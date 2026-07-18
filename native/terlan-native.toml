@@ -1,0 +1,409 @@
+[package]
+namespace = "pytorch"
+adapter = "c-abi"
+crate = "terlan-pytorch-native"
+
+[c_metadata]
+schema = "terlan.c.metadata.v1"
+producer = "terlan-curated-metadata"
+format = "reviewed-declaration-json"
+abi_version = 1
+
+[runtime]
+bridge = "native_boundary"
+ownership = "opaque_handles"
+raw_pointers_public = false
+raw_pointers_contained_in_adapter = true
+exceptions_cross_boundary = false
+
+[functions."pytorch.Tensor.from_int"]
+operation = "pytorch.tensor.from_int"
+arity = 1
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.from_float"]
+operation = "pytorch.tensor.from_float"
+arity = 1
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.from_bool"]
+operation = "pytorch.tensor.from_bool"
+arity = 1
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.from_floats"]
+operation = "pytorch.tensor.from_floats"
+arity = 2
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.from_ints"]
+operation = "pytorch.tensor.from_ints"
+arity = 2
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.full_float"]
+operation = "pytorch.tensor.full_float"
+arity = 2
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.item"]
+operation = "pytorch.tensor.item"
+arity = 1
+returns = "Int"
+blocking = "fast"
+resource = "borrowed_handle"
+
+[functions."pytorch.Tensor.item_float"]
+operation = "pytorch.tensor.item_float"
+arity = 1
+returns = "Float"
+blocking = "fast"
+resource = "borrowed_handle"
+
+[functions."pytorch.Tensor.item_bool"]
+operation = "pytorch.tensor.item_bool"
+arity = 1
+returns = "Bool"
+blocking = "fast"
+resource = "borrowed_handle"
+
+[functions."pytorch.Tensor.dim"]
+operation = "pytorch.tensor.dim"
+arity = 1
+returns = "Int"
+blocking = "fast"
+resource = "borrowed_handle"
+
+[functions."pytorch.Tensor.numel"]
+operation = "pytorch.tensor.numel"
+arity = 1
+returns = "Int"
+blocking = "fast"
+resource = "borrowed_handle"
+
+[functions."pytorch.Tensor.shape"]
+operation = "pytorch.tensor.shape"
+arity = 1
+returns = "List[Int]"
+blocking = "fast"
+resource = "value"
+
+[functions."pytorch.Tensor.dtype"]
+operation = "pytorch.tensor.dtype"
+arity = 1
+returns = "Int"
+blocking = "fast"
+resource = "borrowed_handle"
+
+[functions."pytorch.Tensor.device_type"]
+operation = "pytorch.tensor.device_type"
+arity = 1
+returns = "Int"
+blocking = "fast"
+resource = "borrowed_handle"
+
+[functions."pytorch.Tensor.device_index"]
+operation = "pytorch.tensor.device_index"
+arity = 1
+returns = "Int"
+blocking = "fast"
+resource = "borrowed_handle"
+
+[functions."pytorch.Tensor.clone"]
+operation = "pytorch.tensor.clone"
+arity = 1
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.unsqueeze"]
+operation = "pytorch.tensor.unsqueeze"
+arity = 2
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.matmul"]
+operation = "pytorch.tensor.matmul"
+arity = 2
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.transpose"]
+operation = "pytorch.tensor.transpose"
+arity = 3
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.multiply"]
+operation = "pytorch.tensor.multiply"
+arity = 2
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.add"]
+operation = "pytorch.tensor.add"
+arity = 3
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.subtract"]
+operation = "pytorch.tensor.subtract"
+arity = 3
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.relu"]
+operation = "pytorch.tensor.relu"
+arity = 1
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.gelu"]
+operation = "pytorch.tensor.gelu"
+arity = 1
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.softmax"]
+operation = "pytorch.tensor.softmax"
+arity = 2
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.argmax"]
+operation = "pytorch.tensor.argmax"
+arity = 3
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.embedding"]
+operation = "pytorch.tensor.embedding"
+arity = 5
+returns = "Tensor"
+blocking = "blocking"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.batch_norm"]
+operation = "pytorch.tensor.batch_norm"
+arity = 9
+returns = "Tensor"
+blocking = "blocking"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.layer_norm"]
+operation = "pytorch.tensor.layer_norm"
+arity = 6
+returns = "Tensor"
+blocking = "blocking"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.mse_loss"]
+operation = "pytorch.tensor.mse_loss"
+arity = 3
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.mse_loss_gradient"]
+operation = "pytorch.tensor.mse_loss_gradient"
+arity = 4
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.cross_entropy_loss"]
+operation = "pytorch.tensor.cross_entropy_loss"
+arity = 5
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.narrow"]
+operation = "pytorch.tensor.narrow"
+arity = 4
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.flatten"]
+operation = "pytorch.tensor.flatten"
+arity = 3
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.amax"]
+operation = "pytorch.tensor.amax"
+arity = 3
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.conv2d"]
+operation = "pytorch.tensor.conv2d"
+arity = 7
+returns = "Tensor"
+blocking = "blocking"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.adaptive_avg_pool2d"]
+operation = "pytorch.tensor.adaptive_avg_pool2d"
+arity = 2
+returns = "Tensor"
+blocking = "blocking"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.load_torchscript"]
+operation = "pytorch.torchscript.load"
+arity = 1
+returns = "TorchScriptModel"
+blocking = "blocking"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.torchscript_forward"]
+operation = "pytorch.torchscript.forward"
+arity = 2
+returns = "Tensor"
+blocking = "blocking"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.torchscript_forward2"]
+operation = "pytorch.torchscript.forward2"
+arity = 3
+returns = "Tensor"
+blocking = "blocking"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.torchscript_forward_pair"]
+operation = "pytorch.torchscript.forward_pair"
+arity = 2
+returns = "TensorPair"
+blocking = "blocking"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.torchscript_forward_float"]
+operation = "pytorch.torchscript.forward_float"
+arity = 2
+returns = "Float"
+blocking = "blocking"
+resource = "value"
+
+[functions."pytorch.Tensor.torchscript_forward_int"]
+operation = "pytorch.torchscript.forward_int"
+arity = 2
+returns = "Int"
+blocking = "blocking"
+resource = "value"
+
+[functions."pytorch.Tensor.torchscript_forward_bool"]
+operation = "pytorch.torchscript.forward_bool"
+arity = 2
+returns = "Bool"
+blocking = "blocking"
+resource = "value"
+
+[functions."pytorch.Tensor.torchscript_forward_string"]
+operation = "pytorch.torchscript.forward_string"
+arity = 2
+returns = "String"
+blocking = "blocking"
+resource = "value"
+
+[functions."pytorch.Tensor.torchscript_forward_int_list"]
+operation = "pytorch.torchscript.forward_int_list"
+arity = 2
+returns = "List[Int]"
+blocking = "blocking"
+resource = "value"
+
+[functions."pytorch.Tensor.torchscript_forward_float_list"]
+operation = "pytorch.torchscript.forward_float_list"
+arity = 2
+returns = "List[Float]"
+blocking = "blocking"
+resource = "value"
+
+[functions."pytorch.Tensor.torchscript_forward_bool_list"]
+operation = "pytorch.torchscript.forward_bool_list"
+arity = 2
+returns = "List[Bool]"
+blocking = "blocking"
+resource = "value"
+
+[functions."pytorch.Tensor.torchscript_forward_string_list"]
+operation = "pytorch.torchscript.forward_string_list"
+arity = 2
+returns = "List[String]"
+blocking = "blocking"
+resource = "value"
+
+[functions."pytorch.Tensor.tensor_pair_first"]
+operation = "pytorch.torchscript.tensor_pair_first"
+arity = 1
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.tensor_pair_second"]
+operation = "pytorch.torchscript.tensor_pair_second"
+arity = 1
+returns = "Tensor"
+blocking = "fast"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.run_torchscript"]
+operation = "pytorch.tensor.run_torchscript"
+arity = 2
+returns = "Tensor"
+blocking = "blocking"
+resource = "opaque_handle"
+
+[functions."pytorch.Tensor.dispose_model"]
+operation = "pytorch.torchscript.dispose"
+arity = 1
+returns = "Unit"
+blocking = "fast"
+resource = "dispose_handle"
+
+[functions."pytorch.Tensor.dispose_tensor_pair"]
+operation = "pytorch.torchscript.dispose_tensor_pair"
+arity = 1
+returns = "Unit"
+blocking = "fast"
+resource = "dispose_handle"
+
+[functions."pytorch.Tensor.dispose"]
+operation = "pytorch.tensor.dispose"
+arity = 1
+returns = "Unit"
+blocking = "fast"
+resource = "dispose_handle"
+
+[functions."pytorch.Tensor.abi_version"]
+operation = "pytorch.abi_version"
+arity = 0
+returns = "Int"
+blocking = "fast"
+resource = "value"

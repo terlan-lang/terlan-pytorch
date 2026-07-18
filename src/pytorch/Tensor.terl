@@ -1,0 +1,238 @@
+/**
+ * CPU tensor lifecycle and scalar metadata through LibTorch's stable C ABI.
+ */
+
+module pytorch.Tensor.
+
+/** An owned LibTorch tensor handle disposed exactly once. */
+pub opaque type Tensor.
+
+/** A loaded thread-confined TorchScript module disposed exactly once. */
+pub opaque type TorchScriptModel.
+
+/** An owned two-tensor TorchScript output container disposed exactly once. */
+pub opaque type TensorPair.
+
+/** Creates a scalar int64 tensor. */
+@compiler.native {pytorch.tensor.from_int}
+pub from_int(value: Int): Tensor -> native.
+
+/** Creates a scalar float64 tensor. */
+@compiler.native {pytorch.tensor.from_float}
+pub from_float(value: Float): Tensor -> native.
+
+/** Creates a scalar bool tensor. */
+@compiler.native {pytorch.tensor.from_bool}
+pub from_bool(value: Bool): Tensor -> native.
+
+/** Copies row-major float64 values into an independently owned CPU tensor with the requested shape. */
+@compiler.native {pytorch.tensor.from_floats}
+pub from_floats(values: List[Float], shape: List[Int]): Tensor -> native.
+
+/** Copies row-major int64 values into an independently owned CPU tensor with the requested shape. */
+@compiler.native {pytorch.tensor.from_ints}
+pub from_ints(values: List[Int], shape: List[Int]): Tensor -> native.
+
+/** Creates a CPU float64 tensor with the requested shape and repeated value. */
+@compiler.native {pytorch.tensor.full_float}
+pub full_float(shape: List[Int], value: Float): Tensor -> native.
+
+/** Reads the scalar int64 item. */
+@compiler.native {pytorch.tensor.item}
+pub item(tensor: Tensor): Int -> native.
+
+/** Reads the scalar float64 item. */
+@compiler.native {pytorch.tensor.item_float}
+pub item_float(tensor: Tensor): Float -> native.
+
+/** Reads the scalar bool item. */
+@compiler.native {pytorch.tensor.item_bool}
+pub item_bool(tensor: Tensor): Bool -> native.
+
+/** Returns the tensor rank. */
+@compiler.native {pytorch.tensor.dim}
+pub dim(tensor: Tensor): Int -> native.
+
+/** Returns the tensor element count. */
+@compiler.native {pytorch.tensor.numel}
+pub numel(tensor: Tensor): Int -> native.
+
+/** Immediately copies LibTorch's borrowed size array into an owned Terlan list. */
+@compiler.native {pytorch.tensor.shape}
+pub shape(tensor: Tensor): List[Int] -> native.
+
+/** Returns LibTorch's runtime dtype identifier. */
+@compiler.native {pytorch.tensor.dtype}
+pub dtype(tensor: Tensor): Int -> native.
+
+/** Returns LibTorch's runtime device type identifier. */
+@compiler.native {pytorch.tensor.device_type}
+pub device_type(tensor: Tensor): Int -> native.
+
+/** Returns the device index. */
+@compiler.native {pytorch.tensor.device_index}
+pub device_index(tensor: Tensor): Int -> native.
+
+/** Clones a tensor through LibTorch's versioned StableIValue dispatcher. */
+@compiler.native {pytorch.tensor.clone}
+pub clone(tensor: Tensor): Tensor -> native.
+
+/** Inserts a dimension through a signed StableIValue dispatcher argument. */
+@compiler.native {pytorch.tensor.unsqueeze}
+pub unsqueeze(tensor: Tensor, dimension: Int): Tensor -> native.
+
+/** Multiplies two tensors through independently owned StableIValue handle inputs. */
+@compiler.native {pytorch.tensor.matmul}
+pub matmul(left: Tensor, right: Tensor): Tensor -> native.
+
+/** Transposes two dimensions through a named overload and mixed StableIValue stack. */
+@compiler.native {pytorch.tensor.transpose}
+pub transpose(tensor: Tensor, dimension0: Int, dimension1: Int): Tensor -> native.
+
+/** Multiplies two tensors through the exact named Tensor dispatcher overload. */
+@compiler.native {pytorch.tensor.multiply}
+pub multiply(left: Tensor, right: Tensor): Tensor -> native.
+
+/** Adds a scaled tensor with CPU broadcasting through LibTorch's generated stable C shim. */
+@compiler.native {pytorch.tensor.add}
+pub add(left: Tensor, right: Tensor, alpha: Float): Tensor -> native.
+
+/** Subtracts a scaled tensor through LibTorch's generated stable C shim. */
+@compiler.native {pytorch.tensor.subtract}
+pub subtract(left: Tensor, right: Tensor, alpha: Float): Tensor -> native.
+
+/** Applies the exact default aten::relu operation through the StableIValue dispatcher. */
+@compiler.native {pytorch.tensor.relu}
+pub relu(tensor: Tensor): Tensor -> native.
+
+/** Applies exact aten::gelu with the fixed approximate=none schema default through an owned stable string. */
+@compiler.native {pytorch.tensor.gelu}
+pub gelu(tensor: Tensor): Tensor -> native.
+
+/** Normalizes logits through the exact aten::softmax.int dispatcher overload with inherited dtype. */
+@compiler.native {pytorch.tensor.softmax}
+pub softmax(tensor: Tensor, dimension: Int): Tensor -> native.
+
+/** Returns int64 maximum-value indices through the exact aten::argmax schema, including its owned optional dimension and boolean keep-dimension arguments. */
+@compiler.native {pytorch.tensor.argmax}
+pub argmax(tensor: Tensor, dimension: Int, keep_dimension: Bool): Tensor -> native.
+
+/** Looks up int64 indices in a rank-2 embedding table through exact aten::embedding. */
+@compiler.native {pytorch.tensor.embedding}
+pub embedding(weight: Tensor, indices: Tensor, padding_index: Int, scale_gradient_by_frequency: Bool, sparse: Bool): Tensor -> native.
+
+/** Applies exact aten::batch_norm with explicit affine parameters and running statistics. */
+@compiler.native {pytorch.tensor.batch_norm}
+pub batch_norm(input: Tensor, weight: Tensor, bias: Tensor, running_mean: Tensor, running_variance: Tensor, training: Bool, momentum: Float, epsilon: Float, cudnn_enabled: Bool): Tensor -> native.
+
+/** Applies exact aten::layer_norm over an owned normalized-shape list with explicit affine parameters. */
+@compiler.native {pytorch.tensor.layer_norm}
+pub layer_norm(input: Tensor, normalized_shape: List[Int], weight: Tensor, bias: Tensor, epsilon: Float, cudnn_enabled: Bool): Tensor -> native.
+
+/** Computes elementwise squared error through exact aten::mse_loss; reduction is 0 for none, 1 for mean, or 2 for sum. */
+@compiler.native {pytorch.tensor.mse_loss}
+pub mse_loss(predicted: Tensor, target: Tensor, reduction: Int): Tensor -> native.
+
+/** Computes the exact aten::mse_loss_backward gradient with respect to predicted values. */
+@compiler.native {pytorch.tensor.mse_loss_gradient}
+pub mse_loss_gradient(grad_output: Tensor, predicted: Tensor, target: Tensor, reduction: Int): Tensor -> native.
+
+/** Computes classification loss through exact aten::cross_entropy_loss with no class-weight tensor. */
+@compiler.native {pytorch.tensor.cross_entropy_loss}
+pub cross_entropy_loss(logits: Tensor, target: Tensor, reduction: Int, ignore_index: Int, label_smoothing: Float): Tensor -> native.
+
+/** Returns an independently owned narrowed tensor view through LibTorch's generated stable C shim. */
+@compiler.native {pytorch.tensor.narrow}
+pub narrow(tensor: Tensor, dimension: Int, start: Int, length: Int): Tensor -> native.
+
+/** Flattens an inclusive dimension range through the exact named StableIValue dispatcher overload. */
+@compiler.native {pytorch.tensor.flatten}
+pub flatten(tensor: Tensor, start_dimension: Int, end_dimension: Int): Tensor -> native.
+
+/** Reduces over copied dimensions through LibTorch's generated stable C amax shim. */
+@compiler.native {pytorch.tensor.amax}
+pub amax(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool): Tensor -> native.
+
+/** Applies NCHW 2D convolution with required bias through LibTorch's generated CPU stable C shim. */
+@compiler.native {pytorch.tensor.conv2d}
+pub conv2d(input: Tensor, weight: Tensor, bias: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): Tensor -> native.
+
+/** Reduces NCHW spatial dimensions to an exact output size through LibTorch's generated CPU adaptive-average-pooling shim. */
+@compiler.native {pytorch.tensor.adaptive_avg_pool2d}
+pub adaptive_avg_pool2d(input: Tensor, output_size: List[Int]): Tensor -> native.
+
+/** Loads a serialized TorchScript archive into a reusable thread-confined model resource. */
+@compiler.native {pytorch.torchscript.load}
+pub load_torchscript(path: String): TorchScriptModel -> native.
+
+/** Runs a loaded single-input TorchScript model and returns an independently owned tensor. */
+@compiler.native {pytorch.torchscript.forward}
+pub torchscript_forward(model: TorchScriptModel, input: Tensor): Tensor -> native.
+
+/** Runs a loaded two-positional-tensor TorchScript model and returns an independently owned tensor. */
+@compiler.native {pytorch.torchscript.forward2}
+pub torchscript_forward2(model: TorchScriptModel, first: Tensor, second: Tensor): Tensor -> native.
+
+/** Runs a loaded model whose forward result is exactly a two-tensor tuple and owns that result container. */
+@compiler.native {pytorch.torchscript.forward_pair}
+pub torchscript_forward_pair(model: TorchScriptModel, input: Tensor): TensorPair -> native.
+
+/** Runs a loaded model whose forward result is exactly a TorchScript float and copies it into Terlan. */
+@compiler.native {pytorch.torchscript.forward_float}
+pub torchscript_forward_float(model: TorchScriptModel, input: Tensor): Float -> native.
+
+/** Runs a loaded model whose forward result is exactly a TorchScript integer and copies it into Terlan. */
+@compiler.native {pytorch.torchscript.forward_int}
+pub torchscript_forward_int(model: TorchScriptModel, input: Tensor): Int -> native.
+
+/** Runs a loaded model whose forward result is exactly a TorchScript boolean and copies it into Terlan. */
+@compiler.native {pytorch.torchscript.forward_bool}
+pub torchscript_forward_bool(model: TorchScriptModel, input: Tensor): Bool -> native.
+
+/** Runs a loaded model whose forward result is exactly a TorchScript string and immediately copies its owned UTF-8 bytes into Terlan. */
+@compiler.native {pytorch.torchscript.forward_string}
+pub torchscript_forward_string(model: TorchScriptModel, input: Tensor): String -> native.
+
+/** Runs a loaded model whose forward result is exactly a TorchScript integer list and immediately copies its owned elements into Terlan. */
+@compiler.native {pytorch.torchscript.forward_int_list}
+pub torchscript_forward_int_list(model: TorchScriptModel, input: Tensor): List[Int] -> native.
+
+/** Runs a loaded model whose forward result is exactly a TorchScript floating-point list and immediately copies its owned elements into Terlan. */
+@compiler.native {pytorch.torchscript.forward_float_list}
+pub torchscript_forward_float_list(model: TorchScriptModel, input: Tensor): List[Float] -> native.
+
+/** Runs a loaded model whose forward result is exactly a TorchScript boolean list, validates its portable byte encoding, and copies it into Terlan. */
+@compiler.native {pytorch.torchscript.forward_bool_list}
+pub torchscript_forward_bool_list(model: TorchScriptModel, input: Tensor): List[Bool] -> native.
+
+/** Runs a loaded model whose forward result is exactly a TorchScript string list and copies each length-delimited UTF-8 value into Terlan before native destruction. */
+@compiler.native {pytorch.torchscript.forward_string_list}
+pub torchscript_forward_string_list(model: TorchScriptModel, input: Tensor): List[String] -> native.
+
+/** Returns an independently owned handle for the first tensor in a model-output pair. */
+@compiler.native {pytorch.torchscript.tensor_pair_first}
+pub tensor_pair_first(pair: TensorPair): Tensor -> native.
+
+/** Returns an independently owned handle for the second tensor in a model-output pair. */
+@compiler.native {pytorch.torchscript.tensor_pair_second}
+pub tensor_pair_second(pair: TensorPair): Tensor -> native.
+
+/** Loads, runs, and disposes a TorchScript module as a stateless convenience call. */
+@compiler.native {pytorch.tensor.run_torchscript}
+pub run_torchscript(input: Tensor, path: String): Tensor -> native.
+
+/** Releases the loaded TorchScript model resource. */
+@compiler.native {pytorch.torchscript.dispose}
+pub dispose_model(model: TorchScriptModel): Unit -> native.
+
+/** Releases the owned two-tensor model-output container. */
+@compiler.native {pytorch.torchscript.dispose_tensor_pair}
+pub dispose_tensor_pair(pair: TensorPair): Unit -> native.
+
+/** Releases the owned tensor handle. */
+@compiler.native {pytorch.tensor.dispose}
+pub dispose(tensor: Tensor): Unit -> native.
+
+/** Returns the LibTorch ABI version exported by the runtime. */
+@compiler.native {pytorch.abi_version}
+pub abi_version(): Int -> native.

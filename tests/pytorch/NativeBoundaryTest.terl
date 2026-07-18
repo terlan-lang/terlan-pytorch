@@ -1,0 +1,41 @@
+module pytorch.NativeBoundaryTest.
+
+import pytorch.Tensor.{from_int, from_float, from_bool, from_floats, from_ints, full_float, item, item_float, item_bool, dim, numel, shape, dtype, device_type, device_index, clone, unsqueeze, matmul, transpose, multiply, add, subtract, relu, gelu, softmax, argmax, embedding, batch_norm, layer_norm, mse_loss, mse_loss_gradient, cross_entropy_loss, narrow, flatten, amax, conv2d, adaptive_avg_pool2d, load_torchscript, torchscript_forward, torchscript_forward2, torchscript_forward_pair, torchscript_forward_float, torchscript_forward_int, torchscript_forward_bool, torchscript_forward_string, torchscript_forward_int_list, torchscript_forward_float_list, torchscript_forward_bool_list, torchscript_forward_string_list, tensor_pair_first, tensor_pair_second, run_torchscript, dispose_model, dispose_tensor_pair, dispose, abi_version}.
+
+@test
+pub generated_c_abi_native_boundary_executes(): Bool ->
+    let boundary = from_int(40);
+    let observed_item = item(boundary);
+    let observed_item_float = item_float(boundary);
+    let observed_item_bool = item_bool(boundary);
+    let observed_dim = dim(boundary);
+    let observed_numel = numel(boundary);
+    let observed_shape = shape(boundary);
+    let observed_dtype = dtype(boundary);
+    let observed_device_type = device_type(boundary);
+    let observed_device_index = device_index(boundary);
+    let returned_clone = clone(boundary);
+    let returned_unsqueeze = unsqueeze(boundary, -1);
+    let returned_matmul = matmul(returned_unsqueeze, returned_unsqueeze);
+    let returned_transpose = transpose(boundary, -1, -1);
+    let returned_multiply = multiply(returned_transpose, returned_transpose);
+    let returned_relu = relu(boundary);
+    let returned_flatten = flatten(boundary, -1, -1);
+    let observed_abi_version = abi_version();
+    let observed_returned_source_item = item(boundary);
+    let observed_clone_item = item(returned_clone);
+    let observed_unsqueeze_item = item(returned_unsqueeze);
+    let observed_matmul_item = item(returned_matmul);
+    let observed_transpose_item = item(returned_transpose);
+    let observed_multiply_item = item(returned_multiply);
+    let observed_relu_item = item(returned_relu);
+    let observed_flatten_item = item(returned_flatten);
+    dispose(returned_clone);
+    dispose(returned_unsqueeze);
+    dispose(returned_matmul);
+    dispose(returned_transpose);
+    dispose(returned_multiply);
+    dispose(returned_relu);
+    dispose(returned_flatten);
+    dispose(boundary);
+    observed_item == 40 and observed_clone_item == observed_returned_source_item and observed_relu_item == observed_returned_source_item and observed_shape.length() == observed_dim.

@@ -1,0 +1,200 @@
+#!/usr/bin/env python3
+import argparse
+import hashlib
+import json
+from pathlib import Path
+
+
+def read_required(path: Path) -> str:
+    if not path.is_file():
+        raise SystemExit(f"error[terlan_pytorch_report_input_missing]: missing {path}")
+    return path.read_text(encoding="utf-8").strip()
+
+
+def sha256(path: Path) -> str:
+    if not path.is_file():
+        raise SystemExit(f"error[terlan_pytorch_report_input_missing]: missing {path}")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--repository", required=True, type=Path)
+parser.add_argument("--generated", required=True, type=Path)
+parser.add_argument("--libtorch", required=True, type=Path)
+parser.add_argument("--output", required=True, type=Path)
+parser.add_argument("--status", choices=("pass", "skip", "fail"), default="pass")
+args = parser.parse_args()
+
+source_manifest = args.repository / "bindings/libtorch-c.json"
+normalized_manifest = args.generated / "bindings/native-binding-manifest.json"
+report = {
+    "schema": "terlan.pytorch.package-execution.v1",
+    "status": args.status,
+    "package": "terlan-pytorch",
+    "target": "cpu",
+    "libtorch": {
+        "version": read_required(args.libtorch / "build-version"),
+        "build_hash": read_required(args.libtorch / "build-hash"),
+    },
+    "binding_manifest": {
+        "source_sha256": sha256(source_manifest),
+        "normalized_sha256": sha256(normalized_manifest),
+    },
+    "gates": {
+        "distribution_validation": "pass",
+        "native_adapter_tests": "pass",
+        "generated_terlan_tests": "pass",
+        "fresh_git_consumer": "pass",
+        "missing_distribution_rejection": "pass",
+        "incompatible_distribution_rejection": "pass",
+        "shape_mismatch_rejection": "pass",
+        "dtype_mismatch_rejection": "pass",
+        "narrow_bounds_rejection": "pass",
+        "flatten_dimension_rejection": "pass",
+        "amax_dimension_rejection": "pass",
+        "full_shape_rejection": "pass",
+        "from_floats_value_count_rejection": "pass",
+        "add_broadcast_rejection": "pass",
+        "softmax_dimension_rejection": "pass",
+        "argmax_dimension_rejection": "pass",
+        "mse_shape_rejection": "pass",
+        "mse_reduction_rejection": "pass",
+        "cross_entropy_target_dtype_rejection": "pass",
+        "cross_entropy_smoothing_rejection": "pass",
+        "mse_gradient_shape_rejection": "pass",
+        "conv2d_channel_rejection": "pass",
+        "adaptive_avg_pool2d_size_rejection": "pass",
+        "vision_classifier_execution": "pass",
+        "batched_vision_classifier_execution": "pass",
+        "batched_vision_target_rejection": "pass",
+        "depthwise_pointwise_cnn_execution": "pass",
+        "conv2d_group_topology_rejection": "pass",
+        "normalized_residual_cnn_execution": "pass",
+        "residual_channel_rejection": "pass",
+        "embedding_index_rejection": "pass",
+        "sequence_projection_shape_rejection": "pass",
+        "batch_norm_channel_rejection": "pass",
+        "layer_norm_shape_rejection": "pass",
+        "transformer_residual_execution": "pass",
+        "self_attention_execution": "pass",
+        "self_attention_projection_rejection": "pass",
+        "gelu_execution": "pass",
+        "feed_forward_execution": "pass",
+        "feed_forward_projection_rejection": "pass",
+        "transformer_encoder_execution": "pass",
+        "encoder_output_width_rejection": "pass",
+        "transformer_classifier_execution": "pass",
+        "transformer_class_target_rejection": "pass",
+        "token_transformer_execution": "pass",
+        "token_transformer_oov_rejection": "pass",
+        "batched_token_transformer_execution": "pass",
+        "batched_matmul_shape_rejection": "pass",
+        "stacked_batched_transformer_execution": "pass",
+        "stacked_transformer_width_rejection": "pass",
+        "causal_batched_transformer_execution": "pass",
+        "causal_mask_shape_rejection": "pass",
+        "cross_attention_transformer_execution": "pass",
+        "cross_attention_batch_rejection": "pass",
+        "causal_cross_attention_decoder_execution": "pass",
+        "decoder_context_width_rejection": "pass",
+        "tokenized_seq2seq_execution": "pass",
+        "seq2seq_batch_rejection": "pass",
+        "stale_handle_rejection": "pass",
+        "torchscript_model_execution": "pass",
+        "torchscript_reusable_model_execution": "pass",
+        "torchscript_model_stale_handle_rejection": "pass",
+        "torchscript_two_input_execution": "pass",
+        "torchscript_arity_rejection": "pass",
+        "torchscript_tensor_pair_execution": "pass",
+        "torchscript_tensor_pair_shape_rejection": "pass",
+        "torchscript_float_output_execution": "pass",
+        "torchscript_float_output_type_rejection": "pass",
+        "torchscript_int_output_execution": "pass",
+        "torchscript_int_output_type_rejection": "pass",
+        "torchscript_bool_output_execution": "pass",
+        "torchscript_bool_output_type_rejection": "pass",
+        "torchscript_string_output_execution": "pass",
+        "torchscript_string_output_type_rejection": "pass",
+        "torchscript_int_list_output_execution": "pass",
+        "torchscript_int_list_output_type_rejection": "pass",
+        "torchscript_float_list_output_execution": "pass",
+        "torchscript_float_list_output_type_rejection": "pass",
+        "torchscript_bool_list_output_execution": "pass",
+        "torchscript_bool_list_output_type_rejection": "pass",
+        "torchscript_string_list_output_execution": "pass",
+        "torchscript_string_list_output_type_rejection": "pass",
+        "torchscript_missing_model_rejection": "pass",
+        "torchscript_invalid_model_rejection": "pass",
+    },
+    "semantics": {
+        "operations": ["aten::clone", "aten::unsqueeze", "aten::matmul", "aten::transpose.int", "aten::mul.Tensor", "aoti_torch_cpu_add_Tensor", "aoti_torch_cpu_convolution", "aoti_torch_cpu__adaptive_avg_pool2d", "aoti_torch_aten_subtract_Tensor", "aten::relu", "aten::gelu", "aten::softmax.int", "aten::argmax", "aten::embedding", "aten::batch_norm", "aten::layer_norm", "aten::mse_loss", "aten::mse_loss_backward", "aten::cross_entropy_loss", "aoti_torch_aten_narrow", "aten::flatten.using_ints", "aoti_torch_aten_amax", "aoti_torch_aten_full", "aoti_torch_create_tensor_from_blob_v2", "aoti_torch_clone", "torch::jit::load"],
+        "torchscript_inference": {"format": "TorchScript", "model": "input * 2.0", "input": 3.0, "output": 6.0, "dtype": 7, "input_unchanged": True, "output_owned": True, "missing_status": 7041, "invalid_status": 7042},
+        "torchscript_reusable_model": {"loaded_once": True, "inputs": [3.0, 4.0], "outputs": [6.0, 8.0], "independently_owned_outputs": True, "model_disposed": True, "thread_safety": "thread_confined", "stale_model_rejected": True},
+        "torchscript_two_input_model": {"model": "left - right * 2.0", "ordered_inputs": [3.0, 4.0], "output": -5.0, "inputs_unchanged": True, "output_owned": True, "arity_mismatch_status": 7043},
+        "torchscript_tensor_pair_model": {"model": "(input * 2.0, input * 3.0)", "input": 2.0, "outputs": [4.0, 6.0], "input_unchanged": True, "pair_owned": True, "extracted_outputs_survive_pair_disposal": True, "non_tuple_status": 7046},
+        "torchscript_float_output_model": {"model": "float(input.item()) * 2.0", "input": 3.0, "output": 6.0, "input_unchanged": True, "copied_value": True, "non_float_status": 7049},
+        "torchscript_int_output_model": {"model": "int(input.item()) + 3", "input": 4, "output": 7, "input_unchanged": True, "copied_value": True, "non_int_status": 7050},
+        "torchscript_bool_output_model": {"model": "input.item() > 0", "input": 1, "output": True, "input_unchanged": True, "copied_value": True, "non_bool_status": 7051},
+        "torchscript_string_output_model": {"model": "input.item() > 0 ? positive : non_positive", "input": 1, "output": "positive", "input_unchanged": True, "copied_value": True, "non_string_status": 7052},
+        "torchscript_int_list_output_model": {"model": "[value, value + 1, value + 2]", "input": 4, "output": [4, 5, 6], "input_unchanged": True, "copied_value": True, "non_int_list_status": 7053},
+        "torchscript_float_list_output_model": {"model": "[value, value + 0.5, value + 1.0]", "input": 1.5, "output": [1.5, 2.0, 2.5], "input_unchanged": True, "copied_value": True, "non_float_list_status": 7054},
+        "torchscript_bool_list_output_model": {"model": "[value > 0, value == 0, value < 0]", "input": 2, "output": [True, False, False], "input_unchanged": True, "copied_value": True, "portable_encoding": "uint8-0-or-1", "non_bool_list_status": 7055},
+        "torchscript_string_list_output_model": {"model": "input > 0 ? [positive, empty, ready] : [non_positive, empty, waiting]", "input": 1, "output": ["positive", "", "ready"], "input_unchanged": True, "copied_value": True, "encoding": "length-delimited-utf8", "non_string_list_status": 7056},
+        "multiply": {"left": 4, "right": 5, "result": 20},
+        "float64": {"left": 2.5, "right": 4.0, "result": 10.0, "dtype": 7},
+        "subtract": {"left": 4.0, "right": 1.5, "alpha": 2.0, "result": 1.0},
+        "bool": {"true": True, "false": False, "dtype": 11},
+        "relu": {"input": -2.5, "result": 0.0, "dtype": 7, "input_unchanged": True},
+        "narrow": {"dimension": 0, "start": 0, "length": 1, "shape": [1], "result": 17, "input_unchanged": True},
+        "flatten": {"start_dimension": 0, "end_dimension": 1, "source_rank": 2, "result_rank": 1, "shape": [1], "result": 3.5},
+        "amax": {"dimensions": [0], "keep_dimension": False, "source_rank": 2, "result_rank": 1, "shape": [1], "result": 6.5},
+        "full_float": {"shape": [2, 3], "value": 1.25, "rank": 2, "numel": 6, "dtype": 7},
+        "from_floats": {"shape": [2, 3], "values": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0], "maximum": 6.0, "rank": 2, "numel": 6, "dtype": 7, "owned_copy": True},
+        "affine_forward": {"input_shape": [2, 3], "weight_shape": [3, 1], "bias_shape": [1], "output_shape": [2, 1], "maximum": 7.0, "dtype": 7, "inputs_unchanged": True},
+        "classifier_forward": {"input_shape": [2, 3], "weight_shape": [3, 2], "bias_shape": [2], "target_shape": [2, 2], "class_target_shape": [2], "class_targets": [0, 1], "probability_shape": [2, 2], "prediction_shape": [2], "softmax_dimension": 1, "argmax_dimension": 1, "loss_reduction": 1, "cross_entropy_reduction": 1, "ignore_index": -100, "label_smoothing": 0.1, "logit_maximum": 0.0, "probability_maximum": 0.5, "mse_loss": 0.25, "cross_entropy_loss_min": 0.69, "cross_entropy_loss_max": 0.70, "probability_dtype": 7, "prediction_dtype": 4, "prediction_maximum": 0, "logits_unchanged": True},
+        "argmax": {"dimension": 1, "keep_dimension": True, "source_shape": [2, 3], "result_shape": [2, 1], "dtype": 4, "maximum_index": 0},
+        "mse_loss": {"predicted_shape": [2, 2], "target_shape": [2, 2], "reduction": 1, "result_shape": [], "dtype": 7, "value": 1.0, "sources_unchanged": True},
+        "from_ints": {"shape": [2], "values": [0, 1], "maximum": 1, "rank": 1, "numel": 2, "dtype": 4, "owned_copy": True},
+        "cross_entropy_loss": {"logits_shape": [2, 2], "target_shape": [2], "reduction": 1, "ignore_index": -100, "label_smoothing": 0.1, "result_shape": [], "dtype": 7, "minimum": 0.69, "maximum": 0.70, "sources_unchanged": True},
+        "gradient_step": {"operator": "aten::mse_loss_backward", "parameter_shape": [2, 2], "target_shape": [2, 2], "reduction": 1, "gradient": 0.5, "learning_rate": 0.1, "updated_parameter_min": 1.94, "updated_parameter_max": 1.96, "loss_before": 1.0, "loss_after_min": 0.90, "loss_after_max": 0.91, "loss_decreased": True, "sources_unchanged": True},
+        "conv2d": {"operator": "aoti_torch_cpu_convolution", "layout": "NCHW", "input_shape": [1, 1, 3, 3], "weight_shape": [1, 1, 2, 2], "bias_shape": [1], "stride": [1, 1], "padding": [0, 0], "dilation": [1, 1], "groups": 1, "output_shape": [1, 1, 2, 2], "output_value": 4.0, "exact_mse": 0.0, "dtype": 7, "sources_unchanged": True},
+        "adaptive_avg_pool2d": {"operator": "aoti_torch_cpu__adaptive_avg_pool2d", "layout": "NCHW", "input_shape": [1, 1, 4, 4], "output_size": [2, 2], "output_shape": [1, 1, 2, 2], "output_values": [1.0, 2.0, 3.0, 4.0], "maximum": 4.0, "exact_mse": 0.0, "dtype": 7, "source_unchanged": True},
+        "vision_classifier": {"pipeline": ["conv2d", "relu", "adaptive_avg_pool2d", "flatten", "matmul", "add", "softmax", "argmax"], "input_shape": [1, 1, 3, 3], "feature_shape": [1, 1], "logit_shape": [1, 2], "probability_shape": [1, 2], "probability_maximum": 0.5, "probability_exact_mse": 0.0, "prediction_shape": [1], "prediction_dtype": 4, "prediction": 0, "all_handles_disposed": True},
+        "batched_vision_classifier": {"pipeline": ["conv2d", "relu", "adaptive_avg_pool2d", "flatten_features", "classifier_matmul", "classifier_bias", "softmax", "argmax", "cross_entropy_loss"], "input_shape": [2, 1, 3, 3], "input_image_values": [1.0, 2.0], "convolution_shape": [2, 1, 2, 2], "convolution_values": [4.0, 4.0, 4.0, 4.0, 8.0, 8.0, 8.0, 8.0], "convolution_exact_mse": 0.0, "pool_shape": [2, 1, 1, 1], "pool_values": [4.0, 8.0], "pool_exact_mse": 0.0, "feature_shape": [2, 1], "probability_shape": [2, 2], "probability_values": [0.5, 0.5, 0.5, 0.5], "probability_exact_mse": 0.0, "prediction_shape": [2], "prediction_dtype": 4, "predictions": [0, 0], "class_targets": [0, 0], "cross_entropy_minimum": 0.69, "cross_entropy_maximum": 0.70, "all_handles_disposed": True},
+        "depthwise_pointwise_cnn": {"pipeline": ["depthwise_conv2d", "relu", "pointwise_conv2d", "relu", "adaptive_avg_pool2d", "flatten_features", "classifier_matmul", "classifier_bias", "softmax", "argmax", "cross_entropy_loss"], "input_shape": [2, 2, 3, 3], "depthwise_groups": 2, "depthwise_weight_shape": [2, 1, 2, 2], "depthwise_shape": [2, 2, 2, 2], "depthwise_values": [4.0, 8.0], "depthwise_exact_mse": 0.0, "pointwise_groups": 1, "pointwise_weight_shape": [2, 2, 1, 1], "pointwise_shape": [2, 2, 2, 2], "pointwise_values": [8.0, 16.0], "pointwise_exact_mse": 0.0, "pool_shape": [2, 2, 1, 1], "pool_values": [8.0, 8.0, 16.0, 16.0], "pool_exact_mse": 0.0, "feature_shape": [2, 2], "probability_shape": [2, 2], "probability_values": [0.5, 0.5, 0.5, 0.5], "probability_exact_mse": 0.0, "prediction_shape": [2], "prediction_dtype": 4, "predictions": [0, 0], "cross_entropy_minimum": 0.69, "cross_entropy_maximum": 0.70, "all_handles_disposed": True},
+        "normalized_residual_cnn": {"pipeline": ["depthwise_conv2d", "batch_norm", "relu", "pointwise_conv2d", "batch_norm", "residual_add", "relu", "adaptive_avg_pool2d", "flatten_features", "classifier_matmul", "classifier_bias", "softmax", "argmax", "cross_entropy_loss"], "input_shape": [2, 2, 2, 2], "depthwise_groups": 2, "depthwise_shape": [2, 2, 2, 2], "depthwise_values": [1.0, 2.0], "depthwise_exact_mse": 0.0, "depthwise_normalized_exact_mse": 0.0, "pointwise_shape": [2, 2, 2, 2], "pointwise_values": [2.0, 4.0], "pointwise_normalized_exact_mse": 0.0, "residual_shape": [2, 2, 2, 2], "residual_values": [3.0, 6.0], "residual_exact_mse": 0.0, "pool_shape": [2, 2, 1, 1], "pool_values": [3.0, 3.0, 6.0, 6.0], "pool_exact_mse": 0.0, "feature_shape": [2, 2], "probability_shape": [2, 2], "probability_values": [0.5, 0.5, 0.5, 0.5], "probability_exact_mse": 0.0, "prediction_shape": [2], "prediction_dtype": 4, "predictions": [0, 0], "cross_entropy_minimum": 0.69, "cross_entropy_maximum": 0.70, "all_handles_disposed": True},
+        "embedding": {"operator": "aten::embedding", "weight_shape": [3, 2], "indices_shape": [2], "indices": [0, 2], "padding_index": -1, "scale_gradient_by_frequency": False, "sparse": False, "output_shape": [2, 2], "output_value": 2.0, "exact_mse": 0.0, "dtype": 7, "sources_unchanged": True},
+        "sequence_classifier": {"pipeline": ["embedding", "amax", "matmul", "add", "softmax", "argmax"], "indices_shape": [1, 2], "embedding_shape": [1, 2, 2], "pooled_shape": [1, 2], "probability_shape": [1, 2], "probability_maximum": 0.5, "probability_exact_mse": 0.0, "prediction_shape": [1], "prediction_dtype": 4, "prediction": 0, "all_handles_disposed": True},
+        "batch_norm": {"operator": "aten::batch_norm", "mode": "inference", "input_shape": [1, 2, 2, 2], "parameter_shape": [2], "input_value": 3.0, "weight": 2.0, "bias": 1.0, "running_mean": 1.0, "running_variance": 4.0, "momentum": 0.1, "epsilon": 0.0, "output_shape": [1, 2, 2, 2], "output_value": 3.0, "exact_mse": 0.0, "dtype": 7, "sources_unchanged": True},
+        "layer_norm": {"operator": "aten::layer_norm", "input_shape": [2, 2], "normalized_shape": [2], "weight_shape": [2], "bias_shape": [2], "epsilon": 0.0, "cudnn_enabled": False, "output_shape": [2, 2], "output_values": [-1.0, 1.0, -1.0, 1.0], "output_maximum": 1.0, "exact_mse": 0.0, "dtype": 7, "sources_unchanged": True},
+        "transformer_residual": {"pipeline": ["layer_norm", "matmul", "add"], "input_shape": [2, 2], "normalized_shape": [2, 2], "projection_shape": [2, 2], "residual_shape": [2, 2], "residual_values": [0.0, 4.0, 1.0, 5.0], "normalized_exact_mse": 0.0, "residual_exact_mse": 0.0, "input_unchanged": True, "all_handles_disposed": True},
+        "self_attention": {"pipeline": ["layer_norm", "qkv_matmul", "value_bias", "transpose", "score_matmul", "scale", "softmax", "context_matmul", "residual_add"], "input_shape": [2, 2], "normalized_shape": [2, 2], "query_shape": [2, 2], "key_shape": [2, 2], "value_shape": [2, 2], "attention_shape": [2, 2], "attention_values": [0.5, 0.5, 0.5, 0.5], "context_values": [1.0, 1.0, 1.0, 1.0], "residual_values": [2.0, 4.0, 5.0, 3.0], "attention_exact_mse": 0.0, "context_exact_mse": 0.0, "residual_exact_mse": 0.0, "input_unchanged": True, "all_handles_disposed": True},
+        "gelu": {"operator": "aten::gelu", "approximate": "none", "input_shape": [3], "input_maximum": 2.0, "output_shape": [3], "output_minimum": 1.95, "output_maximum": 1.96, "dtype": 7, "input_unchanged": True},
+        "feed_forward": {"pipeline": ["layer_norm", "expansion_matmul", "expansion_bias", "gelu", "projection_matmul", "projection_bias", "residual_add"], "input_shape": [2, 2], "normalized_shape": [2, 2], "expanded_shape": [2, 4], "projected_shape": [2, 2], "residual_shape": [2, 2], "residual_values": [0.8413447461, 3.8413447461, 4.8413447461, 1.8413447461], "mse_maximum": 0.0000001, "residual_minimum": 4.84, "residual_maximum": 4.85, "input_unchanged": True, "all_handles_disposed": True},
+        "transformer_encoder": {"pipeline": ["attention_layer_norm", "qkv_matmul", "scaled_dot_product_attention", "attention_residual", "feed_forward_layer_norm", "expansion_matmul", "gelu", "projection_matmul", "feed_forward_residual"], "input_shape": [2, 2], "attention_shape": [2, 2], "attention_residual_values": [2.0, 4.0, 5.0, 3.0], "expanded_shape": [2, 4], "output_shape": [2, 2], "output_values": [1.8413447461, 4.8413447461, 5.8413447461, 2.8413447461], "mse_maximum": 0.0000001, "output_minimum": 5.84, "output_maximum": 5.85, "input_unchanged": True, "all_handles_disposed": True},
+        "transformer_classifier": {"pipeline": ["transformer_encoder", "token_amax", "unsqueeze_batch", "classifier_matmul", "classifier_bias", "softmax", "argmax", "cross_entropy_loss"], "encoder_shape": [2, 2], "pooled_shape": [2], "batched_shape": [1, 2], "probability_shape": [1, 2], "probability_values": [0.5, 0.5], "probability_exact_mse": 0.0, "prediction_shape": [1], "prediction_dtype": 4, "prediction": 0, "cross_entropy_minimum": 0.69, "cross_entropy_maximum": 0.70, "pooled_minimum": 5.84, "pooled_maximum": 5.85, "input_unchanged": True, "all_handles_disposed": True},
+        "token_transformer_classifier": {"pipeline": ["embedding", "transformer_encoder", "token_amax", "unsqueeze_batch", "classifier_matmul", "classifier_bias", "softmax", "argmax", "cross_entropy_loss"], "token_ids": [0, 1], "embedding_table_shape": [2, 2], "embedding_shape": [2, 2], "embedding_values": [1.0, 3.0, 4.0, 2.0], "embedding_exact_mse": 0.0, "encoder_shape": [2, 2], "pooled_shape": [2], "batched_shape": [1, 2], "probability_shape": [1, 2], "probability_values": [0.5, 0.5], "probability_exact_mse": 0.0, "prediction_shape": [1], "prediction_dtype": 4, "prediction": 0, "cross_entropy_minimum": 0.69, "cross_entropy_maximum": 0.70, "pooled_minimum": 5.84, "pooled_maximum": 5.85, "all_handles_disposed": True},
+        "batched_token_transformer": {"pipeline": ["embedding", "batched_transformer_encoder", "token_amax", "classifier_matmul", "classifier_bias", "softmax", "argmax", "cross_entropy_loss"], "token_ids": [[0, 1], [1, 0]], "embedding_table_shape": [2, 2], "embedding_shape": [2, 2, 2], "embedding_exact_mse": 0.0, "attention_key_transpose_dimensions": [1, 2], "attention_softmax_dimension": 2, "encoder_shape": [2, 2, 2], "encoder_mse_maximum": 0.0000001, "token_pool_dimension": 1, "pooled_shape": [2, 2], "probability_shape": [2, 2], "probability_values": [0.5, 0.5, 0.5, 0.5], "probability_exact_mse": 0.0, "prediction_shape": [2], "prediction_dtype": 4, "predictions": [0, 0], "class_targets": [0, 0], "cross_entropy_minimum": 0.69, "cross_entropy_maximum": 0.70, "all_handles_disposed": True},
+        "stacked_batched_transformer": {"pipeline": ["embedding", "transformer_encoder_layer_1", "transformer_encoder_layer_2", "token_amax", "classifier_matmul", "classifier_bias", "softmax", "argmax", "cross_entropy_loss"], "token_ids": [[0, 1], [1, 0]], "embedding_shape": [2, 2, 2], "layer_count": 2, "first_encoder_shape": [2, 2, 2], "second_encoder_shape": [2, 2, 2], "second_encoder_values": [2.6826894921, 6.6826894921, 7.6826894921, 3.6826894921, 7.6826894921, 3.6826894921, 2.6826894921, 6.6826894921], "second_encoder_mse_maximum": 0.0000001, "pooled_shape": [2, 2], "pooled_values": [7.6826894921, 6.6826894921, 7.6826894921, 6.6826894921], "pooled_mse_maximum": 0.0000001, "probability_shape": [2, 2], "probability_values": [0.5, 0.5, 0.5, 0.5], "probability_exact_mse": 0.0, "prediction_shape": [2], "prediction_dtype": 4, "predictions": [0, 0], "cross_entropy_minimum": 0.69, "cross_entropy_maximum": 0.70, "parameters_reused_across_layers": True, "all_handles_disposed": True},
+        "causal_batched_transformer": {"pipeline": ["embedding", "qkv_matmul", "scaled_scores", "additive_causal_mask", "softmax", "context_matmul", "attention_residual", "feed_forward", "token_amax", "classifier_matmul", "softmax", "argmax", "cross_entropy_loss"], "token_ids": [[0, 1], [1, 0]], "embedding_shape": [2, 2, 2], "mask_shape": [2, 2], "mask_values": [0.0, -1000.0, 0.0, 0.0], "mask_broadcast_over_batch": True, "attention_shape": [2, 2, 2], "attention_values": [1.0, 0.0, 0.5, 0.5, 1.0, 0.0, 0.5, 0.5], "attention_exact_mse": 0.0, "context_values": [0.0, 2.0, 1.0, 1.0, 2.0, 0.0, 1.0, 1.0], "context_exact_mse": 0.0, "attention_residual_values": [1.0, 5.0, 5.0, 3.0, 6.0, 2.0, 2.0, 4.0], "attention_residual_exact_mse": 0.0, "encoder_shape": [2, 2, 2], "encoder_values": [0.8413447461, 5.8413447461, 5.8413447461, 2.8413447461, 6.8413447461, 1.8413447461, 1.8413447461, 4.8413447461], "encoder_mse_maximum": 0.0000001, "pooled_shape": [2, 2], "pooled_values": [5.8413447461, 5.8413447461, 6.8413447461, 4.8413447461], "pooled_mse_maximum": 0.0000001, "probability_shape": [2, 2], "probability_values": [0.5, 0.5, 0.5, 0.5], "prediction_shape": [2], "prediction_dtype": 4, "predictions": [0, 0], "cross_entropy_minimum": 0.69, "cross_entropy_maximum": 0.70, "all_handles_disposed": True},
+        "cross_attention_transformer": {"pipeline": ["decoder_layer_norm", "memory_layer_norm", "separate_qkv_matmul", "memory_key_transpose", "scaled_cross_attention", "softmax", "memory_context_matmul", "decoder_residual", "feed_forward", "token_amax", "classifier_matmul", "softmax", "argmax", "cross_entropy_loss"], "decoder_shape": [2, 2, 2], "memory_shape": [2, 3, 2], "query_length": 2, "memory_length": 3, "attention_shape": [2, 2, 3], "attention_values": [0.3333333333333333] * 12, "attention_mse_maximum": 0.0000001, "context_shape": [2, 2, 2], "context_values": [-0.3333333333333333, 0.3333333333333333, -0.3333333333333333, 0.3333333333333333, 0.3333333333333333, -0.3333333333333333, 0.3333333333333333, -0.3333333333333333], "context_mse_maximum": 0.0000001, "attention_residual_values": [0.6666666666666667, 3.3333333333333335, 1.6666666666666667, 5.333333333333333, 3.3333333333333335, 0.6666666666666667, 5.333333333333333, 1.6666666666666667], "attention_residual_mse_maximum": 0.0000001, "encoder_shape": [2, 2, 2], "encoder_values": [0.5080114128, 4.1746780794, 1.5080114128, 6.1746780794, 4.1746780794, 0.5080114128, 6.1746780794, 1.5080114128], "encoder_mse_maximum": 0.0000001, "pooled_shape": [2, 2], "pooled_values": [1.5080114128, 6.1746780794, 6.1746780794, 1.5080114128], "pooled_mse_maximum": 0.0000001, "probability_shape": [2, 2], "probability_values": [0.5, 0.5, 0.5, 0.5], "prediction_shape": [2], "prediction_dtype": 4, "predictions": [0, 0], "cross_entropy_minimum": 0.69, "cross_entropy_maximum": 0.70, "decoder_and_memory_independently_owned": True, "all_handles_disposed": True},
+        "causal_cross_attention_decoder": {"pipeline": ["embedding", "causal_self_attention", "self_attention_residual", "memory_cross_attention", "cross_attention_residual", "feed_forward", "token_amax", "classifier_matmul", "softmax", "argmax", "cross_entropy_loss"], "decoder_token_ids": [[0, 1], [1, 0]], "decoder_input_shape": [2, 2, 2], "causal_mask_shape": [2, 2], "memory_shape": [2, 3, 2], "self_attention_residual_shape": [2, 2, 2], "self_attention_residual_values": [1.0, 5.0, 5.0, 3.0, 6.0, 2.0, 2.0, 4.0], "self_attention_residual_exact_mse": 0.0, "cross_attention_shape": [2, 2, 3], "cross_attention_residual_shape": [2, 2, 2], "cross_attention_residual_values": [0.6666666666666667, 5.333333333333333, 4.666666666666667, 3.3333333333333335, 6.333333333333333, 1.6666666666666667, 2.3333333333333335, 3.6666666666666665], "cross_attention_residual_mse_maximum": 0.0000001, "decoder_output_shape": [2, 2, 2], "decoder_output_values": [0.5080114128, 6.1746780794, 5.5080114128, 3.1746780794, 7.1746780794, 1.5080114128, 2.1746780794, 4.5080114128], "decoder_output_mse_maximum": 0.0000001, "pooled_shape": [2, 2], "pooled_values": [5.5080114128, 6.1746780794, 7.1746780794, 4.5080114128], "pooled_mse_maximum": 0.0000001, "probability_shape": [2, 2], "probability_values": [0.5, 0.5, 0.5, 0.5], "prediction_shape": [2], "prediction_dtype": 4, "predictions": [0, 0], "cross_entropy_minimum": 0.69, "cross_entropy_maximum": 0.70, "causal_and_cross_attention_composed": True, "all_handles_disposed": True},
+        "tokenized_seq2seq": {"pipeline": ["source_token_ids", "source_embedding", "encoder_memory", "target_token_ids", "target_embedding", "causal_self_attention", "memory_cross_attention", "feed_forward", "token_amax", "classifier_matmul", "softmax", "argmax", "cross_entropy_loss"], "source_token_ids": [[0, 0, 1], [1, 1, 0]], "source_embedding_table_shape": [2, 2], "memory_shape": [2, 3, 2], "memory_values": [0.0, 2.0, 0.0, 2.0, 2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 2.0], "memory_exact_mse": 0.0, "target_token_ids": [[0, 1], [1, 0]], "target_embedding_table_shape": [2, 2], "decoder_input_shape": [2, 2, 2], "decoder_input_values": [1.0, 3.0, 4.0, 2.0, 4.0, 2.0, 1.0, 3.0], "decoder_input_exact_mse": 0.0, "separate_source_and_target_embeddings": True, "decoder_output_shape": [2, 2, 2], "decoder_output_values": [0.5080114128, 6.1746780794, 5.5080114128, 3.1746780794, 7.1746780794, 1.5080114128, 2.1746780794, 4.5080114128], "decoder_output_mse_maximum": 0.0000001, "pooled_shape": [2, 2], "pooled_values": [5.5080114128, 6.1746780794, 7.1746780794, 4.5080114128], "pooled_mse_maximum": 0.0000001, "probability_shape": [2, 2], "probability_values": [0.5, 0.5, 0.5, 0.5], "prediction_shape": [2], "prediction_dtype": 4, "predictions": [0, 0], "cross_entropy_minimum": 0.69, "cross_entropy_maximum": 0.70, "all_handles_disposed": True},
+        "graph_autograd": {"status": "deferred", "reason": "stable C exposes requires-grad mutation but no stable gradient getter; aten::_backward also requires Tensor[] and unit-output dispatcher support"},
+        "transpose": {"dimension0": 0, "dimension1": 1, "result": 20, "rank": 2},
+        "matmul": {
+            "left": 4,
+            "right": 5,
+            "result": 20,
+            "rank": 2,
+            "dtype": 4,
+            "device_type": 0,
+            "device_index": -1,
+        },
+        "ownership": "all handles disposed",
+    },
+}
+
+args.output.parent.mkdir(parents=True, exist_ok=True)
+args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+print(args.output)
