@@ -4,24 +4,24 @@ module pytorch.GluCompletion.
 
 /// Computes exact aten::glu_backward_jvp.
 
-pub glu_backward_jvp(gradient_input: Tensor, gradient_glu: Tensor, input: Tensor, gradient_glu_tangent: Tensor, input_tangent: Tensor, dimension: Int): Tensor.
+pub glu_backward_jvp(gradient_input: pytorch.Tensor, gradient_glu: pytorch.Tensor, input: pytorch.Tensor, gradient_glu_tangent: pytorch.Tensor, input_tangent: pytorch.Tensor, dimension: Int): pytorch.Tensor.
 
 /// Writes exact aten::glu_backward_jvp.out into retained storage.
 
-pub glu_backward_jvp_out(output: Tensor, gradient_input: Tensor, gradient_glu: Tensor, input: Tensor, gradient_glu_tangent: Tensor, input_tangent: Tensor, dimension: Int): Unit.
+pub glu_backward_jvp_out(output: pytorch.Tensor, gradient_input: pytorch.Tensor, gradient_glu: pytorch.Tensor, input: pytorch.Tensor, gradient_glu_tangent: pytorch.Tensor, input_tangent: pytorch.Tensor, dimension: Int): Unit.
 
 /// Writes exact aten::glu_backward.grad_input into retained storage.
 
-pub glu_backward_out(output: Tensor, gradient_output: Tensor, input: Tensor, dimension: Int): Unit.
+pub glu_backward_out(output: pytorch.Tensor, gradient_output: pytorch.Tensor, input: pytorch.Tensor, dimension: Int): Unit.
 
 /// Computes exact aten::glu_jvp.
 
-pub glu_jvp(glu: Tensor, input: Tensor, input_tangent: Tensor, dimension: Int): Tensor.
+pub glu_jvp(glu: pytorch.Tensor, input: pytorch.Tensor, input_tangent: pytorch.Tensor, dimension: Int): pytorch.Tensor.
 
 /// Writes exact aten::glu_jvp.out into retained storage.
 
-pub glu_jvp_out(output: Tensor, glu: Tensor, input: Tensor, input_tangent: Tensor, dimension: Int): Unit.
+pub glu_jvp_out(output: pytorch.Tensor, glu: pytorch.Tensor, input: pytorch.Tensor, input_tangent: pytorch.Tensor, dimension: Int): Unit.
 
 /// Writes exact aten::glu.out into retained storage.
 
-pub glu_out(output: Tensor, input: Tensor, dimension: Int): Unit.
+pub glu_out(output: pytorch.Tensor, input: pytorch.Tensor, dimension: Int): Unit.

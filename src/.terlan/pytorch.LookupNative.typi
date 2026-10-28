@@ -4,40 +4,40 @@ module pytorch.LookupNative.
 
 /// Returns the bucket index for an integer or floating-point scalar.
 
-pub bucketize_scalar(boundaries: Tensor, value_is_int: Bool, value_int: Int, value_float: Float, out_int32: Bool, right: Bool): Tensor.
+pub bucketize_scalar(boundaries: pytorch.Tensor, value_is_int: Bool, value_int: Int, value_float: Float, out_int32: Bool, right: Bool): pytorch.Tensor.
 
 /// Writes one scalar bucket index into retained output storage.
 
-pub bucketize_scalar_out(output: Tensor, boundaries: Tensor, value_is_int: Bool, value_int: Int, value_float: Float, out_int32: Bool, right: Bool): Unit.
+pub bucketize_scalar_out(output: pytorch.Tensor, boundaries: pytorch.Tensor, value_is_int: Bool, value_int: Int, value_float: Float, out_int32: Bool, right: Bool): Unit.
 
 /// Writes tensor bucket indices into retained output storage.
 
-pub bucketize_tensor_out(output: Tensor, values: Tensor, boundaries: Tensor, out_int32: Bool, right: Bool): Unit.
+pub bucketize_tensor_out(output: pytorch.Tensor, values: pytorch.Tensor, boundaries: pytorch.Tensor, out_int32: Bool, right: Bool): Unit.
 
 /// Evaluates tensor-scalar or scalar-tensor membership.
 
-pub isin_scalar(tensor: Tensor, mode: Int, value_is_int: Bool, value_int: Int, value_float: Float, assume_unique: Bool, invert: Bool): Tensor.
+pub isin_scalar(tensor: pytorch.Tensor, mode: Int, value_is_int: Bool, value_int: Int, value_float: Float, assume_unique: Bool, invert: Bool): pytorch.Tensor.
 
 /// Writes tensor-scalar or scalar-tensor membership into retained output storage.
 
-pub isin_scalar_out(output: Tensor, tensor: Tensor, mode: Int, value_is_int: Bool, value_int: Int, value_float: Float, assume_unique: Bool, invert: Bool): Unit.
+pub isin_scalar_out(output: pytorch.Tensor, tensor: pytorch.Tensor, mode: Int, value_is_int: Bool, value_int: Int, value_float: Float, assume_unique: Bool, invert: Bool): Unit.
 
 /// Writes tensor membership results into retained output storage.
 
-pub isin_tensor_out(output: Tensor, elements: Tensor, test_elements: Tensor, assume_unique: Bool, invert: Bool): Unit.
+pub isin_tensor_out(output: pytorch.Tensor, elements: pytorch.Tensor, test_elements: pytorch.Tensor, assume_unique: Bool, invert: Bool): Unit.
 
 /// Finds one scalar insertion index with explicit side, width, and optional sorter policy.
 
-pub searchsorted_scalar(sorted_sequence: Tensor, value_is_int: Bool, value_int: Int, value_float: Float, out_int32: Bool, right: Bool, side: Int, sorter: Tensor, has_sorter: Bool): Tensor.
+pub searchsorted_scalar(sorted_sequence: pytorch.Tensor, value_is_int: Bool, value_int: Int, value_float: Float, out_int32: Bool, right: Bool, side: Int, sorter: pytorch.Tensor, has_sorter: Bool): pytorch.Tensor.
 
 /// Writes one scalar insertion index into retained output storage.
 
-pub searchsorted_scalar_out(output: Tensor, sorted_sequence: Tensor, value_is_int: Bool, value_int: Int, value_float: Float, out_int32: Bool, right: Bool, side: Int, sorter: Tensor, has_sorter: Bool): Unit.
+pub searchsorted_scalar_out(output: pytorch.Tensor, sorted_sequence: pytorch.Tensor, value_is_int: Bool, value_int: Int, value_float: Float, out_int32: Bool, right: Bool, side: Int, sorter: pytorch.Tensor, has_sorter: Bool): Unit.
 
 /// Finds tensor insertion indices with explicit side, width, and optional sorter policy.
 
-pub searchsorted_tensor(sorted_sequence: Tensor, values: Tensor, out_int32: Bool, right: Bool, side: Int, sorter: Tensor, has_sorter: Bool): Tensor.
+pub searchsorted_tensor(sorted_sequence: pytorch.Tensor, values: pytorch.Tensor, out_int32: Bool, right: Bool, side: Int, sorter: pytorch.Tensor, has_sorter: Bool): pytorch.Tensor.
 
 /// Writes tensor insertion indices into retained output storage.
 
-pub searchsorted_tensor_out(output: Tensor, sorted_sequence: Tensor, values: Tensor, out_int32: Bool, right: Bool, side: Int, sorter: Tensor, has_sorter: Bool): Unit.
+pub searchsorted_tensor_out(output: pytorch.Tensor, sorted_sequence: pytorch.Tensor, values: pytorch.Tensor, out_int32: Bool, right: Bool, side: Int, sorter: pytorch.Tensor, has_sorter: Bool): Unit.

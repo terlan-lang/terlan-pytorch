@@ -4,32 +4,32 @@ module pytorch.Recurrent.
 
 /// Exact generated CXX gated RNN sequence leaf.
 
-pub gru(input: Tensor, hx: Tensor, params: List[Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool, batch_first: Bool): {Tensor, Tensor}.
+pub gru(input: pytorch.Tensor, hx: pytorch.Tensor, params: List[pytorch.Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool, batch_first: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX gated RNN cell leaf.
 
-pub gru_cell(input: Tensor, hx: Tensor, w_ih: Tensor, w_hh: Tensor, has_b_ih: Bool, b_ih: Tensor, has_b_hh: Bool, b_hh: Tensor): Tensor.
+pub gru_cell(input: pytorch.Tensor, hx: pytorch.Tensor, w_ih: pytorch.Tensor, w_hh: pytorch.Tensor, has_b_ih: Bool, b_ih: pytorch.Tensor, has_b_hh: Bool, b_hh: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX LSTM sequence leaf.
 
-pub lstm(input: Tensor, hx: List[Tensor], params: List[Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool, batch_first: Bool): {Tensor, Tensor, Tensor}.
+pub lstm(input: pytorch.Tensor, hx: List[pytorch.Tensor], params: List[pytorch.Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool, batch_first: Bool): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX LSTM cell leaf.
 
-pub lstm_cell(input: Tensor, hx: List[Tensor], w_ih: Tensor, w_hh: Tensor, has_b_ih: Bool, b_ih: Tensor, has_b_hh: Bool, b_hh: Tensor): {Tensor, Tensor}.
+pub lstm_cell(input: pytorch.Tensor, hx: List[pytorch.Tensor], w_ih: pytorch.Tensor, w_hh: pytorch.Tensor, has_b_ih: Bool, b_ih: pytorch.Tensor, has_b_hh: Bool, b_hh: pytorch.Tensor): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX ReLU RNN sequence leaf.
 
-pub rnn_relu(input: Tensor, hx: Tensor, params: List[Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool, batch_first: Bool): {Tensor, Tensor}.
+pub rnn_relu(input: pytorch.Tensor, hx: pytorch.Tensor, params: List[pytorch.Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool, batch_first: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX ReLU RNN cell leaf.
 
-pub rnn_relu_cell(input: Tensor, hx: Tensor, w_ih: Tensor, w_hh: Tensor, has_b_ih: Bool, b_ih: Tensor, has_b_hh: Bool, b_hh: Tensor): Tensor.
+pub rnn_relu_cell(input: pytorch.Tensor, hx: pytorch.Tensor, w_ih: pytorch.Tensor, w_hh: pytorch.Tensor, has_b_ih: Bool, b_ih: pytorch.Tensor, has_b_hh: Bool, b_hh: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX tanh RNN sequence leaf.
 
-pub rnn_tanh(input: Tensor, hx: Tensor, params: List[Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool, batch_first: Bool): {Tensor, Tensor}.
+pub rnn_tanh(input: pytorch.Tensor, hx: pytorch.Tensor, params: List[pytorch.Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool, batch_first: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX tanh RNN cell leaf.
 
-pub rnn_tanh_cell(input: Tensor, hx: Tensor, w_ih: Tensor, w_hh: Tensor, has_b_ih: Bool, b_ih: Tensor, has_b_hh: Bool, b_hh: Tensor): Tensor.
+pub rnn_tanh_cell(input: pytorch.Tensor, hx: pytorch.Tensor, w_ih: pytorch.Tensor, w_hh: pytorch.Tensor, has_b_ih: Bool, b_ih: pytorch.Tensor, has_b_hh: Bool, b_hh: pytorch.Tensor): pytorch.Tensor.

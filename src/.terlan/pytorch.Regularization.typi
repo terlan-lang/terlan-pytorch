@@ -4,96 +4,96 @@ module pytorch.Regularization.
 
 /// Applies functional alpha dropout without mutating the caller-owned tensor.
 
-pub alpha_dropout(input: Tensor, probability: Float, training: Bool): Tensor.
+pub alpha_dropout(input: pytorch.Tensor, probability: Float, training: Bool): pytorch.Tensor.
 
 /// Exact generated CXX tuple leaf for aten::batch_norm_update_stats.
 
-pub batch_norm_update_stats(input: Tensor, has_running_mean: Bool, running_mean: Tensor, has_running_var: Bool, running_var: Tensor, momentum: Float): {Tensor, Tensor}.
+pub batch_norm_update_stats(input: pytorch.Tensor, has_running_mean: Bool, running_mean: pytorch.Tensor, has_running_var: Bool, running_var: pytorch.Tensor, momentum: Float): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX retained-output leaf for aten::batch_norm_update_stats.out.
 
-pub batch_norm_update_stats_out(out_mean: Tensor, out_var: Tensor, input: Tensor, has_running_mean: Bool, running_mean: Tensor, has_running_var: Bool, running_var: Tensor, momentum: Float): Unit.
+pub batch_norm_update_stats_out(out_mean: pytorch.Tensor, out_var: pytorch.Tensor, input: pytorch.Tensor, has_running_mean: Bool, running_mean: pytorch.Tensor, has_running_var: Bool, running_var: pytorch.Tensor, momentum: Float): Unit.
 
 /// Applies functional element dropout without mutating the caller-owned tensor.
 
-pub dropout(input: Tensor, probability: Float, training: Bool): Tensor.
+pub dropout(input: pytorch.Tensor, probability: Float, training: Bool): pytorch.Tensor.
 
 /// Applies functional feature-map dropout without mutating the caller-owned tensor.
 
-pub feature_dropout(input: Tensor, probability: Float, training: Bool): Tensor.
+pub feature_dropout(input: pytorch.Tensor, probability: Float, training: Bool): pytorch.Tensor.
 
 /// Exact generated CXX leaf for aten::log_sigmoid_backward.
 
-pub log_sigmoid_backward(grad_output: Tensor, input: Tensor, buffer: Tensor): Tensor.
+pub log_sigmoid_backward(grad_output: pytorch.Tensor, input: pytorch.Tensor, buffer: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX retained-output leaf for aten::log_sigmoid_backward.grad_input.
 
-pub log_sigmoid_backward_out(grad_input: Tensor, grad_output: Tensor, input: Tensor, buffer: Tensor): Unit.
+pub log_sigmoid_backward_out(grad_input: pytorch.Tensor, grad_output: pytorch.Tensor, input: pytorch.Tensor, buffer: pytorch.Tensor): Unit.
 
 /// Exact generated CXX tuple leaf for aten::log_sigmoid_forward.
 
-pub log_sigmoid_forward(input: Tensor): {Tensor, Tensor}.
+pub log_sigmoid_forward(input: pytorch.Tensor): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX retained-output leaf for aten::log_sigmoid_forward.output.
 
-pub log_sigmoid_forward_out(output: Tensor, buffer: Tensor, input: Tensor): Unit.
+pub log_sigmoid_forward_out(output: pytorch.Tensor, buffer: pytorch.Tensor, input: pytorch.Tensor): Unit.
 
 /// Exact generated CXX tuple leaf for aten::native_batch_norm.
 
-pub native_batch_norm(input: Tensor, has_weight: Bool, weight: Tensor, has_bias: Bool, bias: Tensor, has_running_mean: Bool, running_mean: Tensor, has_running_var: Bool, running_var: Tensor, training: Bool, momentum: Float, eps: Float): {Tensor, Tensor, Tensor}.
+pub native_batch_norm(input: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, has_bias: Bool, bias: pytorch.Tensor, has_running_mean: Bool, running_mean: pytorch.Tensor, has_running_var: Bool, running_var: pytorch.Tensor, training: Bool, momentum: Float, eps: Float): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX tuple leaf for aten::native_batch_norm_backward.
 
-pub native_batch_norm_backward(grad_out: Tensor, input: Tensor, has_weight: Bool, weight: Tensor, has_running_mean: Bool, running_mean: Tensor, has_running_var: Bool, running_var: Tensor, has_save_mean: Bool, save_mean: Tensor, has_save_invstd: Bool, save_invstd: Tensor, train: Bool, eps: Float, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): {Tensor, Tensor, Tensor}.
+pub native_batch_norm_backward(grad_out: pytorch.Tensor, input: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, has_running_mean: Bool, running_mean: pytorch.Tensor, has_running_var: Bool, running_var: pytorch.Tensor, has_save_mean: Bool, save_mean: pytorch.Tensor, has_save_invstd: Bool, save_invstd: pytorch.Tensor, train: Bool, eps: Float, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX retained-output leaf for aten::native_batch_norm_backward.out.
 
-pub native_batch_norm_backward_out(grad_input: Tensor, grad_weight: Tensor, grad_bias: Tensor, grad_out: Tensor, input: Tensor, has_weight: Bool, weight: Tensor, has_running_mean: Bool, running_mean: Tensor, has_running_var: Bool, running_var: Tensor, has_save_mean: Bool, save_mean: Tensor, has_save_invstd: Bool, save_invstd: Tensor, train: Bool, eps: Float, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): Unit.
+pub native_batch_norm_backward_out(grad_input: pytorch.Tensor, grad_weight: pytorch.Tensor, grad_bias: pytorch.Tensor, grad_out: pytorch.Tensor, input: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, has_running_mean: Bool, running_mean: pytorch.Tensor, has_running_var: Bool, running_var: pytorch.Tensor, has_save_mean: Bool, save_mean: pytorch.Tensor, has_save_invstd: Bool, save_invstd: pytorch.Tensor, train: Bool, eps: Float, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): Unit.
 
 /// Exact generated CXX retained-output leaf for aten::native_batch_norm.out.
 
-pub native_batch_norm_out(output: Tensor, save_mean: Tensor, save_invstd: Tensor, input: Tensor, has_weight: Bool, weight: Tensor, has_bias: Bool, bias: Tensor, has_running_mean: Bool, running_mean: Tensor, has_running_var: Bool, running_var: Tensor, training: Bool, momentum: Float, eps: Float): Unit.
+pub native_batch_norm_out(output: pytorch.Tensor, save_mean: pytorch.Tensor, save_invstd: pytorch.Tensor, input: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, has_bias: Bool, bias: pytorch.Tensor, has_running_mean: Bool, running_mean: pytorch.Tensor, has_running_var: Bool, running_var: pytorch.Tensor, training: Bool, momentum: Float, eps: Float): Unit.
 
 /// Exact generated CXX tuple leaf for aten::native_dropout.
 
-pub native_dropout(input: Tensor, probability: Float, train: Bool): {Tensor, Tensor}.
+pub native_dropout(input: pytorch.Tensor, probability: Float, train: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Applies a native dropout mask and scale to an output gradient without mutating either input.
 
-pub native_dropout_backward(gradient_output: Tensor, mask: Tensor, scale: Float): Tensor.
+pub native_dropout_backward(gradient_output: pytorch.Tensor, mask: pytorch.Tensor, scale: Float): pytorch.Tensor.
 
 /// Exact generated CXX retained-output leaf for aten::native_dropout.out.
 
-pub native_dropout_out(output: Tensor, mask: Tensor, input: Tensor, probability: Float, train: Bool): Unit.
+pub native_dropout_out(output: pytorch.Tensor, mask: pytorch.Tensor, input: pytorch.Tensor, probability: Float, train: Bool): Unit.
 
 /// Exact generated CXX tuple leaf for aten::native_group_norm.
 
-pub native_group_norm(input: Tensor, has_weight: Bool, weight: Tensor, has_bias: Bool, bias: Tensor, n: Int, c: Int, hxw: Int, group: Int, eps: Float): {Tensor, Tensor, Tensor}.
+pub native_group_norm(input: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, has_bias: Bool, bias: pytorch.Tensor, n: Int, c: Int, hxw: Int, group: Int, eps: Float): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX tuple leaf for aten::native_group_norm_backward.
 
-pub native_group_norm_backward(grad_out: Tensor, input: Tensor, mean: Tensor, rstd: Tensor, has_weight: Bool, weight: Tensor, n: Int, c: Int, hxw: Int, group: Int, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): {Tensor, Tensor, Tensor}.
+pub native_group_norm_backward(grad_out: pytorch.Tensor, input: pytorch.Tensor, mean: pytorch.Tensor, rstd: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, n: Int, c: Int, hxw: Int, group: Int, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX retained-output leaf for aten::native_group_norm_backward.out.
 
-pub native_group_norm_backward_out(grad_input: Tensor, grad_weight: Tensor, grad_bias: Tensor, grad_out: Tensor, input: Tensor, mean: Tensor, rstd: Tensor, has_weight: Bool, weight: Tensor, n: Int, c: Int, hxw: Int, group: Int, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): Unit.
+pub native_group_norm_backward_out(grad_input: pytorch.Tensor, grad_weight: pytorch.Tensor, grad_bias: pytorch.Tensor, grad_out: pytorch.Tensor, input: pytorch.Tensor, mean: pytorch.Tensor, rstd: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, n: Int, c: Int, hxw: Int, group: Int, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): Unit.
 
 /// Exact generated CXX retained-output leaf for aten::native_group_norm.out.
 
-pub native_group_norm_out(output: Tensor, mean: Tensor, rstd: Tensor, input: Tensor, has_weight: Bool, weight: Tensor, has_bias: Bool, bias: Tensor, n: Int, c: Int, hxw: Int, group: Int, eps: Float): Unit.
+pub native_group_norm_out(output: pytorch.Tensor, mean: pytorch.Tensor, rstd: pytorch.Tensor, input: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, has_bias: Bool, bias: pytorch.Tensor, n: Int, c: Int, hxw: Int, group: Int, eps: Float): Unit.
 
 /// Exact generated CXX tuple leaf for aten::native_layer_norm.
 
-pub native_layer_norm(input: Tensor, normalized_shape: List[Int], has_weight: Bool, weight: Tensor, has_bias: Bool, bias: Tensor, eps: Float): {Tensor, Tensor, Tensor}.
+pub native_layer_norm(input: pytorch.Tensor, normalized_shape: List[Int], has_weight: Bool, weight: pytorch.Tensor, has_bias: Bool, bias: pytorch.Tensor, eps: Float): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX tuple leaf for aten::native_layer_norm_backward.
 
-pub native_layer_norm_backward(grad_out: Tensor, input: Tensor, normalized_shape: List[Int], mean: Tensor, rstd: Tensor, has_weight: Bool, weight: Tensor, has_bias: Bool, bias: Tensor, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): {Tensor, Tensor, Tensor}.
+pub native_layer_norm_backward(grad_out: pytorch.Tensor, input: pytorch.Tensor, normalized_shape: List[Int], mean: pytorch.Tensor, rstd: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, has_bias: Bool, bias: pytorch.Tensor, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX retained-output leaf for aten::native_layer_norm_backward.out.
 
-pub native_layer_norm_backward_out(grad_input: Tensor, grad_weight: Tensor, grad_bias: Tensor, grad_out: Tensor, input: Tensor, normalized_shape: List[Int], mean: Tensor, rstd: Tensor, has_weight: Bool, weight: Tensor, has_bias: Bool, bias: Tensor, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): Unit.
+pub native_layer_norm_backward_out(grad_input: pytorch.Tensor, grad_weight: pytorch.Tensor, grad_bias: pytorch.Tensor, grad_out: pytorch.Tensor, input: pytorch.Tensor, normalized_shape: List[Int], mean: pytorch.Tensor, rstd: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, has_bias: Bool, bias: pytorch.Tensor, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): Unit.
 
 /// Exact generated CXX retained-output leaf for aten::native_layer_norm.out.
 
-pub native_layer_norm_out(output: Tensor, mean: Tensor, rstd: Tensor, input: Tensor, normalized_shape: List[Int], has_weight: Bool, weight: Tensor, has_bias: Bool, bias: Tensor, eps: Float): Unit.
+pub native_layer_norm_out(output: pytorch.Tensor, mean: pytorch.Tensor, rstd: pytorch.Tensor, input: pytorch.Tensor, normalized_shape: List[Int], has_weight: Bool, weight: pytorch.Tensor, has_bias: Bool, bias: pytorch.Tensor, eps: Float): Unit.

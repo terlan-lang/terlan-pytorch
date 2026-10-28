@@ -4,228 +4,228 @@ module pytorch.Unary.
 
 /// Exact generated CXX unary leaf for abs.
 
-pub abs(tensor: Tensor): Tensor.
+pub abs(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for acos.
 
-pub acos(tensor: Tensor): Tensor.
+pub acos(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for acosh.
 
-pub acosh(tensor: Tensor): Tensor.
+pub acosh(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for all.
 
-pub all(tensor: Tensor): Tensor.
+pub all(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for any.
 
-pub any(tensor: Tensor): Tensor.
+pub any(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for argwhere.
 
-pub argwhere(tensor: Tensor): Tensor.
+pub argwhere(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for asin.
 
-pub asin(tensor: Tensor): Tensor.
+pub asin(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for asinh.
 
-pub asinh(tensor: Tensor): Tensor.
+pub asinh(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for atan.
 
-pub atan(tensor: Tensor): Tensor.
+pub atan(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for atanh.
 
-pub atanh(tensor: Tensor): Tensor.
+pub atanh(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for bitwise_not.
 
-pub bitwise_not(tensor: Tensor): Tensor.
+pub bitwise_not(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for ceil.
 
-pub ceil(tensor: Tensor): Tensor.
+pub ceil(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for cos.
 
-pub cos(tensor: Tensor): Tensor.
+pub cos(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for cosh.
 
-pub cosh(tensor: Tensor): Tensor.
+pub cosh(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for deg2rad.
 
-pub deg2rad(tensor: Tensor): Tensor.
+pub deg2rad(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for erf.
 
-pub erf(tensor: Tensor): Tensor.
+pub erf(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for erfc.
 
-pub erfc(tensor: Tensor): Tensor.
+pub erfc(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for erfinv.
 
-pub erfinv(tensor: Tensor): Tensor.
+pub erfinv(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for exp2.
 
-pub exp2(tensor: Tensor): Tensor.
+pub exp2(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for expm1.
 
-pub expm1(tensor: Tensor): Tensor.
+pub expm1(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for floor.
 
-pub floor(tensor: Tensor): Tensor.
+pub floor(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for frac.
 
-pub frac(tensor: Tensor): Tensor.
+pub frac(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for frexp.
 
-pub frexp(tensor: Tensor): {Tensor, Tensor}.
+pub frexp(tensor: pytorch.Tensor): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX unary leaf for hardsigmoid.
 
-pub hardsigmoid(tensor: Tensor): Tensor.
+pub hardsigmoid(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for hardswish.
 
-pub hardswish(tensor: Tensor): Tensor.
+pub hardswish(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for isfinite.
 
-pub isfinite(tensor: Tensor): Tensor.
+pub isfinite(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for isinf.
 
-pub isinf(tensor: Tensor): Tensor.
+pub isinf(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for isnan.
 
-pub isnan(tensor: Tensor): Tensor.
+pub isnan(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for isneginf.
 
-pub isneginf(tensor: Tensor): Tensor.
+pub isneginf(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for isposinf.
 
-pub isposinf(tensor: Tensor): Tensor.
+pub isposinf(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for log10.
 
-pub log10(tensor: Tensor): Tensor.
+pub log10(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for log1p.
 
-pub log1p(tensor: Tensor): Tensor.
+pub log1p(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for log2.
 
-pub log2(tensor: Tensor): Tensor.
+pub log2(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for logical_not.
 
-pub logical_not(tensor: Tensor): Tensor.
+pub logical_not(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for max.
 
-pub max(tensor: Tensor): Tensor.
+pub max(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for median.
 
-pub median(tensor: Tensor): Tensor.
+pub median(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for min.
 
-pub min(tensor: Tensor): Tensor.
+pub min(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for mish.
 
-pub mish(tensor: Tensor): Tensor.
+pub mish(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for nonzero.
 
-pub nonzero(tensor: Tensor): Tensor.
+pub nonzero(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for rad2deg.
 
-pub rad2deg(tensor: Tensor): Tensor.
+pub rad2deg(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for reciprocal.
 
-pub reciprocal(tensor: Tensor): Tensor.
+pub reciprocal(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for relu6.
 
-pub relu6(tensor: Tensor): Tensor.
+pub relu6(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for round.
 
-pub round(tensor: Tensor): Tensor.
+pub round(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for rsqrt.
 
-pub rsqrt(tensor: Tensor): Tensor.
+pub rsqrt(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for selu.
 
-pub selu(tensor: Tensor): Tensor.
+pub selu(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for sigmoid.
 
-pub sigmoid(tensor: Tensor): Tensor.
+pub sigmoid(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for sign.
 
-pub sign(tensor: Tensor): Tensor.
+pub sign(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for signbit.
 
-pub signbit(tensor: Tensor): Tensor.
+pub signbit(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for silu.
 
-pub silu(tensor: Tensor): Tensor.
+pub silu(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for sin.
 
-pub sin(tensor: Tensor): Tensor.
+pub sin(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for sinc.
 
-pub sinc(tensor: Tensor): Tensor.
+pub sinc(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for sinh.
 
-pub sinh(tensor: Tensor): Tensor.
+pub sinh(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for square.
 
-pub square(tensor: Tensor): Tensor.
+pub square(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for tan.
 
-pub tan(tensor: Tensor): Tensor.
+pub tan(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for tanh.
 
-pub tanh(tensor: Tensor): Tensor.
+pub tanh(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for trace.
 
-pub trace(tensor: Tensor): Tensor.
+pub trace(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX unary leaf for trunc.
 
-pub trunc(tensor: Tensor): Tensor.
+pub trunc(tensor: pytorch.Tensor): pytorch.Tensor.

@@ -1,11 +1,11 @@
 module=pytorch.VanderCompletion
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=13902431229403738025
-interface_hash=10686978541519703632
+interface_hash=13258186477581752976
 interface_doc_hash=11159369964047536092
 deps=3
-pytorch.Linalg=2211353630844050351
-pytorch.Shape=8538818789500367258
-pytorch.Tensor=13489932768568026575
+pytorch.Linalg=18025098939098853552
+pytorch.Shape=907399760003317947
+pytorch.Tensor=1089416781329568890

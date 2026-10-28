@@ -4,7 +4,7 @@ module pytorch.TypeRelationsNative.
 
 /// Tests complete tensor contents with explicit PyTorch tolerance and NaN policy.
 
-pub allclose_native(left: Tensor, right: Tensor, relative_tolerance: Float, absolute_tolerance: Float, equal_nan: Bool): Bool.
+pub allclose_native(left: pytorch.Tensor, right: pytorch.Tensor, relative_tolerance: Float, absolute_tolerance: Float, equal_nan: Bool): Bool.
 
 /// Tests PyTorch's safe-casting relation for two validated scalar-type identifiers.
 
@@ -12,59 +12,59 @@ pub can_cast_native(from_dtype: Int, to_dtype: Int): Bool.
 
 /// Tests exact shape and element equality for two tensors.
 
-pub equal_native(left: Tensor, right: Tensor): Bool.
+pub equal_native(left: pytorch.Tensor, right: pytorch.Tensor): Bool.
 
 /// Returns the exact backend device index.
 
-pub get_device_native(tensor: Tensor): Int.
+pub get_device_native(tensor: pytorch.Tensor): Int.
 
 /// Tests the exact complex-dtype tensor predicate.
 
-pub is_complex_native(tensor: Tensor): Bool.
+pub is_complex_native(tensor: pytorch.Tensor): Bool.
 
 /// Tests the exact lazy-conjugate tensor predicate.
 
-pub is_conj_native(tensor: Tensor): Bool.
+pub is_conj_native(tensor: pytorch.Tensor): Bool.
 
 /// Tests the exact distributed-tensor predicate.
 
-pub is_distributed_native(tensor: Tensor): Bool.
+pub is_distributed_native(tensor: pytorch.Tensor): Bool.
 
 /// Tests the exact floating-point dtype predicate.
 
-pub is_floating_point_native(tensor: Tensor): Bool.
+pub is_floating_point_native(tensor: pytorch.Tensor): Bool.
 
 /// Tests the exact inference-tensor predicate.
 
-pub is_inference_native(tensor: Tensor): Bool.
+pub is_inference_native(tensor: pytorch.Tensor): Bool.
 
 /// Tests the exact autograd leaf predicate.
 
-pub is_leaf_native(tensor: Tensor): Bool.
+pub is_leaf_native(tensor: pytorch.Tensor): Bool.
 
 /// Tests the exact lazy-negative-view predicate.
 
-pub is_neg_native(tensor: Tensor): Bool.
+pub is_neg_native(tensor: pytorch.Tensor): Bool.
 
 /// Returns the exact single-element tensor truth value.
 
-pub is_nonzero_native(tensor: Tensor): Bool.
+pub is_nonzero_native(tensor: pytorch.Tensor): Bool.
 
 /// Tests whether two tensors have identical dimensions and extents.
 
-pub is_same_size_native(left: Tensor, right: Tensor): Bool.
+pub is_same_size_native(left: pytorch.Tensor, right: pytorch.Tensor): Bool.
 
 /// Tests whether two tensors share the exact same storage view.
 
-pub is_set_to_native(tensor: Tensor, other: Tensor): Bool.
+pub is_set_to_native(tensor: pytorch.Tensor, other: pytorch.Tensor): Bool.
 
 /// Tests the exact signed-dtype predicate.
 
-pub is_signed_native(tensor: Tensor): Bool.
+pub is_signed_native(tensor: pytorch.Tensor): Bool.
 
 /// Returns the exact autograd output number.
 
-pub output_nr_native(tensor: Tensor): Int.
+pub output_nr_native(tensor: pytorch.Tensor): Int.
 
 /// Returns PyTorch's promoted scalar-type identifier for two validated dtype tags.
 
@@ -72,7 +72,7 @@ pub promote_types_native(first_dtype: Int, second_dtype: Int): Int.
 
 /// Returns the result dtype selected for a tensor followed by an exact scalar.
 
-pub result_type_scalar_native(tensor: Tensor, scalar_is_integer: Bool, scalar_integer: Int, scalar_floating: Float): Int.
+pub result_type_scalar_native(tensor: pytorch.Tensor, scalar_is_integer: Bool, scalar_integer: Int, scalar_floating: Float): Int.
 
 /// Returns the result dtype selected for two exact scalar operands.
 
@@ -80,24 +80,24 @@ pub result_type_scalar_scalar_native(first_is_integer: Bool, first_integer: Int,
 
 /// Returns the result dtype selected for an exact scalar followed by a tensor.
 
-pub result_type_scalar_tensor_native(tensor: Tensor, scalar_is_integer: Bool, scalar_integer: Int, scalar_floating: Float): Int.
+pub result_type_scalar_tensor_native(tensor: pytorch.Tensor, scalar_is_integer: Bool, scalar_integer: Int, scalar_floating: Float): Int.
 
 /// Returns the result dtype selected for two tensor operands.
 
-pub result_type_tensor_native(tensor: Tensor, other: Tensor): Int.
+pub result_type_tensor_native(tensor: pytorch.Tensor, other: pytorch.Tensor): Int.
 
 /// Enables retained gradients on an eligible non-leaf tensor.
 
-pub retain_grad_native(tensor: Tensor): Unit.
+pub retain_grad_native(tensor: pytorch.Tensor): Unit.
 
 /// Tests whether a non-leaf tensor retains its gradient.
 
-pub retains_grad_native(tensor: Tensor): Bool.
+pub retains_grad_native(tensor: pytorch.Tensor): Bool.
 
 /// Returns one exact dimension extent.
 
-pub size_dimension_native(tensor: Tensor, dimension: Int): Int.
+pub size_dimension_native(tensor: pytorch.Tensor, dimension: Int): Int.
 
 /// Returns one exact dimension stride.
 
-pub stride_dimension_native(tensor: Tensor, dimension: Int): Int.
+pub stride_dimension_native(tensor: pytorch.Tensor, dimension: Int): Int.

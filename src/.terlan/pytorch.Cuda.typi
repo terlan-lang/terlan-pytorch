@@ -20,7 +20,7 @@ pub dispose(stream: Stream): Unit.
 
 /// Records a tensor on an owned CUDA stream for allocator lifetime tracking.
 
-pub record_stream(tensor: Tensor, stream: Stream): Unit.
+pub record_stream(tensor: pytorch.Tensor, stream: Stream): Unit.
 
 /// Makes a CUDA stream current.
 

@@ -1,9 +1,9 @@
 module=pytorch.CorrectionStatisticsCompletion
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=5674278336699857080
-interface_hash=12737738226998484333
+interface_hash=17529306575617327980
 interface_doc_hash=5466685378629093927
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

@@ -4,24 +4,24 @@ module pytorch.ScatterNative.
 
 /// Exact generated CXX scatter dispatcher.
 
-pub scatter_scalar(input: Tensor, mode: Int, dimension: Int, index: Tensor, value_is_int: Bool, value_int: Int, value_float: Float, reduction: Int): Tensor.
+pub scatter_scalar(input: pytorch.Tensor, mode: Int, dimension: Int, index: pytorch.Tensor, value_is_int: Bool, value_int: Int, value_float: Float, reduction: Int): pytorch.Tensor.
 
 /// Exact generated CXX scatter dispatcher.
 
-pub scatter_scalar_in_place(input: Tensor, mode: Int, dimension: Int, index: Tensor, value_is_int: Bool, value_int: Int, value_float: Float, reduction: Int): Unit.
+pub scatter_scalar_in_place(input: pytorch.Tensor, mode: Int, dimension: Int, index: pytorch.Tensor, value_is_int: Bool, value_int: Int, value_float: Float, reduction: Int): Unit.
 
 /// Exact generated CXX scatter dispatcher.
 
-pub scatter_scalar_out(output: Tensor, input: Tensor, mode: Int, dimension: Int, index: Tensor, value_is_int: Bool, value_int: Int, value_float: Float, reduction: Int): Unit.
+pub scatter_scalar_out(output: pytorch.Tensor, input: pytorch.Tensor, mode: Int, dimension: Int, index: pytorch.Tensor, value_is_int: Bool, value_int: Int, value_float: Float, reduction: Int): Unit.
 
 /// Exact generated CXX scatter dispatcher.
 
-pub scatter_tensor(input: Tensor, mode: Int, dimension: Int, index: Tensor, source: Tensor, reduction: Int, include_self: Bool): Tensor.
+pub scatter_tensor(input: pytorch.Tensor, mode: Int, dimension: Int, index: pytorch.Tensor, source: pytorch.Tensor, reduction: Int, include_self: Bool): pytorch.Tensor.
 
 /// Exact generated CXX scatter dispatcher.
 
-pub scatter_tensor_in_place(input: Tensor, mode: Int, dimension: Int, index: Tensor, source: Tensor, reduction: Int, include_self: Bool): Unit.
+pub scatter_tensor_in_place(input: pytorch.Tensor, mode: Int, dimension: Int, index: pytorch.Tensor, source: pytorch.Tensor, reduction: Int, include_self: Bool): Unit.
 
 /// Exact generated CXX scatter dispatcher.
 
-pub scatter_tensor_out(output: Tensor, input: Tensor, mode: Int, dimension: Int, index: Tensor, source: Tensor, reduction: Int, include_self: Bool): Unit.
+pub scatter_tensor_out(output: pytorch.Tensor, input: pytorch.Tensor, mode: Int, dimension: Int, index: pytorch.Tensor, source: pytorch.Tensor, reduction: Int, include_self: Bool): Unit.

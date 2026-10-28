@@ -1,9 +1,9 @@
 module=pytorch.UpsampleVectorCompletion
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=6781000698737573348
-interface_hash=7657872178835033450
+interface_hash=8560125338611389249
 interface_doc_hash=7545475452365986912
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

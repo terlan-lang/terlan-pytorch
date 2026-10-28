@@ -4,48 +4,48 @@ module pytorch.Strided.
 
 /// Executes exact aten::as_strided with the input storage offset. The result shares storage with the input; overlapping in-place writes have undefined upstream behavior.
 
-pub as_strided(tensor: Tensor, size: List[Int], stride: List[Int]): Tensor.
+pub as_strided(tensor: pytorch.Tensor, size: List[Int], stride: List[Int]): pytorch.Tensor.
 
 /// Executes exact aten::as_strided_copy with the input storage offset. Returns independently owned storage.
 
-pub as_strided_copy(tensor: Tensor, size: List[Int], stride: List[Int]): Tensor.
+pub as_strided_copy(tensor: pytorch.Tensor, size: List[Int], stride: List[Int]): pytorch.Tensor.
 
 /// Executes exact aten::as_strided_copy with an explicit storage offset. Returns independently owned storage.
 
-pub as_strided_copy_offset(tensor: Tensor, size: List[Int], stride: List[Int], storage_offset: Int): Tensor.
+pub as_strided_copy_offset(tensor: pytorch.Tensor, size: List[Int], stride: List[Int], storage_offset: Int): pytorch.Tensor.
 
 /// Executes exact aten::as_strided_copy.out with the input storage offset. Writes into retained output storage.
 
-pub as_strided_copy_out(output: Tensor, tensor: Tensor, size: List[Int], stride: List[Int]): Unit.
+pub as_strided_copy_out(output: pytorch.Tensor, tensor: pytorch.Tensor, size: List[Int], stride: List[Int]): Unit.
 
 /// Executes exact aten::as_strided_copy.out with an explicit storage offset. Writes into retained output storage.
 
-pub as_strided_copy_out_offset(output: Tensor, tensor: Tensor, size: List[Int], stride: List[Int], storage_offset: Int): Unit.
+pub as_strided_copy_out_offset(output: pytorch.Tensor, tensor: pytorch.Tensor, size: List[Int], stride: List[Int], storage_offset: Int): Unit.
 
 /// Executes exact aten::as_strided_ with the input storage offset. Mutates the retained tensor's size, strides, and offset.
 
-pub as_strided_in_place(tensor: Tensor, size: List[Int], stride: List[Int]): Unit.
+pub as_strided_in_place(tensor: pytorch.Tensor, size: List[Int], stride: List[Int]): Unit.
 
 /// Executes exact aten::as_strided_ with an explicit storage offset. Mutates the retained tensor's size, strides, and offset.
 
-pub as_strided_in_place_offset(tensor: Tensor, size: List[Int], stride: List[Int], storage_offset: Int): Unit.
+pub as_strided_in_place_offset(tensor: pytorch.Tensor, size: List[Int], stride: List[Int], storage_offset: Int): Unit.
 
 /// Executes exact aten::as_strided with an explicit storage offset. The result shares storage with the input; overlapping in-place writes have undefined upstream behavior.
 
-pub as_strided_offset(tensor: Tensor, size: List[Int], stride: List[Int], storage_offset: Int): Tensor.
+pub as_strided_offset(tensor: pytorch.Tensor, size: List[Int], stride: List[Int], storage_offset: Int): pytorch.Tensor.
 
 /// Executes exact aten::as_strided_scatter with the input storage offset. Returns independently owned storage.
 
-pub as_strided_scatter(tensor: Tensor, source: Tensor, size: List[Int], stride: List[Int]): Tensor.
+pub as_strided_scatter(tensor: pytorch.Tensor, source: pytorch.Tensor, size: List[Int], stride: List[Int]): pytorch.Tensor.
 
 /// Executes exact aten::as_strided_scatter with an explicit storage offset. Returns independently owned storage.
 
-pub as_strided_scatter_offset(tensor: Tensor, source: Tensor, size: List[Int], stride: List[Int], storage_offset: Int): Tensor.
+pub as_strided_scatter_offset(tensor: pytorch.Tensor, source: pytorch.Tensor, size: List[Int], stride: List[Int], storage_offset: Int): pytorch.Tensor.
 
 /// Executes exact aten::as_strided_scatter.out with the input storage offset. Writes into retained output storage.
 
-pub as_strided_scatter_out(output: Tensor, tensor: Tensor, source: Tensor, size: List[Int], stride: List[Int]): Unit.
+pub as_strided_scatter_out(output: pytorch.Tensor, tensor: pytorch.Tensor, source: pytorch.Tensor, size: List[Int], stride: List[Int]): Unit.
 
 /// Executes exact aten::as_strided_scatter.out with an explicit storage offset. Writes into retained output storage.
 
-pub as_strided_scatter_out_offset(output: Tensor, tensor: Tensor, source: Tensor, size: List[Int], stride: List[Int], storage_offset: Int): Unit.
+pub as_strided_scatter_out_offset(output: pytorch.Tensor, tensor: pytorch.Tensor, source: pytorch.Tensor, size: List[Int], stride: List[Int], storage_offset: Int): Unit.

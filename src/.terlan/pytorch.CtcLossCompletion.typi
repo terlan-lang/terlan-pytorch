@@ -4,8 +4,8 @@ module pytorch.CtcLossCompletion.
 
 /// Exact generated CXX CTC loss IntList leaf.
 
-pub ctc_loss_intlist(log_probs: Tensor, targets: Tensor, input_lengths: List[Int], target_lengths: List[Int], blank: Int = 0, reduction: Int = 1, zero_infinity: Bool = false): Tensor.
+pub ctc_loss_intlist(log_probs: pytorch.Tensor, targets: pytorch.Tensor, input_lengths: List[Int], target_lengths: List[Int], blank: Int = 0, reduction: Int = 1, zero_infinity: Bool = false): pytorch.Tensor.
 
 /// Exact generated CXX CTC loss Tensor leaf.
 
-pub ctc_loss_tensor(log_probs: Tensor, targets: Tensor, input_lengths: Tensor, target_lengths: Tensor, blank: Int = 0, reduction: Int = 1, zero_infinity: Bool = false): Tensor.
+pub ctc_loss_tensor(log_probs: pytorch.Tensor, targets: pytorch.Tensor, input_lengths: pytorch.Tensor, target_lengths: pytorch.Tensor, blank: Int = 0, reduction: Int = 1, zero_infinity: Bool = false): pytorch.Tensor.

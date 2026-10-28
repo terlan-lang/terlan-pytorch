@@ -4,408 +4,408 @@ module pytorch.Binary.
 
 /// Executes the exact aten::arctan2 two-tensor schema with independently owned dispatcher inputs.
 
-pub arctan2(left: Tensor, right: Tensor): Tensor.
+pub arctan2(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through exact aten::arctan2_.
 
-pub arctan2_in_place(left: Tensor, right: Tensor): Unit.
+pub arctan2_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::arctan2.out result into retained output storage.
 
-pub arctan2_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub arctan2_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::atan2 two-tensor schema with independently owned dispatcher inputs.
 
-pub atan2(left: Tensor, right: Tensor): Tensor.
+pub atan2(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through exact aten::atan2_.
 
-pub atan2_in_place(left: Tensor, right: Tensor): Unit.
+pub atan2_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::atan2.out result into retained output storage.
 
-pub atan2_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub atan2_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::bitwise_and.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub bitwise_and_tensor(left: Tensor, right: Tensor): Tensor.
+pub bitwise_and_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::bitwise_left_shift.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub bitwise_left_shift_tensor(left: Tensor, right: Tensor): Tensor.
+pub bitwise_left_shift_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::bitwise_or.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub bitwise_or_tensor(left: Tensor, right: Tensor): Tensor.
+pub bitwise_or_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::bitwise_right_shift.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub bitwise_right_shift_tensor(left: Tensor, right: Tensor): Tensor.
+pub bitwise_right_shift_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::bitwise_xor.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub bitwise_xor_tensor(left: Tensor, right: Tensor): Tensor.
+pub bitwise_xor_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::clamp_max.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub clamp_max_tensor(left: Tensor, right: Tensor): Tensor.
+pub clamp_max_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::clamp_min.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub clamp_min_tensor(left: Tensor, right: Tensor): Tensor.
+pub clamp_min_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::copysign.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub copysign_tensor(left: Tensor, right: Tensor): Tensor.
+pub copysign_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through exact aten::copysign_.Tensor.
 
-pub copysign_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub copysign_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::copysign.out tensor result into retained output storage.
 
-pub copysign_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub copysign_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::dot two-tensor schema with independently owned dispatcher inputs.
 
-pub dot(left: Tensor, right: Tensor): Tensor.
+pub dot(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the exact aten::dot.out result into retained output storage.
 
-pub dot_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub dot_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::eq.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub eq_tensor(left: Tensor, right: Tensor): Tensor.
+pub eq_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::float_power.Tensor_Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub float_power_tensor(left: Tensor, right: Tensor): Tensor.
+pub float_power_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::floor_divide two-tensor schema with independently owned dispatcher inputs.
 
-pub floor_divide(left: Tensor, right: Tensor): Tensor.
+pub floor_divide(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::fmax two-tensor schema with independently owned dispatcher inputs.
 
-pub fmax(left: Tensor, right: Tensor): Tensor.
+pub fmax(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the exact aten::fmax.out result into retained output storage.
 
-pub fmax_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub fmax_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::fmin two-tensor schema with independently owned dispatcher inputs.
 
-pub fmin(left: Tensor, right: Tensor): Tensor.
+pub fmin(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the exact aten::fmin.out result into retained output storage.
 
-pub fmin_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub fmin_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::fmod.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub fmod_tensor(left: Tensor, right: Tensor): Tensor.
+pub fmod_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through the exact aten::fmod_.Tensor schema.
 
-pub fmod_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub fmod_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::fmod.Tensor_out result into retained output storage.
 
-pub fmod_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub fmod_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::gcd two-tensor schema with independently owned dispatcher inputs.
 
-pub gcd(left: Tensor, right: Tensor): Tensor.
+pub gcd(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through exact aten::gcd_.
 
-pub gcd_in_place(left: Tensor, right: Tensor): Unit.
+pub gcd_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::gcd.out result into retained output storage.
 
-pub gcd_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub gcd_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::ge.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub ge_tensor(left: Tensor, right: Tensor): Tensor.
+pub ge_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::greater_equal.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub greater_equal_tensor(left: Tensor, right: Tensor): Tensor.
+pub greater_equal_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::greater.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub greater_tensor(left: Tensor, right: Tensor): Tensor.
+pub greater_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::gt.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub gt_tensor(left: Tensor, right: Tensor): Tensor.
+pub gt_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::heaviside two-tensor schema with independently owned dispatcher inputs.
 
-pub heaviside(left: Tensor, right: Tensor): Tensor.
+pub heaviside(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through exact aten::heaviside_.
 
-pub heaviside_in_place(left: Tensor, right: Tensor): Unit.
+pub heaviside_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::heaviside.out result into retained output storage.
 
-pub heaviside_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub heaviside_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::hypot two-tensor schema with independently owned dispatcher inputs.
 
-pub hypot(left: Tensor, right: Tensor): Tensor.
+pub hypot(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through exact aten::hypot_.
 
-pub hypot_in_place(left: Tensor, right: Tensor): Unit.
+pub hypot_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::hypot.out result into retained output storage.
 
-pub hypot_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub hypot_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::igamma two-tensor schema with independently owned dispatcher inputs.
 
-pub igamma(left: Tensor, right: Tensor): Tensor.
+pub igamma(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through exact aten::igamma_.
 
-pub igamma_in_place(left: Tensor, right: Tensor): Unit.
+pub igamma_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::igamma.out result into retained output storage.
 
-pub igamma_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub igamma_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::igammac two-tensor schema with independently owned dispatcher inputs.
 
-pub igammac(left: Tensor, right: Tensor): Tensor.
+pub igammac(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through exact aten::igammac_.
 
-pub igammac_in_place(left: Tensor, right: Tensor): Unit.
+pub igammac_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::igammac.out result into retained output storage.
 
-pub igammac_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub igammac_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::inner two-tensor schema with independently owned dispatcher inputs.
 
-pub inner(left: Tensor, right: Tensor): Tensor.
+pub inner(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the exact aten::inner.out result into retained output storage.
 
-pub inner_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub inner_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Compares tensors elementwise using explicit relative, absolute, and NaN equality policy.
 
-pub isclose(left: Tensor, right: Tensor, relative_tolerance: Float = 0.00001, absolute_tolerance: Float = 1e-8, equal_nan: Bool = false): Tensor.
+pub isclose(left: pytorch.Tensor, right: pytorch.Tensor, relative_tolerance: Float = 0.00001, absolute_tolerance: Float = 1e-8, equal_nan: Bool = false): pytorch.Tensor.
 
 /// Executes the exact aten::kron two-tensor schema with independently owned dispatcher inputs.
 
-pub kron(left: Tensor, right: Tensor): Tensor.
+pub kron(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the exact aten::kron.out result into retained output storage.
 
-pub kron_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub kron_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::lcm two-tensor schema with independently owned dispatcher inputs.
 
-pub lcm(left: Tensor, right: Tensor): Tensor.
+pub lcm(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through exact aten::lcm_.
 
-pub lcm_in_place(left: Tensor, right: Tensor): Unit.
+pub lcm_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::lcm.out result into retained output storage.
 
-pub lcm_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub lcm_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::ldexp.out result into retained output storage.
 
-pub ldexp_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub ldexp_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::ldexp.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub ldexp_tensor(left: Tensor, right: Tensor): Tensor.
+pub ldexp_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through exact aten::ldexp_.
 
-pub ldexp_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub ldexp_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::le.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub le_tensor(left: Tensor, right: Tensor): Tensor.
+pub le_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::less_equal.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub less_equal_tensor(left: Tensor, right: Tensor): Tensor.
+pub less_equal_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::less.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub less_tensor(left: Tensor, right: Tensor): Tensor.
+pub less_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::logaddexp two-tensor schema with independently owned dispatcher inputs.
 
-pub logaddexp(left: Tensor, right: Tensor): Tensor.
+pub logaddexp(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::logaddexp2 two-tensor schema with independently owned dispatcher inputs.
 
-pub logaddexp2(left: Tensor, right: Tensor): Tensor.
+pub logaddexp2(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the exact aten::logaddexp2.out result into retained output storage.
 
-pub logaddexp2_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub logaddexp2_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::logaddexp.out result into retained output storage.
 
-pub logaddexp_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub logaddexp_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::logical_and two-tensor schema with independently owned dispatcher inputs.
 
-pub logical_and(left: Tensor, right: Tensor): Tensor.
+pub logical_and(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through the exact aten::logical_and_ schema.
 
-pub logical_and_in_place(left: Tensor, right: Tensor): Unit.
+pub logical_and_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::logical_and.out result into retained output storage.
 
-pub logical_and_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub logical_and_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::logical_or two-tensor schema with independently owned dispatcher inputs.
 
-pub logical_or(left: Tensor, right: Tensor): Tensor.
+pub logical_or(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through the exact aten::logical_or_ schema.
 
-pub logical_or_in_place(left: Tensor, right: Tensor): Unit.
+pub logical_or_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::logical_or.out result into retained output storage.
 
-pub logical_or_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub logical_or_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::logical_xor two-tensor schema with independently owned dispatcher inputs.
 
-pub logical_xor(left: Tensor, right: Tensor): Tensor.
+pub logical_xor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through the exact aten::logical_xor_ schema.
 
-pub logical_xor_in_place(left: Tensor, right: Tensor): Unit.
+pub logical_xor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::logical_xor.out result into retained output storage.
 
-pub logical_xor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub logical_xor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::lt.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub lt_tensor(left: Tensor, right: Tensor): Tensor.
+pub lt_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::masked_select two-tensor schema with independently owned dispatcher inputs.
 
-pub masked_select(left: Tensor, right: Tensor): Tensor.
+pub masked_select(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the exact aten::masked_select.out result into retained output storage.
 
-pub masked_select_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub masked_select_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::max.dim_max values and indices into retained output storage.
 
-pub max_dim_out(values: Tensor, indices: Tensor, tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
+pub max_dim_out(values: pytorch.Tensor, indices: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
 
 /// Executes the exact aten::max.other two-tensor schema with independently owned dispatcher inputs.
 
-pub max_other(left: Tensor, right: Tensor): Tensor.
+pub max_other(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the exact aten::max.out two-tensor result into retained output storage.
 
-pub max_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub max_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::maximum two-tensor schema with independently owned dispatcher inputs.
 
-pub maximum(left: Tensor, right: Tensor): Tensor.
+pub maximum(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the exact aten::maximum.out result into retained output storage.
 
-pub maximum_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub maximum_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::min.dim_min values and indices into retained output storage.
 
-pub min_dim_out(values: Tensor, indices: Tensor, tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
+pub min_dim_out(values: pytorch.Tensor, indices: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
 
 /// Executes the exact aten::min.other two-tensor schema with independently owned dispatcher inputs.
 
-pub min_other(left: Tensor, right: Tensor): Tensor.
+pub min_other(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the exact aten::min.out two-tensor result into retained output storage.
 
-pub min_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub min_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::minimum.out result into retained output storage.
 
-pub minimum_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub minimum_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::ne.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub ne_tensor(left: Tensor, right: Tensor): Tensor.
+pub ne_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::nextafter two-tensor schema with independently owned dispatcher inputs.
 
-pub nextafter(left: Tensor, right: Tensor): Tensor.
+pub nextafter(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Mutates retained tensor storage through exact aten::nextafter_.
 
-pub nextafter_in_place(left: Tensor, right: Tensor): Unit.
+pub nextafter_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the exact aten::nextafter.out result into retained output storage.
 
-pub nextafter_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub nextafter_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::not_equal.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub not_equal_tensor(left: Tensor, right: Tensor): Tensor.
+pub not_equal_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::pow.Tensor_Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub pow_tensor(left: Tensor, right: Tensor): Tensor.
+pub pow_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::remainder.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub remainder_tensor(left: Tensor, right: Tensor): Tensor.
+pub remainder_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::special_xlog1py two-tensor schema with independently owned dispatcher inputs.
 
-pub special_xlog1py(left: Tensor, right: Tensor): Tensor.
+pub special_xlog1py(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::special_xlogy two-tensor schema with independently owned dispatcher inputs.
 
-pub special_xlogy(left: Tensor, right: Tensor): Tensor.
+pub special_xlogy(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::special_zeta two-tensor schema with independently owned dispatcher inputs.
 
-pub special_zeta(left: Tensor, right: Tensor): Tensor.
+pub special_zeta(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::take two-tensor schema with independently owned dispatcher inputs.
 
-pub take(left: Tensor, right: Tensor): Tensor.
+pub take(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the exact aten::take.out result into retained output storage.
 
-pub take_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub take_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::true_divide.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub true_divide_tensor(left: Tensor, right: Tensor): Tensor.
+pub true_divide_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact aten::vdot two-tensor schema with independently owned dispatcher inputs.
 
-pub vdot(left: Tensor, right: Tensor): Tensor.
+pub vdot(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the exact aten::vdot.out result into retained output storage.
 
-pub vdot_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub vdot_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Executes the exact aten::xlogy.Tensor two-tensor schema with independently owned dispatcher inputs.
 
-pub xlogy_tensor(left: Tensor, right: Tensor): Tensor.
+pub xlogy_tensor(left: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.

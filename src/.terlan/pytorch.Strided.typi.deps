@@ -1,9 +1,9 @@
 module=pytorch.Strided
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=12402817421194859912
-interface_hash=6179935662284721215
+interface_hash=16516448289434092599
 interface_doc_hash=9570712730820770750
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

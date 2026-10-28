@@ -4,12 +4,12 @@ module pytorch.SpectralCompletion.
 
 /// Exact generated CXX istft form with LibTorch defaults.
 
-pub istft_default(input: Tensor, n_fft: Int): Tensor.
+pub istft_default(input: pytorch.Tensor, n_fft: Int): pytorch.Tensor.
 
 /// Exact generated CXX centered stft form with LibTorch defaults.
 
-pub stft_center_default(input: Tensor, n_fft: Int, center: Bool = true, pad_mode: String = "reflect"): Tensor.
+pub stft_center_default(input: pytorch.Tensor, n_fft: Int, center: Bool = true, pad_mode: String = "reflect"): pytorch.Tensor.
 
 /// Exact generated CXX stft form with LibTorch defaults.
 
-pub stft_default(input: Tensor, n_fft: Int): Tensor.
+pub stft_default(input: pytorch.Tensor, n_fft: Int): pytorch.Tensor.

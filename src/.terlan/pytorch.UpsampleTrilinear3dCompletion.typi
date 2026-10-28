@@ -4,8 +4,8 @@ module pytorch.UpsampleTrilinear3dCompletion.
 
 /// Upsamples a 5-D tensor to an explicit output size.
 
-pub upsample_trilinear3d(input: Tensor, output_size: List[Int], align_corners: Bool): Tensor.
+pub upsample_trilinear3d(input: pytorch.Tensor, output_size: List[Int], align_corners: Bool): pytorch.Tensor.
 
 /// Writes an upsampled tensor into retained output storage.
 
-pub upsample_trilinear3d_out(output: Tensor, input: Tensor, output_size: List[Int], align_corners: Bool): Unit.
+pub upsample_trilinear3d_out(output: pytorch.Tensor, input: pytorch.Tensor, output_size: List[Int], align_corners: Bool): Unit.

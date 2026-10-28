@@ -8,20 +8,20 @@ pub opaque type HistogramddResult.
 
 /// Computes histogramdd with integer-list bins.
 
-pub histogramdd_bins_result(input: Tensor, bins: List[Int], has_range: Bool, range: List[Float], has_weight: Bool, weight: Tensor, density: Bool): HistogramddResult.
+pub histogramdd_bins_result(input: pytorch.Tensor, bins: List[Int], has_range: Bool, range: List[Float], has_weight: Bool, weight: pytorch.Tensor, density: Bool): HistogramddResult.
 
 /// Computes histogramdd with integer bin count.
 
-pub histogramdd_int_result(input: Tensor, bins: Int, has_range: Bool, range: List[Float], has_weight: Bool, weight: Tensor, density: Bool): HistogramddResult.
+pub histogramdd_int_result(input: pytorch.Tensor, bins: Int, has_range: Bool, range: List[Float], has_weight: Bool, weight: pytorch.Tensor, density: Bool): HistogramddResult.
 
 /// Projects histogram bin-edge tensors.
 
-pub histogramdd_result_bin_edges(result: HistogramddResult): List[Tensor].
+pub histogramdd_result_bin_edges(result: HistogramddResult): List[pytorch.Tensor].
 
 /// Projects the histogram tensor.
 
-pub histogramdd_result_hist(result: HistogramddResult): Tensor.
+pub histogramdd_result_hist(result: HistogramddResult): pytorch.Tensor.
 
 /// Computes histogramdd with Tensor-list bins.
 
-pub histogramdd_tensor_bins_result(input: Tensor, bins: List[Tensor], has_range: Bool, range: List[Float], has_weight: Bool, weight: Tensor, density: Bool): HistogramddResult.
+pub histogramdd_tensor_bins_result(input: pytorch.Tensor, bins: List[pytorch.Tensor], has_range: Bool, range: List[Float], has_weight: Bool, weight: pytorch.Tensor, density: Bool): HistogramddResult.

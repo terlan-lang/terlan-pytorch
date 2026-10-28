@@ -8,21 +8,21 @@ module pytorch.ShapePartitionCompletion.
 /// Copies each split result into independently owned storage, matching
 /// aten::split_copy.Tensor's non-view contract.
 
-pub split_copy(input: Tensor, split_size: Int, dimension: Int = 0): List[Tensor].
+pub split_copy(input: pytorch.Tensor, split_size: Int, dimension: Int = 0): List[pytorch.Tensor].
 
 /// Copies each explicitly sized split result into independently owned storage.
 
-pub split_with_sizes_copy(input: Tensor, split_sizes: List[Int], dimension: Int = 0): List[Tensor].
+pub split_with_sizes_copy(input: pytorch.Tensor, split_sizes: List[Int], dimension: Int = 0): List[pytorch.Tensor].
 
 /// Copies each unbound slice into independently owned storage, matching
 /// aten::unbind_copy.int's copy semantics.
 
-pub unbind_copy(input: Tensor, dimension: Int = 0): List[Tensor].
+pub unbind_copy(input: pytorch.Tensor, dimension: Int = 0): List[pytorch.Tensor].
 
-pub unsafe_chunk(input: Tensor, chunks: Int, dimension: Int = 0): List[Tensor].
+pub unsafe_chunk(input: pytorch.Tensor, chunks: Int, dimension: Int = 0): List[pytorch.Tensor].
 
-pub unsafe_chunk_native(input: Tensor, chunks: Int, dimension: Int): List[Tensor].
+pub unsafe_chunk_native(input: pytorch.Tensor, chunks: Int, dimension: Int): List[pytorch.Tensor].
 
-pub unsafe_split(input: Tensor, split_size: Int, dimension: Int = 0): List[Tensor].
+pub unsafe_split(input: pytorch.Tensor, split_size: Int, dimension: Int = 0): List[pytorch.Tensor].
 
-pub unsafe_split_with_sizes(input: Tensor, split_sizes: List[Int], dimension: Int = 0): List[Tensor].
+pub unsafe_split_with_sizes(input: pytorch.Tensor, split_sizes: List[Int], dimension: Int = 0): List[pytorch.Tensor].

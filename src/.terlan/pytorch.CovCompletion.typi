@@ -4,4 +4,4 @@ module pytorch.CovCompletion.
 
 /// Exact generated CXX covariance leaf.
 
-pub cov(input: Tensor, correction: Int = 1): Tensor.
+pub cov(input: pytorch.Tensor, correction: Int = 1): pytorch.Tensor.

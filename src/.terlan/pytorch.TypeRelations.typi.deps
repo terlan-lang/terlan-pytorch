@@ -1,11 +1,11 @@
 module=pytorch.TypeRelations
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=9734421099945124993
-interface_hash=2052547650108120988
+interface_hash=17189627442254887906
 interface_doc_hash=17555111679498421932
 deps=3
 pytorch.Scalar=15696376780543715656
-pytorch.Tensor=13489932768568026575
-pytorch.TypeRelationsNative=5648133898270306107
+pytorch.Tensor=1089416781329568890
+pytorch.TypeRelationsNative=1322444435342387684

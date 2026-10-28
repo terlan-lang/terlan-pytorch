@@ -4,8 +4,8 @@ module pytorch.RandpermCompletion.
 
 /// Creates a Long permutation of 0..n-1.
 
-pub randperm_default(n: Int): Tensor.
+pub randperm_default(n: Int): pytorch.Tensor.
 
 /// Writes a Long permutation into retained output storage.
 
-pub randperm_out(output: Tensor, n: Int): Unit.
+pub randperm_out(output: pytorch.Tensor, n: Int): Unit.

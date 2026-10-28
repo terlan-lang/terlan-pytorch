@@ -12,44 +12,44 @@ pub type IndexReduction: Int =
 
 /// Counts occurrences of nonnegative integer values.
 
-pub bincount(input: Tensor, minlength: Int = 0): Tensor.
+pub bincount(input: pytorch.Tensor, minlength: Int = 0): pytorch.Tensor.
 
 /// Writes unweighted counts into retained output storage.
 
-pub bincount_out(output: Tensor, input: Tensor, minlength: Int = 0): Unit.
+pub bincount_out(output: pytorch.Tensor, input: pytorch.Tensor, minlength: Int = 0): Unit.
 
 /// Counts occurrences using one floating-point weight per input value.
 
-pub bincount_weighted(input: Tensor, weights: Tensor, minlength: Int = 0): Tensor.
+pub bincount_weighted(input: pytorch.Tensor, weights: pytorch.Tensor, minlength: Int = 0): pytorch.Tensor.
 
 /// Writes weighted counts into retained output storage.
 
-pub bincount_weighted_out(output: Tensor, input: Tensor, weights: Tensor, minlength: Int = 0): Unit.
+pub bincount_weighted_out(output: pytorch.Tensor, input: pytorch.Tensor, weights: pytorch.Tensor, minlength: Int = 0): Unit.
 
 /// Counts values into equal-width bins with floating-point bounds.
 
-pub histc(input: Tensor, bins: Int = 100, minimum: Float = 0.0, maximum: Float = 0.0): Tensor.
+pub histc(input: pytorch.Tensor, bins: Int = 100, minimum: Float = 0.0, maximum: Float = 0.0): pytorch.Tensor.
 
 /// Counts values into equal-width bins with integer bounds.
 
-pub histc_int_bounds(input: Tensor, bins: Int, minimum: Int, maximum: Int): Tensor.
+pub histc_int_bounds(input: pytorch.Tensor, bins: Int, minimum: Int, maximum: Int): pytorch.Tensor.
 
 /// Writes integer-bound histogram counts into retained output storage.
 
-pub histc_int_bounds_out(output: Tensor, input: Tensor, bins: Int, minimum: Int, maximum: Int): Unit.
+pub histc_int_bounds_out(output: pytorch.Tensor, input: pytorch.Tensor, bins: Int, minimum: Int, maximum: Int): Unit.
 
 /// Writes floating-bound histogram counts into retained output storage.
 
-pub histc_out(output: Tensor, input: Tensor, bins: Int = 100, minimum: Float = 0.0, maximum: Float = 0.0): Unit.
+pub histc_out(output: pytorch.Tensor, input: pytorch.Tensor, bins: Int = 100, minimum: Float = 0.0, maximum: Float = 0.0): Unit.
 
 /// Reduces source slices into indexed destinations.
 
-pub index_reduce(input: Tensor, dimension: Int, index: Tensor, source: Tensor, reduction: IndexReduction, include_self: Bool = true): Tensor.
+pub index_reduce(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, source: pytorch.Tensor, reduction: IndexReduction, include_self: Bool = true): pytorch.Tensor.
 
 /// Reduces source slices into input storage in place.
 
-pub index_reduce_in_place(input: Tensor, dimension: Int, index: Tensor, source: Tensor, reduction: IndexReduction, include_self: Bool = true): Unit.
+pub index_reduce_in_place(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, source: pytorch.Tensor, reduction: IndexReduction, include_self: Bool = true): Unit.
 
 /// Writes an indexed reduction into retained output storage.
 
-pub index_reduce_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, source: Tensor, reduction: IndexReduction, include_self: Bool = true): Unit.
+pub index_reduce_out(output: pytorch.Tensor, input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, source: pytorch.Tensor, reduction: IndexReduction, include_self: Bool = true): Unit.

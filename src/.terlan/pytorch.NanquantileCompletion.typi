@@ -2,10 +2,10 @@
 
 module pytorch.NanquantileCompletion.
 
-pub nanquantile_scalar(input: Tensor, q: Float, dimension: Int, keep_dimension: Bool, interpolation: String): Tensor.
+pub nanquantile_scalar(input: pytorch.Tensor, q: Float, dimension: Int, keep_dimension: Bool, interpolation: String): pytorch.Tensor.
 
-pub nanquantile_scalar_out(output: Tensor, input: Tensor, q: Float, dimension: Int, keep_dimension: Bool, interpolation: String): Unit.
+pub nanquantile_scalar_out(output: pytorch.Tensor, input: pytorch.Tensor, q: Float, dimension: Int, keep_dimension: Bool, interpolation: String): Unit.
 
-pub nanquantile_tensor(input: Tensor, q: Tensor, dimension: Int, keep_dimension: Bool, interpolation: String): Tensor.
+pub nanquantile_tensor(input: pytorch.Tensor, q: pytorch.Tensor, dimension: Int, keep_dimension: Bool, interpolation: String): pytorch.Tensor.
 
-pub nanquantile_tensor_out(output: Tensor, input: Tensor, q: Tensor, dimension: Int, keep_dimension: Bool, interpolation: String): Unit.
+pub nanquantile_tensor_out(output: pytorch.Tensor, input: pytorch.Tensor, q: pytorch.Tensor, dimension: Int, keep_dimension: Bool, interpolation: String): Unit.

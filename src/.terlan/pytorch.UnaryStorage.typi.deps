@@ -1,10 +1,10 @@
 module=pytorch.UnaryStorage
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=5079447847905898428
-interface_hash=55538943472174502
+interface_hash=17419103083250957621
 interface_doc_hash=4265624156357833367
 deps=2
-pytorch.Tensor=13489932768568026575
-pytorch.UnaryStorageNative=13304071732718912296
+pytorch.Tensor=1089416781329568890
+pytorch.UnaryStorageNative=14401325133803407276

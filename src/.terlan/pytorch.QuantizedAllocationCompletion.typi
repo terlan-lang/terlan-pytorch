@@ -4,8 +4,8 @@ module pytorch.QuantizedAllocationCompletion.
 
 /// Exact generated CXX empty quantized leaf with default tensor options.
 
-pub empty_quantized(size: List[Int], qtensor: Tensor): Tensor.
+pub empty_quantized(size: List[Int], qtensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX empty quantized retained-output leaf with default memory format.
 
-pub empty_quantized_out(out: Tensor, size: List[Int], qtensor: Tensor): Unit.
+pub empty_quantized_out(out: pytorch.Tensor, size: List[Int], qtensor: pytorch.Tensor): Unit.

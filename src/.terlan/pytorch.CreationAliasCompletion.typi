@@ -2,18 +2,18 @@
 
 module pytorch.CreationAliasCompletion.
 
-pub new_empty(input: Tensor, size: List[Int]): Tensor.
+pub new_empty(input: pytorch.Tensor, size: List[Int]): pytorch.Tensor.
 
-pub new_empty_out(output: Tensor, input: Tensor, size: List[Int]): Unit.
+pub new_empty_out(output: pytorch.Tensor, input: pytorch.Tensor, size: List[Int]): Unit.
 
-pub new_full(input: Tensor, size: List[Int], fill: Scalar): Tensor.
+pub new_full(input: pytorch.Tensor, size: List[Int], fill: pytorch.Scalar): pytorch.Tensor.
 
-pub new_full_scalar_out(output: Tensor, input: Tensor, size: List[Int], fill: Scalar): Unit.
+pub new_full_scalar_out(output: pytorch.Tensor, input: pytorch.Tensor, size: List[Int], fill: pytorch.Scalar): Unit.
 
-pub new_ones(input: Tensor, size: List[Int]): Tensor.
+pub new_ones(input: pytorch.Tensor, size: List[Int]): pytorch.Tensor.
 
-pub new_ones_out(output: Tensor, input: Tensor, size: List[Int]): Unit.
+pub new_ones_out(output: pytorch.Tensor, input: pytorch.Tensor, size: List[Int]): Unit.
 
-pub new_zeros(input: Tensor, size: List[Int]): Tensor.
+pub new_zeros(input: pytorch.Tensor, size: List[Int]): pytorch.Tensor.
 
-pub new_zeros_out(output: Tensor, input: Tensor, size: List[Int]): Unit.
+pub new_zeros_out(output: pytorch.Tensor, input: pytorch.Tensor, size: List[Int]): Unit.

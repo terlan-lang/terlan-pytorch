@@ -2,50 +2,50 @@
 
 module pytorch.ShapePartition.
 
-pub chunk(input: Tensor, chunks: Int, dimension: Int = 0): List[Tensor].
+pub chunk(input: pytorch.Tensor, chunks: Int, dimension: Int = 0): List[pytorch.Tensor].
 
 /// Splits a tensor at depth-axis indices (dimension 2).
 
-pub dsplit_indices(input: Tensor, indices: List[Int]): List[Tensor].
+pub dsplit_indices(input: pytorch.Tensor, indices: List[Int]): List[pytorch.Tensor].
 
 /// Splits a tensor along its depth axis (dimension 2).
 
-pub dsplit_sections(input: Tensor, sections: Int): List[Tensor].
+pub dsplit_sections(input: pytorch.Tensor, sections: Int): List[pytorch.Tensor].
 
 /// Splits a tensor at horizontal-axis indices (dimension 1).
 
-pub hsplit_indices(input: Tensor, indices: List[Int]): List[Tensor].
+pub hsplit_indices(input: pytorch.Tensor, indices: List[Int]): List[pytorch.Tensor].
 
 /// Splits a tensor along its horizontal axis (dimension 1).
 
-pub hsplit_sections(input: Tensor, sections: Int): List[Tensor].
+pub hsplit_sections(input: pytorch.Tensor, sections: Int): List[pytorch.Tensor].
 
-pub split_copy_tensor_out(input: Tensor, outputs: List[Tensor], size: Int, dimension: Int = 0): Unit.
+pub split_copy_tensor_out(input: pytorch.Tensor, outputs: List[pytorch.Tensor], size: Int, dimension: Int = 0): Unit.
 
-pub split_size(input: Tensor, size: Int, dimension: Int = 0): List[Tensor].
+pub split_size(input: pytorch.Tensor, size: Int, dimension: Int = 0): List[pytorch.Tensor].
 
-pub split_sizes(input: Tensor, sizes: List[Int], dimension: Int = 0): List[Tensor].
+pub split_sizes(input: pytorch.Tensor, sizes: List[Int], dimension: Int = 0): List[pytorch.Tensor].
 
-pub split_with_sizes_copy_out(input: Tensor, outputs: List[Tensor], sizes: List[Int], dimension: Int = 0): Unit.
+pub split_with_sizes_copy_out(input: pytorch.Tensor, outputs: List[pytorch.Tensor], sizes: List[Int], dimension: Int = 0): Unit.
 
-pub tensor_split_indices(input: Tensor, indices: List[Int], dimension: Int = 0): List[Tensor].
+pub tensor_split_indices(input: pytorch.Tensor, indices: List[Int], dimension: Int = 0): List[pytorch.Tensor].
 
-pub tensor_split_sections(input: Tensor, sections: Int, dimension: Int = 0): List[Tensor].
+pub tensor_split_sections(input: pytorch.Tensor, sections: Int, dimension: Int = 0): List[pytorch.Tensor].
 
-pub tensor_split_tensor(input: Tensor, indices_or_sections: Tensor, dimension: Int = 0): List[Tensor].
+pub tensor_split_tensor(input: pytorch.Tensor, indices_or_sections: pytorch.Tensor, dimension: Int = 0): List[pytorch.Tensor].
 
-pub unbind(input: Tensor, dimension: Int = 0): List[Tensor].
+pub unbind(input: pytorch.Tensor, dimension: Int = 0): List[pytorch.Tensor].
 
-pub unbind_copy_int_out(input: Tensor, outputs: List[Tensor], dimension: Int = 0): Unit.
+pub unbind_copy_int_out(input: pytorch.Tensor, outputs: List[pytorch.Tensor], dimension: Int = 0): Unit.
 
-pub unsafe_split_tensor_out(input: Tensor, outputs: List[Tensor], size: Int, dimension: Int = 0): Unit.
+pub unsafe_split_tensor_out(input: pytorch.Tensor, outputs: List[pytorch.Tensor], size: Int, dimension: Int = 0): Unit.
 
-pub unsafe_split_with_sizes_out(input: Tensor, outputs: List[Tensor], sizes: List[Int], dimension: Int = 0): Unit.
+pub unsafe_split_with_sizes_out(input: pytorch.Tensor, outputs: List[pytorch.Tensor], sizes: List[Int], dimension: Int = 0): Unit.
 
 /// Splits a tensor at vertical-axis indices (dimension 0).
 
-pub vsplit_indices(input: Tensor, indices: List[Int]): List[Tensor].
+pub vsplit_indices(input: pytorch.Tensor, indices: List[Int]): List[pytorch.Tensor].
 
 /// Splits a tensor along its vertical axis (dimension 0).
 
-pub vsplit_sections(input: Tensor, sections: Int): List[Tensor].
+pub vsplit_sections(input: pytorch.Tensor, sections: Int): List[pytorch.Tensor].

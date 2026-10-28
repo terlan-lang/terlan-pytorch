@@ -5,15 +5,15 @@ module pytorch.StatisticsCompletion.
 /// Computes a scalar-order norm and converts the result to the requested
 /// output dtype, matching the dtype-only ATen overload.
 
-pub norm_scalar_dtype(input: Tensor, order: Scalar, output_dtype: Int): Tensor.
+pub norm_scalar_dtype(input: pytorch.Tensor, order: pytorch.Scalar, output_dtype: Int): pytorch.Tensor.
 
 /// Writes the dtype-configured scalar-order norm into retained output storage.
 
-pub norm_scalar_dtype_out(output: Tensor, input: Tensor, order: Scalar, output_dtype: Int): Unit.
+pub norm_scalar_dtype_out(output: pytorch.Tensor, input: pytorch.Tensor, order: pytorch.Scalar, output_dtype: Int): Unit.
 
 /// Writes the scalar-order norm into retained output storage.
 ///
 /// The generated Linalg norm leaves preserve the scalar's integer/float
 /// dispatch while keeping the retained output ownership explicit.
 
-pub norm_scalar_out(output: Tensor, input: Tensor, order: Scalar): Unit.
+pub norm_scalar_out(output: pytorch.Tensor, input: pytorch.Tensor, order: pytorch.Scalar): Unit.

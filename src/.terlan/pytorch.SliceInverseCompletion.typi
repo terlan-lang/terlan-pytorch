@@ -4,16 +4,16 @@ module pytorch.SliceInverseCompletion.
 
 /// Writes source into the full input slice.
 
-pub slice_inverse_all(input: Tensor, source: Tensor, dimension: Int, step: Int): Tensor.
+pub slice_inverse_all(input: pytorch.Tensor, source: pytorch.Tensor, dimension: Int, step: Int): pytorch.Tensor.
 
 /// Writes source into the input slice between bounds.
 
-pub slice_inverse_bounds(input: Tensor, source: Tensor, dimension: Int, start: Int, end: Int, step: Int): Tensor.
+pub slice_inverse_bounds(input: pytorch.Tensor, source: pytorch.Tensor, dimension: Int, start: Int, end: Int, step: Int): pytorch.Tensor.
 
 /// Writes source into the input slice from a starting bound.
 
-pub slice_inverse_from(input: Tensor, source: Tensor, dimension: Int, start: Int, step: Int): Tensor.
+pub slice_inverse_from(input: pytorch.Tensor, source: pytorch.Tensor, dimension: Int, start: Int, step: Int): pytorch.Tensor.
 
 /// Writes source into the input slice through an ending bound.
 
-pub slice_inverse_until(input: Tensor, source: Tensor, dimension: Int, end: Int, step: Int): Tensor.
+pub slice_inverse_until(input: pytorch.Tensor, source: pytorch.Tensor, dimension: Int, end: Int, step: Int): pytorch.Tensor.

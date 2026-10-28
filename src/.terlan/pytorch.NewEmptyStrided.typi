@@ -4,4 +4,4 @@ module pytorch.NewEmptyStrided.
 
 /// Creates an empty strided tensor inheriting dtype, layout, and device.
 
-pub new_empty_strided(input: Tensor, size: List[Int], stride: List[Int]): Tensor.
+pub new_empty_strided(input: pytorch.Tensor, size: List[Int], stride: List[Int]): pytorch.Tensor.

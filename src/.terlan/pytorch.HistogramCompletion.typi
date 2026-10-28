@@ -2,16 +2,16 @@
 
 module pytorch.HistogramCompletion.
 
-pub histogram_bin_ct(input: Tensor, bins: Int, has_range: Bool, range: List[Float], has_weight: Bool, weight: Tensor, density: Bool): {Tensor, Tensor}.
+pub histogram_bin_ct(input: pytorch.Tensor, bins: Int, has_range: Bool, range: List[Float], has_weight: Bool, weight: pytorch.Tensor, density: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
-pub histogram_bin_ct_out(hist: Tensor, bin_edges: Tensor, input: Tensor, bins: Int, has_range: Bool, range: List[Float], has_weight: Bool, weight: Tensor, density: Bool): Unit.
+pub histogram_bin_ct_out(hist: pytorch.Tensor, bin_edges: pytorch.Tensor, input: pytorch.Tensor, bins: Int, has_range: Bool, range: List[Float], has_weight: Bool, weight: pytorch.Tensor, density: Bool): Unit.
 
-pub histogram_bins_tensor(input: Tensor, bins: Tensor, has_weight: Bool, weight: Tensor, density: Bool): {Tensor, Tensor}.
+pub histogram_bins_tensor(input: pytorch.Tensor, bins: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, density: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
-pub histogram_bins_tensor_out(hist: Tensor, bin_edges: Tensor, input: Tensor, bins: Tensor, has_weight: Bool, weight: Tensor, density: Bool): Unit.
+pub histogram_bins_tensor_out(hist: pytorch.Tensor, bin_edges: pytorch.Tensor, input: pytorch.Tensor, bins: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, density: Bool): Unit.
 
-pub histogramdd_bins(input: Tensor, bins: List[Int], has_range: Bool, range: List[Float], has_weight: Bool, weight: Tensor, density: Bool): {Tensor, List[Tensor]}.
+pub histogramdd_bins(input: pytorch.Tensor, bins: List[Int], has_range: Bool, range: List[Float], has_weight: Bool, weight: pytorch.Tensor, density: Bool): {pytorch.Tensor, List[pytorch.Tensor]}.
 
-pub histogramdd_int(input: Tensor, bins: Int, has_range: Bool, range: List[Float], has_weight: Bool, weight: Tensor, density: Bool): {Tensor, List[Tensor]}.
+pub histogramdd_int(input: pytorch.Tensor, bins: Int, has_range: Bool, range: List[Float], has_weight: Bool, weight: pytorch.Tensor, density: Bool): {pytorch.Tensor, List[pytorch.Tensor]}.
 
-pub histogramdd_tensor_bins(input: Tensor, bins: List[Tensor], has_range: Bool, range: List[Float], has_weight: Bool, weight: Tensor, density: Bool): {Tensor, List[Tensor]}.
+pub histogramdd_tensor_bins(input: pytorch.Tensor, bins: List[pytorch.Tensor], has_range: Bool, range: List[Float], has_weight: Bool, weight: pytorch.Tensor, density: Bool): {pytorch.Tensor, List[pytorch.Tensor]}.

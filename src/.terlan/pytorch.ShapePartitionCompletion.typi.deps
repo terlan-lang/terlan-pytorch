@@ -1,10 +1,10 @@
 module=pytorch.ShapePartitionCompletion
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=3053885043182111594
-interface_hash=7986428218047630316
+interface_hash=6906097374865010948
 interface_doc_hash=8211682483448304886
 deps=2
-pytorch.ShapePartition=11043707876449248419
-pytorch.Tensor=13489932768568026575
+pytorch.ShapePartition=4804933727876285139
+pytorch.Tensor=1089416781329568890

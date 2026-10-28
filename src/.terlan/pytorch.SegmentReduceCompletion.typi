@@ -4,8 +4,8 @@ module pytorch.SegmentReduceCompletion.
 
 /// Exact generated CXX segment_reduce lengths form.
 
-pub segment_reduce_lengths(data: Tensor, reduce: String, lengths: Tensor): Tensor.
+pub segment_reduce_lengths(data: pytorch.Tensor, reduce: String, lengths: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX segment_reduce output lengths form.
 
-pub segment_reduce_lengths_out(out: Tensor, data: Tensor, reduce: String, lengths: Tensor): Unit.
+pub segment_reduce_lengths_out(out: pytorch.Tensor, data: pytorch.Tensor, reduce: String, lengths: pytorch.Tensor): Unit.

@@ -1,9 +1,9 @@
 module=pytorch.RandomCompletion
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=18166026708563529437
-interface_hash=4552782442032883097
+interface_hash=17355816186371153481
 interface_doc_hash=4067136240224482946
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

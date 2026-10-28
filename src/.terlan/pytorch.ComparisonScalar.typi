@@ -4,352 +4,352 @@ module pytorch.ComparisonScalar.
 
 /// Returns eq comparison with a Float scalar right operand.
 
-pub eq_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub eq_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies eq comparison with a Float scalar right operand in place.
 
-pub eq_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub eq_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes eq comparison with a Float scalar right operand.
 
-pub eq_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub eq_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns eq comparison with a Int scalar right operand.
 
-pub eq_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub eq_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies eq comparison with a Int scalar right operand in place.
 
-pub eq_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub eq_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes eq comparison with a Int scalar right operand.
 
-pub eq_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub eq_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies eq comparison with a tensor right operand in place.
 
-pub eq_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub eq_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes eq comparison for two tensors into retained output storage.
 
-pub eq_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub eq_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns ge comparison with a Float scalar right operand.
 
-pub ge_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub ge_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies ge comparison with a Float scalar right operand in place.
 
-pub ge_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub ge_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes ge comparison with a Float scalar right operand.
 
-pub ge_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub ge_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns ge comparison with a Int scalar right operand.
 
-pub ge_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub ge_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies ge comparison with a Int scalar right operand in place.
 
-pub ge_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub ge_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes ge comparison with a Int scalar right operand.
 
-pub ge_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub ge_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies ge comparison with a tensor right operand in place.
 
-pub ge_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub ge_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes ge comparison for two tensors into retained output storage.
 
-pub ge_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub ge_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns greater_equal comparison with a Float scalar right operand.
 
-pub greater_equal_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub greater_equal_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies greater_equal comparison with a Float scalar right operand in place.
 
-pub greater_equal_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub greater_equal_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes greater_equal comparison with a Float scalar right operand.
 
-pub greater_equal_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub greater_equal_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns greater_equal comparison with a Int scalar right operand.
 
-pub greater_equal_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub greater_equal_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies greater_equal comparison with a Int scalar right operand in place.
 
-pub greater_equal_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub greater_equal_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes greater_equal comparison with a Int scalar right operand.
 
-pub greater_equal_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub greater_equal_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies greater_equal comparison with a tensor right operand in place.
 
-pub greater_equal_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub greater_equal_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes greater_equal comparison for two tensors into retained output storage.
 
-pub greater_equal_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub greater_equal_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns greater comparison with a Float scalar right operand.
 
-pub greater_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub greater_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies greater comparison with a Float scalar right operand in place.
 
-pub greater_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub greater_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes greater comparison with a Float scalar right operand.
 
-pub greater_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub greater_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns greater comparison with a Int scalar right operand.
 
-pub greater_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub greater_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies greater comparison with a Int scalar right operand in place.
 
-pub greater_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub greater_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes greater comparison with a Int scalar right operand.
 
-pub greater_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub greater_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies greater comparison with a tensor right operand in place.
 
-pub greater_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub greater_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes greater comparison for two tensors into retained output storage.
 
-pub greater_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub greater_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns gt comparison with a Float scalar right operand.
 
-pub gt_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub gt_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies gt comparison with a Float scalar right operand in place.
 
-pub gt_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub gt_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes gt comparison with a Float scalar right operand.
 
-pub gt_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub gt_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns gt comparison with a Int scalar right operand.
 
-pub gt_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub gt_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies gt comparison with a Int scalar right operand in place.
 
-pub gt_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub gt_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes gt comparison with a Int scalar right operand.
 
-pub gt_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub gt_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies gt comparison with a tensor right operand in place.
 
-pub gt_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub gt_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes gt comparison for two tensors into retained output storage.
 
-pub gt_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub gt_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns le comparison with a Float scalar right operand.
 
-pub le_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub le_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies le comparison with a Float scalar right operand in place.
 
-pub le_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub le_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes le comparison with a Float scalar right operand.
 
-pub le_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub le_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns le comparison with a Int scalar right operand.
 
-pub le_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub le_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies le comparison with a Int scalar right operand in place.
 
-pub le_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub le_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes le comparison with a Int scalar right operand.
 
-pub le_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub le_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies le comparison with a tensor right operand in place.
 
-pub le_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub le_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes le comparison for two tensors into retained output storage.
 
-pub le_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub le_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns less_equal comparison with a Float scalar right operand.
 
-pub less_equal_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub less_equal_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies less_equal comparison with a Float scalar right operand in place.
 
-pub less_equal_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub less_equal_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes less_equal comparison with a Float scalar right operand.
 
-pub less_equal_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub less_equal_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns less_equal comparison with a Int scalar right operand.
 
-pub less_equal_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub less_equal_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies less_equal comparison with a Int scalar right operand in place.
 
-pub less_equal_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub less_equal_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes less_equal comparison with a Int scalar right operand.
 
-pub less_equal_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub less_equal_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies less_equal comparison with a tensor right operand in place.
 
-pub less_equal_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub less_equal_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes less_equal comparison for two tensors into retained output storage.
 
-pub less_equal_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub less_equal_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns less comparison with a Float scalar right operand.
 
-pub less_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub less_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies less comparison with a Float scalar right operand in place.
 
-pub less_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub less_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes less comparison with a Float scalar right operand.
 
-pub less_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub less_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns less comparison with a Int scalar right operand.
 
-pub less_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub less_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies less comparison with a Int scalar right operand in place.
 
-pub less_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub less_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes less comparison with a Int scalar right operand.
 
-pub less_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub less_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies less comparison with a tensor right operand in place.
 
-pub less_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub less_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes less comparison for two tensors into retained output storage.
 
-pub less_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub less_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns lt comparison with a Float scalar right operand.
 
-pub lt_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub lt_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies lt comparison with a Float scalar right operand in place.
 
-pub lt_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub lt_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes lt comparison with a Float scalar right operand.
 
-pub lt_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub lt_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns lt comparison with a Int scalar right operand.
 
-pub lt_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub lt_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies lt comparison with a Int scalar right operand in place.
 
-pub lt_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub lt_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes lt comparison with a Int scalar right operand.
 
-pub lt_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub lt_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies lt comparison with a tensor right operand in place.
 
-pub lt_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub lt_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes lt comparison for two tensors into retained output storage.
 
-pub lt_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub lt_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns ne comparison with a Float scalar right operand.
 
-pub ne_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub ne_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies ne comparison with a Float scalar right operand in place.
 
-pub ne_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub ne_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes ne comparison with a Float scalar right operand.
 
-pub ne_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub ne_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns ne comparison with a Int scalar right operand.
 
-pub ne_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub ne_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies ne comparison with a Int scalar right operand in place.
 
-pub ne_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub ne_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes ne comparison with a Int scalar right operand.
 
-pub ne_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub ne_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies ne comparison with a tensor right operand in place.
 
-pub ne_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub ne_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes ne comparison for two tensors into retained output storage.
 
-pub ne_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub ne_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns not_equal comparison with a Float scalar right operand.
 
-pub not_equal_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub not_equal_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies not_equal comparison with a Float scalar right operand in place.
 
-pub not_equal_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub not_equal_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes not_equal comparison with a Float scalar right operand.
 
-pub not_equal_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub not_equal_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns not_equal comparison with a Int scalar right operand.
 
-pub not_equal_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub not_equal_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies not_equal comparison with a Int scalar right operand in place.
 
-pub not_equal_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub not_equal_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes not_equal comparison with a Int scalar right operand.
 
-pub not_equal_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub not_equal_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies not_equal comparison with a tensor right operand in place.
 
-pub not_equal_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub not_equal_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes not_equal comparison for two tensors into retained output storage.
 
-pub not_equal_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub not_equal_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.

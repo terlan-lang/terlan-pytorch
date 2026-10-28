@@ -4,24 +4,24 @@ module pytorch.Padding.
 
 /// Pads tensor dimensions with an integer scalar value.
 
-pub constant_pad(input: Tensor, padding: List[Int], value: Int = 0): Tensor.
+pub constant_pad(input: pytorch.Tensor, padding: List[Int], value: Int = 0): pytorch.Tensor.
 
 /// Pads tensor dimensions with a floating-point scalar value.
 
-pub constant_pad_float(input: Tensor, padding: List[Int], value: Float): Tensor.
+pub constant_pad_float(input: pytorch.Tensor, padding: List[Int], value: Float): pytorch.Tensor.
 
 /// Writes floating-valued constant padding into retained output storage.
 
-pub constant_pad_float_out(output: Tensor, input: Tensor, padding: List[Int], value: Float): Unit.
+pub constant_pad_float_out(output: pytorch.Tensor, input: pytorch.Tensor, padding: List[Int], value: Float): Unit.
 
 /// Writes integer-valued constant padding into retained output storage.
 
-pub constant_pad_out(output: Tensor, input: Tensor, padding: List[Int], value: Int = 0): Unit.
+pub constant_pad_out(output: pytorch.Tensor, input: pytorch.Tensor, padding: List[Int], value: Int = 0): Unit.
 
 /// Pads through a named mode while preserving an absent optional value.
 
-pub pad(input: Tensor, padding: List[Int], mode: String = "constant"): Tensor.
+pub pad(input: pytorch.Tensor, padding: List[Int], mode: String = "constant"): pytorch.Tensor.
 
 /// Pads through a named mode with an explicit floating-point value.
 
-pub pad(input: Tensor, padding: List[Int], mode: String, value: Float): Tensor.
+pub pad(input: pytorch.Tensor, padding: List[Int], mode: String, value: Float): pytorch.Tensor.

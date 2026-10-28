@@ -4,44 +4,44 @@ module pytorch.LinearStorageCompletion.
 
 /// Executes exact aten::bilinear without a bias tensor.
 
-pub bilinear_no_bias(input1: Tensor, input2: Tensor, weight: Tensor): Tensor.
+pub bilinear_no_bias(input1: pytorch.Tensor, input2: pytorch.Tensor, weight: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes exact aten::bilinear with a bias tensor.
 
-pub bilinear_with_bias(input1: Tensor, input2: Tensor, weight: Tensor, bias: Tensor): Tensor.
+pub bilinear_with_bias(input1: pytorch.Tensor, input2: pytorch.Tensor, weight: pytorch.Tensor, bias: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes exact aten::conv_tbc.
 
-pub conv_tbc(input: Tensor, weight: Tensor, bias: Tensor, padding: Int): Tensor.
+pub conv_tbc(input: pytorch.Tensor, weight: pytorch.Tensor, bias: pytorch.Tensor, padding: Int): pytorch.Tensor.
 
 /// Executes exact aten::conv_tbc_backward and owns all three gradient tensors.
 
-pub conv_tbc_backward(gradient: Tensor, input: Tensor, weight: Tensor, bias: Tensor, padding: Int): {Tensor, Tensor, Tensor}.
+pub conv_tbc_backward(gradient: pytorch.Tensor, input: pytorch.Tensor, weight: pytorch.Tensor, bias: pytorch.Tensor, padding: Int): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Writes exact aten::conv_tbc.out into retained storage.
 
-pub conv_tbc_out(output: Tensor, input: Tensor, weight: Tensor, bias: Tensor, padding: Int): Unit.
+pub conv_tbc_out(output: pytorch.Tensor, input: pytorch.Tensor, weight: pytorch.Tensor, bias: pytorch.Tensor, padding: Int): Unit.
 
 /// Executes exact aten::cummaxmin_backward.
 
-pub cummaxmin_backward(gradient: Tensor, input: Tensor, indices: Tensor, dimension: Int): Tensor.
+pub cummaxmin_backward(gradient: pytorch.Tensor, input: pytorch.Tensor, indices: pytorch.Tensor, dimension: Int): pytorch.Tensor.
 
 /// Returns an exact storage-reset tensor without mutating the source.
 
-pub set_empty(tensor: Tensor): Tensor.
+pub set_empty(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes exact aten::set_ in place.
 
-pub set_empty_in_place(tensor: Tensor): Unit.
+pub set_empty_in_place(tensor: pytorch.Tensor): Unit.
 
 /// Writes an exact storage-reset tensor into retained storage.
 
-pub set_empty_out(output: Tensor, tensor: Tensor): Unit.
+pub set_empty_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Returns a tensor rebound to exact source tensor storage.
 
-pub set_source_tensor(tensor: Tensor, source: Tensor): Tensor.
+pub set_source_tensor(tensor: pytorch.Tensor, source: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes an exact source-storage rebound tensor into retained storage.
 
-pub set_source_tensor_out(output: Tensor, tensor: Tensor, source: Tensor): Unit.
+pub set_source_tensor_out(output: pytorch.Tensor, tensor: pytorch.Tensor, source: pytorch.Tensor): Unit.

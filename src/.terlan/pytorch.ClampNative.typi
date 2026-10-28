@@ -4,24 +4,24 @@ module pytorch.ClampNative.
 
 /// Clamps a tensor using explicitly present integer or floating-point scalar bounds.
 
-pub clamp_scalar(input: Tensor, has_min: Bool, min_is_int: Bool, min_int: Int, min_float: Float, has_max: Bool, max_is_int: Bool, max_int: Int, max_float: Float): Tensor.
+pub clamp_scalar(input: pytorch.Tensor, has_min: Bool, min_is_int: Bool, min_int: Int, min_float: Float, has_max: Bool, max_is_int: Bool, max_int: Int, max_float: Float): pytorch.Tensor.
 
 /// Clamps tensor storage in place using explicitly present scalar bounds.
 
-pub clamp_scalar_in_place(input: Tensor, has_min: Bool, min_is_int: Bool, min_int: Int, min_float: Float, has_max: Bool, max_is_int: Bool, max_int: Int, max_float: Float): Unit.
+pub clamp_scalar_in_place(input: pytorch.Tensor, has_min: Bool, min_is_int: Bool, min_int: Int, min_float: Float, has_max: Bool, max_is_int: Bool, max_int: Int, max_float: Float): Unit.
 
 /// Writes scalar-bound clamp results into retained output storage.
 
-pub clamp_scalar_out(output: Tensor, input: Tensor, has_min: Bool, min_is_int: Bool, min_int: Int, min_float: Float, has_max: Bool, max_is_int: Bool, max_int: Int, max_float: Float): Unit.
+pub clamp_scalar_out(output: pytorch.Tensor, input: pytorch.Tensor, has_min: Bool, min_is_int: Bool, min_int: Int, min_float: Float, has_max: Bool, max_is_int: Bool, max_int: Int, max_float: Float): Unit.
 
 /// Clamps a tensor with minimum-only, maximum-only, or paired tensor bounds.
 
-pub clamp_tensor(input: Tensor, mode: Int, first: Tensor, second: Tensor): Tensor.
+pub clamp_tensor(input: pytorch.Tensor, mode: Int, first: pytorch.Tensor, second: pytorch.Tensor): pytorch.Tensor.
 
 /// Clamps tensor storage in place using tensor bounds.
 
-pub clamp_tensor_in_place(input: Tensor, mode: Int, first: Tensor, second: Tensor): Unit.
+pub clamp_tensor_in_place(input: pytorch.Tensor, mode: Int, first: pytorch.Tensor, second: pytorch.Tensor): Unit.
 
 /// Writes tensor-bound clamp results into retained output storage.
 
-pub clamp_tensor_out(output: Tensor, input: Tensor, mode: Int, first: Tensor, second: Tensor): Unit.
+pub clamp_tensor_out(output: pytorch.Tensor, input: pytorch.Tensor, mode: Int, first: pytorch.Tensor, second: pytorch.Tensor): Unit.

@@ -14,4 +14,4 @@ pub no_bound(): List[Int].
 
 /// Writes source into input using independently optional bounds.
 
-pub slice_inverse(input: Tensor, source: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Tensor.
+pub slice_inverse(input: pytorch.Tensor, source: pytorch.Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): pytorch.Tensor.

@@ -6,4 +6,4 @@
 
 module pytorch.VanderCompletion.
 
-pub vander(input: Tensor, columns: Int = - 1, increasing: Bool = false): Tensor.
+pub vander(input: pytorch.Tensor, columns: Int = - 1, increasing: Bool = false): pytorch.Tensor.

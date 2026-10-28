@@ -4,40 +4,40 @@ module pytorch.ShapeGradient.
 
 /// Executes exact aten::diagonal, preserving dimensions, offsets, strides, and storage ownership.
 
-pub diagonal(tensor: Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): Tensor.
+pub diagonal(tensor: pytorch.Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): pytorch.Tensor.
 
 /// Executes exact aten::diagonal_backward, preserving dimensions, offsets, strides, and storage ownership.
 
-pub diagonal_backward(gradient: Tensor, input_sizes: List[Int], offset: Int, dimension1: Int, dimension2: Int): Tensor.
+pub diagonal_backward(gradient: pytorch.Tensor, input_sizes: List[Int], offset: Int, dimension1: Int, dimension2: Int): pytorch.Tensor.
 
 /// Executes exact aten::diagonal_backward.out, preserving dimensions, offsets, strides, and storage ownership.
 
-pub diagonal_backward_out(output: Tensor, gradient: Tensor, input_sizes: List[Int], offset: Int, dimension1: Int, dimension2: Int): Unit.
+pub diagonal_backward_out(output: pytorch.Tensor, gradient: pytorch.Tensor, input_sizes: List[Int], offset: Int, dimension1: Int, dimension2: Int): Unit.
 
 /// Executes exact aten::diagonal_scatter.out, preserving dimensions, offsets, strides, and storage ownership.
 
-pub diagonal_scatter_out(output: Tensor, tensor: Tensor, source: Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): Unit.
+pub diagonal_scatter_out(output: pytorch.Tensor, tensor: pytorch.Tensor, source: pytorch.Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): Unit.
 
 /// Executes exact aten::select_backward, preserving dimensions, offsets, strides, and storage ownership.
 
-pub select_backward(gradient: Tensor, input_sizes: List[Int], dimension: Int, index: Int): Tensor.
+pub select_backward(gradient: pytorch.Tensor, input_sizes: List[Int], dimension: Int, index: Int): pytorch.Tensor.
 
 /// Executes exact aten::select_backward.out, preserving dimensions, offsets, strides, and storage ownership.
 
-pub select_backward_out(output: Tensor, gradient: Tensor, input_sizes: List[Int], dimension: Int, index: Int): Unit.
+pub select_backward_out(output: pytorch.Tensor, gradient: pytorch.Tensor, input_sizes: List[Int], dimension: Int, index: Int): Unit.
 
 /// Executes exact aten::slice_backward, preserving dimensions, offsets, strides, and storage ownership.
 
-pub slice_backward(gradient: Tensor, input_sizes: List[Int], dimension: Int, start: Int, end: Int, step: Int): Tensor.
+pub slice_backward(gradient: pytorch.Tensor, input_sizes: List[Int], dimension: Int, start: Int, end: Int, step: Int): pytorch.Tensor.
 
 /// Executes exact aten::slice_backward.out, preserving dimensions, offsets, strides, and storage ownership.
 
-pub slice_backward_out(output: Tensor, gradient: Tensor, input_sizes: List[Int], dimension: Int, start: Int, end: Int, step: Int): Unit.
+pub slice_backward_out(output: pytorch.Tensor, gradient: pytorch.Tensor, input_sizes: List[Int], dimension: Int, start: Int, end: Int, step: Int): Unit.
 
 /// Executes exact aten::unfold_backward, preserving dimensions, offsets, strides, and storage ownership.
 
-pub unfold_backward(gradient: Tensor, input_sizes: List[Int], dimension: Int, size: Int, step: Int): Tensor.
+pub unfold_backward(gradient: pytorch.Tensor, input_sizes: List[Int], dimension: Int, size: Int, step: Int): pytorch.Tensor.
 
 /// Executes exact aten::unfold_backward.out, preserving dimensions, offsets, strides, and storage ownership.
 
-pub unfold_backward_out(output: Tensor, gradient: Tensor, input_sizes: List[Int], dimension: Int, size: Int, step: Int): Unit.
+pub unfold_backward_out(output: pytorch.Tensor, gradient: pytorch.Tensor, input_sizes: List[Int], dimension: Int, size: Int, step: Int): Unit.

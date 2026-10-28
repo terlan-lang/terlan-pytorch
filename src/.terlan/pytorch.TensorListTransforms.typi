@@ -4,28 +4,28 @@ module pytorch.TensorListTransforms.
 
 /// Executes exact aten::broadcast_tensors over one or more tensors.
 
-pub broadcast_tensors(first: Tensor, tensors: List[Tensor]): List[Tensor].
+pub broadcast_tensors(first: pytorch.Tensor, tensors: List[pytorch.Tensor]): List[pytorch.Tensor].
 
 /// Executes exact aten::einsum over a tensor list.
 
-pub einsum(equation: String, tensors: List[Tensor]): Tensor.
+pub einsum(equation: String, tensors: List[pytorch.Tensor]): pytorch.Tensor.
 
 /// Executes exact aten::flatten_dense_tensors.
 
-pub flatten_dense_tensors(tensors: List[Tensor]): Tensor.
+pub flatten_dense_tensors(tensors: List[pytorch.Tensor]): pytorch.Tensor.
 
 /// Executes exact aten::meshgrid with pinned default indexing.
 
-pub meshgrid(first: Tensor, tensors: List[Tensor]): List[Tensor].
+pub meshgrid(first: pytorch.Tensor, tensors: List[pytorch.Tensor]): List[pytorch.Tensor].
 
 /// Executes exact aten::meshgrid with explicit ij or xy indexing.
 
-pub meshgrid_indexing(first: Tensor, tensors: List[Tensor], indexing: String): List[Tensor].
+pub meshgrid_indexing(first: pytorch.Tensor, tensors: List[pytorch.Tensor], indexing: String): List[pytorch.Tensor].
 
 /// Executes exact aten::pad_sequence over a tensor list.
 
-pub pad_sequence(sequences: List[Tensor], batch_first: Bool = false, padding_value: Float = 0.0, padding_side: String = "right"): Tensor.
+pub pad_sequence(sequences: List[pytorch.Tensor], batch_first: Bool = false, padding_value: Float = 0.0, padding_side: String = "right"): pytorch.Tensor.
 
 /// Executes exact aten::unflatten_dense_tensors using one or more templates.
 
-pub unflatten_dense_tensors(flat: Tensor, first_template: Tensor, templates: List[Tensor]): List[Tensor].
+pub unflatten_dense_tensors(flat: pytorch.Tensor, first_template: pytorch.Tensor, templates: List[pytorch.Tensor]): List[pytorch.Tensor].

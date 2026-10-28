@@ -4,8 +4,8 @@ module pytorch.QuantizationInternals.
 
 /// Executes the frozen CPU choose_qparams_optimized quantization kernel.
 
-pub choose_qparams_optimized(input: Tensor, numel: Int, n_bins: Int, ratio: Float, bit_width: Int): {Tensor, Tensor}.
+pub choose_qparams_optimized(input: pytorch.Tensor, numel: Int, n_bins: Int, ratio: Float, bit_width: Int): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Executes the frozen CPU fused moving-average observer/fake-quantization kernel with mutable quantization state.
 
-pub fused_moving_avg_obs_fake_quant(self: Tensor, observer_on: Tensor, fake_quant_on: Tensor, running_min: Tensor, running_max: Tensor, scale: Tensor, zero_point: Tensor, averaging_const: Float, quant_min: Int, quant_max: Int, ch_axis: Int, per_row_fake_quant: Bool = false, symmetric_quant: Bool = false): Tensor.
+pub fused_moving_avg_obs_fake_quant(self: pytorch.Tensor, observer_on: pytorch.Tensor, fake_quant_on: pytorch.Tensor, running_min: pytorch.Tensor, running_max: pytorch.Tensor, scale: pytorch.Tensor, zero_point: pytorch.Tensor, averaging_const: Float, quant_min: Int, quant_max: Int, ch_axis: Int, per_row_fake_quant: Bool = false, symmetric_quant: Bool = false): pytorch.Tensor.

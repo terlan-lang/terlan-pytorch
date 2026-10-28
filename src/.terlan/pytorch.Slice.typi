@@ -14,28 +14,28 @@ pub no_bound(): List[Int].
 
 /// Returns the whole tensor as a shared-storage view using PyTorch defaults.
 
-pub slice(tensor: Tensor): Tensor.
+pub slice(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Returns a shared-storage view with independently optional bounds.
 
-pub slice(tensor: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Tensor.
+pub slice(tensor: pytorch.Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): pytorch.Tensor.
 
 /// Returns a full independently owned copy using PyTorch defaults.
 
-pub slice_copy(tensor: Tensor): Tensor.
+pub slice_copy(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Returns independently owned storage with optional slice bounds.
 
-pub slice_copy(tensor: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Tensor.
+pub slice_copy(tensor: pytorch.Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): pytorch.Tensor.
 
 /// Writes the exact sliced result into retained output storage.
 
-pub slice_copy_out(output: Tensor, tensor: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Unit.
+pub slice_copy_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Unit.
 
 /// Replaces a slice and returns independently owned storage.
 
-pub slice_scatter(tensor: Tensor, source: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Tensor.
+pub slice_scatter(tensor: pytorch.Tensor, source: pytorch.Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): pytorch.Tensor.
 
 /// Writes a slice replacement into retained output storage.
 
-pub slice_scatter_out(output: Tensor, tensor: Tensor, source: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Unit.
+pub slice_scatter_out(output: pytorch.Tensor, tensor: pytorch.Tensor, source: pytorch.Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Unit.

@@ -4,36 +4,36 @@ module pytorch.ScaledArithmeticNative.
 
 /// Applies alpha-scaled arithmetic with a floating-point scalar operand.
 
-pub scaled_scalar_float(left: Tensor, operation: Int, right: Float, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Tensor.
+pub scaled_scalar_float(left: pytorch.Tensor, operation: Int, right: Float, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): pytorch.Tensor.
 
 /// Applies supported alpha-scaled floating-scalar arithmetic in place.
 
-pub scaled_scalar_float_in_place(left: Tensor, operation: Int, right: Float, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
+pub scaled_scalar_float_in_place(left: pytorch.Tensor, operation: Int, right: Float, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
 
 /// Writes alpha-scaled floating-scalar arithmetic into retained output storage.
 
-pub scaled_scalar_float_out(output: Tensor, left: Tensor, operation: Int, right: Float, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
+pub scaled_scalar_float_out(output: pytorch.Tensor, left: pytorch.Tensor, operation: Int, right: Float, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
 
 /// Applies alpha-scaled arithmetic with an exact integer scalar operand.
 
-pub scaled_scalar_int(left: Tensor, operation: Int, right: Int, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Tensor.
+pub scaled_scalar_int(left: pytorch.Tensor, operation: Int, right: Int, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): pytorch.Tensor.
 
 /// Applies supported alpha-scaled integer-scalar arithmetic in place.
 
-pub scaled_scalar_int_in_place(left: Tensor, operation: Int, right: Int, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
+pub scaled_scalar_int_in_place(left: pytorch.Tensor, operation: Int, right: Int, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
 
 /// Writes alpha-scaled integer-scalar arithmetic into retained output storage.
 
-pub scaled_scalar_int_out(output: Tensor, left: Tensor, operation: Int, right: Int, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
+pub scaled_scalar_int_out(output: pytorch.Tensor, left: pytorch.Tensor, operation: Int, right: Int, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
 
 /// Applies alpha-scaled tensor arithmetic selected by a reviewed operation identifier.
 
-pub scaled_tensor(left: Tensor, operation: Int, right: Tensor, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Tensor.
+pub scaled_tensor(left: pytorch.Tensor, operation: Int, right: pytorch.Tensor, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): pytorch.Tensor.
 
 /// Applies supported alpha-scaled tensor arithmetic in place.
 
-pub scaled_tensor_in_place(left: Tensor, operation: Int, right: Tensor, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
+pub scaled_tensor_in_place(left: pytorch.Tensor, operation: Int, right: pytorch.Tensor, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
 
 /// Writes alpha-scaled tensor arithmetic into retained output storage.
 
-pub scaled_tensor_out(output: Tensor, left: Tensor, operation: Int, right: Tensor, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
+pub scaled_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, operation: Int, right: pytorch.Tensor, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.

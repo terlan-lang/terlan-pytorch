@@ -4,8 +4,8 @@ module pytorch.UpsampleNearest2dCompletion.
 
 /// Upsamples a 3-D tensor to an explicit output size.
 
-pub upsample_nearest2d(input: Tensor, output_size: List[Int]): Tensor.
+pub upsample_nearest2d(input: pytorch.Tensor, output_size: List[Int]): pytorch.Tensor.
 
 /// Writes an upsampled tensor into retained output storage.
 
-pub upsample_nearest2d_out(output: Tensor, input: Tensor, output_size: List[Int]): Unit.
+pub upsample_nearest2d_out(output: pytorch.Tensor, input: pytorch.Tensor, output_size: List[Int]): Unit.

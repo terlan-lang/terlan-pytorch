@@ -12,7 +12,7 @@ pub adam(learning_rate: Float, beta1: Float, beta2: Float, epsilon: Float, weigh
 
 /// Generated CXX optimizer adapter.
 
-pub add_parameter(optimizer: Adam, parameter: Tensor): Unit.
+pub add_parameter(optimizer: Adam, parameter: pytorch.Tensor): Unit.
 
 /// Generated CXX optimizer adapter.
 
@@ -20,7 +20,7 @@ pub cancel(optimizer: Adam): Unit.
 
 /// Generated CXX optimizer adapter.
 
-pub checkpoint(optimizer: Adam): Bytes.
+pub checkpoint(optimizer: Adam): std.vm.Bytes.
 
 /// Generated CXX optimizer adapter.
 
@@ -32,7 +32,7 @@ pub parameter_count(optimizer: Adam): Int.
 
 /// Generated CXX optimizer adapter.
 
-pub restore(optimizer: Adam, checkpoint: Bytes): Unit.
+pub restore(optimizer: Adam, checkpoint: std.vm.Bytes): Unit.
 
 /// Generated CXX optimizer adapter.
 

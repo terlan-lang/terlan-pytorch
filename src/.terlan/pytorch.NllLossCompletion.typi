@@ -4,16 +4,16 @@ module pytorch.NllLossCompletion.
 
 /// Computes mean NLL loss without class weights.
 
-pub nll_loss_default(input: Tensor, target: Tensor, reduction: Int, ignore_index: Int): Tensor.
+pub nll_loss_default(input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int, ignore_index: Int): pytorch.Tensor.
 
 /// Writes mean NLL loss into retained output storage without class weights.
 
-pub nll_loss_out_default(output: Tensor, input: Tensor, target: Tensor, reduction: Int, ignore_index: Int): Unit.
+pub nll_loss_out_default(output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int, ignore_index: Int): Unit.
 
 /// Writes mean NLL loss into retained output storage with class weights.
 
-pub nll_loss_out_weight(output: Tensor, input: Tensor, target: Tensor, weight: Tensor, reduction: Int, ignore_index: Int): Unit.
+pub nll_loss_out_weight(output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, weight: pytorch.Tensor, reduction: Int, ignore_index: Int): Unit.
 
 /// Computes mean NLL loss with class weights.
 
-pub nll_loss_weight(input: Tensor, target: Tensor, weight: Tensor, reduction: Int, ignore_index: Int): Tensor.
+pub nll_loss_weight(input: pytorch.Tensor, target: pytorch.Tensor, weight: pytorch.Tensor, reduction: Int, ignore_index: Int): pytorch.Tensor.

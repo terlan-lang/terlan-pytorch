@@ -1,10 +1,10 @@
 module=pytorch.Ppo
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=13704394605721357162
-interface_hash=15790376192734428791
+interface_hash=1757974684712789981
 interface_doc_hash=8484338663574664551
 deps=2
-pytorch.Optimizer=10194287168797527988
-pytorch.Tensor=13489932768568026575
+pytorch.Optimizer=16537076176097131951
+pytorch.Tensor=1089416781329568890

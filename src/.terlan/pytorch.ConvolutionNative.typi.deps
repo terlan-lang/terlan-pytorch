@@ -1,9 +1,9 @@
 module=pytorch.ConvolutionNative
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=16569676597594094122
-interface_hash=13466694278233695245
+interface_hash=8348378305408407328
 interface_doc_hash=1293782451093682785
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

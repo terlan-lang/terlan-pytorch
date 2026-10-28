@@ -4,24 +4,24 @@ module pytorch.IndexFillNative.
 
 /// Executes exact aten::index_fill with a tagged integer or floating-point Scalar value.
 
-pub index_fill_scalar(input: Tensor, dimension: Int, index: Tensor, value_is_int: Bool, value_int: Int, value_float: Float): Tensor.
+pub index_fill_scalar(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value_is_int: Bool, value_int: Int, value_float: Float): pytorch.Tensor.
 
 /// Executes the exact dispatcher-backed Tensor::index_fill_ scalar overload in place.
 
-pub index_fill_scalar_in_place(input: Tensor, dimension: Int, index: Tensor, value_is_int: Bool, value_int: Int, value_float: Float): Unit.
+pub index_fill_scalar_in_place(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value_is_int: Bool, value_int: Int, value_float: Float): Unit.
 
 /// Writes exact aten::index_fill.out scalar results into retained output storage.
 
-pub index_fill_scalar_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, value_is_int: Bool, value_int: Int, value_float: Float): Unit.
+pub index_fill_scalar_out(output: pytorch.Tensor, input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value_is_int: Bool, value_int: Int, value_float: Float): Unit.
 
 /// Executes exact aten::index_fill with a scalar Tensor value.
 
-pub index_fill_tensor(input: Tensor, dimension: Int, index: Tensor, value: Tensor): Tensor.
+pub index_fill_tensor(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact dispatcher-backed Tensor::index_fill_ Tensor-value overload in place.
 
-pub index_fill_tensor_in_place(input: Tensor, dimension: Int, index: Tensor, value: Tensor): Unit.
+pub index_fill_tensor_in_place(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value: pytorch.Tensor): Unit.
 
 /// Writes exact aten::index_fill.out Tensor-value results into retained output storage.
 
-pub index_fill_tensor_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, value: Tensor): Unit.
+pub index_fill_tensor_out(output: pytorch.Tensor, input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value: pytorch.Tensor): Unit.

@@ -4,20 +4,20 @@ module pytorch.DropoutCompletion.
 
 /// Executes exact aten::alpha_dropout_ mutation.
 
-pub alpha_dropout_in_place(tensor: Tensor, probability: Float, training: Bool): Unit.
+pub alpha_dropout_in_place(tensor: pytorch.Tensor, probability: Float, training: Bool): Unit.
 
 /// Executes exact aten::dropout_ mutation.
 
-pub dropout_in_place(tensor: Tensor, probability: Float, training: Bool): Unit.
+pub dropout_in_place(tensor: pytorch.Tensor, probability: Float, training: Bool): Unit.
 
 /// Executes exact functional aten::feature_alpha_dropout.
 
-pub feature_alpha_dropout(tensor: Tensor, probability: Float, training: Bool): Tensor.
+pub feature_alpha_dropout(tensor: pytorch.Tensor, probability: Float, training: Bool): pytorch.Tensor.
 
 /// Executes exact aten::feature_alpha_dropout_ mutation.
 
-pub feature_alpha_dropout_in_place(tensor: Tensor, probability: Float, training: Bool): Unit.
+pub feature_alpha_dropout_in_place(tensor: pytorch.Tensor, probability: Float, training: Bool): Unit.
 
 /// Executes exact aten::feature_dropout_ mutation.
 
-pub feature_dropout_in_place(tensor: Tensor, probability: Float, training: Bool): Unit.
+pub feature_dropout_in_place(tensor: pytorch.Tensor, probability: Float, training: Bool): Unit.

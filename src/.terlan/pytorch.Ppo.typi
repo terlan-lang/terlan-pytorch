@@ -2,24 +2,24 @@ module pytorch.Ppo.
 
 /// Returns mean categorical entropy after stabilizing logarithms with epsilon.
 
-pub categorical_entropy(probabilities: pytorch.Tensor.Tensor, epsilon: Float): pytorch.Tensor.Tensor.
+pub categorical_entropy(probabilities: pytorch.Tensor, epsilon: Float): pytorch.Tensor.
 
 /// Returns the negative clipped policy objective for one PPO minibatch.
 
-pub clipped_policy_loss(new_log_probabilities: pytorch.Tensor.Tensor, old_log_probabilities: pytorch.Tensor.Tensor, advantages: pytorch.Tensor.Tensor, clip_epsilon: Float): pytorch.Tensor.Tensor.
+pub clipped_policy_loss(new_log_probabilities: pytorch.Tensor, old_log_probabilities: pytorch.Tensor, advantages: pytorch.Tensor, clip_epsilon: Float): pytorch.Tensor.
 
 /// Combines policy loss, scaled value loss, and an entropy reward into one loss.
 
-pub combined_loss(policy: pytorch.Tensor.Tensor, value: pytorch.Tensor.Tensor, entropy: pytorch.Tensor.Tensor, value_coefficient: Float, entropy_coefficient: Float): pytorch.Tensor.Tensor.
+pub combined_loss(policy: pytorch.Tensor, value: pytorch.Tensor, entropy: pytorch.Tensor, value_coefficient: Float, entropy_coefficient: Float): pytorch.Tensor.
 
 /// Executes one deterministic PPO minibatch update for registered actor and critic leaves.
 
-pub minibatch_update(actor_logits: pytorch.Tensor.Tensor, critic_values: pytorch.Tensor.Tensor, old_log_probabilities: pytorch.Tensor.Tensor, raw_advantages: pytorch.Tensor.Tensor, returns: pytorch.Tensor.Tensor, optimizer: pytorch.Optimizer.Adam, seed: Int, clip_epsilon: Float, value_coefficient: Float, entropy_coefficient: Float): pytorch.Tensor.Tensor.
+pub minibatch_update(actor_logits: pytorch.Tensor, critic_values: pytorch.Tensor, old_log_probabilities: pytorch.Tensor, raw_advantages: pytorch.Tensor, returns: pytorch.Tensor, optimizer: pytorch.Optimizer.Adam, seed: Int, clip_epsilon: Float, value_coefficient: Float, entropy_coefficient: Float): pytorch.Tensor.
 
 /// Returns zero-mean, unit-variance advantages using a positive stability epsilon.
 
-pub normalize_advantages(advantages: pytorch.Tensor.Tensor, epsilon: Float): pytorch.Tensor.Tensor.
+pub normalize_advantages(advantages: pytorch.Tensor, epsilon: Float): pytorch.Tensor.
 
 /// Returns mean squared value-function loss for one PPO minibatch.
 
-pub value_loss(predicted_values: pytorch.Tensor.Tensor, returns: pytorch.Tensor.Tensor): pytorch.Tensor.Tensor.
+pub value_loss(predicted_values: pytorch.Tensor, returns: pytorch.Tensor): pytorch.Tensor.

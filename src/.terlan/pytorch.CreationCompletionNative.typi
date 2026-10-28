@@ -32,16 +32,16 @@ pub type Preserve =
 
 /// Creates an empty, full, ones, or zeros tensor with exact optional arguments.
 
-pub create_configured(operation: Int, shape: List[Int], fill_is_integer: Bool, fill_integer: Int, fill_floating: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool, memory_format: Int, has_memory_format: Bool): Tensor.
+pub create_configured(operation: Int, shape: List[Int], fill_is_integer: Bool, fill_integer: Int, fill_floating: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool, memory_format: Int, has_memory_format: Bool): pytorch.Tensor.
 
 /// Writes an empty, full, ones, or zeros result into retained output storage.
 
-pub create_out(output: Tensor, operation: Int, shape: List[Int], fill_is_integer: Bool, fill_integer: Int, fill_floating: Float, memory_format: Int, has_memory_format: Bool): Unit.
+pub create_out(output: pytorch.Tensor, operation: Int, shape: List[Int], fill_is_integer: Bool, fill_integer: Int, fill_floating: Float, memory_format: Int, has_memory_format: Bool): Unit.
 
 /// Creates an empty, full, ones, or zeros tensor like an input with exact optional arguments.
 
-pub like_configured(input: Tensor, operation: Int, fill_is_integer: Bool, fill_integer: Int, fill_floating: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool, memory_format: Int, has_memory_format: Bool): Tensor.
+pub like_configured(input: pytorch.Tensor, operation: Int, fill_is_integer: Bool, fill_integer: Int, fill_floating: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool, memory_format: Int, has_memory_format: Bool): pytorch.Tensor.
 
 /// Writes an empty, full, ones, or zeros like-result into retained output storage.
 
-pub like_out(output: Tensor, input: Tensor, operation: Int, fill_is_integer: Bool, fill_integer: Int, fill_floating: Float, memory_format: Int, has_memory_format: Bool): Unit.
+pub like_out(output: pytorch.Tensor, input: pytorch.Tensor, operation: Int, fill_is_integer: Bool, fill_integer: Int, fill_floating: Float, memory_format: Int, has_memory_format: Bool): Unit.

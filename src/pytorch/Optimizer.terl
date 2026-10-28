@@ -4,6 +4,7 @@
 module pytorch.Optimizer.
 
 import type pytorch.Tensor.
+import type std.vm.Bytes.
 
 /**
  * Owned optimizer resource.

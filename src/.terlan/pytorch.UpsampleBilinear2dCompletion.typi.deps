@@ -1,9 +1,9 @@
 module=pytorch.UpsampleBilinear2dCompletion
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=4794623476610913113
-interface_hash=14395078255861269794
+interface_hash=11912677351381059995
 interface_doc_hash=17287261421343818362
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

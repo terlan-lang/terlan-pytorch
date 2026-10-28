@@ -4,88 +4,88 @@ module pytorch.ConvolutionNative.
 
 /// Executes exact conv1d with absent bias and numeric padding.
 
-pub conv1d_no_bias(input: Tensor, weight: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): Tensor.
+pub conv1d_no_bias(input: pytorch.Tensor, weight: pytorch.Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): pytorch.Tensor.
 
 /// Executes exact conv1d.padding with absent bias.
 
-pub conv1d_padding_no_bias(input: Tensor, weight: Tensor, stride: List[Int], padding: String, dilation: List[Int], groups: Int): Tensor.
+pub conv1d_padding_no_bias(input: pytorch.Tensor, weight: pytorch.Tensor, stride: List[Int], padding: String, dilation: List[Int], groups: Int): pytorch.Tensor.
 
 /// Executes exact conv1d.padding with present bias.
 
-pub conv1d_padding_with_bias(input: Tensor, weight: Tensor, bias: Tensor, stride: List[Int], padding: String, dilation: List[Int], groups: Int): Tensor.
+pub conv1d_padding_with_bias(input: pytorch.Tensor, weight: pytorch.Tensor, bias: pytorch.Tensor, stride: List[Int], padding: String, dilation: List[Int], groups: Int): pytorch.Tensor.
 
 /// Executes exact conv1d with present bias and numeric padding.
 
-pub conv1d_with_bias(input: Tensor, weight: Tensor, bias: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): Tensor.
+pub conv1d_with_bias(input: pytorch.Tensor, weight: pytorch.Tensor, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): pytorch.Tensor.
 
 /// Executes exact conv2d with absent bias and numeric padding.
 
-pub conv2d_no_bias(input: Tensor, weight: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): Tensor.
+pub conv2d_no_bias(input: pytorch.Tensor, weight: pytorch.Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): pytorch.Tensor.
 
 /// Executes exact conv2d.padding with absent bias.
 
-pub conv2d_padding_no_bias(input: Tensor, weight: Tensor, stride: List[Int], padding: String, dilation: List[Int], groups: Int): Tensor.
+pub conv2d_padding_no_bias(input: pytorch.Tensor, weight: pytorch.Tensor, stride: List[Int], padding: String, dilation: List[Int], groups: Int): pytorch.Tensor.
 
 /// Executes exact conv2d.padding with present bias.
 
-pub conv2d_padding_with_bias(input: Tensor, weight: Tensor, bias: Tensor, stride: List[Int], padding: String, dilation: List[Int], groups: Int): Tensor.
+pub conv2d_padding_with_bias(input: pytorch.Tensor, weight: pytorch.Tensor, bias: pytorch.Tensor, stride: List[Int], padding: String, dilation: List[Int], groups: Int): pytorch.Tensor.
 
 /// Executes exact conv2d with present bias and numeric padding.
 
-pub conv2d_with_bias(input: Tensor, weight: Tensor, bias: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): Tensor.
+pub conv2d_with_bias(input: pytorch.Tensor, weight: pytorch.Tensor, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): pytorch.Tensor.
 
 /// Executes exact conv3d with absent bias and numeric padding.
 
-pub conv3d_no_bias(input: Tensor, weight: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): Tensor.
+pub conv3d_no_bias(input: pytorch.Tensor, weight: pytorch.Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): pytorch.Tensor.
 
 /// Executes exact conv3d.padding with absent bias.
 
-pub conv3d_padding_no_bias(input: Tensor, weight: Tensor, stride: List[Int], padding: String, dilation: List[Int], groups: Int): Tensor.
+pub conv3d_padding_no_bias(input: pytorch.Tensor, weight: pytorch.Tensor, stride: List[Int], padding: String, dilation: List[Int], groups: Int): pytorch.Tensor.
 
 /// Executes exact conv3d.padding with present bias.
 
-pub conv3d_padding_with_bias(input: Tensor, weight: Tensor, bias: Tensor, stride: List[Int], padding: String, dilation: List[Int], groups: Int): Tensor.
+pub conv3d_padding_with_bias(input: pytorch.Tensor, weight: pytorch.Tensor, bias: pytorch.Tensor, stride: List[Int], padding: String, dilation: List[Int], groups: Int): pytorch.Tensor.
 
 /// Executes exact conv3d with present bias and numeric padding.
 
-pub conv3d_with_bias(input: Tensor, weight: Tensor, bias: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): Tensor.
+pub conv3d_with_bias(input: pytorch.Tensor, weight: pytorch.Tensor, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): pytorch.Tensor.
 
 /// Executes exact conv_transpose1d with absent bias.
 
-pub conv_transpose1d_no_bias(input: Tensor, weight: Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], groups: Int, dilation: List[Int]): Tensor.
+pub conv_transpose1d_no_bias(input: pytorch.Tensor, weight: pytorch.Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], groups: Int, dilation: List[Int]): pytorch.Tensor.
 
 /// Executes exact conv_transpose1d with present bias.
 
-pub conv_transpose1d_with_bias(input: Tensor, weight: Tensor, bias: Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], groups: Int, dilation: List[Int]): Tensor.
+pub conv_transpose1d_with_bias(input: pytorch.Tensor, weight: pytorch.Tensor, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], groups: Int, dilation: List[Int]): pytorch.Tensor.
 
 /// Executes exact conv_transpose2d with absent bias.
 
-pub conv_transpose2d_no_bias(input: Tensor, weight: Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], groups: Int, dilation: List[Int]): Tensor.
+pub conv_transpose2d_no_bias(input: pytorch.Tensor, weight: pytorch.Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], groups: Int, dilation: List[Int]): pytorch.Tensor.
 
 /// Executes exact conv_transpose2d with present bias.
 
-pub conv_transpose2d_with_bias(input: Tensor, weight: Tensor, bias: Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], groups: Int, dilation: List[Int]): Tensor.
+pub conv_transpose2d_with_bias(input: pytorch.Tensor, weight: pytorch.Tensor, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], groups: Int, dilation: List[Int]): pytorch.Tensor.
 
 /// Executes exact conv_transpose3d with absent bias.
 
-pub conv_transpose3d_no_bias(input: Tensor, weight: Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], groups: Int, dilation: List[Int]): Tensor.
+pub conv_transpose3d_no_bias(input: pytorch.Tensor, weight: pytorch.Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], groups: Int, dilation: List[Int]): pytorch.Tensor.
 
 /// Executes exact conv_transpose3d with present bias.
 
-pub conv_transpose3d_with_bias(input: Tensor, weight: Tensor, bias: Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], groups: Int, dilation: List[Int]): Tensor.
+pub conv_transpose3d_with_bias(input: pytorch.Tensor, weight: pytorch.Tensor, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], groups: Int, dilation: List[Int]): pytorch.Tensor.
 
 /// Exact generated CXX leaf for aten::convolution.
 
-pub convolution(input: Tensor, weight: Tensor, has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], transposed: Bool, output_padding: List[Int], groups: Int): Tensor.
+pub convolution(input: pytorch.Tensor, weight: pytorch.Tensor, has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], transposed: Bool, output_padding: List[Int], groups: Int): pytorch.Tensor.
 
 /// Exact generated CXX tuple leaf for aten::convolution_backward.
 
-pub convolution_backward(gradient: Tensor, input: Tensor, weight: Tensor, has_bias_sizes: Bool, bias_sizes: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], transposed: Bool, output_padding: List[Int], groups: Int, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): {Tensor, Tensor, Tensor}.
+pub convolution_backward(gradient: pytorch.Tensor, input: pytorch.Tensor, weight: pytorch.Tensor, has_bias_sizes: Bool, bias_sizes: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], transposed: Bool, output_padding: List[Int], groups: Int, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX retained-output leaf for aten::convolution_backward.out.
 
-pub convolution_backward_out(grad_input: Tensor, grad_weight: Tensor, grad_bias: Tensor, gradient: Tensor, input: Tensor, weight: Tensor, has_bias_sizes: Bool, bias_sizes: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], transposed: Bool, output_padding: List[Int], groups: Int, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): Unit.
+pub convolution_backward_out(grad_input: pytorch.Tensor, grad_weight: pytorch.Tensor, grad_bias: pytorch.Tensor, gradient: pytorch.Tensor, input: pytorch.Tensor, weight: pytorch.Tensor, has_bias_sizes: Bool, bias_sizes: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], transposed: Bool, output_padding: List[Int], groups: Int, output_mask_input: Bool, output_mask_weight: Bool, output_mask_bias: Bool): Unit.
 
 /// Exact generated CXX retained-output leaf for aten::convolution.out.
 
-pub convolution_out(output: Tensor, input: Tensor, weight: Tensor, has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], transposed: Bool, output_padding: List[Int], groups: Int): Unit.
+pub convolution_out(output: pytorch.Tensor, input: pytorch.Tensor, weight: pytorch.Tensor, has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], transposed: Bool, output_padding: List[Int], groups: Int): Unit.

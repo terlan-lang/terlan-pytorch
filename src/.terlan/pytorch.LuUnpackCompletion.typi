@@ -4,8 +4,8 @@ module pytorch.LuUnpackCompletion.
 
 /// Exact LU unpacking tuple form.
 
-pub lu_unpack_default(lu_data: Tensor, lu_pivots: Tensor, unpack_data: Bool = true, unpack_pivots: Bool = true): {Tensor, Tensor, Tensor}.
+pub lu_unpack_default(lu_data: pytorch.Tensor, lu_pivots: pytorch.Tensor, unpack_data: Bool = true, unpack_pivots: Bool = true): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact LU unpacking output form.
 
-pub lu_unpack_out_default(p: Tensor, l: Tensor, u: Tensor, lu_data: Tensor, lu_pivots: Tensor, unpack_data: Bool = true, unpack_pivots: Bool = true): Unit.
+pub lu_unpack_out_default(p: pytorch.Tensor, l: pytorch.Tensor, u: pytorch.Tensor, lu_data: pytorch.Tensor, lu_pivots: pytorch.Tensor, unpack_data: Bool = true, unpack_pivots: Bool = true): Unit.

@@ -4,8 +4,8 @@ module pytorch.SvdCompletion.
 
 /// Exact generated CXX legacy SVD leaf.
 
-pub svd_default(input: Tensor, some: Bool = true, compute_uv: Bool = true): {Tensor, Tensor, Tensor}.
+pub svd_default(input: pytorch.Tensor, some: Bool = true, compute_uv: Bool = true): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX legacy SVD retained-output leaf.
 
-pub svd_out(u: Tensor, s: Tensor, v: Tensor, input: Tensor, some: Bool, compute_uv: Bool): Unit.
+pub svd_out(u: pytorch.Tensor, s: pytorch.Tensor, v: pytorch.Tensor, input: pytorch.Tensor, some: Bool, compute_uv: Bool): Unit.

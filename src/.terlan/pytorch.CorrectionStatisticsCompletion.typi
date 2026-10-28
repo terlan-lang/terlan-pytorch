@@ -4,128 +4,128 @@ module pytorch.CorrectionStatisticsCompletion.
 
 /// Undocumented upstream declaration.
 
-pub std_correction_default(input: Tensor, keep_dimension: Bool): Tensor.
+pub std_correction_default(input: pytorch.Tensor, keep_dimension: Bool): pytorch.Tensor.
 
 /// Undocumented upstream declaration.
 
-pub std_correction_dimensions(input: Tensor, dimensions: List[Int], keep_dimension: Bool): Tensor.
+pub std_correction_dimensions(input: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool): pytorch.Tensor.
 
 /// Undocumented upstream declaration.
 
-pub std_correction_dimensions_float(input: Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): Tensor.
+pub std_correction_dimensions_float(input: pytorch.Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): pytorch.Tensor.
 
 /// Undocumented upstream declaration.
 
-pub std_correction_dimensions_int(input: Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): Tensor.
+pub std_correction_dimensions_int(input: pytorch.Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): pytorch.Tensor.
 
 /// Undocumented upstream declaration.
 
-pub std_correction_float(input: Tensor, correction: Float, keep_dimension: Bool): Tensor.
+pub std_correction_float(input: pytorch.Tensor, correction: Float, keep_dimension: Bool): pytorch.Tensor.
 
 /// Undocumented upstream declaration.
 
-pub std_correction_int(input: Tensor, correction: Int, keep_dimension: Bool): Tensor.
+pub std_correction_int(input: pytorch.Tensor, correction: Int, keep_dimension: Bool): pytorch.Tensor.
 
 /// Undocumented upstream declaration.
 
-pub std_correction_out_default(output: Tensor, input: Tensor, keep_dimension: Bool): Unit.
+pub std_correction_out_default(output: pytorch.Tensor, input: pytorch.Tensor, keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub std_correction_out_dimensions(output: Tensor, input: Tensor, dimensions: List[Int], keep_dimension: Bool): Unit.
+pub std_correction_out_dimensions(output: pytorch.Tensor, input: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub std_correction_out_dimensions_float(output: Tensor, input: Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): Unit.
+pub std_correction_out_dimensions_float(output: pytorch.Tensor, input: pytorch.Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub std_correction_out_dimensions_int(output: Tensor, input: Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): Unit.
+pub std_correction_out_dimensions_int(output: pytorch.Tensor, input: pytorch.Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub std_correction_out_float(output: Tensor, input: Tensor, correction: Float, keep_dimension: Bool): Unit.
+pub std_correction_out_float(output: pytorch.Tensor, input: pytorch.Tensor, correction: Float, keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub std_correction_out_int(output: Tensor, input: Tensor, correction: Int, keep_dimension: Bool): Unit.
+pub std_correction_out_int(output: pytorch.Tensor, input: pytorch.Tensor, correction: Int, keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub std_mean_correction_default(input: Tensor, keep_dimension: Bool): {Tensor, Tensor}.
+pub std_mean_correction_default(input: pytorch.Tensor, keep_dimension: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Undocumented upstream declaration.
 
-pub std_mean_correction_dimensions(input: Tensor, dimensions: List[Int], keep_dimension: Bool): {Tensor, Tensor}.
+pub std_mean_correction_dimensions(input: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Undocumented upstream declaration.
 
-pub std_mean_correction_out_default(output: Tensor, mean_output: Tensor, input: Tensor, keep_dimension: Bool): Unit.
+pub std_mean_correction_out_default(output: pytorch.Tensor, mean_output: pytorch.Tensor, input: pytorch.Tensor, keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub std_mean_correction_out_dimensions(output: Tensor, mean_output: Tensor, input: Tensor, dimensions: List[Int], keep_dimension: Bool): Unit.
+pub std_mean_correction_out_dimensions(output: pytorch.Tensor, mean_output: pytorch.Tensor, input: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub var_correction_default(input: Tensor, keep_dimension: Bool): Tensor.
+pub var_correction_default(input: pytorch.Tensor, keep_dimension: Bool): pytorch.Tensor.
 
 /// Undocumented upstream declaration.
 
-pub var_correction_dimensions(input: Tensor, dimensions: List[Int], keep_dimension: Bool): Tensor.
+pub var_correction_dimensions(input: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool): pytorch.Tensor.
 
 /// Undocumented upstream declaration.
 
-pub var_correction_dimensions_float(input: Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): Tensor.
+pub var_correction_dimensions_float(input: pytorch.Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): pytorch.Tensor.
 
 /// Undocumented upstream declaration.
 
-pub var_correction_dimensions_int(input: Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): Tensor.
+pub var_correction_dimensions_int(input: pytorch.Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): pytorch.Tensor.
 
 /// Undocumented upstream declaration.
 
-pub var_correction_float(input: Tensor, correction: Float, keep_dimension: Bool): Tensor.
+pub var_correction_float(input: pytorch.Tensor, correction: Float, keep_dimension: Bool): pytorch.Tensor.
 
 /// Undocumented upstream declaration.
 
-pub var_correction_int(input: Tensor, correction: Int, keep_dimension: Bool): Tensor.
+pub var_correction_int(input: pytorch.Tensor, correction: Int, keep_dimension: Bool): pytorch.Tensor.
 
 /// Undocumented upstream declaration.
 
-pub var_correction_out_default(output: Tensor, input: Tensor, keep_dimension: Bool): Unit.
+pub var_correction_out_default(output: pytorch.Tensor, input: pytorch.Tensor, keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub var_correction_out_dimensions(output: Tensor, input: Tensor, dimensions: List[Int], keep_dimension: Bool): Unit.
+pub var_correction_out_dimensions(output: pytorch.Tensor, input: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub var_correction_out_dimensions_float(output: Tensor, input: Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): Unit.
+pub var_correction_out_dimensions_float(output: pytorch.Tensor, input: pytorch.Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub var_correction_out_dimensions_int(output: Tensor, input: Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): Unit.
+pub var_correction_out_dimensions_int(output: pytorch.Tensor, input: pytorch.Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub var_correction_out_float(output: Tensor, input: Tensor, correction: Float, keep_dimension: Bool): Unit.
+pub var_correction_out_float(output: pytorch.Tensor, input: pytorch.Tensor, correction: Float, keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub var_correction_out_int(output: Tensor, input: Tensor, correction: Int, keep_dimension: Bool): Unit.
+pub var_correction_out_int(output: pytorch.Tensor, input: pytorch.Tensor, correction: Int, keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub var_mean_correction_default(input: Tensor, keep_dimension: Bool): {Tensor, Tensor}.
+pub var_mean_correction_default(input: pytorch.Tensor, keep_dimension: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Undocumented upstream declaration.
 
-pub var_mean_correction_dimensions(input: Tensor, dimensions: List[Int], keep_dimension: Bool): {Tensor, Tensor}.
+pub var_mean_correction_dimensions(input: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Undocumented upstream declaration.
 
-pub var_mean_correction_out_default(output: Tensor, mean_output: Tensor, input: Tensor, keep_dimension: Bool): Unit.
+pub var_mean_correction_out_default(output: pytorch.Tensor, mean_output: pytorch.Tensor, input: pytorch.Tensor, keep_dimension: Bool): Unit.
 
 /// Undocumented upstream declaration.
 
-pub var_mean_correction_out_dimensions(output: Tensor, mean_output: Tensor, input: Tensor, dimensions: List[Int], keep_dimension: Bool): Unit.
+pub var_mean_correction_out_dimensions(output: pytorch.Tensor, mean_output: pytorch.Tensor, input: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool): Unit.

@@ -4,12 +4,12 @@ module pytorch.Distance.
 
 /// Exact generated CXX complex-half conversion.
 
-pub chalf(input: Tensor): Tensor.
+pub chalf(input: pytorch.Tensor): pytorch.Tensor.
 
 /// Computes cosine similarity along one dimension with an explicit denominator floor.
 
-pub cosine_similarity(x1: Tensor, x2: Tensor, dimension: Int = 1, epsilon: Float = 1e-8): Tensor.
+pub cosine_similarity(x1: pytorch.Tensor, x2: pytorch.Tensor, dimension: Int = 1, epsilon: Float = 1e-8): pytorch.Tensor.
 
 /// Computes batched pairwise p-distance with explicit epsilon and dimension retention.
 
-pub pairwise_distance(x1: Tensor, x2: Tensor, order: Float = 2.0, epsilon: Float = 0.000001, keep_dimension: Bool = false): Tensor.
+pub pairwise_distance(x1: pytorch.Tensor, x2: pytorch.Tensor, order: Float = 2.0, epsilon: Float = 0.000001, keep_dimension: Bool = false): pytorch.Tensor.

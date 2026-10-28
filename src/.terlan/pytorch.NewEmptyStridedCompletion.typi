@@ -4,4 +4,4 @@ module pytorch.NewEmptyStridedCompletion.
 
 /// Creates a strided tensor in retained output storage using input options.
 
-pub new_empty_strided_out(output: Tensor, input: Tensor, size: List[Int], stride: List[Int]): Unit.
+pub new_empty_strided_out(output: pytorch.Tensor, input: pytorch.Tensor, size: List[Int], stride: List[Int]): Unit.

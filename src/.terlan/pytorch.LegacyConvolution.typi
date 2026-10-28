@@ -4,52 +4,52 @@ module pytorch.LegacyConvolution.
 
 /// Exact generated CXX slow 3D convolution leaf.
 
-pub slow_conv3d(input: Tensor, weight: Tensor, kernel_size: List[Int], has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int]): Tensor.
+pub slow_conv3d(input: pytorch.Tensor, weight: pytorch.Tensor, kernel_size: List[Int], has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int]): pytorch.Tensor.
 
 /// Exact generated CXX slow_conv3d_forward retained-output leaf.
 
-pub slow_conv3d_forward_out(output: Tensor, input: Tensor, weight: Tensor, kernel_size: List[Int], has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int]): Unit.
+pub slow_conv3d_forward_out(output: pytorch.Tensor, input: pytorch.Tensor, weight: pytorch.Tensor, kernel_size: List[Int], has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int]): Unit.
 
 /// Exact generated CXX slow_conv3d retained-output leaf.
 
-pub slow_conv3d_out(output: Tensor, input: Tensor, weight: Tensor, kernel_size: List[Int], has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int]): Unit.
+pub slow_conv3d_out(output: pytorch.Tensor, input: pytorch.Tensor, weight: pytorch.Tensor, kernel_size: List[Int], has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int]): Unit.
 
 /// Exact generated CXX slow dilated 2D convolution leaf.
 
-pub slow_conv_dilated2d(input: Tensor, weight: Tensor, kernel_size: List[Int], has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int]): Tensor.
+pub slow_conv_dilated2d(input: pytorch.Tensor, weight: pytorch.Tensor, kernel_size: List[Int], has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], dilation: List[Int]): pytorch.Tensor.
 
 /// Exact generated CXX slow_conv_dilated2d retained-output leaf.
 
-pub slow_conv_dilated2d_out(output: Tensor, input: Tensor, weight: Tensor, kernel_size: List[Int], has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int]): Unit.
+pub slow_conv_dilated2d_out(output: pytorch.Tensor, input: pytorch.Tensor, weight: pytorch.Tensor, kernel_size: List[Int], has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], dilation: List[Int]): Unit.
 
 /// Exact generated CXX slow dilated 3D convolution leaf.
 
-pub slow_conv_dilated3d(input: Tensor, weight: Tensor, kernel_size: List[Int], has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int]): Tensor.
+pub slow_conv_dilated3d(input: pytorch.Tensor, weight: pytorch.Tensor, kernel_size: List[Int], has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], dilation: List[Int]): pytorch.Tensor.
 
 /// Exact generated CXX slow_conv_dilated3d retained-output leaf.
 
-pub slow_conv_dilated3d_out(output: Tensor, input: Tensor, weight: Tensor, kernel_size: List[Int], has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int]): Unit.
+pub slow_conv_dilated3d_out(output: pytorch.Tensor, input: pytorch.Tensor, weight: pytorch.Tensor, kernel_size: List[Int], has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], dilation: List[Int]): Unit.
 
 /// Exact generated CXX slow transposed 2D convolution leaf.
 
-pub slow_conv_transpose2d(input: Tensor, weight: Tensor, kernel_size: List[Int], has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], dilation: List[Int]): Tensor.
+pub slow_conv_transpose2d(input: pytorch.Tensor, weight: pytorch.Tensor, kernel_size: List[Int], has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], dilation: List[Int]): pytorch.Tensor.
 
 /// Exact generated CXX slow_conv_transpose2d retained-output leaf.
 
-pub slow_conv_transpose2d_out(output: Tensor, input: Tensor, weight: Tensor, kernel_size: List[Int], has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], dilation: List[Int]): Unit.
+pub slow_conv_transpose2d_out(output: pytorch.Tensor, input: pytorch.Tensor, weight: pytorch.Tensor, kernel_size: List[Int], has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], dilation: List[Int]): Unit.
 
 /// Exact generated CXX slow transposed 3D convolution leaf.
 
-pub slow_conv_transpose3d(input: Tensor, weight: Tensor, kernel_size: List[Int], has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], dilation: List[Int]): Tensor.
+pub slow_conv_transpose3d(input: pytorch.Tensor, weight: pytorch.Tensor, kernel_size: List[Int], has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], dilation: List[Int]): pytorch.Tensor.
 
 /// Exact generated CXX slow_conv_transpose3d retained-output leaf.
 
-pub slow_conv_transpose3d_out(output: Tensor, input: Tensor, weight: Tensor, kernel_size: List[Int], has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], dilation: List[Int]): Unit.
+pub slow_conv_transpose3d_out(output: pytorch.Tensor, input: pytorch.Tensor, weight: pytorch.Tensor, kernel_size: List[Int], has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int], output_padding: List[Int], dilation: List[Int]): Unit.
 
 /// Exact generated CXX THNN 2D convolution leaf.
 
-pub thnn_conv2d(input: Tensor, weight: Tensor, kernel_size: List[Int], has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int]): Tensor.
+pub thnn_conv2d(input: pytorch.Tensor, weight: pytorch.Tensor, kernel_size: List[Int], has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int]): pytorch.Tensor.
 
 /// Exact generated CXX THNN 2D convolution retained-output leaf.
 
-pub thnn_conv2d_out(output: Tensor, input: Tensor, weight: Tensor, kernel_size: List[Int], has_bias: Bool, bias: Tensor, stride: List[Int], padding: List[Int]): Unit.
+pub thnn_conv2d_out(output: pytorch.Tensor, input: pytorch.Tensor, weight: pytorch.Tensor, kernel_size: List[Int], has_bias: Bool, bias: pytorch.Tensor, stride: List[Int], padding: List[Int]): Unit.

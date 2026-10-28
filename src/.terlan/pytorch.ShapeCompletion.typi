@@ -4,72 +4,72 @@ module pytorch.ShapeCompletion.
 
 /// Executes exact aten::channel_shuffle.out. Preserves upstream output values and ownership.
 
-pub channel_shuffle_out(output: Tensor, tensor: Tensor, groups: Int): Unit.
+pub channel_shuffle_out(output: pytorch.Tensor, tensor: pytorch.Tensor, groups: Int): Unit.
 
 /// Executes exact aten::col2im. Preserves upstream output values and ownership.
 
-pub col2im(tensor: Tensor, output_size: List[Int], kernel_size: List[Int], dilation: List[Int], padding: List[Int], stride: List[Int]): Tensor.
+pub col2im(tensor: pytorch.Tensor, output_size: List[Int], kernel_size: List[Int], dilation: List[Int], padding: List[Int], stride: List[Int]): pytorch.Tensor.
 
 /// Executes exact aten::col2im.out. Preserves upstream output values and ownership.
 
-pub col2im_out(output: Tensor, tensor: Tensor, output_size: List[Int], kernel_size: List[Int], dilation: List[Int], padding: List[Int], stride: List[Int]): Unit.
+pub col2im_out(output: pytorch.Tensor, tensor: pytorch.Tensor, output_size: List[Int], kernel_size: List[Int], dilation: List[Int], padding: List[Int], stride: List[Int]): Unit.
 
 /// Executes exact aten::im2col. Preserves upstream output values and ownership.
 
-pub im2col(tensor: Tensor, kernel_size: List[Int], dilation: List[Int], padding: List[Int], stride: List[Int]): Tensor.
+pub im2col(tensor: pytorch.Tensor, kernel_size: List[Int], dilation: List[Int], padding: List[Int], stride: List[Int]): pytorch.Tensor.
 
 /// Executes exact aten::im2col.out. Preserves upstream output values and ownership.
 
-pub im2col_out(output: Tensor, tensor: Tensor, kernel_size: List[Int], dilation: List[Int], padding: List[Int], stride: List[Int]): Unit.
+pub im2col_out(output: pytorch.Tensor, tensor: pytorch.Tensor, kernel_size: List[Int], dilation: List[Int], padding: List[Int], stride: List[Int]): Unit.
 
 /// Executes exact aten::narrow_copy.out. Preserves upstream output values and ownership.
 
-pub narrow_copy_out(output: Tensor, tensor: Tensor, dimension: Int, start: Int, length: Int): Unit.
+pub narrow_copy_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, start: Int, length: Int): Unit.
 
 /// Executes exact aten::narrow.Tensor. Returns a view sharing input storage.
 
-pub narrow_tensor(tensor: Tensor, dimension: Int, start: Tensor, length: Int): Tensor.
+pub narrow_tensor(tensor: pytorch.Tensor, dimension: Int, start: pytorch.Tensor, length: Int): pytorch.Tensor.
 
 /// Executes exact aten::narrow. Returns a view sharing input storage.
 
-pub narrow_view(tensor: Tensor, dimension: Int, start: Int, length: Int): Tensor.
+pub narrow_view(tensor: pytorch.Tensor, dimension: Int, start: Int, length: Int): pytorch.Tensor.
 
 /// Executes exact aten::select_copy.int_out. Preserves upstream output values and ownership.
 
-pub select_copy_out(output: Tensor, tensor: Tensor, dimension: Int, index: Int): Unit.
+pub select_copy_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, index: Int): Unit.
 
 /// Executes exact aten::select_scatter.out. Preserves upstream output values and ownership.
 
-pub select_scatter_out(output: Tensor, tensor: Tensor, source: Tensor, dimension: Int, index: Int): Unit.
+pub select_scatter_out(output: pytorch.Tensor, tensor: pytorch.Tensor, source: pytorch.Tensor, dimension: Int, index: Int): Unit.
 
 /// Executes exact aten::tensordot. Preserves upstream output values and ownership.
 
-pub tensordot(tensor: Tensor, other: Tensor, dimensions_self: List[Int], dimensions_other: List[Int]): Tensor.
+pub tensordot(tensor: pytorch.Tensor, other: pytorch.Tensor, dimensions_self: List[Int], dimensions_other: List[Int]): pytorch.Tensor.
 
 /// Executes exact aten::tensordot.out. Preserves upstream output values and ownership.
 
-pub tensordot_out(output: Tensor, tensor: Tensor, other: Tensor, dimensions_self: List[Int], dimensions_other: List[Int]): Unit.
+pub tensordot_out(output: pytorch.Tensor, tensor: pytorch.Tensor, other: pytorch.Tensor, dimensions_self: List[Int], dimensions_other: List[Int]): Unit.
 
 /// Executes exact aten::trace_backward. Preserves upstream output values and ownership.
 
-pub trace_backward(gradient: Tensor, sizes: List[Int]): Tensor.
+pub trace_backward(gradient: pytorch.Tensor, sizes: List[Int]): pytorch.Tensor.
 
 /// Executes exact aten::transpose_copy.int_out. Preserves upstream output values and ownership.
 
-pub transpose_copy_out(output: Tensor, tensor: Tensor, dimension0: Int, dimension1: Int): Unit.
+pub transpose_copy_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension0: Int, dimension1: Int): Unit.
 
 /// Executes exact aten::unfold. Returns a view sharing input storage.
 
-pub unfold(tensor: Tensor, dimension: Int, size: Int, step: Int): Tensor.
+pub unfold(tensor: pytorch.Tensor, dimension: Int, size: Int, step: Int): pytorch.Tensor.
 
 /// Executes exact aten::unfold_copy.out. Preserves upstream output values and ownership.
 
-pub unfold_copy_out(output: Tensor, tensor: Tensor, dimension: Int, size: Int, step: Int): Unit.
+pub unfold_copy_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, size: Int, step: Int): Unit.
 
 /// Executes exact aten::zero. Preserves upstream output values and ownership.
 
-pub zero(tensor: Tensor): Tensor.
+pub zero(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes exact aten::zero.out. Preserves upstream output values and ownership.
 
-pub zero_out(output: Tensor, tensor: Tensor): Unit.
+pub zero_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.

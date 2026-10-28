@@ -4,24 +4,24 @@ module pytorch.WhereNative.
 
 /// Returns independently owned index tensors through exact aten::nonzero_numpy.
 
-pub nonzero_numpy(condition: Tensor): List[Tensor].
+pub nonzero_numpy(condition: pytorch.Tensor): List[pytorch.Tensor].
 
 /// Returns independently owned index tensors through the exact single-condition at::where overload.
 
-pub where_indices(condition: Tensor): List[Tensor].
+pub where_indices(condition: pytorch.Tensor): List[pytorch.Tensor].
 
 /// Selects between tagged integer or floating-point Scalar values through exact at::where.
 
-pub where_scalar(condition: Tensor, self_is_int: Bool, self_int: Int, self_float: Float, other_is_int: Bool, other_int: Int, other_float: Float): Tensor.
+pub where_scalar(condition: pytorch.Tensor, self_is_int: Bool, self_int: Int, self_float: Float, other_is_int: Bool, other_int: Int, other_float: Float): pytorch.Tensor.
 
 /// Selects between a Tensor and a tagged integer or floating-point Scalar through exact at::where.
 
-pub where_scalar_other(condition: Tensor, when_true: Tensor, other_is_int: Bool, other_int: Int, other_float: Float): Tensor.
+pub where_scalar_other(condition: pytorch.Tensor, when_true: pytorch.Tensor, other_is_int: Bool, other_int: Int, other_float: Float): pytorch.Tensor.
 
 /// Selects between a tagged integer or floating-point Scalar and a Tensor through exact at::where.
 
-pub where_scalar_self(condition: Tensor, self_is_int: Bool, self_int: Int, self_float: Float, when_false: Tensor): Tensor.
+pub where_scalar_self(condition: pytorch.Tensor, self_is_int: Bool, self_int: Int, self_float: Float, when_false: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes exact Tensor selection into retained output storage through at::where_out.
 
-pub where_tensor_out(output: Tensor, condition: Tensor, when_true: Tensor, when_false: Tensor): Unit.
+pub where_tensor_out(output: pytorch.Tensor, condition: pytorch.Tensor, when_true: pytorch.Tensor, when_false: pytorch.Tensor): Unit.

@@ -36,7 +36,7 @@ pub are_deterministic_algorithms_enabled(): Bool.
 
 /// Exact generated CXX cuDNN acceptability predicate.
 
-pub cudnn_is_acceptable(input: Tensor): Bool.
+pub cudnn_is_acceptable(input: pytorch.Tensor): Bool.
 
 /// Restores anomaly detection state and releases the guard.
 
@@ -216,7 +216,7 @@ pub set_warn_always(enabled: Bool): Unit.
 
 /// Exact generated CXX symbolic contiguity predicate.
 
-pub sym_is_contiguous(input: Tensor, memory_format: Int = 0): Bool.
+pub sym_is_contiguous(input: pytorch.Tensor, memory_format: Int = 0): Bool.
 
 /// Exact generated CXX deterministic algorithm configuration setter.
 

@@ -1,9 +1,9 @@
 module=pytorch.TensorListTransforms
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=8561622701467923504
-interface_hash=8645975019586660448
+interface_hash=9123951586773348523
 interface_doc_hash=11321258430052697647
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

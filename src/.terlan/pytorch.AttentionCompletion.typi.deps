@@ -1,9 +1,9 @@
 module=pytorch.AttentionCompletion
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=14588454091176952759
-interface_hash=11980265080119446852
+interface_hash=16066816325139805974
 interface_doc_hash=1506150370391027530
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

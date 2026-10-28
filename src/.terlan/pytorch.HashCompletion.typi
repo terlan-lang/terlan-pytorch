@@ -4,8 +4,8 @@ module pytorch.HashCompletion.
 
 /// Computes LibTorch tensor hash values over selected dimensions.
 
-pub hash_tensor(input: Tensor, dimensions: List[Int] = [], keepdim: Bool = false, mode: Int = 0): Tensor.
+pub hash_tensor(input: pytorch.Tensor, dimensions: List[Int] = [], keepdim: Bool = false, mode: Int = 0): pytorch.Tensor.
 
 /// Writes LibTorch tensor hash values into retained output storage.
 
-pub hash_tensor_out(output: Tensor, input: Tensor, dimensions: List[Int] = [], keepdim: Bool = false, mode: Int = 0): Unit.
+pub hash_tensor_out(output: pytorch.Tensor, input: pytorch.Tensor, dimensions: List[Int] = [], keepdim: Bool = false, mode: Int = 0): Unit.

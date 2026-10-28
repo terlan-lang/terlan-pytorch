@@ -4,105 +4,105 @@ module pytorch.QuantizationCompletion.
 
 /// Converts a quantized tensor to a floating tensor.
 
-pub dequantize(input: Tensor): Tensor.
+pub dequantize(input: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes a dequantized floating tensor into retained output storage.
 
-pub dequantize_out(output: Tensor, input: Tensor): Unit.
+pub dequantize_out(output: pytorch.Tensor, input: pytorch.Tensor): Unit.
 
 /// Dequantizes each tensor in a tensor list.
 
-pub dequantize_tensors(tensors: List[Tensor]): List[Tensor].
+pub dequantize_tensors(tensors: List[pytorch.Tensor]): List[pytorch.Tensor].
 
 /// Dequantizes into caller-owned tensor-list outputs, preserving the ATen
 /// tensors_out contract through element-wise retained-storage copies.
 
-pub dequantize_tensors_out(tensors: List[Tensor], outputs: List[Tensor]): Unit.
+pub dequantize_tensors_out(tensors: List[pytorch.Tensor], outputs: List[pytorch.Tensor]): Unit.
 
 /// Applies per-channel affine fake quantization.
 
-pub fake_quantize_per_channel_affine(input: Tensor, scale: Tensor, zero_point: Tensor, axis: Int, quant_min: Int, quant_max: Int): Tensor.
+pub fake_quantize_per_channel_affine(input: pytorch.Tensor, scale: pytorch.Tensor, zero_point: pytorch.Tensor, axis: Int, quant_min: Int, quant_max: Int): pytorch.Tensor.
 
 /// Applies per-channel affine fake quantization and returns its cache mask.
 
-pub fake_quantize_per_channel_affine_cachemask(input: Tensor, scale: Tensor, zero_point: Tensor, axis: Int, quant_min: Int, quant_max: Int): {Tensor, Tensor}.
+pub fake_quantize_per_channel_affine_cachemask(input: pytorch.Tensor, scale: pytorch.Tensor, zero_point: pytorch.Tensor, axis: Int, quant_min: Int, quant_max: Int): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Writes per-channel affine fake quantization and its cache mask into retained outputs.
 
-pub fake_quantize_per_channel_affine_cachemask_out(output: Tensor, mask: Tensor, input: Tensor, scale: Tensor, zero_point: Tensor, axis: Int, quant_min: Int, quant_max: Int): Unit.
+pub fake_quantize_per_channel_affine_cachemask_out(output: pytorch.Tensor, mask: pytorch.Tensor, input: pytorch.Tensor, scale: pytorch.Tensor, zero_point: pytorch.Tensor, axis: Int, quant_min: Int, quant_max: Int): Unit.
 
 /// Applies per-tensor affine fake quantization.
 
-pub fake_quantize_per_tensor_affine(input: Tensor, scale: Float, zero_point: Int, quant_min: Int, quant_max: Int): Tensor.
+pub fake_quantize_per_tensor_affine(input: pytorch.Tensor, scale: Float, zero_point: Int, quant_min: Int, quant_max: Int): pytorch.Tensor.
 
 /// Applies per-tensor affine fake quantization and returns its cache mask.
 
-pub fake_quantize_per_tensor_affine_cachemask(input: Tensor, scale: Float, zero_point: Int, quant_min: Int, quant_max: Int): {Tensor, Tensor}.
+pub fake_quantize_per_tensor_affine_cachemask(input: pytorch.Tensor, scale: Float, zero_point: Int, quant_min: Int, quant_max: Int): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Writes per-tensor affine fake quantization and its cache mask into retained outputs.
 
-pub fake_quantize_per_tensor_affine_cachemask_out(output: Tensor, mask: Tensor, input: Tensor, scale: Float, zero_point: Int, quant_min: Int, quant_max: Int): Unit.
+pub fake_quantize_per_tensor_affine_cachemask_out(output: pytorch.Tensor, mask: pytorch.Tensor, input: pytorch.Tensor, scale: Float, zero_point: Int, quant_min: Int, quant_max: Int): Unit.
 
 /// Applies per-tensor affine fake quantization with tensor qparams.
 
-pub fake_quantize_per_tensor_affine_tensor_qparams(input: Tensor, scale: Tensor, zero_point: Tensor, quant_min: Int, quant_max: Int): Tensor.
+pub fake_quantize_per_tensor_affine_tensor_qparams(input: pytorch.Tensor, scale: pytorch.Tensor, zero_point: pytorch.Tensor, quant_min: Int, quant_max: Int): pytorch.Tensor.
 
 /// Returns the underlying integer representation of a quantized tensor.
 
-pub int_repr(input: Tensor): Tensor.
+pub int_repr(input: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the integer representation into retained output storage.
 
-pub int_repr_out(output: Tensor, input: Tensor): Unit.
+pub int_repr_out(output: pytorch.Tensor, input: pytorch.Tensor): Unit.
 
-pub q_per_channel_axis(input: Tensor): Int.
+pub q_per_channel_axis(input: pytorch.Tensor): Int.
 
-pub q_per_channel_scales(input: Tensor): Tensor.
+pub q_per_channel_scales(input: pytorch.Tensor): pytorch.Tensor.
 
-pub q_per_channel_scales_out(output: Tensor, input: Tensor): Unit.
+pub q_per_channel_scales_out(output: pytorch.Tensor, input: pytorch.Tensor): Unit.
 
-pub q_per_channel_zero_points(input: Tensor): Tensor.
+pub q_per_channel_zero_points(input: pytorch.Tensor): pytorch.Tensor.
 
-pub q_per_channel_zero_points_out(output: Tensor, input: Tensor): Unit.
+pub q_per_channel_zero_points_out(output: pytorch.Tensor, input: pytorch.Tensor): Unit.
 
-pub q_scale(input: Tensor): Float.
+pub q_scale(input: pytorch.Tensor): Float.
 
-pub q_zero_point(input: Tensor): Int.
+pub q_zero_point(input: pytorch.Tensor): Int.
 
-pub qscheme(input: Tensor): Int.
+pub qscheme(input: pytorch.Tensor): Int.
 
 /// Applies per-channel affine quantization.
 
-pub quantize_per_channel(input: Tensor, scales: Tensor, zero_points: Tensor, axis: Int, dtype: Int): Tensor.
+pub quantize_per_channel(input: pytorch.Tensor, scales: pytorch.Tensor, zero_points: pytorch.Tensor, axis: Int, dtype: Int): pytorch.Tensor.
 
 /// Writes per-channel affine quantization into retained output storage.
 
-pub quantize_per_channel_out(output: Tensor, input: Tensor, scales: Tensor, zero_points: Tensor, axis: Int, dtype: Int): Unit.
+pub quantize_per_channel_out(output: pytorch.Tensor, input: pytorch.Tensor, scales: pytorch.Tensor, zero_points: pytorch.Tensor, axis: Int, dtype: Int): Unit.
 
 /// Applies per-tensor affine quantization.
 
-pub quantize_per_tensor(input: Tensor, scale: Float, zero_point: Int, dtype: Int): Tensor.
+pub quantize_per_tensor(input: pytorch.Tensor, scale: Float, zero_point: Int, dtype: Int): pytorch.Tensor.
 
 /// Applies dynamic per-tensor quantization.
 
-pub quantize_per_tensor_dynamic(input: Tensor, dtype: Int, reduce_range: Bool): Tensor.
+pub quantize_per_tensor_dynamic(input: pytorch.Tensor, dtype: Int, reduce_range: Bool): pytorch.Tensor.
 
 /// Writes dynamic per-tensor quantization into retained output storage.
 
-pub quantize_per_tensor_dynamic_out(output: Tensor, input: Tensor, dtype: Int, reduce_range: Bool): Unit.
+pub quantize_per_tensor_dynamic_out(output: pytorch.Tensor, input: pytorch.Tensor, dtype: Int, reduce_range: Bool): Unit.
 
 /// Writes per-tensor affine quantization into retained output storage.
 
-pub quantize_per_tensor_out(output: Tensor, input: Tensor, scale: Float, zero_point: Int, dtype: Int): Unit.
+pub quantize_per_tensor_out(output: pytorch.Tensor, input: pytorch.Tensor, scale: Float, zero_point: Int, dtype: Int): Unit.
 
 /// Applies per-tensor affine quantization with tensor qparams.
 
-pub quantize_per_tensor_tensor_qparams(input: Tensor, scale: Tensor, zero_point: Tensor, dtype: Int): Tensor.
+pub quantize_per_tensor_tensor_qparams(input: pytorch.Tensor, scale: pytorch.Tensor, zero_point: pytorch.Tensor, dtype: Int): pytorch.Tensor.
 
 /// Writes tensor-qparams affine quantization into retained output storage.
 
-pub quantize_per_tensor_tensor_qparams_out(output: Tensor, input: Tensor, scale: Tensor, zero_point: Tensor, dtype: Int): Unit.
+pub quantize_per_tensor_tensor_qparams_out(output: pytorch.Tensor, input: pytorch.Tensor, scale: pytorch.Tensor, zero_point: pytorch.Tensor, dtype: Int): Unit.
 
 /// Applies per-tensor affine quantization independently to a tensor list.
 
-pub quantize_per_tensor_tensors(tensors: List[Tensor], scales: Tensor, zero_points: Tensor, dtype: Int): List[Tensor].
+pub quantize_per_tensor_tensors(tensors: List[pytorch.Tensor], scales: pytorch.Tensor, zero_points: pytorch.Tensor, dtype: Int): List[pytorch.Tensor].

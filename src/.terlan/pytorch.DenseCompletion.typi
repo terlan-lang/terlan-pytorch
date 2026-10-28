@@ -2,10 +2,10 @@
 
 module pytorch.DenseCompletion.
 
-pub bmm_dtype(left: Tensor, right: Tensor, out_dtype: Int): Tensor.
+pub bmm_dtype(left: pytorch.Tensor, right: pytorch.Tensor, out_dtype: Int): pytorch.Tensor.
 
-pub bmm_dtype_out(output: Tensor, left: Tensor, right: Tensor, out_dtype: Int): Unit.
+pub bmm_dtype_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor, out_dtype: Int): Unit.
 
-pub mm_dtype(left: Tensor, right: Tensor, out_dtype: Int): Tensor.
+pub mm_dtype(left: pytorch.Tensor, right: pytorch.Tensor, out_dtype: Int): pytorch.Tensor.
 
-pub mm_dtype_out(output: Tensor, left: Tensor, right: Tensor, out_dtype: Int): Unit.
+pub mm_dtype_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor, out_dtype: Int): Unit.

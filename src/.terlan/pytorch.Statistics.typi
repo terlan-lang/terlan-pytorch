@@ -4,408 +4,408 @@ module pytorch.Statistics.
 
 /// Exact generated CXX statistics leaf for all_dim.
 
-pub all_dim(tensor: Tensor, dimension: Int, flag: Bool): Tensor.
+pub all_dim(tensor: pytorch.Tensor, dimension: Int, flag: Bool): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for all_dimension_out.
 
-pub all_dimension_out(output: Tensor, tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
+pub all_dimension_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for all_dimensions.
 
-pub all_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Tensor.
+pub all_dimensions(tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for all_dimensions_out.
 
-pub all_dimensions_out(output: Tensor, tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
+pub all_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for amax_out.
 
-pub amax_out(output: Tensor, tensor: Tensor, dimensions: List[Int] = [], keep_dimension: Bool = false): Unit.
+pub amax_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int] = [], keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for amin.
 
-pub amin(tensor: Tensor, dimensions: List[Int] = [], keep_dimension: Bool = false): Tensor.
+pub amin(tensor: pytorch.Tensor, dimensions: List[Int] = [], keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for amin_out.
 
-pub amin_out(output: Tensor, tensor: Tensor, dimensions: List[Int] = [], keep_dimension: Bool = false): Unit.
+pub amin_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int] = [], keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for aminmax.
 
-pub aminmax(tensor: Tensor, keep_dimension: Bool = false): {Tensor, Tensor}.
+pub aminmax(tensor: pytorch.Tensor, keep_dimension: Bool = false): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX statistics leaf for aminmax_all_out.
 
-pub aminmax_all_out(minimum: Tensor, maximum: Tensor, tensor: Tensor, keep_dimension: Bool = false): Unit.
+pub aminmax_all_out(minimum: pytorch.Tensor, maximum: pytorch.Tensor, tensor: pytorch.Tensor, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for aminmax_dim.
 
-pub aminmax_dim(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): {Tensor, Tensor}.
+pub aminmax_dim(tensor: pytorch.Tensor, dimension: Int, keep_dimension: Bool = false): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX statistics leaf for aminmax_dim_out.
 
-pub aminmax_dim_out(minimum: Tensor, maximum: Tensor, tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
+pub aminmax_dim_out(minimum: pytorch.Tensor, maximum: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for any_dim.
 
-pub any_dim(tensor: Tensor, dimension: Int, flag: Bool): Tensor.
+pub any_dim(tensor: pytorch.Tensor, dimension: Int, flag: Bool): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for any_dimension_out.
 
-pub any_dimension_out(output: Tensor, tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
+pub any_dimension_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for any_dimensions.
 
-pub any_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Tensor.
+pub any_dimensions(tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for any_dimensions_out.
 
-pub any_dimensions_out(output: Tensor, tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
+pub any_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for argmax_all.
 
-pub argmax_all(tensor: Tensor, keep_dimension: Bool = false): Tensor.
+pub argmax_all(tensor: pytorch.Tensor, keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for argmax_all_out.
 
-pub argmax_all_out(output: Tensor, tensor: Tensor, keep_dimension: Bool = false): Unit.
+pub argmax_all_out(output: pytorch.Tensor, tensor: pytorch.Tensor, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for argmax_out.
 
-pub argmax_out(output: Tensor, tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
+pub argmax_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for argmin.
 
-pub argmin(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Tensor.
+pub argmin(tensor: pytorch.Tensor, dimension: Int, keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for argmin_all.
 
-pub argmin_all(tensor: Tensor, keep_dimension: Bool = false): Tensor.
+pub argmin_all(tensor: pytorch.Tensor, keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for argmin_all_out.
 
-pub argmin_all_out(output: Tensor, tensor: Tensor, keep_dimension: Bool = false): Unit.
+pub argmin_all_out(output: pytorch.Tensor, tensor: pytorch.Tensor, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for argmin_out.
 
-pub argmin_out(output: Tensor, tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
+pub argmin_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for argsort.
 
-pub argsort(tensor: Tensor, dimension: Int, flag: Bool): Tensor.
+pub argsort(tensor: pytorch.Tensor, dimension: Int, flag: Bool): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for cholesky.
 
-pub cholesky(tensor: Tensor, flag: Bool): Tensor.
+pub cholesky(tensor: pytorch.Tensor, flag: Bool): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for cholesky_inverse.
 
-pub cholesky_inverse(tensor: Tensor, flag: Bool): Tensor.
+pub cholesky_inverse(tensor: pytorch.Tensor, flag: Bool): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for cholesky_inverse_out.
 
-pub cholesky_inverse_out(output: Tensor, tensor: Tensor, flag: Bool = false): Unit.
+pub cholesky_inverse_out(output: pytorch.Tensor, tensor: pytorch.Tensor, flag: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for cholesky_out.
 
-pub cholesky_out(output: Tensor, tensor: Tensor, flag: Bool = false): Unit.
+pub cholesky_out(output: pytorch.Tensor, tensor: pytorch.Tensor, flag: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for cholesky_solve_out.
 
-pub cholesky_solve_out(output: Tensor, tensor: Tensor, factor: Tensor, upper: Bool = false): Unit.
+pub cholesky_solve_out(output: pytorch.Tensor, tensor: pytorch.Tensor, factor: pytorch.Tensor, upper: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for combinations.
 
-pub combinations(tensor: Tensor, dimension: Int, flag: Bool): Tensor.
+pub combinations(tensor: pytorch.Tensor, dimension: Int, flag: Bool): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for count_nonzero.
 
-pub count_nonzero(tensor: Tensor, dimension: Int): Tensor.
+pub count_nonzero(tensor: pytorch.Tensor, dimension: Int): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for count_nonzero_all.
 
-pub count_nonzero_all(tensor: Tensor): Tensor.
+pub count_nonzero_all(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for count_nonzero_all_out.
 
-pub count_nonzero_all_out(output: Tensor, tensor: Tensor): Unit.
+pub count_nonzero_all_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Exact generated CXX statistics leaf for count_nonzero_dimensions_out.
 
-pub count_nonzero_dimensions_out(output: Tensor, tensor: Tensor, dimensions: List[Int]): Unit.
+pub count_nonzero_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int]): Unit.
 
 /// Exact generated CXX statistics leaf for count_nonzero_out.
 
-pub count_nonzero_out(output: Tensor, tensor: Tensor, dimension: Int): Unit.
+pub count_nonzero_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int): Unit.
 
 /// Exact generated CXX statistics leaf for cumprod.
 
-pub cumprod(tensor: Tensor, dimension: Int): Tensor.
+pub cumprod(tensor: pytorch.Tensor, dimension: Int): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for cumprod_dtype.
 
-pub cumprod_dtype(tensor: Tensor, dimension: Int, dtype: Int): Tensor.
+pub cumprod_dtype(tensor: pytorch.Tensor, dimension: Int, dtype: Int): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for cumprod_in_place.
 
-pub cumprod_in_place(tensor: Tensor, dimension: Int): Unit.
+pub cumprod_in_place(tensor: pytorch.Tensor, dimension: Int): Unit.
 
 /// Exact generated CXX statistics leaf for cumprod_in_place_dtype.
 
-pub cumprod_in_place_dtype(tensor: Tensor, dimension: Int, dtype: Int): Unit.
+pub cumprod_in_place_dtype(tensor: pytorch.Tensor, dimension: Int, dtype: Int): Unit.
 
 /// Exact generated CXX statistics leaf for cumprod_out.
 
-pub cumprod_out(output: Tensor, tensor: Tensor, dimension: Int): Unit.
+pub cumprod_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int): Unit.
 
 /// Exact generated CXX statistics leaf for cumprod_out_dtype.
 
-pub cumprod_out_dtype(output: Tensor, tensor: Tensor, dimension: Int, dtype: Int): Unit.
+pub cumprod_out_dtype(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, dtype: Int): Unit.
 
 /// Exact generated CXX statistics leaf for cumsum.
 
-pub cumsum(tensor: Tensor, dimension: Int): Tensor.
+pub cumsum(tensor: pytorch.Tensor, dimension: Int): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for cumsum_dtype.
 
-pub cumsum_dtype(tensor: Tensor, dimension: Int, dtype: Int): Tensor.
+pub cumsum_dtype(tensor: pytorch.Tensor, dimension: Int, dtype: Int): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for cumsum_in_place.
 
-pub cumsum_in_place(tensor: Tensor, dimension: Int): Unit.
+pub cumsum_in_place(tensor: pytorch.Tensor, dimension: Int): Unit.
 
 /// Exact generated CXX statistics leaf for cumsum_in_place_dtype.
 
-pub cumsum_in_place_dtype(tensor: Tensor, dimension: Int, dtype: Int): Unit.
+pub cumsum_in_place_dtype(tensor: pytorch.Tensor, dimension: Int, dtype: Int): Unit.
 
 /// Exact generated CXX statistics leaf for cumsum_out.
 
-pub cumsum_out(output: Tensor, tensor: Tensor, dimension: Int): Unit.
+pub cumsum_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int): Unit.
 
 /// Exact generated CXX statistics leaf for cumsum_out_dtype.
 
-pub cumsum_out_dtype(output: Tensor, tensor: Tensor, dimension: Int, dtype: Int): Unit.
+pub cumsum_out_dtype(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, dtype: Int): Unit.
 
 /// Exact generated CXX statistics leaf for dist.
 
-pub dist(left: Tensor, right: Tensor, order: Float = 2.0): Tensor.
+pub dist(left: pytorch.Tensor, right: pytorch.Tensor, order: Float = 2.0): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for frobenius_norm_dimensions.
 
-pub frobenius_norm_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Tensor.
+pub frobenius_norm_dimensions(tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for frobenius_norm_dimensions_out.
 
-pub frobenius_norm_dimensions_out(output: Tensor, tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
+pub frobenius_norm_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for linalg_matrix_rank.
 
-pub linalg_matrix_rank(tensor: Tensor, tolerance: Float, flag: Bool): Tensor.
+pub linalg_matrix_rank(tensor: pytorch.Tensor, tolerance: Float, flag: Bool): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for linalg_pinv.
 
-pub linalg_pinv(tensor: Tensor, tolerance: Float, flag: Bool): Tensor.
+pub linalg_pinv(tensor: pytorch.Tensor, tolerance: Float, flag: Bool): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for logcumsumexp_out.
 
-pub logcumsumexp_out(output: Tensor, tensor: Tensor, dimension: Int): Unit.
+pub logcumsumexp_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int): Unit.
 
 /// Exact generated CXX statistics leaf for logsumexp.
 
-pub logsumexp(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Tensor.
+pub logsumexp(tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for logsumexp_out.
 
-pub logsumexp_out(output: Tensor, tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
+pub logsumexp_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for mean_all_dimensions_out.
 
-pub mean_all_dimensions_out(output: Tensor, tensor: Tensor, keep_dimension: Bool = false): Unit.
+pub mean_all_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for mean_dimensions_out.
 
-pub mean_dimensions_out(output: Tensor, tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
+pub mean_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for mean_out.
 
-pub mean_out(output: Tensor, tensor: Tensor): Unit.
+pub mean_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Public Terlan composition over the generated CXX nanmean leaf.
 
-pub nanmean(tensor: Tensor): Tensor.
+pub nanmean(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Public Terlan composition over the generated CXX nanmean_dimensions leaf.
 
-pub nanmean_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Tensor.
+pub nanmean_dimensions(tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Public Terlan composition over the generated CXX nanmean_dimensions_dtype leaf.
 
-pub nanmean_dimensions_dtype(tensor: Tensor, dimensions: List[Int], dtype: Int, keep_dimension: Bool = false): Tensor.
+pub nanmean_dimensions_dtype(tensor: pytorch.Tensor, dimensions: List[Int], dtype: Int, keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Public Terlan composition over the generated CXX nanmean_dimensions_dtype_out leaf.
 
-pub nanmean_dimensions_dtype_out(output: Tensor, tensor: Tensor, dimensions: List[Int], dtype: Int, keep_dimension: Bool = false): Unit.
+pub nanmean_dimensions_dtype_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int], dtype: Int, keep_dimension: Bool = false): Unit.
 
 /// Public Terlan composition over the generated CXX nanmean_dimensions_out leaf.
 
-pub nanmean_dimensions_out(output: Tensor, tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
+pub nanmean_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
 
 /// Public Terlan composition over the generated CXX nanmean_out leaf.
 
-pub nanmean_out(output: Tensor, tensor: Tensor): Unit.
+pub nanmean_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Exact generated CXX statistics leaf for nanmedian_out.
 
-pub nanmedian_out(output: Tensor, tensor: Tensor): Unit.
+pub nanmedian_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Public Terlan composition over the generated CXX nansum leaf.
 
-pub nansum(tensor: Tensor): Tensor.
+pub nansum(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Public Terlan composition over the generated CXX nansum_dimensions leaf.
 
-pub nansum_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Tensor.
+pub nansum_dimensions(tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Public Terlan composition over the generated CXX nansum_dimensions_dtype leaf.
 
-pub nansum_dimensions_dtype(tensor: Tensor, dimensions: List[Int], dtype: Int, keep_dimension: Bool = false): Tensor.
+pub nansum_dimensions_dtype(tensor: pytorch.Tensor, dimensions: List[Int], dtype: Int, keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Public Terlan composition over the generated CXX nansum_dimensions_dtype_out leaf.
 
-pub nansum_dimensions_dtype_out(output: Tensor, tensor: Tensor, dimensions: List[Int], dtype: Int, keep_dimension: Bool = false): Unit.
+pub nansum_dimensions_dtype_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int], dtype: Int, keep_dimension: Bool = false): Unit.
 
 /// Public Terlan composition over the generated CXX nansum_dimensions_out leaf.
 
-pub nansum_dimensions_out(output: Tensor, tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
+pub nansum_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
 
 /// Public Terlan composition over the generated CXX nansum_out leaf.
 
-pub nansum_out(output: Tensor, tensor: Tensor): Unit.
+pub nansum_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Exact generated CXX statistics leaf for norm.
 
-pub norm(tensor: Tensor, order: Float = 2.0): Tensor.
+pub norm(tensor: pytorch.Tensor, order: Float = 2.0): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for norm_dimensions.
 
-pub norm_dimensions(tensor: Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool = false): Tensor.
+pub norm_dimensions(tensor: pytorch.Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Generated composition for aten::norm dimension and dtype semantics.
 
-pub norm_dimensions_dtype(tensor: Tensor, order: Float, dimensions: List[Int], dtype: Int, keep_dimension: Bool = false): Tensor.
+pub norm_dimensions_dtype(tensor: pytorch.Tensor, order: Float, dimensions: List[Int], dtype: Int, keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Generated retained-output composition for aten::norm dimension and dtype semantics.
 
-pub norm_dimensions_dtype_out(output: Tensor, tensor: Tensor, order: Float, dimensions: List[Int], dtype: Int, keep_dimension: Bool = false): Unit.
+pub norm_dimensions_dtype_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Float, dimensions: List[Int], dtype: Int, keep_dimension: Bool = false): Unit.
 
 /// Generated retained-output composition for aten::norm dimension semantics.
 
-pub norm_dimensions_out(output: Tensor, tensor: Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool = false): Unit.
+pub norm_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for norm_except_dimension.
 
-pub norm_except_dimension(tensor: Tensor, power: Int = 2, dimension: Int = 0): Tensor.
+pub norm_except_dimension(tensor: pytorch.Tensor, power: Int = 2, dimension: Int = 0): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for nuclear_norm.
 
-pub nuclear_norm(tensor: Tensor, flag: Bool): Tensor.
+pub nuclear_norm(tensor: pytorch.Tensor, flag: Bool): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for nuclear_norm_dimensions.
 
-pub nuclear_norm_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Tensor.
+pub nuclear_norm_dimensions(tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for nuclear_norm_dimensions_out.
 
-pub nuclear_norm_dimensions_out(output: Tensor, tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
+pub nuclear_norm_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for nuclear_norm_out.
 
-pub nuclear_norm_out(output: Tensor, tensor: Tensor, flag: Bool = false): Unit.
+pub nuclear_norm_out(output: pytorch.Tensor, tensor: pytorch.Tensor, flag: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for pdist.
 
-pub pdist(tensor: Tensor, value: Float): Tensor.
+pub pdist(tensor: pytorch.Tensor, value: Float): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for pinverse.
 
-pub pinverse(tensor: Tensor, value: Float): Tensor.
+pub pinverse(tensor: pytorch.Tensor, value: Float): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for prod.
 
-pub prod(tensor: Tensor): Tensor.
+pub prod(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for prod_dim.
 
-pub prod_dim(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Tensor.
+pub prod_dim(tensor: pytorch.Tensor, dimension: Int, keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for prod_dimension_out.
 
-pub prod_dimension_out(output: Tensor, tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
+pub prod_dimension_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimension: Int, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for prod_out.
 
-pub prod_out(output: Tensor, tensor: Tensor): Unit.
+pub prod_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Exact generated CXX statistics leaf for renorm.
 
-pub renorm(tensor: Tensor, order: Float, dimension: Int, maximum_norm: Float): Tensor.
+pub renorm(tensor: pytorch.Tensor, order: Float, dimension: Int, maximum_norm: Float): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for std.
 
-pub std(tensor: Tensor, flag: Bool): Tensor.
+pub std(tensor: pytorch.Tensor, flag: Bool): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for std_all_dimensions_out.
 
-pub std_all_dimensions_out(output: Tensor, tensor: Tensor, unbiased: Bool = true, keep_dimension: Bool = false): Unit.
+pub std_all_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, unbiased: Bool = true, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for std_dimensions.
 
-pub std_dimensions(tensor: Tensor, dimensions: List[Int], unbiased: Bool = true, keep_dimension: Bool = false): Tensor.
+pub std_dimensions(tensor: pytorch.Tensor, dimensions: List[Int], unbiased: Bool = true, keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for std_dimensions_out.
 
-pub std_dimensions_out(output: Tensor, tensor: Tensor, dimensions: List[Int], unbiased: Bool = true, keep_dimension: Bool = false): Unit.
+pub std_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int], unbiased: Bool = true, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for std_mean.
 
-pub std_mean(tensor: Tensor, unbiased: Bool = true): {Tensor, Tensor}.
+pub std_mean(tensor: pytorch.Tensor, unbiased: Bool = true): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX statistics leaf for std_mean_dimensions.
 
-pub std_mean_dimensions(tensor: Tensor, dimensions: List[Int], unbiased: Bool = true, keep_dimension: Bool = false): {Tensor, Tensor}.
+pub std_mean_dimensions(tensor: pytorch.Tensor, dimensions: List[Int], unbiased: Bool = true, keep_dimension: Bool = false): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX statistics leaf for sum_all_dimensions_out.
 
-pub sum_all_dimensions_out(output: Tensor, tensor: Tensor, keep_dimension: Bool = false): Unit.
+pub sum_all_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for sum_dimensions_out.
 
-pub sum_dimensions_out(output: Tensor, tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
+pub sum_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int], keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for sum_out.
 
-pub sum_out(output: Tensor, tensor: Tensor): Unit.
+pub sum_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Exact generated CXX statistics leaf for var.
 
-pub var(tensor: Tensor, flag: Bool): Tensor.
+pub var(tensor: pytorch.Tensor, flag: Bool): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for var_all_dimensions_out.
 
-pub var_all_dimensions_out(output: Tensor, tensor: Tensor, unbiased: Bool = true, keep_dimension: Bool = false): Unit.
+pub var_all_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, unbiased: Bool = true, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for var_dimensions.
 
-pub var_dimensions(tensor: Tensor, dimensions: List[Int], unbiased: Bool = true, keep_dimension: Bool = false): Tensor.
+pub var_dimensions(tensor: pytorch.Tensor, dimensions: List[Int], unbiased: Bool = true, keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Exact generated CXX statistics leaf for var_dimensions_out.
 
-pub var_dimensions_out(output: Tensor, tensor: Tensor, dimensions: List[Int], unbiased: Bool = true, keep_dimension: Bool = false): Unit.
+pub var_dimensions_out(output: pytorch.Tensor, tensor: pytorch.Tensor, dimensions: List[Int], unbiased: Bool = true, keep_dimension: Bool = false): Unit.
 
 /// Exact generated CXX statistics leaf for var_mean.
 
-pub var_mean(tensor: Tensor, unbiased: Bool = true): {Tensor, Tensor}.
+pub var_mean(tensor: pytorch.Tensor, unbiased: Bool = true): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX statistics leaf for var_mean_dimensions.
 
-pub var_mean_dimensions(tensor: Tensor, dimensions: List[Int], unbiased: Bool = true, keep_dimension: Bool = false): {Tensor, Tensor}.
+pub var_mean_dimensions(tensor: pytorch.Tensor, dimensions: List[Int], unbiased: Bool = true, keep_dimension: Bool = false): {pytorch.Tensor, pytorch.Tensor}.

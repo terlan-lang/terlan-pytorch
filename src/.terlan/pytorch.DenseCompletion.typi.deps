@@ -1,11 +1,11 @@
 module=pytorch.DenseCompletion
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=15564562663877672968
-interface_hash=16032778677548972998
+interface_hash=4983184319841718141
 interface_doc_hash=14327353072184432714
 deps=3
-pytorch.Dense=18410695963898360619
-pytorch.ResizeAsCompletion=12990142588926260043
-pytorch.Tensor=13489932768568026575
+pytorch.Dense=2846390821011710061
+pytorch.ResizeAsCompletion=2213062581023794664
+pytorch.Tensor=1089416781329568890

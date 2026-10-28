@@ -6,4 +6,4 @@ module pytorch.LegacyCompletion.
 /// When eigenvectors are disabled, PyTorch returns an empty tensor as the
 /// second tuple element.
 
-pub symeig_legacy(input: Tensor, eigenvectors: Bool = false): {Tensor, Tensor}.
+pub symeig_legacy(input: pytorch.Tensor, eigenvectors: Bool = false): {pytorch.Tensor, pytorch.Tensor}.

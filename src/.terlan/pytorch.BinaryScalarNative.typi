@@ -4,48 +4,48 @@ module pytorch.BinaryScalarNative.
 
 /// Applies a selected binary operation with a floating-point scalar left operand.
 
-pub binary_scalar_left_float(operation: Int, scalar: Float, tensor: Tensor): Tensor.
+pub binary_scalar_left_float(operation: Int, scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes a selected binary operation with a floating-point scalar left operand.
 
-pub binary_scalar_left_float_out(output: Tensor, operation: Int, scalar: Float, tensor: Tensor): Unit.
+pub binary_scalar_left_float_out(output: pytorch.Tensor, operation: Int, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Applies a selected binary operation with an exact integer scalar left operand.
 
-pub binary_scalar_left_int(operation: Int, scalar: Int, tensor: Tensor): Tensor.
+pub binary_scalar_left_int(operation: Int, scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes a selected binary operation with an integer scalar left operand.
 
-pub binary_scalar_left_int_out(output: Tensor, operation: Int, scalar: Int, tensor: Tensor): Unit.
+pub binary_scalar_left_int_out(output: pytorch.Tensor, operation: Int, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Applies a selected binary operation with a floating-point scalar right operand.
 
-pub binary_scalar_right_float(tensor: Tensor, operation: Int, scalar: Float): Tensor.
+pub binary_scalar_right_float(tensor: pytorch.Tensor, operation: Int, scalar: Float): pytorch.Tensor.
 
 /// Applies a selected floating-scalar binary operation in place.
 
-pub binary_scalar_right_float_in_place(tensor: Tensor, operation: Int, scalar: Float): Unit.
+pub binary_scalar_right_float_in_place(tensor: pytorch.Tensor, operation: Int, scalar: Float): Unit.
 
 /// Writes a selected binary operation with a floating-point scalar right operand.
 
-pub binary_scalar_right_float_out(output: Tensor, tensor: Tensor, operation: Int, scalar: Float): Unit.
+pub binary_scalar_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, operation: Int, scalar: Float): Unit.
 
 /// Applies a selected binary operation with an exact integer scalar right operand.
 
-pub binary_scalar_right_int(tensor: Tensor, operation: Int, scalar: Int): Tensor.
+pub binary_scalar_right_int(tensor: pytorch.Tensor, operation: Int, scalar: Int): pytorch.Tensor.
 
 /// Applies a selected integer-scalar binary operation in place.
 
-pub binary_scalar_right_int_in_place(tensor: Tensor, operation: Int, scalar: Int): Unit.
+pub binary_scalar_right_int_in_place(tensor: pytorch.Tensor, operation: Int, scalar: Int): Unit.
 
 /// Writes a selected binary operation with an integer scalar right operand.
 
-pub binary_scalar_right_int_out(output: Tensor, tensor: Tensor, operation: Int, scalar: Int): Unit.
+pub binary_scalar_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, operation: Int, scalar: Int): Unit.
 
 /// Applies a selected two-tensor binary operation to the left tensor in place.
 
-pub binary_tensor_in_place(left: Tensor, operation: Int, right: Tensor): Unit.
+pub binary_tensor_in_place(left: pytorch.Tensor, operation: Int, right: pytorch.Tensor): Unit.
 
 /// Writes a selected two-tensor binary operation into retained output storage.
 
-pub binary_tensor_out(output: Tensor, left: Tensor, operation: Int, right: Tensor): Unit.
+pub binary_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, operation: Int, right: pytorch.Tensor): Unit.

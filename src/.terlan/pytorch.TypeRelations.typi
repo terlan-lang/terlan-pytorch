@@ -4,11 +4,11 @@ module pytorch.TypeRelations.
 
 /// Tests whether two tensors are elementwise close with PyTorch defaults.
 
-pub allclose(left: pytorch.Tensor.Tensor, right: pytorch.Tensor.Tensor): Bool.
+pub allclose(left: pytorch.Tensor, right: pytorch.Tensor): Bool.
 
 /// Tests whether two tensors are elementwise close under explicit tolerances.
 
-pub allclose(left: pytorch.Tensor.Tensor, right: pytorch.Tensor.Tensor, relative_tolerance: Float, absolute_tolerance: Float, equal_nan: Bool): Bool.
+pub allclose(left: pytorch.Tensor, right: pytorch.Tensor, relative_tolerance: Float, absolute_tolerance: Float, equal_nan: Bool): Bool.
 
 /// Tests whether PyTorch permits values of one dtype to be cast into another.
 
@@ -16,59 +16,59 @@ pub can_cast(from_dtype: pytorch.Tensor.DType, to_dtype: pytorch.Tensor.DType): 
 
 /// Tests whether two tensors have identical shapes and element values.
 
-pub equal(left: pytorch.Tensor.Tensor, right: pytorch.Tensor.Tensor): Bool.
+pub equal(left: pytorch.Tensor, right: pytorch.Tensor): Bool.
 
 /// Returns the backend device index, or `-1` for CPU.
 
-pub get_device(tensor: pytorch.Tensor.Tensor): Int.
+pub get_device(tensor: pytorch.Tensor): Int.
 
 /// Tests whether a tensor has a complex dtype.
 
-pub is_complex(tensor: pytorch.Tensor.Tensor): Bool.
+pub is_complex(tensor: pytorch.Tensor): Bool.
 
 /// Tests whether a tensor carries PyTorch's lazy conjugate bit.
 
-pub is_conj(tensor: pytorch.Tensor.Tensor): Bool.
+pub is_conj(tensor: pytorch.Tensor): Bool.
 
 /// Tests whether a tensor uses a distributed representation.
 
-pub is_distributed(tensor: pytorch.Tensor.Tensor): Bool.
+pub is_distributed(tensor: pytorch.Tensor): Bool.
 
 /// Tests whether a tensor has a floating-point dtype.
 
-pub is_floating_point(tensor: pytorch.Tensor.Tensor): Bool.
+pub is_floating_point(tensor: pytorch.Tensor): Bool.
 
 /// Tests whether a tensor was created in inference mode.
 
-pub is_inference(tensor: pytorch.Tensor.Tensor): Bool.
+pub is_inference(tensor: pytorch.Tensor): Bool.
 
 /// Tests whether a tensor is an autograd leaf.
 
-pub is_leaf(tensor: pytorch.Tensor.Tensor): Bool.
+pub is_leaf(tensor: pytorch.Tensor): Bool.
 
 /// Tests whether a tensor carries PyTorch's lazy negative bit.
 
-pub is_neg(tensor: pytorch.Tensor.Tensor): Bool.
+pub is_neg(tensor: pytorch.Tensor): Bool.
 
 /// Returns the truth value of an exactly one-element tensor.
 
-pub is_nonzero(tensor: pytorch.Tensor.Tensor): Bool.
+pub is_nonzero(tensor: pytorch.Tensor): Bool.
 
 /// Tests whether two tensors have identical dimensions and extents.
 
-pub is_same_size(left: pytorch.Tensor.Tensor, right: pytorch.Tensor.Tensor): Bool.
+pub is_same_size(left: pytorch.Tensor, right: pytorch.Tensor): Bool.
 
 /// Tests whether two tensors share the exact same storage view.
 
-pub is_set_to(tensor: pytorch.Tensor.Tensor, other: pytorch.Tensor.Tensor): Bool.
+pub is_set_to(tensor: pytorch.Tensor, other: pytorch.Tensor): Bool.
 
 /// Tests whether a tensor's dtype is signed.
 
-pub is_signed(tensor: pytorch.Tensor.Tensor): Bool.
+pub is_signed(tensor: pytorch.Tensor): Bool.
 
 /// Returns the tensor's autograd output number.
 
-pub output_nr(tensor: pytorch.Tensor.Tensor): Int.
+pub output_nr(tensor: pytorch.Tensor): Int.
 
 /// Returns PyTorch's promoted dtype for two scalar dtypes.
 
@@ -76,42 +76,42 @@ pub promote_types(first: pytorch.Tensor.DType, second: pytorch.Tensor.DType): py
 
 /// Returns the calculation dtype selected for two tensors.
 
-pub result_type(first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor): pytorch.Tensor.DType.
+pub result_type(first: pytorch.Tensor, second: pytorch.Tensor): pytorch.Tensor.DType.
 
 /// Returns the calculation dtype selected for a tensor and exact scalar.
 
-pub result_type(tensor: pytorch.Tensor.Tensor, scalar: Scalar): pytorch.Tensor.DType.
+pub result_type(tensor: pytorch.Tensor, scalar: pytorch.Scalar): pytorch.Tensor.DType.
 
 /// Returns the calculation dtype selected for an exact scalar and tensor.
 
-pub result_type(scalar: Scalar, tensor: pytorch.Tensor.Tensor): pytorch.Tensor.DType.
+pub result_type(scalar: pytorch.Scalar, tensor: pytorch.Tensor): pytorch.Tensor.DType.
 
 /// Returns the calculation dtype selected for two exact scalars.
 
-pub result_type(first: Scalar, second: Scalar): pytorch.Tensor.DType.
+pub result_type(first: pytorch.Scalar, second: pytorch.Scalar): pytorch.Tensor.DType.
 
 pub result_type_scalar_scalar_values(first_is_integer: Bool, first_integer: Int, first_floating: Float, second_is_integer: Bool, second_integer: Int, second_floating: Float): pytorch.Tensor.DType.
 
-pub result_type_scalar_tensor_values(scalar_is_integer: Bool, scalar_integer: Int, scalar_floating: Float, tensor: pytorch.Tensor.Tensor): pytorch.Tensor.DType.
+pub result_type_scalar_tensor_values(scalar_is_integer: Bool, scalar_integer: Int, scalar_floating: Float, tensor: pytorch.Tensor): pytorch.Tensor.DType.
 
-pub result_type_tensor_scalar_values(tensor: pytorch.Tensor.Tensor, scalar_is_integer: Bool, scalar_integer: Int, scalar_floating: Float): pytorch.Tensor.DType.
+pub result_type_tensor_scalar_values(tensor: pytorch.Tensor, scalar_is_integer: Bool, scalar_integer: Int, scalar_floating: Float): pytorch.Tensor.DType.
 
 /// Unambiguous aliases for generated consumers that cannot import overloaded arity-2 names.
 
-pub result_type_tensor_tensor(first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor): pytorch.Tensor.DType.
+pub result_type_tensor_tensor(first: pytorch.Tensor, second: pytorch.Tensor): pytorch.Tensor.DType.
 
 /// Enables gradient retention on an eligible non-leaf tensor.
 
-pub retain_grad(tensor: pytorch.Tensor.Tensor): Unit.
+pub retain_grad(tensor: pytorch.Tensor): Unit.
 
 /// Tests whether a tensor has enabled retained gradients.
 
-pub retains_grad(tensor: pytorch.Tensor.Tensor): Bool.
+pub retains_grad(tensor: pytorch.Tensor): Bool.
 
 /// Returns one dimension extent with negative-dimension support.
 
-pub size(tensor: pytorch.Tensor.Tensor, dimension: Int): Int.
+pub size(tensor: pytorch.Tensor, dimension: Int): Int.
 
 /// Returns one dimension stride with negative-dimension support.
 
-pub stride(tensor: pytorch.Tensor.Tensor, dimension: Int): Int.
+pub stride(tensor: pytorch.Tensor, dimension: Int): Int.

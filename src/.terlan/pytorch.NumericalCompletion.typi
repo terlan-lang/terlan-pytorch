@@ -12,55 +12,55 @@ pub type MemoryFormat: Int =
 
 /// Writes stable or unstable argsort indices into retained storage.
 
-pub argsort_out(output: Tensor, tensor: Tensor, stable: Bool, dimension: Int, descending: Bool): Unit.
+pub argsort_out(output: pytorch.Tensor, tensor: pytorch.Tensor, stable: Bool, dimension: Int, descending: Bool): Unit.
 
 /// Computes pairwise p-distance using PyTorch's inferred compute mode.
 
-pub cdist(left: Tensor, right: Tensor, p: Float): Tensor.
+pub cdist(left: pytorch.Tensor, right: pytorch.Tensor, p: Float): pytorch.Tensor.
 
 /// Computes pairwise p-distance using an explicit PyTorch compute mode.
 
-pub cdist(left: Tensor, right: Tensor, p: Float, compute_mode: Int): Tensor.
+pub cdist(left: pytorch.Tensor, right: pytorch.Tensor, p: Float, compute_mode: Int): pytorch.Tensor.
 
 /// Multiplies a chain of matrices using PyTorch's selected association.
 
-pub chain_matmul(matrices: List[Tensor]): Tensor.
+pub chain_matmul(matrices: List[pytorch.Tensor]): pytorch.Tensor.
 
 /// Writes a matrix-chain product into retained storage.
 
-pub chain_matmul_out(output: Tensor, matrices: List[Tensor]): Unit.
+pub chain_matmul_out(output: pytorch.Tensor, matrices: List[pytorch.Tensor]): Unit.
 
 /// Writes an independent clone using PyTorch's inferred memory format.
 
-pub clone_out(output: Tensor, tensor: Tensor): Unit.
+pub clone_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Writes an independent clone using an explicit memory format.
 
-pub clone_out(output: Tensor, tensor: Tensor, format: MemoryFormat): Unit.
+pub clone_out(output: pytorch.Tensor, tensor: pytorch.Tensor, format: MemoryFormat): Unit.
 
 /// Returns a contiguous tensor using the default row-major format.
 
-pub contiguous(tensor: Tensor): Tensor.
+pub contiguous(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Returns a tensor contiguous in the requested memory format.
 
-pub contiguous(tensor: Tensor, format: MemoryFormat): Tensor.
+pub contiguous(tensor: pytorch.Tensor, format: MemoryFormat): pytorch.Tensor.
 
 /// Computes a vector cross product using PyTorch's inferred dimension.
 
-pub cross(tensor: Tensor, other: Tensor): Tensor.
+pub cross(tensor: pytorch.Tensor, other: pytorch.Tensor): pytorch.Tensor.
 
 /// Computes a vector cross product along an explicit dimension.
 
-pub cross(tensor: Tensor, other: Tensor, dimension: Int): Tensor.
+pub cross(tensor: pytorch.Tensor, other: pytorch.Tensor, dimension: Int): pytorch.Tensor.
 
 /// Writes a vector cross product using PyTorch's inferred dimension.
 
-pub cross_out(output: Tensor, tensor: Tensor, other: Tensor): Unit.
+pub cross_out(output: pytorch.Tensor, tensor: pytorch.Tensor, other: pytorch.Tensor): Unit.
 
 /// Writes a vector cross product along an explicit dimension.
 
-pub cross_out(output: Tensor, tensor: Tensor, other: Tensor, dimension: Int): Unit.
+pub cross_out(output: pytorch.Tensor, tensor: pytorch.Tensor, other: pytorch.Tensor, dimension: Int): Unit.
 
 /// Lowers a typed memory format to LibTorch's stable enum value.
 

@@ -1,9 +1,9 @@
 module=pytorch.LuUnpackCompletion
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=6863850646490773801
-interface_hash=9342778207149856245
+interface_hash=15006516605220144070
 interface_doc_hash=10527191147282190060
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

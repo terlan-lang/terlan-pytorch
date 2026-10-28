@@ -4,36 +4,36 @@ module pytorch.IndexFill.
 
 /// Returns a copy with indexed slices filled by a floating-point scalar.
 
-pub index_fill_float(input: Tensor, dimension: Int, index: Tensor, value: Float): Tensor.
+pub index_fill_float(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value: Float): pytorch.Tensor.
 
 /// Fills indexed slices in place with a floating-point scalar.
 
-pub index_fill_float_in_place(input: Tensor, dimension: Int, index: Tensor, value: Float): Unit.
+pub index_fill_float_in_place(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value: Float): Unit.
 
 /// Writes floating-point scalar index filling into retained output storage.
 
-pub index_fill_float_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, value: Float): Unit.
+pub index_fill_float_out(output: pytorch.Tensor, input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value: Float): Unit.
 
 /// Returns a copy with indexed slices filled by an integer scalar.
 
-pub index_fill_int(input: Tensor, dimension: Int, index: Tensor, value: Int): Tensor.
+pub index_fill_int(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value: Int): pytorch.Tensor.
 
 /// Fills indexed slices in place with an integer scalar.
 
-pub index_fill_int_in_place(input: Tensor, dimension: Int, index: Tensor, value: Int): Unit.
+pub index_fill_int_in_place(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value: Int): Unit.
 
 /// Writes integer scalar index filling into retained output storage.
 
-pub index_fill_int_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, value: Int): Unit.
+pub index_fill_int_out(output: pytorch.Tensor, input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value: Int): Unit.
 
 /// Returns a copy with indexed slices filled by a scalar tensor.
 
-pub index_fill_tensor(input: Tensor, dimension: Int, index: Tensor, value: Tensor): Tensor.
+pub index_fill_tensor(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value: pytorch.Tensor): pytorch.Tensor.
 
 /// Fills indexed slices in place with a scalar tensor.
 
-pub index_fill_tensor_in_place(input: Tensor, dimension: Int, index: Tensor, value: Tensor): Unit.
+pub index_fill_tensor_in_place(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value: pytorch.Tensor): Unit.
 
 /// Writes tensor index filling into retained output storage.
 
-pub index_fill_tensor_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, value: Tensor): Unit.
+pub index_fill_tensor_out(output: pytorch.Tensor, input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, value: pytorch.Tensor): Unit.

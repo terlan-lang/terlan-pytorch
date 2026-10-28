@@ -5,12 +5,12 @@ module pytorch.LinalgCompletion.
 /// Computes legacy aten::geqrf and writes both results into retained outputs.
 /// The generated CXX geqrf leaf remains the sole native operation.
 
-pub geqrf_out(a: Tensor, tau: Tensor, input: Tensor): Unit.
+pub geqrf_out(a: pytorch.Tensor, tau: pytorch.Tensor, input: pytorch.Tensor): Unit.
 
 /// Writes legacy aten::qr.Q outputs, preserving the `some` mode selector.
 
-pub qr_out(q: Tensor, r: Tensor, input: Tensor, some: Bool = true): Unit.
+pub qr_out(q: pytorch.Tensor, r: pytorch.Tensor, input: pytorch.Tensor, some: Bool = true): Unit.
 
 /// Writes legacy triangular-solve tuple outputs into retained tensors.
 
-pub triangular_solve_out(solution: Tensor, cloned_coefficient: Tensor, right: Tensor, coefficient: Tensor, upper: Bool = true, transpose: Bool = false, unitriangular: Bool = false): Unit.
+pub triangular_solve_out(solution: pytorch.Tensor, cloned_coefficient: pytorch.Tensor, right: pytorch.Tensor, coefficient: pytorch.Tensor, upper: Bool = true, transpose: Bool = false, unitriangular: Bool = false): Unit.

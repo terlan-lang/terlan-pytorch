@@ -4,36 +4,36 @@ module pytorch.UpsampleVectorCompletion.
 
 /// Exact vector bicubic upsampling overload.
 
-pub upsample_bicubic2d_vec(input: Tensor, output_size: List[Int], align_corners: Bool): Tensor.
+pub upsample_bicubic2d_vec(input: pytorch.Tensor, output_size: List[Int], align_corners: Bool): pytorch.Tensor.
 
 /// Exact vector bilinear upsampling overload.
 
-pub upsample_bilinear2d_vec(input: Tensor, output_size: List[Int], align_corners: Bool): Tensor.
+pub upsample_bilinear2d_vec(input: pytorch.Tensor, output_size: List[Int], align_corners: Bool): pytorch.Tensor.
 
 /// Exact vector bilinear upsampling output overload.
 
-pub upsample_bilinear2d_vec_out(output: Tensor, input: Tensor, output_size: List[Int], align_corners: Bool): Unit.
+pub upsample_bilinear2d_vec_out(output: pytorch.Tensor, input: pytorch.Tensor, output_size: List[Int], align_corners: Bool): Unit.
 
 /// Exact vector linear upsampling overload.
 
-pub upsample_linear1d_vec(input: Tensor, output_size: List[Int], align_corners: Bool): Tensor.
+pub upsample_linear1d_vec(input: pytorch.Tensor, output_size: List[Int], align_corners: Bool): pytorch.Tensor.
 
 /// Exact vector nearest-1d upsampling overload.
 
-pub upsample_nearest1d_vec(input: Tensor, output_size: List[Int]): Tensor.
+pub upsample_nearest1d_vec(input: pytorch.Tensor, output_size: List[Int]): pytorch.Tensor.
 
 /// Exact vector nearest-2d upsampling overload.
 
-pub upsample_nearest2d_vec(input: Tensor, output_size: List[Int]): Tensor.
+pub upsample_nearest2d_vec(input: pytorch.Tensor, output_size: List[Int]): pytorch.Tensor.
 
 /// Exact vector nearest-2d upsampling output overload.
 
-pub upsample_nearest2d_vec_out(output: Tensor, input: Tensor, output_size: List[Int]): Unit.
+pub upsample_nearest2d_vec_out(output: pytorch.Tensor, input: pytorch.Tensor, output_size: List[Int]): Unit.
 
 /// Exact vector nearest-3d upsampling overload.
 
-pub upsample_nearest3d_vec(input: Tensor, output_size: List[Int]): Tensor.
+pub upsample_nearest3d_vec(input: pytorch.Tensor, output_size: List[Int]): pytorch.Tensor.
 
 /// Exact vector trilinear upsampling overload.
 
-pub upsample_trilinear3d_vec(input: Tensor, output_size: List[Int], align_corners: Bool): Tensor.
+pub upsample_trilinear3d_vec(input: pytorch.Tensor, output_size: List[Int], align_corners: Bool): pytorch.Tensor.

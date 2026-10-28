@@ -2,13 +2,13 @@
 
 module pytorch.ScalarTensorCompletion.
 
-pub scalar_tensor(scalar: Scalar): Tensor.
+pub scalar_tensor(scalar: pytorch.Scalar): pytorch.Tensor.
 
 /// Constructs a zero-dimensional tensor while preserving integer versus
 /// floating scalar dtype inference.
 
-pub scalar_tensor_native(scalar_is_integer: Bool, scalar_integer: Int, scalar_floating: Float): Tensor.
+pub scalar_tensor_native(scalar_is_integer: Bool, scalar_integer: Int, scalar_floating: Float): pytorch.Tensor.
 
 /// Writes a scalar tensor into caller-owned output storage.
 
-pub scalar_tensor_out(output: Tensor, scalar: Scalar): Unit.
+pub scalar_tensor_out(output: pytorch.Tensor, scalar: pytorch.Scalar): Unit.

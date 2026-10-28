@@ -4,24 +4,24 @@ module pytorch.LossCompletion.
 
 /// Computes the multilabel margin loss.
 
-pub multilabel_margin_loss(input: Tensor, target: Tensor, reduction: Int = 1): Tensor.
+pub multilabel_margin_loss(input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int = 1): pytorch.Tensor.
 
 /// Exact generated CXX leaf for aten::multilabel_margin_loss_backward.
 
-pub multilabel_margin_loss_backward(gradient: Tensor, input: Tensor, target: Tensor, reduction: Int, is_target: Tensor): Tensor.
+pub multilabel_margin_loss_backward(gradient: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int, is_target: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX retained-output leaf for aten::multilabel_margin_loss_backward.grad_input.
 
-pub multilabel_margin_loss_backward_out(grad_input: Tensor, gradient: Tensor, input: Tensor, target: Tensor, reduction: Int, is_target: Tensor): Unit.
+pub multilabel_margin_loss_backward_out(grad_input: pytorch.Tensor, gradient: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int, is_target: pytorch.Tensor): Unit.
 
 /// Exact generated CXX leaf for aten::multilabel_margin_loss_forward.
 
-pub multilabel_margin_loss_forward(input: Tensor, target: Tensor, reduction: Int): {Tensor, Tensor}.
+pub multilabel_margin_loss_forward(input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX retained-output leaf for aten::multilabel_margin_loss_forward.output.
 
-pub multilabel_margin_loss_forward_out(output: Tensor, is_target: Tensor, input: Tensor, target: Tensor, reduction: Int): Unit.
+pub multilabel_margin_loss_forward_out(output: pytorch.Tensor, is_target: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int): Unit.
 
 /// Writes the multilabel margin loss into retained output.
 
-pub multilabel_margin_loss_out(output: Tensor, input: Tensor, target: Tensor, reduction: Int = 1): Unit.
+pub multilabel_margin_loss_out(output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int = 1): Unit.

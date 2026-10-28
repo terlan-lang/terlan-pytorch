@@ -4,612 +4,612 @@ module pytorch.Linalg.
 
 /// Generated exact CXX linalg leaf for cholesky_solve.
 
-pub cholesky_solve(right: Tensor, factor: Tensor, upper: Bool = false): Tensor.
+pub cholesky_solve(right: pytorch.Tensor, factor: pytorch.Tensor, upper: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for geqrf.
 
-pub geqrf(tensor: Tensor): {Tensor, Tensor}.
+pub geqrf(tensor: pytorch.Tensor): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_cholesky.
 
-pub linalg_cholesky(tensor: Tensor, upper: Bool = false): Tensor.
+pub linalg_cholesky(tensor: pytorch.Tensor, upper: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_cholesky_ex.
 
-pub linalg_cholesky_ex(tensor: Tensor, upper: Bool = false, check_errors: Bool = false): {Tensor, Tensor}.
+pub linalg_cholesky_ex(tensor: pytorch.Tensor, upper: Bool = false, check_errors: Bool = false): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_cholesky_ex_out.
 
-pub linalg_cholesky_ex_out(factor: Tensor, info: Tensor, tensor: Tensor, upper: Bool = false, check_errors: Bool = false): Unit.
+pub linalg_cholesky_ex_out(factor: pytorch.Tensor, info: pytorch.Tensor, tensor: pytorch.Tensor, upper: Bool = false, check_errors: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_cholesky_out.
 
-pub linalg_cholesky_out(output: Tensor, tensor: Tensor, upper: Bool = false): Unit.
+pub linalg_cholesky_out(output: pytorch.Tensor, tensor: pytorch.Tensor, upper: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_cond_default.
 
-pub linalg_cond_default(tensor: Tensor): Tensor.
+pub linalg_cond_default(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_cond_default_out.
 
-pub linalg_cond_default_out(output: Tensor, tensor: Tensor): Unit.
+pub linalg_cond_default_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_cond_float.
 
-pub linalg_cond_float(tensor: Tensor, order: Float): Tensor.
+pub linalg_cond_float(tensor: pytorch.Tensor, order: Float): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_cond_float_out.
 
-pub linalg_cond_float_out(output: Tensor, tensor: Tensor, order: Float): Unit.
+pub linalg_cond_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Float): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_cond_int.
 
-pub linalg_cond_int(tensor: Tensor, order: Int): Tensor.
+pub linalg_cond_int(tensor: pytorch.Tensor, order: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_cond_int_out.
 
-pub linalg_cond_int_out(output: Tensor, tensor: Tensor, order: Int): Unit.
+pub linalg_cond_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Int): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_cond_string.
 
-pub linalg_cond_string(tensor: Tensor, order: String): Tensor.
+pub linalg_cond_string(tensor: pytorch.Tensor, order: String): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_cond_string_out.
 
-pub linalg_cond_string_out(output: Tensor, tensor: Tensor, order: String): Unit.
+pub linalg_cond_string_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: String): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_cross.
 
-pub linalg_cross(left: Tensor, right: Tensor, dimension: Int = - 1): Tensor.
+pub linalg_cross(left: pytorch.Tensor, right: pytorch.Tensor, dimension: Int = - 1): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_cross_out.
 
-pub linalg_cross_out(output: Tensor, left: Tensor, right: Tensor, dimension: Int = - 1): Unit.
+pub linalg_cross_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor, dimension: Int = - 1): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_det.
 
-pub linalg_det(tensor: Tensor): Tensor.
+pub linalg_det(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_det_out.
 
-pub linalg_det_out(output: Tensor, tensor: Tensor): Unit.
+pub linalg_det_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_diagonal.
 
-pub linalg_diagonal(tensor: Tensor, offset: Int = 0, dimension1: Int = - 2, dimension2: Int = - 1): Tensor.
+pub linalg_diagonal(tensor: pytorch.Tensor, offset: Int = 0, dimension1: Int = - 2, dimension2: Int = - 1): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_eig.
 
-pub linalg_eig(tensor: Tensor): {Tensor, Tensor}.
+pub linalg_eig(tensor: pytorch.Tensor): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_eig_out.
 
-pub linalg_eig_out(eigenvalues: Tensor, eigenvectors: Tensor, tensor: Tensor): Unit.
+pub linalg_eig_out(eigenvalues: pytorch.Tensor, eigenvectors: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_eigh.
 
-pub linalg_eigh(tensor: Tensor, uplo: String = "L"): {Tensor, Tensor}.
+pub linalg_eigh(tensor: pytorch.Tensor, uplo: String = "L"): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_eigh_out.
 
-pub linalg_eigh_out(eigenvalues: Tensor, eigenvectors: Tensor, tensor: Tensor, uplo: String = "L"): Unit.
+pub linalg_eigh_out(eigenvalues: pytorch.Tensor, eigenvectors: pytorch.Tensor, tensor: pytorch.Tensor, uplo: String = "L"): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_eigvals_out.
 
-pub linalg_eigvals_out(output: Tensor, tensor: Tensor): Unit.
+pub linalg_eigvals_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_eigvalsh.
 
-pub linalg_eigvalsh(tensor: Tensor, uplo: String = "L"): Tensor.
+pub linalg_eigvalsh(tensor: pytorch.Tensor, uplo: String = "L"): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_eigvalsh_out.
 
-pub linalg_eigvalsh_out(output: Tensor, tensor: Tensor, uplo: String = "L"): Unit.
+pub linalg_eigvalsh_out(output: pytorch.Tensor, tensor: pytorch.Tensor, uplo: String = "L"): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_householder_product_out.
 
-pub linalg_householder_product_out(output: Tensor, input: Tensor, tau: Tensor): Unit.
+pub linalg_householder_product_out(output: pytorch.Tensor, input: pytorch.Tensor, tau: pytorch.Tensor): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_inv.
 
-pub linalg_inv(tensor: Tensor): Tensor.
+pub linalg_inv(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_inv_ex.
 
-pub linalg_inv_ex(tensor: Tensor, check_errors: Bool = false): {Tensor, Tensor}.
+pub linalg_inv_ex(tensor: pytorch.Tensor, check_errors: Bool = false): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_inv_ex_out.
 
-pub linalg_inv_ex_out(inverse: Tensor, info: Tensor, tensor: Tensor, check_errors: Bool = false): Unit.
+pub linalg_inv_ex_out(inverse: pytorch.Tensor, info: pytorch.Tensor, tensor: pytorch.Tensor, check_errors: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_inv_out.
 
-pub linalg_inv_out(output: Tensor, tensor: Tensor): Unit.
+pub linalg_inv_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_ldl_factor.
 
-pub linalg_ldl_factor(tensor: Tensor, hermitian: Bool = false): {Tensor, Tensor}.
+pub linalg_ldl_factor(tensor: pytorch.Tensor, hermitian: Bool = false): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_ldl_factor_ex.
 
-pub linalg_ldl_factor_ex(tensor: Tensor, hermitian: Bool = false, check_errors: Bool = false): {Tensor, Tensor, Tensor}.
+pub linalg_ldl_factor_ex(tensor: pytorch.Tensor, hermitian: Bool = false, check_errors: Bool = false): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_ldl_factor_ex_out.
 
-pub linalg_ldl_factor_ex_out(factor: Tensor, pivots: Tensor, info: Tensor, tensor: Tensor, hermitian: Bool = false, check_errors: Bool = false): Unit.
+pub linalg_ldl_factor_ex_out(factor: pytorch.Tensor, pivots: pytorch.Tensor, info: pytorch.Tensor, tensor: pytorch.Tensor, hermitian: Bool = false, check_errors: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_ldl_factor_out.
 
-pub linalg_ldl_factor_out(factor: Tensor, pivots: Tensor, tensor: Tensor, hermitian: Bool = false): Unit.
+pub linalg_ldl_factor_out(factor: pytorch.Tensor, pivots: pytorch.Tensor, tensor: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_ldl_solve.
 
-pub linalg_ldl_solve(factor: Tensor, pivots: Tensor, right: Tensor, hermitian: Bool = false): Tensor.
+pub linalg_ldl_solve(factor: pytorch.Tensor, pivots: pytorch.Tensor, right: pytorch.Tensor, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_ldl_solve_out.
 
-pub linalg_ldl_solve_out(output: Tensor, factor: Tensor, pivots: Tensor, right: Tensor, hermitian: Bool = false): Unit.
+pub linalg_ldl_solve_out(output: pytorch.Tensor, factor: pytorch.Tensor, pivots: pytorch.Tensor, right: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_lstsq.
 
-pub linalg_lstsq(coefficient: Tensor, right: Tensor): {Tensor, Tensor, Tensor, Tensor}.
+pub linalg_lstsq(coefficient: pytorch.Tensor, right: pytorch.Tensor): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_lstsq_configured.
 
-pub linalg_lstsq_configured(coefficient: Tensor, right: Tensor, relative_condition: Float, driver: String): {Tensor, Tensor, Tensor, Tensor}.
+pub linalg_lstsq_configured(coefficient: pytorch.Tensor, right: pytorch.Tensor, relative_condition: Float, driver: String): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_lstsq_out.
 
-pub linalg_lstsq_out(solution: Tensor, residuals: Tensor, rank: Tensor, singular_values: Tensor, coefficient: Tensor, right: Tensor): Unit.
+pub linalg_lstsq_out(solution: pytorch.Tensor, residuals: pytorch.Tensor, rank: pytorch.Tensor, singular_values: pytorch.Tensor, coefficient: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_lstsq_out_configured.
 
-pub linalg_lstsq_out_configured(solution: Tensor, residuals: Tensor, rank: Tensor, singular_values: Tensor, coefficient: Tensor, right: Tensor, relative_condition: Float, driver: String): Unit.
+pub linalg_lstsq_out_configured(solution: pytorch.Tensor, residuals: pytorch.Tensor, rank: pytorch.Tensor, singular_values: pytorch.Tensor, coefficient: pytorch.Tensor, right: pytorch.Tensor, relative_condition: Float, driver: String): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_lu.
 
-pub linalg_lu(tensor: Tensor, pivot: Bool = true): {Tensor, Tensor, Tensor}.
+pub linalg_lu(tensor: pytorch.Tensor, pivot: Bool = true): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_lu_factor.
 
-pub linalg_lu_factor(tensor: Tensor, pivot: Bool = true): {Tensor, Tensor}.
+pub linalg_lu_factor(tensor: pytorch.Tensor, pivot: Bool = true): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_lu_factor_ex.
 
-pub linalg_lu_factor_ex(tensor: Tensor, pivot: Bool = true, check_errors: Bool = false): {Tensor, Tensor, Tensor}.
+pub linalg_lu_factor_ex(tensor: pytorch.Tensor, pivot: Bool = true, check_errors: Bool = false): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_lu_factor_ex_out.
 
-pub linalg_lu_factor_ex_out(factor: Tensor, pivots: Tensor, info: Tensor, tensor: Tensor, pivot: Bool = true, check_errors: Bool = false): Unit.
+pub linalg_lu_factor_ex_out(factor: pytorch.Tensor, pivots: pytorch.Tensor, info: pytorch.Tensor, tensor: pytorch.Tensor, pivot: Bool = true, check_errors: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_lu_factor_out.
 
-pub linalg_lu_factor_out(factor: Tensor, pivots: Tensor, tensor: Tensor, pivot: Bool = true): Unit.
+pub linalg_lu_factor_out(factor: pytorch.Tensor, pivots: pytorch.Tensor, tensor: pytorch.Tensor, pivot: Bool = true): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_lu_out.
 
-pub linalg_lu_out(permutation: Tensor, lower: Tensor, upper: Tensor, tensor: Tensor, pivot: Bool = true): Unit.
+pub linalg_lu_out(permutation: pytorch.Tensor, lower: pytorch.Tensor, upper: pytorch.Tensor, tensor: pytorch.Tensor, pivot: Bool = true): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_lu_solve.
 
-pub linalg_lu_solve(factor: Tensor, pivots: Tensor, right: Tensor, left: Bool = true, adjoint: Bool = false): Tensor.
+pub linalg_lu_solve(factor: pytorch.Tensor, pivots: pytorch.Tensor, right: pytorch.Tensor, left: Bool = true, adjoint: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_lu_solve_out.
 
-pub linalg_lu_solve_out(output: Tensor, factor: Tensor, pivots: Tensor, right: Tensor, left: Bool = true, adjoint: Bool = false): Unit.
+pub linalg_lu_solve_out(output: pytorch.Tensor, factor: pytorch.Tensor, pivots: pytorch.Tensor, right: pytorch.Tensor, left: Bool = true, adjoint: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matmul_out.
 
-pub linalg_matmul_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub linalg_matmul_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_exp_out.
 
-pub linalg_matrix_exp_out(output: Tensor, tensor: Tensor): Unit.
+pub linalg_matrix_exp_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_norm_float.
 
-pub linalg_matrix_norm_float(tensor: Tensor, order: Float): Tensor.
+pub linalg_matrix_norm_float(tensor: pytorch.Tensor, order: Float): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_norm_float_configured.
 
-pub linalg_matrix_norm_float_configured(tensor: Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Tensor.
+pub linalg_matrix_norm_float_configured(tensor: pytorch.Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_norm_float_configured_out.
 
-pub linalg_matrix_norm_float_configured_out(output: Tensor, tensor: Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
+pub linalg_matrix_norm_float_configured_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_norm_float_out.
 
-pub linalg_matrix_norm_float_out(output: Tensor, tensor: Tensor, order: Float): Unit.
+pub linalg_matrix_norm_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Float): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_norm_int.
 
-pub linalg_matrix_norm_int(tensor: Tensor, order: Int): Tensor.
+pub linalg_matrix_norm_int(tensor: pytorch.Tensor, order: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_norm_int_configured.
 
-pub linalg_matrix_norm_int_configured(tensor: Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Tensor.
+pub linalg_matrix_norm_int_configured(tensor: pytorch.Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_norm_int_configured_out.
 
-pub linalg_matrix_norm_int_configured_out(output: Tensor, tensor: Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
+pub linalg_matrix_norm_int_configured_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_norm_int_out.
 
-pub linalg_matrix_norm_int_out(output: Tensor, tensor: Tensor, order: Int): Unit.
+pub linalg_matrix_norm_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Int): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_norm_string.
 
-pub linalg_matrix_norm_string(tensor: Tensor, order: String = "fro", dimensions: List[Int] = [- 2, - 1], keep_dimension: Bool = false): Tensor.
+pub linalg_matrix_norm_string(tensor: pytorch.Tensor, order: String = "fro", dimensions: List[Int] = [- 2, - 1], keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_norm_string_dtype.
 
-pub linalg_matrix_norm_string_dtype(tensor: Tensor, order: String, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Tensor.
+pub linalg_matrix_norm_string_dtype(tensor: pytorch.Tensor, order: String, dimensions: List[Int], keep_dimension: Bool, dtype: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_norm_string_out.
 
-pub linalg_matrix_norm_string_out(output: Tensor, tensor: Tensor, order: String = "fro", dimensions: List[Int] = [- 2, - 1], keep_dimension: Bool = false): Unit.
+pub linalg_matrix_norm_string_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: String = "fro", dimensions: List[Int] = [- 2, - 1], keep_dimension: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_norm_string_out_dtype.
 
-pub linalg_matrix_norm_string_out_dtype(output: Tensor, tensor: Tensor, order: String, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
+pub linalg_matrix_norm_string_out_dtype(output: pytorch.Tensor, tensor: pytorch.Tensor, order: String, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_power_out.
 
-pub linalg_matrix_power_out(output: Tensor, tensor: Tensor, exponent: Int): Unit.
+pub linalg_matrix_power_out(output: pytorch.Tensor, tensor: pytorch.Tensor, exponent: Int): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_default.
 
-pub linalg_matrix_rank_default(tensor: Tensor, hermitian: Bool = false): Tensor.
+pub linalg_matrix_rank_default(tensor: pytorch.Tensor, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_out_absolute.
 
-pub linalg_matrix_rank_out_absolute(output: Tensor, tensor: Tensor, absolute_tolerance: Float, hermitian: Bool = false): Unit.
+pub linalg_matrix_rank_out_absolute(output: pytorch.Tensor, tensor: pytorch.Tensor, absolute_tolerance: Float, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_out_default.
 
-pub linalg_matrix_rank_out_default(output: Tensor, tensor: Tensor, hermitian: Bool = false): Unit.
+pub linalg_matrix_rank_out_default(output: pytorch.Tensor, tensor: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_out_relative.
 
-pub linalg_matrix_rank_out_relative(output: Tensor, tensor: Tensor, relative_tolerance: Float, hermitian: Bool = false): Unit.
+pub linalg_matrix_rank_out_relative(output: pytorch.Tensor, tensor: pytorch.Tensor, relative_tolerance: Float, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_out_tensor_absolute.
 
-pub linalg_matrix_rank_out_tensor_absolute(output: Tensor, tensor: Tensor, absolute_tolerance: Tensor, hermitian: Bool = false): Unit.
+pub linalg_matrix_rank_out_tensor_absolute(output: pytorch.Tensor, tensor: pytorch.Tensor, absolute_tolerance: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_out_tensor_default.
 
-pub linalg_matrix_rank_out_tensor_default(output: Tensor, tensor: Tensor, hermitian: Bool = false): Unit.
+pub linalg_matrix_rank_out_tensor_default(output: pytorch.Tensor, tensor: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_out_tensor_relative.
 
-pub linalg_matrix_rank_out_tensor_relative(output: Tensor, tensor: Tensor, relative_tolerance: Tensor, hermitian: Bool = false): Unit.
+pub linalg_matrix_rank_out_tensor_relative(output: pytorch.Tensor, tensor: pytorch.Tensor, relative_tolerance: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_out_tensor_tolerance.
 
-pub linalg_matrix_rank_out_tensor_tolerance(output: Tensor, tensor: Tensor, tolerance: Tensor, hermitian: Bool = false): Unit.
+pub linalg_matrix_rank_out_tensor_tolerance(output: pytorch.Tensor, tensor: pytorch.Tensor, tolerance: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_out_tensor_tolerances.
 
-pub linalg_matrix_rank_out_tensor_tolerances(output: Tensor, tensor: Tensor, absolute_tolerance: Tensor, relative_tolerance: Tensor, hermitian: Bool = false): Unit.
+pub linalg_matrix_rank_out_tensor_tolerances(output: pytorch.Tensor, tensor: pytorch.Tensor, absolute_tolerance: pytorch.Tensor, relative_tolerance: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_out_tolerance.
 
-pub linalg_matrix_rank_out_tolerance(output: Tensor, tensor: Tensor, tolerance: Float, hermitian: Bool = false): Unit.
+pub linalg_matrix_rank_out_tolerance(output: pytorch.Tensor, tensor: pytorch.Tensor, tolerance: Float, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_out_tolerances.
 
-pub linalg_matrix_rank_out_tolerances(output: Tensor, tensor: Tensor, absolute_tolerance: Float, relative_tolerance: Float, hermitian: Bool = false): Unit.
+pub linalg_matrix_rank_out_tolerances(output: pytorch.Tensor, tensor: pytorch.Tensor, absolute_tolerance: Float, relative_tolerance: Float, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_tensor_absolute.
 
-pub linalg_matrix_rank_tensor_absolute(tensor: Tensor, absolute_tolerance: Tensor, hermitian: Bool = false): Tensor.
+pub linalg_matrix_rank_tensor_absolute(tensor: pytorch.Tensor, absolute_tolerance: pytorch.Tensor, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_tensor_default.
 
-pub linalg_matrix_rank_tensor_default(tensor: Tensor, hermitian: Bool = false): Tensor.
+pub linalg_matrix_rank_tensor_default(tensor: pytorch.Tensor, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_tensor_relative.
 
-pub linalg_matrix_rank_tensor_relative(tensor: Tensor, relative_tolerance: Tensor, hermitian: Bool = false): Tensor.
+pub linalg_matrix_rank_tensor_relative(tensor: pytorch.Tensor, relative_tolerance: pytorch.Tensor, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_tensor_tolerances.
 
-pub linalg_matrix_rank_tensor_tolerances(tensor: Tensor, absolute_tolerance: Tensor, relative_tolerance: Tensor, hermitian: Bool = false): Tensor.
+pub linalg_matrix_rank_tensor_tolerances(tensor: pytorch.Tensor, absolute_tolerance: pytorch.Tensor, relative_tolerance: pytorch.Tensor, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_tolerance.
 
-pub linalg_matrix_rank_tolerance(tensor: Tensor, tolerance: Tensor, hermitian: Bool = false): Tensor.
+pub linalg_matrix_rank_tolerance(tensor: pytorch.Tensor, tolerance: pytorch.Tensor, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_matrix_rank_tolerances.
 
-pub linalg_matrix_rank_tolerances(tensor: Tensor, absolute_tolerance: Float, relative_tolerance: Float, hermitian: Bool = false): Tensor.
+pub linalg_matrix_rank_tolerances(tensor: pytorch.Tensor, absolute_tolerance: Float, relative_tolerance: Float, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_multi_dot.
 
-pub linalg_multi_dot(tensors: List[Tensor]): Tensor.
+pub linalg_multi_dot(tensors: List[pytorch.Tensor]): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_multi_dot_out.
 
-pub linalg_multi_dot_out(output: Tensor, tensors: List[Tensor]): Unit.
+pub linalg_multi_dot_out(output: pytorch.Tensor, tensors: List[pytorch.Tensor]): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_norm_default.
 
-pub linalg_norm_default(tensor: Tensor): Tensor.
+pub linalg_norm_default(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_norm_default_out.
 
-pub linalg_norm_default_out(output: Tensor, tensor: Tensor): Unit.
+pub linalg_norm_default_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_norm_float.
 
-pub linalg_norm_float(tensor: Tensor, order: Float): Tensor.
+pub linalg_norm_float(tensor: pytorch.Tensor, order: Float): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_norm_float_configured.
 
-pub linalg_norm_float_configured(tensor: Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Tensor.
+pub linalg_norm_float_configured(tensor: pytorch.Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_norm_float_configured_out.
 
-pub linalg_norm_float_configured_out(output: Tensor, tensor: Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
+pub linalg_norm_float_configured_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_norm_float_out.
 
-pub linalg_norm_float_out(output: Tensor, tensor: Tensor, order: Float): Unit.
+pub linalg_norm_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Float): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_norm_int.
 
-pub linalg_norm_int(tensor: Tensor, order: Int): Tensor.
+pub linalg_norm_int(tensor: pytorch.Tensor, order: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_norm_int_configured.
 
-pub linalg_norm_int_configured(tensor: Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Tensor.
+pub linalg_norm_int_configured(tensor: pytorch.Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_norm_int_configured_out.
 
-pub linalg_norm_int_configured_out(output: Tensor, tensor: Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
+pub linalg_norm_int_configured_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_norm_int_out.
 
-pub linalg_norm_int_out(output: Tensor, tensor: Tensor, order: Int): Unit.
+pub linalg_norm_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Int): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_norm_string.
 
-pub linalg_norm_string(tensor: Tensor, order: String, keep_dimension: Bool = false): Tensor.
+pub linalg_norm_string(tensor: pytorch.Tensor, order: String, keep_dimension: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_norm_string_dimensions.
 
-pub linalg_norm_string_dimensions(tensor: Tensor, order: String, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Tensor.
+pub linalg_norm_string_dimensions(tensor: pytorch.Tensor, order: String, dimensions: List[Int], keep_dimension: Bool, dtype: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_norm_string_out.
 
-pub linalg_norm_string_out(output: Tensor, tensor: Tensor, order: String, keep_dimension: Bool = false): Unit.
+pub linalg_norm_string_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: String, keep_dimension: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_norm_string_out_dimensions.
 
-pub linalg_norm_string_out_dimensions(output: Tensor, tensor: Tensor, order: String, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
+pub linalg_norm_string_out_dimensions(output: pytorch.Tensor, tensor: pytorch.Tensor, order: String, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_default.
 
-pub linalg_pinv_default(tensor: Tensor, hermitian: Bool = false): Tensor.
+pub linalg_pinv_default(tensor: pytorch.Tensor, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_out_absolute.
 
-pub linalg_pinv_out_absolute(output: Tensor, tensor: Tensor, absolute_tolerance: Float, hermitian: Bool = false): Unit.
+pub linalg_pinv_out_absolute(output: pytorch.Tensor, tensor: pytorch.Tensor, absolute_tolerance: Float, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_out_default.
 
-pub linalg_pinv_out_default(output: Tensor, tensor: Tensor, hermitian: Bool = false): Unit.
+pub linalg_pinv_out_default(output: pytorch.Tensor, tensor: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_out_rcond.
 
-pub linalg_pinv_out_rcond(output: Tensor, tensor: Tensor, relative_condition: Float, hermitian: Bool = false): Unit.
+pub linalg_pinv_out_rcond(output: pytorch.Tensor, tensor: pytorch.Tensor, relative_condition: Float, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_out_relative.
 
-pub linalg_pinv_out_relative(output: Tensor, tensor: Tensor, relative_tolerance: Float, hermitian: Bool = false): Unit.
+pub linalg_pinv_out_relative(output: pytorch.Tensor, tensor: pytorch.Tensor, relative_tolerance: Float, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_out_tensor_absolute.
 
-pub linalg_pinv_out_tensor_absolute(output: Tensor, tensor: Tensor, absolute_tolerance: Tensor, hermitian: Bool = false): Unit.
+pub linalg_pinv_out_tensor_absolute(output: pytorch.Tensor, tensor: pytorch.Tensor, absolute_tolerance: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_out_tensor_default.
 
-pub linalg_pinv_out_tensor_default(output: Tensor, tensor: Tensor, hermitian: Bool = false): Unit.
+pub linalg_pinv_out_tensor_default(output: pytorch.Tensor, tensor: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_out_tensor_rcond.
 
-pub linalg_pinv_out_tensor_rcond(output: Tensor, tensor: Tensor, relative_condition: Tensor, hermitian: Bool = false): Unit.
+pub linalg_pinv_out_tensor_rcond(output: pytorch.Tensor, tensor: pytorch.Tensor, relative_condition: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_out_tensor_relative.
 
-pub linalg_pinv_out_tensor_relative(output: Tensor, tensor: Tensor, relative_tolerance: Tensor, hermitian: Bool = false): Unit.
+pub linalg_pinv_out_tensor_relative(output: pytorch.Tensor, tensor: pytorch.Tensor, relative_tolerance: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_out_tensor_tolerances.
 
-pub linalg_pinv_out_tensor_tolerances(output: Tensor, tensor: Tensor, absolute_tolerance: Tensor, relative_tolerance: Tensor, hermitian: Bool = false): Unit.
+pub linalg_pinv_out_tensor_tolerances(output: pytorch.Tensor, tensor: pytorch.Tensor, absolute_tolerance: pytorch.Tensor, relative_tolerance: pytorch.Tensor, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_out_tolerances.
 
-pub linalg_pinv_out_tolerances(output: Tensor, tensor: Tensor, absolute_tolerance: Float, relative_tolerance: Float, hermitian: Bool = false): Unit.
+pub linalg_pinv_out_tolerances(output: pytorch.Tensor, tensor: pytorch.Tensor, absolute_tolerance: Float, relative_tolerance: Float, hermitian: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_rcond.
 
-pub linalg_pinv_rcond(tensor: Tensor, relative_condition: Tensor, hermitian: Bool = false): Tensor.
+pub linalg_pinv_rcond(tensor: pytorch.Tensor, relative_condition: pytorch.Tensor, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_tensor_absolute.
 
-pub linalg_pinv_tensor_absolute(tensor: Tensor, absolute_tolerance: Tensor, hermitian: Bool = false): Tensor.
+pub linalg_pinv_tensor_absolute(tensor: pytorch.Tensor, absolute_tolerance: pytorch.Tensor, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_tensor_default.
 
-pub linalg_pinv_tensor_default(tensor: Tensor, hermitian: Bool = false): Tensor.
+pub linalg_pinv_tensor_default(tensor: pytorch.Tensor, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_tensor_relative.
 
-pub linalg_pinv_tensor_relative(tensor: Tensor, relative_tolerance: Tensor, hermitian: Bool = false): Tensor.
+pub linalg_pinv_tensor_relative(tensor: pytorch.Tensor, relative_tolerance: pytorch.Tensor, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_tensor_tolerances.
 
-pub linalg_pinv_tensor_tolerances(tensor: Tensor, absolute_tolerance: Tensor, relative_tolerance: Tensor, hermitian: Bool = false): Tensor.
+pub linalg_pinv_tensor_tolerances(tensor: pytorch.Tensor, absolute_tolerance: pytorch.Tensor, relative_tolerance: pytorch.Tensor, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_pinv_tolerances.
 
-pub linalg_pinv_tolerances(tensor: Tensor, absolute_tolerance: Float, relative_tolerance: Float, hermitian: Bool = false): Tensor.
+pub linalg_pinv_tolerances(tensor: pytorch.Tensor, absolute_tolerance: Float, relative_tolerance: Float, hermitian: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_powsum_float.
 
-pub linalg_powsum_float(tensor: Tensor, order: Float = 2.0): Tensor.
+pub linalg_powsum_float(tensor: pytorch.Tensor, order: Float = 2.0): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_powsum_float_configured.
 
-pub linalg_powsum_float_configured(tensor: Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Tensor.
+pub linalg_powsum_float_configured(tensor: pytorch.Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_powsum_int.
 
-pub linalg_powsum_int(tensor: Tensor, order: Int = 2): Tensor.
+pub linalg_powsum_int(tensor: pytorch.Tensor, order: Int = 2): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_powsum_int_configured.
 
-pub linalg_powsum_int_configured(tensor: Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Tensor.
+pub linalg_powsum_int_configured(tensor: pytorch.Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_qr.
 
-pub linalg_qr(tensor: Tensor, mode: String = "reduced"): {Tensor, Tensor}.
+pub linalg_qr(tensor: pytorch.Tensor, mode: String = "reduced"): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_qr_out.
 
-pub linalg_qr_out(q: Tensor, r: Tensor, tensor: Tensor, mode: String = "reduced"): Unit.
+pub linalg_qr_out(q: pytorch.Tensor, r: pytorch.Tensor, tensor: pytorch.Tensor, mode: String = "reduced"): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_slogdet.
 
-pub linalg_slogdet(tensor: Tensor): {Tensor, Tensor}.
+pub linalg_slogdet(tensor: pytorch.Tensor): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_slogdet_out.
 
-pub linalg_slogdet_out(sign: Tensor, log_absolute: Tensor, tensor: Tensor): Unit.
+pub linalg_slogdet_out(sign: pytorch.Tensor, log_absolute: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_solve.
 
-pub linalg_solve(coefficient: Tensor, right: Tensor, left: Bool = true): Tensor.
+pub linalg_solve(coefficient: pytorch.Tensor, right: pytorch.Tensor, left: Bool = true): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_solve_ex.
 
-pub linalg_solve_ex(coefficient: Tensor, right: Tensor, left: Bool = true, check_errors: Bool = false): {Tensor, Tensor}.
+pub linalg_solve_ex(coefficient: pytorch.Tensor, right: pytorch.Tensor, left: Bool = true, check_errors: Bool = false): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_solve_ex_out.
 
-pub linalg_solve_ex_out(result: Tensor, info: Tensor, coefficient: Tensor, right: Tensor, left: Bool = true, check_errors: Bool = false): Unit.
+pub linalg_solve_ex_out(result: pytorch.Tensor, info: pytorch.Tensor, coefficient: pytorch.Tensor, right: pytorch.Tensor, left: Bool = true, check_errors: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_solve_out.
 
-pub linalg_solve_out(output: Tensor, coefficient: Tensor, right: Tensor, left: Bool = true): Unit.
+pub linalg_solve_out(output: pytorch.Tensor, coefficient: pytorch.Tensor, right: pytorch.Tensor, left: Bool = true): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_solve_triangular.
 
-pub linalg_solve_triangular(coefficient: Tensor, right: Tensor, upper: Bool, left: Bool = true, unitriangular: Bool = false): Tensor.
+pub linalg_solve_triangular(coefficient: pytorch.Tensor, right: pytorch.Tensor, upper: Bool, left: Bool = true, unitriangular: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_solve_triangular_out.
 
-pub linalg_solve_triangular_out(output: Tensor, coefficient: Tensor, right: Tensor, upper: Bool, left: Bool = true, unitriangular: Bool = false): Unit.
+pub linalg_solve_triangular_out(output: pytorch.Tensor, coefficient: pytorch.Tensor, right: pytorch.Tensor, upper: Bool, left: Bool = true, unitriangular: Bool = false): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_svd.
 
-pub linalg_svd(tensor: Tensor, full_matrices: Bool = true): {Tensor, Tensor, Tensor}.
+pub linalg_svd(tensor: pytorch.Tensor, full_matrices: Bool = true): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for linalg_svd_out.
 
-pub linalg_svd_out(left_vectors: Tensor, values: Tensor, right_vectors: Tensor, tensor: Tensor, full_matrices: Bool = true): Unit.
+pub linalg_svd_out(left_vectors: pytorch.Tensor, values: pytorch.Tensor, right_vectors: pytorch.Tensor, tensor: pytorch.Tensor, full_matrices: Bool = true): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_svdvals.
 
-pub linalg_svdvals(tensor: Tensor): Tensor.
+pub linalg_svdvals(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_svdvals_out.
 
-pub linalg_svdvals_out(output: Tensor, tensor: Tensor): Unit.
+pub linalg_svdvals_out(output: pytorch.Tensor, tensor: pytorch.Tensor): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_tensorinv_out.
 
-pub linalg_tensorinv_out(output: Tensor, tensor: Tensor, index: Int = 2): Unit.
+pub linalg_tensorinv_out(output: pytorch.Tensor, tensor: pytorch.Tensor, index: Int = 2): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_tensorsolve.
 
-pub linalg_tensorsolve(coefficient: Tensor, right: Tensor): Tensor.
+pub linalg_tensorsolve(coefficient: pytorch.Tensor, right: pytorch.Tensor): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_tensorsolve_dimensions.
 
-pub linalg_tensorsolve_dimensions(coefficient: Tensor, right: Tensor, dimensions: List[Int]): Tensor.
+pub linalg_tensorsolve_dimensions(coefficient: pytorch.Tensor, right: pytorch.Tensor, dimensions: List[Int]): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_tensorsolve_out.
 
-pub linalg_tensorsolve_out(output: Tensor, coefficient: Tensor, right: Tensor): Unit.
+pub linalg_tensorsolve_out(output: pytorch.Tensor, coefficient: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_vander.
 
-pub linalg_vander(tensor: Tensor): Tensor.
+pub linalg_vander(tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_vander_columns.
 
-pub linalg_vander_columns(tensor: Tensor, columns: Int): Tensor.
+pub linalg_vander_columns(tensor: pytorch.Tensor, columns: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_vecdot.
 
-pub linalg_vecdot(left: Tensor, right: Tensor, dimension: Int = - 1): Tensor.
+pub linalg_vecdot(left: pytorch.Tensor, right: pytorch.Tensor, dimension: Int = - 1): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_vecdot_out.
 
-pub linalg_vecdot_out(output: Tensor, left: Tensor, right: Tensor, dimension: Int = - 1): Unit.
+pub linalg_vecdot_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor, dimension: Int = - 1): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_vector_norm_float.
 
-pub linalg_vector_norm_float(tensor: Tensor, order: Float = 2.0): Tensor.
+pub linalg_vector_norm_float(tensor: pytorch.Tensor, order: Float = 2.0): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_vector_norm_float_configured.
 
-pub linalg_vector_norm_float_configured(tensor: Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Tensor.
+pub linalg_vector_norm_float_configured(tensor: pytorch.Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_vector_norm_float_configured_out.
 
-pub linalg_vector_norm_float_configured_out(output: Tensor, tensor: Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
+pub linalg_vector_norm_float_configured_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Float, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_vector_norm_float_out.
 
-pub linalg_vector_norm_float_out(output: Tensor, tensor: Tensor, order: Float = 2.0): Unit.
+pub linalg_vector_norm_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Float = 2.0): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_vector_norm_int.
 
-pub linalg_vector_norm_int(tensor: Tensor, order: Int = 2): Tensor.
+pub linalg_vector_norm_int(tensor: pytorch.Tensor, order: Int = 2): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_vector_norm_int_configured.
 
-pub linalg_vector_norm_int_configured(tensor: Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Tensor.
+pub linalg_vector_norm_int_configured(tensor: pytorch.Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for linalg_vector_norm_int_configured_out.
 
-pub linalg_vector_norm_int_configured_out(output: Tensor, tensor: Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
+pub linalg_vector_norm_int_configured_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Int, dimensions: List[Int], keep_dimension: Bool, dtype: Int): Unit.
 
 /// Generated exact CXX linalg leaf for linalg_vector_norm_int_out.
 
-pub linalg_vector_norm_int_out(output: Tensor, tensor: Tensor, order: Int = 2): Unit.
+pub linalg_vector_norm_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, order: Int = 2): Unit.
 
 /// Generated exact CXX linalg leaf for lu_solve.
 
-pub lu_solve(right: Tensor, factor: Tensor, pivots: Tensor): Tensor.
+pub lu_solve(right: pytorch.Tensor, factor: pytorch.Tensor, pivots: pytorch.Tensor): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for ormqr.
 
-pub ormqr(factor: Tensor, tau: Tensor, other: Tensor, left: Bool = true, transpose: Bool = false): Tensor.
+pub ormqr(factor: pytorch.Tensor, tau: pytorch.Tensor, other: pytorch.Tensor, left: Bool = true, transpose: Bool = false): pytorch.Tensor.
 
 /// Generated exact CXX linalg leaf for qr.
 
-pub qr(tensor: Tensor, some: Bool = true): {Tensor, Tensor}.
+pub qr(tensor: pytorch.Tensor, some: Bool = true): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for slogdet.
 
-pub slogdet(tensor: Tensor): {Tensor, Tensor}.
+pub slogdet(tensor: pytorch.Tensor): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Generated exact CXX linalg leaf for triangular_solve.
 
-pub triangular_solve(right: Tensor, coefficient: Tensor, upper: Bool = true, transpose: Bool = false, unitriangular: Bool = false): {Tensor, Tensor}.
+pub triangular_solve(right: pytorch.Tensor, coefficient: pytorch.Tensor, upper: Bool = true, transpose: Bool = false, unitriangular: Bool = false): {pytorch.Tensor, pytorch.Tensor}.

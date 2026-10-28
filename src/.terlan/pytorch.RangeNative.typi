@@ -4,72 +4,72 @@ module pytorch.RangeNative.
 
 /// Creates an exact arange overload with integer-preserving scalar inference and explicit option presence.
 
-pub arange_exact_native(form: Int, start_is_integer: Bool, start_integer: Int, start_floating: Float, end_is_integer: Bool, end_integer: Int, end_floating: Float, step_is_integer: Bool, step_integer: Int, step_floating: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): Tensor.
+pub arange_exact_native(form: Int, start_is_integer: Bool, start_integer: Int, start_floating: Float, end_is_integer: Bool, end_integer: Int, end_floating: Float, step_is_integer: Bool, step_integer: Int, step_floating: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): pytorch.Tensor.
 
 /// Writes an exact arange overload into retained tensor storage.
 
-pub arange_out_exact_native(output: Tensor, form: Int, start_is_integer: Bool, start_integer: Int, start_floating: Float, end_is_integer: Bool, end_integer: Int, end_floating: Float, step_is_integer: Bool, step_integer: Int, step_floating: Float): Unit.
+pub arange_out_exact_native(output: pytorch.Tensor, form: Int, start_is_integer: Bool, start_integer: Int, start_floating: Float, end_is_integer: Bool, end_integer: Int, end_floating: Float, step_is_integer: Bool, step_integer: Int, step_floating: Float): Unit.
 
 /// Creates an exact square or rectangular identity overload with explicit option presence.
 
-pub eye_exact_native(rows: Int, columns: Int, rectangular: Bool, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): Tensor.
+pub eye_exact_native(rows: Int, columns: Int, rectangular: Bool, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): pytorch.Tensor.
 
 /// Writes a square or rectangular identity into retained tensor storage.
 
-pub eye_out_exact_native(output: Tensor, rows: Int, columns: Int, rectangular: Bool): Unit.
+pub eye_out_exact_native(output: pytorch.Tensor, rows: Int, columns: Int, rectangular: Bool): Unit.
 
 /// Creates an inclusive legacy range with exact scalar kinds and option presence.
 
-pub range_exact_native(explicit_step: Bool, start_is_integer: Bool, start_integer: Int, start_floating: Float, end_is_integer: Bool, end_integer: Int, end_floating: Float, step_is_integer: Bool, step_integer: Int, step_floating: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): Tensor.
+pub range_exact_native(explicit_step: Bool, start_is_integer: Bool, start_integer: Int, start_floating: Float, end_is_integer: Bool, end_integer: Int, end_floating: Float, step_is_integer: Bool, step_integer: Int, step_floating: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): pytorch.Tensor.
 
 /// Writes an inclusive legacy range into retained tensor storage.
 
-pub range_out_exact_native(output: Tensor, explicit_step: Bool, start_is_integer: Bool, start_integer: Int, start_floating: Float, end_is_integer: Bool, end_integer: Int, end_floating: Float, step_is_integer: Bool, step_integer: Int, step_floating: Float): Unit.
+pub range_out_exact_native(output: pytorch.Tensor, explicit_step: Bool, start_is_integer: Bool, start_integer: Int, start_floating: Float, end_is_integer: Bool, end_integer: Int, end_floating: Float, step_is_integer: Bool, step_integer: Int, step_floating: Float): Unit.
 
 /// Creates exact scalar-endpoint linspace or logspace output.
 
-pub spacing_scalar_exact_native(operation: Int, start_is_integer: Bool, start_integer: Int, start_floating: Float, end_is_integer: Bool, end_integer: Int, end_floating: Float, steps: Int, base: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): Tensor.
+pub spacing_scalar_exact_native(operation: Int, start_is_integer: Bool, start_integer: Int, start_floating: Float, end_is_integer: Bool, end_integer: Int, end_floating: Float, steps: Int, base: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): pytorch.Tensor.
 
 /// Writes scalar-endpoint linspace or logspace output into retained storage.
 
-pub spacing_scalar_out_exact_native(output: Tensor, operation: Int, start_is_integer: Bool, start_integer: Int, start_floating: Float, end_is_integer: Bool, end_integer: Int, end_floating: Float, steps: Int, base: Float): Unit.
+pub spacing_scalar_out_exact_native(output: pytorch.Tensor, operation: Int, start_is_integer: Bool, start_integer: Int, start_floating: Float, end_is_integer: Bool, end_integer: Int, end_floating: Float, steps: Int, base: Float): Unit.
 
 /// Creates exact scalar-to-tensor linspace or logspace output.
 
-pub spacing_scalar_tensor_exact_native(operation: Int, start_is_integer: Bool, start_integer: Int, start_floating: Float, end: Tensor, steps: Int, base: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): Tensor.
+pub spacing_scalar_tensor_exact_native(operation: Int, start_is_integer: Bool, start_integer: Int, start_floating: Float, end: pytorch.Tensor, steps: Int, base: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): pytorch.Tensor.
 
 /// Writes scalar-to-tensor linspace or logspace output into retained storage.
 
-pub spacing_scalar_tensor_out_exact_native(output: Tensor, operation: Int, start_is_integer: Bool, start_integer: Int, start_floating: Float, end: Tensor, steps: Int, base: Float): Unit.
+pub spacing_scalar_tensor_out_exact_native(output: pytorch.Tensor, operation: Int, start_is_integer: Bool, start_integer: Int, start_floating: Float, end: pytorch.Tensor, steps: Int, base: Float): Unit.
 
 /// Creates exact tensor-to-scalar linspace or logspace output.
 
-pub spacing_tensor_scalar_exact_native(operation: Int, start: Tensor, end_is_integer: Bool, end_integer: Int, end_floating: Float, steps: Int, base: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): Tensor.
+pub spacing_tensor_scalar_exact_native(operation: Int, start: pytorch.Tensor, end_is_integer: Bool, end_integer: Int, end_floating: Float, steps: Int, base: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): pytorch.Tensor.
 
 /// Writes tensor-to-scalar linspace or logspace output into retained storage.
 
-pub spacing_tensor_scalar_out_exact_native(output: Tensor, operation: Int, start: Tensor, end_is_integer: Bool, end_integer: Int, end_floating: Float, steps: Int, base: Float): Unit.
+pub spacing_tensor_scalar_out_exact_native(output: pytorch.Tensor, operation: Int, start: pytorch.Tensor, end_is_integer: Bool, end_integer: Int, end_floating: Float, steps: Int, base: Float): Unit.
 
 /// Creates exact tensor-endpoint linspace or logspace output.
 
-pub spacing_tensor_tensor_exact_native(operation: Int, start: Tensor, end: Tensor, steps: Int, base: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): Tensor.
+pub spacing_tensor_tensor_exact_native(operation: Int, start: pytorch.Tensor, end: pytorch.Tensor, steps: Int, base: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool): pytorch.Tensor.
 
 /// Writes tensor-endpoint linspace or logspace output into retained storage.
 
-pub spacing_tensor_tensor_out_exact_native(output: Tensor, operation: Int, start: Tensor, end: Tensor, steps: Int, base: Float): Unit.
+pub spacing_tensor_tensor_out_exact_native(output: pytorch.Tensor, operation: Int, start: pytorch.Tensor, end: pytorch.Tensor, steps: Int, base: Float): Unit.
 
 /// Public option-normalizing triangular-index composition.
 
-pub tril_indices_exact(row: Int, col: Int, offset: Int, has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device: pytorch.Tensor.Device, has_pin_memory: Bool, pin_memory: Bool): Tensor.
+pub tril_indices_exact(row: Int, col: Int, offset: Int, has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device: pytorch.Tensor.Device, has_pin_memory: Bool, pin_memory: Bool): pytorch.Tensor.
 
 /// Public retained-output triangular-index composition.
 
-pub tril_indices_out_composed(output: Tensor, row: Int, col: Int, offset: Int): Unit.
+pub tril_indices_out_composed(output: pytorch.Tensor, row: Int, col: Int, offset: Int): Unit.
 
 /// Public option-normalizing triangular-index composition.
 
-pub triu_indices_exact(row: Int, col: Int, offset: Int, has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device: pytorch.Tensor.Device, has_pin_memory: Bool, pin_memory: Bool): Tensor.
+pub triu_indices_exact(row: Int, col: Int, offset: Int, has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device: pytorch.Tensor.Device, has_pin_memory: Bool, pin_memory: Bool): pytorch.Tensor.
 
 /// Public retained-output triangular-index composition.
 
-pub triu_indices_out_composed(output: Tensor, row: Int, col: Int, offset: Int): Unit.
+pub triu_indices_out_composed(output: pytorch.Tensor, row: Int, col: Int, offset: Int): Unit.

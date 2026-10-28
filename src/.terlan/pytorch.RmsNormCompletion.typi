@@ -4,16 +4,16 @@ module pytorch.RmsNormCompletion.
 
 /// Normalizes by root mean square with default weight and epsilon.
 
-pub rms_norm_default(input: Tensor, normalized_shape: List[Int]): Tensor.
+pub rms_norm_default(input: pytorch.Tensor, normalized_shape: List[Int]): pytorch.Tensor.
 
 /// Normalizes by root mean square with an explicit epsilon.
 
-pub rms_norm_eps(input: Tensor, normalized_shape: List[Int], eps: Float): Tensor.
+pub rms_norm_eps(input: pytorch.Tensor, normalized_shape: List[Int], eps: Float): pytorch.Tensor.
 
 /// Normalizes by root mean square with a learned weight.
 
-pub rms_norm_weight(input: Tensor, normalized_shape: List[Int], weight: Tensor): Tensor.
+pub rms_norm_weight(input: pytorch.Tensor, normalized_shape: List[Int], weight: pytorch.Tensor): pytorch.Tensor.
 
 /// Normalizes by root mean square with weight and epsilon.
 
-pub rms_norm_weight_eps(input: Tensor, normalized_shape: List[Int], weight: Tensor, eps: Float): Tensor.
+pub rms_norm_weight_eps(input: pytorch.Tensor, normalized_shape: List[Int], weight: pytorch.Tensor, eps: Float): pytorch.Tensor.

@@ -4,8 +4,8 @@ module pytorch.QuantizedNormalization.
 
 /// Exact generated CXX quantized batch-normalization leaf.
 
-pub quantized_batch_norm(input: Tensor, has_weight: Bool, weight: Tensor, has_bias: Bool, bias: Tensor, mean: Tensor, var: Tensor, eps: Float, output_scale: Float, output_zero_point: Int): Tensor.
+pub quantized_batch_norm(input: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, has_bias: Bool, bias: pytorch.Tensor, mean: pytorch.Tensor, var: pytorch.Tensor, eps: Float, output_scale: Float, output_zero_point: Int): pytorch.Tensor.
 
 /// Exact generated CXX quantized batch-normalization output leaf.
 
-pub quantized_batch_norm_out(out: Tensor, input: Tensor, has_weight: Bool, weight: Tensor, has_bias: Bool, bias: Tensor, mean: Tensor, var: Tensor, eps: Float, output_scale: Float, output_zero_point: Int): Unit.
+pub quantized_batch_norm_out(out: pytorch.Tensor, input: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, has_bias: Bool, bias: pytorch.Tensor, mean: pytorch.Tensor, var: pytorch.Tensor, eps: Float, output_scale: Float, output_zero_point: Int): Unit.

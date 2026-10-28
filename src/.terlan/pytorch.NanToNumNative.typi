@@ -4,12 +4,12 @@ module pytorch.NanToNumNative.
 
 /// Replaces non-finite values with independently present replacement values.
 
-pub nan_to_num_configured(input: Tensor, has_nan: Bool, nan: Float, has_posinf: Bool, posinf: Float, has_neginf: Bool, neginf: Float): Tensor.
+pub nan_to_num_configured(input: pytorch.Tensor, has_nan: Bool, nan: Float, has_posinf: Bool, posinf: Float, has_neginf: Bool, neginf: Float): pytorch.Tensor.
 
 /// Replaces non-finite tensor values in place.
 
-pub nan_to_num_configured_in_place(input: Tensor, has_nan: Bool, nan: Float, has_posinf: Bool, posinf: Float, has_neginf: Bool, neginf: Float): Unit.
+pub nan_to_num_configured_in_place(input: pytorch.Tensor, has_nan: Bool, nan: Float, has_posinf: Bool, posinf: Float, has_neginf: Bool, neginf: Float): Unit.
 
 /// Writes non-finite replacement results into retained output storage.
 
-pub nan_to_num_configured_out(output: Tensor, input: Tensor, has_nan: Bool, nan: Float, has_posinf: Bool, posinf: Float, has_neginf: Bool, neginf: Float): Unit.
+pub nan_to_num_configured_out(output: pytorch.Tensor, input: pytorch.Tensor, has_nan: Bool, nan: Float, has_posinf: Bool, posinf: Float, has_neginf: Bool, neginf: Float): Unit.

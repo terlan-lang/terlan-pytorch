@@ -554,7 +554,7 @@ pub dispose_scalar(scalar: Scalar): Unit.
 
 /// Drops a tensor pair.
 
-pub dispose_tensor_pair(pair: TensorPair): Unit.
+pub dispose_tensor_pair(pair: pytorch.CorrectionStatisticsPairNative.TensorPair): Unit.
 
 /// Generated CXX Tensor operation adapter.
 
@@ -665,7 +665,7 @@ pub floor(tensor: Tensor): Tensor.
 
 /// Compatibility alias that validates and copies a package-neutral TNXP value into independently owned LibTorch storage.
 
-pub from_array(packet: Bytes): Tensor.
+pub from_array(packet: std.vm.Bytes): Tensor.
 
 /// Generated CXX Tensor compatibility adapter.
 
@@ -697,7 +697,7 @@ pub from_ints(values: List[Int], shape: List[Int]): Tensor.
 
 /// Validates and copies a package-neutral TNXP value into independently owned LibTorch storage.
 
-pub from_packet(packet: Bytes): Tensor.
+pub from_packet(packet: std.vm.Bytes): Tensor.
 
 /// Generated CXX Tensor compatibility adapter.
 
@@ -1070,11 +1070,11 @@ pub tanhshrink(tensor: Tensor): Tensor.
 
 /// Generated CXX TorchScript compatibility adapter.
 
-pub tensor_pair_first(pair: TensorPair): Tensor.
+pub tensor_pair_first(pair: pytorch.CorrectionStatisticsPairNative.TensorPair): Tensor.
 
 /// Generated CXX TorchScript compatibility adapter.
 
-pub tensor_pair_second(pair: TensorPair): Tensor.
+pub tensor_pair_second(pair: pytorch.CorrectionStatisticsPairNative.TensorPair): Tensor.
 
 /// Common dtype overload of torch.Tensor.to().  PyTorch exposes additional
 /// Python-only overloads (including memory-format and copy controls); these
@@ -1113,7 +1113,7 @@ pub to_other(tensor: Tensor, other: Tensor, non_blocking: Bool = false): Tensor.
 
 /// Copies a contiguous CPU snapshot into a package-neutral TNXP value.
 
-pub to_packet(tensor: Tensor): Bytes.
+pub to_packet(tensor: Tensor): std.vm.Bytes.
 
 /// Converts a nested tensor to padded dense storage.
 
@@ -1165,7 +1165,7 @@ pub torchscript_forward_optional_tensor(model: TorchScriptModel, input: Tensor):
 
 /// Generated CXX TorchScript compatibility adapter.
 
-pub torchscript_forward_pair(model: TorchScriptModel, input: Tensor): TensorPair.
+pub torchscript_forward_pair(model: TorchScriptModel, input: Tensor): pytorch.CorrectionStatisticsPairNative.TensorPair.
 
 /// Generated CXX TorchScript compatibility adapter.
 

@@ -4,448 +4,448 @@ module pytorch.SpecialScalar.
 
 /// Computes the Chebyshev U polynomial with a floating-point scalar left operand.
 
-pub special_chebyshev_polynomial_u_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_chebyshev_polynomial_u_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Chebyshev U polynomial with a floating-point scalar left operand.
 
-pub special_chebyshev_polynomial_u_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_chebyshev_polynomial_u_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Chebyshev U polynomial with an integer scalar left operand.
 
-pub special_chebyshev_polynomial_u_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_chebyshev_polynomial_u_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Chebyshev U polynomial with an integer scalar left operand.
 
-pub special_chebyshev_polynomial_u_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_chebyshev_polynomial_u_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Chebyshev U polynomial with a floating-point scalar right operand.
 
-pub special_chebyshev_polynomial_u_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_chebyshev_polynomial_u_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the Chebyshev U polynomial with a floating-point scalar right operand.
 
-pub special_chebyshev_polynomial_u_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_chebyshev_polynomial_u_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the Chebyshev U polynomial with an integer scalar right operand.
 
-pub special_chebyshev_polynomial_u_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_chebyshev_polynomial_u_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the Chebyshev U polynomial with an integer scalar right operand.
 
-pub special_chebyshev_polynomial_u_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_chebyshev_polynomial_u_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Computes the Chebyshev V polynomial with a floating-point scalar left operand.
 
-pub special_chebyshev_polynomial_v_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_chebyshev_polynomial_v_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Chebyshev V polynomial with a floating-point scalar left operand.
 
-pub special_chebyshev_polynomial_v_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_chebyshev_polynomial_v_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Chebyshev V polynomial with an integer scalar left operand.
 
-pub special_chebyshev_polynomial_v_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_chebyshev_polynomial_v_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Chebyshev V polynomial with an integer scalar left operand.
 
-pub special_chebyshev_polynomial_v_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_chebyshev_polynomial_v_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Chebyshev V polynomial with a floating-point scalar right operand.
 
-pub special_chebyshev_polynomial_v_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_chebyshev_polynomial_v_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the Chebyshev V polynomial with a floating-point scalar right operand.
 
-pub special_chebyshev_polynomial_v_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_chebyshev_polynomial_v_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the Chebyshev V polynomial with an integer scalar right operand.
 
-pub special_chebyshev_polynomial_v_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_chebyshev_polynomial_v_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the Chebyshev V polynomial with an integer scalar right operand.
 
-pub special_chebyshev_polynomial_v_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_chebyshev_polynomial_v_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Computes the Chebyshev W polynomial with a floating-point scalar left operand.
 
-pub special_chebyshev_polynomial_w_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_chebyshev_polynomial_w_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Chebyshev W polynomial with a floating-point scalar left operand.
 
-pub special_chebyshev_polynomial_w_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_chebyshev_polynomial_w_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Chebyshev W polynomial with an integer scalar left operand.
 
-pub special_chebyshev_polynomial_w_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_chebyshev_polynomial_w_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Chebyshev W polynomial with an integer scalar left operand.
 
-pub special_chebyshev_polynomial_w_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_chebyshev_polynomial_w_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Chebyshev W polynomial with a floating-point scalar right operand.
 
-pub special_chebyshev_polynomial_w_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_chebyshev_polynomial_w_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the Chebyshev W polynomial with a floating-point scalar right operand.
 
-pub special_chebyshev_polynomial_w_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_chebyshev_polynomial_w_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the Chebyshev W polynomial with an integer scalar right operand.
 
-pub special_chebyshev_polynomial_w_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_chebyshev_polynomial_w_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the Chebyshev W polynomial with an integer scalar right operand.
 
-pub special_chebyshev_polynomial_w_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_chebyshev_polynomial_w_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Computes the Hermite H polynomial with a floating-point scalar left operand.
 
-pub special_hermite_polynomial_h_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_hermite_polynomial_h_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Hermite H polynomial with a floating-point scalar left operand.
 
-pub special_hermite_polynomial_h_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_hermite_polynomial_h_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Hermite H polynomial with an integer scalar left operand.
 
-pub special_hermite_polynomial_h_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_hermite_polynomial_h_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Hermite H polynomial with an integer scalar left operand.
 
-pub special_hermite_polynomial_h_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_hermite_polynomial_h_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Hermite H polynomial with a floating-point scalar right operand.
 
-pub special_hermite_polynomial_h_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_hermite_polynomial_h_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the Hermite H polynomial with a floating-point scalar right operand.
 
-pub special_hermite_polynomial_h_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_hermite_polynomial_h_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the Hermite H polynomial with an integer scalar right operand.
 
-pub special_hermite_polynomial_h_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_hermite_polynomial_h_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the Hermite H polynomial with an integer scalar right operand.
 
-pub special_hermite_polynomial_h_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_hermite_polynomial_h_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Computes the Hermite He polynomial with a floating-point scalar left operand.
 
-pub special_hermite_polynomial_he_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_hermite_polynomial_he_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Hermite He polynomial with a floating-point scalar left operand.
 
-pub special_hermite_polynomial_he_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_hermite_polynomial_he_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Hermite He polynomial with an integer scalar left operand.
 
-pub special_hermite_polynomial_he_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_hermite_polynomial_he_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Hermite He polynomial with an integer scalar left operand.
 
-pub special_hermite_polynomial_he_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_hermite_polynomial_he_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Hermite He polynomial with a floating-point scalar right operand.
 
-pub special_hermite_polynomial_he_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_hermite_polynomial_he_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the Hermite He polynomial with a floating-point scalar right operand.
 
-pub special_hermite_polynomial_he_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_hermite_polynomial_he_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the Hermite He polynomial with an integer scalar right operand.
 
-pub special_hermite_polynomial_he_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_hermite_polynomial_he_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the Hermite He polynomial with an integer scalar right operand.
 
-pub special_hermite_polynomial_he_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_hermite_polynomial_he_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Computes the Laguerre L polynomial with a floating-point scalar left operand.
 
-pub special_laguerre_polynomial_l_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_laguerre_polynomial_l_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Laguerre L polynomial with a floating-point scalar left operand.
 
-pub special_laguerre_polynomial_l_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_laguerre_polynomial_l_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Laguerre L polynomial with an integer scalar left operand.
 
-pub special_laguerre_polynomial_l_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_laguerre_polynomial_l_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Laguerre L polynomial with an integer scalar left operand.
 
-pub special_laguerre_polynomial_l_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_laguerre_polynomial_l_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Laguerre L polynomial with a floating-point scalar right operand.
 
-pub special_laguerre_polynomial_l_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_laguerre_polynomial_l_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the Laguerre L polynomial with a floating-point scalar right operand.
 
-pub special_laguerre_polynomial_l_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_laguerre_polynomial_l_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the Laguerre L polynomial with an integer scalar right operand.
 
-pub special_laguerre_polynomial_l_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_laguerre_polynomial_l_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the Laguerre L polynomial with an integer scalar right operand.
 
-pub special_laguerre_polynomial_l_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_laguerre_polynomial_l_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Computes the Legendre P polynomial with a floating-point scalar left operand.
 
-pub special_legendre_polynomial_p_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_legendre_polynomial_p_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Legendre P polynomial with a floating-point scalar left operand.
 
-pub special_legendre_polynomial_p_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_legendre_polynomial_p_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Legendre P polynomial with an integer scalar left operand.
 
-pub special_legendre_polynomial_p_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_legendre_polynomial_p_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Legendre P polynomial with an integer scalar left operand.
 
-pub special_legendre_polynomial_p_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_legendre_polynomial_p_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Legendre P polynomial with a floating-point scalar right operand.
 
-pub special_legendre_polynomial_p_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_legendre_polynomial_p_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the Legendre P polynomial with a floating-point scalar right operand.
 
-pub special_legendre_polynomial_p_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_legendre_polynomial_p_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the Legendre P polynomial with an integer scalar right operand.
 
-pub special_legendre_polynomial_p_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_legendre_polynomial_p_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the Legendre P polynomial with an integer scalar right operand.
 
-pub special_legendre_polynomial_p_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_legendre_polynomial_p_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Computes the shifted Chebyshev T polynomial with a floating-point scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_t_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_shifted_chebyshev_polynomial_t_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev T polynomial with a floating-point scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_t_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_shifted_chebyshev_polynomial_t_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the shifted Chebyshev T polynomial with an integer scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_t_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_shifted_chebyshev_polynomial_t_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev T polynomial with an integer scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_t_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_shifted_chebyshev_polynomial_t_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the shifted Chebyshev T polynomial with a floating-point scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_t_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_shifted_chebyshev_polynomial_t_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev T polynomial with a floating-point scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_t_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_shifted_chebyshev_polynomial_t_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the shifted Chebyshev T polynomial with an integer scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_t_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_shifted_chebyshev_polynomial_t_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev T polynomial with an integer scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_t_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_shifted_chebyshev_polynomial_t_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Computes the shifted Chebyshev U polynomial with a floating-point scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_u_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_shifted_chebyshev_polynomial_u_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev U polynomial with a floating-point scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_u_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_shifted_chebyshev_polynomial_u_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the shifted Chebyshev U polynomial with an integer scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_u_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_shifted_chebyshev_polynomial_u_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev U polynomial with an integer scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_u_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_shifted_chebyshev_polynomial_u_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the shifted Chebyshev U polynomial with a floating-point scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_u_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_shifted_chebyshev_polynomial_u_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev U polynomial with a floating-point scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_u_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_shifted_chebyshev_polynomial_u_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the shifted Chebyshev U polynomial with an integer scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_u_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_shifted_chebyshev_polynomial_u_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev U polynomial with an integer scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_u_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_shifted_chebyshev_polynomial_u_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Computes the shifted Chebyshev V polynomial with a floating-point scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_v_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_shifted_chebyshev_polynomial_v_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev V polynomial with a floating-point scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_v_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_shifted_chebyshev_polynomial_v_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the shifted Chebyshev V polynomial with an integer scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_v_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_shifted_chebyshev_polynomial_v_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev V polynomial with an integer scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_v_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_shifted_chebyshev_polynomial_v_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the shifted Chebyshev V polynomial with a floating-point scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_v_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_shifted_chebyshev_polynomial_v_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev V polynomial with a floating-point scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_v_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_shifted_chebyshev_polynomial_v_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the shifted Chebyshev V polynomial with an integer scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_v_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_shifted_chebyshev_polynomial_v_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev V polynomial with an integer scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_v_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_shifted_chebyshev_polynomial_v_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Computes the shifted Chebyshev W polynomial with a floating-point scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_w_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_shifted_chebyshev_polynomial_w_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev W polynomial with a floating-point scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_w_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_shifted_chebyshev_polynomial_w_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the shifted Chebyshev W polynomial with an integer scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_w_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_shifted_chebyshev_polynomial_w_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev W polynomial with an integer scalar left operand.
 
-pub special_shifted_chebyshev_polynomial_w_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_shifted_chebyshev_polynomial_w_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the shifted Chebyshev W polynomial with a floating-point scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_w_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_shifted_chebyshev_polynomial_w_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev W polynomial with a floating-point scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_w_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_shifted_chebyshev_polynomial_w_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the shifted Chebyshev W polynomial with an integer scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_w_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_shifted_chebyshev_polynomial_w_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the shifted Chebyshev W polynomial with an integer scalar right operand.
 
-pub special_shifted_chebyshev_polynomial_w_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_shifted_chebyshev_polynomial_w_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Computes the x-log-one-plus-y function with a floating-point scalar left operand.
 
-pub special_xlog1py_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_xlog1py_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the x-log-one-plus-y function with a floating-point scalar left operand.
 
-pub special_xlog1py_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_xlog1py_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the x-log-one-plus-y function with an integer scalar left operand.
 
-pub special_xlog1py_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_xlog1py_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the x-log-one-plus-y function with an integer scalar left operand.
 
-pub special_xlog1py_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_xlog1py_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the x-log-one-plus-y function with a floating-point scalar right operand.
 
-pub special_xlog1py_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_xlog1py_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the x-log-one-plus-y function with a floating-point scalar right operand.
 
-pub special_xlog1py_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_xlog1py_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the x-log-one-plus-y function with an integer scalar right operand.
 
-pub special_xlog1py_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_xlog1py_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the x-log-one-plus-y function with an integer scalar right operand.
 
-pub special_xlog1py_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_xlog1py_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Computes the x-log-y function with a floating-point scalar left operand.
 
-pub special_xlogy_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_xlogy_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the x-log-y function with a floating-point scalar left operand.
 
-pub special_xlogy_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_xlogy_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the x-log-y function with an integer scalar left operand.
 
-pub special_xlogy_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_xlogy_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the x-log-y function with an integer scalar left operand.
 
-pub special_xlogy_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_xlogy_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the x-log-y function with a floating-point scalar right operand.
 
-pub special_xlogy_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_xlogy_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the x-log-y function with a floating-point scalar right operand.
 
-pub special_xlogy_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_xlogy_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the x-log-y function with an integer scalar right operand.
 
-pub special_xlogy_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_xlogy_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the x-log-y function with an integer scalar right operand.
 
-pub special_xlogy_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_xlogy_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Computes the Hurwitz zeta function with a floating-point scalar left operand.
 
-pub special_zeta_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub special_zeta_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Hurwitz zeta function with a floating-point scalar left operand.
 
-pub special_zeta_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub special_zeta_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Hurwitz zeta function with an integer scalar left operand.
 
-pub special_zeta_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub special_zeta_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes the Hurwitz zeta function with an integer scalar left operand.
 
-pub special_zeta_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub special_zeta_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Computes the Hurwitz zeta function with a floating-point scalar right operand.
 
-pub special_zeta_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub special_zeta_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Writes the Hurwitz zeta function with a floating-point scalar right operand.
 
-pub special_zeta_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub special_zeta_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Computes the Hurwitz zeta function with an integer scalar right operand.
 
-pub special_zeta_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub special_zeta_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Writes the Hurwitz zeta function with an integer scalar right operand.
 
-pub special_zeta_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub special_zeta_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.

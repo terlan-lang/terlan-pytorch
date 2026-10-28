@@ -4,144 +4,144 @@ module pytorch.ExtendedActivationCompletion.
 
 /// Executes the exact frozen ATen celu schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub celu_float(input: Tensor, alpha: Float): Tensor.
+pub celu_float(input: pytorch.Tensor, alpha: Float): pytorch.Tensor.
 
 /// Executes the exact frozen ATen celu_ schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub celu_in_place_float(input: Tensor, alpha: Float): Unit.
+pub celu_in_place_float(input: pytorch.Tensor, alpha: Float): Unit.
 
 /// Executes the exact frozen ATen celu_ schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub celu_in_place_int(input: Tensor, alpha: Int): Unit.
+pub celu_in_place_int(input: pytorch.Tensor, alpha: Int): Unit.
 
 /// Executes the exact frozen ATen celu schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub celu_int(input: Tensor, alpha: Int): Tensor.
+pub celu_int(input: pytorch.Tensor, alpha: Int): pytorch.Tensor.
 
 /// Executes the exact frozen ATen celu.out schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub celu_out_float(output: Tensor, input: Tensor, alpha: Float): Unit.
+pub celu_out_float(output: pytorch.Tensor, input: pytorch.Tensor, alpha: Float): Unit.
 
 /// Executes the exact frozen ATen celu.out schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub celu_out_int(output: Tensor, input: Tensor, alpha: Int): Unit.
+pub celu_out_int(output: pytorch.Tensor, input: pytorch.Tensor, alpha: Int): Unit.
 
 /// Executes the exact frozen ATen elu_backward schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub elu_backward_float(gradient: Tensor, alpha: Float, scale: Float, input_scale: Float, is_result: Bool, input: Tensor): Tensor.
+pub elu_backward_float(gradient: pytorch.Tensor, alpha: Float, scale: Float, input_scale: Float, is_result: Bool, input: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact frozen ATen elu_backward schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub elu_backward_int(gradient: Tensor, alpha: Int, scale: Int, input_scale: Int, is_result: Bool, input: Tensor): Tensor.
+pub elu_backward_int(gradient: pytorch.Tensor, alpha: Int, scale: Int, input_scale: Int, is_result: Bool, input: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact frozen ATen elu_backward.out schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub elu_backward_out_float(output: Tensor, gradient: Tensor, alpha: Float, scale: Float, input_scale: Float, is_result: Bool, input: Tensor): Unit.
+pub elu_backward_out_float(output: pytorch.Tensor, gradient: pytorch.Tensor, alpha: Float, scale: Float, input_scale: Float, is_result: Bool, input: pytorch.Tensor): Unit.
 
 /// Executes the exact frozen ATen elu_backward.out schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub elu_backward_out_int(output: Tensor, gradient: Tensor, alpha: Int, scale: Int, input_scale: Int, is_result: Bool, input: Tensor): Unit.
+pub elu_backward_out_int(output: pytorch.Tensor, gradient: pytorch.Tensor, alpha: Int, scale: Int, input_scale: Int, is_result: Bool, input: pytorch.Tensor): Unit.
 
 /// Executes the exact frozen ATen elu schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub elu_float(input: Tensor, alpha: Float, scale: Float, input_scale: Float): Tensor.
+pub elu_float(input: pytorch.Tensor, alpha: Float, scale: Float, input_scale: Float): pytorch.Tensor.
 
 /// Executes the exact frozen ATen elu_ schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub elu_in_place_float(input: Tensor, alpha: Float, scale: Float, input_scale: Float): Unit.
+pub elu_in_place_float(input: pytorch.Tensor, alpha: Float, scale: Float, input_scale: Float): Unit.
 
 /// Executes the exact frozen ATen elu_ schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub elu_in_place_int(input: Tensor, alpha: Int, scale: Int, input_scale: Int): Unit.
+pub elu_in_place_int(input: pytorch.Tensor, alpha: Int, scale: Int, input_scale: Int): Unit.
 
 /// Executes the exact frozen ATen elu schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub elu_int(input: Tensor, alpha: Int, scale: Int, input_scale: Int): Tensor.
+pub elu_int(input: pytorch.Tensor, alpha: Int, scale: Int, input_scale: Int): pytorch.Tensor.
 
 /// Executes the exact frozen ATen elu.out schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub elu_out_float(output: Tensor, input: Tensor, alpha: Float, scale: Float, input_scale: Float): Unit.
+pub elu_out_float(output: pytorch.Tensor, input: pytorch.Tensor, alpha: Float, scale: Float, input_scale: Float): Unit.
 
 /// Executes the exact frozen ATen elu.out schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub elu_out_int(output: Tensor, input: Tensor, alpha: Int, scale: Int, input_scale: Int): Unit.
+pub elu_out_int(output: pytorch.Tensor, input: pytorch.Tensor, alpha: Int, scale: Int, input_scale: Int): Unit.
 
 /// Executes the exact frozen ATen hardtanh_backward schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub hardtanh_backward_float(gradient: Tensor, input: Tensor, minimum: Float, maximum: Float): Tensor.
+pub hardtanh_backward_float(gradient: pytorch.Tensor, input: pytorch.Tensor, minimum: Float, maximum: Float): pytorch.Tensor.
 
 /// Executes the exact frozen ATen hardtanh_backward schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub hardtanh_backward_int(gradient: Tensor, input: Tensor, minimum: Int, maximum: Int): Tensor.
+pub hardtanh_backward_int(gradient: pytorch.Tensor, input: pytorch.Tensor, minimum: Int, maximum: Int): pytorch.Tensor.
 
 /// Executes the exact frozen ATen hardtanh_backward.out schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub hardtanh_backward_out_float(output: Tensor, gradient: Tensor, input: Tensor, minimum: Float, maximum: Float): Unit.
+pub hardtanh_backward_out_float(output: pytorch.Tensor, gradient: pytorch.Tensor, input: pytorch.Tensor, minimum: Float, maximum: Float): Unit.
 
 /// Executes the exact frozen ATen hardtanh_backward.out schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub hardtanh_backward_out_int(output: Tensor, gradient: Tensor, input: Tensor, minimum: Int, maximum: Int): Unit.
+pub hardtanh_backward_out_int(output: pytorch.Tensor, gradient: pytorch.Tensor, input: pytorch.Tensor, minimum: Int, maximum: Int): Unit.
 
 /// Executes the exact frozen ATen hardtanh schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub hardtanh_float(input: Tensor, minimum: Float, maximum: Float): Tensor.
+pub hardtanh_float(input: pytorch.Tensor, minimum: Float, maximum: Float): pytorch.Tensor.
 
 /// Executes the exact frozen ATen hardtanh_ schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub hardtanh_in_place_float(input: Tensor, minimum: Float, maximum: Float): Unit.
+pub hardtanh_in_place_float(input: pytorch.Tensor, minimum: Float, maximum: Float): Unit.
 
 /// Executes the exact frozen ATen hardtanh_ schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub hardtanh_in_place_int(input: Tensor, minimum: Int, maximum: Int): Unit.
+pub hardtanh_in_place_int(input: pytorch.Tensor, minimum: Int, maximum: Int): Unit.
 
 /// Executes the exact frozen ATen hardtanh schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub hardtanh_int(input: Tensor, minimum: Int, maximum: Int): Tensor.
+pub hardtanh_int(input: pytorch.Tensor, minimum: Int, maximum: Int): pytorch.Tensor.
 
 /// Executes the exact frozen ATen hardtanh.out schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub hardtanh_out_float(output: Tensor, input: Tensor, minimum: Float, maximum: Float): Unit.
+pub hardtanh_out_float(output: pytorch.Tensor, input: pytorch.Tensor, minimum: Float, maximum: Float): Unit.
 
 /// Executes the exact frozen ATen hardtanh.out schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub hardtanh_out_int(output: Tensor, input: Tensor, minimum: Int, maximum: Int): Unit.
+pub hardtanh_out_int(output: pytorch.Tensor, input: pytorch.Tensor, minimum: Int, maximum: Int): Unit.
 
 /// Executes the exact frozen ATen leaky_relu_backward schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub leaky_relu_backward_float(gradient: Tensor, input: Tensor, negative_slope: Float, self_is_result: Bool): Tensor.
+pub leaky_relu_backward_float(gradient: pytorch.Tensor, input: pytorch.Tensor, negative_slope: Float, self_is_result: Bool): pytorch.Tensor.
 
 /// Executes the exact frozen ATen leaky_relu_backward schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub leaky_relu_backward_int(gradient: Tensor, input: Tensor, negative_slope: Int, self_is_result: Bool): Tensor.
+pub leaky_relu_backward_int(gradient: pytorch.Tensor, input: pytorch.Tensor, negative_slope: Int, self_is_result: Bool): pytorch.Tensor.
 
 /// Executes the exact frozen ATen leaky_relu_backward.out schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub leaky_relu_backward_out_float(output: Tensor, gradient: Tensor, input: Tensor, negative_slope: Float, self_is_result: Bool): Unit.
+pub leaky_relu_backward_out_float(output: pytorch.Tensor, gradient: pytorch.Tensor, input: pytorch.Tensor, negative_slope: Float, self_is_result: Bool): Unit.
 
 /// Executes the exact frozen ATen leaky_relu_backward.out schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub leaky_relu_backward_out_int(output: Tensor, gradient: Tensor, input: Tensor, negative_slope: Int, self_is_result: Bool): Unit.
+pub leaky_relu_backward_out_int(output: pytorch.Tensor, gradient: pytorch.Tensor, input: pytorch.Tensor, negative_slope: Int, self_is_result: Bool): Unit.
 
 /// Executes the exact frozen ATen leaky_relu schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub leaky_relu_float(input: Tensor, negative_slope: Float): Tensor.
+pub leaky_relu_float(input: pytorch.Tensor, negative_slope: Float): pytorch.Tensor.
 
 /// Executes the exact frozen ATen leaky_relu_ schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub leaky_relu_in_place_float(input: Tensor, negative_slope: Float): Unit.
+pub leaky_relu_in_place_float(input: pytorch.Tensor, negative_slope: Float): Unit.
 
 /// Executes the exact frozen ATen leaky_relu_ schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub leaky_relu_in_place_int(input: Tensor, negative_slope: Int): Unit.
+pub leaky_relu_in_place_int(input: pytorch.Tensor, negative_slope: Int): Unit.
 
 /// Executes the exact frozen ATen leaky_relu schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub leaky_relu_int(input: Tensor, negative_slope: Int): Tensor.
+pub leaky_relu_int(input: pytorch.Tensor, negative_slope: Int): pytorch.Tensor.
 
 /// Executes the exact frozen ATen leaky_relu.out schema with floating Scalar parameters through the typed direct-ATen path.
 
-pub leaky_relu_out_float(output: Tensor, input: Tensor, negative_slope: Float): Unit.
+pub leaky_relu_out_float(output: pytorch.Tensor, input: pytorch.Tensor, negative_slope: Float): Unit.
 
 /// Executes the exact frozen ATen leaky_relu.out schema with integer Scalar parameters through the typed direct-ATen path.
 
-pub leaky_relu_out_int(output: Tensor, input: Tensor, negative_slope: Int): Unit.
+pub leaky_relu_out_int(output: pytorch.Tensor, input: pytorch.Tensor, negative_slope: Int): Unit.

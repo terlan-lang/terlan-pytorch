@@ -4,100 +4,100 @@ module pytorch.Indexing.
 
 /// Returns stable or unstable sort indices along one dimension with explicit direction.
 
-pub argsort_stable(input: Tensor, stable: Bool, dimension: Int = - 1, descending: Bool = false): Tensor.
+pub argsort_stable(input: pytorch.Tensor, stable: Bool, dimension: Int = - 1, descending: Bool = false): pytorch.Tensor.
 
 /// Places each input value into sorted boundaries with explicit side and index-width policy.
 
-pub bucketize(input: Tensor, boundaries: Tensor, int32_output: Bool = false, right: Bool = false): Tensor.
+pub bucketize(input: pytorch.Tensor, boundaries: pytorch.Tensor, int32_output: Bool = false, right: Bool = false): pytorch.Tensor.
 
 /// Embeds the input along a selected diagonal in two result dimensions.
 
-pub diag_embed(input: Tensor, offset: Int = 0, dimension1: Int = - 2, dimension2: Int = - 1): Tensor.
+pub diag_embed(input: pytorch.Tensor, offset: Int = 0, dimension1: Int = - 2, dimension2: Int = - 1): pytorch.Tensor.
 
 /// Copies one selected diagonal into independently owned storage.
 
-pub diagonal_copy(input: Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): Tensor.
+pub diagonal_copy(input: pytorch.Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): pytorch.Tensor.
 
 /// Returns a copy with one selected diagonal replaced from a source tensor.
 
-pub diagonal_scatter(input: Tensor, source: Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): Tensor.
+pub diagonal_scatter(input: pytorch.Tensor, source: pytorch.Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): pytorch.Tensor.
 
 /// Returns a copy with source slices copied into explicit indices along one dimension.
 
-pub index_copy(input: Tensor, dimension: Int, indices: Tensor, source: Tensor): Tensor.
+pub index_copy(input: pytorch.Tensor, dimension: Int, indices: pytorch.Tensor, source: pytorch.Tensor): pytorch.Tensor.
 
 /// Updates Tensor?/None indexed positions with an explicit presence mask.
 
-pub index_put(input: Tensor, indices: List[Tensor], present: List[Int], values: Tensor, accumulate: Bool = false): Tensor.
+pub index_put(input: pytorch.Tensor, indices: List[pytorch.Tensor], present: List[Int], values: pytorch.Tensor, accumulate: Bool = false): pytorch.Tensor.
 
 /// Mutates Tensor?/None indexed positions with an explicit presence mask.
 
-pub index_put_in_place(input: Tensor, indices: List[Tensor], present: List[Int], values: Tensor, accumulate: Bool = false): Unit.
+pub index_put_in_place(input: pytorch.Tensor, indices: List[pytorch.Tensor], present: List[Int], values: pytorch.Tensor, accumulate: Bool = false): Unit.
 
 /// Writes Tensor?/None indexed updates into retained output storage.
 
-pub index_put_out(output: Tensor, input: Tensor, indices: List[Tensor], present: List[Int], values: Tensor, accumulate: Bool = false): Unit.
+pub index_put_out(output: pytorch.Tensor, input: pytorch.Tensor, indices: List[pytorch.Tensor], present: List[Int], values: pytorch.Tensor, accumulate: Bool = false): Unit.
 
 /// Copies slices selected by integer indices along one dimension.
 
-pub index_select(input: Tensor, dimension: Int, indices: Tensor): Tensor.
+pub index_select(input: pytorch.Tensor, dimension: Int, indices: pytorch.Tensor): pytorch.Tensor.
 
 /// Indexes with an explicit Tensor?/None presence mask.
 
-pub index_tensor(input: Tensor, indices: List[Tensor], present: List[Int]): Tensor.
+pub index_tensor(input: pytorch.Tensor, indices: List[pytorch.Tensor], present: List[Int]): pytorch.Tensor.
 
 /// Writes Tensor?/None indexed values into retained output storage.
 
-pub index_tensor_out(output: Tensor, input: Tensor, indices: List[Tensor], present: List[Int]): Unit.
+pub index_tensor_out(output: pytorch.Tensor, input: pytorch.Tensor, indices: List[pytorch.Tensor], present: List[Int]): Unit.
 
 /// Tests tensor membership with explicit uniqueness and inversion policy.
 
-pub isin(elements: Tensor, test_elements: Tensor, assume_unique: Bool = false, invert: Bool = false): Tensor.
+pub isin(elements: pytorch.Tensor, test_elements: pytorch.Tensor, assume_unique: Bool = false, invert: Bool = false): pytorch.Tensor.
 
 /// Returns a copy with selected elements replaced by a tensor value.
 
-pub masked_fill_tensor(input: Tensor, mask: Tensor, value: Tensor): Tensor.
+pub masked_fill_tensor(input: pytorch.Tensor, mask: pytorch.Tensor, value: pytorch.Tensor): pytorch.Tensor.
 
 /// Returns a copy with selected elements replaced sequentially from a source tensor.
 
-pub masked_scatter(input: Tensor, mask: Tensor, source: Tensor): Tensor.
+pub masked_scatter(input: pytorch.Tensor, mask: pytorch.Tensor, source: pytorch.Tensor): pytorch.Tensor.
 
 /// Replaces selected retained values through exact aten::masked_scatter_.
 
-pub masked_scatter_in_place(input: Tensor, mask: Tensor, source: Tensor): Unit.
+pub masked_scatter_in_place(input: pytorch.Tensor, mask: pytorch.Tensor, source: pytorch.Tensor): Unit.
 
 /// Writes exact aten::masked_scatter.out values into retained storage.
 
-pub masked_scatter_out(output: Tensor, input: Tensor, mask: Tensor, source: Tensor): Unit.
+pub masked_scatter_out(output: pytorch.Tensor, input: pytorch.Tensor, mask: pytorch.Tensor, source: pytorch.Tensor): Unit.
 
 /// Returns a copy with flat indexed values replaced or accumulated from a source tensor.
 
-pub put(input: Tensor, indices: Tensor, source: Tensor, accumulate: Bool = false): Tensor.
+pub put(input: pytorch.Tensor, indices: pytorch.Tensor, source: pytorch.Tensor, accumulate: Bool = false): pytorch.Tensor.
 
 /// Writes flat indexed values into retained storage through exact aten::put_.
 
-pub put_in_place(input: Tensor, indices: Tensor, source: Tensor, accumulate: Bool = false): Unit.
+pub put_in_place(input: pytorch.Tensor, indices: pytorch.Tensor, source: pytorch.Tensor, accumulate: Bool = false): Unit.
 
 /// Writes exact aten::put.out values into retained storage.
 
-pub put_out(output: Tensor, input: Tensor, indices: Tensor, source: Tensor, accumulate: Bool = false): Unit.
+pub put_out(output: pytorch.Tensor, input: pytorch.Tensor, indices: pytorch.Tensor, source: pytorch.Tensor, accumulate: Bool = false): Unit.
 
 /// Returns a copy with source values scattered through indices along one dimension.
 
-pub scatter(input: Tensor, dimension: Int, indices: Tensor, source: Tensor): Tensor.
+pub scatter(input: pytorch.Tensor, dimension: Int, indices: pytorch.Tensor, source: pytorch.Tensor): pytorch.Tensor.
 
 /// Returns a copy with source values accumulated through indices along one dimension.
 
-pub scatter_add(input: Tensor, dimension: Int, indices: Tensor, source: Tensor): Tensor.
+pub scatter_add(input: pytorch.Tensor, dimension: Int, indices: pytorch.Tensor, source: pytorch.Tensor): pytorch.Tensor.
 
 /// Returns a copy with one selected slice replaced by a source tensor.
 
-pub select_scatter(input: Tensor, source: Tensor, dimension: Int, index: Int): Tensor.
+pub select_scatter(input: pytorch.Tensor, source: pytorch.Tensor, dimension: Int, index: Int): pytorch.Tensor.
 
 /// Copies sliding windows of one dimension into independently owned result storage.
 
-pub unfold_copy(input: Tensor, dimension: Int, size: Int, step: Int): Tensor.
+pub unfold_copy(input: pytorch.Tensor, dimension: Int, size: Int, step: Int): pytorch.Tensor.
 
 /// Selects elementwise between two tensors using a boolean condition tensor.
 
-pub where_tensor(condition: Tensor, when_true: Tensor, when_false: Tensor): Tensor.
+pub where_tensor(condition: pytorch.Tensor, when_true: pytorch.Tensor, when_false: pytorch.Tensor): pytorch.Tensor.

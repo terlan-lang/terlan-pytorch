@@ -5,4 +5,4 @@ module pytorch.InstanceNormCompletion.
 /// Applies instance normalization using input statistics and default absent
 /// affine/running-stat tensors.
 
-pub instance_norm_default(input: Tensor, use_input_stats: Bool, momentum: Float, eps: Float, cudnn_enabled: Bool): Tensor.
+pub instance_norm_default(input: pytorch.Tensor, use_input_stats: Bool, momentum: Float, eps: Float, cudnn_enabled: Bool): pytorch.Tensor.

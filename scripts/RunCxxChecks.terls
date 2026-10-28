@@ -70,6 +70,34 @@ run_command(
             }
     }.
 
+run_test_files(
+    paths: List[String],
+    compiler: String,
+    repository: String,
+    environment: List[EnvironmentEntry],
+): Bool ->
+    case paths {
+        [] -> true;
+        [path | rest] ->
+            if {
+                String.ends_with(path, ".terl") -> announce(String.append("running ", basename(path)))
+                    and run_command(compiler, ["--incremental", "test", path], repository, environment)
+                    and run_test_files(rest, compiler, repository, environment);
+                true -> run_test_files(rest, compiler, repository, environment)
+            }
+    }.
+
+run_test_tree(
+    directory: String,
+    compiler: String,
+    repository: String,
+    environment: List[EnvironmentEntry],
+): Bool ->
+    case Directory.files_recursive(directory) {
+        Err(reason) -> failure(reason.message);
+        Ok(paths) -> run_test_files(paths, compiler, repository, environment)
+    }.
+
 copy_one(source: String, destination: String): Bool ->
     case File.copy(source, destination) {
         Ok(Unit) -> true;
@@ -247,11 +275,15 @@ copy_fixtures(repository: String, generated: String, cuda: Bool): Bool ->
     ),
     copy_replace(child(repository, "src/pytorch/Tensor.terl"), child(generated_src, "Tensor.terl")),
     copy_replace(
+        child(repository, "src/pytorch/Optimizer.terl"),
+        child(generated_src, "Optimizer.terl"),
+    ),
+    copy_replace(
         child(repository, "src/pytorch/ShapePartition.terl"),
         child(generated_src, "ShapePartition.terl"),
     ),
 } {
-    {Ok(paths), Ok(Unit), Ok(Unit), true, true, true, true} ->
+    {Ok(paths), Ok(Unit), Ok(Unit), true, true, true, true, true} ->
         copy_supports(paths, generated_src)
             and copy_tests(paths, generated_tests, cuda)
             and copy_native_tests(paths, generated_native_tests)
@@ -557,17 +589,8 @@ execute(mode: String, repository: String, compiler: String, libtorch: String): B
     env,
 )
         and announce("running generated CXX test tree")
-        and run_command(
-    compiler,
-    [
-        "--incremental",
-        "test",
-        child(generated_tests, "pytorch_cxx"),
-        child(generated_tests, "pytorch_runtime"),
-    ],
-    repository,
-    env,
-).
+        and run_test_tree(child(generated_tests, "pytorch_cxx"), compiler, repository, env)
+        and run_test_tree(child(generated_tests, "pytorch_runtime"), compiler, repository, env).
 
 entry(): Bool ->
     case {Arguments.count(), Arguments.get(0), Arguments.get(1), Arguments.get(2), Arguments.get(3)} {

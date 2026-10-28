@@ -23,6 +23,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: terlan-lang/terlan
+          ref: 0a8085a6f6e1b83b55b0900ada7e2688b0921c32
           path: terlan
       - name: Require configured CUDA LibTorch
         run: test -n "$LIBTORCH" && test -f "$LIBTORCH/lib/libtorch_cuda.so"
@@ -31,6 +32,8 @@ jobs:
       - name: Configure CUDA runtime libraries
         run: echo "LD_LIBRARY_PATH=${CUDA_LIBRARY_PATH}:${LIBTORCH}/lib" >> "$GITHUB_ENV"
       - name: Build compiler
-        run: cargo build --manifest-path terlan/Cargo.toml --bin terlc
+        run: >-
+          cargo build --manifest-path terlan/Cargo.toml -p terlan
+          --bin terlc --bin terlan-vm
       - name: Execute CUDA LibTorch gate
         run: make -C terlan-pytorch cuda-check TERLC=../terlan/target/debug/terlc LIBTORCH="$LIBTORCH"

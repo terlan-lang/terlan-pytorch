@@ -2,30 +2,30 @@
 
 module pytorch.UpsampleBackwardCompletion.
 
-pub upsample_bicubic2d_backward(grad_output: Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): Tensor.
+pub upsample_bicubic2d_backward(grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): pytorch.Tensor.
 
-pub upsample_bicubic2d_backward_out(grad_input: Tensor, grad_output: Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): Unit.
+pub upsample_bicubic2d_backward_out(grad_input: pytorch.Tensor, grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): Unit.
 
-pub upsample_bilinear2d_backward(grad_output: Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): Tensor.
+pub upsample_bilinear2d_backward(grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): pytorch.Tensor.
 
-pub upsample_bilinear2d_backward_out(grad_input: Tensor, grad_output: Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): Unit.
+pub upsample_bilinear2d_backward_out(grad_input: pytorch.Tensor, grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): Unit.
 
-pub upsample_linear1d_backward(grad_output: Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): Tensor.
+pub upsample_linear1d_backward(grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): pytorch.Tensor.
 
-pub upsample_linear1d_backward_out(grad_input: Tensor, grad_output: Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): Unit.
+pub upsample_linear1d_backward_out(grad_input: pytorch.Tensor, grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): Unit.
 
-pub upsample_nearest1d_backward(grad_output: Tensor, output_size: List[Int], input_size: List[Int]): Tensor.
+pub upsample_nearest1d_backward(grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int]): pytorch.Tensor.
 
-pub upsample_nearest1d_backward_out(grad_input: Tensor, grad_output: Tensor, output_size: List[Int], input_size: List[Int]): Unit.
+pub upsample_nearest1d_backward_out(grad_input: pytorch.Tensor, grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int]): Unit.
 
-pub upsample_nearest2d_backward(grad_output: Tensor, output_size: List[Int], input_size: List[Int]): Tensor.
+pub upsample_nearest2d_backward(grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int]): pytorch.Tensor.
 
-pub upsample_nearest2d_backward_out(grad_input: Tensor, grad_output: Tensor, output_size: List[Int], input_size: List[Int]): Unit.
+pub upsample_nearest2d_backward_out(grad_input: pytorch.Tensor, grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int]): Unit.
 
-pub upsample_nearest3d_backward(grad_output: Tensor, output_size: List[Int], input_size: List[Int]): Tensor.
+pub upsample_nearest3d_backward(grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int]): pytorch.Tensor.
 
-pub upsample_nearest3d_backward_out(grad_input: Tensor, grad_output: Tensor, output_size: List[Int], input_size: List[Int]): Unit.
+pub upsample_nearest3d_backward_out(grad_input: pytorch.Tensor, grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int]): Unit.
 
-pub upsample_trilinear3d_backward(grad_output: Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): Tensor.
+pub upsample_trilinear3d_backward(grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): pytorch.Tensor.
 
-pub upsample_trilinear3d_backward_out(grad_input: Tensor, grad_output: Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): Unit.
+pub upsample_trilinear3d_backward_out(grad_input: pytorch.Tensor, grad_output: pytorch.Tensor, output_size: List[Int], input_size: List[Int], align_corners: Bool): Unit.

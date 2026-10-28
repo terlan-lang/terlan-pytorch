@@ -4,4 +4,4 @@ module pytorch.ViewDtypeCompletion.
 
 /// Reinterprets tensor storage with the requested scalar type.
 
-pub view_dtype(input: Tensor, dtype: Int): Tensor.
+pub view_dtype(input: pytorch.Tensor, dtype: Int): pytorch.Tensor.

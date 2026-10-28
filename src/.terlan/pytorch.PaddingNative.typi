@@ -4,16 +4,16 @@ module pytorch.PaddingNative.
 
 /// Executes exact aten::constant_pad_nd with an integer or floating Scalar value.
 
-pub constant_pad_configured(input: Tensor, padding: List[Int], value_is_int: Bool, integer_value: Int, floating_value: Float): Tensor.
+pub constant_pad_configured(input: pytorch.Tensor, padding: List[Int], value_is_int: Bool, integer_value: Int, floating_value: Float): pytorch.Tensor.
 
 /// Writes exact aten::constant_pad_nd.out with an integer or floating Scalar value.
 
-pub constant_pad_configured_out(output: Tensor, input: Tensor, padding: List[Int], value_is_int: Bool, integer_value: Int, floating_value: Float): Unit.
+pub constant_pad_configured_out(output: pytorch.Tensor, input: pytorch.Tensor, padding: List[Int], value_is_int: Bool, integer_value: Int, floating_value: Float): Unit.
 
 /// Executes exact aten::pad with an explicit floating fill value.
 
-pub pad_with_value(input: Tensor, padding: List[Int], mode: String, value: Float): Tensor.
+pub pad_with_value(input: pytorch.Tensor, padding: List[Int], mode: String, value: Float): pytorch.Tensor.
 
 /// Executes exact aten::pad with no optional fill value.
 
-pub pad_without_value(input: Tensor, padding: List[Int], mode: String): Tensor.
+pub pad_without_value(input: pytorch.Tensor, padding: List[Int], mode: String): pytorch.Tensor.

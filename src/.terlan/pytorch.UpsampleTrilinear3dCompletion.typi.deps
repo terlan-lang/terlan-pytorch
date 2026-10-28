@@ -1,9 +1,9 @@
 module=pytorch.UpsampleTrilinear3dCompletion
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=6047284513823878907
-interface_hash=3565453418952446009
+interface_hash=4722453244928140459
 interface_doc_hash=3155750538747329600
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

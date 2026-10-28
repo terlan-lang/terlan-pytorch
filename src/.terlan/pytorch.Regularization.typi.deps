@@ -1,9 +1,9 @@
 module=pytorch.Regularization
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=9602580636457759806
-interface_hash=13642426119042021439
+interface_hash=13524308065100938843
 interface_doc_hash=1540083395574603860
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

@@ -8,6 +8,7 @@ import std.core.String.{length, starts_with, utf8_slice}.
 
 import type pytorch.CorrectionStatisticsPairNative.TensorPair.
 import type std.collections.List.
+import type std.core.{Option, Result}.
 import type std.vm.Bytes.
 
 /**

@@ -4,64 +4,64 @@ module pytorch.CorrectionStatisticsPairCompletion.
 
 /// Computes dimension-wise paired standard deviation and mean with floating correction.
 
-pub std_mean_correction_dimensions_float(input: Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): {Tensor, Tensor}.
+pub std_mean_correction_dimensions_float(input: pytorch.Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Computes dimension-wise paired standard deviation and mean with integer correction.
 
-pub std_mean_correction_dimensions_int(input: Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): {Tensor, Tensor}.
+pub std_mean_correction_dimensions_int(input: pytorch.Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Computes paired standard deviation and mean with floating correction.
 
-pub std_mean_correction_float(input: Tensor, correction: Float, keep_dimension: Bool): {Tensor, Tensor}.
+pub std_mean_correction_float(input: pytorch.Tensor, correction: Float, keep_dimension: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Computes paired standard deviation and mean with integer correction.
 
-pub std_mean_correction_int(input: Tensor, correction: Int, keep_dimension: Bool): {Tensor, Tensor}.
+pub std_mean_correction_int(input: pytorch.Tensor, correction: Int, keep_dimension: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Writes dimension-wise paired standard deviation and mean with floating correction into retained outputs.
 
-pub std_mean_correction_out_dimensions_float(output: Tensor, mean_output: Tensor, input: Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): Unit.
+pub std_mean_correction_out_dimensions_float(output: pytorch.Tensor, mean_output: pytorch.Tensor, input: pytorch.Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): Unit.
 
 /// Writes dimension-wise paired standard deviation and mean with integer correction into retained outputs.
 
-pub std_mean_correction_out_dimensions_int(output: Tensor, mean_output: Tensor, input: Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): Unit.
+pub std_mean_correction_out_dimensions_int(output: pytorch.Tensor, mean_output: pytorch.Tensor, input: pytorch.Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): Unit.
 
 /// Writes paired standard deviation and mean with floating correction into retained outputs.
 
-pub std_mean_correction_out_float(output: Tensor, mean_output: Tensor, input: Tensor, correction: Float, keep_dimension: Bool): Unit.
+pub std_mean_correction_out_float(output: pytorch.Tensor, mean_output: pytorch.Tensor, input: pytorch.Tensor, correction: Float, keep_dimension: Bool): Unit.
 
 /// Writes paired standard deviation and mean with integer correction into retained outputs.
 
-pub std_mean_correction_out_int(output: Tensor, mean_output: Tensor, input: Tensor, correction: Int, keep_dimension: Bool): Unit.
+pub std_mean_correction_out_int(output: pytorch.Tensor, mean_output: pytorch.Tensor, input: pytorch.Tensor, correction: Int, keep_dimension: Bool): Unit.
 
 /// Computes dimension-wise paired variance and mean with floating correction.
 
-pub var_mean_correction_dimensions_float(input: Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): {Tensor, Tensor}.
+pub var_mean_correction_dimensions_float(input: pytorch.Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Computes dimension-wise paired variance and mean with integer correction.
 
-pub var_mean_correction_dimensions_int(input: Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): {Tensor, Tensor}.
+pub var_mean_correction_dimensions_int(input: pytorch.Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Computes paired variance and mean with floating correction.
 
-pub var_mean_correction_float(input: Tensor, correction: Float, keep_dimension: Bool): {Tensor, Tensor}.
+pub var_mean_correction_float(input: pytorch.Tensor, correction: Float, keep_dimension: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Computes paired variance and mean with integer correction.
 
-pub var_mean_correction_int(input: Tensor, correction: Int, keep_dimension: Bool): {Tensor, Tensor}.
+pub var_mean_correction_int(input: pytorch.Tensor, correction: Int, keep_dimension: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Writes dimension-wise paired variance and mean with floating correction into retained outputs.
 
-pub var_mean_correction_out_dimensions_float(output: Tensor, mean_output: Tensor, input: Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): Unit.
+pub var_mean_correction_out_dimensions_float(output: pytorch.Tensor, mean_output: pytorch.Tensor, input: pytorch.Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): Unit.
 
 /// Writes dimension-wise paired variance and mean with integer correction into retained outputs.
 
-pub var_mean_correction_out_dimensions_int(output: Tensor, mean_output: Tensor, input: Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): Unit.
+pub var_mean_correction_out_dimensions_int(output: pytorch.Tensor, mean_output: pytorch.Tensor, input: pytorch.Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): Unit.
 
 /// Writes paired variance and mean with floating correction into retained outputs.
 
-pub var_mean_correction_out_float(output: Tensor, mean_output: Tensor, input: Tensor, correction: Float, keep_dimension: Bool): Unit.
+pub var_mean_correction_out_float(output: pytorch.Tensor, mean_output: pytorch.Tensor, input: pytorch.Tensor, correction: Float, keep_dimension: Bool): Unit.
 
 /// Writes paired variance and mean with integer correction into retained outputs.
 
-pub var_mean_correction_out_int(output: Tensor, mean_output: Tensor, input: Tensor, correction: Int, keep_dimension: Bool): Unit.
+pub var_mean_correction_out_int(output: pytorch.Tensor, mean_output: pytorch.Tensor, input: pytorch.Tensor, correction: Int, keep_dimension: Bool): Unit.

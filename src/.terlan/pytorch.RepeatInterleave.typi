@@ -4,48 +4,48 @@ module pytorch.RepeatInterleave.
 
 /// Returns indices repeated by each element of `repeats`.
 
-pub repeat_indices(repeats: Tensor): Tensor.
+pub repeat_indices(repeats: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes repeated indices into retained output storage.
 
-pub repeat_indices_out(output: Tensor, repeats: Tensor): Unit.
+pub repeat_indices_out(output: pytorch.Tensor, repeats: pytorch.Tensor): Unit.
 
 /// Writes repeated indices with a validated total-size hint.
 
-pub repeat_indices_out_output_size(output: Tensor, repeats: Tensor, output_size: Int): Unit.
+pub repeat_indices_out_output_size(output: pytorch.Tensor, repeats: pytorch.Tensor, output_size: Int): Unit.
 
 /// Returns repeated indices while validating the caller-provided total size.
 
-pub repeat_indices_output_size(repeats: Tensor, output_size: Int): Tensor.
+pub repeat_indices_output_size(repeats: pytorch.Tensor, output_size: Int): pytorch.Tensor.
 
 /// Repeats every flattened input element by one integer count.
 
-pub repeat_int(input: Tensor, repeats: Int): Tensor.
+pub repeat_int(input: pytorch.Tensor, repeats: Int): pytorch.Tensor.
 
 /// Repeats input elements along a dimension by one integer count.
 
-pub repeat_int_dimension(input: Tensor, repeats: Int, dimension: Int): Tensor.
+pub repeat_int_dimension(input: pytorch.Tensor, repeats: Int, dimension: Int): pytorch.Tensor.
 
 /// Repeats along a dimension by an integer with a total-size hint.
 
-pub repeat_int_dimension_output_size(input: Tensor, repeats: Int, dimension: Int, output_size: Int): Tensor.
+pub repeat_int_dimension_output_size(input: pytorch.Tensor, repeats: Int, dimension: Int, output_size: Int): pytorch.Tensor.
 
 /// Repeats flattened input elements by an integer with a total-size hint.
 
-pub repeat_int_output_size(input: Tensor, repeats: Int, output_size: Int): Tensor.
+pub repeat_int_output_size(input: pytorch.Tensor, repeats: Int, output_size: Int): pytorch.Tensor.
 
 /// Repeats flattened input elements using tensor-valued counts.
 
-pub repeat_tensor(input: Tensor, repeats: Tensor): Tensor.
+pub repeat_tensor(input: pytorch.Tensor, repeats: pytorch.Tensor): pytorch.Tensor.
 
 /// Repeats input elements along an explicit dimension using tensor counts.
 
-pub repeat_tensor_dimension(input: Tensor, repeats: Tensor, dimension: Int): Tensor.
+pub repeat_tensor_dimension(input: pytorch.Tensor, repeats: pytorch.Tensor, dimension: Int): pytorch.Tensor.
 
 /// Repeats along a dimension using tensor counts and a total-size hint.
 
-pub repeat_tensor_dimension_output_size(input: Tensor, repeats: Tensor, dimension: Int, output_size: Int): Tensor.
+pub repeat_tensor_dimension_output_size(input: pytorch.Tensor, repeats: pytorch.Tensor, dimension: Int, output_size: Int): pytorch.Tensor.
 
 /// Repeats flattened input elements with a validated total-size hint.
 
-pub repeat_tensor_output_size(input: Tensor, repeats: Tensor, output_size: Int): Tensor.
+pub repeat_tensor_output_size(input: pytorch.Tensor, repeats: pytorch.Tensor, output_size: Int): pytorch.Tensor.

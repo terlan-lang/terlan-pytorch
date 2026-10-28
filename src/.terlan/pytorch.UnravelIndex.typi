@@ -7,8 +7,8 @@ module pytorch.UnravelIndex.
 /// Converts flattened integer indices into one coordinate tensor per shape
 /// dimension, matching torch.unravel_index for non-empty positive shapes.
 
-pub unravel_index(indices: Tensor, shape: List[Int]): List[Tensor].
+pub unravel_index(indices: pytorch.Tensor, shape: List[Int]): List[pytorch.Tensor].
 
 /// Scalar-shape overload matching torch.unravel_index's one-dimensional form.
 
-pub unravel_index(indices: Tensor, shape: Int): List[Tensor].
+pub unravel_index(indices: pytorch.Tensor, shape: Int): List[pytorch.Tensor].

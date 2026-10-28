@@ -4,20 +4,20 @@ module pytorch.LerpNative.
 
 /// Executes exact aten::lerp with a tagged integer or floating-point Scalar weight.
 
-pub lerp_scalar(input: Tensor, end: Tensor, weight_is_int: Bool, weight_int: Int, weight_float: Float): Tensor.
+pub lerp_scalar(input: pytorch.Tensor, end: pytorch.Tensor, weight_is_int: Bool, weight_int: Int, weight_float: Float): pytorch.Tensor.
 
 /// Writes exact aten::lerp.out Scalar-weight results into retained output storage.
 
-pub lerp_scalar_out(output: Tensor, input: Tensor, end: Tensor, weight_is_int: Bool, weight_int: Int, weight_float: Float): Unit.
+pub lerp_scalar_out(output: pytorch.Tensor, input: pytorch.Tensor, end: pytorch.Tensor, weight_is_int: Bool, weight_int: Int, weight_float: Float): Unit.
 
 /// Executes exact aten::lerp with an elementwise Tensor weight.
 
-pub lerp_tensor(input: Tensor, end: Tensor, weight: Tensor): Tensor.
+pub lerp_tensor(input: pytorch.Tensor, end: pytorch.Tensor, weight: pytorch.Tensor): pytorch.Tensor.
 
 /// Executes the exact dispatcher-backed Tensor::lerp_ Tensor-weight overload in place.
 
-pub lerp_tensor_in_place(input: Tensor, end: Tensor, weight: Tensor): Unit.
+pub lerp_tensor_in_place(input: pytorch.Tensor, end: pytorch.Tensor, weight: pytorch.Tensor): Unit.
 
 /// Writes exact aten::lerp.out Tensor-weight results into retained output storage.
 
-pub lerp_tensor_out(output: Tensor, input: Tensor, end: Tensor, weight: Tensor): Unit.
+pub lerp_tensor_out(output: pytorch.Tensor, input: pytorch.Tensor, end: pytorch.Tensor, weight: pytorch.Tensor): Unit.

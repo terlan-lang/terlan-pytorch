@@ -4,456 +4,456 @@ module pytorch.BinaryScalar.
 
 /// Returns elementwise bitwise AND with an integer scalar left operand.
 
-pub bitwise_and_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub bitwise_and_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes elementwise bitwise AND with an integer scalar left operand.
 
-pub bitwise_and_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub bitwise_and_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Returns elementwise bitwise AND with an integer scalar right operand.
 
-pub bitwise_and_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub bitwise_and_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies elementwise bitwise AND with an integer scalar right operand in place.
 
-pub bitwise_and_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub bitwise_and_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes elementwise bitwise AND with an integer scalar right operand.
 
-pub bitwise_and_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub bitwise_and_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies elementwise bitwise AND with a tensor right operand in place.
 
-pub bitwise_and_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub bitwise_and_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes elementwise bitwise AND for two tensors into retained output storage.
 
-pub bitwise_and_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub bitwise_and_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns elementwise bitwise left shift with an integer scalar left operand.
 
-pub bitwise_left_shift_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub bitwise_left_shift_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes elementwise bitwise left shift with an integer scalar left operand.
 
-pub bitwise_left_shift_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub bitwise_left_shift_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Returns elementwise bitwise left shift with an integer scalar right operand.
 
-pub bitwise_left_shift_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub bitwise_left_shift_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies elementwise bitwise left shift with an integer scalar right operand in place.
 
-pub bitwise_left_shift_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub bitwise_left_shift_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes elementwise bitwise left shift with an integer scalar right operand.
 
-pub bitwise_left_shift_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub bitwise_left_shift_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies elementwise bitwise left shift with a tensor right operand in place.
 
-pub bitwise_left_shift_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub bitwise_left_shift_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes elementwise bitwise left shift for two tensors into retained output storage.
 
-pub bitwise_left_shift_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub bitwise_left_shift_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns elementwise bitwise OR with an integer scalar left operand.
 
-pub bitwise_or_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub bitwise_or_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes elementwise bitwise OR with an integer scalar left operand.
 
-pub bitwise_or_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub bitwise_or_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Returns elementwise bitwise OR with an integer scalar right operand.
 
-pub bitwise_or_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub bitwise_or_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies elementwise bitwise OR with an integer scalar right operand in place.
 
-pub bitwise_or_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub bitwise_or_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes elementwise bitwise OR with an integer scalar right operand.
 
-pub bitwise_or_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub bitwise_or_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies elementwise bitwise OR with a tensor right operand in place.
 
-pub bitwise_or_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub bitwise_or_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes elementwise bitwise OR for two tensors into retained output storage.
 
-pub bitwise_or_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub bitwise_or_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns elementwise bitwise right shift with an integer scalar left operand.
 
-pub bitwise_right_shift_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub bitwise_right_shift_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes elementwise bitwise right shift with an integer scalar left operand.
 
-pub bitwise_right_shift_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub bitwise_right_shift_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Returns elementwise bitwise right shift with an integer scalar right operand.
 
-pub bitwise_right_shift_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub bitwise_right_shift_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies elementwise bitwise right shift with an integer scalar right operand in place.
 
-pub bitwise_right_shift_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub bitwise_right_shift_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes elementwise bitwise right shift with an integer scalar right operand.
 
-pub bitwise_right_shift_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub bitwise_right_shift_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies elementwise bitwise right shift with a tensor right operand in place.
 
-pub bitwise_right_shift_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub bitwise_right_shift_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes elementwise bitwise right shift for two tensors into retained output storage.
 
-pub bitwise_right_shift_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub bitwise_right_shift_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns elementwise bitwise XOR with an integer scalar left operand.
 
-pub bitwise_xor_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub bitwise_xor_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes elementwise bitwise XOR with an integer scalar left operand.
 
-pub bitwise_xor_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub bitwise_xor_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Returns elementwise bitwise XOR with an integer scalar right operand.
 
-pub bitwise_xor_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub bitwise_xor_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies elementwise bitwise XOR with an integer scalar right operand in place.
 
-pub bitwise_xor_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub bitwise_xor_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes elementwise bitwise XOR with an integer scalar right operand.
 
-pub bitwise_xor_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub bitwise_xor_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies elementwise bitwise XOR with a tensor right operand in place.
 
-pub bitwise_xor_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub bitwise_xor_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes elementwise bitwise XOR for two tensors into retained output storage.
 
-pub bitwise_xor_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub bitwise_xor_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns values from a tensor with signs copied from a floating-point scalar.
 
-pub copysign_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub copysign_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Copies signs from a floating-point scalar into a tensor in place.
 
-pub copysign_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub copysign_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes values with signs copied from a floating-point scalar into retained storage.
 
-pub copysign_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub copysign_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns values from a tensor with signs copied from an integer scalar.
 
-pub copysign_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub copysign_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Copies signs from an integer scalar into a tensor in place.
 
-pub copysign_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub copysign_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes values with signs copied from an integer scalar into retained storage.
 
-pub copysign_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub copysign_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Returns elementwise floating power with a floating-point scalar left operand.
 
-pub float_power_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub float_power_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes elementwise floating power with a floating-point scalar left operand.
 
-pub float_power_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub float_power_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Returns elementwise floating power with an integer scalar left operand.
 
-pub float_power_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub float_power_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes elementwise floating power with an integer scalar left operand.
 
-pub float_power_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub float_power_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Returns elementwise floating power with a floating-point scalar right operand.
 
-pub float_power_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub float_power_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies elementwise floating power with a floating-point scalar right operand in place.
 
-pub float_power_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub float_power_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes elementwise floating power with a floating-point scalar right operand.
 
-pub float_power_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub float_power_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns elementwise floating power with an integer scalar right operand.
 
-pub float_power_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub float_power_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies elementwise floating power with an integer scalar right operand in place.
 
-pub float_power_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub float_power_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes elementwise floating power with an integer scalar right operand.
 
-pub float_power_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub float_power_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies elementwise floating power with a tensor right operand in place.
 
-pub float_power_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub float_power_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes elementwise floating power for two tensors into retained output storage.
 
-pub float_power_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub float_power_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Applies floor division by a floating-point scalar.
 
-pub floor_divide_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub floor_divide_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies floor division by a floating-point scalar in place.
 
-pub floor_divide_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub floor_divide_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes floor division by a floating-point scalar into retained output storage.
 
-pub floor_divide_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub floor_divide_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Applies floor division by an integer scalar.
 
-pub floor_divide_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub floor_divide_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies floor division by an integer scalar in place.
 
-pub floor_divide_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub floor_divide_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes floor division by an integer scalar into retained output storage.
 
-pub floor_divide_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub floor_divide_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies floor division by a tensor in place.
 
-pub floor_divide_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub floor_divide_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes floor division for two tensors into retained output storage.
 
-pub floor_divide_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub floor_divide_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns elementwise floating-point remainder with a scalar right operand.
 
-pub fmod_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub fmod_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies floating-point remainder with a scalar right operand in place.
 
-pub fmod_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub fmod_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes elementwise floating-point remainder with a scalar right operand.
 
-pub fmod_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub fmod_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Multiplies by a floating-point scalar.
 
-pub mul_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub mul_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Multiplies by a floating-point scalar in place.
 
-pub mul_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub mul_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes multiplication by a floating-point scalar into retained output storage.
 
-pub mul_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub mul_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Multiplies by an integer scalar.
 
-pub mul_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub mul_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Multiplies by an integer scalar in place.
 
-pub mul_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub mul_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes multiplication by an integer scalar into retained output storage.
 
-pub mul_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub mul_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Multiplies by a tensor in place.
 
-pub mul_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub mul_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes elementwise multiplication for two tensors into retained output storage.
 
-pub mul_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub mul_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Applies the multiply alias with a floating-point scalar.
 
-pub multiply_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub multiply_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies the multiply alias with a floating-point scalar in place.
 
-pub multiply_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub multiply_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Applies the multiply alias with an integer scalar.
 
-pub multiply_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub multiply_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies the multiply alias with an integer scalar in place.
 
-pub multiply_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub multiply_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies the multiply alias with a tensor in place.
 
-pub multiply_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub multiply_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes the multiply alias for two tensors into retained output storage.
 
-pub multiply_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub multiply_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns elementwise power with a floating-point scalar left operand.
 
-pub pow_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub pow_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes elementwise power with a floating-point scalar left operand.
 
-pub pow_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub pow_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Returns elementwise power with an integer scalar left operand.
 
-pub pow_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub pow_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes elementwise power with an integer scalar left operand.
 
-pub pow_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub pow_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Returns elementwise power with a floating-point scalar right operand.
 
-pub pow_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub pow_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies elementwise power with a floating-point scalar right operand in place.
 
-pub pow_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub pow_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes elementwise power with a floating-point scalar right operand.
 
-pub pow_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub pow_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns elementwise power with an integer scalar right operand.
 
-pub pow_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub pow_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies elementwise power with an integer scalar right operand in place.
 
-pub pow_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub pow_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes elementwise power with an integer scalar right operand.
 
-pub pow_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub pow_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies elementwise power with a tensor right operand in place.
 
-pub pow_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub pow_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes elementwise power for two tensors into retained output storage.
 
-pub pow_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub pow_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns elementwise remainder with a floating-point scalar left operand.
 
-pub remainder_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub remainder_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes elementwise remainder with a floating-point scalar left operand.
 
-pub remainder_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub remainder_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Returns elementwise remainder with an integer scalar left operand.
 
-pub remainder_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub remainder_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes elementwise remainder with an integer scalar left operand.
 
-pub remainder_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub remainder_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Returns elementwise remainder with a floating-point scalar right operand.
 
-pub remainder_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub remainder_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies elementwise remainder with a floating-point scalar right operand in place.
 
-pub remainder_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub remainder_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes elementwise remainder with a floating-point scalar right operand.
 
-pub remainder_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub remainder_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns elementwise remainder with an integer scalar right operand.
 
-pub remainder_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub remainder_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies elementwise remainder with an integer scalar right operand in place.
 
-pub remainder_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub remainder_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes elementwise remainder with an integer scalar right operand.
 
-pub remainder_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub remainder_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies elementwise remainder with a tensor right operand in place.
 
-pub remainder_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub remainder_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes elementwise remainder for two tensors into retained output storage.
 
-pub remainder_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub remainder_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Returns xlogy with a floating-point scalar left operand.
 
-pub xlogy_left_float(scalar: Float, tensor: Tensor): Tensor.
+pub xlogy_left_float(scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes xlogy with a floating-point scalar left operand.
 
-pub xlogy_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit.
+pub xlogy_left_float_out(output: pytorch.Tensor, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Returns xlogy with an integer scalar left operand.
 
-pub xlogy_left_int(scalar: Int, tensor: Tensor): Tensor.
+pub xlogy_left_int(scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes xlogy with an integer scalar left operand.
 
-pub xlogy_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit.
+pub xlogy_left_int_out(output: pytorch.Tensor, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Returns xlogy with a floating-point scalar right operand.
 
-pub xlogy_right_float(tensor: Tensor, scalar: Float): Tensor.
+pub xlogy_right_float(tensor: pytorch.Tensor, scalar: Float): pytorch.Tensor.
 
 /// Applies xlogy with a floating-point scalar right operand in place.
 
-pub xlogy_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+pub xlogy_right_float_in_place(tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Writes xlogy with a floating-point scalar right operand.
 
-pub xlogy_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+pub xlogy_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Float): Unit.
 
 /// Returns xlogy with an integer scalar right operand.
 
-pub xlogy_right_int(tensor: Tensor, scalar: Int): Tensor.
+pub xlogy_right_int(tensor: pytorch.Tensor, scalar: Int): pytorch.Tensor.
 
 /// Applies xlogy with an integer scalar right operand in place.
 
-pub xlogy_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+pub xlogy_right_int_in_place(tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Writes xlogy with an integer scalar right operand.
 
-pub xlogy_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+pub xlogy_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, scalar: Int): Unit.
 
 /// Applies xlogy with a tensor right operand in place.
 
-pub xlogy_tensor_in_place(left: Tensor, right: Tensor): Unit.
+pub xlogy_tensor_in_place(left: pytorch.Tensor, right: pytorch.Tensor): Unit.
 
 /// Writes xlogy for two tensors into retained output storage.
 
-pub xlogy_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+pub xlogy_tensor_out(output: pytorch.Tensor, left: pytorch.Tensor, right: pytorch.Tensor): Unit.

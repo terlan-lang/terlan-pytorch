@@ -4,32 +4,32 @@ module pytorch.SpecialScalarNative.
 
 /// Exact generated CXX special-scalar dispatcher.
 
-pub scalar_left_float(operation: Int, scalar: Float, tensor: Tensor): Tensor.
+pub scalar_left_float(operation: Int, scalar: Float, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX special-scalar dispatcher.
 
-pub scalar_left_float_out(output: Tensor, operation: Int, scalar: Float, tensor: Tensor): Unit.
+pub scalar_left_float_out(output: pytorch.Tensor, operation: Int, scalar: Float, tensor: pytorch.Tensor): Unit.
 
 /// Exact generated CXX special-scalar dispatcher.
 
-pub scalar_left_int(operation: Int, scalar: Int, tensor: Tensor): Tensor.
+pub scalar_left_int(operation: Int, scalar: Int, tensor: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX special-scalar dispatcher.
 
-pub scalar_left_int_out(output: Tensor, operation: Int, scalar: Int, tensor: Tensor): Unit.
+pub scalar_left_int_out(output: pytorch.Tensor, operation: Int, scalar: Int, tensor: pytorch.Tensor): Unit.
 
 /// Exact generated CXX special-scalar dispatcher.
 
-pub scalar_right_float(tensor: Tensor, operation: Int, scalar: Float): Tensor.
+pub scalar_right_float(tensor: pytorch.Tensor, operation: Int, scalar: Float): pytorch.Tensor.
 
 /// Exact generated CXX special-scalar dispatcher.
 
-pub scalar_right_float_out(output: Tensor, tensor: Tensor, operation: Int, scalar: Float): Unit.
+pub scalar_right_float_out(output: pytorch.Tensor, tensor: pytorch.Tensor, operation: Int, scalar: Float): Unit.
 
 /// Exact generated CXX special-scalar dispatcher.
 
-pub scalar_right_int(tensor: Tensor, operation: Int, scalar: Int): Tensor.
+pub scalar_right_int(tensor: pytorch.Tensor, operation: Int, scalar: Int): pytorch.Tensor.
 
 /// Exact generated CXX special-scalar dispatcher.
 
-pub scalar_right_int_out(output: Tensor, tensor: Tensor, operation: Int, scalar: Int): Unit.
+pub scalar_right_int_out(output: pytorch.Tensor, tensor: pytorch.Tensor, operation: Int, scalar: Int): Unit.

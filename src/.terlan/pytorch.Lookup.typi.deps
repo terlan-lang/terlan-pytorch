@@ -1,10 +1,10 @@
 module=pytorch.Lookup
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=14176160567403458673
-interface_hash=5633366634748636188
+interface_hash=1524417624890155889
 interface_doc_hash=16889520517337597768
 deps=2
-pytorch.LookupNative=17620093206138649235
-pytorch.Tensor=13489932768568026575
+pytorch.LookupNative=16034392002813464627
+pytorch.Tensor=1089416781329568890

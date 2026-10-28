@@ -4,34 +4,34 @@ module pytorch.Lerp.
 
 /// Interpolates between tensors using a floating-point scalar weight.
 
-pub lerp_float(input: Tensor, end: Tensor, weight: Float): Tensor.
+pub lerp_float(input: pytorch.Tensor, end: pytorch.Tensor, weight: Float): pytorch.Tensor.
 
 /// Writes floating-weight interpolation into retained output storage.
 
-pub lerp_float_out(output: Tensor, input: Tensor, end: Tensor, weight: Float): Unit.
+pub lerp_float_out(output: pytorch.Tensor, input: pytorch.Tensor, end: pytorch.Tensor, weight: Float): Unit.
 
 /// Interpolates between tensors using an integer scalar weight.
 
-pub lerp_int(input: Tensor, end: Tensor, weight: Int): Tensor.
+pub lerp_int(input: pytorch.Tensor, end: pytorch.Tensor, weight: Int): pytorch.Tensor.
 
 /// Writes integer-weight interpolation into retained output storage.
 
-pub lerp_int_out(output: Tensor, input: Tensor, end: Tensor, weight: Int): Unit.
+pub lerp_int_out(output: pytorch.Tensor, input: pytorch.Tensor, end: pytorch.Tensor, weight: Int): Unit.
 
 /// Interpolates in place using the exact tagged Scalar accepted by aten::lerp_.
 /// The generated CXX scalar leaf computes the result; copy_in_place preserves
 /// the caller's Tensor handle and mutation semantics without a second ABI.
 
-pub lerp_scalar_in_place(input: Tensor, end: Tensor, weight: Scalar): Unit.
+pub lerp_scalar_in_place(input: pytorch.Tensor, end: pytorch.Tensor, weight: pytorch.Scalar): Unit.
 
 /// Interpolates between tensors using an elementwise tensor weight.
 
-pub lerp_tensor(input: Tensor, end: Tensor, weight: Tensor): Tensor.
+pub lerp_tensor(input: pytorch.Tensor, end: pytorch.Tensor, weight: pytorch.Tensor): pytorch.Tensor.
 
 /// Interpolates retained tensor storage using elementwise tensor weights.
 
-pub lerp_tensor_in_place(input: Tensor, end: Tensor, weight: Tensor): Unit.
+pub lerp_tensor_in_place(input: pytorch.Tensor, end: pytorch.Tensor, weight: pytorch.Tensor): Unit.
 
 /// Writes tensor-weight interpolation into retained output storage.
 
-pub lerp_tensor_out(output: Tensor, input: Tensor, end: Tensor, weight: Tensor): Unit.
+pub lerp_tensor_out(output: pytorch.Tensor, input: pytorch.Tensor, end: pytorch.Tensor, weight: pytorch.Tensor): Unit.

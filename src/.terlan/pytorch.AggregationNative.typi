@@ -4,28 +4,28 @@ module pytorch.AggregationNative.
 
 /// Counts nonnegative integer values with optional weights and a minimum output length.
 
-pub bincount_configured(input: Tensor, weights: Tensor, has_weights: Bool, minlength: Int): Tensor.
+pub bincount_configured(input: pytorch.Tensor, weights: pytorch.Tensor, has_weights: Bool, minlength: Int): pytorch.Tensor.
 
 /// Writes weighted or unweighted counts into retained output storage.
 
-pub bincount_configured_out(output: Tensor, input: Tensor, weights: Tensor, has_weights: Bool, minlength: Int): Unit.
+pub bincount_configured_out(output: pytorch.Tensor, input: pytorch.Tensor, weights: pytorch.Tensor, has_weights: Bool, minlength: Int): Unit.
 
 /// Counts values into equal-width histogram bins using integer or floating scalar bounds.
 
-pub histc_configured(input: Tensor, bins: Int, bounds_are_int: Bool, minimum_int: Int, maximum_int: Int, minimum_float: Float, maximum_float: Float): Tensor.
+pub histc_configured(input: pytorch.Tensor, bins: Int, bounds_are_int: Bool, minimum_int: Int, maximum_int: Int, minimum_float: Float, maximum_float: Float): pytorch.Tensor.
 
 /// Writes equal-width histogram counts into retained output storage.
 
-pub histc_configured_out(output: Tensor, input: Tensor, bins: Int, bounds_are_int: Bool, minimum_int: Int, maximum_int: Int, minimum_float: Float, maximum_float: Float): Unit.
+pub histc_configured_out(output: pytorch.Tensor, input: pytorch.Tensor, bins: Int, bounds_are_int: Bool, minimum_int: Int, maximum_int: Int, minimum_float: Float, maximum_float: Float): Unit.
 
 /// Reduces source slices into indexed destinations with a typed reduction identifier.
 
-pub index_reduce_configured(input: Tensor, dimension: Int, index: Tensor, source: Tensor, reduction: Int, include_self: Bool): Tensor.
+pub index_reduce_configured(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, source: pytorch.Tensor, reduction: Int, include_self: Bool): pytorch.Tensor.
 
 /// Reduces source slices into indexed input storage in place.
 
-pub index_reduce_configured_in_place(input: Tensor, dimension: Int, index: Tensor, source: Tensor, reduction: Int, include_self: Bool): Unit.
+pub index_reduce_configured_in_place(input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, source: pytorch.Tensor, reduction: Int, include_self: Bool): Unit.
 
 /// Writes an indexed reduction into retained output storage.
 
-pub index_reduce_configured_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, source: Tensor, reduction: Int, include_self: Bool): Unit.
+pub index_reduce_configured_out(output: pytorch.Tensor, input: pytorch.Tensor, dimension: Int, index: pytorch.Tensor, source: pytorch.Tensor, reduction: Int, include_self: Bool): Unit.

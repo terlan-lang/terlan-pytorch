@@ -1,9 +1,9 @@
 module=pytorch.NllLossCompletion
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=10136890485095887255
-interface_hash=15412953072544814983
+interface_hash=2276442858997325784
 interface_doc_hash=10457773914824480660
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

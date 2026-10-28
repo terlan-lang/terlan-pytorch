@@ -4,8 +4,8 @@ module pytorch.SparseCompletion.
 
 /// Exact sparse reduction adapter for torch.sparse.sum.
 
-pub sparse_sum(input: Tensor, dimensions: List[Int], has_dimensions: Bool, dtype: Int, has_dtype: Bool): Tensor.
+pub sparse_sum(input: pytorch.Tensor, dimensions: List[Int], has_dimensions: Bool, dtype: Int, has_dtype: Bool): pytorch.Tensor.
 
 /// Converts a dense tensor to the default sparse COO layout.
 
-pub to_sparse_coo(input: Tensor): Tensor.
+pub to_sparse_coo(input: pytorch.Tensor): pytorch.Tensor.

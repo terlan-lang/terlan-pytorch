@@ -4,112 +4,112 @@ module pytorch.Loss.
 
 /// Computes cosine embedding loss with explicit margin and reduction.
 
-pub cosine_embedding_loss(input1: Tensor, input2: Tensor, target: Tensor, margin: Float = 0.0, reduction: Int = 1): Tensor.
+pub cosine_embedding_loss(input1: pytorch.Tensor, input2: pytorch.Tensor, target: pytorch.Tensor, margin: Float = 0.0, reduction: Int = 1): pytorch.Tensor.
 
 /// Computes hinge embedding loss with explicit margin and reduction.
 
-pub hinge_embedding_loss(input: Tensor, target: Tensor, margin: Float = 1.0, reduction: Int = 1): Tensor.
+pub hinge_embedding_loss(input: pytorch.Tensor, target: pytorch.Tensor, margin: Float = 1.0, reduction: Int = 1): pytorch.Tensor.
 
 /// Computes Huber loss with explicit reduction and transition delta.
 
-pub huber_loss(input: Tensor, target: Tensor, reduction: Int = 1, delta: Float = 1.0): Tensor.
+pub huber_loss(input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int = 1, delta: Float = 1.0): pytorch.Tensor.
 
 /// Computes the Huber loss input gradient with explicit reduction and transition delta.
 
-pub huber_loss_backward(gradient_output: Tensor, input: Tensor, target: Tensor, reduction: Int, delta: Float): Tensor.
+pub huber_loss_backward(gradient_output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int, delta: Float): pytorch.Tensor.
 
 /// Writes exact Huber input gradients into retained storage.
 
-pub huber_loss_backward_out(output: Tensor, gradient_output: Tensor, input: Tensor, target: Tensor, reduction: Int, delta: Float): Unit.
+pub huber_loss_backward_out(output: pytorch.Tensor, gradient_output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int, delta: Float): Unit.
 
 /// Writes exact Huber loss into retained output storage.
 
-pub huber_loss_out(output: Tensor, input: Tensor, target: Tensor, reduction: Int, delta: Float): Unit.
+pub huber_loss_out(output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int, delta: Float): Unit.
 
 /// Computes absolute-error loss with explicit reduction.
 
-pub l1_loss(input: Tensor, target: Tensor, reduction: Int = 1): Tensor.
+pub l1_loss(input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int = 1): pytorch.Tensor.
 
 /// Computes pairwise margin ranking loss with explicit reduction.
 
-pub margin_ranking_loss(input1: Tensor, input2: Tensor, target: Tensor, margin: Float = 0.0, reduction: Int = 1): Tensor.
+pub margin_ranking_loss(input1: pytorch.Tensor, input2: pytorch.Tensor, target: pytorch.Tensor, margin: Float = 0.0, reduction: Int = 1): pytorch.Tensor.
 
 /// Writes exact mean-squared-error input gradients into retained storage.
 
-pub mse_loss_backward_out(output: Tensor, gradient_output: Tensor, input: Tensor, target: Tensor, reduction: Int): Unit.
+pub mse_loss_backward_out(output: pytorch.Tensor, gradient_output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int): Unit.
 
 /// Writes exact mean-squared-error loss into retained storage.
 
-pub mse_loss_out(output: Tensor, input: Tensor, target: Tensor, reduction: Int): Unit.
+pub mse_loss_out(output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int): Unit.
 
 /// Exact generated CXX leaf for aten::nll_loss2d_backward.
 
-pub nll_loss2d_backward(grad_output: Tensor, input: Tensor, target: Tensor, has_weight: Bool, weight: Tensor, reduction: Int, ignore_index: Int, total_weight: Tensor): Tensor.
+pub nll_loss2d_backward(grad_output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, reduction: Int, ignore_index: Int, total_weight: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX retained-output leaf for aten::nll_loss2d_backward.grad_input.
 
-pub nll_loss2d_backward_out(grad_input: Tensor, grad_output: Tensor, input: Tensor, target: Tensor, has_weight: Bool, weight: Tensor, reduction: Int, ignore_index: Int, total_weight: Tensor): Unit.
+pub nll_loss2d_backward_out(grad_input: pytorch.Tensor, grad_output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, reduction: Int, ignore_index: Int, total_weight: pytorch.Tensor): Unit.
 
 /// Exact generated CXX tuple leaf for aten::nll_loss2d_forward.
 
-pub nll_loss2d_forward(input: Tensor, target: Tensor, has_weight: Bool, weight: Tensor, reduction: Int, ignore_index: Int): {Tensor, Tensor}.
+pub nll_loss2d_forward(input: pytorch.Tensor, target: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, reduction: Int, ignore_index: Int): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX retained-output leaf for aten::nll_loss2d_forward.output.
 
-pub nll_loss2d_forward_out(output: Tensor, total_weight: Tensor, input: Tensor, target: Tensor, has_weight: Bool, weight: Tensor, reduction: Int, ignore_index: Int): Unit.
+pub nll_loss2d_forward_out(output: pytorch.Tensor, total_weight: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, reduction: Int, ignore_index: Int): Unit.
 
 /// Exact generated CXX leaf for aten::nll_loss_backward.
 
-pub nll_loss_backward(grad_output: Tensor, input: Tensor, target: Tensor, has_weight: Bool, weight: Tensor, reduction: Int, ignore_index: Int, total_weight: Tensor): Tensor.
+pub nll_loss_backward(grad_output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, reduction: Int, ignore_index: Int, total_weight: pytorch.Tensor): pytorch.Tensor.
 
 /// Exact generated CXX retained-output leaf for aten::nll_loss_backward.grad_input.
 
-pub nll_loss_backward_out(grad_input: Tensor, grad_output: Tensor, input: Tensor, target: Tensor, has_weight: Bool, weight: Tensor, reduction: Int, ignore_index: Int, total_weight: Tensor): Unit.
+pub nll_loss_backward_out(grad_input: pytorch.Tensor, grad_output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, reduction: Int, ignore_index: Int, total_weight: pytorch.Tensor): Unit.
 
 /// Exact generated CXX tuple leaf for aten::nll_loss_forward.
 
-pub nll_loss_forward(input: Tensor, target: Tensor, has_weight: Bool, weight: Tensor, reduction: Int, ignore_index: Int): {Tensor, Tensor}.
+pub nll_loss_forward(input: pytorch.Tensor, target: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, reduction: Int, ignore_index: Int): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX retained-output leaf for aten::nll_loss_forward.output.
 
-pub nll_loss_forward_out(output: Tensor, total_weight: Tensor, input: Tensor, target: Tensor, has_weight: Bool, weight: Tensor, reduction: Int, ignore_index: Int): Unit.
+pub nll_loss_forward_out(output: pytorch.Tensor, total_weight: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, reduction: Int, ignore_index: Int): Unit.
 
 /// Exact generated CXX leaf for aten::nll_loss_nd.
 
-pub nll_loss_nd(input: Tensor, target: Tensor, has_weight: Bool, weight: Tensor, reduction: Int, ignore_index: Int): Tensor.
+pub nll_loss_nd(input: pytorch.Tensor, target: pytorch.Tensor, has_weight: Bool, weight: pytorch.Tensor, reduction: Int, ignore_index: Int): pytorch.Tensor.
 
 /// Computes Poisson negative log-likelihood with explicit input and Stirling policies.
 
-pub poisson_nll_loss(input: Tensor, target: Tensor, log_input: Bool, full: Bool, epsilon: Float, reduction: Int): Tensor.
+pub poisson_nll_loss(input: pytorch.Tensor, target: pytorch.Tensor, log_input: Bool, full: Bool, epsilon: Float, reduction: Int): pytorch.Tensor.
 
 /// Computes smooth absolute-error loss with explicit reduction and transition beta.
 
-pub smooth_l1_loss(input: Tensor, target: Tensor, reduction: Int = 1, beta: Float = 1.0): Tensor.
+pub smooth_l1_loss(input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int = 1, beta: Float = 1.0): pytorch.Tensor.
 
 /// Computes the smooth-L1 input gradient with explicit reduction and transition beta.
 
-pub smooth_l1_loss_backward(gradient_output: Tensor, input: Tensor, target: Tensor, reduction: Int, beta: Float): Tensor.
+pub smooth_l1_loss_backward(gradient_output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int, beta: Float): pytorch.Tensor.
 
 /// Writes exact smooth-L1 input gradients into retained storage.
 
-pub smooth_l1_loss_backward_out(output: Tensor, gradient_output: Tensor, input: Tensor, target: Tensor, reduction: Int, beta: Float): Unit.
+pub smooth_l1_loss_backward_out(output: pytorch.Tensor, gradient_output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int, beta: Float): Unit.
 
 /// Writes exact smooth-L1 loss into retained output storage.
 
-pub smooth_l1_loss_out(output: Tensor, input: Tensor, target: Tensor, reduction: Int, beta: Float): Unit.
+pub smooth_l1_loss_out(output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int, beta: Float): Unit.
 
 /// Computes logistic soft-margin loss with explicit reduction.
 
-pub soft_margin_loss(input: Tensor, target: Tensor, reduction: Int = 1): Tensor.
+pub soft_margin_loss(input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int = 1): pytorch.Tensor.
 
 /// Writes exact soft-margin input gradients into retained storage.
 
-pub soft_margin_loss_backward_out(output: Tensor, gradient_output: Tensor, input: Tensor, target: Tensor, reduction: Int): Unit.
+pub soft_margin_loss_backward_out(output: pytorch.Tensor, gradient_output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int): Unit.
 
 /// Writes exact soft-margin loss into retained output storage.
 
-pub soft_margin_loss_out(output: Tensor, input: Tensor, target: Tensor, reduction: Int): Unit.
+pub soft_margin_loss_out(output: pytorch.Tensor, input: pytorch.Tensor, target: pytorch.Tensor, reduction: Int): Unit.
 
 /// Computes triplet margin loss with explicit norm, swap, epsilon, and reduction policy.
 
-pub triplet_margin_loss(anchor: Tensor, positive: Tensor, negative: Tensor, margin: Float = 1.0, order: Float = 2.0, epsilon: Float = 0.000001, swap: Bool = false, reduction: Int = 1): Tensor.
+pub triplet_margin_loss(anchor: pytorch.Tensor, positive: pytorch.Tensor, negative: pytorch.Tensor, margin: Float = 1.0, order: Float = 2.0, epsilon: Float = 0.000001, swap: Bool = false, reduction: Int = 1): pytorch.Tensor.

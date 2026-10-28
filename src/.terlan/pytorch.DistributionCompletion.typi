@@ -2,128 +2,128 @@
 
 module pytorch.DistributionCompletion.
 
-pub bernoulli(input: Tensor): Tensor.
+pub bernoulli(input: pytorch.Tensor): pytorch.Tensor.
 
-pub bernoulli_inplace(input: Tensor, probability: Float = 0.5): Unit.
+pub bernoulli_inplace(input: pytorch.Tensor, probability: Float = 0.5): Unit.
 
-pub bernoulli_out(output: Tensor, input: Tensor): Unit.
+pub bernoulli_out(output: pytorch.Tensor, input: pytorch.Tensor): Unit.
 
-pub bernoulli_probability(input: Tensor, probability: Float): Tensor.
+pub bernoulli_probability(input: pytorch.Tensor, probability: Float): pytorch.Tensor.
 
-pub bernoulli_probability_out(output: Tensor, input: Tensor, probability: Float = 0.5): Unit.
+pub bernoulli_probability_out(output: pytorch.Tensor, input: pytorch.Tensor, probability: Float = 0.5): Unit.
 
-pub bernoulli_tensor(input: Tensor, probability: Tensor): Tensor.
+pub bernoulli_tensor(input: pytorch.Tensor, probability: pytorch.Tensor): pytorch.Tensor.
 
-pub bernoulli_tensor_inplace(input: Tensor, probability: Tensor): Unit.
+pub bernoulli_tensor_inplace(input: pytorch.Tensor, probability: pytorch.Tensor): Unit.
 
-pub bernoulli_tensor_out(output: Tensor, input: Tensor, probability: Tensor): Unit.
+pub bernoulli_tensor_out(output: pytorch.Tensor, input: pytorch.Tensor, probability: pytorch.Tensor): Unit.
 
 /// Samples a binomial distribution from count and probability tensors.
 
-pub binomial(count: Tensor, probability: Tensor): Tensor.
+pub binomial(count: pytorch.Tensor, probability: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes binomial samples into retained output storage.
 
-pub binomial_out(output: Tensor, count: Tensor, probability: Tensor): Unit.
+pub binomial_out(output: pytorch.Tensor, count: pytorch.Tensor, probability: pytorch.Tensor): Unit.
 
 /// Samples a Cauchy distribution into a tensor-shaped result.
 
-pub cauchy(input: Tensor, median: Float = 0.0, sigma: Float = 1.0): Tensor.
+pub cauchy(input: pytorch.Tensor, median: Float = 0.0, sigma: Float = 1.0): pytorch.Tensor.
 
-pub cauchy_inplace(input: Tensor, median: Float = 0.0, sigma: Float = 1.0): Unit.
+pub cauchy_inplace(input: pytorch.Tensor, median: Float = 0.0, sigma: Float = 1.0): Unit.
 
 /// Writes Cauchy samples into retained output storage.
 
-pub cauchy_out(output: Tensor, input: Tensor, median: Float = 0.0, sigma: Float = 1.0): Unit.
+pub cauchy_out(output: pytorch.Tensor, input: pytorch.Tensor, median: Float = 0.0, sigma: Float = 1.0): Unit.
 
 /// Samples an exponential distribution into a tensor-shaped result.
 
-pub exponential(input: Tensor, lambd: Float = 1.0): Tensor.
+pub exponential(input: pytorch.Tensor, lambd: Float = 1.0): pytorch.Tensor.
 
-pub exponential_inplace(input: Tensor, lambd: Float = 1.0): Unit.
+pub exponential_inplace(input: pytorch.Tensor, lambd: Float = 1.0): Unit.
 
 /// Writes exponential samples into retained output storage.
 
-pub exponential_out(output: Tensor, input: Tensor, lambd: Float = 1.0): Unit.
+pub exponential_out(output: pytorch.Tensor, input: pytorch.Tensor, lambd: Float = 1.0): Unit.
 
 /// Samples a geometric distribution into a tensor-shaped result.
 
-pub geometric(input: Tensor, probability: Float): Tensor.
+pub geometric(input: pytorch.Tensor, probability: Float): pytorch.Tensor.
 
-pub geometric_inplace(input: Tensor, probability: Float): Unit.
+pub geometric_inplace(input: pytorch.Tensor, probability: Float): Unit.
 
 /// Writes geometric samples into retained output storage.
 
-pub geometric_out(output: Tensor, input: Tensor, probability: Float): Unit.
+pub geometric_out(output: pytorch.Tensor, input: pytorch.Tensor, probability: Float): Unit.
 
 /// Samples a log-normal distribution into a tensor-shaped result.
 
-pub log_normal(input: Tensor, mean: Float = 1.0, standard_deviation: Float = 2.0): Tensor.
+pub log_normal(input: pytorch.Tensor, mean: Float = 1.0, standard_deviation: Float = 2.0): pytorch.Tensor.
 
-pub log_normal_inplace(input: Tensor, mean: Float = 1.0, standard_deviation: Float = 2.0): Unit.
+pub log_normal_inplace(input: pytorch.Tensor, mean: Float = 1.0, standard_deviation: Float = 2.0): Unit.
 
 /// Writes log-normal samples into retained output storage.
 
-pub log_normal_out(output: Tensor, input: Tensor, mean: Float = 1.0, standard_deviation: Float = 2.0): Unit.
+pub log_normal_out(output: pytorch.Tensor, input: pytorch.Tensor, mean: Float = 1.0, standard_deviation: Float = 2.0): Unit.
 
-pub multinomial(input: Tensor, samples: Int, replacement: Bool = false): Tensor.
+pub multinomial(input: pytorch.Tensor, samples: Int, replacement: Bool = false): pytorch.Tensor.
 
-pub multinomial_out(output: Tensor, input: Tensor, samples: Int, replacement: Bool = false): Unit.
+pub multinomial_out(output: pytorch.Tensor, input: pytorch.Tensor, samples: Int, replacement: Bool = false): Unit.
 
 /// Samples a normal distribution with scalar parameters and explicit size.
 
-pub normal_float_float(mean: Float, standard_deviation: Float, size: List[Int]): Tensor.
+pub normal_float_float(mean: Float, standard_deviation: Float, size: List[Int]): pytorch.Tensor.
 
 /// Writes scalar-parameter normal samples into retained output storage.
 
-pub normal_float_float_out(output: Tensor, mean: Float, standard_deviation: Float, size: List[Int]): Unit.
+pub normal_float_float_out(output: pytorch.Tensor, mean: Float, standard_deviation: Float, size: List[Int]): Unit.
 
 /// Samples a normal distribution from scalar mean and tensor standard deviation.
 
-pub normal_float_tensor(mean: Float, standard_deviation: Tensor): Tensor.
+pub normal_float_tensor(mean: Float, standard_deviation: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes scalar/tensor normal samples into retained output storage.
 
-pub normal_float_tensor_out(output: Tensor, mean: Float, standard_deviation: Tensor): Unit.
+pub normal_float_tensor_out(output: pytorch.Tensor, mean: Float, standard_deviation: pytorch.Tensor): Unit.
 
-pub normal_functional(input: Tensor, mean: Float = 0.0, standard_deviation: Float = 1.0): Tensor.
+pub normal_functional(input: pytorch.Tensor, mean: Float = 0.0, standard_deviation: Float = 1.0): pytorch.Tensor.
 
-pub normal_inplace(input: Tensor, mean: Float = 0.0, standard_deviation: Float = 1.0): Unit.
+pub normal_inplace(input: pytorch.Tensor, mean: Float = 0.0, standard_deviation: Float = 1.0): Unit.
 
-pub normal_out(output: Tensor, input: Tensor, mean: Float = 0.0, standard_deviation: Float = 1.0): Unit.
+pub normal_out(output: pytorch.Tensor, input: pytorch.Tensor, mean: Float = 0.0, standard_deviation: Float = 1.0): Unit.
 
 /// Samples a normal distribution from tensor mean and scalar standard deviation.
 
-pub normal_tensor_float(mean: Tensor, standard_deviation: Float = 1.0): Tensor.
+pub normal_tensor_float(mean: pytorch.Tensor, standard_deviation: Float = 1.0): pytorch.Tensor.
 
 /// Writes tensor/scalar normal samples into retained output storage.
 
-pub normal_tensor_float_out(output: Tensor, mean: Tensor, standard_deviation: Float = 1.0): Unit.
+pub normal_tensor_float_out(output: pytorch.Tensor, mean: pytorch.Tensor, standard_deviation: Float = 1.0): Unit.
 
 /// Samples a normal distribution from tensor mean and standard deviation.
 
-pub normal_tensor_tensor(mean: Tensor, standard_deviation: Tensor): Tensor.
+pub normal_tensor_tensor(mean: pytorch.Tensor, standard_deviation: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes tensor/tensor normal samples into retained output storage.
 
-pub normal_tensor_tensor_out(output: Tensor, mean: Tensor, standard_deviation: Tensor): Unit.
+pub normal_tensor_tensor_out(output: pytorch.Tensor, mean: pytorch.Tensor, standard_deviation: pytorch.Tensor): Unit.
 
 /// Samples a Poisson distribution with rates supplied by the input tensor.
 
-pub poisson(input: Tensor): Tensor.
+pub poisson(input: pytorch.Tensor): pytorch.Tensor.
 
 /// Writes Poisson samples into retained output storage.
 
-pub poisson_out(output: Tensor, input: Tensor): Unit.
+pub poisson_out(output: pytorch.Tensor, input: pytorch.Tensor): Unit.
 
 /// Samples a uniform distribution into a tensor-shaped result.
 
-pub uniform(input: Tensor, minimum: Float = 0.0, maximum: Float = 1.0): Tensor.
+pub uniform(input: pytorch.Tensor, minimum: Float = 0.0, maximum: Float = 1.0): pytorch.Tensor.
 
 /// Fills a tensor in place with uniform samples.
 
-pub uniform_inplace(input: Tensor, minimum: Float = 0.0, maximum: Float = 1.0): Unit.
+pub uniform_inplace(input: pytorch.Tensor, minimum: Float = 0.0, maximum: Float = 1.0): Unit.
 
 /// Writes uniform samples into retained output storage.
 
-pub uniform_out(output: Tensor, input: Tensor, minimum: Float = 0.0, maximum: Float = 1.0): Unit.
+pub uniform_out(output: pytorch.Tensor, input: pytorch.Tensor, minimum: Float = 0.0, maximum: Float = 1.0): Unit.

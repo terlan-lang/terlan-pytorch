@@ -4,40 +4,40 @@ module pytorch.Where.
 
 /// Selects between two floating-point scalar values.
 
-pub where_float_float(condition: Tensor, when_true: Float, when_false: Float): Tensor.
+pub where_float_float(condition: pytorch.Tensor, when_true: Float, when_false: Float): pytorch.Tensor.
 
 /// Selects between a floating-point true value and an integer false value.
 
-pub where_float_int(condition: Tensor, when_true: Float, when_false: Int): Tensor.
+pub where_float_int(condition: pytorch.Tensor, when_true: Float, when_false: Int): pytorch.Tensor.
 
 /// Selects between a floating-point true value and a tensor.
 
-pub where_float_tensor(condition: Tensor, when_true: Float, when_false: Tensor): Tensor.
+pub where_float_tensor(condition: pytorch.Tensor, when_true: Float, when_false: pytorch.Tensor): pytorch.Tensor.
 
 /// Returns one owned index tensor for each condition dimension.
 
-pub where_indices(condition: Tensor): List[Tensor].
+pub where_indices(condition: pytorch.Tensor): List[pytorch.Tensor].
 
 /// Selects between an integer true value and a floating-point false value.
 
-pub where_int_float(condition: Tensor, when_true: Int, when_false: Float): Tensor.
+pub where_int_float(condition: pytorch.Tensor, when_true: Int, when_false: Float): pytorch.Tensor.
 
 /// Selects between two integer scalar values.
 
-pub where_int_int(condition: Tensor, when_true: Int, when_false: Int): Tensor.
+pub where_int_int(condition: pytorch.Tensor, when_true: Int, when_false: Int): pytorch.Tensor.
 
 /// Selects between an integer true value and a tensor.
 
-pub where_int_tensor(condition: Tensor, when_true: Int, when_false: Tensor): Tensor.
+pub where_int_tensor(condition: pytorch.Tensor, when_true: Int, when_false: pytorch.Tensor): pytorch.Tensor.
 
 /// Selects between a tensor and a floating-point false value.
 
-pub where_tensor_float(condition: Tensor, when_true: Tensor, when_false: Float): Tensor.
+pub where_tensor_float(condition: pytorch.Tensor, when_true: pytorch.Tensor, when_false: Float): pytorch.Tensor.
 
 /// Selects between a tensor and an integer false value.
 
-pub where_tensor_int(condition: Tensor, when_true: Tensor, when_false: Int): Tensor.
+pub where_tensor_int(condition: pytorch.Tensor, when_true: pytorch.Tensor, when_false: Int): pytorch.Tensor.
 
 /// Writes tensor selection into retained output storage.
 
-pub where_tensor_out(output: Tensor, condition: Tensor, when_true: Tensor, when_false: Tensor): Unit.
+pub where_tensor_out(output: pytorch.Tensor, condition: pytorch.Tensor, when_true: pytorch.Tensor, when_false: pytorch.Tensor): Unit.

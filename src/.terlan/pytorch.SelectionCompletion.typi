@@ -2,14 +2,14 @@
 
 module pytorch.SelectionCompletion.
 
-pub sort_stable(input: Tensor, stable: Bool, dimension: Int = - 1, descending: Bool = false): {Tensor, Tensor}.
+pub sort_stable(input: pytorch.Tensor, stable: Bool, dimension: Int = - 1, descending: Bool = false): {pytorch.Tensor, pytorch.Tensor}.
 
-pub sort_values_stable(values: Tensor, indices: Tensor, input: Tensor, stable: Bool, dimension: Int = - 1, descending: Bool = false): Unit.
+pub sort_values_stable(values: pytorch.Tensor, indices: pytorch.Tensor, input: pytorch.Tensor, stable: Bool, dimension: Int = - 1, descending: Bool = false): Unit.
 
 /// Implements take-along-dimension through the equivalent dense gather leaf.
 
-pub take_along_dim(input: Tensor, indices: Tensor, dimension: Int): Tensor.
+pub take_along_dim(input: pytorch.Tensor, indices: pytorch.Tensor, dimension: Int): pytorch.Tensor.
 
 /// Writes take-along-dimension results into retained output storage.
 
-pub take_along_dim_out(output: Tensor, input: Tensor, indices: Tensor, dimension: Int): Unit.
+pub take_along_dim_out(output: pytorch.Tensor, input: pytorch.Tensor, indices: pytorch.Tensor, dimension: Int): Unit.

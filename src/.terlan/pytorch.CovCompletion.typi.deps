@@ -1,9 +1,9 @@
 module=pytorch.CovCompletion
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=5274443730826256451
-interface_hash=15898392819134255625
+interface_hash=8593721623765631457
 interface_doc_hash=17342704845316087025
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

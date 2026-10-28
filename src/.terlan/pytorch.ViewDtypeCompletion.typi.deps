@@ -1,9 +1,9 @@
 module=pytorch.ViewDtypeCompletion
 syntax_contract_schema=terlan-syntax-contract-v1
 syntax_contract_fingerprint_algorithm=fnv1a64
-syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+syntax_contract_fingerprint=fnv1a64:b9e183c0575aeaba
 source_hash=5932926047560357813
-interface_hash=383747452403861473
+interface_hash=10175737773516467976
 interface_doc_hash=3339111249379392646
 deps=1
-pytorch.Tensor=13489932768568026575
+pytorch.Tensor=1089416781329568890

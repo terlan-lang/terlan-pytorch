@@ -4,16 +4,16 @@ module pytorch.RecurrentData.
 
 /// Exact generated CXX packed gated RNN sequence leaf.
 
-pub gru_data(data: Tensor, batch_sizes: Tensor, hx: Tensor, params: List[Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool): {Tensor, Tensor}.
+pub gru_data(data: pytorch.Tensor, batch_sizes: pytorch.Tensor, hx: pytorch.Tensor, params: List[pytorch.Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX packed LSTM sequence leaf.
 
-pub lstm_data(data: Tensor, batch_sizes: Tensor, hx: List[Tensor], params: List[Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool): {Tensor, Tensor, Tensor}.
+pub lstm_data(data: pytorch.Tensor, batch_sizes: pytorch.Tensor, hx: List[pytorch.Tensor], params: List[pytorch.Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool): {pytorch.Tensor, pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX packed ReLU RNN sequence leaf.
 
-pub rnn_relu_data(data: Tensor, batch_sizes: Tensor, hx: Tensor, params: List[Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool): {Tensor, Tensor}.
+pub rnn_relu_data(data: pytorch.Tensor, batch_sizes: pytorch.Tensor, hx: pytorch.Tensor, params: List[pytorch.Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool): {pytorch.Tensor, pytorch.Tensor}.
 
 /// Exact generated CXX packed tanh RNN sequence leaf.
 
-pub rnn_tanh_data(data: Tensor, batch_sizes: Tensor, hx: Tensor, params: List[Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool): {Tensor, Tensor}.
+pub rnn_tanh_data(data: pytorch.Tensor, batch_sizes: pytorch.Tensor, hx: pytorch.Tensor, params: List[pytorch.Tensor], has_biases: Bool, num_layers: Int, dropout: Float, train: Bool, bidirectional: Bool): {pytorch.Tensor, pytorch.Tensor}.
