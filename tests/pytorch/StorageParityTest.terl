@@ -1,0 +1,72 @@
+module pytorch.StorageParityTest.
+
+import pytorch.StorageCompletion.share_memory.
+import pytorch.StorageNative.{storage_dispose, storage_from_tensor, storage_is_shared, storage_set, storage_set_in_place, storage_set_in_place_offset, storage_set_offset, storage_set_offset_out}.
+import pytorch.Tensor.{clone, dispose, from_floats, item_float, shape}.
+
+import type pytorch.StorageNative.StorageHandle.
+import type pytorch.Tensor.
+
+finish(target: Tensor, result: Tensor, source: Tensor, handle: StorageHandle, valid: Bool): Bool ->
+    storage_dispose(handle);
+    dispose(result);
+    dispose(target);
+    dispose(source);
+    valid.
+
+/**
+ * Proves that the CXX-owned StorageHandle adapters preserve tensor storage
+ * metadata for functional and in-place set forms.
+ */
+@test
+pub storage_handle_set_forms_execute(): Bool ->
+    let source = from_floats([1.0, 2.0], [2]);
+    let handle = storage_from_tensor(source);
+    let target = clone(source);
+    let result = storage_set(target, handle);
+    let before = shape(result) == [2];
+    storage_set_in_place(target, handle);
+    finish(target, result, source, handle, before and shape(target) == [2]).
+
+/**
+ * Proves that offset and stride metadata is preserved for functional, output,
+ * and in-place storage updates.
+ */
+@test
+pub storage_handle_offset_forms_execute(): Bool ->
+    let source = from_floats([10.0, 20.0], [2]);
+    let handle = storage_from_tensor(source);
+    let target = clone(source);
+    let result = storage_set_offset(target, handle, 1, [1], [1]);
+    let output = clone(source);
+    storage_set_offset_out(output, source, handle, 1, [1], [1]);
+    let mutation = clone(source);
+    (storage_set_in_place_offset(mutation, handle, 1, [1], [1]); let valid =
+    shape(result) == [1]
+        and shape(output) == [1]
+        and shape(mutation) == [1]
+        and item_float(result) == 20.0
+        and item_float(output) == 20.0
+        and item_float(mutation) == 20.0;
+(dispose(mutation); dispose(output); dispose(result); dispose(target); storage_dispose(handle); dispose(source); valid)).
+
+/**
+ * Proves the fixed Tensor.is_shared metadata query on ordinary CPU storage.
+ */
+@test
+pub tensor_is_shared_matches_libtorch(): Bool ->
+    let tensor = from_floats([1.0, 2.0], [2]);
+    let shared = storage_is_shared(tensor);
+    dispose(tensor);
+    not shared.
+
+/**
+ * Proves the fixed Tensor.share_memory_ mutation and return-self contract.
+ */
+@test
+pub tensor_share_memory_matches_libtorch(): Bool ->
+    let tensor = from_floats([1.0, 2.0], [2]);
+    let shared = share_memory(tensor);
+    let result = storage_is_shared(shared);
+    dispose(shared);
+    result.

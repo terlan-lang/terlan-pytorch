@@ -1,0 +1,11 @@
+module=pytorch.CreationCompletionNative
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=7411636118987233771
+interface_hash=16772366650289153205
+interface_doc_hash=3848323383246294668
+deps=3
+pytorch.Tensor=13489932768568026575
+std.core.Int=6981787512204747997
+std.vm.Process=4559445320576606900

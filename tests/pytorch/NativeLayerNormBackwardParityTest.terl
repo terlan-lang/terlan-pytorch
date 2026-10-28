@@ -1,0 +1,81 @@
+/**
+ * CPU runtime evidence for native_layer_norm_backward and its out form.
+ */
+module pytorch.NativeLayerNormBackwardParityTest.
+
+import pytorch.Regularization.{native_layer_norm, native_layer_norm_backward, native_layer_norm_backward_out}.
+import pytorch.Tensor.{backward, clone, dispose, from_floats, full_float, gradient, item_float, layer_norm, mse_loss, require_grad, shape, sum, to_dtype}.
+
+import type pytorch.Tensor.
+
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let error = mse_loss(actual, expected, 1);
+    let distance = item_float(error);
+    dispose(error);
+    distance == 0.0.
+
+@test
+pub native_layer_norm_backward_forms_match_autograd(): Bool ->
+    let source = from_floats([1.0, 3.0, 2.0, 4.0], [2, 2]);
+    let input = require_grad(source);
+    let weight_base = full_float([2], 1.0);
+    let bias_base = full_float([2], 0.0);
+    let weight = require_grad(to_dtype(weight_base, 7));
+    let bias = require_grad(to_dtype(bias_base, 7));
+    let expected_output = layer_norm(input, [2], weight, bias, 0.0, false);
+    let loss = sum(expected_output);
+    backward(loss);
+    let expected_input = gradient(input);
+    let expected_weight = gradient(weight);
+    let expected_bias = gradient(bias);
+    let {ignored_output, mean, rstd} = native_layer_norm(input, [2], true, weight, true, bias, 0.0);
+    let grad_base = full_float([2, 2], 1.0);
+    let grad_out = to_dtype(grad_base, 7);
+    let {grad_input, grad_weight, grad_bias} =
+        native_layer_norm_backward(
+            grad_out,
+            input,
+            [2],
+            mean,
+            rstd,
+            true,
+            weight,
+            true,
+            bias,
+            true,
+            true,
+            true,
+        );
+    let out_input = clone(grad_out);
+    let out_weight = clone(grad_out);
+    let out_bias = clone(grad_out);
+    (native_layer_norm_backward_out(
+    out_input,
+    out_weight,
+    out_bias,
+    grad_out,
+    input,
+    [2],
+    mean,
+    rstd,
+    true,
+    weight,
+    true,
+    bias,
+    true,
+    true,
+    true,
+); let valid =
+    shape(grad_input) == [2, 2]
+        and shape(grad_weight) == [2]
+        and shape(grad_bias) == [2]
+        and shape(out_input) == [2, 2]
+        and shape(out_weight) == [2]
+        and shape(out_bias) == [2]
+        and matches(grad_input, expected_input)
+        and matches(grad_weight, expected_weight)
+        and matches(grad_bias, expected_bias)
+        and matches(out_input, expected_input)
+        and matches(out_weight, expected_weight)
+        and matches(out_bias, expected_bias);
+(dispose(out_bias); dispose(out_weight); dispose(out_input); dispose(grad_bias); dispose(grad_weight); dispose(grad_input); dispose(grad_out); dispose(grad_base); dispose(rstd); dispose(mean); dispose(ignored_output); dispose(expected_bias); dispose(expected_weight); dispose(expected_input); dispose(loss); dispose(expected_output); dispose(bias); dispose(weight); dispose(bias_base); dispose(weight_base); dispose(input); dispose(source); valid)).

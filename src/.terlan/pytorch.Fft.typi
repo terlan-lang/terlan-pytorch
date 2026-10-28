@@ -1,0 +1,179 @@
+//! Generated direct-CXX implementation of discrete, Hermitian, and real Fourier transforms, frequency grids, and frequency-domain shifts.
+
+module pytorch.Fft.
+
+/// Executes exact LibTorch fft through compiler-generated CXX adaptation.
+
+pub fft(tensor: Tensor, dimension: Int = - 1, normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch fft2 through compiler-generated CXX adaptation.
+
+pub fft2(tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch fft2_out through compiler-generated CXX adaptation.
+
+pub fft2_out(output: Tensor, tensor: Tensor, dimensions: List[Int] = [- 2, - 1], normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch fft_out through compiler-generated CXX adaptation.
+
+pub fft_out(output: Tensor, tensor: Tensor, dimension: Int = - 1, normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch fftfreq through compiler-generated CXX adaptation.
+
+pub fftfreq(size: Int, spacing: Float = 1.0): Tensor.
+
+/// Executes exact LibTorch fftfreq_out through compiler-generated CXX adaptation.
+
+pub fftfreq_out(output: Tensor, size: Int, spacing: Float = 1.0): Unit.
+
+/// Executes exact LibTorch fftn through compiler-generated CXX adaptation.
+
+pub fftn(tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch fftn_out through compiler-generated CXX adaptation.
+
+pub fftn_out(output: Tensor, tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch fftshift through compiler-generated CXX adaptation.
+
+pub fftshift(tensor: Tensor, dimensions: List[Int]): Tensor.
+
+/// Executes exact LibTorch fftshift_all through compiler-generated CXX adaptation.
+
+pub fftshift_all(tensor: Tensor): Tensor.
+
+/// Executes exact LibTorch hfft through compiler-generated CXX adaptation.
+
+pub hfft(tensor: Tensor, dimension: Int = - 1, normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch hfft2 through compiler-generated CXX adaptation.
+
+pub hfft2(tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch hfft2_out through compiler-generated CXX adaptation.
+
+pub hfft2_out(output: Tensor, tensor: Tensor, dimensions: List[Int] = [- 2, - 1], normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch hfft_out through compiler-generated CXX adaptation.
+
+pub hfft_out(output: Tensor, tensor: Tensor, dimension: Int = - 1, normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch hfftn through compiler-generated CXX adaptation.
+
+pub hfftn(tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch hfftn_out through compiler-generated CXX adaptation.
+
+pub hfftn_out(output: Tensor, tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch ifft through compiler-generated CXX adaptation.
+
+pub ifft(tensor: Tensor, dimension: Int = - 1, normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch ifft2 through compiler-generated CXX adaptation.
+
+pub ifft2(tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch ifft2_out through compiler-generated CXX adaptation.
+
+pub ifft2_out(output: Tensor, tensor: Tensor, dimensions: List[Int] = [- 2, - 1], normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch ifft_out through compiler-generated CXX adaptation.
+
+pub ifft_out(output: Tensor, tensor: Tensor, dimension: Int = - 1, normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch ifftn through compiler-generated CXX adaptation.
+
+pub ifftn(tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch ifftn_out through compiler-generated CXX adaptation.
+
+pub ifftn_out(output: Tensor, tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch ifftshift through compiler-generated CXX adaptation.
+
+pub ifftshift(tensor: Tensor, dimensions: List[Int]): Tensor.
+
+/// Executes exact LibTorch ifftshift_all through compiler-generated CXX adaptation.
+
+pub ifftshift_all(tensor: Tensor): Tensor.
+
+/// Executes exact LibTorch ihfft through compiler-generated CXX adaptation.
+
+pub ihfft(tensor: Tensor, dimension: Int = - 1, normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch ihfft2 through compiler-generated CXX adaptation.
+
+pub ihfft2(tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch ihfft2_out through compiler-generated CXX adaptation.
+
+pub ihfft2_out(output: Tensor, tensor: Tensor, dimensions: List[Int] = [- 2, - 1], normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch ihfft_out through compiler-generated CXX adaptation.
+
+pub ihfft_out(output: Tensor, tensor: Tensor, dimension: Int = - 1, normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch ihfftn through compiler-generated CXX adaptation.
+
+pub ihfftn(tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch ihfftn_out through compiler-generated CXX adaptation.
+
+pub ihfftn_out(output: Tensor, tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch irfft through compiler-generated CXX adaptation.
+
+pub irfft(tensor: Tensor, dimension: Int = - 1, normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch irfft2 through compiler-generated CXX adaptation.
+
+pub irfft2(tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch irfft2_out through compiler-generated CXX adaptation.
+
+pub irfft2_out(output: Tensor, tensor: Tensor, dimensions: List[Int] = [- 2, - 1], normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch irfft_out through compiler-generated CXX adaptation.
+
+pub irfft_out(output: Tensor, tensor: Tensor, dimension: Int = - 1, normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch irfftn through compiler-generated CXX adaptation.
+
+pub irfftn(tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch irfftn_out through compiler-generated CXX adaptation.
+
+pub irfftn_out(output: Tensor, tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch rfft through compiler-generated CXX adaptation.
+
+pub rfft(tensor: Tensor, dimension: Int = - 1, normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch rfft2 through compiler-generated CXX adaptation.
+
+pub rfft2(tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch rfft2_out through compiler-generated CXX adaptation.
+
+pub rfft2_out(output: Tensor, tensor: Tensor, dimensions: List[Int] = [- 2, - 1], normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch rfft_out through compiler-generated CXX adaptation.
+
+pub rfft_out(output: Tensor, tensor: Tensor, dimension: Int = - 1, normalization: String = "backward"): Unit.
+
+/// Executes exact LibTorch rfftfreq through compiler-generated CXX adaptation.
+
+pub rfftfreq(size: Int, spacing: Float = 1.0): Tensor.
+
+/// Executes exact LibTorch rfftfreq_out through compiler-generated CXX adaptation.
+
+pub rfftfreq_out(output: Tensor, size: Int, spacing: Float = 1.0): Unit.
+
+/// Executes exact LibTorch rfftn through compiler-generated CXX adaptation.
+
+pub rfftn(tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Tensor.
+
+/// Executes exact LibTorch rfftn_out through compiler-generated CXX adaptation.
+
+pub rfftn_out(output: Tensor, tensor: Tensor, dimensions: List[Int], normalization: String = "backward"): Unit.

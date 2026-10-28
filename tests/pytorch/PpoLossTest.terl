@@ -1,0 +1,65 @@
+module pytorch.PpoLossTest.
+
+import pytorch.Ppo.{categorical_entropy, clipped_policy_loss, combined_loss, normalize_advantages, value_loss}.
+import pytorch.Tensor.{backward, dispose, from_float, from_floats, gradient, item_float, mean, multiply, require_grad, sum}.
+
+@test
+pub clipped_policy_loss_bounds_ratios_and_propagates_gradients(): Bool ->
+    let initial_new = from_floats([0.6931471805599453, -0.6931471805599453], [2]);
+    let new_log_probabilities = require_grad(initial_new);
+    let old_log_probabilities = from_floats([0.0, 0.0], [2]);
+    let advantages = from_floats([1.0, 1.0], [2]);
+    let loss = clipped_policy_loss(new_log_probabilities, old_log_probabilities, advantages, 0.2);
+    backward(loss);
+    let accumulated = gradient(new_log_probabilities);
+    let gradient_total = sum(accumulated);
+    let observed_loss = item_float(loss);
+    let observed_gradient = item_float(gradient_total);
+    (dispose(gradient_total); dispose(accumulated); dispose(loss); dispose(advantages); dispose(old_log_probabilities); dispose(new_log_probabilities); dispose(initial_new); observed_loss > -0.851
+    and observed_loss < -0.849
+    and observed_gradient > -0.251
+    and observed_gradient < -0.249).
+
+@test
+pub value_entropy_and_combined_losses_preserve_component_semantics(): Bool ->
+    let predicted_values = from_floats([2.0, 0.0], [2]);
+    let returns = from_floats([1.0, 1.0], [2]);
+    let value = value_loss(predicted_values, returns);
+    let probabilities = from_floats([0.5, 0.5, 0.25, 0.75], [2, 2]);
+    let entropy = categorical_entropy(probabilities, 0.000001);
+    let policy = from_float(1.0);
+    let combined = combined_loss(policy, value, entropy, 0.5, 0.1);
+    let observed_value = item_float(value);
+    let observed_entropy = item_float(entropy);
+    let observed_combined = item_float(combined);
+    dispose(combined);
+    dispose(policy);
+    dispose(entropy);
+    dispose(probabilities);
+    dispose(value);
+    dispose(returns);
+    dispose(predicted_values);
+    observed_value == 1.0
+        and observed_entropy > 0.62
+        and observed_entropy < 0.64
+        and observed_combined > 1.43
+        and observed_combined < 1.44.
+
+@test
+pub advantage_normalization_produces_zero_mean_unit_variance(): Bool ->
+    let advantages = from_floats([1.0, 2.0, 3.0], [3]);
+    let normalized = normalize_advantages(advantages, 0.000001);
+    let average = mean(normalized);
+    let squared = multiply(normalized, normalized);
+    let variance = mean(squared);
+    let observed_average = item_float(average);
+    let observed_variance = item_float(variance);
+    dispose(variance);
+    dispose(squared);
+    dispose(average);
+    dispose(normalized);
+    dispose(advantages);
+    observed_average > -0.000001
+        and observed_average < 0.000001
+        and observed_variance > 0.999
+        and observed_variance < 1.001.

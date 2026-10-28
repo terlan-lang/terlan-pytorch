@@ -1,0 +1,15 @@
+//! Compatibility aliases for stable sort schemas.
+
+module pytorch.SelectionCompletion.
+
+pub sort_stable(input: Tensor, stable: Bool, dimension: Int = - 1, descending: Bool = false): {Tensor, Tensor}.
+
+pub sort_values_stable(values: Tensor, indices: Tensor, input: Tensor, stable: Bool, dimension: Int = - 1, descending: Bool = false): Unit.
+
+/// Implements take-along-dimension through the equivalent dense gather leaf.
+
+pub take_along_dim(input: Tensor, indices: Tensor, dimension: Int): Tensor.
+
+/// Writes take-along-dimension results into retained output storage.
+
+pub take_along_dim_out(output: Tensor, input: Tensor, indices: Tensor, dimension: Int): Unit.

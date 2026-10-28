@@ -1,0 +1,149 @@
+module pytorch.LinalgOutToleranceParityTest.
+
+import pytorch.Linalg.{linalg_cond_string_out, linalg_matrix_norm_string_out, linalg_matrix_norm_string_out_dtype, linalg_matrix_rank_out_absolute, linalg_matrix_rank_out_default, linalg_matrix_rank_out_relative, linalg_matrix_rank_out_tensor_absolute, linalg_matrix_rank_out_tensor_default, linalg_matrix_rank_out_tensor_relative, linalg_matrix_rank_out_tensor_tolerance, linalg_matrix_rank_out_tensor_tolerances, linalg_matrix_rank_out_tolerance, linalg_matrix_rank_out_tolerances, linalg_norm_string_out, linalg_norm_string_out_dimensions, linalg_pinv_out_absolute, linalg_pinv_out_default, linalg_pinv_out_rcond, linalg_pinv_out_relative, linalg_pinv_out_tensor_absolute, linalg_pinv_out_tensor_default, linalg_pinv_out_tensor_rcond, linalg_pinv_out_tensor_relative, linalg_pinv_out_tensor_tolerances, linalg_pinv_out_tolerances}.
+import pytorch.Tensor.{dispose, dtype, from_float, from_floats, item, item_float, shape, sum, zeros}.
+
+import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Reduces a floating-point tensor and releases its scalar result.
+ */
+float_sum(tensor: Tensor): Float ->
+    let total = sum(tensor);
+    let value = item_float(total);
+    dispose(total);
+    value.
+
+/**
+ * Proves every matrix-rank output tolerance form mutates retained Int64 storage.
+ */
+@test
+pub matrix_rank_out_tolerances_match_libtorch(): Bool ->
+    let matrix = from_floats([4.0, 0.0, 0.0, 0.25], [2, 2]);
+    let absolute = from_float(0.5);
+    let relative = from_float(0.01);
+    let output = zeros([0], DType.INT64);
+    linalg_matrix_rank_out_default(output, matrix);
+    let default_rank = item(output);
+    (linalg_matrix_rank_out_absolute(output, matrix, 0.5); let absolute_rank = item(output);
+(linalg_matrix_rank_out_relative(output, matrix, 0.01); let relative_rank = item(output);
+(linalg_matrix_rank_out_tolerances(output, matrix, 0.5, 0.01); let combined_rank = item(output);
+(linalg_matrix_rank_out_tensor_default(output, matrix); let tensor_default_rank = item(output);
+(linalg_matrix_rank_out_tensor_absolute(output, matrix, absolute); let tensor_absolute_rank = item(output);
+(linalg_matrix_rank_out_tensor_relative(output, matrix, relative); let tensor_relative_rank = item(output);
+(linalg_matrix_rank_out_tensor_tolerances(output, matrix, absolute, relative); let tensor_combined_rank = item(output);
+(linalg_matrix_rank_out_tolerance(output, matrix, 0.5); let tolerance_rank = item(output);
+(linalg_matrix_rank_out_tensor_tolerance(output, matrix, absolute); let tensor_tolerance_rank = item(output);
+let valid =
+    default_rank == 2
+        and absolute_rank == 1
+        and relative_rank == 2
+        and combined_rank == 1
+        and tensor_default_rank == 2
+        and tensor_absolute_rank == 1
+        and tensor_relative_rank == 2
+        and tensor_combined_rank == 1
+        and tolerance_rank == 1
+        and tensor_tolerance_rank == 1
+        and shape(output) == []
+        and shape(matrix) == [2, 2]
+        and shape(absolute) == []
+        and shape(relative) == [];
+(dispose(output); dispose(relative); dispose(absolute); dispose(matrix); valid)))))))))).
+
+/**
+ * Proves every pseudoinverse output tolerance form mutates retained storage.
+ */
+@test
+pub pseudoinverse_out_tolerances_match_libtorch(): Bool ->
+    let matrix = from_floats([4.0, 0.0, 0.0, 0.25], [2, 2]);
+    let absolute = from_float(0.5);
+    let relative = from_float(0.01);
+    let output = zeros([0], DType.FLOAT64);
+    linalg_pinv_out_default(output, matrix);
+    let default_total = float_sum(output);
+    (linalg_pinv_out_absolute(output, matrix, 0.5); let absolute_total = float_sum(output);
+(linalg_pinv_out_relative(output, matrix, 0.01); let relative_total = float_sum(output);
+(linalg_pinv_out_tolerances(output, matrix, 0.5, 0.01); let combined_total = float_sum(output);
+(linalg_pinv_out_tensor_default(output, matrix); let tensor_default_total = float_sum(output);
+(linalg_pinv_out_tensor_absolute(output, matrix, absolute); let tensor_absolute_total = float_sum(output);
+(linalg_pinv_out_tensor_relative(output, matrix, relative); let tensor_relative_total = float_sum(output);
+(linalg_pinv_out_tensor_tolerances(output, matrix, absolute, relative); let tensor_combined_total = float_sum(output);
+(linalg_pinv_out_rcond(output, matrix, 0.01); let rcond_total = float_sum(output);
+(linalg_pinv_out_tensor_rcond(output, matrix, relative); let tensor_rcond_total = float_sum(output);
+let valid =
+    default_total > 4.24
+        and default_total < 4.26
+        and absolute_total > 0.24
+        and absolute_total < 0.26
+        and relative_total > 4.24
+        and relative_total < 4.26
+        and combined_total > 0.24
+        and combined_total < 0.26
+        and tensor_default_total > 4.24
+        and tensor_default_total < 4.26
+        and tensor_absolute_total > 0.24
+        and tensor_absolute_total < 0.26
+        and tensor_relative_total > 4.24
+        and tensor_relative_total < 4.26
+        and tensor_combined_total > 0.24
+        and tensor_combined_total < 0.26
+        and rcond_total > 4.24
+        and rcond_total < 4.26
+        and tensor_rcond_total > 4.24
+        and tensor_rcond_total < 4.26
+        and shape(output) == [2, 2]
+        and shape(matrix) == [2, 2];
+(dispose(output); dispose(relative); dispose(absolute); dispose(matrix); valid)))))))))).
+
+/**
+ * Proves named condition and norm outputs support omitted and explicit options.
+ */
+@test
+pub named_linalg_out_options_match_libtorch(): Bool ->
+    let condition_matrix = from_floats([1.0, 0.0, 0.0, 2.0], [2, 2]);
+    let matrix = from_floats([3.0, 4.0, 0.0, 0.0], [2, 2]);
+    let condition = from_float(0.0);
+    let matrix_default_output = zeros([0], DType.FLOAT64);
+    let matrix_configured_output = zeros([0], DType.FLOAT64);
+    let norm_default_output = zeros([0], DType.FLOAT64);
+    let norm_configured_output = zeros([0], DType.FLOAT64);
+    linalg_cond_string_out(condition, condition_matrix, "fro");
+    let condition_value = item_float(condition);
+    (linalg_matrix_norm_string_out(matrix_default_output, matrix); let matrix_default = item_float(matrix_default_output);
+(linalg_matrix_norm_string_out_dtype(
+    matrix_configured_output,
+    matrix,
+    "fro",
+    [0, 1],
+    true,
+    dtype(matrix),
+); let matrix_configured = item_float(matrix_configured_output);
+(linalg_norm_string_out(norm_default_output, matrix, "fro"); let norm_default = item_float(norm_default_output);
+(linalg_norm_string_out_dimensions(
+    norm_configured_output,
+    matrix,
+    "fro",
+    [0, 1],
+    true,
+    dtype(matrix),
+); let norm_configured = item_float(norm_configured_output);
+let valid =
+    condition_value > 2.49
+        and condition_value < 2.51
+        and matrix_default > 4.99
+        and matrix_default < 5.01
+        and matrix_configured > 4.99
+        and matrix_configured < 5.01
+        and shape(matrix_configured_output) == [1, 1]
+        and norm_default > 4.99
+        and norm_default < 5.01
+        and norm_configured > 4.99
+        and norm_configured < 5.01
+        and shape(norm_configured_output) == [1, 1]
+        and shape(matrix_default_output) == []
+        and shape(norm_default_output) == []
+        and shape(condition) == []
+        and shape(condition_matrix) == [2, 2]
+        and shape(matrix) == [2, 2];
+(dispose(norm_configured_output); dispose(norm_default_output); dispose(matrix_configured_output); dispose(matrix_default_output); dispose(condition); dispose(matrix); dispose(condition_matrix); valid))))).

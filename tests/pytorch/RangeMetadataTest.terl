@@ -1,0 +1,28 @@
+module pytorch.RangeMetadataTest.
+
+import pytorch.Tensor.{arange, device_index, device_type, dispose, dtype, eye, linspace, logspace_typed_native, shape}.
+
+import type pytorch.Tensor.{DType}.
+
+@test
+pub range_and_identity_constructors_preserve_metadata(): Bool ->
+    let progression = arange(1.0, 6.0, 2.0, DType.FLOAT64);
+    let linear = linspace(0.0, 1.0, 5, DType.FLOAT32);
+    let logarithmic = logspace_typed_native(0.0, 3.0, 4, 2.0, 7, 0, -1, false);
+    let identity = eye(2, 3, DType.INT64);
+    let valid =
+        shape(progression) == [3]
+            and dtype(progression) == 7
+            and shape(linear) == [5]
+            and dtype(linear) == 6
+            and shape(logarithmic) == [4]
+            and dtype(logarithmic) == 7
+            and shape(identity) == [2, 3]
+            and dtype(identity) == 4
+            and device_type(identity) == 0
+            and device_index(identity) == -1;
+    dispose(identity);
+    dispose(logarithmic);
+    dispose(linear);
+    dispose(progression);
+    valid.

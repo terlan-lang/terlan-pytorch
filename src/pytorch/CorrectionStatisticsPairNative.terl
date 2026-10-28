@@ -1,0 +1,210 @@
+/**
+ * Generated correction pair operations.
+ */
+module pytorch.CorrectionStatisticsPairNative.
+
+import type pytorch.Tensor.
+
+/**
+ * Owned pair of LibTorch tensors.
+ */
+pub opaque type TensorPair.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.std_mean_correction_int_pair}
+pub std_mean_correction_int_pair(input: Tensor, correction: Int, keep_dimension: Bool): TensorPair ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.std_mean_correction_out_int}
+pub std_mean_correction_out_int(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    correction: Int,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.std_mean_correction_float_pair}
+pub std_mean_correction_float_pair(
+    input: Tensor,
+    correction: Float,
+    keep_dimension: Bool,
+): TensorPair ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.std_mean_correction_out_float}
+pub std_mean_correction_out_float(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    correction: Float,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.std_mean_correction_dimensions_int_pair}
+pub std_mean_correction_dimensions_int_pair(
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Int,
+    keep_dimension: Bool,
+): TensorPair ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.std_mean_correction_out_dimensions_int}
+pub std_mean_correction_out_dimensions_int(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Int,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.std_mean_correction_dimensions_float_pair}
+pub std_mean_correction_dimensions_float_pair(
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Float,
+    keep_dimension: Bool,
+): TensorPair ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.std_mean_correction_out_dimensions_float}
+pub std_mean_correction_out_dimensions_float(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Float,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.var_mean_correction_int_pair}
+pub var_mean_correction_int_pair(input: Tensor, correction: Int, keep_dimension: Bool): TensorPair ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.var_mean_correction_out_int}
+pub var_mean_correction_out_int(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    correction: Int,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.var_mean_correction_float_pair}
+pub var_mean_correction_float_pair(
+    input: Tensor,
+    correction: Float,
+    keep_dimension: Bool,
+): TensorPair ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.var_mean_correction_out_float}
+pub var_mean_correction_out_float(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    correction: Float,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.var_mean_correction_dimensions_int_pair}
+pub var_mean_correction_dimensions_int_pair(
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Int,
+    keep_dimension: Bool,
+): TensorPair ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.var_mean_correction_out_dimensions_int}
+pub var_mean_correction_out_dimensions_int(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Int,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.var_mean_correction_dimensions_float_pair}
+pub var_mean_correction_dimensions_float_pair(
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Float,
+    keep_dimension: Bool,
+): TensorPair ->
+    native.
+
+/**
+ * Generated exact correction pair operation.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.var_mean_correction_out_dimensions_float}
+pub var_mean_correction_out_dimensions_float(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Float,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Drops a generated tensor pair carrier.
+ */
+@compiler.native {pytorch.correction_statistics_pair_native.dispose}
+dispose_tensor_pair(pair: TensorPair): Unit ->
+    native.

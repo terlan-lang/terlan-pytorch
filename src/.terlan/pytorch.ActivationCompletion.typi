@@ -1,0 +1,131 @@
+//! Compiler-generated exact hardshrink, softshrink, softplus, and threshold forward/backward primitives.
+
+module pytorch.ActivationCompletion.
+
+/// Executes exact hardshrink backward with the public floating-point Scalar form.
+
+pub hardshrink_backward_float(gradient: Tensor, input: Tensor, lambd: Float): Tensor.
+
+/// Executes exact hardshrink backward with the public integer Scalar form.
+
+pub hardshrink_backward_int(gradient: Tensor, input: Tensor, lambd: Int): Tensor.
+
+/// Executes exact hardshrink backward out with the public floating-point Scalar form.
+
+pub hardshrink_backward_out_float(output: Tensor, gradient: Tensor, input: Tensor, lambd: Float): Unit.
+
+/// Executes exact hardshrink backward out with the public integer Scalar form.
+
+pub hardshrink_backward_out_int(output: Tensor, gradient: Tensor, input: Tensor, lambd: Int): Unit.
+
+/// Executes exact hardshrink with the public floating-point Scalar form.
+
+pub hardshrink_float(input: Tensor, lambd: Float): Tensor.
+
+/// Executes exact hardshrink with the public integer Scalar form.
+
+pub hardshrink_int(input: Tensor, lambd: Int): Tensor.
+
+/// Executes exact hardshrink out with the public floating-point Scalar form.
+
+pub hardshrink_out_float(output: Tensor, input: Tensor, lambd: Float): Unit.
+
+/// Executes exact hardshrink out with the public integer Scalar form.
+
+pub hardshrink_out_int(output: Tensor, input: Tensor, lambd: Int): Unit.
+
+/// Executes exact softplus backward with the public floating-point Scalar form.
+
+pub softplus_backward_float(gradient: Tensor, input: Tensor, beta: Float, threshold: Float): Tensor.
+
+/// Executes exact softplus backward with the public integer Scalar form.
+
+pub softplus_backward_int(gradient: Tensor, input: Tensor, beta: Int, threshold: Int): Tensor.
+
+/// Executes exact softplus backward out with the public floating-point Scalar form.
+
+pub softplus_backward_out_float(output: Tensor, gradient: Tensor, input: Tensor, beta: Float, threshold: Float): Unit.
+
+/// Executes exact softplus backward out with the public integer Scalar form.
+
+pub softplus_backward_out_int(output: Tensor, gradient: Tensor, input: Tensor, beta: Int, threshold: Int): Unit.
+
+/// Executes exact softplus with the public floating-point Scalar form.
+
+pub softplus_float(input: Tensor, beta: Float, threshold: Float): Tensor.
+
+/// Executes exact softplus with the public integer Scalar form.
+
+pub softplus_int(input: Tensor, beta: Int, threshold: Int): Tensor.
+
+/// Executes exact softplus out with the public floating-point Scalar form.
+
+pub softplus_out_float(output: Tensor, input: Tensor, beta: Float, threshold: Float): Unit.
+
+/// Executes exact softplus out with the public integer Scalar form.
+
+pub softplus_out_int(output: Tensor, input: Tensor, beta: Int, threshold: Int): Unit.
+
+/// Executes exact softshrink backward with the public floating-point Scalar form.
+
+pub softshrink_backward_float(gradient: Tensor, input: Tensor, lambd: Float): Tensor.
+
+/// Executes exact softshrink backward with the public integer Scalar form.
+
+pub softshrink_backward_int(gradient: Tensor, input: Tensor, lambd: Int): Tensor.
+
+/// Executes exact softshrink backward out with the public floating-point Scalar form.
+
+pub softshrink_backward_out_float(output: Tensor, gradient: Tensor, input: Tensor, lambd: Float): Unit.
+
+/// Executes exact softshrink backward out with the public integer Scalar form.
+
+pub softshrink_backward_out_int(output: Tensor, gradient: Tensor, input: Tensor, lambd: Int): Unit.
+
+/// Executes exact softshrink with the public floating-point Scalar form.
+
+pub softshrink_float(input: Tensor, lambd: Float): Tensor.
+
+/// Executes exact softshrink with the public integer Scalar form.
+
+pub softshrink_int(input: Tensor, lambd: Int): Tensor.
+
+/// Executes exact softshrink out with the public floating-point Scalar form.
+
+pub softshrink_out_float(output: Tensor, input: Tensor, lambd: Float): Unit.
+
+/// Executes exact softshrink out with the public integer Scalar form.
+
+pub softshrink_out_int(output: Tensor, input: Tensor, lambd: Int): Unit.
+
+/// Executes exact threshold backward with the public floating-point Scalar form.
+
+pub threshold_backward_float(gradient: Tensor, input: Tensor, threshold: Float): Tensor.
+
+/// Executes exact threshold backward with the public integer Scalar form.
+
+pub threshold_backward_int(gradient: Tensor, input: Tensor, threshold: Int): Tensor.
+
+/// Executes exact threshold backward out with the public floating-point Scalar form.
+
+pub threshold_backward_out_float(output: Tensor, gradient: Tensor, input: Tensor, threshold: Float): Unit.
+
+/// Executes exact threshold backward out with the public integer Scalar form.
+
+pub threshold_backward_out_int(output: Tensor, gradient: Tensor, input: Tensor, threshold: Int): Unit.
+
+/// Executes exact threshold with the public floating-point Scalar form.
+
+pub threshold_float(input: Tensor, threshold: Float, value: Float): Tensor.
+
+/// Executes exact threshold with the public integer Scalar form.
+
+pub threshold_int(input: Tensor, threshold: Int, value: Int): Tensor.
+
+/// Executes exact threshold out with the public floating-point Scalar form.
+
+pub threshold_out_float(output: Tensor, input: Tensor, threshold: Float, value: Float): Unit.
+
+/// Executes exact threshold out with the public integer Scalar form.
+
+pub threshold_out_int(output: Tensor, input: Tensor, threshold: Int, value: Int): Unit.

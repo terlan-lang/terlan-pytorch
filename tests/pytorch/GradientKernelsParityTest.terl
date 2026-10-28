@@ -1,0 +1,299 @@
+module pytorch.GradientKernelsParityTest.
+
+import pytorch.Binary.greater_tensor.
+import pytorch.Gradients.{cumprod_backward, embedding_backward, embedding_dense_backward, fake_quantize_per_channel_affine_cachemask_backward, fake_quantize_per_tensor_affine_cachemask_backward, gather_backward, gelu_backward, glu_backward, gradient_array, gradient_scalar_array, gradient_scalar_array_array, gradient_scalar_array_int, gradient_scalar_int, gradient_tensor_array, gradient_tensor_array_int, masked_select_backward, soft_margin_loss_backward}.
+import pytorch.Statistics.cumprod.
+import pytorch.Tensor.{dispose, flatten, from_float, from_floats, from_ints, item_float, narrow, shape}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads one floating-point value from a flattened tensor without consuming it.
+ */
+flat_item(tensor: Tensor, index: Int): Float ->
+    let values = flatten(tensor, 0, -1);
+    let element = narrow(values, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    dispose(values);
+    value.
+
+/**
+ * Proves numerical gradients return one tensor per requested dimension.
+ */
+@test
+pub gradient_array_matches_libtorch(): Bool ->
+    let input = from_floats([1.0, 4.0, 9.0], [3]);
+    let outputs = gradient_array(input, [0], 1);
+    let gradient = outputs[0];
+    let valid =
+        shape(gradient) == [3]
+            and flat_item(gradient, 0) == 3.0
+            and flat_item(gradient, 1) == 4.0
+            and flat_item(gradient, 2) == 5.0;
+    dispose(gradient);
+    dispose(input);
+    valid.
+
+/**
+ * Proves scalar spacing scales numerical gradients like LibTorch.
+ */
+@test
+pub gradient_scalar_array_matches_libtorch(): Bool ->
+    let input = from_floats([1.0, 4.0, 9.0], [3]);
+    let outputs = gradient_scalar_array(input, 2.0, [0], 1);
+    let gradient = outputs[0];
+    let valid =
+        shape(gradient) == [3]
+            and flat_item(gradient, 0) == 1.5
+            and flat_item(gradient, 1) == 2.0
+            and flat_item(gradient, 2) == 2.5;
+    dispose(gradient);
+    dispose(input);
+    valid.
+
+/**
+ * Proves optional and tensor/list spacing gradient overloads preserve values.
+ */
+@test
+pub gradient_remaining_overloads_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 4.0, 9.0], [3]);
+    let scalar_int = gradient_scalar_int(input, false, 0.0, true, 0, 1)[0];
+    let scalar_array_array = gradient_scalar_array_array(input, [2.0], [0], 1)[0];
+    let scalar_array_int = gradient_scalar_array_int(input, [2.0], true, 0, 1)[0];
+    let spacing = from_floats([0.0, 2.0, 4.0], [3]);
+    let tensor_array = gradient_tensor_array(input, [spacing], [0], 1)[0];
+    let tensor_array_int = gradient_tensor_array_int(input, [spacing], true, 0, 1)[0];
+    let valid =
+        flat_item(scalar_int, 1) == 4.0
+            and flat_item(scalar_array_array, 1) == 2.0
+            and flat_item(scalar_array_int, 1) == 2.0
+            and flat_item(tensor_array, 1) == 2.0
+            and flat_item(tensor_array_int, 1) == 2.0;
+    dispose(tensor_array_int);
+    dispose(tensor_array);
+    dispose(spacing);
+    dispose(scalar_array_int);
+    dispose(scalar_array_array);
+    dispose(scalar_int);
+    dispose(input);
+    valid.
+
+/**
+ * Proves cumulative-product backward uses all forward prefix dependencies.
+ */
+@test
+pub cumprod_backward_matches_libtorch(): Bool ->
+    let input = from_floats([2.0, 3.0], [2]);
+    let gradient = from_floats([1.0, 1.0], [2]);
+    let output = cumprod(input, 0);
+    let input_gradient = cumprod_backward(gradient, input, 0, output);
+    let valid =
+        flat_item(input_gradient, 0) == 4.0
+            and flat_item(input_gradient, 1) == 2.0
+            and shape(input_gradient) == [2]
+            and shape(input) == [2]
+            and shape(gradient) == [2]
+            and shape(output) == [2];
+    dispose(input_gradient);
+    dispose(output);
+    dispose(gradient);
+    dispose(input);
+    valid.
+
+/**
+ * Proves ordinary embedding backward scatters rows into a dense table gradient.
+ */
+@test
+pub embedding_backward_matches_libtorch(): Bool ->
+    let gradient = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let indices = from_ints([0, 2], [2]);
+    let table_gradient = embedding_backward(gradient, indices, 3, -1, false, false);
+    let valid =
+        shape(table_gradient) == [3, 2]
+            and flat_item(table_gradient, 0) == 1.0
+            and flat_item(table_gradient, 1) == 2.0
+            and flat_item(table_gradient, 2) == 0.0
+            and flat_item(table_gradient, 3) == 0.0
+            and flat_item(table_gradient, 4) == 3.0
+            and flat_item(table_gradient, 5) == 4.0
+            and shape(gradient) == [2, 2]
+            and shape(indices) == [2];
+    dispose(table_gradient);
+    dispose(indices);
+    dispose(gradient);
+    valid.
+
+/**
+ * Proves dense embedding backward frequency-scales duplicate index gradients.
+ */
+@test
+pub embedding_dense_backward_matches_libtorch(): Bool ->
+    let gradient = from_floats([2.0, 4.0, 6.0, 8.0], [2, 2]);
+    let indices = from_ints([1, 1], [2]);
+    let table_gradient = embedding_dense_backward(gradient, indices, 3, -1, true);
+    let valid =
+        shape(table_gradient) == [3, 2]
+            and flat_item(table_gradient, 0) == 0.0
+            and flat_item(table_gradient, 1) == 0.0
+            and flat_item(table_gradient, 2) == 4.0
+            and flat_item(table_gradient, 3) == 6.0
+            and flat_item(table_gradient, 4) == 0.0
+            and flat_item(table_gradient, 5) == 0.0
+            and shape(gradient) == [2, 2]
+            and shape(indices) == [2];
+    dispose(table_gradient);
+    dispose(indices);
+    dispose(gradient);
+    valid.
+
+/**
+ * Proves gather backward scatters selected gradients into the source shape.
+ */
+@test
+pub gather_backward_matches_libtorch(): Bool ->
+    let gradient = from_floats([10.0, 20.0], [2]);
+    let input = from_floats([1.0, 2.0, 3.0], [3]);
+    let indices = from_ints([2, 0], [2]);
+    let input_gradient = gather_backward(gradient, input, 0, indices, false);
+    let valid =
+        shape(input_gradient) == [3]
+            and flat_item(input_gradient, 0) == 20.0
+            and flat_item(input_gradient, 1) == 0.0
+            and flat_item(input_gradient, 2) == 10.0
+            and shape(gradient) == [2]
+            and shape(input) == [3]
+            and shape(indices) == [2];
+    dispose(input_gradient);
+    dispose(indices);
+    dispose(input);
+    dispose(gradient);
+    valid.
+
+/**
+ * Proves exact GELU backward has derivative one-half at the origin.
+ */
+@test
+pub gelu_backward_matches_libtorch(): Bool ->
+    let gradient_output = from_float(2.0);
+    let input = from_float(0.0);
+    let input_gradient = gelu_backward(gradient_output, input, "none");
+    let valid = item_float(input_gradient) == 1.0 and shape(gradient_output) == [] and shape(input) == [];
+    dispose(input_gradient);
+    dispose(input);
+    dispose(gradient_output);
+    valid.
+
+/**
+ * Proves GLU backward restores both data and gate halves in split order.
+ */
+@test
+pub glu_backward_matches_libtorch(): Bool ->
+    let gradient_output = from_floats([2.0], [1]);
+    let input = from_floats([3.0, 0.0], [2]);
+    let input_gradient = glu_backward(gradient_output, input, 0);
+    let valid =
+        shape(input_gradient) == [2]
+            and flat_item(input_gradient, 0) == 1.0
+            and flat_item(input_gradient, 1) == 1.5
+            and shape(gradient_output) == [1]
+            and shape(input) == [2];
+    dispose(input_gradient);
+    dispose(input);
+    dispose(gradient_output);
+    valid.
+
+/**
+ * Proves masked-selection backward scatters only into selected positions.
+ */
+@test
+pub masked_select_backward_matches_libtorch(): Bool ->
+    let gradient = from_floats([10.0, 20.0], [2]);
+    let input = from_floats([1.0, 2.0, 3.0], [3]);
+    let mask_values = from_floats([0.0, 1.0, 1.0], [3]);
+    let zero = from_float(0.0);
+    let mask = greater_tensor(mask_values, zero);
+    let input_gradient = masked_select_backward(gradient, input, mask);
+    let valid =
+        shape(input_gradient) == [3]
+            and flat_item(input_gradient, 0) == 0.0
+            and flat_item(input_gradient, 1) == 10.0
+            and flat_item(input_gradient, 2) == 20.0
+            and shape(gradient) == [2]
+            and shape(input) == [3]
+            and shape(mask) == [3];
+    dispose(input_gradient);
+    dispose(mask);
+    dispose(zero);
+    dispose(mask_values);
+    dispose(input);
+    dispose(gradient);
+    valid.
+
+/**
+ * Proves soft-margin backward applies the logistic derivative and reduction.
+ */
+@test
+pub soft_margin_loss_backward_matches_libtorch(): Bool ->
+    let gradient_output = from_float(1.0);
+    let input = from_float(0.0);
+    let target = from_float(1.0);
+    let input_gradient = soft_margin_loss_backward(gradient_output, input, target, 1);
+    let valid =
+        item_float(input_gradient) == -0.5
+            and shape(gradient_output) == []
+            and shape(input) == []
+            and shape(target) == [];
+    dispose(input_gradient);
+    dispose(target);
+    dispose(input);
+    dispose(gradient_output);
+    valid.
+
+/**
+ * Proves per-channel fake-quant backward honors every cached mask element.
+ */
+@test
+pub per_channel_fake_quantize_backward_matches_libtorch(): Bool ->
+    let gradient = from_floats([2.0, 3.0, 4.0], [3]);
+    let mask_values = from_floats([1.0, 0.0, 1.0], [3]);
+    let zero = from_float(0.0);
+    let mask = greater_tensor(mask_values, zero);
+    let input_gradient = fake_quantize_per_channel_affine_cachemask_backward(gradient, mask);
+    let valid =
+        shape(input_gradient) == [3]
+            and flat_item(input_gradient, 0) == 2.0
+            and flat_item(input_gradient, 1) == 0.0
+            and flat_item(input_gradient, 2) == 4.0
+            and shape(gradient) == [3]
+            and shape(mask) == [3];
+    dispose(input_gradient);
+    dispose(mask);
+    dispose(zero);
+    dispose(mask_values);
+    dispose(gradient);
+    valid.
+
+/**
+ * Proves per-tensor fake-quant backward honors every cached mask element.
+ */
+@test
+pub per_tensor_fake_quantize_backward_matches_libtorch(): Bool ->
+    let gradient = from_floats([5.0, 6.0, 7.0], [3]);
+    let mask_values = from_floats([0.0, 1.0, 0.0], [3]);
+    let zero = from_float(0.0);
+    let mask = greater_tensor(mask_values, zero);
+    let input_gradient = fake_quantize_per_tensor_affine_cachemask_backward(gradient, mask);
+    let valid =
+        shape(input_gradient) == [3]
+            and flat_item(input_gradient, 0) == 0.0
+            and flat_item(input_gradient, 1) == 6.0
+            and flat_item(input_gradient, 2) == 0.0
+            and shape(gradient) == [3]
+            and shape(mask) == [3];
+    dispose(input_gradient);
+    dispose(mask);
+    dispose(zero);
+    dispose(mask_values);
+    dispose(gradient);
+    valid.

@@ -1,0 +1,7 @@
+module pytorch_cxx.ShapeBehaviorTest.
+
+import pytorch.ShapeBehaviorSupport.{shape_contracts_on}.
+
+@test
+pub cpu_shape_contracts(): Bool ->
+    shape_contracts_on("cpu", false).

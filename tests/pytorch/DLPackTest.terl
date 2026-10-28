@@ -1,0 +1,117 @@
+module pytorch.DLPackTest.
+
+import pytorch.Tensor.{dispose, from_floats, from_packet, item_float, mse_loss, shape, to_packet}.
+import std.vm.Bytes.{from_list}.
+
+@test
+pub pointer_free_dlpack_packet_imports_owned_float64_tensor(): Bool ->
+    let packet =
+        from_list(
+            [
+                84,
+                78,
+                88,
+                80,
+                1,
+                1,
+                2,
+                64,
+                1,
+                0,
+                1,
+                0,
+                2,
+                0,
+                0,
+                0,
+                2,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                2,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                2,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                240,
+                63,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                64,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                8,
+                64,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                16,
+                64,
+            ],
+        );
+    let imported = from_packet(packet);
+    let expected = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let loss = mse_loss(imported, expected, 1);
+    let valid = shape(imported) == [2, 2] and item_float(loss) == 0.0;
+    dispose(loss);
+    dispose(expected);
+    dispose(imported);
+    valid.
+
+@test
+pub tensor_packet_export_is_independent_of_the_source_tensor(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let packet = to_packet(source);
+    dispose(source);
+    let first = from_packet(packet);
+    let second = from_packet(packet);
+    let expected = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let first_loss = mse_loss(first, expected, 1);
+    let second_loss = mse_loss(second, expected, 1);
+    let valid =
+        shape(first) == [2, 2]
+            and shape(second) == [2, 2]
+            and item_float(first_loss) == 0.0
+            and item_float(second_loss) == 0.0;
+    (dispose(second_loss); dispose(first_loss); dispose(expected); dispose(second); dispose(first); valid).

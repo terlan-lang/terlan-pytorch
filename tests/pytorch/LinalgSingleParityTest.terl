@@ -1,0 +1,582 @@
+module pytorch.LinalgSingleParityTest.
+
+import pytorch.Linalg.{cholesky_solve, geqrf, linalg_cholesky, linalg_cholesky_out, linalg_cond_default, linalg_cond_float, linalg_cond_int, linalg_cond_string, linalg_cross, linalg_cross_out, linalg_det, linalg_det_out, linalg_diagonal, linalg_eigvals_out, linalg_eigvalsh, linalg_eigvalsh_out, linalg_householder_product_out, linalg_inv, linalg_inv_out, linalg_ldl_factor, linalg_ldl_solve, linalg_ldl_solve_out, linalg_lu_factor, linalg_lu_solve, linalg_lu_solve_out, linalg_matmul_out, linalg_matrix_exp_out, linalg_matrix_norm_float, linalg_matrix_norm_float_configured, linalg_matrix_norm_int, linalg_matrix_norm_int_configured, linalg_matrix_norm_string, linalg_matrix_norm_string_dtype, linalg_matrix_power_out, linalg_matrix_rank_default, linalg_matrix_rank_tensor_absolute, linalg_matrix_rank_tensor_default, linalg_matrix_rank_tensor_relative, linalg_matrix_rank_tensor_tolerances, linalg_matrix_rank_tolerance, linalg_matrix_rank_tolerances, linalg_multi_dot, linalg_multi_dot_out, linalg_norm_default, linalg_norm_float, linalg_norm_float_configured, linalg_norm_int, linalg_norm_int_configured, linalg_norm_string, linalg_norm_string_dimensions, linalg_pinv_default, linalg_pinv_rcond, linalg_pinv_tensor_absolute, linalg_pinv_tensor_default, linalg_pinv_tensor_relative, linalg_pinv_tensor_tolerances, linalg_pinv_tolerances, linalg_powsum_float, linalg_powsum_float_configured, linalg_powsum_int, linalg_powsum_int_configured, linalg_solve, linalg_solve_out, linalg_solve_triangular, linalg_solve_triangular_out, linalg_svdvals, linalg_svdvals_out, linalg_tensorinv_out, linalg_tensorsolve, linalg_tensorsolve_dimensions, linalg_tensorsolve_out, linalg_vander, linalg_vander_columns, linalg_vecdot, linalg_vecdot_out, linalg_vector_norm_float, linalg_vector_norm_float_configured, linalg_vector_norm_int, linalg_vector_norm_int_configured, lu_solve, ormqr}.
+import pytorch.Special.{linalg_eigvals}.
+import pytorch.Tensor.{dispose, dtype, from_float, from_floats, item, item_bool, item_float, shape, sum, zeros}.
+import pytorch.Unary.{all, isfinite}.
+
+import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Proves remaining non-scalar linalg outputs, including complex and list inputs.
+ */
+@test
+pub extended_single_out_overloads_populate_storage(): Bool ->
+    let matrix = from_floats([2.0, 0.0, 0.0, 3.0], [2, 2]);
+    let zero_matrix = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let right = from_floats([4.0, 9.0], [2]);
+    let reflector = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
+    let tau = from_floats([0.0, 0.0], [2]);
+    let eigenvalues = linalg_eigvals(zero_matrix);
+    linalg_eigvals_out(eigenvalues, matrix);
+    let hermitian_values = zeros([0], DType.FLOAT64);
+    (linalg_eigvalsh_out(hermitian_values, matrix); let householder = zeros([0], DType.FLOAT64);
+(linalg_householder_product_out(householder, reflector, tau); let exponential = zeros([0], DType.FLOAT64);
+(linalg_matrix_exp_out(exponential, zero_matrix); let powered = zeros([0], DType.FLOAT64);
+(linalg_matrix_power_out(powered, matrix, 2); let singular_values = zeros([0], DType.FLOAT64);
+(linalg_svdvals_out(singular_values, matrix); let tensor_inverse = zeros([0], DType.FLOAT64);
+(linalg_tensorinv_out(tensor_inverse, matrix, 1); let tensor_solution = zeros([0], DType.FLOAT64);
+(linalg_tensorsolve_out(tensor_solution, matrix, right); let chain = zeros([0], DType.FLOAT64);
+(linalg_multi_dot_out(chain, [matrix, matrix]); let valid =
+    shape(eigenvalues) == [2]
+        and dtype(eigenvalues) == 10
+        and shape(hermitian_values) == [2]
+        and float_sum(hermitian_values) == 5.0
+        and shape(householder) == [2, 2]
+        and all_finite(householder)
+        and shape(exponential) == [2, 2]
+        and float_sum(exponential) == 2.0
+        and shape(powered) == [2, 2]
+        and float_sum(powered) == 13.0
+        and shape(singular_values) == [2]
+        and float_sum(singular_values) == 5.0
+        and shape(tensor_inverse) == [2, 2]
+        and shape(tensor_solution) == [2]
+        and float_sum(tensor_solution) == 5.0
+        and shape(chain) == [2, 2]
+        and float_sum(chain) == 13.0;
+(dispose(chain); dispose(tensor_solution); dispose(tensor_inverse); dispose(singular_values); dispose(powered); dispose(exponential); dispose(householder); dispose(hermitian_values); dispose(eigenvalues); dispose(tau); dispose(reflector); dispose(right); dispose(zero_matrix); dispose(matrix); valid))))))))).
+
+/**
+ * Proves core single-result output overloads mutate and retain caller storage.
+ */
+@test
+pub core_single_out_overloads_populate_storage(): Bool ->
+    let matrix = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
+    let right = from_floats([1.0, 0.0], [2, 1]);
+    let x = from_floats([1.0, 0.0, 0.0], [3]);
+    let y = from_floats([0.0, 1.0, 0.0], [3]);
+    let cholesky = zeros([0], DType.FLOAT64);
+    linalg_cholesky_out(cholesky, matrix);
+    let cross = zeros([0], DType.FLOAT64);
+    (linalg_cross_out(cross, x, y); let inverse = zeros([0], DType.FLOAT64);
+(linalg_inv_out(inverse, matrix); let {ldl, ldl_pivots} = linalg_ldl_factor(matrix);
+let ldl_solution = zeros([0], DType.FLOAT64);
+(linalg_ldl_solve_out(ldl_solution, ldl, ldl_pivots, right); let {lu, lu_pivots} = linalg_lu_factor(matrix);
+let lu_solution = zeros([0], DType.FLOAT64);
+(linalg_lu_solve_out(lu_solution, lu, lu_pivots, right); let product = zeros([0], DType.FLOAT64);
+(linalg_matmul_out(product, matrix, matrix); let solution = zeros([0], DType.FLOAT64);
+(linalg_solve_out(solution, matrix, right); let triangular = zeros([0], DType.FLOAT64);
+(linalg_solve_triangular_out(triangular, cholesky, right, false); let dot = zeros([0], DType.FLOAT64);
+(linalg_vecdot_out(dot, x, y); let valid =
+    shape(cholesky) == [2, 2]
+        and shape(cross) == [3]
+        and shape(inverse) == [2, 2]
+        and shape(ldl_solution) == [2, 1]
+        and shape(lu_solution) == [2, 1]
+        and shape(product) == [2, 2]
+        and shape(solution) == [2, 1]
+        and shape(triangular) == [2, 1]
+        and item_float(dot) == 0.0
+        and float_sum(cross) == 1.0
+        and shape(matrix) == [2, 2];
+(dispose(dot); dispose(triangular); dispose(solution); dispose(product); dispose(lu_solution); dispose(lu_pivots); dispose(lu); dispose(ldl_solution); dispose(ldl_pivots); dispose(ldl); dispose(inverse); dispose(cross); dispose(cholesky); dispose(y); dispose(x); dispose(right); dispose(matrix); valid))))))))).
+
+/**
+ * Reduces a floating-point tensor and releases its scalar result.
+ */
+float_sum(tensor: Tensor): Float ->
+    let total = sum(tensor);
+    let value = item_float(total);
+    dispose(total);
+    value.
+
+/**
+ * Classifies every tensor element as finite and releases both intermediates.
+ */
+all_finite(tensor: Tensor): Bool ->
+    let classifications = isfinite(tensor);
+    let reduced = all(classifications);
+    let value = item_bool(reduced);
+    dispose(reduced);
+    dispose(classifications);
+    value.
+
+/**
+ * Proves checked Cholesky construction and factor-based solve behavior.
+ */
+@test
+pub cholesky_and_factor_solve_match_libtorch(): Bool ->
+    let matrix = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
+    let right = from_floats([1.0, 0.0], [2, 1]);
+    let factor = linalg_cholesky(matrix);
+    let solution = cholesky_solve(right, factor);
+    let factor_total = float_sum(factor);
+    let solution_total = float_sum(solution);
+    let valid =
+        shape(factor) == [2, 2]
+            and factor_total > 4.15
+            and factor_total < 4.17
+            and shape(solution) == [2, 1]
+            and solution_total > 0.18
+            and solution_total < 0.19;
+    dispose(solution);
+    dispose(factor);
+    dispose(right);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves direct determinant, inverse, and linear-system solve results.
+ */
+@test
+pub direct_inverse_determinant_and_solve_match_libtorch(): Bool ->
+    let matrix = from_floats([4.0, 7.0, 2.0, 6.0], [2, 2]);
+    let right = from_floats([1.0, 0.0], [2]);
+    let determinant = linalg_det(matrix);
+    let inverse = linalg_inv(matrix);
+    let solution = linalg_solve(matrix, right);
+    let determinant_value = item_float(determinant);
+    let inverse_total = float_sum(inverse);
+    let solution_total = float_sum(solution);
+    let valid =
+        determinant_value > 9.99
+            and determinant_value < 10.01
+            and shape(inverse) == [2, 2]
+            and inverse_total > 0.09
+            and inverse_total < 0.11
+            and shape(solution) == [2]
+            and solution_total > 0.39
+            and solution_total < 0.41;
+    dispose(solution);
+    dispose(inverse);
+    dispose(determinant);
+    dispose(right);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves vector cross products and conjugating vector dot products.
+ */
+@test
+pub vector_products_match_libtorch(): Bool ->
+    let x_axis = from_floats([1.0, 0.0, 0.0], [3]);
+    let y_axis = from_floats([0.0, 1.0, 0.0], [3]);
+    let left = from_floats([1.0, 2.0], [2]);
+    let right = from_floats([3.0, 4.0], [2]);
+    let cross_product = linalg_cross(x_axis, y_axis);
+    let dot_product = linalg_vecdot(left, right);
+    let valid =
+        shape(cross_product) == [3]
+            and float_sum(cross_product) == 1.0
+            and item_float(dot_product) == 11.0;
+    dispose(dot_product);
+    dispose(cross_product);
+    dispose(right);
+    dispose(left);
+    dispose(y_axis);
+    dispose(x_axis);
+    valid.
+
+/**
+ * Proves tensor-valued rank tolerance and pseudoinverse cutoff behavior.
+ */
+@test
+pub tensor_tolerance_rank_and_pseudoinverse_match_libtorch(): Bool ->
+    let matrix = from_floats([2.0, 0.0, 0.0, 0.1], [2, 2]);
+    let tolerance = from_float(0.5);
+    let relative_condition = from_float(0.01);
+    let rank = linalg_matrix_rank_tolerance(matrix, tolerance);
+    let pseudoinverse = linalg_pinv_rcond(matrix, relative_condition);
+    let pseudoinverse_total = float_sum(pseudoinverse);
+    let valid =
+        item(rank) == 1
+            and shape(pseudoinverse) == [2, 2]
+            and pseudoinverse_total > 10.49
+            and pseudoinverse_total < 10.51;
+    dispose(pseudoinverse);
+    dispose(rank);
+    dispose(relative_condition);
+    dispose(tolerance);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves compact LDL and LU factors feed every corresponding solve schema.
+ */
+@test
+pub compact_factor_solve_variants_match_libtorch(): Bool ->
+    let symmetric = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
+    let symmetric_right = from_floats([1.0, 0.0], [2, 1]);
+    let matrix = from_floats([4.0, 7.0, 2.0, 6.0], [2, 2]);
+    let right = from_floats([1.0, 0.0], [2, 1]);
+    let {ldl_factor, ldl_pivots} = linalg_ldl_factor(symmetric);
+    let ldl_solution = linalg_ldl_solve(ldl_factor, ldl_pivots, symmetric_right);
+    let {lu_factor, lu_pivots} = linalg_lu_factor(matrix);
+    let lu_solution = linalg_lu_solve(lu_factor, lu_pivots, right);
+    let legacy_solution = lu_solve(right, lu_factor, lu_pivots);
+    let ldl_total = float_sum(ldl_solution);
+    let lu_total = float_sum(lu_solution);
+    let legacy_total = float_sum(legacy_solution);
+    let valid =
+        shape(ldl_solution) == [2, 1]
+            and ldl_total > 0.18
+            and ldl_total < 0.19
+            and shape(lu_solution) == [2, 1]
+            and lu_total > 0.39
+            and lu_total < 0.41
+            and shape(legacy_solution) == [2, 1]
+            and legacy_total > 0.39
+            and legacy_total < 0.41;
+    dispose(legacy_solution);
+    dispose(lu_solution);
+    dispose(lu_pivots);
+    dispose(lu_factor);
+    dispose(ldl_solution);
+    dispose(ldl_pivots);
+    dispose(ldl_factor);
+    dispose(right);
+    dispose(matrix);
+    dispose(symmetric_right);
+    dispose(symmetric);
+    valid.
+
+/**
+ * Proves triangular solving and Householder-factor application behavior.
+ */
+@test
+pub triangular_solve_and_ormqr_match_libtorch(): Bool ->
+    let triangular = from_floats([2.0, 1.0, 0.0, 4.0], [2, 2]);
+    let right = from_floats([1.0, 1.0], [2, 1]);
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let identity = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
+    let triangular_solution = linalg_solve_triangular(triangular, right, true);
+    let {factor, tau} = geqrf(matrix);
+    let orthogonal_product = ormqr(factor, tau, identity);
+    let triangular_total = float_sum(triangular_solution);
+    let valid =
+        shape(triangular_solution) == [2, 1]
+            and triangular_total > 0.62
+            and triangular_total < 0.63
+            and shape(orthogonal_product) == [2, 2]
+            and all_finite(orthogonal_product);
+    dispose(orthogonal_product);
+    dispose(tau);
+    dispose(factor);
+    dispose(triangular_solution);
+    dispose(identity);
+    dispose(matrix);
+    dispose(right);
+    dispose(triangular);
+    valid.
+
+/**
+ * Proves named condition, Hermitian eigenvalue, SVD-value, rank, pseudoinverse, and Vandermonde behavior.
+ */
+@test
+pub remaining_single_result_linalg_operations_match_libtorch(): Bool ->
+    let matrix = from_floats([1.0, 0.0, 0.0, 2.0], [2, 2]);
+    let hermitian = from_floats([2.0, 0.0, 0.0, 3.0], [2, 2]);
+    let values = from_floats([1.0, 2.0, 3.0], [3]);
+    let condition = linalg_cond_string(matrix, "fro");
+    let eigenvalues = linalg_eigvalsh(hermitian);
+    let rank = linalg_matrix_rank_default(matrix);
+    let tolerance_rank = linalg_matrix_rank_tolerances(matrix, 0.1, 0.1);
+    let pseudoinverse = linalg_pinv_default(matrix);
+    let tolerance_pseudoinverse = linalg_pinv_tolerances(matrix, 0.1, 0.1);
+    let singular_values = linalg_svdvals(matrix);
+    let vandermonde = linalg_vander(values);
+    let wide_vandermonde = linalg_vander_columns(values, 4);
+    let condition_value = item_float(condition);
+    let eigenvalue_total = float_sum(eigenvalues);
+    let pseudoinverse_total = float_sum(pseudoinverse);
+    let tolerance_pseudoinverse_total = float_sum(tolerance_pseudoinverse);
+    let singular_total = float_sum(singular_values);
+    let valid =
+        condition_value > 2.49
+            and condition_value < 2.51
+            and shape(eigenvalues) == [2]
+            and eigenvalue_total > 4.99
+            and eigenvalue_total < 5.01
+            and item(rank) == 2
+            and item(tolerance_rank) == 2
+            and shape(pseudoinverse) == [2, 2]
+            and pseudoinverse_total > 1.49
+            and pseudoinverse_total < 1.51
+            and shape(tolerance_pseudoinverse) == [2, 2]
+            and tolerance_pseudoinverse_total > 1.49
+            and tolerance_pseudoinverse_total < 1.51
+            and shape(singular_values) == [2]
+            and singular_total > 2.99
+            and singular_total < 3.01
+            and shape(vandermonde) == [3, 3]
+            and shape(wide_vandermonde) == [3, 4]
+            and shape(matrix) == [2, 2]
+            and shape(hermitian) == [2, 2]
+            and shape(values) == [3];
+    dispose(wide_vandermonde);
+    dispose(vandermonde);
+    dispose(singular_values);
+    dispose(tolerance_pseudoinverse);
+    dispose(pseudoinverse);
+    dispose(tolerance_rank);
+    dispose(rank);
+    dispose(eigenvalues);
+    dispose(condition);
+    dispose(values);
+    dispose(hermitian);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves named norm optionals and tensor-equation dimension permutation.
+ */
+@test
+pub norm_and_tensor_solve_optionals_match_libtorch(): Bool ->
+    let matrix = from_floats([3.0, 4.0, 0.0, 0.0], [2, 2]);
+    let identity = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
+    let right = from_floats([1.0, 2.0], [2]);
+    let scalar_type = dtype(matrix);
+    let matrix_norm = linalg_matrix_norm_string(matrix);
+    let typed_matrix_norm = linalg_matrix_norm_string_dtype(matrix, "fro", [0, 1], false, scalar_type);
+    let tensor_norm = linalg_norm_string(matrix, "fro");
+    let dimension_tensor_norm = linalg_norm_string_dimensions(matrix, "fro", [0, 1], false, scalar_type);
+    let solution = linalg_tensorsolve(identity, right);
+    let dimension_solution = linalg_tensorsolve_dimensions(identity, right, [0]);
+    let matrix_norm_value = item_float(matrix_norm);
+    let typed_matrix_norm_value = item_float(typed_matrix_norm);
+    let tensor_norm_value = item_float(tensor_norm);
+    let dimension_tensor_norm_value = item_float(dimension_tensor_norm);
+    let solution_total = float_sum(solution);
+    let dimension_solution_total = float_sum(dimension_solution);
+    let valid =
+        matrix_norm_value > 4.99
+            and matrix_norm_value < 5.01
+            and typed_matrix_norm_value > 4.99
+            and typed_matrix_norm_value < 5.01
+            and tensor_norm_value > 4.99
+            and tensor_norm_value < 5.01
+            and dimension_tensor_norm_value > 4.99
+            and dimension_tensor_norm_value < 5.01
+            and dtype(typed_matrix_norm) == scalar_type
+            and dtype(dimension_tensor_norm) == scalar_type
+            and shape(solution) == [2]
+            and solution_total > 2.99
+            and solution_total < 3.01
+            and shape(dimension_solution) == [2]
+            and dimension_solution_total > 2.99
+            and dimension_solution_total < 3.01
+            and shape(matrix) == [2, 2]
+            and shape(identity) == [2, 2]
+            and shape(right) == [2];
+    dispose(dimension_solution);
+    dispose(solution);
+    dispose(dimension_tensor_norm);
+    dispose(tensor_norm);
+    dispose(typed_matrix_norm);
+    dispose(matrix_norm);
+    dispose(right);
+    dispose(identity);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves tensor-list dispatch, optimized matrix-chain multiplication, and source ownership.
+ */
+@test
+pub multi_dot_tensor_list_matches_libtorch(): Bool ->
+    let first = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let second = from_floats([1.0, 0.0, 0.0, 1.0, 1.0, 1.0], [3, 2]);
+    let third = from_floats([1.0, 2.0], [2, 1]);
+    let product = linalg_multi_dot([first, second, third]);
+    let product_total = float_sum(product);
+    let valid =
+        shape(product) == [2, 1]
+            and product_total > 45.99
+            and product_total < 46.01
+            and shape(first) == [2, 3]
+            and shape(second) == [3, 2]
+            and shape(third) == [2, 1];
+    dispose(product);
+    dispose(third);
+    dispose(second);
+    dispose(first);
+    valid.
+
+/**
+ * Proves every absent and present tensor-tolerance combination for rank and pseudoinverse.
+ */
+@test
+pub tensor_optional_rank_and_pseudoinverse_match_libtorch(): Bool ->
+    let matrix = from_floats([4.0, 0.0, 0.0, 0.25], [2, 2]);
+    let absolute_tolerance = from_float(0.5);
+    let relative_tolerance = from_float(0.01);
+    let default_rank = linalg_matrix_rank_tensor_default(matrix);
+    let absolute_rank = linalg_matrix_rank_tensor_absolute(matrix, absolute_tolerance);
+    let relative_rank = linalg_matrix_rank_tensor_relative(matrix, relative_tolerance);
+    let combined_rank = linalg_matrix_rank_tensor_tolerances(matrix, absolute_tolerance, relative_tolerance);
+    let default_inverse = linalg_pinv_tensor_default(matrix);
+    let absolute_inverse = linalg_pinv_tensor_absolute(matrix, absolute_tolerance);
+    let relative_inverse = linalg_pinv_tensor_relative(matrix, relative_tolerance);
+    let combined_inverse = linalg_pinv_tensor_tolerances(matrix, absolute_tolerance, relative_tolerance);
+    let default_total = float_sum(default_inverse);
+    let absolute_total = float_sum(absolute_inverse);
+    let relative_total = float_sum(relative_inverse);
+    let combined_total = float_sum(combined_inverse);
+    let valid =
+        item(default_rank) == 2
+            and item(absolute_rank) == 1
+            and item(relative_rank) == 2
+            and item(combined_rank) == 1
+            and default_total > 4.24
+            and default_total < 4.26
+            and absolute_total > 0.24
+            and absolute_total < 0.26
+            and relative_total > 4.24
+            and relative_total < 4.26
+            and combined_total > 0.24
+            and combined_total < 0.26
+            and shape(matrix) == [2, 2]
+            and shape(absolute_tolerance) == []
+            and shape(relative_tolerance) == [];
+    dispose(combined_inverse);
+    dispose(relative_inverse);
+    dispose(absolute_inverse);
+    dispose(default_inverse);
+    dispose(combined_rank);
+    dispose(relative_rank);
+    dispose(absolute_rank);
+    dispose(default_rank);
+    dispose(relative_tolerance);
+    dispose(absolute_tolerance);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves diagonal view values and independent handle lifetime after source disposal.
+ */
+@test
+pub diagonal_view_survives_source_handle_disposal(): Bool ->
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let diagonal = linalg_diagonal(matrix);
+    let diagonal_shape = shape(diagonal);
+    dispose(matrix);
+    let diagonal_total = float_sum(diagonal);
+    let valid = diagonal_shape == [2] and diagonal_total == 6.0;
+    (dispose(diagonal); valid).
+
+/**
+ * Proves absent, integer, and floating-point scalar condition-number orders.
+ */
+@test
+pub scalar_condition_orders_match_libtorch(): Bool ->
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let default_condition = linalg_cond_default(matrix);
+    let integer_condition = linalg_cond_int(matrix, 1);
+    let floating_condition = linalg_cond_float(matrix, 2.0);
+    let default_value = item_float(default_condition);
+    let integer_value = item_float(integer_condition);
+    let floating_value = item_float(floating_condition);
+    let valid =
+        default_value > 14.92
+            and default_value < 14.94
+            and integer_value > 20.99
+            and integer_value < 21.01
+            and floating_value > 14.92
+            and floating_value < 14.94
+            and shape(matrix) == [2, 2];
+    dispose(floating_condition);
+    dispose(integer_condition);
+    dispose(default_condition);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves integer and floating scalar orders across every non-out linalg norm schema.
+ */
+@test
+pub scalar_linalg_norm_family_matches_libtorch(): Bool ->
+    let matrix = from_floats([3.0, 4.0, 0.0, 0.0], [2, 2]);
+    let scalar_type = dtype(matrix);
+    let matrix_int = linalg_matrix_norm_int(matrix, 1);
+    let matrix_float = linalg_matrix_norm_float(matrix, 2.0);
+    let matrix_int_configured = linalg_matrix_norm_int_configured(matrix, 1, [0, 1], true, scalar_type);
+    let matrix_float_configured = linalg_matrix_norm_float_configured(matrix, 2.0, [0, 1], true, scalar_type);
+    let norm_default = linalg_norm_default(matrix);
+    let norm_int = linalg_norm_int(matrix, 1);
+    let norm_float = linalg_norm_float(matrix, 2.0);
+    let norm_int_configured = linalg_norm_int_configured(matrix, 1, [0, 1], true, scalar_type);
+    let norm_float_configured = linalg_norm_float_configured(matrix, 2.0, [0, 1], true, scalar_type);
+    let vector_int = linalg_vector_norm_int(matrix);
+    let vector_float = linalg_vector_norm_float(matrix, 1.0);
+    let vector_int_configured = linalg_vector_norm_int_configured(matrix, 1, [0, 1], true, scalar_type);
+    let vector_float_configured = linalg_vector_norm_float_configured(matrix, 2.0, [0, 1], true, scalar_type);
+    let powsum_int = linalg_powsum_int(matrix);
+    let powsum_float = linalg_powsum_float(matrix, 1.0);
+    let powsum_int_configured = linalg_powsum_int_configured(matrix, 2, [0, 1], true, scalar_type);
+    let powsum_float_configured = linalg_powsum_float_configured(matrix, 1.0, [0, 1], true, scalar_type);
+    let valid =
+        float_sum(matrix_int) == 4.0
+            and float_sum(matrix_float) == 5.0
+            and float_sum(matrix_int_configured) == 4.0
+            and float_sum(matrix_float_configured) == 5.0
+            and float_sum(norm_default) == 5.0
+            and float_sum(norm_int) == 4.0
+            and float_sum(norm_float) == 5.0
+            and float_sum(norm_int_configured) == 4.0
+            and float_sum(norm_float_configured) == 5.0
+            and float_sum(vector_int) == 5.0
+            and float_sum(vector_float) == 7.0
+            and float_sum(vector_int_configured) == 7.0
+            and float_sum(vector_float_configured) == 5.0
+            and float_sum(powsum_int) == 25.0
+            and float_sum(powsum_float) == 7.0
+            and float_sum(powsum_int_configured) == 25.0
+            and float_sum(powsum_float_configured) == 7.0
+            and shape(matrix_int_configured) == [1, 1]
+            and shape(matrix_float_configured) == [1, 1]
+            and shape(norm_int_configured) == [1, 1]
+            and shape(norm_float_configured) == [1, 1]
+            and shape(vector_int_configured) == [1, 1]
+            and shape(vector_float_configured) == [1, 1]
+            and shape(powsum_int_configured) == [1, 1]
+            and shape(powsum_float_configured) == [1, 1]
+            and dtype(matrix_float_configured) == scalar_type
+            and dtype(norm_float_configured) == scalar_type
+            and dtype(vector_float_configured) == scalar_type
+            and dtype(powsum_float_configured) == scalar_type
+            and shape(matrix) == [2, 2];
+    dispose(powsum_float_configured);
+    dispose(powsum_int_configured);
+    dispose(powsum_float);
+    dispose(powsum_int);
+    dispose(vector_float_configured);
+    dispose(vector_int_configured);
+    dispose(vector_float);
+    dispose(vector_int);
+    dispose(norm_float_configured);
+    dispose(norm_int_configured);
+    dispose(norm_float);
+    dispose(norm_int);
+    dispose(norm_default);
+    dispose(matrix_float_configured);
+    dispose(matrix_int_configured);
+    dispose(matrix_float);
+    dispose(matrix_int);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves a mutable out schema writes caller-owned storage without replacing its handle.
+ */
+@test
+pub determinant_out_populates_existing_tensor(): Bool ->
+    let matrix = from_floats([4.0, 7.0, 2.0, 6.0], [2, 2]);
+    let output = from_float(0.0);
+    linalg_det_out(output, matrix);
+    let valid =
+        item_float(output) > 9.99
+            and item_float(output) < 10.01
+            and shape(output) == []
+            and shape(matrix) == [2, 2];
+    (dispose(output); dispose(matrix); valid).

@@ -1,0 +1,41 @@
+/**
+ * Generated direct-CXX implementation of remaining in-place and feature-wise dropout operators.
+ */
+module pytorch.DropoutCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes exact aten::alpha_dropout_ mutation.
+ */
+@compiler.native {pytorch.dropout_completion.alpha_dropout_in_place}
+pub alpha_dropout_in_place(tensor: Tensor, probability: Float, training: Bool): Unit ->
+    native.
+
+/**
+ * Executes exact aten::dropout_ mutation.
+ */
+@compiler.native {pytorch.dropout_completion.dropout_in_place}
+pub dropout_in_place(tensor: Tensor, probability: Float, training: Bool): Unit ->
+    native.
+
+/**
+ * Executes exact functional aten::feature_alpha_dropout.
+ */
+@compiler.native {pytorch.dropout_completion.feature_alpha_dropout}
+pub feature_alpha_dropout(tensor: Tensor, probability: Float, training: Bool): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::feature_alpha_dropout_ mutation.
+ */
+@compiler.native {pytorch.dropout_completion.feature_alpha_dropout_in_place}
+pub feature_alpha_dropout_in_place(tensor: Tensor, probability: Float, training: Bool): Unit ->
+    native.
+
+/**
+ * Executes exact aten::feature_dropout_ mutation.
+ */
+@compiler.native {pytorch.dropout_completion.feature_dropout_in_place}
+pub feature_dropout_in_place(tensor: Tensor, probability: Float, training: Bool): Unit ->
+    native.

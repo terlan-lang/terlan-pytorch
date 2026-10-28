@@ -1,0 +1,10 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{add, full_float}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let residual = full_float([1, 2, 2, 2], 1.0);
+    let wrong_channel_branch = full_float([1, 3, 2, 2], 1.0);
+    let output = add(residual, wrong_channel_branch, 1.0);
+    println("PYTORCH_RESIDUAL_CHANNEL_NOT_REJECTED").

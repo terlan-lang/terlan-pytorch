@@ -1,0 +1,48 @@
+module pytorch.XlogyParityTest.
+
+import pytorch.BinaryScalar.{xlogy_left_float, xlogy_left_float_out, xlogy_left_int, xlogy_left_int_out, xlogy_right_float, xlogy_right_float_in_place, xlogy_right_float_out, xlogy_right_int, xlogy_right_int_in_place, xlogy_right_int_out, xlogy_tensor_in_place, xlogy_tensor_out}.
+import pytorch.Tensor.{dispose, from_float, item_float}.
+
+/**
+ * Proves all xlogy scalar, output, and mutation shapes with stable zero behavior.
+ */
+@test
+pub xlogy_overloads_match_libtorch(): Bool ->
+    let source = from_float(2.0);
+    let one = from_float(1.0);
+    let right_int = xlogy_right_int(source, 1);
+    let right_float = xlogy_right_float(source, 1.0);
+    let left_int = xlogy_left_int(0, source);
+    let left_float = xlogy_left_float(0.0, source);
+    let tensor_output = from_float(7.0);
+    let right_int_output = from_float(7.0);
+    let right_float_output = from_float(7.0);
+    let left_int_output = from_float(7.0);
+    let left_float_output = from_float(7.0);
+    let tensor_mutation = from_float(2.0);
+    let int_mutation = from_float(2.0);
+    let float_mutation = from_float(2.0);
+    xlogy_tensor_out(tensor_output, source, one);
+    xlogy_right_int_out(right_int_output, source, 1);
+    xlogy_right_float_out(right_float_output, source, 1.0);
+    xlogy_left_int_out(left_int_output, 0, source);
+    xlogy_left_float_out(left_float_output, 0.0, source);
+    xlogy_tensor_in_place(tensor_mutation, one);
+    xlogy_right_int_in_place(int_mutation, 1);
+    xlogy_right_float_in_place(float_mutation, 1.0);
+    let valid =
+        item_float(right_int) == 0.0
+            and item_float(right_float) == 0.0
+            and item_float(left_int) == 0.0
+            and item_float(left_float) == 0.0
+            and item_float(tensor_output) == 0.0
+            and item_float(right_int_output) == 0.0
+            and item_float(right_float_output) == 0.0
+            and item_float(left_int_output) == 0.0
+            and item_float(left_float_output) == 0.0
+            and item_float(tensor_mutation) == 0.0
+            and item_float(int_mutation) == 0.0
+            and item_float(float_mutation) == 0.0
+            and item_float(source) == 2.0
+            and item_float(one) == 1.0;
+    (dispose(float_mutation); dispose(int_mutation); dispose(tensor_mutation); dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(tensor_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(one); dispose(source); valid).

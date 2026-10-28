@@ -1,0 +1,44 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{amax, conv2d, dispose, dtype, full_float, item_float, mse_loss, numel, shape}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = full_float([1, 1, 3, 3], 1.0);
+    let weight = full_float([1, 1, 2, 2], 1.0);
+    let bias = full_float([1], 0.0);
+    let output = conv2d(input, weight, bias, [1, 1], [0, 0], [1, 1], 1);
+    let expected = full_float([1, 1, 2, 2], 4.0);
+    let exact_loss = mse_loss(output, expected, 1);
+    let maximum0 = amax(output, [0], false);
+    let maximum1 = amax(maximum0, [0], false);
+    let maximum2 = amax(maximum1, [0], false);
+    let maximum3 = amax(maximum2, [0], false);
+    let observed_shape = shape(output);
+    let observed_numel = numel(output);
+    let observed_dtype = dtype(output);
+    let observed = item_float(maximum3);
+    let observed_exact_loss = item_float(exact_loss);
+    let input_shape = shape(input);
+    let weight_shape = shape(weight);
+    let bias_value = item_float(bias);
+    dispose(maximum3);
+    dispose(maximum2);
+    dispose(maximum1);
+    dispose(maximum0);
+    dispose(exact_loss);
+    dispose(expected);
+    dispose(output);
+    dispose(bias);
+    dispose(weight);
+    dispose(input);
+    if {
+        observed_shape.length() == 4 and observed_shape[0] == 1 and
+            observed_shape[1] == 1 and observed_shape[2] == 2 and observed_shape[3] == 2 and
+            observed_numel == 4 and observed_dtype == 7 and observed == 4.0 and
+            observed_exact_loss == 0.0 and
+            input_shape.length() == 4 and input_shape[2] == 3 and input_shape[3] == 3 and
+            weight_shape.length() == 4 and weight_shape[2] == 2 and weight_shape[3] == 2 and
+            bias_value == 0.0 -> println("PYTORCH_CONV2D_CONSUMER_OK");
+        true -> println("PYTORCH_CONV2D_CONSUMER_FAILED")
+    }.

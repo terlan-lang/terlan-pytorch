@@ -1,0 +1,106 @@
+module pytorch.FillParityTest.
+
+import pytorch.Binary.greater_tensor.
+import pytorch.Fill.{fill_diagonal_float_in_place, fill_diagonal_int_in_place, fill_float, fill_float_in_place, fill_float_out, fill_int, fill_int_in_place, fill_int_out, fill_tensor_in_place, fill_tensor_out, masked_fill_float, masked_fill_float_in_place, masked_fill_float_out, masked_fill_int, masked_fill_int_in_place, masked_fill_int_out, masked_fill_tensor_in_place, masked_fill_tensor_out}.
+import pytorch.Tensor.{dispose, from_float, from_floats, item_float, sum}.
+
+/**
+ * Proves scalar and scalar-tensor full-fill storage contracts.
+ */
+@test
+pub full_fill_forms_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let integer = fill_int(input, 3);
+    let floating = fill_float(input, 0.5);
+    let integer_output = from_float(-1.0);
+    let floating_output = from_float(-1.0);
+    let integer_mutation = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let floating_mutation = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let value = from_float(2.5);
+    let tensor_output = from_float(-1.0);
+    let tensor_mutation = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    fill_int_out(integer_output, input, 3);
+    fill_float_out(floating_output, input, 0.5);
+    fill_int_in_place(integer_mutation, 3);
+    fill_float_in_place(floating_mutation, 0.5);
+    fill_tensor_out(tensor_output, input, value);
+    fill_tensor_in_place(tensor_mutation, value);
+    let integer_total = sum(integer);
+    let floating_total = sum(floating);
+    let integer_output_total = sum(integer_output);
+    let floating_output_total = sum(floating_output);
+    let integer_mutation_total = sum(integer_mutation);
+    let floating_mutation_total = sum(floating_mutation);
+    let tensor_output_total = sum(tensor_output);
+    let tensor_mutation_total = sum(tensor_mutation);
+    let input_total = sum(input);
+    let valid =
+        item_float(integer_total) == 12.0
+            and item_float(floating_total) == 2.0
+            and item_float(integer_output_total) == 12.0
+            and item_float(floating_output_total) == 2.0
+            and item_float(integer_mutation_total) == 12.0
+            and item_float(floating_mutation_total) == 2.0
+            and item_float(tensor_output_total) == 10.0
+            and item_float(tensor_mutation_total) == 10.0
+            and item_float(input_total) == 10.0;
+    (dispose(input_total); dispose(tensor_mutation_total); dispose(tensor_output_total); dispose(floating_mutation_total); dispose(integer_mutation_total); dispose(floating_output_total); dispose(integer_output_total); dispose(floating_total); dispose(integer_total); dispose(tensor_mutation); dispose(tensor_output); dispose(value); dispose(floating_mutation); dispose(integer_mutation); dispose(floating_output); dispose(integer_output); dispose(floating); dispose(integer); dispose(input); valid).
+
+/**
+ * Proves diagonal values and wrapping behavior.
+ */
+@test
+pub diagonal_forms_match_libtorch(): Bool ->
+    let diagonal = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [3, 3]);
+    let wrapped = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [5, 2]);
+    fill_diagonal_int_in_place(diagonal, 2, false);
+    fill_diagonal_float_in_place(wrapped, 1.5, true);
+    let diagonal_total = sum(diagonal);
+    let wrapped_total = sum(wrapped);
+    let valid = item_float(diagonal_total) == 6.0 and item_float(wrapped_total) == 6.0;
+    (dispose(wrapped_total); dispose(diagonal_total); dispose(wrapped); dispose(diagonal); valid).
+
+/**
+ * Proves scalar and scalar-tensor masked-fill storage contracts.
+ */
+@test
+pub masked_fill_forms_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let mask_values = from_floats([0.0, 1.0, 0.0, 1.0], [2, 2]);
+    let zero = from_float(0.0);
+    let mask = greater_tensor(mask_values, zero);
+    let integer = masked_fill_int(input, mask, 9);
+    let floating = masked_fill_float(input, mask, 0.5);
+    let integer_output = from_float(-1.0);
+    let floating_output = from_float(-1.0);
+    let integer_mutation = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let floating_mutation = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let value = from_float(7.0);
+    let tensor_output = from_float(-1.0);
+    let tensor_mutation = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    masked_fill_int_out(integer_output, input, mask, 9);
+    masked_fill_float_out(floating_output, input, mask, 0.5);
+    masked_fill_int_in_place(integer_mutation, mask, 9);
+    masked_fill_float_in_place(floating_mutation, mask, 0.5);
+    masked_fill_tensor_out(tensor_output, input, mask, value);
+    masked_fill_tensor_in_place(tensor_mutation, mask, value);
+    let integer_total = sum(integer);
+    let floating_total = sum(floating);
+    let integer_output_total = sum(integer_output);
+    let floating_output_total = sum(floating_output);
+    let integer_mutation_total = sum(integer_mutation);
+    let floating_mutation_total = sum(floating_mutation);
+    let tensor_output_total = sum(tensor_output);
+    let tensor_mutation_total = sum(tensor_mutation);
+    let input_total = sum(input);
+    let valid =
+        item_float(integer_total) == 22.0
+            and item_float(floating_total) == 5.0
+            and item_float(integer_output_total) == 22.0
+            and item_float(floating_output_total) == 5.0
+            and item_float(integer_mutation_total) == 22.0
+            and item_float(floating_mutation_total) == 5.0
+            and item_float(tensor_output_total) == 18.0
+            and item_float(tensor_mutation_total) == 18.0
+            and item_float(input_total) == 10.0;
+    (dispose(input_total); dispose(tensor_mutation_total); dispose(tensor_output_total); dispose(floating_mutation_total); dispose(integer_mutation_total); dispose(floating_output_total); dispose(integer_output_total); dispose(floating_total); dispose(integer_total); dispose(tensor_mutation); dispose(tensor_output); dispose(value); dispose(floating_mutation); dispose(integer_mutation); dispose(floating_output); dispose(integer_output); dispose(floating); dispose(integer); dispose(mask); dispose(zero); dispose(mask_values); dispose(input); valid).

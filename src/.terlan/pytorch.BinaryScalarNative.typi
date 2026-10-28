@@ -1,0 +1,51 @@
+//! Generated exact CXX tensor/scalar binary dispatchers.
+
+module pytorch.BinaryScalarNative.
+
+/// Applies a selected binary operation with a floating-point scalar left operand.
+
+pub binary_scalar_left_float(operation: Int, scalar: Float, tensor: Tensor): Tensor.
+
+/// Writes a selected binary operation with a floating-point scalar left operand.
+
+pub binary_scalar_left_float_out(output: Tensor, operation: Int, scalar: Float, tensor: Tensor): Unit.
+
+/// Applies a selected binary operation with an exact integer scalar left operand.
+
+pub binary_scalar_left_int(operation: Int, scalar: Int, tensor: Tensor): Tensor.
+
+/// Writes a selected binary operation with an integer scalar left operand.
+
+pub binary_scalar_left_int_out(output: Tensor, operation: Int, scalar: Int, tensor: Tensor): Unit.
+
+/// Applies a selected binary operation with a floating-point scalar right operand.
+
+pub binary_scalar_right_float(tensor: Tensor, operation: Int, scalar: Float): Tensor.
+
+/// Applies a selected floating-scalar binary operation in place.
+
+pub binary_scalar_right_float_in_place(tensor: Tensor, operation: Int, scalar: Float): Unit.
+
+/// Writes a selected binary operation with a floating-point scalar right operand.
+
+pub binary_scalar_right_float_out(output: Tensor, tensor: Tensor, operation: Int, scalar: Float): Unit.
+
+/// Applies a selected binary operation with an exact integer scalar right operand.
+
+pub binary_scalar_right_int(tensor: Tensor, operation: Int, scalar: Int): Tensor.
+
+/// Applies a selected integer-scalar binary operation in place.
+
+pub binary_scalar_right_int_in_place(tensor: Tensor, operation: Int, scalar: Int): Unit.
+
+/// Writes a selected binary operation with an integer scalar right operand.
+
+pub binary_scalar_right_int_out(output: Tensor, tensor: Tensor, operation: Int, scalar: Int): Unit.
+
+/// Applies a selected two-tensor binary operation to the left tensor in place.
+
+pub binary_tensor_in_place(left: Tensor, operation: Int, right: Tensor): Unit.
+
+/// Writes a selected two-tensor binary operation into retained output storage.
+
+pub binary_tensor_out(output: Tensor, left: Tensor, operation: Int, right: Tensor): Unit.

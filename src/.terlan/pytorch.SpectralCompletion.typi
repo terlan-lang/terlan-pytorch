@@ -1,0 +1,15 @@
+//! Generated exact CXX short-time Fourier transform surfaces.
+
+module pytorch.SpectralCompletion.
+
+/// Exact generated CXX istft form with LibTorch defaults.
+
+pub istft_default(input: Tensor, n_fft: Int): Tensor.
+
+/// Exact generated CXX centered stft form with LibTorch defaults.
+
+pub stft_center_default(input: Tensor, n_fft: Int, center: Bool = true, pad_mode: String = "reflect"): Tensor.
+
+/// Exact generated CXX stft form with LibTorch defaults.
+
+pub stft_default(input: Tensor, n_fft: Int): Tensor.

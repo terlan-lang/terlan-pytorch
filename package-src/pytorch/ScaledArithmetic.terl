@@ -1,0 +1,386 @@
+/**
+ * Typed alpha-scaled addition, subtraction, and reverse subtraction.
+ */
+module pytorch.ScaledArithmetic.
+
+import pytorch.ScaledArithmeticNative.{scaled_scalar_float, scaled_scalar_float_in_place, scaled_scalar_float_out, scaled_scalar_int, scaled_scalar_int_in_place, scaled_scalar_int_out, scaled_tensor, scaled_tensor_in_place, scaled_tensor_out}.
+
+import type pytorch.Tensor.
+
+/**
+ * Top-level `torch.rsub` alias for a floating-point scalar operand and alpha.
+ */
+pub rsub(input: Tensor, other: Float, alpha: Float): Tensor ->
+    rsub_right_float_alpha_float(input, other, alpha).
+
+/**
+ * Applies add with a Int operand and Int alpha.
+ */
+pub add_right_int_alpha_int(left: Tensor, right: Int, alpha: Int): Tensor ->
+    scaled_scalar_int(left, 0, right, true, alpha, 0.0).
+
+/**
+ * Writes add with a Int operand and Int alpha.
+ */
+pub add_right_int_alpha_int_out(output: Tensor, left: Tensor, right: Int, alpha: Int): Unit ->
+    scaled_scalar_int_out(output, left, 0, right, true, alpha, 0.0).
+
+/**
+ * Applies add with a Int operand and Int alpha in place.
+ */
+pub add_right_int_alpha_int_in_place(left: Tensor, right: Int, alpha: Int): Unit ->
+    scaled_scalar_int_in_place(left, 0, right, true, alpha, 0.0).
+
+/**
+ * Applies add with a Int operand and Float alpha.
+ */
+pub add_right_int_alpha_float(left: Tensor, right: Int, alpha: Float): Tensor ->
+    scaled_scalar_int(left, 0, right, false, 0, alpha).
+
+/**
+ * Writes add with a Int operand and Float alpha.
+ */
+pub add_right_int_alpha_float_out(output: Tensor, left: Tensor, right: Int, alpha: Float): Unit ->
+    scaled_scalar_int_out(output, left, 0, right, false, 0, alpha).
+
+/**
+ * Applies add with a Int operand and Float alpha in place.
+ */
+pub add_right_int_alpha_float_in_place(left: Tensor, right: Int, alpha: Float): Unit ->
+    scaled_scalar_int_in_place(left, 0, right, false, 0, alpha).
+
+/**
+ * Applies add with a Float operand and Int alpha.
+ */
+pub add_right_float_alpha_int(left: Tensor, right: Float, alpha: Int): Tensor ->
+    scaled_scalar_float(left, 0, right, true, alpha, 0.0).
+
+/**
+ * Writes add with a Float operand and Int alpha.
+ */
+pub add_right_float_alpha_int_out(output: Tensor, left: Tensor, right: Float, alpha: Int): Unit ->
+    scaled_scalar_float_out(output, left, 0, right, true, alpha, 0.0).
+
+/**
+ * Applies add with a Float operand and Int alpha in place.
+ */
+pub add_right_float_alpha_int_in_place(left: Tensor, right: Float, alpha: Int): Unit ->
+    scaled_scalar_float_in_place(left, 0, right, true, alpha, 0.0).
+
+/**
+ * Applies add with a Float operand and Float alpha.
+ */
+pub add_right_float_alpha_float(left: Tensor, right: Float, alpha: Float): Tensor ->
+    scaled_scalar_float(left, 0, right, false, 0, alpha).
+
+/**
+ * Writes add with a Float operand and Float alpha.
+ */
+pub add_right_float_alpha_float_out(output: Tensor, left: Tensor, right: Float, alpha: Float): Unit ->
+    scaled_scalar_float_out(output, left, 0, right, false, 0, alpha).
+
+/**
+ * Applies add with a Float operand and Float alpha in place.
+ */
+pub add_right_float_alpha_float_in_place(left: Tensor, right: Float, alpha: Float): Unit ->
+    scaled_scalar_float_in_place(left, 0, right, false, 0, alpha).
+
+/**
+ * Applies tensor add with Int alpha.
+ */
+pub add_tensor_alpha_int(left: Tensor, right: Tensor, alpha: Int): Tensor ->
+    scaled_tensor(left, 0, right, true, alpha, 0.0).
+
+/**
+ * Writes tensor add with Int alpha.
+ */
+pub add_tensor_alpha_int_out(output: Tensor, left: Tensor, right: Tensor, alpha: Int): Unit ->
+    scaled_tensor_out(output, left, 0, right, true, alpha, 0.0).
+
+/**
+ * Applies tensor add with Int alpha in place.
+ */
+pub add_tensor_alpha_int_in_place(left: Tensor, right: Tensor, alpha: Int): Unit ->
+    scaled_tensor_in_place(left, 0, right, true, alpha, 0.0).
+
+/**
+ * Applies tensor add with Float alpha.
+ */
+pub add_tensor_alpha_float(left: Tensor, right: Tensor, alpha: Float): Tensor ->
+    scaled_tensor(left, 0, right, false, 0, alpha).
+
+/**
+ * Writes tensor add with Float alpha.
+ */
+pub add_tensor_alpha_float_out(output: Tensor, left: Tensor, right: Tensor, alpha: Float): Unit ->
+    scaled_tensor_out(output, left, 0, right, false, 0, alpha).
+
+/**
+ * Applies tensor add with Float alpha in place.
+ */
+pub add_tensor_alpha_float_in_place(left: Tensor, right: Tensor, alpha: Float): Unit ->
+    scaled_tensor_in_place(left, 0, right, false, 0, alpha).
+
+/**
+ * Applies sub with a Int operand and Int alpha.
+ */
+pub sub_right_int_alpha_int(left: Tensor, right: Int, alpha: Int): Tensor ->
+    scaled_scalar_int(left, 1, right, true, alpha, 0.0).
+
+/**
+ * Writes sub with a Int operand and Int alpha.
+ */
+pub sub_right_int_alpha_int_out(output: Tensor, left: Tensor, right: Int, alpha: Int): Unit ->
+    scaled_scalar_int_out(output, left, 1, right, true, alpha, 0.0).
+
+/**
+ * Applies sub with a Int operand and Int alpha in place.
+ */
+pub sub_right_int_alpha_int_in_place(left: Tensor, right: Int, alpha: Int): Unit ->
+    scaled_scalar_int_in_place(left, 1, right, true, alpha, 0.0).
+
+/**
+ * Applies sub with a Int operand and Float alpha.
+ */
+pub sub_right_int_alpha_float(left: Tensor, right: Int, alpha: Float): Tensor ->
+    scaled_scalar_int(left, 1, right, false, 0, alpha).
+
+/**
+ * Writes sub with a Int operand and Float alpha.
+ */
+pub sub_right_int_alpha_float_out(output: Tensor, left: Tensor, right: Int, alpha: Float): Unit ->
+    scaled_scalar_int_out(output, left, 1, right, false, 0, alpha).
+
+/**
+ * Applies sub with a Int operand and Float alpha in place.
+ */
+pub sub_right_int_alpha_float_in_place(left: Tensor, right: Int, alpha: Float): Unit ->
+    scaled_scalar_int_in_place(left, 1, right, false, 0, alpha).
+
+/**
+ * Applies sub with a Float operand and Int alpha.
+ */
+pub sub_right_float_alpha_int(left: Tensor, right: Float, alpha: Int): Tensor ->
+    scaled_scalar_float(left, 1, right, true, alpha, 0.0).
+
+/**
+ * Writes sub with a Float operand and Int alpha.
+ */
+pub sub_right_float_alpha_int_out(output: Tensor, left: Tensor, right: Float, alpha: Int): Unit ->
+    scaled_scalar_float_out(output, left, 1, right, true, alpha, 0.0).
+
+/**
+ * Applies sub with a Float operand and Int alpha in place.
+ */
+pub sub_right_float_alpha_int_in_place(left: Tensor, right: Float, alpha: Int): Unit ->
+    scaled_scalar_float_in_place(left, 1, right, true, alpha, 0.0).
+
+/**
+ * Applies sub with a Float operand and Float alpha.
+ */
+pub sub_right_float_alpha_float(left: Tensor, right: Float, alpha: Float): Tensor ->
+    scaled_scalar_float(left, 1, right, false, 0, alpha).
+
+/**
+ * Writes sub with a Float operand and Float alpha.
+ */
+pub sub_right_float_alpha_float_out(output: Tensor, left: Tensor, right: Float, alpha: Float): Unit ->
+    scaled_scalar_float_out(output, left, 1, right, false, 0, alpha).
+
+/**
+ * Applies sub with a Float operand and Float alpha in place.
+ */
+pub sub_right_float_alpha_float_in_place(left: Tensor, right: Float, alpha: Float): Unit ->
+    scaled_scalar_float_in_place(left, 1, right, false, 0, alpha).
+
+/**
+ * Applies tensor sub with Int alpha.
+ */
+pub sub_tensor_alpha_int(left: Tensor, right: Tensor, alpha: Int): Tensor ->
+    scaled_tensor(left, 1, right, true, alpha, 0.0).
+
+/**
+ * Writes tensor sub with Int alpha.
+ */
+pub sub_tensor_alpha_int_out(output: Tensor, left: Tensor, right: Tensor, alpha: Int): Unit ->
+    scaled_tensor_out(output, left, 1, right, true, alpha, 0.0).
+
+/**
+ * Applies tensor sub with Int alpha in place.
+ */
+pub sub_tensor_alpha_int_in_place(left: Tensor, right: Tensor, alpha: Int): Unit ->
+    scaled_tensor_in_place(left, 1, right, true, alpha, 0.0).
+
+/**
+ * Applies tensor sub with Float alpha.
+ */
+pub sub_tensor_alpha_float(left: Tensor, right: Tensor, alpha: Float): Tensor ->
+    scaled_tensor(left, 1, right, false, 0, alpha).
+
+/**
+ * Writes tensor sub with Float alpha.
+ */
+pub sub_tensor_alpha_float_out(output: Tensor, left: Tensor, right: Tensor, alpha: Float): Unit ->
+    scaled_tensor_out(output, left, 1, right, false, 0, alpha).
+
+/**
+ * Applies tensor sub with Float alpha in place.
+ */
+pub sub_tensor_alpha_float_in_place(left: Tensor, right: Tensor, alpha: Float): Unit ->
+    scaled_tensor_in_place(left, 1, right, false, 0, alpha).
+
+/**
+ * Applies subtract with a Int operand and Int alpha.
+ */
+pub subtract_right_int_alpha_int(left: Tensor, right: Int, alpha: Int): Tensor ->
+    scaled_scalar_int(left, 1, right, true, alpha, 0.0).
+
+/**
+ * Applies subtract with a Int operand and Int alpha in place.
+ */
+pub subtract_right_int_alpha_int_in_place(left: Tensor, right: Int, alpha: Int): Unit ->
+    scaled_scalar_int_in_place(left, 1, right, true, alpha, 0.0).
+
+/**
+ * Applies subtract with a Int operand and Float alpha.
+ */
+pub subtract_right_int_alpha_float(left: Tensor, right: Int, alpha: Float): Tensor ->
+    scaled_scalar_int(left, 1, right, false, 0, alpha).
+
+/**
+ * Applies subtract with a Int operand and Float alpha in place.
+ */
+pub subtract_right_int_alpha_float_in_place(left: Tensor, right: Int, alpha: Float): Unit ->
+    scaled_scalar_int_in_place(left, 1, right, false, 0, alpha).
+
+/**
+ * Applies subtract with a Float operand and Int alpha.
+ */
+pub subtract_right_float_alpha_int(left: Tensor, right: Float, alpha: Int): Tensor ->
+    scaled_scalar_float(left, 1, right, true, alpha, 0.0).
+
+/**
+ * Applies subtract with a Float operand and Int alpha in place.
+ */
+pub subtract_right_float_alpha_int_in_place(left: Tensor, right: Float, alpha: Int): Unit ->
+    scaled_scalar_float_in_place(left, 1, right, true, alpha, 0.0).
+
+/**
+ * Applies subtract with a Float operand and Float alpha.
+ */
+pub subtract_right_float_alpha_float(left: Tensor, right: Float, alpha: Float): Tensor ->
+    scaled_scalar_float(left, 1, right, false, 0, alpha).
+
+/**
+ * Applies subtract with a Float operand and Float alpha in place.
+ */
+pub subtract_right_float_alpha_float_in_place(left: Tensor, right: Float, alpha: Float): Unit ->
+    scaled_scalar_float_in_place(left, 1, right, false, 0, alpha).
+
+/**
+ * Applies tensor subtract with Int alpha.
+ */
+pub subtract_tensor_alpha_int(left: Tensor, right: Tensor, alpha: Int): Tensor ->
+    scaled_tensor(left, 1, right, true, alpha, 0.0).
+
+/**
+ * Writes tensor subtract with Int alpha.
+ */
+pub subtract_tensor_alpha_int_out(output: Tensor, left: Tensor, right: Tensor, alpha: Int): Unit ->
+    scaled_tensor_out(output, left, 1, right, true, alpha, 0.0).
+
+/**
+ * Applies tensor subtract with Int alpha in place.
+ */
+pub subtract_tensor_alpha_int_in_place(left: Tensor, right: Tensor, alpha: Int): Unit ->
+    scaled_tensor_in_place(left, 1, right, true, alpha, 0.0).
+
+/**
+ * Applies tensor subtract with Float alpha.
+ */
+pub subtract_tensor_alpha_float(left: Tensor, right: Tensor, alpha: Float): Tensor ->
+    scaled_tensor(left, 1, right, false, 0, alpha).
+
+/**
+ * Writes tensor subtract with Float alpha.
+ */
+pub subtract_tensor_alpha_float_out(output: Tensor, left: Tensor, right: Tensor, alpha: Float): Unit ->
+    scaled_tensor_out(output, left, 1, right, false, 0, alpha).
+
+/**
+ * Applies tensor subtract with Float alpha in place.
+ */
+pub subtract_tensor_alpha_float_in_place(left: Tensor, right: Tensor, alpha: Float): Unit ->
+    scaled_tensor_in_place(left, 1, right, false, 0, alpha).
+
+/**
+ * Applies rsub with a Int operand and Int alpha.
+ */
+pub rsub_right_int_alpha_int(left: Tensor, right: Int, alpha: Int): Tensor ->
+    scaled_scalar_int(left, 2, right, true, alpha, 0.0).
+
+/**
+ * Writes rsub with a Int operand and Int alpha.
+ */
+pub rsub_right_int_alpha_int_out(output: Tensor, left: Tensor, right: Int, alpha: Int): Unit ->
+    scaled_scalar_int_out(output, left, 2, right, true, alpha, 0.0).
+
+/**
+ * Applies rsub with a Int operand and Float alpha.
+ */
+pub rsub_right_int_alpha_float(left: Tensor, right: Int, alpha: Float): Tensor ->
+    scaled_scalar_int(left, 2, right, false, 0, alpha).
+
+/**
+ * Writes rsub with a Int operand and Float alpha.
+ */
+pub rsub_right_int_alpha_float_out(output: Tensor, left: Tensor, right: Int, alpha: Float): Unit ->
+    scaled_scalar_int_out(output, left, 2, right, false, 0, alpha).
+
+/**
+ * Applies rsub with a Float operand and Int alpha.
+ */
+pub rsub_right_float_alpha_int(left: Tensor, right: Float, alpha: Int): Tensor ->
+    scaled_scalar_float(left, 2, right, true, alpha, 0.0).
+
+/**
+ * Writes rsub with a Float operand and Int alpha.
+ */
+pub rsub_right_float_alpha_int_out(output: Tensor, left: Tensor, right: Float, alpha: Int): Unit ->
+    scaled_scalar_float_out(output, left, 2, right, true, alpha, 0.0).
+
+/**
+ * Applies rsub with a Float operand and Float alpha.
+ */
+pub rsub_right_float_alpha_float(left: Tensor, right: Float, alpha: Float): Tensor ->
+    scaled_scalar_float(left, 2, right, false, 0, alpha).
+
+/**
+ * Writes rsub with a Float operand and Float alpha.
+ */
+pub rsub_right_float_alpha_float_out(output: Tensor, left: Tensor, right: Float, alpha: Float): Unit ->
+    scaled_scalar_float_out(output, left, 2, right, false, 0, alpha).
+
+/**
+ * Applies tensor rsub with Int alpha.
+ */
+pub rsub_tensor_alpha_int(left: Tensor, right: Tensor, alpha: Int): Tensor ->
+    scaled_tensor(left, 2, right, true, alpha, 0.0).
+
+/**
+ * Writes tensor rsub with Int alpha.
+ */
+pub rsub_tensor_alpha_int_out(output: Tensor, left: Tensor, right: Tensor, alpha: Int): Unit ->
+    scaled_tensor_out(output, left, 2, right, true, alpha, 0.0).
+
+/**
+ * Applies tensor rsub with Float alpha.
+ */
+pub rsub_tensor_alpha_float(left: Tensor, right: Tensor, alpha: Float): Tensor ->
+    scaled_tensor(left, 2, right, false, 0, alpha).
+
+/**
+ * Writes tensor rsub with Float alpha.
+ */
+pub rsub_tensor_alpha_float_out(output: Tensor, left: Tensor, right: Tensor, alpha: Float): Unit ->
+    scaled_tensor_out(output, left, 2, right, false, 0, alpha).

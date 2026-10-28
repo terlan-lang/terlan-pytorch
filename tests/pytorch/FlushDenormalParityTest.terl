@@ -1,0 +1,12 @@
+/**
+ * CPU runtime evidence for the generated flush-denormal bridge.
+ */
+module pytorch.FlushDenormalParityTest.
+
+import pytorch.BackendAvailability.set_flush_denormal.
+
+@test
+pub flush_denormal_cpu_toggle_matches_libtorch(): Bool ->
+    let enabled = set_flush_denormal(true);
+    let disabled = set_flush_denormal(false);
+    enabled and disabled.

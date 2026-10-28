@@ -1,0 +1,668 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Validates the published-package contract through fresh external consumers.
+ */
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.Console.{eprintln, println}.
+import std.io.{Directory, File}.
+import std.system.{Arguments, Process}.
+
+import type std.system.Process.{EnvironmentEntry, Output}.
+
+/**
+ * Scenario describes one external consumer execution and its output contract.
+ */
+pub struct Scenario {
+    fixture: String,
+    mode: String,
+    build_directory: String,
+    required_outputs: List[String],
+    forbidden_outputs: List[String],
+}.
+
+/**
+ * ConsumerContext owns immutable paths shared by every consumer scenario.
+ */
+pub struct ConsumerContext {
+    compiler: String,
+    repository: String,
+    libtorch: String,
+    workspace: String,
+    consumer: String,
+    selector: String,
+}.
+
+/**
+ * StagingContext owns paths shared while package repositories remain present.
+ */
+pub struct StagingContext {
+    compiler: String,
+    repository: String,
+    libtorch: String,
+    workspace: String,
+    consumer: String,
+    package: String,
+    ndarray_package: String,
+    selector: String,
+}.
+
+/**
+ * Joins a parent path and one relative child.
+ */
+child(parent: String, relative: String): String ->
+    if {
+        String.ends_with(parent, "/") -> String.append(parent, relative);
+        true -> String.concat([parent, "/", relative])
+    }.
+
+/**
+ * Reports one stable external-consumer failure.
+ */
+failure(code: String, message: String): Bool ->
+    let _printed = eprintln(String.concat(["error[", code, "]: ", message]));
+    false.
+
+/**
+ * Executes one host command under explicit duration and output bounds.
+ */
+run_command(
+    program: String,
+    arguments: List[String],
+    working_directory: String,
+    environment: List[EnvironmentEntry],
+): Option[Output] ->
+    let base =
+        Process.with_output_limit_bytes(
+            Process.with_timeout_ms(
+                Process.with_working_directory(
+                    Process.with_arguments(Process.command(program), arguments),
+                    working_directory,
+                ),
+                600000,
+            ),
+            16777216,
+        );
+    let request =
+        if {
+            environment == [] -> base;
+            true -> Process.with_environment(base, environment)
+        };
+    case Process.run(request) {
+        Err(reason) ->
+            let _reported = failure("terlan_pytorch_consumer_process", reason.message);
+            None;
+        Ok(output) -> Some(output)
+    }.
+
+/**
+ * Requires a command to exit successfully and reports captured diagnostics.
+ */
+command_succeeds(
+    program: String,
+    arguments: List[String],
+    working_directory: String,
+    environment: List[EnvironmentEntry],
+): Bool ->
+    case run_command(program, arguments, working_directory, environment) {
+        None -> false;
+        Some(output) ->
+            if {
+                output.status == 0 -> true;
+                true -> failure(
+                    "terlan_pytorch_consumer_command",
+                    String.append(output.stderr, output.stdout),
+                )
+            }
+    }.
+
+/**
+ * Reads successful command output with surrounding whitespace removed.
+ */
+command_stdout(
+    program: String,
+    arguments: List[String],
+    working_directory: String,
+    environment: List[EnvironmentEntry],
+): Option[String] ->
+    case run_command(program, arguments, working_directory, environment) {
+        None -> None;
+        Some(output) ->
+            if {
+                output.status == 0 -> Some(String.trim(output.stdout));
+                true -> let _reported =
+                    failure(
+                        "terlan_pytorch_consumer_command",
+                        String.append(output.stderr, output.stdout),
+                    );
+                None
+            }
+    }.
+
+/**
+ * Reports whether one directory exists without following symbolic links.
+ */
+directory_exists(path: String): Bool ->
+    case Directory.entries(path) {
+        Ok(_entries) -> true;
+        Err(_reason) -> false
+    }.
+
+/**
+ * Copies one required file into an existing destination directory.
+ */
+copy_file(source: String, destination: String): Bool ->
+    case File.copy(source, destination) {
+        Ok(Unit) -> true;
+        Err(reason) -> failure("terlan_pytorch_consumer_copy", reason.message)
+    }.
+
+/**
+ * Copies one source tree while pruning build and repository metadata.
+ */
+copy_tree(source: String, destination: String): Bool ->
+    case Directory.copy_tree_excluding(source, destination, ["target", ".git"]) {
+        Ok(Unit) -> true;
+        Err(reason) -> failure("terlan_pytorch_consumer_copy", reason.message)
+    }.
+
+/**
+ * Configures and commits one deterministic local Git package snapshot.
+ */
+commit_package(path: String, message: String): Option[String] ->
+    let identity =
+        command_succeeds("git", ["init", "--quiet"], path, [])
+            and command_succeeds("git", ["config", "user.email", "terlan-pytorch-tests@example.invalid"], path, [])
+            and command_succeeds("git", ["config", "user.name", "Terlan PyTorch Tests"], path, [])
+            and command_succeeds("git", ["add", "."], path, []);
+    let dates =
+        [
+            Process.environment_entry("GIT_AUTHOR_DATE", "2000-01-01T00:00:00Z"),
+            Process.environment_entry("GIT_COMMITTER_DATE", "2000-01-01T00:00:00Z"),
+        ];
+    if {
+        not identity -> None;
+        not command_succeeds("git", ["commit", "--quiet", "-m", message], path, dates) -> None;
+        true -> command_stdout("git", ["rev-parse", "HEAD"], path, [])
+    }.
+
+/**
+ * Stages and commits the ndarray dependency as a standalone package.
+ */
+stage_ndarray(source: String, destination: String): Option[String] ->
+    let prepared =
+        case Directory.create_all(destination) {
+            Err(reason) -> failure("terlan_pytorch_consumer_stage", reason.message);
+            Ok(Unit) ->
+                copy_file(child(source, "terlan.toml"), child(destination, "terlan.toml"))
+                    and copy_tree(child(source, "src"), child(destination, "src"))
+                    and copy_tree(child(source, "native"), child(destination, "native"))
+        };
+    let bindings = child(source, "bindings");
+    let copied =
+        prepared
+            and if {
+    directory_exists(bindings) -> copy_tree(bindings, child(destination, "bindings"));
+    true -> true
+};
+    if {
+        copied -> commit_package(destination, "advanced terlan-ndarray dependency snapshot");
+        true -> None
+    }.
+
+/**
+ * Writes the staged PyTorch manifest with its immutable ndarray Git revision.
+ */
+write_staged_manifest(
+    repository: String,
+    destination: String,
+    ndarray_package: String,
+    ndarray_revision: String,
+): Bool ->
+    case File.read_text(child(repository, "terlan.toml")) {
+        Err(reason) -> failure("terlan_pytorch_consumer_manifest", reason.message);
+        Ok(contents) ->
+            let path_dependency = "ndarray = { path = \"../terlan-ndarray\" }";
+            if {
+                not String.contains(contents, path_dependency) -> failure(
+                    "terlan_pytorch_ndarray_dependency_missing",
+                    "package manifest does not depend on ndarray",
+                );
+                true -> case File.write_text(
+                    child(destination, "terlan.toml"),
+                    String.replace(
+                        contents,
+                        path_dependency,
+                        String.concat(
+                            [
+                                "ndarray = { git = \"",
+                                ndarray_package,
+                                "\", rev = \"",
+                                ndarray_revision,
+                                "\" }",
+                            ],
+                        ),
+                    ),
+                ) {
+                    Ok(Unit) -> true;
+                    Err(reason) -> failure("terlan_pytorch_consumer_manifest", reason.message)
+                }
+            }
+    }.
+
+/**
+ * Stages and commits the PyTorch package consumed by the external project.
+ */
+stage_pytorch(
+    repository: String,
+    destination: String,
+    ndarray_package: String,
+    ndarray_revision: String,
+): Option[String] ->
+    let directories =
+        case Directory.create_all(child(destination, "bindings")) {
+            Err(reason) -> failure("terlan_pytorch_consumer_stage", reason.message);
+            Ok(Unit) ->
+                case Directory.create_all(child(destination, "docs")) {
+                    Err(reason) -> failure("terlan_pytorch_consumer_stage", reason.message);
+                    Ok(Unit) ->
+                        Directory.create_all(child(destination, "tests/pytorch")) == Ok(Unit)
+                }
+        };
+    let prepared =
+        directories
+            and write_staged_manifest(repository, destination, ndarray_package, ndarray_revision)
+            and copy_tree(child(repository, "src"), child(destination, "src"))
+            and copy_tree(child(repository, "native"), child(destination, "native"))
+            and copy_file(
+    child(repository, "bindings/native-binding-manifest.json"),
+    child(destination, "bindings/native-binding-manifest.json"),
+)
+            and copy_file(
+    child(repository, "bindings/skipped-symbols.json"),
+    child(destination, "bindings/skipped-symbols.json"),
+)
+            and copy_file(child(repository, "docs/pytorch.Tensor.md"), child(destination, "docs/pytorch.Tensor.md"))
+            and copy_file(
+    child(repository, "tests/pytorch/DispatcherTest.terl"),
+    child(destination, "tests/pytorch/DispatcherTest.terl"),
+)
+            and copy_file(
+    child(repository, "tests/pytorch/NativeBoundaryTest.terl"),
+    child(destination, "tests/pytorch/NativeBoundaryTest.terl"),
+);
+    if {
+        prepared -> commit_package(destination, "generated terlan-pytorch package");
+        true -> None
+    }.
+
+/**
+ * Writes the fresh external consumer package manifest.
+ */
+write_consumer_manifest(consumer: String, package: String, revision: String): Bool ->
+    case File.write_text(
+        child(consumer, "terlan.toml"),
+        String.concat(
+            [
+                "[package]\n",
+                "name = \"terlan-pytorch-consumer\"\n",
+                "version = \"0.0.0\"\n",
+                "namespace = \"pytorch_consumer\"\n\n",
+                "[build]\n",
+                "source_roots = [\"src\"]\n",
+                "artifact = \"terlan-vm\"\n\n",
+                "[dependencies]\n",
+                "pytorch = { git = \"",
+                package,
+                "\", rev = \"",
+                revision,
+                "\" }\n",
+            ],
+        ),
+    ) {
+        Ok(Unit) -> true;
+        Err(reason) -> failure("terlan_pytorch_consumer_manifest", reason.message)
+    }.
+
+/**
+ * Fetches the staged dependency graph and proves ndarray appears in its lock.
+ */
+fetch_dependencies(compiler: String, consumer: String): Bool ->
+    let offline = [Process.environment_entry("CARGO_NET_OFFLINE", "true")];
+    command_succeeds(compiler, ["package", "fetch", consumer], consumer, offline)
+        and case File.read_text(child(consumer, "terlan.lock")) {
+    Err(reason) -> failure("terlan_pytorch_consumer_lock", reason.message);
+    Ok(contents) ->
+        if {
+            String.contains(contents, "name = \"terlan-ndarray\"") -> true;
+            true -> failure(
+                "terlan_pytorch_consumer_lock",
+                "resolved lock omits the transitive ndarray package",
+            )
+        }
+}.
+
+/**
+ * Replaces every fixture model placeholder with its repository-local path.
+ */
+substitute_paths(source: String, repository: String, workspace: String): String ->
+    let models = child(repository, "fixtures/models");
+    let s1 = String.replace(source, "$two_input_model", child(models, "weighted_difference.pt"));
+    let s2 = String.replace(s1, "$tensor_pair_model", child(models, "tensor_pair.pt"));
+    let s3 = String.replace(s2, "$scalar_float_model", child(models, "scalar_float.pt"));
+    let s4 = String.replace(s3, "$scalar_int_model", child(models, "scalar_int.pt"));
+    let s5 = String.replace(s4, "$scalar_bool_model", child(models, "scalar_bool.pt"));
+    let s6 = String.replace(s5, "$scalar_string_model", child(models, "scalar_string.pt"));
+    let s7 = String.replace(s6, "$int_list_model", child(models, "int_list.pt"));
+    let s8 = String.replace(s7, "$float_list_model", child(models, "float_list.pt"));
+    let s9 = String.replace(s8, "$bool_list_model", child(models, "bool_list.pt"));
+    let s10 = String.replace(s9, "$string_list_model", child(models, "string_list.pt"));
+    let s11 = String.replace(s10, "$optional_tensor_model", child(models, "optional_tensor.pt"));
+    let s12 = String.replace(s11, "$tensor_list_model", child(models, "tensor_list.pt"));
+    let s13 = String.replace(s12, "$invalid_model", child(models, "invalid.pt"));
+    let s14 = String.replace(s13, "$model", child(models, "double.pt"));
+    let s15 = String.replace(s14, "$workspace", workspace);
+    s15.
+
+/**
+ * Parses a comma-separated output assertion list.
+ */
+output_list(value: String): List[String] ->
+    if {
+        value == "" -> [];
+        true -> String.split(value, ",")
+    }.
+
+/**
+ * Requires every declared marker in captured process output.
+ */
+contains_all(output: String, expected: List[String]): Bool ->
+    case expected {
+        [] -> true;
+        [marker | rest] ->
+            let present = String.contains(output, marker);
+            let remaining = contains_all(output, rest);
+            present and remaining
+    }.
+
+/**
+ * Requires every declared forbidden marker to be absent.
+ */
+contains_none(output: String, forbidden: List[String]): Bool ->
+    case forbidden {
+        [] -> true;
+        [marker | rest] ->
+            let absent = not String.contains(output, marker);
+            let remaining = contains_none(output, rest);
+            absent and remaining
+    }.
+
+/**
+ * Writes one substituted consumer fixture.
+ */
+write_fixture(path: String, source: String): Bool ->
+    case File.write_text(path, source) {
+        Err(reason) -> failure("terlan_pytorch_consumer_fixture", reason.message);
+        Ok(Unit) -> true
+    }.
+
+/**
+ * Validates process status and every declared output marker.
+ */
+output_contract(current: Scenario, output: Output): Bool ->
+    let combined = String.append(output.stderr, output.stdout);
+    let status_correct =
+        if {
+            current.mode == "success" -> output.status == 0;
+            current.mode == "failure" -> output.status != 0;
+            true -> false
+        };
+    let assertions =
+        status_correct
+            and contains_all(combined, current.required_outputs)
+            and contains_none(combined, current.forbidden_outputs);
+    if {
+        assertions -> true;
+        true -> failure(
+            "terlan_pytorch_consumer_scenario",
+            String.concat([current.fixture, " failed its execution contract\n", combined]),
+        )
+    }.
+
+/**
+ * Removes one disposable compiler output tree.
+ */
+remove_build(path: String): Bool ->
+    case Directory.remove_all(path) {
+        Ok(Unit) -> true;
+        Err(_reason) -> true
+    }.
+
+/**
+ * Executes and validates one external consumer scenario.
+ */
+validate_execution(current: Scenario, context: ConsumerContext): Bool ->
+    let fixture_path = child(child(context.repository, "fixtures/consumer"), current.fixture);
+    case File.read_text(fixture_path) {
+        Err(reason) -> failure("terlan_pytorch_consumer_fixture", reason.message);
+        Ok(contents) ->
+            let source = substitute_paths(contents, context.repository, context.workspace);
+            let main_path = child(context.consumer, "src/pytorch_consumer/Main.terl");
+            let written = write_fixture(main_path, source);
+            if {
+                not written -> false;
+                true -> let output_directory = child(context.workspace, current.build_directory);
+                let environment =
+                    [
+                        Process.environment_entry("CARGO_NET_OFFLINE", "true"),
+                        Process.environment_entry("LIBTORCH", context.libtorch),
+                    ];
+                case run_command(
+                    context.compiler,
+                    [
+                        "run",
+                        context.consumer,
+                        "--target",
+                        "terlan-vm",
+                        "--out-dir",
+                        output_directory,
+                    ],
+                    context.repository,
+                    environment,
+                ) {
+                    None -> false;
+                    Some(output) ->
+                        let valid = output_contract(current, output);
+                        let removed = remove_build(output_directory);
+                        valid and removed
+                }
+            }
+    }.
+
+/**
+ * Executes every non-comment scenario declaration in order.
+ */
+run_scenarios(lines: List[String], context: ConsumerContext): Bool ->
+    case lines {
+        [] -> true;
+        [line | rest] ->
+            if {
+                line == "" or String.starts_with(line, "#") -> run_scenarios(rest, context);
+                true -> case String.split(line, "\t") {
+                    [fixture, mode, build_directory, required, forbidden] ->
+                        let current =
+                            Scenario(
+                                fixture = fixture,
+                                mode = mode,
+                                build_directory = build_directory,
+                                required_outputs = output_list(required),
+                                forbidden_outputs = output_list(forbidden),
+                            );
+                        if {
+                            context.selector != "" and context.selector != fixture -> run_scenarios(rest, context);
+                            true -> validate_execution(current, context) and run_scenarios(rest, context)
+                        };
+                    _ ->
+                        failure(
+                            "terlan_pytorch_consumer_manifest",
+                            String.append("invalid scenario row: ", line),
+                        )
+                }
+            }
+    }.
+
+/**
+ * Removes staged source repositories and executes the cached scenario matrix.
+ */
+run_cached_scenarios(context: StagingContext): Bool ->
+    case File.read_text(child(context.repository, "fixtures/consumer/scenarios.tsv")) {
+        Err(reason) -> failure("terlan_pytorch_consumer_manifest", reason.message);
+        Ok(contents) ->
+            let package_removed = Directory.remove_all(context.package);
+            let ndarray_removed = Directory.remove_all(context.ndarray_package);
+            case {package_removed, ndarray_removed} {
+                {Ok(Unit), Ok(Unit)} ->
+                    run_scenarios(
+                        String.split(contents, "\n"),
+                        ConsumerContext(
+                            compiler = context.compiler,
+                            repository = context.repository,
+                            libtorch = context.libtorch,
+                            workspace = context.workspace,
+                            consumer = context.consumer,
+                            selector = context.selector,
+                        ),
+                    );
+                _ ->
+                    failure(
+                        "terlan_pytorch_consumer_cache",
+                        "cannot remove source repositories before cached execution",
+                    )
+            }
+    }.
+
+/**
+ * Commits PyTorch after ndarray staging and starts cached consumer execution.
+ */
+finish_staging(context: StagingContext, ndarray_revision: String): Bool ->
+    case stage_pytorch(context.repository, context.package, context.ndarray_package, ndarray_revision) {
+        None -> false;
+        Some(revision) ->
+            let manifest_written = write_consumer_manifest(context.consumer, context.package, revision);
+            let fetched = manifest_written and fetch_dependencies(context.compiler, context.consumer);
+            if {
+                fetched -> run_cached_scenarios(context);
+                true -> false
+            }
+    }.
+
+/**
+ * Stages immutable package revisions and prepares the external consumer.
+ */
+execute_workspace(
+    compiler: String,
+    repository: String,
+    libtorch: String,
+    ndarray: String,
+    workspace: String,
+    selector: String,
+): Bool ->
+    let package = child(workspace, "package");
+    let ndarray_package = child(workspace, "ndarray-package");
+    let consumer = child(workspace, "consumer");
+    let source_directory = child(consumer, "src/pytorch_consumer");
+    let context =
+        StagingContext(
+            compiler = compiler,
+            repository = repository,
+            libtorch = libtorch,
+            workspace = workspace,
+            consumer = consumer,
+            package = package,
+            ndarray_package = ndarray_package,
+            selector = selector,
+        );
+    case Directory.create_all(source_directory) {
+        Err(reason) -> failure("terlan_pytorch_consumer_workspace", reason.message);
+        Ok(Unit) ->
+            case stage_ndarray(ndarray, ndarray_package) {
+                None -> false;
+                Some(ndarray_revision) -> finish_staging(context, ndarray_revision)
+            }
+    }.
+
+/**
+ * Stages package snapshots and runs the complete external-consumer matrix.
+ */
+execute(
+    compiler: String,
+    repository: String,
+    libtorch: String,
+    ndarray: String,
+    selector: String,
+): Bool ->
+    let selection_valid = selector == "" or File.exists(child(child(repository, "fixtures/consumer"), selector));
+    if {
+        not selection_valid -> failure(
+            "terlan_pytorch_consumer_selector",
+            String.append("unknown consumer fixture: ", selector),
+        );
+        true -> execute_in_temporary(compiler, repository, libtorch, ndarray, selector)
+    }.
+
+/**
+ * Owns temporary workspace creation and deterministic cleanup.
+ */
+execute_in_temporary(
+    compiler: String,
+    repository: String,
+    libtorch: String,
+    ndarray: String,
+    selector: String,
+): Bool ->
+    case Directory.create_temporary("terlan-pytorch-consumer") {
+        Err(reason) -> failure("terlan_pytorch_consumer_workspace", reason.message);
+        Ok(workspace) ->
+            let checked = execute_workspace(compiler, repository, libtorch, ndarray, workspace, selector);
+            let cleaned =
+                case Directory.remove_all(workspace) {
+                    Ok(Unit) -> true;
+                    Err(reason) -> failure("terlan_pytorch_consumer_cleanup", reason.message)
+                };
+            if {
+                checked and cleaned -> let _printed =
+                    println(
+                        "Fresh Git-package consumers executed through the verified package cache.",
+                    );
+                true;
+                true -> false
+            }
+    }.
+
+/**
+ * Parses the compiler, package, LibTorch, and ndarray repository arguments.
+ */
+entry(): Bool ->
+    case {
+        Arguments.count(),
+        Arguments.get(0),
+        Arguments.get(1),
+        Arguments.get(2),
+        Arguments.get(3),
+        Arguments.get(4),
+        Arguments.get(5),
+    } {
+        {4, Some(compiler), Some(repository), Some(libtorch), Some(ndarray), None, None} ->
+            execute(compiler, repository, libtorch, ndarray, "");
+        {5, Some(compiler), Some(repository), Some(libtorch), Some(ndarray), Some(selector), None} ->
+            execute(compiler, repository, libtorch, ndarray, selector);
+        _ ->
+            failure(
+                "terlan_pytorch_consumer_usage",
+                "usage: CheckConsumer.terls <terlc> <package-repository> <libtorch-root> <ndarray-repository> [fixture]",
+            )
+    }.
+
+assert(entry());
+Unit.

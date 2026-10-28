@@ -1,0 +1,25 @@
+/**
+ * Generated CXX trilinear upsampling completion surface.
+ */
+module pytorch.UpsampleTrilinear3dCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Upsamples a 5-D tensor to an explicit output size.
+ */
+@compiler.native {pytorch.upsample_trilinear3d.upsample_trilinear3d}
+pub upsample_trilinear3d(input: Tensor, output_size: List[Int], align_corners: Bool): Tensor ->
+    native.
+
+/**
+ * Writes an upsampled tensor into retained output storage.
+ */
+@compiler.native {pytorch.upsample_trilinear3d.upsample_trilinear3d_out}
+pub upsample_trilinear3d_out(
+    output: Tensor,
+    input: Tensor,
+    output_size: List[Int],
+    align_corners: Bool,
+): Unit ->
+    native.

@@ -1,0 +1,98 @@
+/**
+ * Generated exact CXX unique and consecutive-unique completion surface.
+ */
+module pytorch.UniqueCompletion.
+
+import pytorch.Tensor.{dispose, flatten}.
+import std.core.Option.{None, Option, Some}.
+
+import type pytorch.Tensor.
+
+@compiler.native {pytorch.unique_consecutive.default}
+pub unique_consecutive(
+    input: Tensor,
+    return_inverse: Bool = false,
+    return_counts: Bool = false,
+): {Tensor, Tensor, Tensor} ->
+    native.
+
+@compiler.native {pytorch.unique_consecutive.out}
+pub unique_consecutive_out(
+    out0: Tensor,
+    out1: Tensor,
+    out2: Tensor,
+    input: Tensor,
+    return_inverse: Bool,
+    return_counts: Bool,
+): Unit ->
+    native.
+
+@compiler.native {pytorch.unique_dim.default}
+pub unique_dim(
+    input: Tensor,
+    dim: Int,
+    sorted: Bool = true,
+    return_inverse: Bool = false,
+    return_counts: Bool = false,
+): {Tensor, Tensor, Tensor} ->
+    native.
+
+@compiler.native {pytorch.unique_dim.out}
+pub unique_dim_out(
+    out0: Tensor,
+    out1: Tensor,
+    out2: Tensor,
+    input: Tensor,
+    dim: Int,
+    sorted: Bool,
+    return_inverse: Bool,
+    return_counts: Bool,
+): Unit ->
+    native.
+
+@compiler.native {pytorch.unique_dim_consecutive.default}
+pub unique_dim_consecutive(
+    input: Tensor,
+    dim: Int,
+    return_inverse: Bool = false,
+    return_counts: Bool = false,
+): {Tensor, Tensor, Tensor} ->
+    native.
+
+@compiler.native {pytorch.unique_dim_consecutive.out}
+pub unique_dim_consecutive_out(
+    out0: Tensor,
+    out1: Tensor,
+    out2: Tensor,
+    input: Tensor,
+    dim: Int,
+    return_inverse: Bool,
+    return_counts: Bool,
+): Unit ->
+    native.
+
+/**
+ * Preserves the legacy Tensor.unique flatten and optional-dimension contract.
+ */
+pub unique_legacy(
+    input: Tensor,
+    dim: Option[Int],
+    sorted: Bool = true,
+    return_inverse: Bool = false,
+    return_counts: Bool = false,
+): {Tensor, Tensor, Tensor} ->
+    case dim {
+        None -> unique_legacy_flattened(input, sorted, return_inverse, return_counts);
+        Some(value) -> unique_dim(input, value, sorted, return_inverse, return_counts)
+    }.
+
+unique_legacy_flattened(
+    input: Tensor,
+    sorted: Bool,
+    return_inverse: Bool,
+    return_counts: Bool,
+): {Tensor, Tensor, Tensor} ->
+    let flattened = flatten(input, 0, -1);
+    let result = unique_dim(flattened, 0, sorted, return_inverse, return_counts);
+    dispose(flattened);
+    result.

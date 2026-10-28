@@ -1,0 +1,23 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{amax, dim, dispose, dtype, from_floats, item_float, numel, shape}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let tensor = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let column_maxima = amax(tensor, [0], false);
+    let scalar_maximum = amax(column_maxima, [0], false);
+    let observed_rank = dim(tensor);
+    let observed_numel = numel(tensor);
+    let observed_shape = shape(tensor);
+    let observed_dtype = dtype(tensor);
+    let observed = item_float(scalar_maximum);
+    dispose(scalar_maximum);
+    dispose(column_maxima);
+    dispose(tensor);
+    if {
+        observed_rank == 2 and observed_numel == 6 and observed_shape.length() == 2 and
+            observed_shape[0] == 2 and observed_shape[1] == 3 and
+            observed_dtype == 7 and observed == 6.0 -> println("PYTORCH_FROM_FLOATS_CONSUMER_OK");
+        true -> println("PYTORCH_FROM_FLOATS_CONSUMER_FAILED")
+    }.

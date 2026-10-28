@@ -1,0 +1,223 @@
+//! Generated CXX backend-availability predicates.
+
+module pytorch.BackendAvailability.
+
+/// Owned anomaly-detection scope guard.
+
+pub opaque type AnomalyModeGuard.
+
+/// Owned CPU autocast scope guard.
+
+pub opaque type AutocastCpuGuard.
+
+/// Owned default-dtype scope guard.
+
+pub opaque type DefaultDtypeGuard.
+
+/// Owned deterministic-algorithm scope guard.
+
+pub opaque type DeterministicAlgorithmsGuard.
+
+/// Owned float32 matmul precision scope guard.
+
+pub opaque type Float32MatmulPrecisionGuard.
+
+/// Owned inference-mode scope guard.
+
+pub opaque type InferenceModeGuard.
+
+/// Owned warning-policy scope guard.
+
+pub opaque type WarningModeGuard.
+
+/// Exact generated CXX deterministic algorithm enablement predicate.
+
+pub are_deterministic_algorithms_enabled(): Bool.
+
+/// Exact generated CXX cuDNN acceptability predicate.
+
+pub cudnn_is_acceptable(input: Tensor): Bool.
+
+/// Restores anomaly detection state and releases the guard.
+
+pub dispose_anomaly_mode(guard: AnomalyModeGuard): Unit.
+
+/// Restores CPU autocast state and releases the guard.
+
+pub dispose_autocast_cpu(guard: AutocastCpuGuard): Unit.
+
+/// Restores default dtype and releases the guard.
+
+pub dispose_default_dtype(guard: DefaultDtypeGuard): Unit.
+
+/// Restores deterministic-algorithm state and releases the guard.
+
+pub dispose_deterministic_algorithms(guard: DeterministicAlgorithmsGuard): Unit.
+
+/// Restores float32 matmul precision and releases the guard.
+
+pub dispose_float32_matmul_precision(guard: Float32MatmulPrecisionGuard): Unit.
+
+/// Releases the inference-mode guard and restores prior state.
+
+pub dispose_inference_mode(guard: InferenceModeGuard): Unit.
+
+/// Restores warning policy and releases the guard.
+
+pub dispose_warning_mode(guard: WarningModeGuard): Unit.
+
+/// Enters anomaly detection for the guard lifetime.
+
+pub enter_anomaly_mode(enabled: Bool, check_nan: Bool): AnomalyModeGuard.
+
+/// Enters CPU autocast for the guard lifetime.
+
+pub enter_autocast_cpu(enabled: Bool, dtype: Int, cache_enabled: Bool): AutocastCpuGuard.
+
+/// Enters the default dtype for the guard lifetime.
+
+pub enter_default_dtype(dtype: Int): DefaultDtypeGuard.
+
+/// Enters deterministic-algorithm mode for the guard lifetime.
+
+pub enter_deterministic_algorithms(enabled: Bool, warn_only: Bool): DeterministicAlgorithmsGuard.
+
+/// Enters float32 matmul precision for the guard lifetime.
+
+pub enter_float32_matmul_precision_code(code: Int): Float32MatmulPrecisionGuard.
+
+/// Enters LibTorch inference mode for the guard lifetime.
+
+pub enter_inference_mode(enabled: Bool = true): InferenceModeGuard.
+
+/// Enters warning policy for the guard lifetime.
+
+pub enter_warning_mode(enabled: Bool): WarningModeGuard.
+
+/// Exact generated CXX CPU autocast dtype query.
+
+pub get_autocast_cpu_dtype(): Int.
+
+/// Exact generated CXX default-dtype query.
+
+pub get_default_dtype(): Int.
+
+/// Exact generated CXX deterministic debug mode query.
+
+pub get_deterministic_debug_mode(): Int.
+
+/// Exact generated CXX float32 matmul precision query.
+
+pub get_float32_matmul_precision(): String.
+
+/// Exact generated CXX inter-op thread-count query.
+
+pub get_num_interop_threads(): Int.
+
+/// Exact generated CXX CPU thread-count query.
+
+pub get_num_threads(): Int.
+
+/// Exact generated CXX CPU thread initialization.
+
+pub init_num_threads(): Unit.
+
+/// Exact generated CXX anomaly NaN-check query.
+
+pub is_anomaly_check_nan_enabled(): Bool.
+
+/// Exact generated CXX anomaly-mode query.
+
+pub is_anomaly_enabled(): Bool.
+
+/// Exact generated CXX autocast-cache query.
+
+pub is_autocast_cache_enabled(): Bool.
+
+/// Exact generated CXX CPU autocast-enabled query.
+
+pub is_autocast_cpu_enabled(): Bool.
+
+/// Exact generated CXX deterministic algorithm warn-only predicate.
+
+pub is_deterministic_algorithms_warn_only_enabled(): Bool.
+
+/// Exact generated CXX gradient-mode query.
+
+pub is_grad_enabled(): Bool.
+
+/// Exact generated CXX inference-mode query.
+
+pub is_inference_mode_enabled(): Bool.
+
+/// Exact generated CXX Vulkan availability predicate.
+
+pub is_vulkan_available(): Bool.
+
+/// Exact generated CXX warning-mode query.
+
+pub is_warn_always_enabled(): Bool.
+
+/// Exact generated CXX inference-mode transition probe.
+
+pub probe_inference_mode_transition(): Bool.
+
+/// Exact generated CXX anomaly-mode setter.
+
+pub set_anomaly_enabled(enabled: Bool, check_nan: Bool): Unit.
+
+/// Exact generated CXX autocast-cache setter.
+
+pub set_autocast_cache_enabled(enabled: Bool): Unit.
+
+/// Exact generated CXX CPU autocast dtype setter.
+
+pub set_autocast_cpu_dtype(dtype: Int): Unit.
+
+/// Exact generated CXX CPU autocast-enabled setter.
+
+pub set_autocast_cpu_enabled(enabled: Bool): Unit.
+
+/// Exact generated CXX default-dtype setter.
+
+pub set_default_dtype(dtype: Int): Unit.
+
+/// Exact generated CXX deterministic debug mode setter.
+
+pub set_deterministic_debug_mode(mode: Int): Unit.
+
+/// Sets LibTorch's float32 matmul precision mode.
+
+pub set_float32_matmul_precision(precision: String): Unit.
+
+/// Exact generated CXX float32 matmul precision code setter.
+
+pub set_float32_matmul_precision_code(code: Int): Unit.
+
+/// Exact generated CXX floating-point denormal handling toggle.
+
+pub set_flush_denormal(enabled: Bool): Bool.
+
+/// Exact generated CXX gradient-mode setter.
+
+pub set_grad_enabled(mode: Bool): Unit.
+
+/// Exact generated CXX inter-op thread-count setter.
+
+pub set_num_interop_threads(count: Int): Unit.
+
+/// Exact generated CXX CPU thread-count setter.
+
+pub set_num_threads(count: Int): Unit.
+
+/// Exact generated CXX warning-mode setter.
+
+pub set_warn_always(enabled: Bool): Unit.
+
+/// Exact generated CXX symbolic contiguity predicate.
+
+pub sym_is_contiguous(input: Tensor, memory_format: Int = 0): Bool.
+
+/// Exact generated CXX deterministic algorithm configuration setter.
+
+pub use_deterministic_algorithms(enabled: Bool, warn_only: Bool): Unit.

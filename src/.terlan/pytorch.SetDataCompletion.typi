@@ -1,0 +1,7 @@
+//! Generated CXX tensor data replacement surface.
+
+module pytorch.SetDataCompletion.
+
+/// Replaces the tensor data handle with another tensor.
+
+pub set_data(self: Tensor, new_data: Tensor): Unit.

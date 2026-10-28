@@ -1,0 +1,19 @@
+module pytorch.SliceInverseParityTest.
+
+import pytorch.Slice.{slice}.
+import pytorch.SliceInverse.{bound, no_bound, slice_inverse}.
+import pytorch.Tensor.{from_floats, shape}.
+import pytorch.TypeRelations.equal.
+
+@test
+pub slice_inverse_bounded_matches(): Bool ->
+    let input = from_floats([0.0, 1.0, 2.0, 3.0, 4.0], [5]);
+    let source = slice(input, 0, bound(1), bound(3), 1);
+    let result = slice_inverse(input, source, 0, bound(1), bound(3), 1);
+    equal(result, source) and shape(result) == [2].
+
+@test
+pub slice_inverse_full_matches(): Bool ->
+    let all_input = from_floats([1.0, 2.0, 3.0], [3]);
+    let all_result = slice_inverse(all_input, all_input, 0, no_bound(), no_bound(), 1);
+    equal(all_result, all_input).

@@ -1,0 +1,289 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Proves that malformed CPU and CUDA LibTorch distributions are rejected.
+ */
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.Console.{eprintln, println}.
+import std.io.{Directory, File}.
+import std.system.{Arguments, Environment, Process}.
+
+import type std.core.Option.
+import type std.system.Process.Output.
+
+/**
+ * Joins a parent path and one relative child.
+ */
+child(parent: String, relative: String): String ->
+    if {
+        String.ends_with(parent, "/") -> String.append(parent, relative);
+        true -> String.concat([parent, "/", relative])
+    }.
+
+/**
+ * Reports one stable negative-check failure.
+ */
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[terlan_pytorch_libtorch_negative]: ", message));
+    false.
+
+/**
+ * Executes one bounded host command and captures its completion.
+ */
+run(program: String, arguments: List[String], working_directory: Option[String]): Option[Output] ->
+    let base =
+        Process.with_output_limit_bytes(
+            Process.with_timeout_ms(
+                Process.with_arguments(Process.command(program), arguments),
+                600000,
+            ),
+            16777216,
+        );
+    let request =
+        case working_directory {
+            Some(path) -> Process.with_working_directory(base, path);
+            None -> base
+        };
+    case Process.run(request) {
+        Ok(output) -> Some(output);
+        Err(reason) ->
+            let _reported = failure(reason.message);
+            None
+    }.
+
+/**
+ * Requires one host command to complete successfully.
+ */
+run_success(program: String, arguments: List[String]): Bool ->
+    case run(program, arguments, None) {
+        None -> false;
+        Some(output) ->
+            if {
+                output.status == 0 -> true;
+                true -> failure(String.append(output.stderr, output.stdout))
+            }
+    }.
+
+/**
+ * Requires the Terlan admission script to reject one candidate diagnostically.
+ */
+rejects(
+    compiler: String,
+    repository: String,
+    candidate: String,
+    flavor: String,
+    expected: String,
+): Bool ->
+    case run(compiler, ["run", "scripts/CheckLibTorch.terls", "--", candidate, flavor], Some(repository)) {
+        None -> false;
+        Some(output) ->
+            let diagnostics = String.append(output.stdout, output.stderr);
+            if {
+                output.status == 0 -> failure(String.append("candidate unexpectedly passed: ", candidate));
+                not String.contains(diagnostics, expected) -> failure(
+                    String.concat(["expected ", expected, " for ", candidate, ": ", diagnostics]),
+                );
+                true -> true
+            }
+    }.
+
+/**
+ * Creates a candidate that reaches CUDA-specific admission checks.
+ */
+make_cuda_candidate(candidate: String, valid_cpu_root: String): Bool ->
+    let library_directory = child(candidate, "lib");
+    let include_directory = child(candidate, "include");
+    let {
+        Ok(Unit) <- Directory.create_all(library_directory);
+        Ok(Unit) <- Directory.create_all(include_directory);
+        Ok(Unit) <-
+            Directory.create_symbolic_link(
+                child(valid_cpu_root, "include/ATen"),
+                child(include_directory, "ATen"),
+            );
+        Ok(Unit) <-
+            Directory.create_symbolic_link(
+                child(valid_cpu_root, "include/torch"),
+                child(include_directory, "torch"),
+            );
+        Ok(Unit) <- File.write_text(child(include_directory, "cuda.h"), "#pragma once\n");
+        Ok(Unit) <- File.write_text(child(include_directory, "cuda_runtime_api.h"), "#pragma once\n");
+        Ok(Unit) <-
+            File.write_text(
+                child(candidate, "build-hash"),
+                "cf30153c4c131c8164ee7798e5022d810682e2cb\n",
+            );
+        true <-
+            run_success(
+                "ln",
+                [
+                    "-s",
+                    child(valid_cpu_root, "lib/libtorch_cpu.so"),
+                    child(library_directory, "libtorch_cpu.so"),
+                ],
+            );
+        Ok(Unit) <- File.write_text(child(candidate, "build-version"), "2.13.0+cu129\n")
+    } else {
+        _ -> failure(String.append("cannot create CUDA candidate: ", candidate))
+    };
+    true.
+
+/**
+ * Creates a CUDA library whose dynamic dependency is deliberately absent.
+ */
+make_missing_runtime_library(workspace: String, candidate: String): Bool ->
+    let missing_source = child(workspace, "missing-runtime.c");
+    let symbols_source = child(workspace, "cuda-symbols.c");
+    let missing_library = child(workspace, "libterlan_pytorch_missing_cuda_runtime.so");
+    let cuda_library = child(candidate, "lib/libtorch_cuda.so");
+    let {
+        Ok(Unit) <- File.write_text(missing_source, "void terlan_pytorch_missing_cuda_runtime(void) {}\n");
+        Ok(Unit) <-
+            File.write_text(
+                symbols_source,
+                "#include <stdbool.h>\n#include <stdint.h>\n\nextern void terlan_pytorch_missing_cuda_runtime(void);\n\nint32_t torch_get_cuda_stream_from_pool(bool high_priority, int32_t device, void **stream) {\n  terlan_pytorch_missing_cuda_runtime();\n  return high_priority || device || stream ? 0 : 0;\n}\n\nint32_t torch_set_current_cuda_stream(void *stream, int32_t device) {\n  terlan_pytorch_missing_cuda_runtime();\n  return stream || device ? 0 : 0;\n}\n\nint32_t torch_cuda_stream_synchronize(void *stream, int32_t device) {\n  terlan_pytorch_missing_cuda_runtime();\n  return stream || device ? 0 : 0;\n}\n",
+            );
+        true <-
+            run_success(
+                "cc",
+                [
+                    "-shared",
+                    "-fPIC",
+                    missing_source,
+                    "-Wl,-soname,libterlan_pytorch_missing_cuda_runtime.so",
+                    "-o",
+                    missing_library,
+                ],
+            );
+        true <-
+            run_success(
+                "cc",
+                [
+                    "-shared",
+                    "-fPIC",
+                    symbols_source,
+                    String.concat(["-L", workspace]),
+                    "-Wl,--no-as-needed",
+                    "-lterlan_pytorch_missing_cuda_runtime",
+                    "-Wl,-rpath,$ORIGIN",
+                    "-o",
+                    cuda_library,
+                ],
+            );
+        Ok(Unit) <- File.delete(missing_library)
+    } else {
+        _ -> failure("cannot create unresolved CUDA runtime fixture")
+    };
+    true.
+
+/**
+ * Executes the ordered malformed-distribution cases inside one workspace.
+ */
+run_negative_cases(
+    compiler: String,
+    repository: String,
+    valid_cpu_root: String,
+    workspace: String,
+    missing: String,
+    incompatible: String,
+    missing_cuda: String,
+    missing_runtime: String,
+): Bool ->
+    let {
+        true <-
+            rejects(
+                compiler,
+                repository,
+                missing,
+                "cpu",
+                "error[terlan_pytorch_libtorch_build_version_missing]",
+            );
+        Ok(Unit) <- Directory.create_all(incompatible);
+        Ok(Unit) <- File.write_text(child(incompatible, "build-version"), "0.0.0+incompatible\n");
+        true <-
+            rejects(
+                compiler,
+                repository,
+                incompatible,
+                "cpu",
+                "error[terlan_pytorch_libtorch_version_incompatible]",
+            );
+        true <-
+            rejects(
+                compiler,
+                repository,
+                incompatible,
+                "cuda",
+                "error[terlan_pytorch_libtorch_version_incompatible]",
+            );
+        true <- make_cuda_candidate(missing_cuda, valid_cpu_root);
+        true <-
+            rejects(
+                compiler,
+                repository,
+                missing_cuda,
+                "cuda",
+                "error[terlan_pytorch_libtorch_cuda_library_missing]",
+            );
+        true <- make_cuda_candidate(missing_runtime, valid_cpu_root);
+        true <- make_missing_runtime_library(workspace, missing_runtime);
+        true <-
+            rejects(
+                compiler,
+                repository,
+                missing_runtime,
+                "cuda",
+                "error[terlan_pytorch_libtorch_cuda_runtime_dependency_missing]",
+            )
+    } else {
+        _ -> false
+    };
+    true.
+
+/**
+ * Executes every malformed-distribution case and removes its fixtures.
+ */
+execute(compiler: String, repository: String, valid_cpu_root: String): Bool ->
+    case Directory.create_temporary("terlan-pytorch-libtorch-negative") {
+        Err(reason) -> failure(reason.message);
+        Ok(workspace) ->
+            let missing = child(workspace, "missing");
+            let incompatible = child(workspace, "incompatible");
+            let missing_cuda = child(workspace, "missing-cuda");
+            let missing_runtime = child(workspace, "missing-runtime");
+            let checked =
+                run_negative_cases(
+                    compiler,
+                    repository,
+                    valid_cpu_root,
+                    workspace,
+                    missing,
+                    incompatible,
+                    missing_cuda,
+                    missing_runtime,
+                );
+            let cleaned =
+                case Directory.remove_all(workspace) {
+                    Ok(Unit) -> true;
+                    Err(reason) -> failure(reason.message)
+                };
+            if {
+                checked and cleaned -> let _printed = println("CPU and CUDA LibTorch distribution failures are rejected stably.");
+                true;
+                true -> false
+            }
+    }.
+
+/**
+ * Parses the compiler and valid CPU distribution paths.
+ */
+entry(): Bool ->
+    case {Arguments.get(0), Arguments.get(1), Arguments.get(2)} {
+        {Some(compiler), Some(valid_cpu_root), None} ->
+            execute(compiler, Environment.current_directory(), valid_cpu_root);
+        _ -> failure("usage: CheckLibTorchNegative.terls <terlc> <valid-cpu-libtorch-root>")
+    }.
+
+assert(entry());
+Unit.

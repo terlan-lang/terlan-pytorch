@@ -1,0 +1,103 @@
+//! Exact dense empty, full, ones, and zeros creation families.
+
+module pytorch.CreationCompletion.
+
+/// Creates a tensor with exact optional creation arguments and an integer fill scalar.
+
+pub configured(operation: Int, shape: List[Int], fill: Int, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool, memory_format: Int, has_memory_format: Bool): Tensor.
+
+/// Creates a tensor with exact optional creation arguments and a floating fill scalar.
+
+pub configured_float(operation: Int, shape: List[Int], fill: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool, memory_format: Int, has_memory_format: Bool): Tensor.
+
+/// Creates an uninitialized tensor using PyTorch defaults.
+
+pub empty(shape: List[Int]): Tensor.
+
+/// Creates an uninitialized tensor with exact optional arguments.
+
+pub empty_configured(shape: List[Int], dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool, memory_format: Int, has_memory_format: Bool): Tensor.
+
+/// Creates an uninitialized tensor like the input using inherited options.
+
+pub empty_like(input: Tensor): Tensor.
+
+/// Writes an uninitialized like-result into retained storage.
+
+pub empty_like_out(output: Tensor, input: Tensor, memory_format: Int = 0, has_memory_format: Bool = false): Unit.
+
+/// Writes an uninitialized tensor into retained storage.
+
+pub empty_out(output: Tensor, shape: List[Int], memory_format: Int = 0, has_memory_format: Bool = false): Unit.
+
+/// Creates an integer-filled tensor using PyTorch dtype inference.
+
+pub full(shape: List[Int], fill: Int): Tensor.
+
+/// Creates a floating-filled tensor using PyTorch dtype inference.
+
+pub full_float(shape: List[Int], fill: Float): Tensor.
+
+/// Writes a floating-full tensor into retained storage.
+
+pub full_float_out(output: Tensor, shape: List[Int], fill: Float): Unit.
+
+/// Creates an integer-filled tensor like the input.
+
+pub full_like(input: Tensor, fill: Int): Tensor.
+
+/// Creates a floating-filled tensor like the input.
+
+pub full_like_float(input: Tensor, fill: Float): Tensor.
+
+/// Writes a floating-full like-result into retained storage.
+
+pub full_like_float_out(output: Tensor, input: Tensor, fill: Float, memory_format: Int = 0, has_memory_format: Bool = false): Unit.
+
+/// Writes an integer-full like-result into retained storage.
+
+pub full_like_out(output: Tensor, input: Tensor, fill: Int, memory_format: Int = 0, has_memory_format: Bool = false): Unit.
+
+/// Writes a full tensor into retained storage.
+
+pub full_out(output: Tensor, shape: List[Int], fill: Int): Unit.
+
+/// Creates a tensor like the input with exact optional arguments and a floating fill scalar.
+
+pub like_configured_float(input: Tensor, operation: Int, fill: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool, memory_format: Int, has_memory_format: Bool): Tensor.
+
+/// Creates a tensor like the input with exact optional arguments and an integer fill scalar.
+
+pub like_configured_int(input: Tensor, operation: Int, fill: Int, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool, memory_format: Int, has_memory_format: Bool): Tensor.
+
+/// Creates a tensor of ones using PyTorch defaults.
+
+pub ones(shape: List[Int]): Tensor.
+
+/// Creates a tensor of ones like the input.
+
+pub ones_like(input: Tensor): Tensor.
+
+/// Writes a ones-like result into retained storage.
+
+pub ones_like_out(output: Tensor, input: Tensor, memory_format: Int = 0, has_memory_format: Bool = false): Unit.
+
+/// Writes a tensor of ones into retained storage.
+
+pub ones_out(output: Tensor, shape: List[Int]): Unit.
+
+/// Creates a tensor of zeros using PyTorch defaults.
+
+pub zeros(shape: List[Int]): Tensor.
+
+/// Creates a tensor of zeros like the input.
+
+pub zeros_like(input: Tensor): Tensor.
+
+/// Writes a zeros-like result into retained storage.
+
+pub zeros_like_out(output: Tensor, input: Tensor, memory_format: Int = 0, has_memory_format: Bool = false): Unit.
+
+/// Writes a tensor of zeros into retained storage.
+
+pub zeros_out(output: Tensor, shape: List[Int]): Unit.

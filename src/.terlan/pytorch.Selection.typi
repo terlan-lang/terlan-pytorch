@@ -1,0 +1,87 @@
+//! Indexed ordering, cumulative extrema, ranked selection, and dimension reduction operations.
+
+module pytorch.Selection.
+
+/// Returns cumulative maximum values and source indices along one dimension.
+
+pub cummax(tensor: Tensor, dimension: Int): {Tensor, Tensor}.
+
+/// Writes exact aten::cummax.out values and indices into retained storage.
+
+pub cummax_out(values: Tensor, indices: Tensor, tensor: Tensor, dimension: Int): Unit.
+
+/// Returns cumulative minimum values and source indices along one dimension.
+
+pub cummin(tensor: Tensor, dimension: Int): {Tensor, Tensor}.
+
+/// Writes exact aten::cummin.out values and indices into retained storage.
+
+pub cummin_out(values: Tensor, indices: Tensor, tensor: Tensor, dimension: Int): Unit.
+
+/// Returns the kth smallest values and source indices along one dimension.
+
+pub kthvalue(tensor: Tensor, k: Int, dimension: Int = - 1, keep_dimension: Bool = false): {Tensor, Tensor}.
+
+/// Writes exact aten::kthvalue.values values and indices into retained storage.
+
+pub kthvalue_out(values: Tensor, indices: Tensor, tensor: Tensor, k: Int, dimension: Int = - 1, keep_dimension: Bool = false): Unit.
+
+/// Returns maximum values and source indices along one dimension.
+
+pub max_dim(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): {Tensor, Tensor}.
+
+/// Returns median values and source indices along one dimension.
+
+pub median_dim(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): {Tensor, Tensor}.
+
+/// Writes exact aten::median.dim_values values and indices into retained storage.
+
+pub median_dim_out(values: Tensor, indices: Tensor, tensor: Tensor, dimension: Int = - 1, keep_dimension: Bool = false): Unit.
+
+/// Returns minimum values and source indices along one dimension.
+
+pub min_dim(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): {Tensor, Tensor}.
+
+/// Returns modal values and source indices along one dimension.
+
+pub mode(tensor: Tensor, dimension: Int = - 1, keep_dimension: Bool = false): {Tensor, Tensor}.
+
+/// Writes exact aten::mode.values values and indices into retained storage.
+
+pub mode_out(values: Tensor, indices: Tensor, tensor: Tensor, dimension: Int = - 1, keep_dimension: Bool = false): Unit.
+
+/// Returns NaN-ignoring median values and source indices along one dimension.
+
+pub nanmedian_dim(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): {Tensor, Tensor}.
+
+/// Writes exact aten::nanmedian.dim_values values and indices into retained storage.
+
+pub nanmedian_dim_out(values: Tensor, indices: Tensor, tensor: Tensor, dimension: Int = - 1, keep_dimension: Bool = false): Unit.
+
+/// Returns fixed-size nonzero coordinates with padding.
+
+pub nonzero_static(tensor: Tensor, size: Int, fill_value: Int = - 1): Tensor.
+
+/// Writes fixed-size nonzero coordinates with padding.
+
+pub nonzero_static_out(output: Tensor, tensor: Tensor, size: Int, fill_value: Int = - 1): Unit.
+
+/// Returns sorted values and source indices along one dimension.
+
+pub sort(tensor: Tensor, dimension: Int = - 1, descending: Bool = false): {Tensor, Tensor}.
+
+/// Writes exact aten::sort.values values and indices into retained storage.
+
+pub sort_out(values: Tensor, indices: Tensor, tensor: Tensor, dimension: Int = - 1, descending: Bool = false): Unit.
+
+/// Returns the largest or smallest ranked values and source indices along one dimension.
+
+pub topk(tensor: Tensor, k: Int, dimension: Int = - 1, largest: Bool = true, sorted: Bool = true): {Tensor, Tensor}.
+
+/// Writes exact aten::topk.values values and indices into retained storage.
+
+pub topk_out(values: Tensor, indices: Tensor, tensor: Tensor, k: Int, dimension: Int = - 1, largest: Bool = true, sorted: Bool = true): Unit.
+
+/// Exact generated CXX leaf for aten::value_selecting_reduction_backward.
+
+pub value_selecting_reduction_backward_exact(gradient: Tensor, dimension: Int, indices: Tensor, sizes: List[Int], keep_dimension: Bool): Tensor.

@@ -1,0 +1,35 @@
+module pytorch_cxx.TypeRelationsNativeCudaBehaviorTest.
+
+import pytorch.TypeRelationsNativeBehaviorSupport.{type_relation_comparisons_on, type_relation_dtype_rules, type_relation_geometry_on, type_relation_nonzero_on, type_relation_properties_on, type_relation_result_types_on, type_relation_retain_grad_on, type_relation_storage_identity_on}.
+
+@test
+pub generated_cxx_cuda_type_relation_comparisons(): Bool ->
+    type_relation_comparisons_on("cuda:0").
+
+@test
+pub generated_cxx_cuda_type_relation_properties(): Bool ->
+    type_relation_properties_on("cuda:0").
+
+@test
+pub generated_cxx_cuda_type_relation_nonzero(): Bool ->
+    type_relation_nonzero_on("cuda:0").
+
+@test
+pub generated_cxx_cuda_type_relation_storage_identity(): Bool ->
+    type_relation_storage_identity_on("cuda:0").
+
+@test
+pub generated_cxx_cuda_type_relation_geometry(): Bool ->
+    type_relation_geometry_on("cuda:0").
+
+@test
+pub generated_cxx_cuda_type_relation_dtype_rules(): Bool ->
+    type_relation_dtype_rules().
+
+@test
+pub generated_cxx_cuda_type_relation_result_types(): Bool ->
+    type_relation_result_types_on("cuda:0").
+
+@test
+pub generated_cxx_cuda_type_relation_retain_grad(): Bool ->
+    type_relation_retain_grad_on("cuda:0").

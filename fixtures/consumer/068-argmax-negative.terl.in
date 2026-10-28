@@ -1,0 +1,9 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{argmax, from_floats}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let values = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let predictions = argmax(values, 2, false);
+    println("PYTORCH_ARGMAX_DIMENSION_NOT_REJECTED").

@@ -1,0 +1,232 @@
+module pytorch.ShapeTransformParityTest.
+
+import pytorch.Binary.{eq_tensor}.
+import pytorch.Indexing.{diag_embed, diagonal_copy}.
+import pytorch.Shape.{diag, diag_embed_out, diag_out, diagonal_copy_out, expand, expand_copy, flip, flip_out, matrix_power, matrix_power_out, moveaxis, movedim, narrow_copy, permute_copy, permute_copy_out, pixel_shuffle, pixel_shuffle_out, pixel_unshuffle, pixel_unshuffle_out, repeat, repeat_out, roll, roll_out, rot90, rot90_out, squeeze_copy_dim, squeeze_copy_dimension_out, squeeze_copy_dimensions_out, squeeze_copy_dims, squeeze_copy_out, tril, tril_out, triu, triu_out, unflatten, unsqueeze_copy, unsqueeze_copy_out, view_copy, view_copy_out}.
+import pytorch.Tensor.{clone, dispose, from_floats, item_bool, item_float, narrow, shape, strides, sum}.
+import pytorch.Unary.{all}.
+import pytorch.View.{squeeze_copy}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reduces a floating-point tensor and releases its scalar result.
+ */
+float_sum(tensor: Tensor): Float ->
+    let total = sum(tensor);
+    let value = item_float(total);
+    dispose(total);
+    value.
+
+/**
+ * Reads one matrix element through owned row and column views.
+ */
+matrix_float(tensor: Tensor, row: Int, column: Int): Float ->
+    let row_view = narrow(tensor, 0, row, 1);
+    let element = narrow(row_view, 1, column, 1);
+    let value = item_float(element);
+    dispose(element);
+    dispose(row_view);
+    value.
+
+/**
+ * Compares complete tensor values and releases both compared tensors.
+ */
+same_and_dispose(actual: Tensor, expected: Tensor): Bool ->
+    let comparisons = eq_tensor(actual, expected);
+    let reduced = all(comparisons);
+    let value = item_bool(reduced);
+    dispose(reduced);
+    dispose(comparisons);
+    dispose(expected);
+    dispose(actual);
+    value.
+
+/**
+ * Proves expanding views and owned copies, including the omitted implicit flag.
+ */
+@test
+pub expand_views_and_copies_match_libtorch(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0], [1, 3]);
+    let expanded = expand(source, [2, 3]);
+    let copied = expand_copy(source, [2, 3]);
+    let valid =
+        shape(expanded) == [2, 3]
+            and strides(expanded) == [0, 1]
+            and float_sum(expanded) == 12.0
+            and shape(copied) == [2, 3]
+            and strides(copied) == [3, 1]
+            and float_sum(copied) == 12.0
+            and shape(source) == [1, 3];
+    dispose(copied);
+    dispose(expanded);
+    dispose(source);
+    valid.
+
+/**
+ * Proves list-based moveaxis and movedim overloads preserve values and shape.
+ */
+@test
+pub list_axis_moves_match_libtorch(): Bool ->
+    let source =
+        from_floats(
+            [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+                6.0,
+                7.0,
+                8.0,
+                9.0,
+                10.0,
+                11.0,
+                12.0,
+                13.0,
+                14.0,
+                15.0,
+                16.0,
+                17.0,
+                18.0,
+                19.0,
+                20.0,
+                21.0,
+                22.0,
+                23.0,
+                24.0,
+            ],
+            [2, 3, 4],
+        );
+    let axis_moved = moveaxis(source, [0, 2], [2, 0]);
+    let dimension_moved = movedim(source, [0, 2], [2, 0]);
+    let valid =
+        shape(axis_moved) == [4, 3, 2]
+            and shape(dimension_moved) == [4, 3, 2]
+            and float_sum(axis_moved) == 300.0
+            and float_sum(dimension_moved) == 300.0
+            and shape(source) == [2, 3, 4];
+    dispose(dimension_moved);
+    dispose(axis_moved);
+    dispose(source);
+    valid.
+
+/**
+ * Proves owned narrowing and integer-axis unflattening.
+ */
+@test
+pub narrow_copy_and_unflatten_match_libtorch(): Bool ->
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [2, 4]);
+    let vector = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [8]);
+    let narrowed = narrow_copy(matrix, 1, 1, 2);
+    let unflattened = unflatten(vector, 0, [2, 2, 2]);
+    let valid =
+        shape(narrowed) == [2, 2]
+            and strides(narrowed) == [2, 1]
+            and float_sum(narrowed) == 18.0
+            and shape(unflattened) == [2, 2, 2]
+            and float_sum(unflattened) == 36.0
+            and shape(matrix) == [2, 4]
+            and shape(vector) == [8];
+    dispose(unflattened);
+    dispose(narrowed);
+    dispose(vector);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves flattened and axis-specific rolling plus default and explicit rotations.
+ */
+@test
+pub roll_and_rot90_defaults_match_libtorch(): Bool ->
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let flattened_roll = roll(matrix, [1]);
+    let axis_roll = roll(matrix, [1], [1]);
+    let default_rotation = rot90(matrix);
+    let half_turn = rot90(matrix, 2, [0, 1]);
+    let valid =
+        shape(flattened_roll) == [2, 3]
+            and matrix_float(flattened_roll, 0, 0) == 6.0
+            and shape(axis_roll) == [2, 3]
+            and matrix_float(axis_roll, 0, 0) == 3.0
+            and shape(default_rotation) == [3, 2]
+            and matrix_float(default_rotation, 0, 0) == 3.0
+            and shape(half_turn) == [2, 3]
+            and matrix_float(half_turn, 0, 0) == 6.0
+            and float_sum(default_rotation) == 21.0
+            and shape(matrix) == [2, 3];
+    dispose(half_turn);
+    dispose(default_rotation);
+    dispose(axis_roll);
+    dispose(flattened_roll);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves retained matrix reshape and permutation outputs.
+ */
+@test
+pub matrix_shape_outputs_match_functional_results(): Bool ->
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let diagonal = diag(matrix, 0);
+    let diagonal_output = clone(diagonal);
+    diag_out(diagonal_output, matrix, 0);
+    let diagonal_ok = same_and_dispose(diagonal_output, diagonal);
+    let flipped = flip(matrix, [1]);
+    let flip_output = clone(flipped);
+    (flip_out(flip_output, matrix, [1]); let flip_ok = same_and_dispose(flip_output, flipped);
+let permuted = permute_copy(matrix, [1, 0]);
+let permute_output = clone(permuted);
+(permute_copy_out(permute_output, matrix, [1, 0]); let permute_ok = same_and_dispose(permute_output, permuted);
+let repeated = repeat(matrix, [2, 1]);
+let repeat_output = clone(repeated);
+(repeat_out(repeat_output, matrix, [2, 1]); let repeat_ok = same_and_dispose(repeat_output, repeated);
+let rolled = roll(matrix, [1], [1]);
+let roll_output = clone(rolled);
+(roll_out(roll_output, matrix, [1], [1]); let roll_ok = same_and_dispose(roll_output, rolled);
+let rotated = rot90(matrix, 1, [0, 1]);
+let rotation_output = clone(rotated);
+(rot90_out(rotation_output, matrix, 1, [0, 1]); let rotation_ok = same_and_dispose(rotation_output, rotated);
+let viewed = view_copy(matrix, [3, 2]);
+let view_output = clone(viewed);
+(view_copy_out(view_output, matrix, [3, 2]); let view_ok = same_and_dispose(view_output, viewed);
+let expanded = unsqueeze_copy(matrix, 0);
+let expanded_output = clone(expanded);
+(unsqueeze_copy_out(expanded_output, matrix, 0); let expanded_ok = same_and_dispose(expanded_output, expanded);
+(dispose(matrix); diagonal_ok
+    and flip_ok
+    and permute_ok
+    and repeat_ok
+    and roll_ok
+    and rotation_ok
+    and view_ok
+    and expanded_ok)))))))).
+
+/**
+ * Proves retained diagonal, power, and triangular outputs.
+ */
+@test
+pub matrix_value_outputs_match_functional_results(): Bool ->
+    let square = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let diagonal = diagonal_copy(square, 0, 0, 1);
+    let diagonal_output = clone(diagonal);
+    diagonal_copy_out(diagonal_output, square, 0, 0, 1);
+    let diagonal_ok = same_and_dispose(diagonal_output, diagonal);
+    let powered = matrix_power(square, 2);
+    let power_output = clone(powered);
+    (matrix_power_out(power_output, square, 2); let power_ok = same_and_dispose(power_output, powered); let lower = tril(square, 0); let lower_output = clone(lower); (tril_out(lower_output, square, 0); let lower_ok = same_and_dispose(lower_output, lower); let upper = triu(square, 0); let upper_output = clone(upper); (triu_out(upper_output, square, 0); let upper_ok = same_and_dispose(upper_output, upper); let vector = from_floats([1.0, 2.0, 3.0], [3]); let embedded = diag_embed(vector, 0, -2, -1); let embedded_output = clone(embedded); (diag_embed_out(embedded_output, vector, 0, -2, -1); let embedded_ok = same_and_dispose(embedded_output, embedded); (dispose(vector); dispose(square); diagonal_ok and power_ok and lower_ok and upper_ok and embedded_ok))))).
+
+/**
+ * Proves retained pixel-layout and squeeze outputs.
+ */
+@test
+pub pixel_and_squeeze_outputs_match_functional_results(): Bool ->
+    let pixels = from_floats([1.0, 2.0, 3.0, 4.0], [1, 4, 1, 1]);
+    let shuffled = pixel_shuffle(pixels, 2);
+    let shuffle_output = clone(shuffled);
+    pixel_shuffle_out(shuffle_output, pixels, 2);
+    let shuffle_ok = same_and_dispose(shuffle_output, shuffled);
+    let shuffled_source = pixel_shuffle(pixels, 2);
+    let unshuffled = pixel_unshuffle(shuffled_source, 2);
+    let unshuffle_output = clone(unshuffled);
+    (pixel_unshuffle_out(unshuffle_output, shuffled_source, 2); let unshuffle_ok = same_and_dispose(unshuffle_output, unshuffled); let singleton = from_floats([1.0, 2.0], [1, 2, 1]); let squeezed = squeeze_copy(singleton); let squeeze_output = clone(squeezed); (squeeze_copy_out(squeeze_output, singleton); let squeeze_ok = same_and_dispose(squeeze_output, squeezed); let dimension_squeezed = squeeze_copy_dim(singleton, 0); let dimension_output = clone(dimension_squeezed); (squeeze_copy_dimension_out(dimension_output, singleton, 0); let dimension_ok = same_and_dispose(dimension_output, dimension_squeezed); let dimensions_squeezed = squeeze_copy_dims(singleton, [0, 2]); let dimensions_output = clone(dimensions_squeezed); (squeeze_copy_dimensions_out(dimensions_output, singleton, [0, 2]); let dimensions_ok = same_and_dispose(dimensions_output, dimensions_squeezed); (dispose(singleton); dispose(shuffled_source); dispose(pixels); shuffle_ok and unshuffle_ok and squeeze_ok and dimension_ok and dimensions_ok))))).

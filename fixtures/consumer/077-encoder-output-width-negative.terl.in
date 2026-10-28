@@ -1,0 +1,12 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{add, from_floats, full_float, matmul}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let attention_residual = from_floats([2.0, 4.0, 5.0, 3.0], [2, 2]);
+    let activated = full_float([2, 4], 1.0);
+    let invalid_projection_weight = full_float([4, 3], 1.0);
+    let projected = matmul(activated, invalid_projection_weight);
+    let encoder_output = add(attention_residual, projected, 1.0);
+    println("PYTORCH_ENCODER_OUTPUT_WIDTH_NOT_REJECTED").

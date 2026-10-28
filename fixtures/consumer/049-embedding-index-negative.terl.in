@@ -1,0 +1,10 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{embedding, from_ints, full_float}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let weight = full_float([3, 2], 2.0);
+    let indices = from_ints([3], [1]);
+    let output = embedding(weight, indices, -1, false, false);
+    println("PYTORCH_EMBEDDING_INDEX_NOT_REJECTED").

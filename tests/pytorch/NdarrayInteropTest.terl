@@ -1,0 +1,98 @@
+module pytorch.NdarrayInteropTest.
+
+import ndarray.Array.{dispose as dispose_array, export_tensor_packet, from_bools as array_from_bools, from_floats as array_from_floats, from_ints as array_from_ints, live_count, matmul as array_matmul, shape as array_shape}.
+import pytorch.Tensor.{dispose as dispose_tensor, dtype, from_array, from_floats as tensor_from_floats, from_packet, item, item_bool, item_float, mse_loss, narrow, numel, shape}.
+
+@test
+pub ndarray_packet_becomes_an_owned_pytorch_tensor(): Bool ->
+    let arrays_before = live_count();
+    let array = array_from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let packet = export_tensor_packet(array, "pytorch");
+    let tensor = from_array(packet);
+    let expected = tensor_from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let loss = mse_loss(tensor, expected, 1);
+    let valid =
+        shape(tensor) == [2, 3]
+            and numel(tensor) == 6
+            and dtype(tensor) == 7
+            and item_float(loss) == 0.0;
+    dispose_tensor(loss);
+    dispose_tensor(expected);
+    dispose_tensor(tensor);
+    let source_remains_valid = array_shape(array) == [2, 3];
+    (dispose_array(array); valid and source_remains_valid and live_count() == arrays_before).
+
+@test
+pub ndarray_source_can_be_disposed_before_owned_pytorch_tensor(): Bool ->
+    let arrays_before = live_count();
+    let array = array_from_floats([1.0, 2.0, 3.0], [3]);
+    let packet = export_tensor_packet(array, "pytorch");
+    let tensor = from_packet(packet);
+    dispose_array(array);
+    let selected = narrow(tensor, 0, 2, 1);
+    let valid = shape(tensor) == [3] and item_float(selected) == 3.0 and live_count() == arrays_before;
+    (dispose_tensor(selected); dispose_tensor(tensor); valid).
+
+@test
+pub ndarray_bool_packet_executes_a_pytorch_operation(): Bool ->
+    let arrays_before = live_count();
+    let array = array_from_bools([false, true, false], [3]);
+    let packet = export_tensor_packet(array, "pytorch");
+    let tensor = from_packet(packet);
+    let selected = narrow(tensor, 0, 1, 1);
+    let valid = shape(tensor) == [3] and dtype(tensor) == 11 and item_bool(selected);
+    dispose_tensor(selected);
+    dispose_tensor(tensor);
+    dispose_array(array);
+    valid and live_count() == arrays_before.
+
+@test
+pub ndarray_int64_packet_executes_a_pytorch_operation(): Bool ->
+    let arrays_before = live_count();
+    let array = array_from_ints([-3, 7, 2], [3]);
+    let packet = export_tensor_packet(array, "pytorch");
+    let tensor = from_packet(packet);
+    let selected = narrow(tensor, 0, 1, 1);
+    let valid = shape(tensor) == [3] and dtype(tensor) == 4 and item(selected) == 7;
+    dispose_tensor(selected);
+    dispose_tensor(tensor);
+    dispose_array(array);
+    valid and live_count() == arrays_before.
+
+@test
+pub ndarray_float64_packet_executes_a_pytorch_operation(): Bool ->
+    let arrays_before = live_count();
+    let array = array_from_floats([1.25, 7.5, -2.0], [3]);
+    let packet = export_tensor_packet(array, "pytorch");
+    let tensor = from_packet(packet);
+    let selected = narrow(tensor, 0, 0, 1);
+    let valid = shape(tensor) == [3] and dtype(tensor) == 7 and item_float(selected) == 1.25;
+    dispose_tensor(selected);
+    dispose_tensor(tensor);
+    dispose_array(array);
+    valid and live_count() == arrays_before.
+
+@test
+pub advanced_ndarray_matmul_becomes_a_pytorch_tensor(): Bool ->
+    let arrays_before = live_count();
+    let input = array_from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let weights = array_from_floats([1.0, 2.0, 3.0], [3, 1]);
+    let projected = array_matmul(input, weights);
+    let packet = export_tensor_packet(projected, "pytorch");
+    let tensor = from_packet(packet);
+    let expected = tensor_from_floats([14.0, 32.0], [2, 1]);
+    let loss = mse_loss(tensor, expected, 1);
+    let second = narrow(tensor, 0, 1, 1);
+    let valid =
+        array_shape(projected) == [2, 1]
+            and shape(tensor) == [2, 1]
+            and item_float(second) == 32.0
+            and item_float(loss) == 0.0;
+    dispose_tensor(second);
+    dispose_tensor(loss);
+    dispose_tensor(expected);
+    dispose_tensor(tensor);
+    dispose_array(projected);
+    dispose_array(weights);
+    dispose_array(input);
+    valid and live_count() == arrays_before.

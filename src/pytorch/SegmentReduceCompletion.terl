@@ -1,0 +1,20 @@
+/**
+ * Generated exact CXX segment-reduction forms.
+ */
+module pytorch.SegmentReduceCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX segment_reduce lengths form.
+ */
+@compiler.native {pytorch.segment_reduce.lengths}
+pub segment_reduce_lengths(data: Tensor, reduce: String, lengths: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX segment_reduce output lengths form.
+ */
+@compiler.native {pytorch.segment_reduce.lengths_out}
+pub segment_reduce_lengths_out(out: Tensor, data: Tensor, reduce: String, lengths: Tensor): Unit ->
+    native.

@@ -1,0 +1,244 @@
+/**
+ * Exact Bartlett, Blackman, Hamming, Hann, and Kaiser window constructors and retained-output operations composed from generated CXX leaves.
+ */
+module pytorch.WindowNative.
+
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+import type pytorch.Tensor.{DType, Device, Layout}.
+
+/**
+ * Constructs one exact signal-processing window with explicit dtype, device, and pin-memory controls.
+ */
+pub window_native(
+    operation: Int,
+    window_length: Int,
+    periodic: Bool,
+    alpha: Float,
+    beta: Float,
+    dtype: Int,
+    device_type: Int,
+    device_index: Int,
+    pin_memory: Bool,
+): Tensor ->
+    let selected_dtype = window_dtype(dtype);
+    let selected_device = window_device(device_type, device_index);
+    if {
+        operation == 0 -> window_bartlett(window_length, periodic, selected_dtype, 0, selected_device, pin_memory);
+        operation == 1 -> window_blackman(window_length, periodic, selected_dtype, 0, selected_device, pin_memory);
+        operation == 2 -> window_hamming(
+            window_length,
+            periodic,
+            alpha,
+            beta,
+            selected_dtype,
+            0,
+            selected_device,
+            pin_memory,
+        );
+        operation == 3 -> window_hann(window_length, periodic, selected_dtype, 0, selected_device, pin_memory);
+        operation == 4 -> window_kaiser(window_length, periodic, beta, selected_dtype, 0, selected_device, pin_memory);
+        true -> let _failed = fail(exit_reason(7250));
+        window_bartlett(window_length, periodic, selected_dtype, 0, selected_device, pin_memory)
+    }.
+
+/**
+ * Writes one exact signal-processing window into retained output storage.
+ */
+pub window_out_native(
+    output: Tensor,
+    operation: Int,
+    window_length: Int,
+    periodic: Bool,
+    alpha: Float,
+    beta: Float,
+): Unit ->
+    if {
+        operation == 0 -> window_bartlett_out(output, window_length, periodic);
+        operation == 1 -> window_blackman_out(output, window_length, periodic);
+        operation == 2 -> window_hamming_out(output, window_length, periodic, alpha, beta);
+        operation == 3 -> window_hann_out(output, window_length, periodic);
+        operation == 4 -> window_kaiser_out(output, window_length, periodic, beta);
+        true -> fail(exit_reason(7250))
+    }.
+
+/**
+ * Maps the stable package dtype selector to the generated CXX dtype atom.
+ */
+window_dtype(code: Int): Int ->
+    if {
+        code == 0 -> 0;
+        code == 1 -> 1;
+        code == 2 -> 2;
+        code == 3 -> 3;
+        code == 4 -> 4;
+        code == 5 -> 5;
+        code == 6 -> 6;
+        code == 7 -> 7;
+        code == 8 -> 8;
+        code == 9 -> 9;
+        code == 10 -> 10;
+        code == 11 -> 11;
+        code == 12 -> 12;
+        code == 13 -> 13;
+        code == 14 -> 14;
+        code == 15 -> 15;
+        code == 16 -> 16;
+        code == 17 -> 17;
+        code == 18 -> 18;
+        code == 19 -> 19;
+        code == 20 -> 20;
+        code == 21 -> 21;
+        code == 22 -> 22;
+        code == 23 -> 23;
+        code == 24 -> 24;
+        code == 25 -> 25;
+        code == 26 -> 26;
+        code == 27 -> 27;
+        code == 28 -> 28;
+        code == 29 -> 29;
+        code == 30 -> 30;
+        code == 31 -> 31;
+        code == 32 -> 32;
+        code == 33 -> 33;
+        code == 34 -> 34;
+        code == 35 -> 35;
+        code == 36 -> 36;
+        code == 37 -> 37;
+        code == 38 -> 38;
+        code == 39 -> 39;
+        code == 40 -> 40;
+        code == 41 -> 41;
+        code == 42 -> 42;
+        code == 43 -> 43;
+        code == 44 -> 44;
+        code == 45 -> 45;
+        true -> let _failed = fail(exit_reason(7250));
+        6
+    }.
+
+/**
+ * Maps the stable package device selector to the generated CXX device spelling.
+ */
+window_device(kind: Int, index: Int): Device ->
+    if {
+        kind == 0 -> "cpu";
+        kind == 1 -> "cuda:" + std.core.Int.to_string(index);
+        true -> let _failed = fail(exit_reason(7250));
+        "cpu"
+    }.
+
+/**
+ * Generated Bartlett window constructor.
+ */
+@compiler.native {pytorch.window.cxx.bartlett}
+window_bartlett(
+    window_length: Int,
+    periodic: Bool,
+    dtype: Int,
+    layout: Int,
+    device: Device,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated Blackman window constructor.
+ */
+@compiler.native {pytorch.window.cxx.blackman}
+window_blackman(
+    window_length: Int,
+    periodic: Bool,
+    dtype: Int,
+    layout: Int,
+    device: Device,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated Hamming window constructor.
+ */
+@compiler.native {pytorch.window.cxx.hamming}
+window_hamming(
+    window_length: Int,
+    periodic: Bool,
+    alpha: Float,
+    beta: Float,
+    dtype: Int,
+    layout: Int,
+    device: Device,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated Hann window constructor.
+ */
+@compiler.native {pytorch.window.cxx.hann}
+window_hann(
+    window_length: Int,
+    periodic: Bool,
+    dtype: Int,
+    layout: Int,
+    device: Device,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated Kaiser window constructor.
+ */
+@compiler.native {pytorch.window.cxx.kaiser}
+window_kaiser(
+    window_length: Int,
+    periodic: Bool,
+    beta: Float,
+    dtype: Int,
+    layout: Int,
+    device: Device,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated Bartlett retained-output operation.
+ */
+@compiler.native {pytorch.window.cxx.bartlett_out}
+window_bartlett_out(output: Tensor, window_length: Int, periodic: Bool): Unit ->
+    native.
+
+/**
+ * Generated Blackman retained-output operation.
+ */
+@compiler.native {pytorch.window.cxx.blackman_out}
+window_blackman_out(output: Tensor, window_length: Int, periodic: Bool): Unit ->
+    native.
+
+/**
+ * Generated Hamming retained-output operation.
+ */
+@compiler.native {pytorch.window.cxx.hamming_out}
+window_hamming_out(
+    output: Tensor,
+    window_length: Int,
+    periodic: Bool,
+    alpha: Float,
+    beta: Float,
+): Unit ->
+    native.
+
+/**
+ * Generated Hann retained-output operation.
+ */
+@compiler.native {pytorch.window.cxx.hann_out}
+window_hann_out(output: Tensor, window_length: Int, periodic: Bool): Unit ->
+    native.
+
+/**
+ * Generated Kaiser retained-output operation.
+ */
+@compiler.native {pytorch.window.cxx.kaiser_out}
+window_kaiser_out(output: Tensor, window_length: Int, periodic: Bool, beta: Float): Unit ->
+    native.

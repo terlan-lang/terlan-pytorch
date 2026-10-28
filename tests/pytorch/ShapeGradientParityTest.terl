@@ -1,0 +1,59 @@
+/**
+ * Explicit shape-gradient and diagonal-view public execution evidence.
+ */
+module pytorch.ShapeGradientParityTest.
+
+import pytorch.ShapeGradient.{diagonal, diagonal_backward, diagonal_backward_out, diagonal_scatter_out, select_backward, select_backward_out, slice_backward, slice_backward_out, unfold_backward, unfold_backward_out}.
+import pytorch.Tensor.{dispose, from_floats, storage_offset, strides}.
+import pytorch.TypeRelations.equal.
+import pytorch.UnaryStorage.zero_in_place.
+
+/**
+ * Checks explicit backward values and independently owned retained outputs.
+ */
+@test
+pub shape_backward_values_and_outputs(): Bool ->
+    let gradient = from_floats([10.0, 20.0], [2]);
+    let diagonal_result = diagonal_backward(gradient, [2, 3], 1, 0, 1);
+    let selected = select_backward(gradient, [2, 3], -1, 1);
+    let sliced = slice_backward(gradient, [5], 0, 1, 5, 2);
+    let windows = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [3, 2]);
+    let unfolded = unfold_backward(windows, [4], 0, 2, 1);
+    let diagonal_output = from_floats([], [0]);
+    let selected_output = from_floats([], [0]);
+    let sliced_output = from_floats([], [0]);
+    let unfolded_output = from_floats([], [0]);
+    diagonal_backward_out(diagonal_output, gradient, [2, 3], 1, 0, 1);
+    select_backward_out(selected_output, gradient, [2, 3], -1, 1);
+    slice_backward_out(sliced_output, gradient, [5], 0, 1, 5, 2);
+    unfold_backward_out(unfolded_output, windows, [4], 0, 2, 1);
+    let wanted_diagonal = from_floats([0.0, 10.0, 0.0, 0.0, 0.0, 20.0], [2, 3]);
+    let wanted_selected = from_floats([0.0, 10.0, 0.0, 0.0, 20.0, 0.0], [2, 3]);
+    let wanted_sliced = from_floats([0.0, 10.0, 0.0, 20.0, 0.0], [5]);
+    let wanted_unfolded = from_floats([1.0, 5.0, 9.0, 6.0], [4]);
+    let valid =
+        equal(diagonal_result, wanted_diagonal)
+            and equal(diagonal_output, wanted_diagonal)
+            and equal(selected, wanted_selected)
+            and equal(selected_output, wanted_selected)
+            and equal(sliced, wanted_sliced)
+            and equal(sliced_output, wanted_sliced)
+            and equal(unfolded, wanted_unfolded)
+            and equal(unfolded_output, wanted_unfolded);
+    (dispose(wanted_unfolded); dispose(wanted_sliced); dispose(wanted_selected); dispose(wanted_diagonal); dispose(unfolded_output); dispose(sliced_output); dispose(selected_output); dispose(diagonal_output); dispose(unfolded); dispose(windows); dispose(sliced); dispose(selected); dispose(diagonal_result); dispose(gradient); valid).
+
+/**
+ * Checks the diagonal default arguments, shared storage, and scatter output.
+ */
+@test
+pub diagonal_aliases_and_scatter_output(): Bool ->
+    let matrix = from_floats([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], [2, 3]);
+    let view = diagonal(matrix);
+    let wanted = from_floats([0.0, 4.0], [2]);
+    let before = equal(view, wanted) and strides(view) == [4] and storage_offset(view) == 0;
+    zero_in_place(view);
+    let changed = from_floats([0.0, 1.0, 2.0, 3.0, 0.0, 5.0], [2, 3]);
+    let alias = equal(matrix, changed);
+    let patch = from_floats([10.0, 20.0], [2]);
+    let output = from_floats([], [0]);
+    (diagonal_scatter_out(output, matrix, patch, 1, 0, 1); let expected = from_floats([0.0, 10.0, 2.0, 3.0, 0.0, 20.0], [2, 3]); let valid = before and alias and equal(output, expected) and equal(matrix, changed); (dispose(expected); dispose(output); dispose(patch); dispose(changed); dispose(wanted); dispose(view); dispose(matrix); valid)).

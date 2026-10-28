@@ -1,0 +1,36 @@
+/**
+ * CPU default-dtype global state parity coverage.
+ */
+module pytorch.DefaultDtypeParityTest.
+
+import pytorch.BackendAvailability.{dispose_default_dtype, enter_default_dtype, get_default_dtype, set_default_dtype}.
+
+@test
+pub default_dtype_state_matches_libtorch(): Bool ->
+    let original = get_default_dtype();
+    set_default_dtype(6);
+    let changed = get_default_dtype() == 6;
+    (set_default_dtype(original); changed and get_default_dtype() == original).
+
+@test
+pub default_dtype_guard_restores_prior_state(): Bool ->
+    let original = get_default_dtype();
+    let target =
+        if {
+            original == 6 -> 7;
+            true -> 6
+        };
+    let guard = enter_default_dtype(target);
+    let entered = get_default_dtype() == target;
+    dispose_default_dtype(guard);
+    entered and get_default_dtype() == original.
+
+@test
+pub default_dtype_guards_nest_and_restore(): Bool ->
+    let original = get_default_dtype();
+    let outer = enter_default_dtype(6);
+    let inner = enter_default_dtype(7);
+    let inner_state = get_default_dtype() == 7;
+    dispose_default_dtype(inner);
+    let outer_state = get_default_dtype() == 6;
+    (dispose_default_dtype(outer); inner_state and outer_state and get_default_dtype() == original).

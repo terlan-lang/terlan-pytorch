@@ -1,0 +1,618 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Classifies the frozen public ATen schemas against the Terlan PyTorch package.
+ */
+import std.collections.{List, Map}.
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{Int, String, Unit}.
+import std.data.Json.
+import std.io.Console.{eprintln, println}.
+import std.io.File.
+import std.system.Arguments.
+
+import type std.core.Option.
+
+struct Inventory {
+    valid: Bool,
+    total: Int,
+    implemented: Int,
+    equivalent: Int,
+    non_applicable: Int,
+    missing: Int,
+    reason: String,
+}.
+
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[pytorch.api]: ", message));
+    false.
+
+invalid(reason: String): Inventory ->
+    Inventory(
+        valid = false,
+        total = 0,
+        implemented = 0,
+        equivalent = 0,
+        non_applicable = 0,
+        missing = 0,
+        reason = reason,
+    ).
+
+read_json(path: String): Option[Json] ->
+    let {
+        Ok(source) <- File.read_text(path);
+        Ok(document) <- Json.parse(source)
+    } else {
+        _ -> None
+    };
+    Some(document).
+
+reverse_strings(values: List[String], output: List[String]): List[String] ->
+    case values {
+        [] -> output;
+        [value | rest] -> reverse_strings(rest, [value | output])
+    }.
+
+json_strings(value: Json): Option[List[String]] ->
+    case value.length() {
+        Ok(length) -> json_strings_at(value, 0, length, List.new[String]());
+        Err(_reason) -> None
+    }.
+
+json_strings_at(
+    value: Json,
+    index: Int,
+    length: Int,
+    output: List[String],
+): Option[List[String]] ->
+    if {
+        index == length -> Some(reverse_strings(output, List.new[String]()));
+        true -> let {
+            Ok(item) <- value.at(index);
+            Ok(text) <- item.as_string()
+        } else {
+            _ -> None
+        };
+        json_strings_at(value, index + 1, length, [text | output])
+    }.
+
+collect_manifest_modules(
+    modules: Json,
+    index: Int,
+    module_count: Int,
+    available: Map[String, Bool],
+): Option[Map[String, Bool]] ->
+    if {
+        index == module_count -> Some(available);
+        true -> let {
+            Ok(module_value) <- modules.at(index);
+            Ok(module_name_value) <- module_value.get("module");
+            Ok(module_name) <- module_name_value.as_string();
+            Ok(functions) <- module_value.get("functions");
+            Ok(function_count) <- functions.length();
+            Some(updated) <- collect_manifest_functions(module_name, functions, 0, function_count, available);
+            Some(with_families) <- collect_manifest_function_families(module_name, module_value, updated)
+        } else {
+            _ -> None
+        };
+        collect_manifest_modules(modules, index + 1, module_count, with_families)
+    }.
+
+collect_manifest_functions(
+    module_name: String,
+    functions: Json,
+    index: Int,
+    function_count: Int,
+    mut available: Map[String, Bool],
+): Option[Map[String, Bool]] ->
+    if {
+        index == function_count -> Some(available);
+        true -> let {
+            Ok(function_value) <- functions.at(index);
+            Ok(name_value) <- function_value.get("name");
+            Ok(name) <- name_value.as_string()
+        } else {
+            _ -> None
+        };
+        (let qualified = String.concat([module_name, ".", name]); let _put = available.put(qualified, true); collect_manifest_functions(module_name, functions, index + 1, function_count, available))
+    }.
+
+/**
+ * Collects optional concise function-family members from one binding module.
+ */
+collect_manifest_function_families(
+    module_name: String,
+    module_value: Json,
+    available: Map[String, Bool],
+): Option[Map[String, Bool]] ->
+    case module_value.get("function_families") {
+        Err(_reason) -> Some(available);
+        Ok(families) ->
+            case families.length() {
+                Err(_reason) -> None;
+                Ok(family_count) ->
+                    collect_manifest_families(module_name, families, 0, family_count, available)
+            }
+    }.
+
+/**
+ * Collects every family member from a module's concise family declarations.
+ */
+collect_manifest_families(
+    module_name: String,
+    families: Json,
+    index: Int,
+    family_count: Int,
+    available: Map[String, Bool],
+): Option[Map[String, Bool]] ->
+    if {
+        index == family_count -> Some(available);
+        true -> let {
+            Ok(family) <- families.at(index);
+            Ok(members) <- family.get("members");
+            Ok(member_count) <- members.length();
+            Some(updated) <- collect_manifest_family_members(module_name, members, 0, member_count, available)
+        } else {
+            _ -> None
+        };
+        collect_manifest_families(module_name, families, index + 1, family_count, updated)
+    }.
+
+/**
+ * Adds concise family member names to the public availability map.
+ */
+collect_manifest_family_members(
+    module_name: String,
+    members: Json,
+    index: Int,
+    member_count: Int,
+    mut available: Map[String, Bool],
+): Option[Map[String, Bool]] ->
+    if {
+        index == member_count -> Some(available);
+        true -> let {
+            Ok(member) <- members.at(index);
+            Ok(name_value) <- member.get("name");
+            Ok(name) <- name_value.as_string()
+        } else {
+            _ -> None
+        };
+        (let qualified = String.concat([module_name, ".", name]); let _put = available.put(qualified, true); collect_manifest_family_members(module_name, members, index + 1, member_count, available))
+    }.
+
+available_functions(manifest: Json): Option[Map[String, Bool]] ->
+    let {
+        Ok(modules) <- manifest.get("modules");
+        Ok(module_count) <- modules.length()
+    } else {
+        _ -> None
+    };
+    collect_manifest_modules(modules, 0, module_count, Map.new[String, Bool]()).
+
+mapping(policy: Json, signature: String): Option[{String, String}] ->
+    let {
+        Ok(value) <- policy.get(signature);
+        Ok(fields) <- value.required_fields(["target", "evidence"], [], []);
+        [target, evidence] <- fields.strings
+    } else {
+        _ -> None
+    };
+    Some({target, evidence}).
+
+exclusion(policy: Json, signature: String): Option[String] ->
+    let {
+        Ok(value) <- policy.get(signature);
+        Ok(reason) <- value.as_string()
+    } else {
+        _ -> None
+    };
+    Some(reason).
+
+last_segment(parts: List[String], fallback: String): String ->
+    case parts {
+        [] -> fallback;
+        [head] -> head;
+        [_head | rest] -> last_segment(rest, fallback)
+    }.
+
+first_segment(parts: List[String], fallback: String): String ->
+    case parts {
+        [head | _rest] -> head;
+        [] -> fallback
+    }.
+
+contains_any(source: String, tokens: List[String]): Bool ->
+    case tokens {
+        [] -> false;
+        [token | rest] ->
+            not token.is_empty() and String.contains(source, token) or contains_any(source, rest)
+    }.
+
+evidence_operation_tokens(signature: String): List[String] ->
+    let before_arguments = first_segment(String.split(signature, "("), signature);
+    let operation_parts = String.split(before_arguments, ".");
+    let first = first_segment(operation_parts, before_arguments);
+    let last = last_segment(operation_parts, before_arguments);
+    [
+        first,
+        String.replace(first, "unsafe_", ""),
+        String.replace(first, "sym_", ""),
+        String.replace(first, "_nd", ""),
+        last,
+    ].
+
+evidence_matches_target(path: String, target: String, signature: String): Bool ->
+    case File.read_text(path) {
+        Ok(source) ->
+            let leaf = last_segment(String.split(target, "."), target);
+            let test_marker = String.contains(source, "@test") or String.contains(source, "#[test]");
+            (String.contains(source, leaf) or contains_any(source, evidence_operation_tokens(signature)))
+                and test_marker;
+        Err(_reason) -> false
+    }.
+
+classify_schemas(
+    schemas: List[String],
+    implemented_policy: Json,
+    equivalent_policy: Json,
+    excluded_policy: Json,
+    available: Map[String, Bool],
+    mut seen: Map[String, Bool],
+    implemented_count: Int,
+    equivalent_count: Int,
+    excluded_count: Int,
+    missing_count: Int,
+): Inventory ->
+    case schemas {
+        [] ->
+            Inventory(
+                valid = true,
+                total = implemented_count + equivalent_count + excluded_count + missing_count,
+                implemented = implemented_count,
+                equivalent = equivalent_count,
+                non_applicable = excluded_count,
+                missing = missing_count,
+                reason = "",
+            );
+        [signature | rest] ->
+            if {
+                seen.contains_key(signature) -> invalid(String.append("duplicate frozen schema: ", signature));
+                true -> let _seen = seen.put(signature, true);
+                let implemented = mapping(implemented_policy, signature);
+                let equivalent = mapping(equivalent_policy, signature);
+                let excluded = exclusion(excluded_policy, signature);
+                let category_count =
+                    case implemented {
+    Some(_value) -> 1;
+    None -> 0
+} + case equivalent {
+    Some(_value) -> 1;
+    None -> 0
+} + case excluded {
+    Some(_value) -> 1;
+    None -> 0
+};
+                if {
+                    category_count > 1 -> invalid(String.append("schema has multiple classifications: ", signature));
+                    true -> case {implemented, equivalent, excluded} {
+                        {Some({target, evidence}), None, None} ->
+                            if {
+                                not available.contains_key(target) -> invalid(
+                                    String.concat(
+                                        [
+                                            "implemented target is unavailable: ",
+                                            target,
+                                            " for ",
+                                            signature,
+                                        ],
+                                    ),
+                                );
+                                not evidence_matches_target(evidence, target, signature) -> invalid(
+                                    String.concat(
+                                        [
+                                            "implemented evidence does not exercise target ",
+                                            target,
+                                            ": ",
+                                            evidence,
+                                        ],
+                                    ),
+                                );
+                                true -> classify_schemas(
+                                    rest,
+                                    implemented_policy,
+                                    equivalent_policy,
+                                    excluded_policy,
+                                    available,
+                                    seen,
+                                    implemented_count + 1,
+                                    equivalent_count,
+                                    excluded_count,
+                                    missing_count,
+                                )
+                            };
+                        {None, Some({target, evidence}), None} ->
+                            if {
+                                not available.contains_key(target) -> invalid(
+                                    String.concat(
+                                        [
+                                            "equivalent target is unavailable: ",
+                                            target,
+                                            " for ",
+                                            signature,
+                                        ],
+                                    ),
+                                );
+                                not evidence_matches_target(evidence, target, signature) -> invalid(
+                                    String.concat(
+                                        [
+                                            "equivalent evidence does not exercise target ",
+                                            target,
+                                            ": ",
+                                            evidence,
+                                        ],
+                                    ),
+                                );
+                                true -> classify_schemas(
+                                    rest,
+                                    implemented_policy,
+                                    equivalent_policy,
+                                    excluded_policy,
+                                    available,
+                                    seen,
+                                    implemented_count,
+                                    equivalent_count + 1,
+                                    excluded_count,
+                                    missing_count,
+                                )
+                            };
+                        {None, None, Some(reason)} ->
+                            if {
+                                reason.is_empty() -> invalid(String.append("empty exclusion reason: ", signature));
+                                true -> classify_schemas(
+                                    rest,
+                                    implemented_policy,
+                                    equivalent_policy,
+                                    excluded_policy,
+                                    available,
+                                    seen,
+                                    implemented_count,
+                                    equivalent_count,
+                                    excluded_count + 1,
+                                    missing_count,
+                                )
+                            };
+                        _ ->
+                            classify_schemas(
+                                rest,
+                                implemented_policy,
+                                equivalent_policy,
+                                excluded_policy,
+                                available,
+                                seen,
+                                implemented_count,
+                                equivalent_count,
+                                excluded_count,
+                                missing_count + 1,
+                            )
+                    }
+                }
+            }
+    }.
+
+classify(
+    reference: Json,
+    policy: Json,
+    manifest: Json,
+    expected_reference_schema: String,
+    reference_hash_field: String,
+    expected_reference_hash: String,
+    expected_schema_count: Int,
+): Inventory ->
+    let {
+        Ok(reference_header) <-
+            reference
+                .required_fields(
+                    ["schema", "pytorch_version", "build_hash", reference_hash_field],
+                    [],
+                    ["schemas"],
+                );
+        [reference_schema, reference_version, build_hash, header_sha256] <- reference_header.strings;
+        [schema_count] <- reference_header.array_lengths;
+        Ok(schema_values) <- reference.get("schemas");
+        Some(schemas) <- json_strings(schema_values);
+        Ok(policy_header) <- policy.required_fields(["schema", "pytorch_version"], [], []);
+        [policy_schema, policy_version] <- policy_header.strings;
+        Ok(implemented_policy) <- policy.get("implemented");
+        Ok(equivalent_policy) <- policy.get("equivalent");
+        Ok(excluded_policy) <- policy.get("non_applicable");
+        Ok(implemented_policy_count) <- implemented_policy.object_length();
+        Ok(equivalent_policy_count) <- equivalent_policy.object_length();
+        Ok(excluded_policy_count) <- excluded_policy.object_length();
+        Some(available) <- available_functions(manifest)
+    } else {
+        _ -> invalid("invalid reference, policy, or generated manifest structure")
+    };
+    if {
+        reference_schema != expected_reference_schema
+            or policy_schema != "terlan.pytorch.api-policy.v1"
+            or reference_version != "2.13.0+cpu"
+            or policy_version != reference_version
+            or build_hash != "cf30153c4c131c8164ee7798e5022d810682e2cb"
+            or header_sha256 != expected_reference_hash
+            or schema_count != expected_schema_count
+            or List.length(schemas) != schema_count -> invalid("pinned PyTorch reference identity or schema count drifted");
+        true -> let inventory =
+            classify_schemas(
+                schemas,
+                implemented_policy,
+                equivalent_policy,
+                excluded_policy,
+                available,
+                Map.new[String, Bool](),
+                0,
+                0,
+                0,
+                0,
+            );
+        if {
+            not inventory.valid -> inventory;
+            inventory.implemented != implemented_policy_count
+                or inventory.equivalent != equivalent_policy_count
+                or inventory.non_applicable != excluded_policy_count -> invalid("policy contains an unknown or duplicate frozen schema");
+            true -> inventory
+        }
+    }.
+
+render(
+    reference: Json,
+    inventory: Inventory,
+    report_schema: String,
+    reference_hash_field: String,
+): Option[String] ->
+    let report = Json.object();
+    let _schema = report.put("schema", Json.string(report_schema));
+    let _version = report.put("pytorch_version", Json.string("2.13.0+cpu"));
+    let _build_hash = report.put("build_hash", Json.string("cf30153c4c131c8164ee7798e5022d810682e2cb"));
+    let _reference_hash =
+        case reference.get(reference_hash_field) {
+            Ok(value) -> report.put(reference_hash_field, value);
+            Err(_reason) -> report.put(reference_hash_field, Json.string(""))
+        };
+    let _total = report.put("total", Json.int(inventory.total));
+    let _implemented = report.put("implemented", Json.int(inventory.implemented));
+    let _equivalent = report.put("equivalent", Json.int(inventory.equivalent));
+    let _excluded = report.put("non_applicable", Json.int(inventory.non_applicable));
+    let _missing = report.put("missing", Json.int(inventory.missing));
+    let _status =
+        report
+            .put(
+                "status",
+                Json.string(
+                    if {
+                        inventory.missing == 0 -> "passed";
+                        true -> "incomplete"
+                    },
+                ),
+            );
+    case Json.stringify_pretty(report) {
+        Ok(value) -> Some(String.append(value, "\n"));
+        Err(_reason) -> None
+    }.
+
+execute(
+    reference_path: String,
+    policy_path: String,
+    report_path: String,
+    expected_reference_schema: String,
+    report_schema: String,
+    reference_hash_field: String,
+    expected_reference_hash: String,
+    expected_schema_count: Int,
+    label: String,
+    allow: Bool,
+): Bool ->
+    let {
+        Some(reference) <- read_json(reference_path);
+        Some(policy) <- read_json(policy_path);
+        Some(manifest) <- read_json("libtorch-cxx.json")
+    } else {
+        _ -> failure("cannot read the API reference, policy, or generated manifest")
+    };
+    (let inventory =
+    classify(
+        reference,
+        policy,
+        manifest,
+        expected_reference_schema,
+        reference_hash_field,
+        expected_reference_hash,
+        expected_schema_count,
+    );
+(let Some(report) <- render(reference, inventory, report_schema, reference_hash_field) else {
+    _ -> failure("cannot render the API report")
+};
+if {
+    not inventory.valid -> failure(String.append("classification policy is inconsistent: ", inventory.reason));
+    inventory.missing > 0 and not allow -> failure("unclassified PyTorch schemas remain");
+    true -> case File.write_text(report_path, report) {
+        Ok(Unit) ->
+            let _printed =
+                println(
+                    String.concat(
+                        [
+                            label,
+                            Int.to_string(inventory.implemented),
+                            " implemented, ",
+                            Int.to_string(inventory.equivalent),
+                            " equivalent, ",
+                            Int.to_string(inventory.non_applicable),
+                            " non-applicable, ",
+                            Int.to_string(inventory.missing),
+                            " missing",
+                        ],
+                    ),
+                );
+            true;
+        Err(_reason) -> failure("cannot write the API report")
+    }
+})).
+
+entry(): Bool ->
+    case {Arguments.count(), Arguments.get(0), Arguments.get(1)} {
+        {0, None, None} ->
+            execute(
+                "tests/fixtures/pytorch-2.13-aten-api.json",
+                "tests/pytorch-api-policy.json",
+                "reports/pytorch-api-report.json",
+                "terlan.pytorch.aten-api.v1",
+                "terlan.pytorch.api-report.v1",
+                "header_sha256",
+                "93baae67e8130a6adbaa820c43ea42a004cf653d5a772a5e7b4af8244c179515",
+                2261,
+                "terlan-pytorch ATen API inventory: ",
+                false,
+            );
+        {1, Some("--allow-missing"), None} ->
+            execute(
+                "tests/fixtures/pytorch-2.13-aten-api.json",
+                "tests/pytorch-api-policy.json",
+                "reports/pytorch-api-report.json",
+                "terlan.pytorch.aten-api.v1",
+                "terlan.pytorch.api-report.v1",
+                "header_sha256",
+                "93baae67e8130a6adbaa820c43ea42a004cf653d5a772a5e7b4af8244c179515",
+                2261,
+                "terlan-pytorch ATen API inventory: ",
+                true,
+            );
+        {1, Some("--public"), None} ->
+            execute(
+                "tests/fixtures/pytorch-2.13-public-api.json",
+                "tests/pytorch-public-api-policy.json",
+                "reports/pytorch-public-api-report.json",
+                "terlan.pytorch.public-api.v1",
+                "terlan.pytorch.public-api-report.v1",
+                "inventory_sha256",
+                "c7ccb9322ac8202810f345f425143574f495b6e03ef260b316414dfe9134051f",
+                3425,
+                "terlan-pytorch public API inventory: ",
+                false,
+            );
+        {2, Some("--public"), Some("--allow-missing")} ->
+            execute(
+                "tests/fixtures/pytorch-2.13-public-api.json",
+                "tests/pytorch-public-api-policy.json",
+                "reports/pytorch-public-api-report.json",
+                "terlan.pytorch.public-api.v1",
+                "terlan.pytorch.public-api-report.v1",
+                "inventory_sha256",
+                "c7ccb9322ac8202810f345f425143574f495b6e03ef260b316414dfe9134051f",
+                3425,
+                "terlan-pytorch public API inventory: ",
+                true,
+            );
+        _ -> failure("usage: CheckPytorchApi.terls [--allow-missing | --public [--allow-missing]]")
+    }.
+
+assert(entry());
+Unit.

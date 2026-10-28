@@ -1,0 +1,111 @@
+module pytorch.BinaryOutputParityTest.
+
+import pytorch.Binary.{arctan2, arctan2_out, atan2, atan2_out, copysign_tensor, copysign_tensor_out, dot, dot_out, eq_tensor, gcd, gcd_out, heaviside, heaviside_out, hypot, hypot_out, igamma, igamma_out, igammac, igammac_out, inner, inner_out, kron, kron_out, lcm, lcm_out, ldexp_out, ldexp_tensor, logaddexp, logaddexp2, logaddexp2_out, logaddexp_out, masked_select, masked_select_out, max_dim_out, max_other, max_out, min_dim_out, min_other, min_out, nextafter, nextafter_out, take, take_out, vdot, vdot_out}.
+import pytorch.Selection.{max_dim, min_dim}.
+import pytorch.Tensor.{clone, dispose, from_bool, from_floats, from_ints, item_bool}.
+import pytorch.Unary.{all}.
+
+/**
+ * Compares complete tensor contents and releases both operands.
+ */
+same_and_dispose(actual: Tensor, expected: Tensor): Bool ->
+    let equal = eq_tensor(actual, expected);
+    let reduced = all(equal);
+    let matches = item_bool(reduced);
+    dispose(reduced);
+    dispose(equal);
+    dispose(expected);
+    dispose(actual);
+    matches.
+
+/**
+ * Proves angle, sign, and norm-like retained outputs.
+ */
+@test
+pub angle_output_forms_match_libtorch(): Bool ->
+    let left = from_floats([0.5, 1.5], [2]);
+    let right = from_floats([1.0, 2.0], [2]);
+    let arctan_expected = arctan2(left, right);
+    let arctan_output = clone(left);
+    arctan2_out(arctan_output, left, right);
+    let arctan_ok = same_and_dispose(arctan_output, arctan_expected);
+    let atan_expected = atan2(left, right);
+    let atan_output = clone(left);
+    (atan2_out(atan_output, left, right); let atan_ok = same_and_dispose(atan_output, atan_expected); let copysign_expected = copysign_tensor(left, right); let copysign_output = clone(left); (copysign_tensor_out(copysign_output, left, right); let copysign_ok = same_and_dispose(copysign_output, copysign_expected); let hypot_expected = hypot(left, right); let hypot_output = clone(left); (hypot_out(hypot_output, left, right); let hypot_ok = same_and_dispose(hypot_output, hypot_expected); (dispose(right); dispose(left); arctan_ok and atan_ok and copysign_ok and hypot_ok)))).
+
+/**
+ * Proves special-function retained outputs.
+ */
+@test
+pub special_output_forms_match_libtorch(): Bool ->
+    let left = from_floats([0.5, 1.5], [2]);
+    let right = from_floats([1.0, 2.0], [2]);
+    let heaviside_expected = heaviside(left, right);
+    let heaviside_output = clone(left);
+    heaviside_out(heaviside_output, left, right);
+    let heaviside_ok = same_and_dispose(heaviside_output, heaviside_expected);
+    let igamma_expected = igamma(left, right);
+    let igamma_output = clone(left);
+    (igamma_out(igamma_output, left, right); let igamma_ok = same_and_dispose(igamma_output, igamma_expected); let igammac_expected = igammac(left, right); let igammac_output = clone(left); (igammac_out(igammac_output, left, right); let igammac_ok = same_and_dispose(igammac_output, igammac_expected); let nextafter_expected = nextafter(left, right); let nextafter_output = clone(left); (nextafter_out(nextafter_output, left, right); let nextafter_ok = same_and_dispose(nextafter_output, nextafter_expected); (dispose(right); dispose(left); heaviside_ok and igamma_ok and igammac_ok and nextafter_ok)))).
+
+/**
+ * Proves contraction and product retained outputs.
+ */
+@test
+pub contraction_output_forms_match_libtorch(): Bool ->
+    let left = from_floats([0.5, 1.5], [2]);
+    let right = from_floats([1.0, 2.0], [2]);
+    let dot_expected = dot(left, right);
+    let dot_output = clone(left);
+    dot_out(dot_output, left, right);
+    let dot_ok = same_and_dispose(dot_output, dot_expected);
+    let inner_expected = inner(left, right);
+    let inner_output = clone(left);
+    (inner_out(inner_output, left, right); let inner_ok = same_and_dispose(inner_output, inner_expected); let kron_expected = kron(left, right); let kron_output = clone(left); (kron_out(kron_output, left, right); let kron_ok = same_and_dispose(kron_output, kron_expected); let vdot_expected = vdot(left, right); let vdot_output = clone(left); (vdot_out(vdot_output, left, right); let vdot_ok = same_and_dispose(vdot_output, vdot_expected); (dispose(right); dispose(left); dot_ok and inner_ok and kron_ok and vdot_ok)))).
+
+/**
+ * Proves logarithmic combination and extrema retained outputs.
+ */
+@test
+pub extrema_output_forms_match_libtorch(): Bool ->
+    let left = from_floats([0.5, 1.5], [2]);
+    let right = from_floats([1.0, 2.0], [2]);
+    let log_expected = logaddexp(left, right);
+    let log_output = clone(left);
+    logaddexp_out(log_output, left, right);
+    let log_ok = same_and_dispose(log_output, log_expected);
+    let log2_expected = logaddexp2(left, right);
+    let log2_output = clone(left);
+    (logaddexp2_out(log2_output, left, right); let log2_ok = same_and_dispose(log2_output, log2_expected); let max_expected = max_other(left, right); let max_output = clone(left); (max_out(max_output, left, right); let max_ok = same_and_dispose(max_output, max_expected); let min_expected = min_other(left, right); let min_output = clone(left); (min_out(min_output, left, right); let min_ok = same_and_dispose(min_output, min_expected); (dispose(right); dispose(left); log_ok and log2_ok and max_ok and min_ok)))).
+
+/**
+ * Proves dtype-specific retained outputs.
+ */
+@test
+pub specialized_output_forms_match_libtorch(): Bool ->
+    let integers = from_ints([6, 15], [2]);
+    let divisors = from_ints([4, 10], [2]);
+    let gcd_expected = gcd(integers, divisors);
+    let gcd_output = clone(integers);
+    gcd_out(gcd_output, integers, divisors);
+    let gcd_ok = same_and_dispose(gcd_output, gcd_expected);
+    let lcm_expected = lcm(integers, divisors);
+    let lcm_output = clone(integers);
+    (lcm_out(lcm_output, integers, divisors); let lcm_ok = same_and_dispose(lcm_output, lcm_expected); let mantissas = from_floats([1.5, 2.0], [2]); let exponents = from_ints([2, -1], [2]); let ldexp_expected = ldexp_tensor(mantissas, exponents); let ldexp_output = clone(mantissas); (ldexp_out(ldexp_output, mantissas, exponents); let ldexp_ok = same_and_dispose(ldexp_output, ldexp_expected); let values = from_floats([-2.0, 3.0, 4.0], [3]); let mask = from_bool(true); let selected_expected = masked_select(values, mask); let selected_output = clone(values); (masked_select_out(selected_output, values, mask); let selected_ok = same_and_dispose(selected_output, selected_expected); let indices = from_ints([2, 0], [2]); let take_expected = take(values, indices); let take_output = clone(values); (take_out(take_output, values, indices); let take_ok = same_and_dispose(take_output, take_expected); (dispose(indices); dispose(mask); dispose(values); dispose(exponents); dispose(mantissas); dispose(divisors); dispose(integers); gcd_ok and lcm_ok and ldexp_ok and selected_ok and take_ok))))).
+
+/**
+ * Proves retained tuple outputs for dimension-wise extrema.
+ */
+@test
+pub dimension_output_forms_match_libtorch(): Bool ->
+    let input = from_floats([3.0, 1.0, 2.0, 4.0], [2, 2]);
+    let {expected_max, expected_max_indices} = max_dim(input, 1);
+    let max_values = from_floats([0.0, 0.0], [2]);
+    let max_indices = from_ints([0, 0], [2]);
+    max_dim_out(max_values, max_indices, input, 1);
+    let max_values_ok = same_and_dispose(max_values, expected_max);
+    let max_indices_ok = same_and_dispose(max_indices, expected_max_indices);
+    let {expected_min, expected_min_indices} = min_dim(input, 1);
+    let min_values = from_floats([0.0, 0.0], [2]);
+    let min_indices = from_ints([0, 0], [2]);
+    (min_dim_out(min_values, min_indices, input, 1); let min_values_ok = same_and_dispose(min_values, expected_min); let min_indices_ok = same_and_dispose(min_indices, expected_min_indices); (dispose(input); max_values_ok and max_indices_ok and min_values_ok and min_indices_ok)).

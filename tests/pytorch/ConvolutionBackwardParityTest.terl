@@ -1,0 +1,62 @@
+/**
+ * Public evidence for convolution backward functional and retained outputs.
+ */
+module pytorch.ConvolutionBackwardParityTest.
+
+import pytorch.ConvolutionNative.{convolution_backward, convolution_backward_out}.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+import pytorch.TypeRelations.equal.
+
+/**
+ * Validates exact CPU convolution gradients and all retained output slots.
+ */
+@test
+pub convolution_backward_forms_match(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0], [1, 1, 3, 3]);
+    let weight = from_floats([1.0, 0.0, 0.0, 1.0], [1, 1, 2, 2]);
+    let gradient = from_floats([1.0, 1.0, 1.0, 1.0], [1, 1, 2, 2]);
+    let {grad_input, grad_weight, grad_bias} =
+        convolution_backward(
+            gradient,
+            input,
+            weight,
+            true,
+            [1],
+            [1, 1],
+            [0, 0],
+            [1, 1],
+            false,
+            [0, 0],
+            1,
+            true,
+            true,
+            true,
+        );
+    let grad_input_out = from_floats([], [0]);
+    let grad_weight_out = from_floats([], [0]);
+    let grad_bias_out = from_floats([], [0]);
+    convolution_backward_out(
+        grad_input_out,
+        grad_weight_out,
+        grad_bias_out,
+        gradient,
+        input,
+        weight,
+        true,
+        [1],
+        [1, 1],
+        [0, 0],
+        [1, 1],
+        false,
+        [0, 0],
+        1,
+        true,
+        true,
+        true,
+    );
+    let valid =
+        shape(grad_input) == [1, 1, 3, 3]
+            and equal(grad_input, grad_input_out)
+            and equal(grad_weight, grad_weight_out)
+            and equal(grad_bias, grad_bias_out);
+    (dispose(grad_bias_out); dispose(grad_weight_out); dispose(grad_input_out); dispose(grad_bias); dispose(grad_weight); dispose(grad_input); dispose(gradient); dispose(weight); dispose(input); valid).

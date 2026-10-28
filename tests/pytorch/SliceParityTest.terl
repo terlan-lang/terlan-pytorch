@@ -1,0 +1,79 @@
+/**
+ * The same optional-bound slicing scenarios execute on CPU and CUDA.
+ */
+module pytorch.SliceParityTest.
+
+import pytorch.Slice.{bound, no_bound, slice, slice_copy, slice_copy_out, slice_scatter, slice_scatter_out}.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, strides, to_device}.
+import pytorch.TypeRelations.equal.
+import pytorch.UnaryStorage.zero_in_place.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(tensor: Tensor, values: List[Float], dimensions: List[Int], device: Int): Bool ->
+    let expected = placed(values, dimensions, device);
+    let valid = equal(tensor, expected) and dtype(tensor) == 7 and device_type(tensor) == device;
+    dispose(expected);
+    valid.
+
+verify(device: Int): Bool ->
+    let base = placed([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [6], device);
+    let patch = placed([10.0, 20.0], [2], device);
+    let view = slice(base, -1, bound(1), bound(5), 2);
+    let copy = slice_copy(base, -1, bound(1), bound(5), 2);
+    let copy_output = placed([], [0], device);
+    slice_copy_out(copy_output, base, -1, bound(1), bound(5), 2);
+    let scattered = slice_scatter(base, patch, -1, bound(1), bound(5), 2);
+    let scatter_output = placed([], [0], device);
+    (slice_scatter_out(scatter_output, base, patch, -1, bound(1), bound(5), 2); let all = slice(base, 0, no_bound(), no_bound(), 2);
+let from = slice(base, 0, bound(1), no_bound(), 2);
+let until = slice(base, 0, no_bound(), bound(3), 2);
+let negative = slice(base, 0, bound(-5), bound(-1), 2);
+let empty = slice(base, 0, no_bound(), bound(0), 1);
+let default_view = slice(base);
+let default_copy = slice_copy(base);
+let before =
+    matches(view, [2.0, 4.0], [2], device)
+        and matches(copy, [2.0, 4.0], [2], device)
+        and matches(copy_output, [2.0, 4.0], [2], device)
+        and matches(scattered, [1.0, 10.0, 3.0, 20.0, 5.0, 6.0], [6], device)
+        and matches(scatter_output, [1.0, 10.0, 3.0, 20.0, 5.0, 6.0], [6], device)
+        and matches(all, [1.0, 3.0, 5.0], [3], device)
+        and matches(from, [2.0, 4.0, 6.0], [3], device)
+        and matches(until, [1.0, 3.0], [2], device)
+        and matches(negative, [2.0, 4.0], [2], device)
+        and matches(empty, [], [0], device)
+        and equal(default_view, base)
+        and equal(default_copy, base)
+        and strides(view) == [2];
+(zero_in_place(view); zero_in_place(copy_output); zero_in_place(scatter_output); let ownership =
+    matches(base, [1.0, 0.0, 3.0, 0.0, 5.0, 6.0], [6], device)
+        and matches(copy, [2.0, 4.0], [2], device)
+        and matches(scattered, [1.0, 10.0, 3.0, 20.0, 5.0, 6.0], [6], device);
+(dispose(default_copy); dispose(default_view); dispose(empty); dispose(negative); dispose(until); dispose(from); dispose(all); dispose(scatter_output); dispose(scattered); dispose(copy_output); dispose(copy); dispose(view); dispose(patch); dispose(base); before and ownership))).
+
+/**
+ * Requires actual GPU execution whenever the CUDA gate requests it.
+ */
+@test
+pub slice_bounds_on_cpu_and_required_cuda(): Bool ->
+    let cpu_valid = verify(0);
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    cpu_valid and cuda_valid.

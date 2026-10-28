@@ -1,0 +1,125 @@
+/**
+ * CPU and required-CUDA public shape, patch, and contraction evidence.
+ */
+module pytorch.ShapeCompletionParityTest.
+
+import pytorch.ShapeCompletion.{channel_shuffle_out, col2im, col2im_out, im2col, im2col_out, narrow_copy_out, narrow_tensor, narrow_view, select_copy_out, select_scatter_out, tensordot, tensordot_out, trace_backward, transpose_copy_out, unfold, unfold_copy_out, zero, zero_out}.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, storage_offset, strides, to_device, to_dtype}.
+import pytorch.TypeRelations.equal.
+import pytorch.UnaryStorage.zero_in_place.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], shape: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, shape);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(tensor: Tensor, values: List[Float], shape: List[Int], device: Int): Bool ->
+    let expected = placed(values, shape, device);
+    let valid = equal(tensor, expected) and dtype(tensor) == 7 and device_type(tensor) == device;
+    dispose(expected);
+    valid.
+
+/**
+ * The pinned narrow_copy.out has only a CPU kernel; native tests assert its
+ * CUDA rejection and preserved output instead of emulating another operator.
+ */
+narrow_copy_values(output: Tensor, matrix: Tensor, device: Int): Bool ->
+    if {
+        device == 0 -> (narrow_copy_out(output, matrix, -1, 1, 2); matches(output, [2.0, 3.0, 5.0, 6.0], [2, 2], device));
+        true -> true
+    }.
+
+outputs_and_views(device: Int): Bool ->
+    let matrix = placed([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3], device);
+    let output = placed([], [0], device);
+    transpose_copy_out(output, matrix, 0, 1);
+    let transposed = matches(output, [1.0, 4.0, 2.0, 5.0, 3.0, 6.0], [3, 2], device);
+    (select_copy_out(output, matrix, -1, 1); let selected = matches(output, [2.0, 5.0], [2], device);
+let narrowed = narrow_copy_values(output, matrix, device);
+let patch = placed([10.0, 20.0], [2], device);
+(select_scatter_out(output, matrix, patch, 1, -1); let scattered = matches(output, [1.0, 2.0, 10.0, 4.0, 5.0, 20.0], [2, 3], device);
+let zeroed = zero(matrix);
+(zero_out(output, matrix); let zeros_valid = equal(output, zeroed) and matches(output, [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3], device);
+let channels = placed([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], [1, 6, 1, 1], device);
+(channel_shuffle_out(output, channels, 2); let shuffled = matches(output, [0.0, 3.0, 1.0, 4.0, 2.0, 5.0], [1, 6, 1, 1], device);
+let view = narrow_view(matrix, -1, -2, 2);
+let start_float = placed([-2.0], [], device);
+let start = to_dtype(start_float, 4);
+let indexed = narrow_tensor(matrix, -1, start, 2);
+let views_valid = equal(view, indexed) and strides(view) == [3, 1] and storage_offset(view) == 1;
+(zero_in_place(indexed); let alias = matches(matrix, [1.0, 0.0, 0.0, 4.0, 0.0, 0.0], [2, 3], device);
+(dispose(matrix); let lifetime = matches(view, [0.0, 0.0, 0.0, 0.0], [2, 2], device);
+(dispose(indexed); dispose(start); dispose(start_float); dispose(view); dispose(channels); dispose(zeroed); dispose(patch); dispose(output); transposed
+    and selected
+    and narrowed
+    and scattered
+    and zeros_valid
+    and shuffled
+    and views_valid
+    and alias
+    and lifetime))))))).
+
+windows_and_patches(device: Int): Bool ->
+    let base = placed([1.0, 2.0, 3.0, 4.0], [4], device);
+    let windows = unfold(base, 0, 2, 1);
+    let copied = placed([], [0], device);
+    unfold_copy_out(copied, base, 0, 2, 1);
+    let before = equal(windows, copied) and strides(windows) == [1, 1];
+    (zero_in_place(base); let ownership =
+    matches(windows, [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [3, 2], device)
+        and matches(copied, [1.0, 2.0, 2.0, 3.0, 3.0, 4.0], [3, 2], device);
+let scalar = placed([3.0], [], device);
+let traced = trace_backward(scalar, [2, 3]);
+let trace_valid = matches(traced, [3.0, 0.0, 0.0, 0.0, 3.0, 0.0], [2, 3], device);
+let image = placed([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0], [1, 1, 3, 3], device);
+let columns = im2col(image, [2, 2], [1, 1], [0, 0], [1, 1]);
+let column_output = placed([], [0], device);
+(im2col_out(column_output, image, [2, 2], [1, 1], [0, 0], [1, 1]); let columns_valid =
+    equal(columns, column_output)
+        and matches(
+    columns,
+    [1.0, 2.0, 4.0, 5.0, 2.0, 3.0, 5.0, 6.0, 4.0, 5.0, 7.0, 8.0, 5.0, 6.0, 8.0, 9.0],
+    [1, 4, 4],
+    device,
+);
+let folded = col2im(columns, [3, 3], [2, 2], [1, 1], [0, 0], [1, 1]);
+let fold_output = placed([], [0], device);
+(col2im_out(fold_output, columns, [3, 3], [2, 2], [1, 1], [0, 0], [1, 1]); let folds_valid =
+    equal(folded, fold_output)
+        and matches(folded, [1.0, 4.0, 3.0, 8.0, 20.0, 12.0, 7.0, 16.0, 9.0], [1, 1, 3, 3], device);
+(dispose(fold_output); dispose(folded); dispose(column_output); dispose(columns); dispose(image); dispose(traced); dispose(scalar); dispose(copied); dispose(windows); dispose(base); before and ownership and trace_valid and columns_valid and folds_valid)))).
+
+contractions(device: Int): Bool ->
+    let left = placed([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3], device);
+    let right = placed([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [3, 2], device);
+    let result = tensordot(left, right, [-1], [0]);
+    let output = placed([], [0], device);
+    tensordot_out(output, left, right, [1], [0]);
+    let valid = equal(result, output) and matches(result, [22.0, 28.0, 49.0, 64.0], [2, 2], device);
+    (zero_in_place(output); let ownership = matches(result, [22.0, 28.0, 49.0, 64.0], [2, 2], device); let scalar = tensordot(left, left, [0, 1], [0, 1]); let scalar_valid = matches(scalar, [91.0], [], device); (dispose(scalar); dispose(output); dispose(result); dispose(right); dispose(left); valid and ownership and scalar_valid)).
+
+verify(device: Int): Bool ->
+    outputs_and_views(device) and windows_and_patches(device) and contractions(device).
+
+/**
+ * Runs the same public API scenarios on CPU and, when mandatory, CUDA.
+ */
+@test
+pub shape_completion_on_cpu_and_required_cuda(): Bool ->
+    let cpu_valid = verify(0);
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    cpu_valid and cuda_valid.

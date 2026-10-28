@@ -1,0 +1,80 @@
+/**
+ * Typed indexed filling with scalar or tensor values and explicit storage behavior.
+ */
+module pytorch.IndexFill.
+
+import pytorch.IndexFillNative.{index_fill_scalar, index_fill_scalar_in_place, index_fill_scalar_out, index_fill_tensor as native_index_fill_tensor, index_fill_tensor_in_place as native_index_fill_tensor_in_place, index_fill_tensor_out as native_index_fill_tensor_out}.
+
+import type pytorch.Tensor.
+
+/**
+ * Returns a copy with indexed slices filled by an integer scalar.
+ */
+pub index_fill_int(input: Tensor, dimension: Int, index: Tensor, value: Int): Tensor ->
+    index_fill_scalar(input, dimension, index, true, value, 0.0).
+
+/**
+ * Writes integer scalar index filling into retained output storage.
+ */
+pub index_fill_int_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value: Int,
+): Unit ->
+    index_fill_scalar_out(output, input, dimension, index, true, value, 0.0).
+
+/**
+ * Fills indexed slices in place with an integer scalar.
+ */
+pub index_fill_int_in_place(input: Tensor, dimension: Int, index: Tensor, value: Int): Unit ->
+    index_fill_scalar_in_place(input, dimension, index, true, value, 0.0).
+
+/**
+ * Returns a copy with indexed slices filled by a floating-point scalar.
+ */
+pub index_fill_float(input: Tensor, dimension: Int, index: Tensor, value: Float): Tensor ->
+    index_fill_scalar(input, dimension, index, false, 0, value).
+
+/**
+ * Writes floating-point scalar index filling into retained output storage.
+ */
+pub index_fill_float_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value: Float,
+): Unit ->
+    index_fill_scalar_out(output, input, dimension, index, false, 0, value).
+
+/**
+ * Fills indexed slices in place with a floating-point scalar.
+ */
+pub index_fill_float_in_place(input: Tensor, dimension: Int, index: Tensor, value: Float): Unit ->
+    index_fill_scalar_in_place(input, dimension, index, false, 0, value).
+
+/**
+ * Returns a copy with indexed slices filled by a scalar tensor.
+ */
+pub index_fill_tensor(input: Tensor, dimension: Int, index: Tensor, value: Tensor): Tensor ->
+    native_index_fill_tensor(input, dimension, index, value).
+
+/**
+ * Writes tensor index filling into retained output storage.
+ */
+pub index_fill_tensor_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value: Tensor,
+): Unit ->
+    native_index_fill_tensor_out(output, input, dimension, index, value).
+
+/**
+ * Fills indexed slices in place with a scalar tensor.
+ */
+pub index_fill_tensor_in_place(input: Tensor, dimension: Int, index: Tensor, value: Tensor): Unit ->
+    native_index_fill_tensor_in_place(input, dimension, index, value).

@@ -1,0 +1,80 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{dim, dispose, dtype, flatten, from_bool, from_float, from_int, item, item_bool, item_float, matmul, multiply, narrow, relu, shape, subtract, transpose, unsqueeze}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let left_scalar = from_int(4);
+    let left_vector = unsqueeze(left_scalar, -1);
+    let left_matrix = unsqueeze(left_vector, -1);
+    let right_scalar = from_int(5);
+    let right_vector = unsqueeze(right_scalar, -1);
+    let right_matrix = unsqueeze(right_vector, -1);
+    let product = matmul(left_matrix, right_matrix);
+    let observed_item = item(product);
+    let observed_dim = dim(product);
+    let observed_shape = shape(product);
+    let transposed = transpose(product, 0, 1);
+    let observed_transpose = item(transposed);
+    dispose(transposed);
+    let multiplied = multiply(left_scalar, right_scalar);
+    let observed_multiply = item(multiplied);
+    dispose(multiplied);
+    let float_left = from_float(2.5);
+    let float_right = from_float(4.0);
+    let float_product = multiply(float_left, float_right);
+    let observed_float = item_float(float_product);
+    let observed_float_dtype = dtype(float_product);
+    dispose(float_product);
+    let difference = subtract(float_right, float_left, 1.0);
+    let observed_difference = item_float(difference);
+    dispose(difference);
+    dispose(float_right);
+    dispose(float_left);
+    let enabled = from_bool(true);
+    let disabled = from_bool(false);
+    let observed_enabled = item_bool(enabled);
+    let observed_disabled = item_bool(disabled);
+    let observed_bool_dtype = dtype(enabled);
+    dispose(disabled);
+    dispose(enabled);
+    let negative = from_float(-2.5);
+    let activated = relu(negative);
+    let observed_negative = item_float(negative);
+    let observed_relu = item_float(activated);
+    dispose(activated);
+    dispose(negative);
+    let narrowed = narrow(left_vector, 0, 0, 1);
+    let observed_narrow = item(narrowed);
+    let observed_narrow_shape = shape(narrowed);
+    dispose(narrowed);
+    let flattened = flatten(left_matrix, 0, 1);
+    let observed_flatten = item(flattened);
+    let observed_flatten_rank = dim(flattened);
+    let observed_flatten_shape = shape(flattened);
+    dispose(flattened);
+    dispose(product);
+    dispose(right_matrix);
+    dispose(right_vector);
+    dispose(right_scalar);
+    dispose(left_matrix);
+    dispose(left_vector);
+    dispose(left_scalar);
+    let matrix_semantics = observed_item == 20 and observed_dim == 2 and
+        observed_shape.length() == 2 and observed_transpose == 20 and
+        observed_multiply == 20;
+    let float_semantics = observed_float == 10.0 and observed_float_dtype == 7 and
+        observed_difference == 1.5 and observed_negative == -2.5 and
+        observed_relu == 0.0;
+    let bool_semantics = observed_enabled and not observed_disabled and
+        observed_bool_dtype == 11;
+    let narrow_semantics = observed_narrow == 4 and
+        observed_narrow_shape.length() == 1 and observed_narrow_shape[0] == 1;
+    let flatten_semantics = observed_flatten == 4 and
+        observed_flatten_rank == 1 and observed_flatten_shape.length() == 1 and
+        observed_flatten_shape[0] == 1;
+    if {
+        matrix_semantics and float_semantics and bool_semantics and
+            narrow_semantics and flatten_semantics -> println("PYTORCH_PACKAGE_CONSUMER_OK");
+        true -> println("PYTORCH_PACKAGE_CONSUMER_FAILED")
+    }.

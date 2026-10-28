@@ -1,0 +1,11 @@
+module pytorch_cxx.FusedArithmeticNativeCudaBehaviorTest.
+
+import pytorch.FusedArithmeticNativeBehaviorSupport.{fused_arithmetic_contracts_on, fused_arithmetic_dtype_contracts_on}.
+
+@test
+pub generated_cxx_cuda_fused_arithmetic_contracts(): Bool ->
+    fused_arithmetic_contracts_on("cuda:0").
+
+@test
+pub generated_cxx_cuda_fused_arithmetic_dtype_contracts(): Bool ->
+    fused_arithmetic_dtype_contracts_on("cuda:0").

@@ -1,0 +1,110 @@
+module pytorch.WindowParityTest.
+
+import pytorch.Tensor.{cpu, dispose, dtype, dtype_code, empty_typed_native, from_floats, shape, to_dtype}.
+import pytorch.TypeRelations.allclose.
+import pytorch.Window.{bartlett_window, bartlett_window_on, bartlett_window_out, blackman_window, blackman_window_out, hamming_window, hamming_window_out, hann_window, hann_window_out, kaiser_window, kaiser_window_out}.
+import std.collections.List.
+
+import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Creates one float32 vector used as independent expected-value evidence.
+ */
+expected(values: List[Float]): Tensor ->
+    let source = from_floats(values, [values.length()]);
+    let converted = to_dtype(source, dtype_code(DType.FLOAT32));
+    dispose(source);
+    converted.
+
+/**
+ * Compares and releases one actual and expected window pair.
+ */
+matches(actual: Tensor, wanted: Tensor, tolerance: Float): Bool ->
+    let valid = allclose(actual, wanted, tolerance, tolerance, false);
+    dispose(wanted);
+    dispose(actual);
+    valid.
+
+/**
+ * Compares retained output with and releases one allocating reference value.
+ */
+matches_retained(actual: Tensor, wanted: Tensor): Bool ->
+    let valid = allclose(actual, wanted);
+    dispose(wanted);
+    valid.
+
+/**
+ * Validates exact symmetric values for the four trigonometric window families.
+ */
+@test
+pub symmetric_windows_match_libtorch_values(): Bool ->
+    matches(bartlett_window(5, false), expected([0.0, 0.5, 1.0, 0.5, 0.0]), 0.000001)
+        and matches(blackman_window(5, false), expected([0.0, 0.34, 1.0, 0.34, 0.0]), 0.000001)
+        and matches(hamming_window(5, false), expected([0.08, 0.54, 1.0, 0.54, 0.08]), 0.000001)
+        and matches(hann_window(5, false), expected([0.0, 0.5, 1.0, 0.5, 0.0]), 0.000001).
+
+/**
+ * Validates default periodicity and configurable Hamming coefficients.
+ */
+@test
+pub defaults_and_hamming_coefficients_match_libtorch(): Bool ->
+    let default_window = hamming_window(5);
+    let explicit_window = hamming_window(5, true, 0.54, 0.46);
+    let constant_window = hamming_window(5, false, 1.0, 0.0);
+    let constant_expected = expected([1.0, 1.0, 1.0, 1.0, 1.0]);
+    let valid = allclose(default_window, explicit_window) and allclose(constant_window, constant_expected);
+    dispose(constant_expected);
+    dispose(constant_window);
+    dispose(explicit_window);
+    dispose(default_window);
+    valid.
+
+/**
+ * Validates the default Kaiser beta and its beta-zero limiting behavior.
+ */
+@test
+pub kaiser_overloads_match_libtorch(): Bool ->
+    let default_window = kaiser_window(7);
+    let explicit_window = kaiser_window(7, true, 12.0);
+    let constant_window = kaiser_window(5, false, 0.0);
+    let constant_expected = expected([1.0, 1.0, 1.0, 1.0, 1.0]);
+    let valid = allclose(default_window, explicit_window) and allclose(constant_window, constant_expected);
+    dispose(constant_expected);
+    dispose(constant_window);
+    dispose(explicit_window);
+    dispose(default_window);
+    valid.
+
+/**
+ * Validates all retained-output families and output resizing semantics.
+ */
+@test
+pub retained_outputs_match_allocating_overloads(): Bool ->
+    let bartlett = empty_typed_native([0], 6, 0, -1);
+    let blackman = empty_typed_native([0], 6, 0, -1);
+    let hamming = empty_typed_native([0], 6, 0, -1);
+    let hann = empty_typed_native([0], 6, 0, -1);
+    let kaiser = empty_typed_native([0], 6, 0, -1);
+    bartlett_window_out(bartlett, 5, false);
+    blackman_window_out(blackman, 5, false);
+    hamming_window_out(hamming, 5, false, 0.54, 0.46);
+    hann_window_out(hann, 5, false);
+    kaiser_window_out(kaiser, 5, false, 0.0);
+    let valid =
+        shape(bartlett) == [5]
+            and matches_retained(bartlett, bartlett_window(5, false))
+            and matches_retained(blackman, blackman_window(5, false))
+            and matches_retained(hamming, hamming_window(5, false))
+            and matches_retained(hann, hann_window(5, false))
+            and matches_retained(kaiser, kaiser_window(5, false, 0.0));
+    (dispose(kaiser); dispose(hann); dispose(hamming); dispose(blackman); dispose(bartlett); valid).
+
+/**
+ * Validates explicit dtype options through an independently observable result.
+ */
+@test
+pub explicit_window_options_preserve_dtype(): Bool ->
+    let window = bartlett_window_on(5, false, DType.FLOAT64, cpu(), false);
+    let valid = dtype_code(DType.FLOAT64) == 7 and dtype(window) == 7;
+    dispose(window);
+    valid.

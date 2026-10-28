@@ -1,0 +1,67 @@
+//! Exact retained-output forms for established dense, shape, linalg, statistical, dropout, padding, and softmax kernels.
+
+module pytorch.OutputCompletion.
+
+/// Writes exact aten::complex.out into retained complex storage.
+
+pub complex_out(output: Tensor, real: Tensor, imaginary: Tensor): Unit.
+
+/// Writes exact aten::dist.out into retained storage through the typed direct-ATen Scalar path.
+
+pub dist_out(output: Tensor, left: Tensor, right: Tensor, order: Float): Unit.
+
+/// Writes exact aten::expand_copy.out into retained storage.
+
+pub expand_copy_out(output: Tensor, input: Tensor, size: List[Int], implicit: Bool): Unit.
+
+/// Writes exact aten::lu_solve.out into retained storage.
+
+pub lu_solve_out(output: Tensor, right: Tensor, factor: Tensor, pivots: Tensor): Unit.
+
+/// Writes exact aten::native_dropout_backward.out into retained storage.
+
+pub native_dropout_backward_out(output: Tensor, gradient: Tensor, mask: Tensor, scale: Float): Unit.
+
+/// Writes exact aten::ormqr.out into retained storage.
+
+pub ormqr_out(output: Tensor, factor: Tensor, tau: Tensor, other: Tensor, left: Bool, transpose: Bool): Unit.
+
+/// Writes exact aten::polar.out into retained complex storage.
+
+pub polar_out(output: Tensor, absolute: Tensor, angle: Tensor): Unit.
+
+/// Writes exact aten::reflection_pad1d.out.
+
+pub reflection_pad1d_out(output: Tensor, input: Tensor, padding: List[Int]): Unit.
+
+/// Writes exact aten::reflection_pad2d.out.
+
+pub reflection_pad2d_out(output: Tensor, input: Tensor, padding: List[Int]): Unit.
+
+/// Writes exact aten::reflection_pad3d.out.
+
+pub reflection_pad3d_out(output: Tensor, input: Tensor, padding: List[Int]): Unit.
+
+/// Writes exact aten::renorm.out into retained storage through the typed direct-ATen Scalar path.
+
+pub renorm_out(output: Tensor, input: Tensor, order: Float, dimension: Int, maximum_norm: Float): Unit.
+
+/// Writes exact aten::replication_pad1d.out.
+
+pub replication_pad1d_out(output: Tensor, input: Tensor, padding: List[Int]): Unit.
+
+/// Writes exact aten::replication_pad2d.out.
+
+pub replication_pad2d_out(output: Tensor, input: Tensor, padding: List[Int]): Unit.
+
+/// Writes exact aten::replication_pad3d.out.
+
+pub replication_pad3d_out(output: Tensor, input: Tensor, padding: List[Int]): Unit.
+
+/// Writes exact aten::slogdet.out tuple into retained storage.
+
+pub slogdet_out(sign: Tensor, log_absolute_determinant: Tensor, input: Tensor): Unit.
+
+/// Writes exact aten::softmax.int_out with inferred dtype.
+
+pub softmax_out(output: Tensor, input: Tensor, dimension: Int): Unit.

@@ -1,0 +1,1474 @@
+/**
+ * Generated exact CXX linear-algebra surface.
+ */
+module pytorch.Linalg.
+
+import type pytorch.Tensor.
+
+/**
+ * Generated exact CXX linalg leaf for geqrf.
+ */
+@compiler.native {pytorch.linalg.geqrf}
+pub geqrf(tensor: Tensor): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cholesky_ex.
+ */
+@compiler.native {pytorch.linalg.cholesky_ex}
+pub linalg_cholesky_ex(
+    tensor: Tensor,
+    upper: Bool = false,
+    check_errors: Bool = false,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cholesky_ex_out.
+ */
+@compiler.native {pytorch.linalg.cholesky_ex_out}
+pub linalg_cholesky_ex_out(
+    factor: Tensor,
+    info: Tensor,
+    tensor: Tensor,
+    upper: Bool = false,
+    check_errors: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_eig.
+ */
+@compiler.native {pytorch.linalg.eig}
+pub linalg_eig(tensor: Tensor): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_eig_out.
+ */
+@compiler.native {pytorch.linalg.eig_out}
+pub linalg_eig_out(eigenvalues: Tensor, eigenvectors: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_eigh.
+ */
+@compiler.native {pytorch.linalg.eigh}
+pub linalg_eigh(tensor: Tensor, uplo: String = "L"): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_eigh_out.
+ */
+@compiler.native {pytorch.linalg.eigh_out}
+pub linalg_eigh_out(
+    eigenvalues: Tensor,
+    eigenvectors: Tensor,
+    tensor: Tensor,
+    uplo: String = "L",
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_inv_ex.
+ */
+@compiler.native {pytorch.linalg.inv_ex}
+pub linalg_inv_ex(tensor: Tensor, check_errors: Bool = false): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_inv_ex_out.
+ */
+@compiler.native {pytorch.linalg.inv_ex_out}
+pub linalg_inv_ex_out(
+    inverse: Tensor,
+    info: Tensor,
+    tensor: Tensor,
+    check_errors: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_ldl_factor.
+ */
+@compiler.native {pytorch.linalg.ldl_factor}
+pub linalg_ldl_factor(tensor: Tensor, hermitian: Bool = false): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_ldl_factor_out.
+ */
+@compiler.native {pytorch.linalg.ldl_factor_out}
+pub linalg_ldl_factor_out(
+    factor: Tensor,
+    pivots: Tensor,
+    tensor: Tensor,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_ldl_factor_ex.
+ */
+@compiler.native {pytorch.linalg.ldl_factor_ex}
+pub linalg_ldl_factor_ex(
+    tensor: Tensor,
+    hermitian: Bool = false,
+    check_errors: Bool = false,
+): {Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_ldl_factor_ex_out.
+ */
+@compiler.native {pytorch.linalg.ldl_factor_ex_out}
+pub linalg_ldl_factor_ex_out(
+    factor: Tensor,
+    pivots: Tensor,
+    info: Tensor,
+    tensor: Tensor,
+    hermitian: Bool = false,
+    check_errors: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_lu.
+ */
+@compiler.native {pytorch.linalg.lu}
+pub linalg_lu(tensor: Tensor, pivot: Bool = true): {Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_lu_out.
+ */
+@compiler.native {pytorch.linalg.lu_out}
+pub linalg_lu_out(
+    permutation: Tensor,
+    lower: Tensor,
+    upper: Tensor,
+    tensor: Tensor,
+    pivot: Bool = true,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_lu_factor.
+ */
+@compiler.native {pytorch.linalg.lu_factor}
+pub linalg_lu_factor(tensor: Tensor, pivot: Bool = true): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_lu_factor_out.
+ */
+@compiler.native {pytorch.linalg.lu_factor_out}
+pub linalg_lu_factor_out(factor: Tensor, pivots: Tensor, tensor: Tensor, pivot: Bool = true): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_lu_factor_ex.
+ */
+@compiler.native {pytorch.linalg.lu_factor_ex}
+pub linalg_lu_factor_ex(
+    tensor: Tensor,
+    pivot: Bool = true,
+    check_errors: Bool = false,
+): {Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_lu_factor_ex_out.
+ */
+@compiler.native {pytorch.linalg.lu_factor_ex_out}
+pub linalg_lu_factor_ex_out(
+    factor: Tensor,
+    pivots: Tensor,
+    info: Tensor,
+    tensor: Tensor,
+    pivot: Bool = true,
+    check_errors: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_qr.
+ */
+@compiler.native {pytorch.linalg.qr}
+pub linalg_qr(tensor: Tensor, mode: String = "reduced"): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_qr_out.
+ */
+@compiler.native {pytorch.linalg.qr_out}
+pub linalg_qr_out(q: Tensor, r: Tensor, tensor: Tensor, mode: String = "reduced"): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_slogdet.
+ */
+@compiler.native {pytorch.linalg.slogdet}
+pub linalg_slogdet(tensor: Tensor): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_slogdet_out.
+ */
+@compiler.native {pytorch.linalg.slogdet_out}
+pub linalg_slogdet_out(sign: Tensor, log_absolute: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_solve_ex.
+ */
+@compiler.native {pytorch.linalg.solve_ex}
+pub linalg_solve_ex(
+    coefficient: Tensor,
+    right: Tensor,
+    left: Bool = true,
+    check_errors: Bool = false,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_solve_ex_out.
+ */
+@compiler.native {pytorch.linalg.solve_ex_out}
+pub linalg_solve_ex_out(
+    result: Tensor,
+    info: Tensor,
+    coefficient: Tensor,
+    right: Tensor,
+    left: Bool = true,
+    check_errors: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for qr.
+ */
+@compiler.native {pytorch.linalg.qr_legacy}
+pub qr(tensor: Tensor, some: Bool = true): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for slogdet.
+ */
+@compiler.native {pytorch.linalg.slogdet_legacy}
+pub slogdet(tensor: Tensor): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for triangular_solve.
+ */
+@compiler.native {pytorch.linalg.triangular_solve}
+pub triangular_solve(
+    right: Tensor,
+    coefficient: Tensor,
+    upper: Bool = true,
+    transpose: Bool = false,
+    unitriangular: Bool = false,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for cholesky_solve.
+ */
+@compiler.native {pytorch.linalg.cholesky_solve}
+pub cholesky_solve(right: Tensor, factor: Tensor, upper: Bool = false): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cholesky.
+ */
+@compiler.native {pytorch.linalg.cholesky}
+pub linalg_cholesky(tensor: Tensor, upper: Bool = false): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cross.
+ */
+@compiler.native {pytorch.linalg.cross}
+pub linalg_cross(left: Tensor, right: Tensor, dimension: Int = -1): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_det.
+ */
+@compiler.native {pytorch.linalg.det}
+pub linalg_det(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_det_out.
+ */
+@compiler.native {pytorch.linalg.det_out}
+pub linalg_det_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_inv.
+ */
+@compiler.native {pytorch.linalg.inv}
+pub linalg_inv(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cholesky_out.
+ */
+@compiler.native {pytorch.linalg.cholesky_out}
+pub linalg_cholesky_out(output: Tensor, tensor: Tensor, upper: Bool = false): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cross_out.
+ */
+@compiler.native {pytorch.linalg.cross_out}
+pub linalg_cross_out(output: Tensor, left: Tensor, right: Tensor, dimension: Int = -1): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_inv_out.
+ */
+@compiler.native {pytorch.linalg.inv_out}
+pub linalg_inv_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_ldl_solve_out.
+ */
+@compiler.native {pytorch.linalg.ldl_solve_out}
+pub linalg_ldl_solve_out(
+    output: Tensor,
+    factor: Tensor,
+    pivots: Tensor,
+    right: Tensor,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_lu_solve_out.
+ */
+@compiler.native {pytorch.linalg.lu_solve_out}
+pub linalg_lu_solve_out(
+    output: Tensor,
+    factor: Tensor,
+    pivots: Tensor,
+    right: Tensor,
+    left: Bool = true,
+    adjoint: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matmul_out.
+ */
+@compiler.native {pytorch.linalg.matmul_out}
+pub linalg_matmul_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_solve_out.
+ */
+@compiler.native {pytorch.linalg.solve_out}
+pub linalg_solve_out(output: Tensor, coefficient: Tensor, right: Tensor, left: Bool = true): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_solve_triangular_out.
+ */
+@compiler.native {pytorch.linalg.solve_triangular_out}
+pub linalg_solve_triangular_out(
+    output: Tensor,
+    coefficient: Tensor,
+    right: Tensor,
+    upper: Bool,
+    left: Bool = true,
+    unitriangular: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_vecdot_out.
+ */
+@compiler.native {pytorch.linalg.vecdot_out}
+pub linalg_vecdot_out(output: Tensor, left: Tensor, right: Tensor, dimension: Int = -1): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_eigvals_out.
+ */
+@compiler.native {pytorch.linalg.eigvals_out}
+pub linalg_eigvals_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_eigvalsh_out.
+ */
+@compiler.native {pytorch.linalg.eigvalsh_out}
+pub linalg_eigvalsh_out(output: Tensor, tensor: Tensor, uplo: String = "L"): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_householder_product_out.
+ */
+@compiler.native {pytorch.linalg.householder_product_out}
+pub linalg_householder_product_out(output: Tensor, input: Tensor, tau: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_exp_out.
+ */
+@compiler.native {pytorch.linalg.matrix_exp_out}
+pub linalg_matrix_exp_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_power_out.
+ */
+@compiler.native {pytorch.linalg.matrix_power_out}
+pub linalg_matrix_power_out(output: Tensor, tensor: Tensor, exponent: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_svdvals_out.
+ */
+@compiler.native {pytorch.linalg.svdvals_out}
+pub linalg_svdvals_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_tensorinv_out.
+ */
+@compiler.native {pytorch.linalg.tensorinv_out}
+pub linalg_tensorinv_out(output: Tensor, tensor: Tensor, index: Int = 2): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_tensorsolve_out.
+ */
+@compiler.native {pytorch.linalg.tensorsolve_out}
+pub linalg_tensorsolve_out(output: Tensor, coefficient: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_multi_dot_out.
+ */
+@compiler.native {pytorch.linalg.multi_dot_out}
+pub linalg_multi_dot_out(output: Tensor, tensors: List[Tensor]): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_out_default.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_out_default}
+pub linalg_matrix_rank_out_default(output: Tensor, tensor: Tensor, hermitian: Bool = false): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_out_absolute.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_out_absolute}
+pub linalg_matrix_rank_out_absolute(
+    output: Tensor,
+    tensor: Tensor,
+    absolute_tolerance: Float,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_out_relative.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_out_relative}
+pub linalg_matrix_rank_out_relative(
+    output: Tensor,
+    tensor: Tensor,
+    relative_tolerance: Float,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_out_tolerances.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_out_tolerances}
+pub linalg_matrix_rank_out_tolerances(
+    output: Tensor,
+    tensor: Tensor,
+    absolute_tolerance: Float,
+    relative_tolerance: Float,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_out_tensor_default.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_out_tensor_default}
+pub linalg_matrix_rank_out_tensor_default(
+    output: Tensor,
+    tensor: Tensor,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_out_tensor_absolute.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_out_tensor_absolute}
+pub linalg_matrix_rank_out_tensor_absolute(
+    output: Tensor,
+    tensor: Tensor,
+    absolute_tolerance: Tensor,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_out_tensor_relative.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_out_tensor_relative}
+pub linalg_matrix_rank_out_tensor_relative(
+    output: Tensor,
+    tensor: Tensor,
+    relative_tolerance: Tensor,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_out_tensor_tolerances.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_out_tensor_tolerances}
+pub linalg_matrix_rank_out_tensor_tolerances(
+    output: Tensor,
+    tensor: Tensor,
+    absolute_tolerance: Tensor,
+    relative_tolerance: Tensor,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_out_tolerance.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_out_tolerance}
+pub linalg_matrix_rank_out_tolerance(
+    output: Tensor,
+    tensor: Tensor,
+    tolerance: Float,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_out_tensor_tolerance.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_out_tensor_tolerance}
+pub linalg_matrix_rank_out_tensor_tolerance(
+    output: Tensor,
+    tensor: Tensor,
+    tolerance: Tensor,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_out_default.
+ */
+@compiler.native {pytorch.linalg.pinv_out_default}
+pub linalg_pinv_out_default(output: Tensor, tensor: Tensor, hermitian: Bool = false): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_out_absolute.
+ */
+@compiler.native {pytorch.linalg.pinv_out_absolute}
+pub linalg_pinv_out_absolute(
+    output: Tensor,
+    tensor: Tensor,
+    absolute_tolerance: Float,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_out_relative.
+ */
+@compiler.native {pytorch.linalg.pinv_out_relative}
+pub linalg_pinv_out_relative(
+    output: Tensor,
+    tensor: Tensor,
+    relative_tolerance: Float,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_out_tolerances.
+ */
+@compiler.native {pytorch.linalg.pinv_out_tolerances}
+pub linalg_pinv_out_tolerances(
+    output: Tensor,
+    tensor: Tensor,
+    absolute_tolerance: Float,
+    relative_tolerance: Float,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_out_tensor_default.
+ */
+@compiler.native {pytorch.linalg.pinv_out_tensor_default}
+pub linalg_pinv_out_tensor_default(output: Tensor, tensor: Tensor, hermitian: Bool = false): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_out_tensor_absolute.
+ */
+@compiler.native {pytorch.linalg.pinv_out_tensor_absolute}
+pub linalg_pinv_out_tensor_absolute(
+    output: Tensor,
+    tensor: Tensor,
+    absolute_tolerance: Tensor,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_out_tensor_relative.
+ */
+@compiler.native {pytorch.linalg.pinv_out_tensor_relative}
+pub linalg_pinv_out_tensor_relative(
+    output: Tensor,
+    tensor: Tensor,
+    relative_tolerance: Tensor,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_out_tensor_tolerances.
+ */
+@compiler.native {pytorch.linalg.pinv_out_tensor_tolerances}
+pub linalg_pinv_out_tensor_tolerances(
+    output: Tensor,
+    tensor: Tensor,
+    absolute_tolerance: Tensor,
+    relative_tolerance: Tensor,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_out_rcond.
+ */
+@compiler.native {pytorch.linalg.pinv_out_rcond}
+pub linalg_pinv_out_rcond(
+    output: Tensor,
+    tensor: Tensor,
+    relative_condition: Float,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_out_tensor_rcond.
+ */
+@compiler.native {pytorch.linalg.pinv_out_tensor_rcond}
+pub linalg_pinv_out_tensor_rcond(
+    output: Tensor,
+    tensor: Tensor,
+    relative_condition: Tensor,
+    hermitian: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cond_string_out.
+ */
+@compiler.native {pytorch.linalg.cond_string_out}
+pub linalg_cond_string_out(output: Tensor, tensor: Tensor, order: String): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_norm_string_out.
+ */
+@compiler.native {pytorch.linalg.matrix_norm_string_out}
+pub linalg_matrix_norm_string_out(
+    output: Tensor,
+    tensor: Tensor,
+    order: String = "fro",
+    dimensions: List[Int] = [-2, -1],
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_norm_string_out_dtype.
+ */
+@compiler.native {pytorch.linalg.matrix_norm_string_out_dtype}
+pub linalg_matrix_norm_string_out_dtype(
+    output: Tensor,
+    tensor: Tensor,
+    order: String,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_string_out.
+ */
+@compiler.native {pytorch.linalg.norm_string_out}
+pub linalg_norm_string_out(
+    output: Tensor,
+    tensor: Tensor,
+    order: String,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_string_out_dimensions.
+ */
+@compiler.native {pytorch.linalg.norm_string_out_dimensions}
+pub linalg_norm_string_out_dimensions(
+    output: Tensor,
+    tensor: Tensor,
+    order: String,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cond_default_out.
+ */
+@compiler.native {pytorch.linalg.cond_default_out}
+pub linalg_cond_default_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cond_int_out.
+ */
+@compiler.native {pytorch.linalg.cond_int_out}
+pub linalg_cond_int_out(output: Tensor, tensor: Tensor, order: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cond_float_out.
+ */
+@compiler.native {pytorch.linalg.cond_float_out}
+pub linalg_cond_float_out(output: Tensor, tensor: Tensor, order: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_norm_int_out.
+ */
+@compiler.native {pytorch.linalg.matrix_norm_int_out}
+pub linalg_matrix_norm_int_out(output: Tensor, tensor: Tensor, order: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_norm_float_out.
+ */
+@compiler.native {pytorch.linalg.matrix_norm_float_out}
+pub linalg_matrix_norm_float_out(output: Tensor, tensor: Tensor, order: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_norm_int_configured_out.
+ */
+@compiler.native {pytorch.linalg.matrix_norm_int_configured_out}
+pub linalg_matrix_norm_int_configured_out(
+    output: Tensor,
+    tensor: Tensor,
+    order: Int,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_norm_float_configured_out.
+ */
+@compiler.native {pytorch.linalg.matrix_norm_float_configured_out}
+pub linalg_matrix_norm_float_configured_out(
+    output: Tensor,
+    tensor: Tensor,
+    order: Float,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_default_out.
+ */
+@compiler.native {pytorch.linalg.norm_default_out}
+pub linalg_norm_default_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_int_out.
+ */
+@compiler.native {pytorch.linalg.norm_int_out}
+pub linalg_norm_int_out(output: Tensor, tensor: Tensor, order: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_float_out.
+ */
+@compiler.native {pytorch.linalg.norm_float_out}
+pub linalg_norm_float_out(output: Tensor, tensor: Tensor, order: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_int_configured_out.
+ */
+@compiler.native {pytorch.linalg.norm_int_configured_out}
+pub linalg_norm_int_configured_out(
+    output: Tensor,
+    tensor: Tensor,
+    order: Int,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_float_configured_out.
+ */
+@compiler.native {pytorch.linalg.norm_float_configured_out}
+pub linalg_norm_float_configured_out(
+    output: Tensor,
+    tensor: Tensor,
+    order: Float,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_vector_norm_int_out.
+ */
+@compiler.native {pytorch.linalg.vector_norm_int_out}
+pub linalg_vector_norm_int_out(output: Tensor, tensor: Tensor, order: Int = 2): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_vector_norm_float_out.
+ */
+@compiler.native {pytorch.linalg.vector_norm_float_out}
+pub linalg_vector_norm_float_out(output: Tensor, tensor: Tensor, order: Float = 2.0): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_vector_norm_int_configured_out.
+ */
+@compiler.native {pytorch.linalg.vector_norm_int_configured_out}
+pub linalg_vector_norm_int_configured_out(
+    output: Tensor,
+    tensor: Tensor,
+    order: Int,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_vector_norm_float_configured_out.
+ */
+@compiler.native {pytorch.linalg.vector_norm_float_configured_out}
+pub linalg_vector_norm_float_configured_out(
+    output: Tensor,
+    tensor: Tensor,
+    order: Float,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_ldl_solve.
+ */
+@compiler.native {pytorch.linalg.ldl_solve}
+pub linalg_ldl_solve(factor: Tensor, pivots: Tensor, right: Tensor, hermitian: Bool = false): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_lu_solve.
+ */
+@compiler.native {pytorch.linalg.lu_solve}
+pub linalg_lu_solve(
+    factor: Tensor,
+    pivots: Tensor,
+    right: Tensor,
+    left: Bool = true,
+    adjoint: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_tolerance.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_tolerance}
+pub linalg_matrix_rank_tolerance(tensor: Tensor, tolerance: Tensor, hermitian: Bool = false): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_rcond.
+ */
+@compiler.native {pytorch.linalg.pinv_rcond}
+pub linalg_pinv_rcond(tensor: Tensor, relative_condition: Tensor, hermitian: Bool = false): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_solve.
+ */
+@compiler.native {pytorch.linalg.solve}
+pub linalg_solve(coefficient: Tensor, right: Tensor, left: Bool = true): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_solve_triangular.
+ */
+@compiler.native {pytorch.linalg.solve_triangular}
+pub linalg_solve_triangular(
+    coefficient: Tensor,
+    right: Tensor,
+    upper: Bool,
+    left: Bool = true,
+    unitriangular: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_vecdot.
+ */
+@compiler.native {pytorch.linalg.vecdot}
+pub linalg_vecdot(left: Tensor, right: Tensor, dimension: Int = -1): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for lu_solve.
+ */
+@compiler.native {pytorch.linalg.lu_solve_legacy}
+pub lu_solve(right: Tensor, factor: Tensor, pivots: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for ormqr.
+ */
+@compiler.native {pytorch.linalg.ormqr}
+pub ormqr(
+    factor: Tensor,
+    tau: Tensor,
+    other: Tensor,
+    left: Bool = true,
+    transpose: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cond_string.
+ */
+@compiler.native {pytorch.linalg.cond_string}
+pub linalg_cond_string(tensor: Tensor, order: String): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cond_default.
+ */
+@compiler.native {pytorch.linalg.cond_default}
+pub linalg_cond_default(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cond_int.
+ */
+@compiler.native {pytorch.linalg.cond_int}
+pub linalg_cond_int(tensor: Tensor, order: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_cond_float.
+ */
+@compiler.native {pytorch.linalg.cond_float}
+pub linalg_cond_float(tensor: Tensor, order: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_norm_int.
+ */
+@compiler.native {pytorch.linalg.matrix_norm_int}
+pub linalg_matrix_norm_int(tensor: Tensor, order: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_norm_float.
+ */
+@compiler.native {pytorch.linalg.matrix_norm_float}
+pub linalg_matrix_norm_float(tensor: Tensor, order: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_norm_int_configured.
+ */
+@compiler.native {pytorch.linalg.matrix_norm_int_configured}
+pub linalg_matrix_norm_int_configured(
+    tensor: Tensor,
+    order: Int,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_norm_float_configured.
+ */
+@compiler.native {pytorch.linalg.matrix_norm_float_configured}
+pub linalg_matrix_norm_float_configured(
+    tensor: Tensor,
+    order: Float,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_default.
+ */
+@compiler.native {pytorch.linalg.norm_default}
+pub linalg_norm_default(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_int.
+ */
+@compiler.native {pytorch.linalg.norm_int}
+pub linalg_norm_int(tensor: Tensor, order: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_float.
+ */
+@compiler.native {pytorch.linalg.norm_float}
+pub linalg_norm_float(tensor: Tensor, order: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_int_configured.
+ */
+@compiler.native {pytorch.linalg.norm_int_configured}
+pub linalg_norm_int_configured(
+    tensor: Tensor,
+    order: Int,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_float_configured.
+ */
+@compiler.native {pytorch.linalg.norm_float_configured}
+pub linalg_norm_float_configured(
+    tensor: Tensor,
+    order: Float,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_vector_norm_int.
+ */
+@compiler.native {pytorch.linalg.vector_norm_int}
+pub linalg_vector_norm_int(tensor: Tensor, order: Int = 2): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_vector_norm_float.
+ */
+@compiler.native {pytorch.linalg.vector_norm_float}
+pub linalg_vector_norm_float(tensor: Tensor, order: Float = 2.0): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_vector_norm_int_configured.
+ */
+@compiler.native {pytorch.linalg.vector_norm_int_configured}
+pub linalg_vector_norm_int_configured(
+    tensor: Tensor,
+    order: Int,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_vector_norm_float_configured.
+ */
+@compiler.native {pytorch.linalg.vector_norm_float_configured}
+pub linalg_vector_norm_float_configured(
+    tensor: Tensor,
+    order: Float,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_powsum_int.
+ */
+@compiler.native {pytorch.linalg.powsum_int}
+pub linalg_powsum_int(tensor: Tensor, order: Int = 2): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_powsum_float.
+ */
+@compiler.native {pytorch.linalg.powsum_float}
+pub linalg_powsum_float(tensor: Tensor, order: Float = 2.0): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_powsum_int_configured.
+ */
+@compiler.native {pytorch.linalg.powsum_int_configured}
+pub linalg_powsum_int_configured(
+    tensor: Tensor,
+    order: Int,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_powsum_float_configured.
+ */
+@compiler.native {pytorch.linalg.powsum_float_configured}
+pub linalg_powsum_float_configured(
+    tensor: Tensor,
+    order: Float,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_eigvalsh.
+ */
+@compiler.native {pytorch.linalg.eigvalsh}
+pub linalg_eigvalsh(tensor: Tensor, uplo: String = "L"): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_lstsq.
+ */
+@compiler.native {pytorch.linalg.lstsq}
+pub linalg_lstsq(coefficient: Tensor, right: Tensor): {Tensor, Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_lstsq_configured.
+ */
+@compiler.native {pytorch.linalg.lstsq_configured}
+pub linalg_lstsq_configured(
+    coefficient: Tensor,
+    right: Tensor,
+    relative_condition: Float,
+    driver: String,
+): {Tensor, Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_lstsq_out.
+ */
+@compiler.native {pytorch.linalg.lstsq_out}
+pub linalg_lstsq_out(
+    solution: Tensor,
+    residuals: Tensor,
+    rank: Tensor,
+    singular_values: Tensor,
+    coefficient: Tensor,
+    right: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_lstsq_out_configured.
+ */
+@compiler.native {pytorch.linalg.lstsq_out_configured}
+pub linalg_lstsq_out_configured(
+    solution: Tensor,
+    residuals: Tensor,
+    rank: Tensor,
+    singular_values: Tensor,
+    coefficient: Tensor,
+    right: Tensor,
+    relative_condition: Float,
+    driver: String,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_default.
+ */
+@compiler.native {pytorch.linalg.matrix_rank}
+pub linalg_matrix_rank_default(tensor: Tensor, hermitian: Bool = false): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_tolerances.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_tolerances}
+pub linalg_matrix_rank_tolerances(
+    tensor: Tensor,
+    absolute_tolerance: Float,
+    relative_tolerance: Float,
+    hermitian: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_tensor_default.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_tensor_default}
+pub linalg_matrix_rank_tensor_default(tensor: Tensor, hermitian: Bool = false): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_tensor_absolute.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_tensor_absolute}
+pub linalg_matrix_rank_tensor_absolute(
+    tensor: Tensor,
+    absolute_tolerance: Tensor,
+    hermitian: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_tensor_relative.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_tensor_relative}
+pub linalg_matrix_rank_tensor_relative(
+    tensor: Tensor,
+    relative_tolerance: Tensor,
+    hermitian: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_rank_tensor_tolerances.
+ */
+@compiler.native {pytorch.linalg.matrix_rank_tensor_tolerances}
+pub linalg_matrix_rank_tensor_tolerances(
+    tensor: Tensor,
+    absolute_tolerance: Tensor,
+    relative_tolerance: Tensor,
+    hermitian: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_default.
+ */
+@compiler.native {pytorch.linalg.pinv}
+pub linalg_pinv_default(tensor: Tensor, hermitian: Bool = false): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_tolerances.
+ */
+@compiler.native {pytorch.linalg.pinv_tolerances}
+pub linalg_pinv_tolerances(
+    tensor: Tensor,
+    absolute_tolerance: Float,
+    relative_tolerance: Float,
+    hermitian: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_tensor_default.
+ */
+@compiler.native {pytorch.linalg.pinv_tensor_default}
+pub linalg_pinv_tensor_default(tensor: Tensor, hermitian: Bool = false): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_tensor_absolute.
+ */
+@compiler.native {pytorch.linalg.pinv_tensor_absolute}
+pub linalg_pinv_tensor_absolute(
+    tensor: Tensor,
+    absolute_tolerance: Tensor,
+    hermitian: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_tensor_relative.
+ */
+@compiler.native {pytorch.linalg.pinv_tensor_relative}
+pub linalg_pinv_tensor_relative(
+    tensor: Tensor,
+    relative_tolerance: Tensor,
+    hermitian: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_pinv_tensor_tolerances.
+ */
+@compiler.native {pytorch.linalg.pinv_tensor_tolerances}
+pub linalg_pinv_tensor_tolerances(
+    tensor: Tensor,
+    absolute_tolerance: Tensor,
+    relative_tolerance: Tensor,
+    hermitian: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_svd.
+ */
+@compiler.native {pytorch.linalg.svd}
+pub linalg_svd(tensor: Tensor, full_matrices: Bool = true): {Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_svd_out.
+ */
+@compiler.native {pytorch.linalg.svd_out}
+pub linalg_svd_out(
+    left_vectors: Tensor,
+    values: Tensor,
+    right_vectors: Tensor,
+    tensor: Tensor,
+    full_matrices: Bool = true,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_svdvals.
+ */
+@compiler.native {pytorch.linalg.svdvals}
+pub linalg_svdvals(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_vander.
+ */
+@compiler.native {pytorch.linalg.vander}
+pub linalg_vander(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_vander_columns.
+ */
+@compiler.native {pytorch.linalg.vander_columns}
+pub linalg_vander_columns(tensor: Tensor, columns: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_norm_string.
+ */
+@compiler.native {pytorch.linalg.matrix_norm_string}
+pub linalg_matrix_norm_string(
+    tensor: Tensor,
+    order: String = "fro",
+    dimensions: List[Int] = [-2, -1],
+    keep_dimension: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_matrix_norm_string_dtype.
+ */
+@compiler.native {pytorch.linalg.matrix_norm_string_dtype}
+pub linalg_matrix_norm_string_dtype(
+    tensor: Tensor,
+    order: String,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_string.
+ */
+@compiler.native {pytorch.linalg.norm_string}
+pub linalg_norm_string(tensor: Tensor, order: String, keep_dimension: Bool = false): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_norm_string_dimensions.
+ */
+@compiler.native {pytorch.linalg.norm_string_dimensions}
+pub linalg_norm_string_dimensions(
+    tensor: Tensor,
+    order: String,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+    dtype: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_tensorsolve.
+ */
+@compiler.native {pytorch.linalg.tensorsolve}
+pub linalg_tensorsolve(coefficient: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_tensorsolve_dimensions.
+ */
+@compiler.native {pytorch.linalg.tensorsolve_dimensions}
+pub linalg_tensorsolve_dimensions(coefficient: Tensor, right: Tensor, dimensions: List[Int]): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_multi_dot.
+ */
+@compiler.native {pytorch.linalg.multi_dot}
+pub linalg_multi_dot(tensors: List[Tensor]): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX linalg leaf for linalg_diagonal.
+ */
+@compiler.native {pytorch.linalg.diagonal}
+pub linalg_diagonal(
+    tensor: Tensor,
+    offset: Int = 0,
+    dimension1: Int = -2,
+    dimension2: Int = -1,
+): Tensor ->
+    native.

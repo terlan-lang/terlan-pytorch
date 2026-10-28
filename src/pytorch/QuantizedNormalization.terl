@@ -1,0 +1,43 @@
+/**
+ * Generated exact CXX quantized CPU normalization surface.
+ */
+module pytorch.QuantizedNormalization.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX quantized batch-normalization leaf.
+ */
+@compiler.native {pytorch.quantized_normalization.quantized_batch_norm}
+pub quantized_batch_norm(
+    input: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    has_bias: Bool,
+    bias: Tensor,
+    mean: Tensor,
+    var: Tensor,
+    eps: Float,
+    output_scale: Float,
+    output_zero_point: Int,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX quantized batch-normalization output leaf.
+ */
+@compiler.native {pytorch.quantized_normalization.quantized_batch_norm_out}
+pub quantized_batch_norm_out(
+    out: Tensor,
+    input: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    has_bias: Bool,
+    bias: Tensor,
+    mean: Tensor,
+    var: Tensor,
+    eps: Float,
+    output_scale: Float,
+    output_zero_point: Int,
+): Unit ->
+    native.

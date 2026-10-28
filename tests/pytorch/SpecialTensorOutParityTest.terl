@@ -1,0 +1,149 @@
+module pytorch.SpecialTensorOutParityTest.
+
+import pytorch.Binary.{special_xlog1py, special_xlogy, special_zeta}.
+import pytorch.Dense.{special_chebyshev_polynomial_t, special_chebyshev_polynomial_u, special_chebyshev_polynomial_v, special_chebyshev_polynomial_w, special_gammainc, special_gammaincc, special_hermite_polynomial_h, special_hermite_polynomial_he, special_laguerre_polynomial_l, special_legendre_polynomial_p, special_shifted_chebyshev_polynomial_t, special_shifted_chebyshev_polynomial_u, special_shifted_chebyshev_polynomial_v, special_shifted_chebyshev_polynomial_w}.
+import pytorch.Shape.special_multigammaln.
+import pytorch.Special.{special_chebyshev_polynomial_t_out, special_chebyshev_polynomial_u_out, special_chebyshev_polynomial_v_out, special_chebyshev_polynomial_w_out, special_gammainc_out, special_gammaincc_out, special_hermite_polynomial_h_out, special_hermite_polynomial_he_out, special_laguerre_polynomial_l_out, special_legendre_polynomial_p_out, special_logit, special_logit_epsilon, special_logit_epsilon_out, special_logit_out, special_logsumexp, special_logsumexp_out, special_multigammaln_out, special_polygamma, special_polygamma_out, special_round, special_round_out, special_shifted_chebyshev_polynomial_t_out, special_shifted_chebyshev_polynomial_u_out, special_shifted_chebyshev_polynomial_v_out, special_shifted_chebyshev_polynomial_w_out, special_xlog1py_out, special_xlogy_out, special_zeta_out}.
+import pytorch.Tensor.{dispose, from_floats, item_float, mse_loss, shape, zeros}.
+
+import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Compares an output tensor with an independently dispatched reference.
+ */
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let error = mse_loss(actual, expected, 1);
+    let value = item_float(error);
+    dispose(error);
+    value == 0.0.
+
+/**
+ * Proves binary special functions populate retained output storage.
+ */
+@test
+pub binary_outputs_match_libtorch(): Bool ->
+    let left = from_floats([2.0, 3.0], [2]);
+    let right = from_floats([1.0, 2.0], [2]);
+    let gamma_expected = special_gammainc(left, right);
+    let gamma_complement_expected = special_gammaincc(left, right);
+    let xlog1py_expected = special_xlog1py(left, right);
+    let xlogy_expected = special_xlogy(left, right);
+    let zeta_expected = special_zeta(left, right);
+    let gamma_output = zeros([0], DType.FLOAT64);
+    let gamma_complement_output = zeros([0], DType.FLOAT64);
+    let xlog1py_output = zeros([0], DType.FLOAT64);
+    let xlogy_output = zeros([0], DType.FLOAT64);
+    let zeta_output = zeros([0], DType.FLOAT64);
+    special_gammainc_out(gamma_output, left, right);
+    special_gammaincc_out(gamma_complement_output, left, right);
+    special_xlog1py_out(xlog1py_output, left, right);
+    special_xlogy_out(xlogy_output, left, right);
+    special_zeta_out(zeta_output, left, right);
+    let valid =
+        matches(gamma_output, gamma_expected)
+            and matches(gamma_complement_output, gamma_complement_expected)
+            and matches(xlog1py_output, xlog1py_expected)
+            and matches(xlogy_output, xlogy_expected)
+            and matches(zeta_output, zeta_expected)
+            and shape(left) == [2]
+            and shape(right) == [2];
+    (dispose(zeta_output); dispose(xlogy_output); dispose(xlog1py_output); dispose(gamma_complement_output); dispose(gamma_output); dispose(zeta_expected); dispose(xlogy_expected); dispose(xlog1py_expected); dispose(gamma_complement_expected); dispose(gamma_expected); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every tensor-order polynomial family populates retained output storage.
+ */
+@test
+pub tensor_polynomial_outputs_match_libtorch(): Bool ->
+    let input = from_floats([0.25, 0.5], [2]);
+    let order = from_floats([2.0, 3.0], [2]);
+    let chebyshev_t_expected = special_chebyshev_polynomial_t(input, order);
+    let chebyshev_u_expected = special_chebyshev_polynomial_u(input, order);
+    let chebyshev_v_expected = special_chebyshev_polynomial_v(input, order);
+    let chebyshev_w_expected = special_chebyshev_polynomial_w(input, order);
+    let hermite_h_expected = special_hermite_polynomial_h(input, order);
+    let hermite_he_expected = special_hermite_polynomial_he(input, order);
+    let laguerre_expected = special_laguerre_polynomial_l(input, order);
+    let legendre_expected = special_legendre_polynomial_p(input, order);
+    let shifted_t_expected = special_shifted_chebyshev_polynomial_t(input, order);
+    let shifted_u_expected = special_shifted_chebyshev_polynomial_u(input, order);
+    let shifted_v_expected = special_shifted_chebyshev_polynomial_v(input, order);
+    let shifted_w_expected = special_shifted_chebyshev_polynomial_w(input, order);
+    let chebyshev_t_output = zeros([0], DType.FLOAT64);
+    let chebyshev_u_output = zeros([0], DType.FLOAT64);
+    let chebyshev_v_output = zeros([0], DType.FLOAT64);
+    let chebyshev_w_output = zeros([0], DType.FLOAT64);
+    let hermite_h_output = zeros([0], DType.FLOAT64);
+    let hermite_he_output = zeros([0], DType.FLOAT64);
+    let laguerre_output = zeros([0], DType.FLOAT64);
+    let legendre_output = zeros([0], DType.FLOAT64);
+    let shifted_t_output = zeros([0], DType.FLOAT64);
+    let shifted_u_output = zeros([0], DType.FLOAT64);
+    let shifted_v_output = zeros([0], DType.FLOAT64);
+    let shifted_w_output = zeros([0], DType.FLOAT64);
+    special_chebyshev_polynomial_t_out(chebyshev_t_output, input, order);
+    special_chebyshev_polynomial_u_out(chebyshev_u_output, input, order);
+    special_chebyshev_polynomial_v_out(chebyshev_v_output, input, order);
+    special_chebyshev_polynomial_w_out(chebyshev_w_output, input, order);
+    special_hermite_polynomial_h_out(hermite_h_output, input, order);
+    special_hermite_polynomial_he_out(hermite_he_output, input, order);
+    special_laguerre_polynomial_l_out(laguerre_output, input, order);
+    special_legendre_polynomial_p_out(legendre_output, input, order);
+    special_shifted_chebyshev_polynomial_t_out(shifted_t_output, input, order);
+    special_shifted_chebyshev_polynomial_u_out(shifted_u_output, input, order);
+    special_shifted_chebyshev_polynomial_v_out(shifted_v_output, input, order);
+    special_shifted_chebyshev_polynomial_w_out(shifted_w_output, input, order);
+    let valid =
+        matches(chebyshev_t_output, chebyshev_t_expected)
+            and matches(chebyshev_u_output, chebyshev_u_expected)
+            and matches(chebyshev_v_output, chebyshev_v_expected)
+            and matches(chebyshev_w_output, chebyshev_w_expected)
+            and matches(hermite_h_output, hermite_h_expected)
+            and matches(hermite_he_output, hermite_he_expected)
+            and matches(laguerre_output, laguerre_expected)
+            and matches(legendre_output, legendre_expected)
+            and matches(shifted_t_output, shifted_t_expected)
+            and matches(shifted_u_output, shifted_u_expected)
+            and matches(shifted_v_output, shifted_v_expected)
+            and matches(shifted_w_output, shifted_w_expected)
+            and shape(input) == [2]
+            and shape(order) == [2];
+    (dispose(shifted_w_output); dispose(shifted_v_output); dispose(shifted_u_output); dispose(shifted_t_output); dispose(legendre_output); dispose(laguerre_output); dispose(hermite_he_output); dispose(hermite_h_output); dispose(chebyshev_w_output); dispose(chebyshev_v_output); dispose(chebyshev_u_output); dispose(chebyshev_t_output); dispose(shifted_w_expected); dispose(shifted_v_expected); dispose(shifted_u_expected); dispose(shifted_t_expected); dispose(legendre_expected); dispose(laguerre_expected); dispose(hermite_he_expected); dispose(hermite_h_expected); dispose(chebyshev_w_expected); dispose(chebyshev_v_expected); dispose(chebyshev_u_expected); dispose(chebyshev_t_expected); dispose(order); dispose(input); valid).
+
+/**
+ * Proves optional, reduction, integer-order, and decimal output arguments.
+ */
+@test
+pub parameterized_outputs_match_libtorch(): Bool ->
+    let probabilities = from_floats([0.25, 0.5], [2]);
+    let matrix = from_floats([0.0, 1.0, 2.0, 3.0], [2, 2]);
+    let positive = from_floats([2.0, 3.0], [2]);
+    let decimal = from_floats([1.234, 2.345], [2]);
+    let logit_expected = special_logit(probabilities);
+    let clamped_logit_expected = special_logit_epsilon(probabilities, 0.1);
+    let logsumexp_expected = special_logsumexp(matrix, [1], true);
+    let multigammaln_expected = special_multigammaln(positive, 2);
+    let polygamma_expected = special_polygamma(positive, 1);
+    let round_expected = special_round(decimal, 2);
+    let logit_output = zeros([0], DType.FLOAT64);
+    let clamped_logit_output = zeros([0], DType.FLOAT64);
+    let logsumexp_output = zeros([0], DType.FLOAT64);
+    let multigammaln_output = zeros([0], DType.FLOAT64);
+    let polygamma_output = zeros([0], DType.FLOAT64);
+    let round_output = zeros([0], DType.FLOAT64);
+    special_logit_out(logit_output, probabilities);
+    special_logit_epsilon_out(clamped_logit_output, probabilities, 0.1);
+    special_logsumexp_out(logsumexp_output, matrix, [1], true);
+    special_multigammaln_out(multigammaln_output, positive, 2);
+    special_polygamma_out(polygamma_output, positive, 1);
+    special_round_out(round_output, decimal, 2);
+    let valid =
+        matches(logit_output, logit_expected)
+            and matches(clamped_logit_output, clamped_logit_expected)
+            and matches(logsumexp_output, logsumexp_expected)
+            and matches(multigammaln_output, multigammaln_expected)
+            and matches(polygamma_output, polygamma_expected)
+            and matches(round_output, round_expected)
+            and shape(logsumexp_output) == [2, 1]
+            and shape(probabilities) == [2]
+            and shape(matrix) == [2, 2];
+    (dispose(round_output); dispose(polygamma_output); dispose(multigammaln_output); dispose(logsumexp_output); dispose(clamped_logit_output); dispose(logit_output); dispose(round_expected); dispose(polygamma_expected); dispose(multigammaln_expected); dispose(logsumexp_expected); dispose(clamped_logit_expected); dispose(logit_expected); dispose(decimal); dispose(positive); dispose(matrix); dispose(probabilities); valid).

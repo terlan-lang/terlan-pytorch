@@ -1,0 +1,27 @@
+//! Generated direct ATen scatter primitives with exact typed and reduced overload dispatch.
+
+module pytorch.ScatterNative.
+
+/// Exact generated CXX scatter dispatcher.
+
+pub scatter_scalar(input: Tensor, mode: Int, dimension: Int, index: Tensor, value_is_int: Bool, value_int: Int, value_float: Float, reduction: Int): Tensor.
+
+/// Exact generated CXX scatter dispatcher.
+
+pub scatter_scalar_in_place(input: Tensor, mode: Int, dimension: Int, index: Tensor, value_is_int: Bool, value_int: Int, value_float: Float, reduction: Int): Unit.
+
+/// Exact generated CXX scatter dispatcher.
+
+pub scatter_scalar_out(output: Tensor, input: Tensor, mode: Int, dimension: Int, index: Tensor, value_is_int: Bool, value_int: Int, value_float: Float, reduction: Int): Unit.
+
+/// Exact generated CXX scatter dispatcher.
+
+pub scatter_tensor(input: Tensor, mode: Int, dimension: Int, index: Tensor, source: Tensor, reduction: Int, include_self: Bool): Tensor.
+
+/// Exact generated CXX scatter dispatcher.
+
+pub scatter_tensor_in_place(input: Tensor, mode: Int, dimension: Int, index: Tensor, source: Tensor, reduction: Int, include_self: Bool): Unit.
+
+/// Exact generated CXX scatter dispatcher.
+
+pub scatter_tensor_out(output: Tensor, input: Tensor, mode: Int, dimension: Int, index: Tensor, source: Tensor, reduction: Int, include_self: Bool): Unit.

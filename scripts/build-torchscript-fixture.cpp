@@ -10,13 +10,14 @@
 #include <iostream>
 
 int main(int argc, char** argv) {
-  if (argc != 12) {
+  if (argc != 14) {
     std::cerr << "usage: build-torchscript-fixture <double-output.pt> "
                  "<weighted-difference-output.pt> <tensor-pair-output.pt> "
                  "<scalar-float-output.pt> <scalar-int-output.pt> "
                  "<scalar-bool-output.pt> <scalar-string-output.pt> "
                  "<int-list-output.pt> <float-list-output.pt> "
-                 "<bool-list-output.pt> <string-list-output.pt>\n";
+                 "<bool-list-output.pt> <string-list-output.pt> "
+                 "<optional-tensor-output.pt> <tensor-list-output.pt>\n";
     return 2;
   }
 
@@ -104,6 +105,22 @@ int main(int argc, char** argv) {
         return ["non_positive", "", "waiting"]
     )JIT");
     string_list.save(argv[11]);
+
+    torch::jit::Module optional_tensor("TerlanOptionalTensorModel");
+    optional_tensor.define(R"JIT(
+      def forward(self, input: Tensor) -> Optional[Tensor]:
+        if input.item() > 0:
+          return input * 2.0
+        return None
+    )JIT");
+    optional_tensor.save(argv[12]);
+
+    torch::jit::Module tensor_list("TerlanTensorListModel");
+    tensor_list.define(R"JIT(
+      def forward(self, input: Tensor) -> List[Tensor]:
+        return [input * 2.0, input]
+    )JIT");
+    tensor_list.save(argv[13]);
   } catch (const c10::Error& error) {
     std::cerr << "failed to create TorchScript fixture: " << error.what()
               << '\n';

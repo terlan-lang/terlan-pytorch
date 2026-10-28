@@ -1,0 +1,297 @@
+/**
+ * Shared typed native primitives for scalar and tensor clamp operations composed in Terlan from exact generated CXX leaves.
+ */
+module pytorch.ClampNative.
+
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+
+/**
+ * Clamps a tensor using explicitly present integer or floating-point scalar bounds.
+ */
+pub clamp_scalar(
+    input: Tensor,
+    has_min: Bool,
+    min_is_int: Bool,
+    min_int: Int,
+    min_float: Float,
+    has_max: Bool,
+    max_is_int: Bool,
+    max_int: Int,
+    max_float: Float,
+): Tensor ->
+    if {
+        has_min and has_max -> clamp_scalar_min_max(input, min_is_int, min_int, min_float, max_is_int, max_int, max_float);
+        has_min -> clamp_scalar_min(input, min_is_int, min_int, min_float);
+        has_max -> clamp_scalar_max(input, max_is_int, max_int, max_float);
+        true -> let _failed = fail(exit_reason(7150));
+        clamp_scalar_min(input, min_is_int, min_int, min_float)
+    }.
+
+/**
+ * Writes scalar-bound clamp results into retained output storage.
+ */
+pub clamp_scalar_out(
+    output: Tensor,
+    input: Tensor,
+    has_min: Bool,
+    min_is_int: Bool,
+    min_int: Int,
+    min_float: Float,
+    has_max: Bool,
+    max_is_int: Bool,
+    max_int: Int,
+    max_float: Float,
+): Unit ->
+    if {
+        has_min and has_max -> clamp_scalar_min_max_out(
+            output,
+            input,
+            min_is_int,
+            min_int,
+            min_float,
+            max_is_int,
+            max_int,
+            max_float,
+        );
+        has_min -> clamp_scalar_min_out(output, input, min_is_int, min_int, min_float);
+        has_max -> clamp_scalar_max_out(output, input, max_is_int, max_int, max_float);
+        true -> fail(exit_reason(7150))
+    }.
+
+/**
+ * Clamps tensor storage in place using explicitly present scalar bounds.
+ */
+pub clamp_scalar_in_place(
+    input: Tensor,
+    has_min: Bool,
+    min_is_int: Bool,
+    min_int: Int,
+    min_float: Float,
+    has_max: Bool,
+    max_is_int: Bool,
+    max_int: Int,
+    max_float: Float,
+): Unit ->
+    if {
+        has_min and has_max -> clamp_scalar_min_max_in_place(
+            input,
+            min_is_int,
+            min_int,
+            min_float,
+            max_is_int,
+            max_int,
+            max_float,
+        );
+        has_min -> clamp_scalar_min_in_place(input, min_is_int, min_int, min_float);
+        has_max -> clamp_scalar_max_in_place(input, max_is_int, max_int, max_float);
+        true -> fail(exit_reason(7150))
+    }.
+
+/**
+ * Clamps a tensor with minimum-only, maximum-only, or paired tensor bounds.
+ */
+pub clamp_tensor(input: Tensor, mode: Int, first: Tensor, second: Tensor): Tensor ->
+    if {
+        mode == 0 -> clamp_tensor_min(input, first);
+        mode == 1 -> clamp_tensor_max(input, first);
+        mode == 2 -> clamp_tensor_min_max(input, first, second);
+        true -> let _failed = fail(exit_reason(7150));
+        clamp_tensor_min(input, first)
+    }.
+
+/**
+ * Writes tensor-bound clamp results into retained output storage.
+ */
+pub clamp_tensor_out(output: Tensor, input: Tensor, mode: Int, first: Tensor, second: Tensor): Unit ->
+    if {
+        mode == 0 -> clamp_tensor_min_out(output, input, first);
+        mode == 1 -> clamp_tensor_max_out(output, input, first);
+        mode == 2 -> clamp_tensor_min_max_out(output, input, first, second);
+        true -> fail(exit_reason(7150))
+    }.
+
+/**
+ * Clamps tensor storage in place using tensor bounds.
+ */
+pub clamp_tensor_in_place(input: Tensor, mode: Int, first: Tensor, second: Tensor): Unit ->
+    if {
+        mode == 0 -> clamp_tensor_min_in_place(input, first);
+        mode == 1 -> clamp_tensor_max_in_place(input, first);
+        mode == 2 -> clamp_tensor_min_max_in_place(input, first, second);
+        true -> fail(exit_reason(7150))
+    }.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_scalar_min}
+clamp_scalar_min(input: Tensor, bound_is_int: Bool, bound_int: Int, bound_float: Float): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_scalar_max}
+clamp_scalar_max(input: Tensor, bound_is_int: Bool, bound_int: Int, bound_float: Float): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_scalar_min_max}
+clamp_scalar_min_max(
+    input: Tensor,
+    min_is_int: Bool,
+    min_int: Int,
+    min_float: Float,
+    max_is_int: Bool,
+    max_int: Int,
+    max_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_scalar_min_out}
+clamp_scalar_min_out(
+    output: Tensor,
+    input: Tensor,
+    bound_is_int: Bool,
+    bound_int: Int,
+    bound_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_scalar_max_out}
+clamp_scalar_max_out(
+    output: Tensor,
+    input: Tensor,
+    bound_is_int: Bool,
+    bound_int: Int,
+    bound_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_scalar_min_max_out}
+clamp_scalar_min_max_out(
+    output: Tensor,
+    input: Tensor,
+    min_is_int: Bool,
+    min_int: Int,
+    min_float: Float,
+    max_is_int: Bool,
+    max_int: Int,
+    max_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_scalar_min_in_place}
+clamp_scalar_min_in_place(
+    input: Tensor,
+    bound_is_int: Bool,
+    bound_int: Int,
+    bound_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_scalar_max_in_place}
+clamp_scalar_max_in_place(
+    input: Tensor,
+    bound_is_int: Bool,
+    bound_int: Int,
+    bound_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_scalar_min_max_in_place}
+clamp_scalar_min_max_in_place(
+    input: Tensor,
+    min_is_int: Bool,
+    min_int: Int,
+    min_float: Float,
+    max_is_int: Bool,
+    max_int: Int,
+    max_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_tensor_min}
+clamp_tensor_min(input: Tensor, first: Tensor): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_tensor_max}
+clamp_tensor_max(input: Tensor, first: Tensor): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_tensor_min_max}
+clamp_tensor_min_max(input: Tensor, first: Tensor, second: Tensor): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_tensor_min_out}
+clamp_tensor_min_out(output: Tensor, input: Tensor, first: Tensor): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_tensor_max_out}
+clamp_tensor_max_out(output: Tensor, input: Tensor, first: Tensor): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_tensor_min_max_out}
+clamp_tensor_min_max_out(output: Tensor, input: Tensor, first: Tensor, second: Tensor): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_tensor_min_in_place}
+clamp_tensor_min_in_place(input: Tensor, first: Tensor): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_tensor_max_in_place}
+clamp_tensor_max_in_place(input: Tensor, first: Tensor): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.clamp.cxx.clamp_tensor_min_max_in_place}
+clamp_tensor_min_max_in_place(input: Tensor, first: Tensor, second: Tensor): Unit ->
+    native.

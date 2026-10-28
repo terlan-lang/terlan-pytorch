@@ -1,0 +1,10 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{from_int, subtract}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let left = from_int(4);
+    let right = from_int(1);
+    let result = subtract(left, right, 2.0);
+    println("PYTORCH_DTYPE_MISMATCH_NOT_REJECTED").

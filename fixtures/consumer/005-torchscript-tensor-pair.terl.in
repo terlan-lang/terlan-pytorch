@@ -1,0 +1,25 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{dispose, dispose_model, dispose_tensor_pair, from_float, item_float, load_torchscript, tensor_pair_first, tensor_pair_second, torchscript_forward_pair}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let model = load_torchscript("$tensor_pair_model");
+    let input = from_float(2.0);
+    let pair = torchscript_forward_pair(model, input);
+    let first_output = tensor_pair_first(pair);
+    let second_output = tensor_pair_second(pair);
+    dispose_tensor_pair(pair);
+    let observed_input = item_float(input);
+    let observed_first = item_float(first_output);
+    let observed_second = item_float(second_output);
+    dispose(second_output);
+    dispose(first_output);
+    dispose(input);
+    dispose_model(model);
+    if {
+        observed_input == 2.0 and observed_first == 4.0 and
+            observed_second == 6.0 ->
+            println("PYTORCH_TENSOR_PAIR_OUTPUT_CONSUMER_OK");
+        true -> println("PYTORCH_TENSOR_PAIR_OUTPUT_CONSUMER_FAILED")
+    }.

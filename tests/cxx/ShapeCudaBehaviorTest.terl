@@ -1,0 +1,7 @@
+module pytorch_cxx.ShapeCudaBehaviorTest.
+
+import pytorch.ShapeBehaviorSupport.{shape_contracts_on}.
+
+@test
+pub cuda_shape_contracts(): Bool ->
+    shape_contracts_on("cuda:0", true).

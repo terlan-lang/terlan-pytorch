@@ -1,0 +1,193 @@
+/**
+ * CPU and required-CUDA evidence for constant and named padding modes.
+ */
+module pytorch.PaddingParityTest.
+
+import pytorch.Padding.{constant_pad, constant_pad_float, constant_pad_float_out, constant_pad_out, pad}.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, to_device}.
+import pytorch.TypeRelations.equal.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], shape: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, shape);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(tensor: Tensor, values: List[Float], shape: List[Int], device: Int): Bool ->
+    let expected = placed(values, shape, device);
+    let valid = equal(tensor, expected) and dtype(tensor) == 7 and device_type(tensor) == device;
+    dispose(expected);
+    valid.
+
+verify(device: Int): Bool ->
+    let input = placed([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [1, 1, 2, 3], device);
+    let integer_constant = constant_pad(input, [1, 1, 1, 1], -2);
+    let floating_constant = constant_pad_float(input, [1, 1, 1, 1], 0.5);
+    let integer_output = placed([], [0], device);
+    let floating_output = placed([], [0], device);
+    constant_pad_out(integer_output, input, [1, 1, 1, 1], -2);
+    constant_pad_float_out(floating_output, input, [1, 1, 1, 1], 0.5);
+    let expected_integer =
+        [
+            -2.0,
+            -2.0,
+            -2.0,
+            -2.0,
+            -2.0,
+            -2.0,
+            1.0,
+            2.0,
+            3.0,
+            -2.0,
+            -2.0,
+            4.0,
+            5.0,
+            6.0,
+            -2.0,
+            -2.0,
+            -2.0,
+            -2.0,
+            -2.0,
+            -2.0,
+        ];
+    let expected_float =
+        [
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            1.0,
+            2.0,
+            3.0,
+            0.5,
+            0.5,
+            4.0,
+            5.0,
+            6.0,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+        ];
+    let constant_valid =
+        matches(integer_constant, expected_integer, [1, 1, 4, 5], device)
+            and matches(floating_constant, expected_float, [1, 1, 4, 5], device)
+            and matches(integer_output, expected_integer, [1, 1, 4, 5], device)
+            and matches(floating_output, expected_float, [1, 1, 4, 5], device);
+    let reflected = pad(input, [1, 1, 1, 1], "reflect");
+    let replicated = pad(input, [1, 1, 1, 1], "replicate");
+    let circular = pad(input, [1, 1, 1, 1], "circular");
+    let generic_constant = pad(input, [1, 1, 1, 1], "constant", 0.5);
+    let modes_valid =
+        matches(
+    reflected,
+    [
+        5.0,
+        4.0,
+        5.0,
+        6.0,
+        5.0,
+        2.0,
+        1.0,
+        2.0,
+        3.0,
+        2.0,
+        5.0,
+        4.0,
+        5.0,
+        6.0,
+        5.0,
+        2.0,
+        1.0,
+        2.0,
+        3.0,
+        2.0,
+    ],
+    [1, 1, 4, 5],
+    device,
+)
+            and matches(
+    replicated,
+    [
+        1.0,
+        1.0,
+        2.0,
+        3.0,
+        3.0,
+        1.0,
+        1.0,
+        2.0,
+        3.0,
+        3.0,
+        4.0,
+        4.0,
+        5.0,
+        6.0,
+        6.0,
+        4.0,
+        4.0,
+        5.0,
+        6.0,
+        6.0,
+    ],
+    [1, 1, 4, 5],
+    device,
+)
+            and matches(
+    circular,
+    [
+        6.0,
+        4.0,
+        5.0,
+        6.0,
+        4.0,
+        3.0,
+        1.0,
+        2.0,
+        3.0,
+        1.0,
+        6.0,
+        4.0,
+        5.0,
+        6.0,
+        4.0,
+        3.0,
+        1.0,
+        2.0,
+        3.0,
+        1.0,
+    ],
+    [1, 1, 4, 5],
+    device,
+)
+            and matches(generic_constant, expected_float, [1, 1, 4, 5], device);
+    let cropped_source = placed([1.0, 2.0, 3.0, 4.0], [4], device);
+    let cropped = constant_pad(cropped_source, [-1, -1]);
+    let ownership_valid =
+        matches(cropped, [2.0, 3.0], [2], device)
+            and matches(input, [1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [1, 1, 2, 3], device)
+            and matches(cropped_source, [1.0, 2.0, 3.0, 4.0], [4], device);
+    (dispose(cropped); dispose(cropped_source); dispose(generic_constant); dispose(circular); dispose(replicated); dispose(reflected); dispose(floating_output); dispose(integer_output); dispose(floating_constant); dispose(integer_constant); dispose(input); constant_valid and modes_valid and ownership_valid).
+
+@test
+pub padding_executes_on_cpu_and_required_cuda(): Bool ->
+    let cpu_valid = verify(0);
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    cpu_valid and cuda_valid.

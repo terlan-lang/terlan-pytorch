@@ -1,0 +1,61 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{add, amax, dispose, dtype, from_floats, full_float, gelu, item_float, layer_norm, matmul, mse_loss, shape}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
+    let normalization_weight = full_float([2], 1.0);
+    let normalization_bias = full_float([2], 0.0);
+    let normalized = layer_norm(
+        input, [2], normalization_weight, normalization_bias, 0.0, false
+    );
+    let expansion_weight = from_floats(
+        [1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]
+    );
+    let expansion_bias = full_float([4], 0.0);
+    let expanded = matmul(normalized, expansion_weight);
+    let biased_expansion = add(expanded, expansion_bias, 1.0);
+    let activated = gelu(biased_expansion);
+    let projection_weight = from_floats(
+        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]
+    );
+    let projection_bias = full_float([2], 0.0);
+    let projected = matmul(activated, projection_weight);
+    let biased_projection = add(projected, projection_bias, 1.0);
+    let residual = add(input, biased_projection, 1.0);
+    let expected = from_floats(
+        [0.8413447461, 3.8413447461, 4.8413447461, 1.8413447461], [2, 2]
+    );
+    let loss = mse_loss(residual, expected, 1);
+    let residual_columns = amax(residual, [0], false);
+    let residual_maximum = amax(residual_columns, [0], false);
+    let observed_loss = item_float(loss);
+    let observed_residual = item_float(residual_maximum);
+    let observed_shape = shape(residual);
+    let observed_dtype = dtype(residual);
+    dispose(residual_maximum);
+    dispose(residual_columns);
+    dispose(loss);
+    dispose(expected);
+    dispose(residual);
+    dispose(biased_projection);
+    dispose(projected);
+    dispose(projection_bias);
+    dispose(projection_weight);
+    dispose(activated);
+    dispose(biased_expansion);
+    dispose(expanded);
+    dispose(expansion_bias);
+    dispose(expansion_weight);
+    dispose(normalized);
+    dispose(normalization_bias);
+    dispose(normalization_weight);
+    dispose(input);
+    if {
+        observed_shape.length() == 2 and observed_shape[0] == 2 and
+            observed_shape[1] == 2 and observed_dtype == 7 and
+            observed_loss < 0.0000001 and observed_residual > 4.84 and
+            observed_residual < 4.85 -> println("PYTORCH_FEED_FORWARD_CONSUMER_OK");
+        true -> println("PYTORCH_FEED_FORWARD_CONSUMER_FAILED")
+    }.

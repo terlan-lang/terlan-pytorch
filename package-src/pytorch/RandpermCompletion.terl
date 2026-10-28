@@ -1,0 +1,20 @@
+/**
+ * Generated CXX random-permutation completion surface.
+ */
+module pytorch.RandpermCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Creates a Long permutation of 0..n-1.
+ */
+@compiler.native {pytorch.randperm.randperm_default}
+pub randperm_default(n: Int): Tensor ->
+    native.
+
+/**
+ * Writes a Long permutation into retained output storage.
+ */
+@compiler.native {pytorch.randperm.randperm_out}
+pub randperm_out(output: Tensor, n: Int): Unit ->
+    native.

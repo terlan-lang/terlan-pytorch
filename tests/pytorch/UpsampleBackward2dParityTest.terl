@@ -1,0 +1,41 @@
+/**
+ * CPU shape and dtype evidence for bilinear and bicubic backward operators.
+ */
+module pytorch.UpsampleBackward2dParityTest.
+
+import pytorch.Tensor.{dispose, dtype, from_floats, shape}.
+import pytorch.UpsampleBackwardCompletion.{upsample_bicubic2d_backward, upsample_bicubic2d_backward_out, upsample_bilinear2d_backward, upsample_bilinear2d_backward_out}.
+
+@test
+pub bilinear2d_backward_forms_match(): Bool ->
+    let grad =
+        from_floats(
+            [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            [1, 1, 4, 4],
+        );
+    let actual = upsample_bilinear2d_backward(grad, [4, 4], [1, 1, 2, 2], false);
+    let output = from_floats([], [0]);
+    upsample_bilinear2d_backward_out(output, grad, [4, 4], [1, 1, 2, 2], false);
+    let valid =
+        shape(actual) == [1, 1, 2, 2]
+            and shape(output) == [1, 1, 2, 2]
+            and dtype(actual) == dtype(grad)
+            and dtype(output) == dtype(grad);
+    (dispose(output); dispose(actual); dispose(grad); valid).
+
+@test
+pub bicubic2d_backward_forms_match(): Bool ->
+    let grad =
+        from_floats(
+            [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            [1, 1, 4, 4],
+        );
+    let actual = upsample_bicubic2d_backward(grad, [4, 4], [1, 1, 2, 2], false);
+    let output = from_floats([], [0]);
+    upsample_bicubic2d_backward_out(output, grad, [4, 4], [1, 1, 2, 2], false);
+    let valid =
+        shape(actual) == [1, 1, 2, 2]
+            and shape(output) == [1, 1, 2, 2]
+            and dtype(actual) == dtype(grad)
+            and dtype(output) == dtype(grad);
+    (dispose(output); dispose(actual); dispose(grad); valid).

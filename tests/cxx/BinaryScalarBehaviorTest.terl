@@ -1,0 +1,7 @@
+module pytorch_cxx.BinaryScalarBehaviorTest.
+
+import pytorch.BinaryScalarBehaviorSupport.{binary_scalar_contracts_on}.
+
+@test
+pub cpu_binary_scalar_contracts(): Bool ->
+    binary_scalar_contracts_on("cpu", false).

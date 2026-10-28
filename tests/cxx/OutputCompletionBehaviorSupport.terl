@@ -1,0 +1,130 @@
+module pytorch.OutputCompletionBehaviorSupport.
+
+import pytorch.Dense.{complex}.
+import pytorch.OutputCompletion.{complex_out, dist_out, expand_copy_out, lu_solve_out, native_dropout_backward_out, ormqr_out, polar_out, reflection_pad1d_out, reflection_pad2d_out, reflection_pad3d_out, renorm_out, replication_pad1d_out, replication_pad2d_out, replication_pad3d_out, slogdet_out, softmax_out}.
+import pytorch.OutputCompletionDTypeSupport.{bool_mask_on}.
+import pytorch.ShapeCompletion.{narrow_view, zero}.
+import pytorch.Tensor.{Complex128, Float64, Int32, Strided, abs, dispose, dispose_scalar, dtype, is_cuda, item, ones_device, scalar_to_float, shape}.
+
+import type pytorch.Tensor.
+
+value(tensor: Tensor): Float ->
+    let scalar = item(tensor);
+    let observed = scalar_to_float(scalar);
+    dispose_scalar(scalar);
+    observed.
+
+/**
+ * Executes every generated OutputCompletion retained-output contract on one device.
+ */
+pub output_completion_contracts_on(device_name: String): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let real = ones_device([1], Float64, Strided, device_name);
+    let imaginary = ones_device([1], Float64, Strided, device_name);
+    let zero_real = zero(real);
+    let complex_output = complex(zero_real, zero_real);
+    complex_out(complex_output, real, imaginary);
+    let complex_magnitude = abs(complex_output);
+    let distance_output = ones_device([0], Float64, Strided, device_name);
+    (dist_out(distance_output, real, real, 2.0); let expandable = ones_device([1, 2], Float64, Strided, device_name);
+let expanded_output = ones_device([0], Float64, Strided, device_name);
+(expand_copy_out(expanded_output, expandable, [3, 2], false); let expanded_row = narrow_view(expanded_output, 0, 2, 1);
+let expanded_element = narrow_view(expanded_row, 1, 1, 1);
+let right = ones_device([1, 1], Float64, Strided, device_name);
+let factor = ones_device([1, 1], Float64, Strided, device_name);
+let pivots = ones_device([1], Int32, Strided, device_name);
+let solution_output = ones_device([0], Float64, Strided, device_name);
+(lu_solve_out(solution_output, right, factor, pivots); let gradient = ones_device([1], Float64, Strided, device_name);
+let mask = bool_mask_on(device_name);
+let dropout_output = ones_device([0], Float64, Strided, device_name);
+(native_dropout_backward_out(dropout_output, gradient, mask, 2.0); let tau_source = ones_device([1], Float64, Strided, device_name);
+let tau = zero(tau_source);
+let other = ones_device([1, 1], Float64, Strided, device_name);
+let ormqr_output = ones_device([0], Float64, Strided, device_name);
+(ormqr_out(ormqr_output, factor, tau, other, true, false); let angle = zero(real);
+let polar_output = complex(zero_real, zero_real);
+(polar_out(polar_output, real, angle); let polar_magnitude = abs(polar_output);
+let one_d = ones_device([1, 1, 2], Float64, Strided, device_name);
+let two_d = ones_device([1, 1, 2, 2], Float64, Strided, device_name);
+let three_d = ones_device([1, 1, 2, 2, 2], Float64, Strided, device_name);
+let reflection1 = ones_device([0], Float64, Strided, device_name);
+let reflection2 = ones_device([0], Float64, Strided, device_name);
+let reflection3 = ones_device([0], Float64, Strided, device_name);
+let replication1 = ones_device([0], Float64, Strided, device_name);
+let replication2 = ones_device([0], Float64, Strided, device_name);
+let replication3 = ones_device([0], Float64, Strided, device_name);
+(reflection_pad1d_out(reflection1, one_d, [1, 1]); reflection_pad2d_out(reflection2, two_d, [1, 1, 1, 1]); reflection_pad3d_out(reflection3, three_d, [1, 1, 1, 1, 1, 1]); replication_pad1d_out(replication1, one_d, [1, 1]); replication_pad2d_out(replication2, two_d, [1, 1, 1, 1]); replication_pad3d_out(replication3, three_d, [1, 1, 1, 1, 1, 1]); let reflection1_element = narrow_view(reflection1, 2, 0, 1);
+let reflection2_row = narrow_view(reflection2, 2, 0, 1);
+let reflection2_element = narrow_view(reflection2_row, 3, 0, 1);
+let reflection3_plane = narrow_view(reflection3, 2, 0, 1);
+let reflection3_row = narrow_view(reflection3_plane, 3, 0, 1);
+let reflection3_element = narrow_view(reflection3_row, 4, 0, 1);
+let replication1_element = narrow_view(replication1, 2, 0, 1);
+let replication2_row = narrow_view(replication2, 2, 0, 1);
+let replication2_element = narrow_view(replication2_row, 3, 0, 1);
+let replication3_plane = narrow_view(replication3, 2, 0, 1);
+let replication3_row = narrow_view(replication3_plane, 3, 0, 1);
+let replication3_element = narrow_view(replication3_row, 4, 0, 1);
+let renorm_input = ones_device([1, 1], Float64, Strided, device_name);
+let renorm_output = ones_device([0], Float64, Strided, device_name);
+(renorm_out(renorm_output, renorm_input, 2.0, 0, 10.0); let determinant_input = ones_device([1, 1], Float64, Strided, device_name);
+let sign_output = ones_device([0], Float64, Strided, device_name);
+let log_output = ones_device([0], Float64, Strided, device_name);
+(slogdet_out(sign_output, log_output, determinant_input); let logits = ones_device([1, 2], Float64, Strided, device_name);
+let softmax_output = ones_device([0], Float64, Strided, device_name);
+(softmax_out(softmax_output, logits, 1); let probability = narrow_view(softmax_output, 1, 0, 1);
+let complex_value = value(complex_magnitude);
+let valid =
+    shape(complex_output) == [1]
+        and dtype(complex_output) == Complex128
+        and complex_value > 1.4
+        and complex_value < 1.5
+        and shape(distance_output) == []
+        and value(distance_output) == 0.0
+        and shape(expanded_output) == [3, 2]
+        and value(expanded_element) == 1.0
+        and shape(solution_output) == [1, 1]
+        and value(solution_output) == 1.0
+        and shape(dropout_output) == [1]
+        and value(dropout_output) == 2.0
+        and shape(ormqr_output) == [1, 1]
+        and value(ormqr_output) == 1.0
+        and shape(polar_output) == [1]
+        and dtype(polar_output) == Complex128
+        and value(polar_magnitude) == 1.0
+        and shape(reflection1) == [1, 1, 4]
+        and shape(reflection2) == [1, 1, 4, 4]
+        and shape(reflection3) == [1, 1, 4, 4, 4]
+        and shape(replication1) == [1, 1, 4]
+        and shape(replication2) == [1, 1, 4, 4]
+        and shape(replication3) == [1, 1, 4, 4, 4]
+        and value(reflection1_element) == 1.0
+        and value(reflection2_element) == 1.0
+        and value(reflection3_element) == 1.0
+        and value(replication1_element) == 1.0
+        and value(replication2_element) == 1.0
+        and value(replication3_element) == 1.0
+        and shape(renorm_output) == [1, 1]
+        and value(renorm_output) == 1.0
+        and shape(sign_output) == []
+        and shape(log_output) == []
+        and value(sign_output) == 1.0
+        and value(log_output) == 0.0
+        and shape(softmax_output) == [1, 2]
+        and value(probability) == 0.5
+        and is_cuda(complex_output) == expected_cuda
+        and is_cuda(distance_output) == expected_cuda
+        and is_cuda(expanded_output) == expected_cuda
+        and is_cuda(solution_output) == expected_cuda
+        and is_cuda(dropout_output) == expected_cuda
+        and is_cuda(ormqr_output) == expected_cuda
+        and is_cuda(polar_output) == expected_cuda
+        and is_cuda(reflection3) == expected_cuda
+        and is_cuda(replication3) == expected_cuda
+        and is_cuda(renorm_output) == expected_cuda
+        and is_cuda(sign_output) == expected_cuda
+        and is_cuda(log_output) == expected_cuda
+        and is_cuda(softmax_output) == expected_cuda
+        and value(real) == 1.0
+        and value(factor) == 1.0;
+(dispose(probability); dispose(softmax_output); dispose(logits); dispose(log_output); dispose(sign_output); dispose(determinant_input); dispose(renorm_output); dispose(renorm_input); dispose(replication3_element); dispose(replication3_row); dispose(replication3_plane); dispose(replication2_element); dispose(replication2_row); dispose(replication1_element); dispose(reflection3_element); dispose(reflection3_row); dispose(reflection3_plane); dispose(reflection2_element); dispose(reflection2_row); dispose(reflection1_element); dispose(replication3); dispose(replication2); dispose(replication1); dispose(reflection3); dispose(reflection2); dispose(reflection1); dispose(three_d); dispose(two_d); dispose(one_d); dispose(polar_magnitude); dispose(polar_output); dispose(angle); dispose(ormqr_output); dispose(other); dispose(tau); dispose(tau_source); dispose(dropout_output); dispose(mask); dispose(gradient); dispose(solution_output); dispose(pivots); dispose(factor); dispose(right); dispose(expanded_element); dispose(expanded_row); dispose(expanded_output); dispose(expandable); dispose(distance_output); dispose(complex_magnitude); dispose(complex_output); dispose(zero_real); dispose(imaginary); dispose(real); valid))))))))))).

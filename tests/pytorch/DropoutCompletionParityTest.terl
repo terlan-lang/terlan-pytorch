@@ -1,0 +1,78 @@
+/**
+ * Remaining exact dropout operators execute on CPU and CUDA.
+ */
+module pytorch.DropoutCompletionParityTest.
+
+import pytorch.DropoutCompletion.{alpha_dropout_in_place, dropout_in_place, feature_alpha_dropout, feature_alpha_dropout_in_place, feature_dropout_in_place}.
+import pytorch.Regularization.feature_dropout.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, to_device}.
+import pytorch.TypeRelations.equal.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(tensor: Tensor, values: List[Float], dimensions: List[Int], device: Int): Bool ->
+    let expected = placed(values, dimensions, device);
+    let valid = equal(tensor, expected) and dtype(tensor) == 7 and device_type(tensor) == device;
+    dispose(expected);
+    valid.
+
+verify(device: Int): Bool ->
+    let values = [-1.0, 2.0, -3.0, 4.0];
+    let zeros = [0.0, 0.0, 0.0, 0.0];
+    let alpha = placed(values, [2, 2], device);
+    alpha_dropout_in_place(alpha, 0.0, true);
+    let alpha_identity = matches(alpha, values, [2, 2], device);
+    (alpha_dropout_in_place(alpha, 1.0, true); let alpha_zero = matches(alpha, zeros, [2, 2], device);
+let dropout = placed(values, [2, 2], device);
+(dropout_in_place(dropout, 0.7, false); let dropout_identity = matches(dropout, values, [2, 2], device);
+(dropout_in_place(dropout, 1.0, true); let dropout_zero = matches(dropout, zeros, [2, 2], device);
+let source = placed(values, [2, 2], device);
+let functional_identity = feature_alpha_dropout(source, 0.0, true);
+let functional_zero = feature_alpha_dropout(source, 1.0, true);
+let feature_functional_identity = feature_dropout(source, 0.0, true);
+let feature_functional_zero = feature_dropout(source, 1.0, true);
+let functional =
+    matches(functional_identity, values, [2, 2], device)
+        and matches(functional_zero, zeros, [2, 2], device)
+        and matches(feature_functional_identity, values, [2, 2], device)
+        and matches(feature_functional_zero, zeros, [2, 2], device)
+        and matches(source, values, [2, 2], device);
+let feature_alpha = placed(values, [2, 2], device);
+(feature_alpha_dropout_in_place(feature_alpha, 1.0, true); let feature_alpha_zero = matches(feature_alpha, zeros, [2, 2], device);
+let feature = placed(values, [2, 2], device);
+(feature_dropout_in_place(feature, 0.0, true); let feature_identity = matches(feature, values, [2, 2], device);
+(feature_dropout_in_place(feature, 1.0, true); let feature_zero = matches(feature, zeros, [2, 2], device);
+(dispose(feature); dispose(feature_alpha); dispose(feature_functional_zero); dispose(feature_functional_identity); dispose(functional_zero); dispose(functional_identity); dispose(source); dispose(dropout); dispose(alpha); alpha_identity
+    and alpha_zero
+    and dropout_identity
+    and dropout_zero
+    and functional
+    and feature_alpha_zero
+    and feature_identity
+    and feature_zero))))))).
+
+/**
+ * Requires real CUDA execution whenever the CUDA gate requests it.
+ */
+@test
+pub dropout_completion_on_cpu_and_required_cuda(): Bool ->
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    let cpu_valid = verify(0);
+    cpu_valid and cuda_valid.

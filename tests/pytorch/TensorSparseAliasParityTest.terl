@@ -1,0 +1,18 @@
+module pytorch.TensorSparseAliasParityTest.
+
+import pytorch.Tensor.{dispose, from_floats, to_dense, to_sparse_coo}.
+import pytorch.TypeRelations.equal.
+
+/**
+ * Proves the Tensor.to_sparse_coo convenience method preserves values.
+ */
+@test
+pub tensor_to_sparse_coo_alias_matches_pytorch(): Bool ->
+    let dense = from_floats([1.0, 0.0, 0.0, 2.0], [2, 2]);
+    let sparse = to_sparse_coo(dense);
+    let restored = to_dense(sparse);
+    let valid = equal(restored, dense);
+    dispose(restored);
+    dispose(sparse);
+    dispose(dense);
+    valid.

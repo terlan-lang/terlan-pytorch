@@ -1,0 +1,10 @@
+module=pytorch.ScalarTensorCompletion
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=12564312297272955507
+interface_hash=2516623748285667458
+interface_doc_hash=12836836971003749503
+deps=2
+pytorch.Scalar=15696376780543715656
+pytorch.Tensor=13489932768568026575

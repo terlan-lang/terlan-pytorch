@@ -1,0 +1,10 @@
+module=pytorch.Clamp
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=2574801549184946470
+interface_hash=1889790758699877882
+interface_doc_hash=7870751821153937793
+deps=2
+pytorch.ClampNative=9837484738928524428
+pytorch.Tensor=13489932768568026575

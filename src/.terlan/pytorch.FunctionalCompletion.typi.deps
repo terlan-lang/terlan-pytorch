@@ -1,0 +1,10 @@
+module=pytorch.FunctionalCompletion
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=18092035038640400301
+interface_hash=1568812252169131671
+interface_doc_hash=12640582913389147830
+deps=2
+pytorch.Tensor=13489932768568026575
+std.core.Option=11539230284316612175

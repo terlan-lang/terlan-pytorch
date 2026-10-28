@@ -1,0 +1,227 @@
+/**
+ * Generated direct-CXX implementation of public indexing, masking, scatter, membership, and window extraction operations.
+ */
+module pytorch.Indexing.
+
+import type pytorch.Tensor.
+
+/**
+ * Returns stable or unstable sort indices along one dimension with explicit direction.
+ */
+@compiler.native {pytorch.indexing.argsort_stable}
+pub argsort_stable(
+    input: Tensor,
+    stable: Bool,
+    dimension: Int = -1,
+    descending: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Places each input value into sorted boundaries with explicit side and index-width policy.
+ */
+@compiler.native {pytorch.indexing.bucketize}
+pub bucketize(
+    input: Tensor,
+    boundaries: Tensor,
+    int32_output: Bool = false,
+    right: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Embeds the input along a selected diagonal in two result dimensions.
+ */
+@compiler.native {pytorch.indexing.diag_embed}
+pub diag_embed(input: Tensor, offset: Int = 0, dimension1: Int = -2, dimension2: Int = -1): Tensor ->
+    native.
+
+/**
+ * Copies one selected diagonal into independently owned storage.
+ */
+@compiler.native {pytorch.indexing.diagonal_copy}
+pub diagonal_copy(input: Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): Tensor ->
+    native.
+
+/**
+ * Returns a copy with one selected diagonal replaced from a source tensor.
+ */
+@compiler.native {pytorch.indexing.diagonal_scatter}
+pub diagonal_scatter(
+    input: Tensor,
+    source: Tensor,
+    offset: Int = 0,
+    dimension1: Int = 0,
+    dimension2: Int = 1,
+): Tensor ->
+    native.
+
+/**
+ * Returns a copy with source slices copied into explicit indices along one dimension.
+ */
+@compiler.native {pytorch.indexing.index_copy}
+pub index_copy(input: Tensor, dimension: Int, indices: Tensor, source: Tensor): Tensor ->
+    native.
+
+/**
+ * Copies slices selected by integer indices along one dimension.
+ */
+@compiler.native {pytorch.indexing.index_select}
+pub index_select(input: Tensor, dimension: Int, indices: Tensor): Tensor ->
+    native.
+
+/**
+ * Tests tensor membership with explicit uniqueness and inversion policy.
+ */
+@compiler.native {pytorch.indexing.isin}
+pub isin(
+    elements: Tensor,
+    test_elements: Tensor,
+    assume_unique: Bool = false,
+    invert: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Returns a copy with selected elements replaced by a tensor value.
+ */
+@compiler.native {pytorch.indexing.masked_fill_tensor}
+pub masked_fill_tensor(input: Tensor, mask: Tensor, value: Tensor): Tensor ->
+    native.
+
+/**
+ * Returns a copy with selected elements replaced sequentially from a source tensor.
+ */
+@compiler.native {pytorch.indexing.masked_scatter}
+pub masked_scatter(input: Tensor, mask: Tensor, source: Tensor): Tensor ->
+    native.
+
+/**
+ * Returns a copy with flat indexed values replaced or accumulated from a source tensor.
+ */
+@compiler.native {pytorch.indexing.put}
+pub put(input: Tensor, indices: Tensor, source: Tensor, accumulate: Bool = false): Tensor ->
+    native.
+
+/**
+ * Returns a copy with source values scattered through indices along one dimension.
+ */
+@compiler.native {pytorch.indexing.scatter}
+pub scatter(input: Tensor, dimension: Int, indices: Tensor, source: Tensor): Tensor ->
+    native.
+
+/**
+ * Returns a copy with source values accumulated through indices along one dimension.
+ */
+@compiler.native {pytorch.indexing.scatter_add}
+pub scatter_add(input: Tensor, dimension: Int, indices: Tensor, source: Tensor): Tensor ->
+    native.
+
+/**
+ * Returns a copy with one selected slice replaced by a source tensor.
+ */
+@compiler.native {pytorch.indexing.select_scatter}
+pub select_scatter(input: Tensor, source: Tensor, dimension: Int, index: Int): Tensor ->
+    native.
+
+/**
+ * Copies sliding windows of one dimension into independently owned result storage.
+ */
+@compiler.native {pytorch.indexing.unfold_copy}
+pub unfold_copy(input: Tensor, dimension: Int, size: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Selects elementwise between two tensors using a boolean condition tensor.
+ */
+@compiler.native {pytorch.indexing.where_tensor}
+pub where_tensor(condition: Tensor, when_true: Tensor, when_false: Tensor): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::masked_scatter.out values into retained storage.
+ */
+@compiler.native {pytorch.indexing.masked_scatter_out}
+pub masked_scatter_out(output: Tensor, input: Tensor, mask: Tensor, source: Tensor): Unit ->
+    native.
+
+/**
+ * Replaces selected retained values through exact aten::masked_scatter_.
+ */
+@compiler.native {pytorch.indexing.masked_scatter_in_place}
+pub masked_scatter_in_place(input: Tensor, mask: Tensor, source: Tensor): Unit ->
+    native.
+
+/**
+ * Writes exact aten::put.out values into retained storage.
+ */
+@compiler.native {pytorch.indexing.put_out}
+pub put_out(
+    output: Tensor,
+    input: Tensor,
+    indices: Tensor,
+    source: Tensor,
+    accumulate: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Writes flat indexed values into retained storage through exact aten::put_.
+ */
+@compiler.native {pytorch.indexing.put_in_place}
+pub put_in_place(input: Tensor, indices: Tensor, source: Tensor, accumulate: Bool = false): Unit ->
+    native.
+
+/**
+ * Indexes with an explicit Tensor?/None presence mask.
+ */
+@compiler.native {pytorch.indexing.index_tensor}
+pub index_tensor(input: Tensor, indices: List[Tensor], present: List[Int]): Tensor ->
+    native.
+
+/**
+ * Writes Tensor?/None indexed values into retained output storage.
+ */
+@compiler.native {pytorch.indexing.index_tensor_out}
+pub index_tensor_out(output: Tensor, input: Tensor, indices: List[Tensor], present: List[Int]): Unit ->
+    native.
+
+/**
+ * Updates Tensor?/None indexed positions with an explicit presence mask.
+ */
+@compiler.native {pytorch.indexing.index_put}
+pub index_put(
+    input: Tensor,
+    indices: List[Tensor],
+    present: List[Int],
+    values: Tensor,
+    accumulate: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Writes Tensor?/None indexed updates into retained output storage.
+ */
+@compiler.native {pytorch.indexing.index_put_out}
+pub index_put_out(
+    output: Tensor,
+    input: Tensor,
+    indices: List[Tensor],
+    present: List[Int],
+    values: Tensor,
+    accumulate: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Mutates Tensor?/None indexed positions with an explicit presence mask.
+ */
+@compiler.native {pytorch.indexing.index_put_in_place}
+pub index_put_in_place(
+    input: Tensor,
+    indices: List[Tensor],
+    present: List[Int],
+    values: Tensor,
+    accumulate: Bool = false,
+): Unit ->
+    native.

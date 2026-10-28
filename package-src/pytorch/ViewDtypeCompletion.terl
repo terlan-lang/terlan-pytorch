@@ -1,0 +1,13 @@
+/**
+ * Generated CXX dtype-reinterpreting view completion surface.
+ */
+module pytorch.ViewDtypeCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Reinterprets tensor storage with the requested scalar type.
+ */
+@compiler.native {pytorch.view_dtype.view_dtype}
+pub view_dtype(input: Tensor, dtype: Int): Tensor ->
+    native.

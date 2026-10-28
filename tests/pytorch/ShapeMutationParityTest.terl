@@ -1,0 +1,73 @@
+/**
+ * Behavioral evidence for in-place tensor shape and storage mutations.
+ */
+module pytorch.ShapeMutationParityTest.
+
+import pytorch.Shape.{squeeze_dim, squeeze_dimension_in_place, squeeze_dimensions_in_place, squeeze_dims, swapaxes, swapaxes_in_place, swapdims, swapdims_in_place, transpose_in_place, tril, tril_in_place, triu, triu_in_place, unsqueeze_in_place}.
+import pytorch.Tensor.{Tensor, clone, dispose, from_floats, item_float, mse_loss, transpose, unsqueeze}.
+import pytorch.UnaryStorage.{detach_in_place, squeeze_in_place, zero_in_place}.
+import pytorch.View.{detach, squeeze}.
+
+/**
+ * Returns whether two tensors have identical numeric values.
+ */
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let loss = mse_loss(actual, expected, 1);
+    let valid = item_float(loss) == 0.0;
+    dispose(loss);
+    valid.
+
+/**
+ * Proves no-argument storage and shape mutations through public Terlan APIs.
+ */
+@test
+pub direct_mutations_match_libtorch(): Bool ->
+    let singleton = from_floats([1.0, 2.0], [1, 2, 1]);
+    let expected_squeeze = squeeze(singleton);
+    let mutation_squeeze = clone(singleton);
+    squeeze_in_place(mutation_squeeze);
+    let expected_detach = detach(singleton);
+    let mutation_detach = clone(singleton);
+    (detach_in_place(mutation_detach); let mutation_zero = clone(singleton);
+(zero_in_place(mutation_zero); let expected_zero = from_floats([0.0, 0.0], [1, 2, 1]);
+let valid =
+    matches(mutation_squeeze, expected_squeeze)
+        and matches(mutation_detach, expected_detach)
+        and matches(mutation_zero, expected_zero);
+(dispose(expected_zero); dispose(mutation_zero); dispose(mutation_detach); dispose(expected_detach); dispose(mutation_squeeze); dispose(expected_squeeze); dispose(singleton); valid))).
+
+/**
+ * Proves integer and dimension-list shape mutations through public Terlan APIs.
+ */
+@test
+pub dimension_mutations_match_libtorch(): Bool ->
+    let singleton = from_floats([1.0, 2.0], [1, 2, 1]);
+    let expected_squeeze_dimension = squeeze_dim(singleton, 0);
+    let mutation_squeeze_dimension = clone(singleton);
+    squeeze_dimension_in_place(mutation_squeeze_dimension, 0);
+    let expected_squeeze_dimensions = squeeze_dims(singleton, [0, 2]);
+    let mutation_squeeze_dimensions = clone(singleton);
+    (squeeze_dimensions_in_place(mutation_squeeze_dimensions, [0, 2]); let expected_unsqueeze = unsqueeze(singleton, 0);
+let mutation_unsqueeze = clone(singleton);
+(unsqueeze_in_place(mutation_unsqueeze, 0); let matrix = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+let expected_swapaxes = swapaxes(matrix, 0, 1);
+let mutation_swapaxes = clone(matrix);
+(swapaxes_in_place(mutation_swapaxes, 0, 1); let expected_swapdims = swapdims(matrix, 0, 1);
+let mutation_swapdims = clone(matrix);
+(swapdims_in_place(mutation_swapdims, 0, 1); let expected_transpose = transpose(matrix, 0, 1);
+let mutation_transpose = clone(matrix);
+(transpose_in_place(mutation_transpose, 0, 1); let square = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+let expected_tril = tril(square, 0);
+let mutation_tril = clone(square);
+(tril_in_place(mutation_tril, 0); let expected_triu = triu(square, 0);
+let mutation_triu = clone(square);
+(triu_in_place(mutation_triu, 0); let valid =
+    matches(mutation_squeeze_dimension, expected_squeeze_dimension)
+        and matches(mutation_squeeze_dimensions, expected_squeeze_dimensions)
+        and matches(mutation_unsqueeze, expected_unsqueeze)
+        and matches(mutation_swapaxes, expected_swapaxes)
+        and matches(mutation_swapdims, expected_swapdims)
+        and matches(mutation_transpose, expected_transpose)
+        and matches(mutation_tril, expected_tril)
+        and matches(mutation_triu, expected_triu);
+(dispose(mutation_triu); dispose(expected_triu); dispose(mutation_tril); dispose(expected_tril); dispose(square); dispose(mutation_transpose); dispose(expected_transpose); dispose(mutation_swapdims); dispose(expected_swapdims); dispose(mutation_swapaxes); dispose(expected_swapaxes); dispose(matrix); dispose(mutation_unsqueeze); dispose(expected_unsqueeze); dispose(mutation_squeeze_dimensions); dispose(expected_squeeze_dimensions); dispose(mutation_squeeze_dimension); dispose(expected_squeeze_dimension); dispose(singleton); valid)))))))).

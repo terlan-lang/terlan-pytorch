@@ -1,0 +1,13 @@
+/**
+ * Generated exact CXX covariance completion surface.
+ */
+module pytorch.CovCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX covariance leaf.
+ */
+@compiler.native {pytorch.statistics.cov}
+pub cov(input: Tensor, correction: Int = 1): Tensor ->
+    native.

@@ -1,0 +1,51 @@
+//! Exact reflection and replication padding backward kernels with retained-output variants.
+
+module pytorch.PaddingBackwardCompletion.
+
+/// Executes exact aten::reflection_pad1d_backward.
+
+pub reflection_pad1d_backward(gradient: Tensor, input: Tensor, padding: List[Int]): Tensor.
+
+/// Writes exact aten::reflection_pad1d_backward.grad_input into retained storage.
+
+pub reflection_pad1d_backward_out(output: Tensor, gradient: Tensor, input: Tensor, padding: List[Int]): Unit.
+
+/// Executes exact aten::reflection_pad2d_backward.
+
+pub reflection_pad2d_backward(gradient: Tensor, input: Tensor, padding: List[Int]): Tensor.
+
+/// Writes exact aten::reflection_pad2d_backward.grad_input into retained storage.
+
+pub reflection_pad2d_backward_out(output: Tensor, gradient: Tensor, input: Tensor, padding: List[Int]): Unit.
+
+/// Executes exact aten::reflection_pad3d_backward.
+
+pub reflection_pad3d_backward(gradient: Tensor, input: Tensor, padding: List[Int]): Tensor.
+
+/// Writes exact aten::reflection_pad3d_backward.grad_input into retained storage.
+
+pub reflection_pad3d_backward_out(output: Tensor, gradient: Tensor, input: Tensor, padding: List[Int]): Unit.
+
+/// Executes exact aten::replication_pad1d_backward.
+
+pub replication_pad1d_backward(gradient: Tensor, input: Tensor, padding: List[Int]): Tensor.
+
+/// Writes exact aten::replication_pad1d_backward.grad_input into retained storage.
+
+pub replication_pad1d_backward_out(output: Tensor, gradient: Tensor, input: Tensor, padding: List[Int]): Unit.
+
+/// Executes exact aten::replication_pad2d_backward.
+
+pub replication_pad2d_backward(gradient: Tensor, input: Tensor, padding: List[Int]): Tensor.
+
+/// Writes exact aten::replication_pad2d_backward.grad_input into retained storage.
+
+pub replication_pad2d_backward_out(output: Tensor, gradient: Tensor, input: Tensor, padding: List[Int]): Unit.
+
+/// Executes exact aten::replication_pad3d_backward.
+
+pub replication_pad3d_backward(gradient: Tensor, input: Tensor, padding: List[Int]): Tensor.
+
+/// Writes exact aten::replication_pad3d_backward.grad_input into retained storage.
+
+pub replication_pad3d_backward_out(output: Tensor, gradient: Tensor, input: Tensor, padding: List[Int]): Unit.

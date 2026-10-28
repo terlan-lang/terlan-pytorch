@@ -1,0 +1,509 @@
+{
+  "schema": "terlan.pytorch.cxx-migration.v1",
+  "maximum_snapshot_operations": 1760,
+  "snapshot_sha256": "db7b5c14b72b27ff18bbac42e3647a0768584255f167fbfb918aaaa7c5cb6217",
+  "allowed_native_extras": {
+    "pytorch.Tensor": [
+      {
+        "name": "backward_with_gradient",
+        "operation": "pytorch.tensor.backward_with_gradient"
+      },
+      {
+        "name": "gradient_with_graph",
+        "operation": "pytorch.tensor.gradient_with_graph"
+      },
+      {
+        "name": "autograd_grad",
+        "operation": "pytorch.tensor.autograd_grad"
+      },
+      {
+        "name": "backward_many_token",
+        "operation": "pytorch.tensor.backward_many_token"
+      },
+      {
+        "name": "autograd_grad_many",
+        "operation": "pytorch.tensor.autograd_grad_many"
+      },
+      {
+        "name": "to_other",
+        "operation": "pytorch.tensor.to_other"
+      },
+      {
+        "name": "to_device_dtype",
+        "operation": "pytorch.tensor.to_device_dtype"
+      },
+      {
+        "name": "to_dtype_layout",
+        "operation": "pytorch.tensor.to_dtype_layout"
+      },
+      {
+        "name": "nested_from_tensor_list",
+        "operation": "pytorch.tensor.nested_from_tensor_list"
+      },
+      {
+        "name": "nested_to_padded_tensor",
+        "operation": "pytorch.tensor.nested_to_padded_tensor"
+      },
+      {
+        "name": "to_padded_tensor",
+        "operation": "pytorch.tensor.to_padded_tensor"
+      },
+      {
+        "name": "to_padded_tensor_out",
+        "operation": "pytorch.tensor.to_padded_tensor_out"
+      },
+      {
+        "name": "from_file",
+        "operation": "pytorch.tensor.from_file"
+      },
+      {
+        "name": "from_file_out",
+        "operation": "pytorch.tensor.from_file_out"
+      }
+    ],
+    "pytorch.Indexing": [
+      {
+        "name": "index_tensor",
+        "operation": "pytorch.indexing.index_tensor"
+      },
+      {
+        "name": "index_tensor_out",
+        "operation": "pytorch.indexing.index_tensor_out"
+      },
+      {
+        "name": "index_put",
+        "operation": "pytorch.indexing.index_put"
+      },
+      {
+        "name": "index_put_out",
+        "operation": "pytorch.indexing.index_put_out"
+      },
+      {
+        "name": "index_put_in_place",
+        "operation": "pytorch.indexing.index_put_in_place"
+      }
+    ],
+    "pytorch.Gradients": [
+      {
+        "name": "gradient_array",
+        "operation": "pytorch.gradients.gradient_array"
+      },
+      {
+        "name": "gradient_scalar_array",
+        "operation": "pytorch.gradients.gradient_scalar_array"
+      },
+      {
+        "name": "gradient_scalar_int",
+        "operation": "pytorch.gradients.gradient_scalar_int"
+      },
+      {
+        "name": "gradient_scalar_array_array",
+        "operation": "pytorch.gradients.gradient_scalar_array_array"
+      },
+      {
+        "name": "gradient_scalar_array_int",
+        "operation": "pytorch.gradients.gradient_scalar_array_int"
+      },
+      {
+        "name": "gradient_tensor_array",
+        "operation": "pytorch.gradients.gradient_tensor_array"
+      },
+      {
+        "name": "gradient_tensor_array_int",
+        "operation": "pytorch.gradients.gradient_tensor_array_int"
+      }
+    ],
+    "pytorch.FunctionalCompletion": [
+      {
+        "name": "local_response_norm_configured",
+        "operation": "pytorch.functional_completion.local_response_norm_configured"
+      },
+      {
+        "name": "multilabel_soft_margin_loss_configured",
+        "operation": "pytorch.functional_completion.multilabel_soft_margin_loss_configured"
+      },
+      {
+        "name": "lp_pool1d_configured",
+        "operation": "pytorch.functional_completion.lp_pool1d_configured"
+      },
+      {
+        "name": "max_unpool1d_configured",
+        "operation": "pytorch.functional_completion.max_unpool1d_configured"
+      },
+      {
+        "name": "lp_pool2d_configured",
+        "operation": "pytorch.functional_completion.lp_pool2d_configured"
+      },
+      {
+        "name": "lp_pool3d_configured",
+        "operation": "pytorch.functional_completion.lp_pool3d_configured"
+      },
+      {
+        "name": "gumbel_softmax_configured",
+        "operation": "pytorch.functional_completion.gumbel_softmax_configured"
+      },
+      {
+        "name": "gaussian_nll_loss_configured",
+        "operation": "pytorch.functional_completion.gaussian_nll_loss_configured"
+      },
+      {
+        "name": "interpolate_configured",
+        "operation": "pytorch.functional_completion.interpolate_configured"
+      }
+    ],
+    "pytorch.Selection": [
+      {
+        "name": "nonzero_static",
+        "operation": "pytorch.selection.nonzero_static"
+      },
+      {
+        "name": "nonzero_static_out",
+        "operation": "pytorch.selection.nonzero_static_out"
+      },
+      {
+        "name": "value_selecting_reduction_backward_exact",
+        "operation": "pytorch.selection.value_selecting_reduction_backward_exact"
+      }
+    ],
+    "pytorch.Spatial": [
+      {
+        "name": "grid_sampler_2d_backward",
+        "operation": "pytorch.spatial.grid_sampler_2d_backward"
+      },
+      {
+        "name": "grid_sampler_2d_backward_out",
+        "operation": "pytorch.spatial.grid_sampler_2d_backward_out"
+      },
+      {
+        "name": "grid_sampler_3d_backward",
+        "operation": "pytorch.spatial.grid_sampler_3d_backward"
+      },
+      {
+        "name": "grid_sampler_3d_backward_out",
+        "operation": "pytorch.spatial.grid_sampler_3d_backward_out"
+      }
+    ],
+    "pytorch.Regularization": [
+      {
+        "name": "native_dropout",
+        "operation": "pytorch.regularization.native_dropout"
+      },
+      {
+        "name": "native_dropout_out",
+        "operation": "pytorch.regularization.native_dropout_out"
+      },
+      {
+        "name": "native_layer_norm",
+        "operation": "pytorch.regularization.native_layer_norm"
+      },
+      {
+        "name": "native_layer_norm_out",
+        "operation": "pytorch.regularization.native_layer_norm_out"
+      },
+      {
+        "name": "native_group_norm",
+        "operation": "pytorch.regularization.native_group_norm"
+      },
+      {
+        "name": "native_group_norm_out",
+        "operation": "pytorch.regularization.native_group_norm_out"
+      },
+      {
+        "name": "native_group_norm_backward",
+        "operation": "pytorch.regularization.native_group_norm_backward"
+      },
+      {
+        "name": "native_group_norm_backward_out",
+        "operation": "pytorch.regularization.native_group_norm_backward_out"
+      },
+      {
+        "name": "native_layer_norm_backward",
+        "operation": "pytorch.regularization.native_layer_norm_backward"
+      },
+      {
+        "name": "native_layer_norm_backward_out",
+        "operation": "pytorch.regularization.native_layer_norm_backward_out"
+      },
+      {
+        "name": "native_batch_norm",
+        "operation": "pytorch.regularization.native_batch_norm"
+      },
+      {
+        "name": "native_batch_norm_out",
+        "operation": "pytorch.regularization.native_batch_norm_out"
+      },
+      {
+        "name": "batch_norm_update_stats",
+        "operation": "pytorch.regularization.batch_norm_update_stats"
+      },
+      {
+        "name": "batch_norm_update_stats_out",
+        "operation": "pytorch.regularization.batch_norm_update_stats_out"
+      },
+      {
+        "name": "native_batch_norm_backward",
+        "operation": "pytorch.regularization.native_batch_norm_backward"
+      },
+      {
+        "name": "native_batch_norm_backward_out",
+        "operation": "pytorch.regularization.native_batch_norm_backward_out"
+      },
+      {
+        "name": "log_sigmoid_forward",
+        "operation": "pytorch.regularization.log_sigmoid_forward"
+      },
+      {
+        "name": "log_sigmoid_forward_out",
+        "operation": "pytorch.regularization.log_sigmoid_forward_out"
+      },
+      {
+        "name": "log_sigmoid_backward",
+        "operation": "pytorch.regularization.log_sigmoid_backward"
+      },
+      {
+        "name": "log_sigmoid_backward_out",
+        "operation": "pytorch.regularization.log_sigmoid_backward_out"
+      }
+    ],
+    "pytorch.Recurrent": [
+      {
+        "name": "lstm_cell",
+        "operation": "pytorch.recurrent.lstm_cell"
+      },
+      {
+        "name": "rnn_tanh_cell",
+        "operation": "pytorch.recurrent.rnn_tanh_cell"
+      },
+      {
+        "name": "rnn_relu_cell",
+        "operation": "pytorch.recurrent.rnn_relu_cell"
+      },
+      {
+        "name": "gru_cell",
+        "operation": "pytorch.recurrent.gru_cell"
+      },
+      {
+        "name": "rnn_tanh",
+        "operation": "pytorch.recurrent.rnn_tanh"
+      },
+      {
+        "name": "rnn_relu",
+        "operation": "pytorch.recurrent.rnn_relu"
+      },
+      {
+        "name": "gru",
+        "operation": "pytorch.recurrent.gru"
+      },
+      {
+        "name": "lstm",
+        "operation": "pytorch.recurrent.lstm"
+      }
+    ],
+    "pytorch.LegacyConvolution": [
+      {
+        "name": "thnn_conv2d",
+        "operation": "pytorch.legacy_convolution.thnn_conv2d"
+      },
+      {
+        "name": "slow_conv3d",
+        "operation": "pytorch.legacy_convolution.slow_conv3d"
+      },
+      {
+        "name": "slow_conv_dilated2d",
+        "operation": "pytorch.legacy_convolution.slow_conv_dilated2d"
+      },
+      {
+        "name": "slow_conv_dilated3d",
+        "operation": "pytorch.legacy_convolution.slow_conv_dilated3d"
+      },
+      {
+        "name": "slow_conv_transpose2d",
+        "operation": "pytorch.legacy_convolution.slow_conv_transpose2d"
+      },
+      {
+        "name": "slow_conv_transpose3d",
+        "operation": "pytorch.legacy_convolution.slow_conv_transpose3d"
+      },
+      {
+        "name": "slow_conv3d_forward_out",
+        "operation": "pytorch.legacy_convolution.slow_conv3d_forward_out"
+      },
+      {
+        "name": "slow_conv3d_out",
+        "operation": "pytorch.legacy_convolution.slow_conv3d_out"
+      },
+      {
+        "name": "slow_conv_dilated2d_out",
+        "operation": "pytorch.legacy_convolution.slow_conv_dilated2d_out"
+      },
+      {
+        "name": "slow_conv_dilated3d_out",
+        "operation": "pytorch.legacy_convolution.slow_conv_dilated3d_out"
+      },
+      {
+        "name": "slow_conv_transpose2d_out",
+        "operation": "pytorch.legacy_convolution.slow_conv_transpose2d_out"
+      },
+      {
+        "name": "slow_conv_transpose3d_out",
+        "operation": "pytorch.legacy_convolution.slow_conv_transpose3d_out"
+      }
+    ],
+    "pytorch.WhereNative": [
+      {
+        "name": "nonzero_numpy",
+        "operation": "pytorch.where_native.nonzero_numpy"
+      }
+    ],
+    "pytorch.Loss": [
+      {
+        "name": "nll_loss_forward",
+        "operation": "pytorch.loss.nll_loss_forward"
+      },
+      {
+        "name": "nll_loss_forward_out",
+        "operation": "pytorch.loss.nll_loss_forward_out"
+      },
+      {
+        "name": "nll_loss_backward",
+        "operation": "pytorch.loss.nll_loss_backward"
+      },
+      {
+        "name": "nll_loss_backward_out",
+        "operation": "pytorch.loss.nll_loss_backward_out"
+      },
+      {
+        "name": "nll_loss2d_forward",
+        "operation": "pytorch.loss.nll_loss2d_forward"
+      },
+      {
+        "name": "nll_loss2d_forward_out",
+        "operation": "pytorch.loss.nll_loss2d_forward_out"
+      },
+      {
+        "name": "nll_loss2d_backward",
+        "operation": "pytorch.loss.nll_loss2d_backward"
+      },
+      {
+        "name": "nll_loss2d_backward_out",
+        "operation": "pytorch.loss.nll_loss2d_backward_out"
+      },
+      {
+        "name": "nll_loss_nd",
+        "operation": "pytorch.loss.nll_loss_nd"
+      },
+      {
+        "name": "multilabel_margin_loss_backward",
+        "operation": "pytorch.loss.multilabel_margin_loss_backward"
+      },
+      {
+        "name": "multilabel_margin_loss_backward_out",
+        "operation": "pytorch.loss.multilabel_margin_loss_backward_out"
+      },
+      {
+        "name": "multilabel_margin_loss_forward",
+        "operation": "pytorch.loss.multilabel_margin_loss_forward"
+      },
+      {
+        "name": "multilabel_margin_loss_forward_out",
+        "operation": "pytorch.loss.multilabel_margin_loss_forward_out"
+      }
+    ],
+    "pytorch.ConvolutionNative": [
+      {
+        "name": "convolution_backward",
+        "operation": "pytorch.convolution.convolution_backward"
+      },
+      {
+        "name": "convolution_backward_out",
+        "operation": "pytorch.convolution.convolution_backward_out"
+      },
+      {
+        "name": "convolution",
+        "operation": "pytorch.convolution.convolution"
+      },
+      {
+        "name": "convolution_out",
+        "operation": "pytorch.convolution.convolution_out"
+      }
+    ],
+    "pytorch.Cuda": [
+      {
+        "name": "record_stream",
+        "operation": "pytorch.cuda.stream.record"
+      }
+    ],
+    "pytorch.Distance": [
+      {
+        "name": "chalf",
+        "operation": "pytorch.tensor.chalf"
+      }
+    ]
+  },
+  "migrated_modules": [
+    "pytorch.ActivationCompletion",
+    "pytorch.ExtendedActivationCompletion",
+    "pytorch.DropoutCompletion",
+    "pytorch.Distance",
+    "pytorch.FillNative",
+    "pytorch.GluCompletion",
+    "pytorch.IndexFillNative",
+    "pytorch.IndexMutationNative",
+    "pytorch.IntegrationCompletion",
+    "pytorch.LerpNative",
+    "pytorch.NanToNumNative",
+    "pytorch.PaddingBackwardCompletion",
+    "pytorch.Regularization",
+    "pytorch.ShapeGradient",
+    "pytorch.ShapePartition",
+    "pytorch.Spatial",
+    "pytorch.Strided",
+    "pytorch.TensorJoining",
+    "pytorch.WhereNative",
+    "pytorch.Loss",
+    "pytorch.ShapeCompletion",
+    "pytorch.Indexing",
+    "pytorch.Gradients",
+    "pytorch.Dense",
+    "pytorch.FunctionalCompletion",
+    "pytorch.PaddingNative",
+    "pytorch.BinaryCrossEntropyCompletion",
+    "pytorch.Division",
+    "pytorch.SliceNative",
+    "pytorch.Fft",
+    "pytorch.Pooling",
+    "pytorch.Selection",
+    "pytorch.TensorListTransforms",
+    "pytorch.NumericalCompletionNative",
+    "pytorch.LinearStorageCompletion",
+    "pytorch.OutputCompletion",
+    "pytorch.View",
+    "pytorch.ConvolutionNative",
+    "pytorch.TypeRelationsNative",
+    "pytorch.CorrectionStatisticsCompletion",
+    "pytorch.RepeatInterleaveNative",
+    "pytorch.FusedArithmeticNative",
+    "pytorch.ScaledArithmeticNative",
+    "pytorch.ClampNative",
+    "pytorch.AggregationNative",
+    "pytorch.WindowNative",
+    "pytorch.Binary",
+    "pytorch.ScatterNative",
+    "pytorch.RangeNative",
+    "pytorch.SpecialScalarNative",
+    "pytorch.CreationCompletionNative",
+    "pytorch.BinaryScalarNative",
+    "pytorch.LookupNative",
+    "pytorch.UnaryStorageNative",
+    "pytorch.Unary",
+    "pytorch.Shape",
+    "pytorch.Special",
+    "pytorch.Statistics",
+    "pytorch.CorrectionStatisticsPairNative",
+    "pytorch.Sparse",
+    "pytorch.Linalg",
+    "pytorch.Cuda",
+    "pytorch.Optimizer",
+    "pytorch.Tensor"
+  ]
+}

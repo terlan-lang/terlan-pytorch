@@ -1,0 +1,7 @@
+module pytorch_cxx.StatisticsBehaviorTest.
+
+import pytorch.StatisticsBehaviorSupport.{statistics_contracts_on}.
+
+@test
+pub cpu_statistics_contracts(): Bool ->
+    statistics_contracts_on("cpu", false).

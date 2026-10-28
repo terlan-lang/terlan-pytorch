@@ -1,0 +1,179 @@
+module pytorch.ViewBehaviorSupport.
+
+import pytorch.Dense.{complex}.
+import pytorch.ShapeCompletion.{zero}.
+import pytorch.Tensor.{Complex128, Float64, Strided, abs, dispose, dtype, is_cuda, ones_device, shape}.
+import pytorch.View.{adjoint, alias, alias_copy, atleast_1d, atleast_1d_sequence, atleast_2d, atleast_2d_sequence, atleast_3d, atleast_3d_sequence, conj, data, detach, detach_copy, imag, lift, lift_fresh, lift_fresh_copy, mH, mT, matrix_H, numpy_T, positive, ravel, real, resolve_conj, resolve_neg, squeeze, squeeze_copy, t, t_copy, view_as_complex, view_as_complex_copy, view_as_real, view_as_real_copy}.
+
+import type pytorch.Tensor.
+
+pair_has_shapes(
+    tensors: List[Tensor],
+    first_shape: List[Int],
+    second_shape: List[Int],
+    expected_cuda: Bool,
+): Bool ->
+    case tensors {
+        [first, second] ->
+            pair_has_shape_values(first, first_shape, second, second_shape, expected_cuda);
+        _ -> false
+    }.
+
+pair_has_shape_values(
+    first: Tensor,
+    first_shape: List[Int],
+    second: Tensor,
+    second_shape: List[Int],
+    expected_cuda: Bool,
+): Bool ->
+    let valid =
+        shape(first) == first_shape
+            and shape(second) == second_shape
+            and is_cuda(first) == expected_cuda
+            and is_cuda(second) == expected_cuda;
+    dispose(second);
+    dispose(first);
+    valid.
+
+/**
+ * Executes every generated View contract on one device.
+ */
+pub view_contracts_on(device_name: String): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let scalar = ones_device([], Float64, Strided, device_name);
+    let vector = ones_device([2], Float64, Strided, device_name);
+    let singleton_matrix = ones_device([1, 2, 1], Float64, Strided, device_name);
+    let matrix = ones_device([2, 3], Float64, Strided, device_name);
+    let rank_one = atleast_1d(scalar);
+    let rank_two = atleast_2d(scalar);
+    let rank_three = atleast_3d(scalar);
+    let rank_one_sequence = pair_has_shapes(atleast_1d_sequence(scalar, [vector]), [1], [2], expected_cuda);
+    let rank_two_sequence = pair_has_shapes(atleast_2d_sequence(scalar, [vector]), [1, 1], [1, 2], expected_cuda);
+    let rank_three_sequence = pair_has_shapes(atleast_3d_sequence(scalar, [vector]), [1, 1, 1], [1, 2, 1], expected_cuda);
+    let aliased = alias(singleton_matrix);
+    let copied_alias = alias_copy(singleton_matrix);
+    let data_view = data(singleton_matrix);
+    let detached = detach(singleton_matrix);
+    let copied_detach = detach_copy(singleton_matrix);
+    let lifted = lift(singleton_matrix);
+    let fresh_lift = lift_fresh(singleton_matrix);
+    let copied_fresh_lift = lift_fresh_copy(singleton_matrix);
+    let positive_view = positive(singleton_matrix);
+    let flattened = ravel(singleton_matrix);
+    let squeezed = squeeze(singleton_matrix);
+    let copied_squeeze = squeeze_copy(singleton_matrix);
+    let resolved_negative = resolve_neg(singleton_matrix);
+    let adjoint_view = adjoint(matrix);
+    let hermitian_view = mH(matrix);
+    let transpose_view = mT(matrix);
+    let matrix_hermitian = matrix_H(matrix);
+    let numpy_transpose = numpy_T(matrix);
+    let ordinary_transpose = t(matrix);
+    let copied_transpose = t_copy(matrix);
+    let real_source = ones_device([1], Float64, Strided, device_name);
+    let zero_source = zero(real_source);
+    let complex_source = complex(real_source, zero_source);
+    let conjugated = conj(complex_source);
+    let resolved_conjugate = resolve_conj(conjugated);
+    let real_part = real(complex_source);
+    let imaginary_part = imag(complex_source);
+    let real_view = view_as_real(complex_source);
+    let copied_real_view = view_as_real_copy(complex_source);
+    let packed = ones_device([1, 2], Float64, Strided, device_name);
+    let complex_view = view_as_complex(packed);
+    let copied_complex_view = view_as_complex_copy(packed);
+    let resolved_magnitude = abs(resolved_conjugate);
+    let valid =
+        shape(rank_one) == [1]
+            and shape(rank_two) == [1, 1]
+            and shape(rank_three) == [1, 1, 1]
+            and rank_one_sequence
+            and rank_two_sequence
+            and rank_three_sequence
+            and shape(aliased) == [1, 2, 1]
+            and shape(copied_alias) == [1, 2, 1]
+            and shape(data_view) == [1, 2, 1]
+            and shape(detached) == [1, 2, 1]
+            and shape(copied_detach) == [1, 2, 1]
+            and shape(lifted) == [1, 2, 1]
+            and shape(fresh_lift) == [1, 2, 1]
+            and shape(copied_fresh_lift) == [1, 2, 1]
+            and shape(positive_view) == [1, 2, 1]
+            and shape(flattened) == [2]
+            and shape(squeezed) == [2]
+            and shape(copied_squeeze) == [2]
+            and shape(resolved_negative) == [1, 2, 1]
+            and shape(adjoint_view) == [3, 2]
+            and shape(hermitian_view) == [3, 2]
+            and shape(transpose_view) == [3, 2]
+            and shape(matrix_hermitian) == [3, 2]
+            and shape(numpy_transpose) == [3, 2]
+            and shape(ordinary_transpose) == [3, 2]
+            and shape(copied_transpose) == [3, 2]
+            and shape(conjugated) == [1]
+            and shape(resolved_conjugate) == [1]
+            and dtype(resolved_conjugate) == Complex128
+            and shape(real_part) == [1]
+            and shape(imaginary_part) == [1]
+            and shape(real_view) == [1, 2]
+            and shape(copied_real_view) == [1, 2]
+            and shape(complex_view) == [1]
+            and shape(copied_complex_view) == [1]
+            and dtype(complex_view) == Complex128
+            and dtype(copied_complex_view) == Complex128
+            and shape(resolved_magnitude) == [1]
+            and is_cuda(rank_three) == expected_cuda
+            and is_cuda(copied_alias) == expected_cuda
+            and is_cuda(copied_detach) == expected_cuda
+            and is_cuda(copied_fresh_lift) == expected_cuda
+            and is_cuda(copied_squeeze) == expected_cuda
+            and is_cuda(copied_transpose) == expected_cuda
+            and is_cuda(copied_real_view) == expected_cuda
+            and is_cuda(copied_complex_view) == expected_cuda
+            and shape(scalar) == []
+            and shape(vector) == [2]
+            and shape(singleton_matrix) == [1, 2, 1]
+            and shape(matrix) == [2, 3]
+            and shape(real_source) == [1]
+            and shape(packed) == [1, 2];
+    dispose(resolved_magnitude);
+    dispose(copied_complex_view);
+    dispose(complex_view);
+    dispose(packed);
+    dispose(copied_real_view);
+    dispose(real_view);
+    dispose(imaginary_part);
+    dispose(real_part);
+    dispose(resolved_conjugate);
+    dispose(conjugated);
+    dispose(complex_source);
+    dispose(zero_source);
+    dispose(real_source);
+    dispose(copied_transpose);
+    dispose(ordinary_transpose);
+    dispose(numpy_transpose);
+    dispose(matrix_hermitian);
+    dispose(transpose_view);
+    dispose(hermitian_view);
+    dispose(adjoint_view);
+    dispose(resolved_negative);
+    dispose(copied_squeeze);
+    dispose(squeezed);
+    dispose(flattened);
+    dispose(positive_view);
+    dispose(copied_fresh_lift);
+    dispose(fresh_lift);
+    dispose(lifted);
+    dispose(copied_detach);
+    dispose(detached);
+    dispose(data_view);
+    dispose(copied_alias);
+    dispose(aliased);
+    dispose(rank_three);
+    dispose(rank_two);
+    dispose(rank_one);
+    dispose(matrix);
+    dispose(singleton_matrix);
+    dispose(vector);
+    dispose(scalar);
+    valid.

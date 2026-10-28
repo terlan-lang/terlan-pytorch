@@ -1,0 +1,32 @@
+module pytorch.VanderParityTest.
+
+import pytorch.Tensor.{dispose, from_floats}.
+import pytorch.TypeRelations.equal.
+import pytorch.VanderCompletion.vander.
+
+import type pytorch.Tensor.
+
+/**
+ * Proves default, explicit-width, and increasing Vandermonde construction.
+ */
+@test
+pub vander_forms_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0], [3]);
+    let default_result = vander(input);
+    let wide_result = vander(input, 4, false);
+    let increasing_result = vander(input, 3, true);
+    let expected_default = from_floats([1.0, 1.0, 1.0, 4.0, 2.0, 1.0, 9.0, 3.0, 1.0], [3, 3]);
+    let expected_wide = from_floats([1.0, 1.0, 1.0, 1.0, 8.0, 4.0, 2.0, 1.0, 27.0, 9.0, 3.0, 1.0], [3, 4]);
+    let expected_increasing = from_floats([1.0, 1.0, 1.0, 1.0, 2.0, 4.0, 1.0, 3.0, 9.0], [3, 3]);
+    let valid =
+        equal(default_result, expected_default)
+            and equal(wide_result, expected_wide)
+            and equal(increasing_result, expected_increasing);
+    dispose(expected_increasing);
+    dispose(expected_wide);
+    dispose(expected_default);
+    dispose(increasing_result);
+    dispose(wide_result);
+    dispose(default_result);
+    dispose(input);
+    valid.

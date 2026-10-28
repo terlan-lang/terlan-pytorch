@@ -1,0 +1,26 @@
+/**
+ * Public gumbel_softmax parity for soft and straight-through hard outputs.
+ */
+module pytorch.GumbelSoftmaxParityTest.
+
+import pytorch.FunctionalCompletion.gumbel_softmax.
+import pytorch.Tensor.{dispose, from_floats, sum_dimensions}.
+import pytorch.TypeRelationsNative.allclose_native.
+
+@test
+pub gumbel_softmax_outputs_normalized_rows(): Bool ->
+    let logits = from_floats([1.0, 2.0, 3.0, 0.5, -1.0, 2.5], [2, 3]);
+    let expected = from_floats([1.0, 1.0], [2]);
+    let soft = gumbel_softmax(logits, 1.0, false, 1e-10, -1);
+    let hard = gumbel_softmax(logits, 1.0, true, 1e-10, -1);
+    let soft_rows = sum_dimensions(soft, [1], false);
+    let hard_rows = sum_dimensions(hard, [1], false);
+    let soft_valid = allclose_native(soft_rows, expected, 0.000001, 0.000001, false);
+    let hard_valid = allclose_native(hard_rows, expected, 0.000001, 0.000001, false);
+    dispose(hard_rows);
+    dispose(soft_rows);
+    dispose(hard);
+    dispose(soft);
+    dispose(expected);
+    dispose(logits);
+    soft_valid and hard_valid.

@@ -1,0 +1,739 @@
+/**
+ * Exact PyTorch range, identity, and endpoint-spacing constructors.
+ */
+module pytorch.Range.
+
+import pytorch.RangeNative.{arange_exact_native, arange_out_exact_native, eye_exact_native, eye_out_exact_native, range_exact_native, range_out_exact_native, spacing_scalar_exact_native, spacing_scalar_out_exact_native, spacing_scalar_tensor_exact_native, spacing_scalar_tensor_out_exact_native, spacing_tensor_scalar_exact_native, spacing_tensor_tensor_exact_native, tril_indices_exact, tril_indices_out_composed, triu_indices_exact, triu_indices_out_composed}.
+import pytorch.Scalar.{from_int, one}.
+import pytorch.Tensor.{cpu, device_index_for, device_kind, dtype_code}.
+
+import type pytorch.Scalar.
+import type pytorch.Tensor.{DType, Device, Tensor}.
+
+/**
+ * A tensor layout admitted by PyTorch range constructors.
+ */
+pub type Layout: Int = STRIDED = 0.
+
+/**
+ * Lowers a typed range layout to LibTorch's stable layout identifier.
+ */
+pub layout_code(layout: Layout): Int ->
+    case layout {
+        Layout.STRIDED -> 0
+    }.
+
+/**
+ * Preserves presence independently for every optional tensor argument.
+ */
+pub struct RangeOptions {
+    dtype: DType,
+    has_dtype: Bool,
+    layout_code: Int,
+    has_layout: Bool,
+    device: Device,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool,
+}.
+
+/**
+ * Returns options in which PyTorch infers every optional value.
+ */
+pub default_options(): RangeOptions ->
+    RangeOptions {
+        dtype: DType.FLOAT32,
+        has_dtype: false,
+        layout_code: layout_code(Layout.STRIDED),
+        has_layout: false,
+        device: cpu(),
+        has_device: false,
+        pin_memory: false,
+        has_pin_memory: false,
+    }.
+
+/**
+ * Returns explicit strided dtype, device, and pinned-memory options.
+ */
+pub options(dtype: DType, device: Device, pin_memory: Bool): RangeOptions ->
+    RangeOptions {
+        dtype: dtype,
+        has_dtype: true,
+        layout_code: layout_code(Layout.STRIDED),
+        has_layout: true,
+        device: device,
+        has_device: true,
+        pin_memory: pin_memory,
+        has_pin_memory: true,
+    }.
+
+/**
+ * Creates an exclusive progression from zero using inferred tensor options.
+ */
+pub arange(end: Scalar): Tensor ->
+    create_arange(0, from_int(0), end, one(), default_options()).
+
+/**
+ * Creates an exclusive unit-step progression using inferred tensor options.
+ */
+pub arange(start: Scalar, end: Scalar): Tensor ->
+    create_arange(1, start, end, one(), default_options()).
+
+/**
+ * Creates an exclusive progression using inferred tensor options.
+ */
+pub arange(start: Scalar, end: Scalar, step: Scalar): Tensor ->
+    create_arange(2, start, end, step, default_options()).
+
+/**
+ * Creates an exclusive progression with explicit option presence.
+ */
+pub arange_with(start: Scalar, end: Scalar, step: Scalar, configured: RangeOptions): Tensor ->
+    create_arange(2, start, end, step, configured).
+
+/**
+ * Writes an exclusive progression from zero into retained storage.
+ */
+pub arange_out(output: Tensor, end: Scalar): Unit ->
+    write_arange(output, 0, from_int(0), end, one()).
+
+/**
+ * Writes an exclusive progression into retained storage.
+ */
+pub arange_out(output: Tensor, start: Scalar, end: Scalar, step: Scalar): Unit ->
+    write_arange(output, 2, start, end, step).
+
+/**
+ * Creates a square identity with inferred tensor options.
+ */
+pub eye(size: Int): Tensor ->
+    create_eye(size, size, false, default_options()).
+
+/**
+ * Creates a rectangular identity with inferred tensor options.
+ */
+pub eye(rows: Int, columns: Int): Tensor ->
+    create_eye(rows, columns, true, default_options()).
+
+/**
+ * Creates a rectangular identity with explicit option presence.
+ */
+pub eye_with(rows: Int, columns: Int, configured: RangeOptions): Tensor ->
+    create_eye(rows, columns, true, configured).
+
+/**
+ * Writes a square identity into retained storage.
+ */
+pub eye_out(output: Tensor, size: Int): Unit ->
+    eye_out_exact_native(output, size, size, false).
+
+/**
+ * Writes a rectangular identity into retained storage.
+ */
+pub eye_out(output: Tensor, rows: Int, columns: Int): Unit ->
+    eye_out_exact_native(output, rows, columns, true).
+
+/**
+ * Creates lower-triangular row/column indices with inferred int64 options.
+ */
+pub tril_indices(rows: Int, columns: Int, offset: Int): Tensor ->
+    tril_indices_exact(
+        rows,
+        columns,
+        offset,
+        false,
+        dtype_code(DType.INT64),
+        false,
+        layout_code(Layout.STRIDED),
+        false,
+        cpu(),
+        false,
+        false,
+    ).
+
+/**
+ * Creates lower-triangular indices with explicit tensor options.
+ */
+pub tril_indices_with(rows: Int, columns: Int, offset: Int, configured: RangeOptions): Tensor ->
+    tril_indices_exact(
+        rows,
+        columns,
+        offset,
+        configured.has_dtype,
+        dtype_code(configured.dtype),
+        configured.has_layout,
+        configured.layout_code,
+        configured.has_device,
+        configured.device,
+        configured.has_pin_memory,
+        configured.pin_memory,
+    ).
+
+/**
+ * Writes lower-triangular indices into retained output storage.
+ */
+pub tril_indices_out(output: Tensor, rows: Int, columns: Int, offset: Int): Unit ->
+    tril_indices_out_composed(output, rows, columns, offset).
+
+/**
+ * Creates upper-triangular row/column indices with inferred int64 options.
+ */
+pub triu_indices(rows: Int, columns: Int, offset: Int): Tensor ->
+    triu_indices_exact(
+        rows,
+        columns,
+        offset,
+        false,
+        dtype_code(DType.INT64),
+        false,
+        layout_code(Layout.STRIDED),
+        false,
+        cpu(),
+        false,
+        false,
+    ).
+
+/**
+ * Creates upper-triangular indices with explicit tensor options.
+ */
+pub triu_indices_with(rows: Int, columns: Int, offset: Int, configured: RangeOptions): Tensor ->
+    triu_indices_exact(
+        rows,
+        columns,
+        offset,
+        configured.has_dtype,
+        dtype_code(configured.dtype),
+        configured.has_layout,
+        configured.layout_code,
+        configured.has_device,
+        configured.device,
+        configured.has_pin_memory,
+        configured.pin_memory,
+    ).
+
+/**
+ * Writes upper-triangular indices into retained output storage.
+ */
+pub triu_indices_out(output: Tensor, rows: Int, columns: Int, offset: Int): Unit ->
+    triu_indices_out_composed(output, rows, columns, offset).
+
+/**
+ * Creates scalar-endpoint linear spacing with inferred tensor options.
+ */
+pub linspace(start: Scalar, end: Scalar, steps: Int): Tensor ->
+    scalar_spacing(0, start, end, steps, 10.0, default_options()).
+
+/**
+ * Creates tensor-endpoint linear spacing with inferred tensor options.
+ */
+pub linspace(start: Tensor, end: Tensor, steps: Int): Tensor ->
+    tensor_tensor_spacing(0, start, end, steps, 10.0, default_options()).
+
+/**
+ * Creates tensor-to-scalar linear spacing with inferred tensor options.
+ */
+pub linspace(start: Tensor, end: Scalar, steps: Int): Tensor ->
+    tensor_scalar_spacing(0, start, end, steps, 10.0, default_options()).
+
+/**
+ * Creates scalar-to-tensor linear spacing with inferred tensor options.
+ */
+pub linspace(start: Scalar, end: Tensor, steps: Int): Tensor ->
+    scalar_tensor_spacing(0, start, end, steps, 10.0, default_options()).
+
+/**
+ * Creates scalar-endpoint linear spacing with explicit option presence.
+ */
+pub linspace_with(start: Scalar, end: Scalar, steps: Int, configured: RangeOptions): Tensor ->
+    scalar_spacing(0, start, end, steps, 10.0, configured).
+
+/**
+ * Creates tensor-endpoint linear spacing with explicit option presence.
+ */
+pub linspace_with(start: Tensor, end: Tensor, steps: Int, configured: RangeOptions): Tensor ->
+    tensor_tensor_spacing(0, start, end, steps, 10.0, configured).
+
+/**
+ * Creates tensor-to-scalar linear spacing with explicit option presence.
+ */
+pub linspace_with(start: Tensor, end: Scalar, steps: Int, configured: RangeOptions): Tensor ->
+    tensor_scalar_spacing(0, start, end, steps, 10.0, configured).
+
+/**
+ * Creates scalar-to-tensor linear spacing with explicit option presence.
+ */
+pub linspace_with(start: Scalar, end: Tensor, steps: Int, configured: RangeOptions): Tensor ->
+    scalar_tensor_spacing(0, start, end, steps, 10.0, configured).
+
+/**
+ * Writes scalar-endpoint linear spacing into retained storage.
+ */
+pub linspace_out(output: Tensor, start: Scalar, end: Scalar, steps: Int): Unit ->
+    scalar_spacing_out(output, 0, start, end, steps, 10.0).
+
+/**
+ * Writes tensor-endpoint linear spacing into retained storage.
+ */
+pub linspace_out(output: Tensor, start: Tensor, end: Tensor, steps: Int): Unit ->
+    spacing_tensor_tensor_out_exact_native(output, 0, start, end, steps, 10.0).
+
+/**
+ * Writes tensor-to-scalar linear spacing into retained storage.
+ */
+pub linspace_out(output: Tensor, start: Tensor, end: Scalar, steps: Int): Unit ->
+    spacing_tensor_scalar_out_exact_native(
+        output,
+        0,
+        start,
+        end.is_integer,
+        end.integer_value,
+        end.floating_value,
+        steps,
+        10.0,
+    ).
+
+/**
+ * Writes scalar-to-tensor linear spacing into retained storage.
+ */
+pub linspace_out(output: Tensor, start: Scalar, end: Tensor, steps: Int): Unit ->
+    spacing_scalar_tensor_out_exact_native(
+        output,
+        0,
+        start.is_integer,
+        start.integer_value,
+        start.floating_value,
+        end,
+        steps,
+        10.0,
+    ).
+
+/**
+ * Creates scalar-endpoint base-ten logarithmic spacing.
+ */
+pub logspace(start: Scalar, end: Scalar, steps: Int): Tensor ->
+    logspace(start, end, steps, 10.0).
+
+/**
+ * Creates tensor-endpoint base-ten logarithmic spacing.
+ */
+pub logspace(start: Tensor, end: Tensor, steps: Int): Tensor ->
+    logspace(start, end, steps, 10.0).
+
+/**
+ * Creates tensor-to-scalar base-ten logarithmic spacing.
+ */
+pub logspace(start: Tensor, end: Scalar, steps: Int): Tensor ->
+    logspace(start, end, steps, 10.0).
+
+/**
+ * Creates scalar-to-tensor base-ten logarithmic spacing.
+ */
+pub logspace(start: Scalar, end: Tensor, steps: Int): Tensor ->
+    logspace(start, end, steps, 10.0).
+
+/**
+ * Creates scalar-endpoint logarithmic spacing with an explicit base.
+ */
+pub logspace(start: Scalar, end: Scalar, steps: Int, base: Float): Tensor ->
+    scalar_spacing(1, start, end, steps, base, default_options()).
+
+/**
+ * Creates tensor-endpoint logarithmic spacing with an explicit base.
+ */
+pub logspace(start: Tensor, end: Tensor, steps: Int, base: Float): Tensor ->
+    tensor_tensor_spacing(1, start, end, steps, base, default_options()).
+
+/**
+ * Creates tensor-to-scalar logarithmic spacing with an explicit base.
+ */
+pub logspace(start: Tensor, end: Scalar, steps: Int, base: Float): Tensor ->
+    tensor_scalar_spacing(1, start, end, steps, base, default_options()).
+
+/**
+ * Creates scalar-to-tensor logarithmic spacing with an explicit base.
+ */
+pub logspace(start: Scalar, end: Tensor, steps: Int, base: Float): Tensor ->
+    scalar_tensor_spacing(1, start, end, steps, base, default_options()).
+
+/**
+ * Creates scalar-endpoint logarithmic spacing with explicit options.
+ */
+pub logspace_with(
+    start: Scalar,
+    end: Scalar,
+    steps: Int,
+    base: Float,
+    configured: RangeOptions,
+): Tensor ->
+    scalar_spacing(1, start, end, steps, base, configured).
+
+/**
+ * Creates tensor-endpoint logarithmic spacing with explicit options.
+ */
+pub logspace_with(
+    start: Tensor,
+    end: Tensor,
+    steps: Int,
+    base: Float,
+    configured: RangeOptions,
+): Tensor ->
+    tensor_tensor_spacing(1, start, end, steps, base, configured).
+
+/**
+ * Creates tensor-to-scalar logarithmic spacing with explicit options.
+ */
+pub logspace_with(
+    start: Tensor,
+    end: Scalar,
+    steps: Int,
+    base: Float,
+    configured: RangeOptions,
+): Tensor ->
+    tensor_scalar_spacing(1, start, end, steps, base, configured).
+
+/**
+ * Creates scalar-to-tensor logarithmic spacing with explicit options.
+ */
+pub logspace_with(
+    start: Scalar,
+    end: Tensor,
+    steps: Int,
+    base: Float,
+    configured: RangeOptions,
+): Tensor ->
+    scalar_tensor_spacing(1, start, end, steps, base, configured).
+
+/**
+ * Writes scalar-endpoint logarithmic spacing into retained storage.
+ */
+pub logspace_out(output: Tensor, start: Scalar, end: Scalar, steps: Int, base: Float): Unit ->
+    scalar_spacing_out(output, 1, start, end, steps, base).
+
+/**
+ * Writes tensor-endpoint logarithmic spacing into retained storage.
+ */
+pub logspace_out(output: Tensor, start: Tensor, end: Tensor, steps: Int, base: Float): Unit ->
+    spacing_tensor_tensor_out_exact_native(output, 1, start, end, steps, base).
+
+/**
+ * Writes tensor-to-scalar logarithmic spacing into retained storage.
+ */
+pub logspace_out(output: Tensor, start: Tensor, end: Scalar, steps: Int, base: Float): Unit ->
+    spacing_tensor_scalar_out_exact_native(
+        output,
+        1,
+        start,
+        end.is_integer,
+        end.integer_value,
+        end.floating_value,
+        steps,
+        base,
+    ).
+
+/**
+ * Writes scalar-to-tensor logarithmic spacing into retained storage.
+ */
+pub logspace_out(output: Tensor, start: Scalar, end: Tensor, steps: Int, base: Float): Unit ->
+    spacing_scalar_tensor_out_exact_native(
+        output,
+        1,
+        start.is_integer,
+        start.integer_value,
+        start.floating_value,
+        end,
+        steps,
+        base,
+    ).
+
+/**
+ * Creates an inclusive unit-step legacy range with inferred options.
+ */
+pub range(start: Scalar, end: Scalar): Tensor ->
+    create_range(false, start, end, one(), default_options()).
+
+/**
+ * Creates an inclusive legacy range with inferred options.
+ */
+pub range(start: Scalar, end: Scalar, step: Scalar): Tensor ->
+    create_range(true, start, end, step, default_options()).
+
+/**
+ * Creates an inclusive legacy range with explicit option presence.
+ */
+pub range_with(start: Scalar, end: Scalar, step: Scalar, configured: RangeOptions): Tensor ->
+    create_range(true, start, end, step, configured).
+
+/**
+ * Writes an inclusive unit-step legacy range into retained storage.
+ */
+pub range_out(output: Tensor, start: Scalar, end: Scalar): Unit ->
+    write_range(output, false, start, end, one()).
+
+/**
+ * Writes an inclusive legacy range into retained storage.
+ */
+pub range_out(output: Tensor, start: Scalar, end: Scalar, step: Scalar): Unit ->
+    write_range(output, true, start, end, step).
+
+/**
+ * Lowers one arange family call to its shared native primitive.
+ */
+create_arange(
+    form: Int,
+    start: Scalar,
+    end: Scalar,
+    step: Scalar,
+    configured: RangeOptions,
+): Tensor ->
+    arange_exact_native(
+        form,
+        start.is_integer,
+        start.integer_value,
+        start.floating_value,
+        end.is_integer,
+        end.integer_value,
+        end.floating_value,
+        step.is_integer,
+        step.integer_value,
+        step.floating_value,
+        dtype_code(configured.dtype),
+        configured.has_dtype,
+        configured.layout_code,
+        configured.has_layout,
+        device_kind(configured.device),
+        device_index_for(configured.device),
+        configured.has_device,
+        configured.pin_memory,
+        configured.has_pin_memory,
+    ).
+
+/**
+ * Lowers one retained arange family call to its shared native primitive.
+ */
+write_arange(output: Tensor, form: Int, start: Scalar, end: Scalar, step: Scalar): Unit ->
+    arange_out_exact_native(
+        output,
+        form,
+        start.is_integer,
+        start.integer_value,
+        start.floating_value,
+        end.is_integer,
+        end.integer_value,
+        end.floating_value,
+        step.is_integer,
+        step.integer_value,
+        step.floating_value,
+    ).
+
+/**
+ * Lowers one identity call to its shared native primitive.
+ */
+create_eye(rows: Int, columns: Int, rectangular: Bool, configured: RangeOptions): Tensor ->
+    eye_exact_native(
+        rows,
+        columns,
+        rectangular,
+        dtype_code(configured.dtype),
+        configured.has_dtype,
+        configured.layout_code,
+        configured.has_layout,
+        device_kind(configured.device),
+        device_index_for(configured.device),
+        configured.has_device,
+        configured.pin_memory,
+        configured.has_pin_memory,
+    ).
+
+/**
+ * Lowers scalar endpoint spacing to its shared native primitive.
+ */
+scalar_spacing(
+    operation: Int,
+    start: Scalar,
+    end: Scalar,
+    steps: Int,
+    base: Float,
+    configured: RangeOptions,
+): Tensor ->
+    spacing_scalar_exact_native(
+        operation,
+        start.is_integer,
+        start.integer_value,
+        start.floating_value,
+        end.is_integer,
+        end.integer_value,
+        end.floating_value,
+        steps,
+        base,
+        dtype_code(configured.dtype),
+        configured.has_dtype,
+        configured.layout_code,
+        configured.has_layout,
+        device_kind(configured.device),
+        device_index_for(configured.device),
+        configured.has_device,
+        configured.pin_memory,
+        configured.has_pin_memory,
+    ).
+
+/**
+ * Lowers tensor endpoint spacing to its shared native primitive.
+ */
+tensor_tensor_spacing(
+    operation: Int,
+    start: Tensor,
+    end: Tensor,
+    steps: Int,
+    base: Float,
+    configured: RangeOptions,
+): Tensor ->
+    spacing_tensor_tensor_exact_native(
+        operation,
+        start,
+        end,
+        steps,
+        base,
+        dtype_code(configured.dtype),
+        configured.has_dtype,
+        configured.layout_code,
+        configured.has_layout,
+        device_kind(configured.device),
+        device_index_for(configured.device),
+        configured.has_device,
+        configured.pin_memory,
+        configured.has_pin_memory,
+    ).
+
+/**
+ * Lowers tensor-to-scalar spacing to its shared native primitive.
+ */
+tensor_scalar_spacing(
+    operation: Int,
+    start: Tensor,
+    end: Scalar,
+    steps: Int,
+    base: Float,
+    configured: RangeOptions,
+): Tensor ->
+    spacing_tensor_scalar_exact_native(
+        operation,
+        start,
+        end.is_integer,
+        end.integer_value,
+        end.floating_value,
+        steps,
+        base,
+        dtype_code(configured.dtype),
+        configured.has_dtype,
+        configured.layout_code,
+        configured.has_layout,
+        device_kind(configured.device),
+        device_index_for(configured.device),
+        configured.has_device,
+        configured.pin_memory,
+        configured.has_pin_memory,
+    ).
+
+/**
+ * Lowers scalar-to-tensor spacing to its shared native primitive.
+ */
+scalar_tensor_spacing(
+    operation: Int,
+    start: Scalar,
+    end: Tensor,
+    steps: Int,
+    base: Float,
+    configured: RangeOptions,
+): Tensor ->
+    spacing_scalar_tensor_exact_native(
+        operation,
+        start.is_integer,
+        start.integer_value,
+        start.floating_value,
+        end,
+        steps,
+        base,
+        dtype_code(configured.dtype),
+        configured.has_dtype,
+        configured.layout_code,
+        configured.has_layout,
+        device_kind(configured.device),
+        device_index_for(configured.device),
+        configured.has_device,
+        configured.pin_memory,
+        configured.has_pin_memory,
+    ).
+
+/**
+ * Lowers retained scalar endpoint spacing to its shared native primitive.
+ */
+scalar_spacing_out(
+    output: Tensor,
+    operation: Int,
+    start: Scalar,
+    end: Scalar,
+    steps: Int,
+    base: Float,
+): Unit ->
+    spacing_scalar_out_exact_native(
+        output,
+        operation,
+        start.is_integer,
+        start.integer_value,
+        start.floating_value,
+        end.is_integer,
+        end.integer_value,
+        end.floating_value,
+        steps,
+        base,
+    ).
+
+/**
+ * Lowers one inclusive range call to its shared native primitive.
+ */
+create_range(
+    explicit_step: Bool,
+    start: Scalar,
+    end: Scalar,
+    step: Scalar,
+    configured: RangeOptions,
+): Tensor ->
+    range_exact_native(
+        explicit_step,
+        start.is_integer,
+        start.integer_value,
+        start.floating_value,
+        end.is_integer,
+        end.integer_value,
+        end.floating_value,
+        step.is_integer,
+        step.integer_value,
+        step.floating_value,
+        dtype_code(configured.dtype),
+        configured.has_dtype,
+        configured.layout_code,
+        configured.has_layout,
+        device_kind(configured.device),
+        device_index_for(configured.device),
+        configured.has_device,
+        configured.pin_memory,
+        configured.has_pin_memory,
+    ).
+
+/**
+ * Lowers one retained inclusive range call to its shared native primitive.
+ */
+write_range(output: Tensor, explicit_step: Bool, start: Scalar, end: Scalar, step: Scalar): Unit ->
+    range_out_exact_native(
+        output,
+        explicit_step,
+        start.is_integer,
+        start.integer_value,
+        start.floating_value,
+        end.is_integer,
+        end.integer_value,
+        end.floating_value,
+        step.is_integer,
+        step.integer_value,
+        step.floating_value,
+    ).

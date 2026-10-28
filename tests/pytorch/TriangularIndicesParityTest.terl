@@ -1,0 +1,143 @@
+module pytorch.TriangularIndicesParityTest.
+
+import pytorch.Range.{options, tril_indices, tril_indices_out, tril_indices_with, triu_indices, triu_indices_out}.
+import pytorch.Tensor.{cpu, dispose, dtype, dtype_code, from_floats, ones, shape, to_dtype}.
+import pytorch.TypeRelations.allclose.
+
+import type pytorch.Tensor.{DType, Tensor}.
+
+expected(values: List[Float], wanted_dtype: DType, dimensions: List[Int]): Tensor ->
+    let source = from_floats(values, dimensions);
+    let converted = to_dtype(source, dtype_code(wanted_dtype));
+    dispose(source);
+    converted.
+
+/**
+ * Verifies the default lower-triangular index family.
+ */
+@test
+pub tril_indices_match_libtorch(): Bool ->
+    let actual = tril_indices(3, 4, 0);
+    let wanted = expected([0.0, 1.0, 1.0, 2.0, 2.0, 2.0, 0.0, 0.0, 1.0, 0.0, 1.0, 2.0], DType.INT64, [2, 6]);
+    let valid = shape(actual) == [2, 6] and dtype(actual) == 4 and allclose(actual, wanted);
+    dispose(wanted);
+    dispose(actual);
+    valid.
+
+/**
+ * Verifies configured dtype and offset handling for lower indices.
+ */
+@test
+pub tril_indices_configured_match_libtorch(): Bool ->
+    let actual = tril_indices_with(3, 4, 1, options(DType.INT32, cpu(), false));
+    let wanted =
+        expected(
+            [
+                0.0,
+                0.0,
+                1.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                0.0,
+                1.0,
+                0.0,
+                1.0,
+                2.0,
+                0.0,
+                1.0,
+                2.0,
+                3.0,
+            ],
+            DType.INT32,
+            [2, 9],
+        );
+    let valid = shape(actual) == [2, 9] and dtype(actual) == 3 and allclose(actual, wanted);
+    dispose(wanted);
+    dispose(actual);
+    valid.
+
+/**
+ * Verifies the default upper-triangular index family.
+ */
+@test
+pub triu_indices_match_libtorch(): Bool ->
+    let actual = triu_indices(3, 4, 0);
+    let wanted =
+        expected(
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0,
+                0.0,
+                1.0,
+                2.0,
+                3.0,
+                1.0,
+                2.0,
+                3.0,
+                2.0,
+                3.0,
+            ],
+            DType.INT64,
+            [2, 9],
+        );
+    let valid = shape(actual) == [2, 9] and dtype(actual) == 4 and allclose(actual, wanted);
+    dispose(wanted);
+    dispose(actual);
+    valid.
+
+/**
+ * Verifies the retained lower-triangular output form and resizing.
+ */
+@test
+pub tril_indices_out_matches_libtorch(): Bool ->
+    let output = to_dtype(ones([1]), dtype_code(DType.INT64));
+    tril_indices_out(output, 3, 4, 0);
+    let wanted = expected([0.0, 1.0, 1.0, 2.0, 2.0, 2.0, 0.0, 0.0, 1.0, 0.0, 1.0, 2.0], DType.INT64, [2, 6]);
+    let valid = shape(output) == [2, 6] and allclose(output, wanted);
+    (dispose(wanted); dispose(output); valid).
+
+/**
+ * Verifies the retained upper-triangular output form and resizing.
+ */
+@test
+pub triu_indices_out_matches_libtorch(): Bool ->
+    let output = to_dtype(ones([1]), dtype_code(DType.INT64));
+    triu_indices_out(output, 3, 4, 0);
+    let wanted =
+        expected(
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0,
+                0.0,
+                1.0,
+                2.0,
+                3.0,
+                1.0,
+                2.0,
+                3.0,
+                2.0,
+                3.0,
+            ],
+            DType.INT64,
+            [2, 9],
+        );
+    let valid = shape(output) == [2, 9] and allclose(output, wanted);
+    (dispose(wanted); dispose(output); valid).

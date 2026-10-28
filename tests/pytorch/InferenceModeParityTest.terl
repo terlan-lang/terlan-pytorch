@@ -1,0 +1,29 @@
+/**
+ * CPU inference-mode global-state parity coverage.
+ */
+module pytorch.InferenceModeParityTest.
+
+import pytorch.BackendAvailability.{dispose_inference_mode, enter_inference_mode, is_inference_mode_enabled}.
+
+@test
+pub inference_mode_query_is_available(): Bool ->
+    not is_inference_mode_enabled().
+
+@test
+pub inference_mode_guard_restores_prior_state(): Bool ->
+    let original = is_inference_mode_enabled();
+    let guard = enter_inference_mode();
+    let entered = is_inference_mode_enabled();
+    dispose_inference_mode(guard);
+    entered and is_inference_mode_enabled() == original.
+
+@test
+pub inference_mode_guards_nest_and_restore(): Bool ->
+    let original = is_inference_mode_enabled();
+    let outer = enter_inference_mode();
+    let outer_enabled = is_inference_mode_enabled();
+    let inner = enter_inference_mode(false);
+    let inner_disabled = not is_inference_mode_enabled();
+    dispose_inference_mode(inner);
+    let outer_restored = is_inference_mode_enabled();
+    (dispose_inference_mode(outer); outer_enabled and inner_disabled and outer_restored and is_inference_mode_enabled() == original).

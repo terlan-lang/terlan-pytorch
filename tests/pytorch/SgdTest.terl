@@ -1,0 +1,28 @@
+module test.PytorchSgd.
+
+import pytorch.Optimizer.{add_parameter, checkpoint, dispose as dispose_optimizer, restore, sgd, step, step_count, zero_grad}.
+import pytorch.Tensor.{backward, dispose, from_floats, item_float, mse_loss, require_grad}.
+
+@test
+pub stateful_sgd_updates_momentum_and_restores_owned_state(): Bool ->
+    let source = from_floats([2.0], [1]);
+    let parameter = require_grad(source);
+    let target = from_floats([0.0], [1]);
+    let optimizer = sgd(0.1, 0.9, 0.0, 0.0, false);
+    add_parameter(optimizer, parameter);
+    let first_loss = mse_loss(parameter, target, 1);
+    (backward(first_loss); step(optimizer); let first_value = item_float(parameter);
+let saved = checkpoint(optimizer);
+(zero_grad(optimizer); let second_loss = mse_loss(parameter, target, 1);
+(backward(second_loss); step(optimizer); let second_value = item_float(parameter);
+let second_step = step_count(optimizer);
+(restore(optimizer, saved); let restored_value = item_float(parameter);
+let restored_step = step_count(optimizer);
+(dispose(second_loss); dispose(first_loss); dispose_optimizer(optimizer); dispose(target); dispose(parameter); dispose(source); first_value > 1.599999999999
+    and first_value < 1.600000000001
+    and second_value > 0.919999999999
+    and second_value < 0.920000000001
+    and second_step == 2
+    and restored_value > 1.599999999999
+    and restored_value < 1.600000000001
+    and restored_step == 1))))).

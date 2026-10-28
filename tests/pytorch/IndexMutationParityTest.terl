@@ -1,0 +1,69 @@
+module pytorch.IndexMutationParityTest.
+
+import pytorch.IndexMutation.{index_add_float, index_add_float_in_place, index_add_float_out, index_add_int, index_add_int_in_place, index_add_int_out, index_copy_in_place, index_copy_out, index_select_backward, index_select_out}.
+import pytorch.Tensor.{dispose, from_float, from_floats, from_ints, item_float, sum}.
+
+/**
+ * Proves integer and floating alpha index-add behavior across every storage contract.
+ */
+@test
+pub index_add_forms_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0], [3]);
+    let index = from_ints([0, 2], [2]);
+    let source = from_floats([10.0, 20.0], [2]);
+    let integer = index_add_int(input, 0, index, source, 2);
+    let floating = index_add_float(input, 0, index, source, 0.5);
+    let integer_output = from_float(-1.0);
+    let floating_output = from_float(-1.0);
+    let integer_mutation = from_floats([1.0, 2.0, 3.0], [3]);
+    let floating_mutation = from_floats([1.0, 2.0, 3.0], [3]);
+    index_add_int_out(integer_output, input, 0, index, source, 2);
+    index_add_float_out(floating_output, input, 0, index, source, 0.5);
+    index_add_int_in_place(integer_mutation, 0, index, source, 2);
+    index_add_float_in_place(floating_mutation, 0, index, source, 0.5);
+    let integer_total = sum(integer);
+    let floating_total = sum(floating);
+    let integer_output_total = sum(integer_output);
+    let floating_output_total = sum(floating_output);
+    let integer_mutation_total = sum(integer_mutation);
+    let floating_mutation_total = sum(floating_mutation);
+    let input_total = sum(input);
+    let source_total = sum(source);
+    let valid =
+        item_float(integer_total) == 66.0
+            and item_float(floating_total) == 21.0
+            and item_float(integer_output_total) == 66.0
+            and item_float(floating_output_total) == 21.0
+            and item_float(integer_mutation_total) == 66.0
+            and item_float(floating_mutation_total) == 21.0
+            and item_float(input_total) == 6.0
+            and item_float(source_total) == 30.0;
+    (dispose(source_total); dispose(input_total); dispose(floating_mutation_total); dispose(integer_mutation_total); dispose(floating_output_total); dispose(integer_output_total); dispose(floating_total); dispose(integer_total); dispose(floating_mutation); dispose(integer_mutation); dispose(floating_output); dispose(integer_output); dispose(floating); dispose(integer); dispose(source); dispose(index); dispose(input); valid).
+
+/**
+ * Proves copy/select outputs and selection gradients preserve every source value.
+ */
+@test
+pub copy_select_and_backward_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0], [3]);
+    let index = from_ints([2, 0], [2]);
+    let source = from_floats([5.0, 6.0], [2]);
+    let copy_output = from_float(-1.0);
+    let copy_mutation = from_floats([1.0, 2.0, 3.0], [3]);
+    index_copy_out(copy_output, input, 0, index, source);
+    index_copy_in_place(copy_mutation, 0, index, source);
+    let select_output = from_float(-1.0);
+    (index_select_out(select_output, input, 0, index); let gradient = from_floats([2.0, 3.0], [2]);
+let backward = index_select_backward(gradient, [3], 0, index);
+let copy_output_total = sum(copy_output);
+let copy_mutation_total = sum(copy_mutation);
+let select_output_total = sum(select_output);
+let backward_total = sum(backward);
+let input_total = sum(input);
+let valid =
+    item_float(copy_output_total) == 13.0
+        and item_float(copy_mutation_total) == 13.0
+        and item_float(select_output_total) == 4.0
+        and item_float(backward_total) == 5.0
+        and item_float(input_total) == 6.0;
+(dispose(input_total); dispose(backward_total); dispose(select_output_total); dispose(copy_mutation_total); dispose(copy_output_total); dispose(backward); dispose(gradient); dispose(select_output); dispose(copy_mutation); dispose(copy_output); dispose(source); dispose(index); dispose(input); valid)).

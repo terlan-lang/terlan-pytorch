@@ -1,0 +1,23 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{amax, dim, dispose, from_float, item_float, shape, unsqueeze}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let scalar = from_float(6.5);
+    let vector = unsqueeze(scalar, -1);
+    let matrix = unsqueeze(vector, -1);
+    let result = amax(matrix, [0], false);
+    let source_rank = dim(matrix);
+    let result_rank = dim(result);
+    let result_shape = shape(result);
+    let observed = item_float(result);
+    dispose(result);
+    dispose(matrix);
+    dispose(vector);
+    dispose(scalar);
+    if {
+        source_rank == 2 and result_rank == 1 and result_shape.length() == 1 and
+            result_shape[0] == 1 and observed == 6.5 -> println("PYTORCH_AMAX_CONSUMER_OK");
+        true -> println("PYTORCH_AMAX_CONSUMER_FAILED")
+    }.

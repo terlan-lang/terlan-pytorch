@@ -1,0 +1,9 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{from_float, run_torchscript}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = from_float(3.0);
+    let output = run_torchscript(input, "$workspace/missing.pt");
+    println("PYTORCH_MISSING_MODEL_UNEXPECTED_SUCCESS").

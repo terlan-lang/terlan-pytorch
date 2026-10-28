@@ -1,0 +1,34 @@
+/**
+ * CPU runtime evidence for the backend-visible native_dropout schemas.
+ *
+ * p=0 makes the forward and retained-output forms deterministic while still
+ * exercising both the value and mask tuple paths.
+ */
+module pytorch.NativeDropoutParityTest.
+
+import pytorch.Regularization.{native_dropout, native_dropout_out}.
+import pytorch.Tensor.{clone, dispose, from_floats, item_float, mse_loss, shape, zeros}.
+
+import type pytorch.Tensor.
+
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let error = mse_loss(actual, expected, 1);
+    let distance = item_float(error);
+    dispose(error);
+    distance == 0.0.
+
+@test
+pub native_dropout_forms_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [4]);
+    let {actual, mask} = native_dropout(input, 0.0, true);
+    let output = clone(input);
+    let output_mask = zeros([0], 11);
+    native_dropout_out(output, output_mask, input, 0.0, true);
+    let valid =
+        shape(actual) == [4]
+            and shape(mask) == [4]
+            and shape(output) == [4]
+            and shape(output_mask) == [4]
+            and matches(actual, input)
+            and matches(output, input);
+    (dispose(output_mask); dispose(output); dispose(mask); dispose(actual); dispose(input); valid).

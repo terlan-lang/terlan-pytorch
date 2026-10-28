@@ -1,238 +1,2346 @@
 /**
- * CPU tensor lifecycle and scalar metadata through LibTorch's stable C ABI.
+ * Generated CXX-owned LibTorch tensor resources and migration support.
  */
-
 module pytorch.Tensor.
 
-/** An owned LibTorch tensor handle disposed exactly once. */
+import std.core.Option.{Some}.
+import std.core.String.{length, starts_with, utf8_slice}.
+
+import type pytorch.CorrectionStatisticsPairNative.TensorPair.
+import type std.collections.List.
+import type std.vm.Bytes.
+
+/**
+ * Opaque uniquely owned LibTorch tensor.
+ */
 pub opaque type Tensor.
 
-/** A loaded thread-confined TorchScript module disposed exactly once. */
+/**
+ * Opaque uniquely owned LibTorch scalar.
+ */
+pub opaque type Scalar.
+
+/**
+ * Unsigned 8-bit integer dtype.
+ */
+pub type UInt8 = Atom["uint8"].
+
+/**
+ * Signed 8-bit integer dtype.
+ */
+pub type Int8 = Atom["int8"].
+
+/**
+ * Signed 16-bit integer dtype.
+ */
+pub type Int16 = Atom["int16"].
+
+/**
+ * Signed 32-bit integer dtype.
+ */
+pub type Int32 = Atom["int32"].
+
+/**
+ * Signed 64-bit integer dtype.
+ */
+pub type Int64 = Atom["int64"].
+
+/**
+ * IEEE half-precision floating dtype.
+ */
+pub type Float16 = Atom["float16"].
+
+/**
+ * IEEE single-precision floating dtype.
+ */
+pub type Float32 = Atom["float32"].
+
+/**
+ * IEEE double-precision floating dtype.
+ */
+pub type Float64 = Atom["float64"].
+
+/**
+ * Complex half-precision dtype.
+ */
+pub type Complex32 = Atom["complex32"].
+
+/**
+ * Complex single-precision dtype.
+ */
+pub type Complex64 = Atom["complex64"].
+
+/**
+ * Complex double-precision dtype.
+ */
+pub type Complex128 = Atom["complex128"].
+
+/**
+ * Boolean dtype.
+ */
+pub type Bool.
+
+/**
+ * Quantized signed 8-bit dtype.
+ */
+pub type QInt8 = Atom["qint8"].
+
+/**
+ * Quantized unsigned 8-bit dtype.
+ */
+pub type QUInt8 = Atom["quint8"].
+
+/**
+ * Quantized signed 32-bit dtype.
+ */
+pub type QInt32 = Atom["qint32"].
+
+/**
+ * Brain floating-point 16-bit dtype.
+ */
+pub type BFloat16 = Atom["bfloat16"].
+
+/**
+ * Packed quantized unsigned 4-bit dtype.
+ */
+pub type QUInt4x2 = Atom["quint4x2"].
+
+/**
+ * Packed quantized unsigned 2-bit dtype.
+ */
+pub type QUInt2x4 = Atom["quint2x4"].
+
+/**
+ * Packed one-bit dtype.
+ */
+pub type Bits1x8 = Atom["bits1x8"].
+
+/**
+ * Packed two-bit dtype.
+ */
+pub type Bits2x4 = Atom["bits2x4"].
+
+/**
+ * Packed four-bit dtype.
+ */
+pub type Bits4x2 = Atom["bits4x2"].
+
+/**
+ * Opaque 8-bit dtype.
+ */
+pub type Bits8 = Atom["bits8"].
+
+/**
+ * Opaque 16-bit dtype.
+ */
+pub type Bits16 = Atom["bits16"].
+
+/**
+ * 8-bit E5M2 floating dtype.
+ */
+pub type Float8E5M2 = Atom["float8_e5m2"].
+
+/**
+ * 8-bit E4M3 finite floating dtype.
+ */
+pub type Float8E4M3Fn = Atom["float8_e4m3fn"].
+
+/**
+ * 8-bit E5M2 FNUZ floating dtype.
+ */
+pub type Float8E5M2Fnuz = Atom["float8_e5m2fnuz"].
+
+/**
+ * 8-bit E4M3 FNUZ floating dtype.
+ */
+pub type Float8E4M3Fnuz = Atom["float8_e4m3fnuz"].
+
+/**
+ * Unsigned 16-bit integer dtype.
+ */
+pub type UInt16 = Atom["uint16"].
+
+/**
+ * Unsigned 32-bit integer dtype.
+ */
+pub type UInt32 = Atom["uint32"].
+
+/**
+ * Unsigned 64-bit integer dtype.
+ */
+pub type UInt64 = Atom["uint64"].
+
+/**
+ * Unsigned 1-bit integer dtype.
+ */
+pub type UInt1 = Atom["uint1"].
+
+/**
+ * Unsigned 2-bit integer dtype.
+ */
+pub type UInt2 = Atom["uint2"].
+
+/**
+ * Unsigned 3-bit integer dtype.
+ */
+pub type UInt3 = Atom["uint3"].
+
+/**
+ * Unsigned 4-bit integer dtype.
+ */
+pub type UInt4 = Atom["uint4"].
+
+/**
+ * Unsigned 5-bit integer dtype.
+ */
+pub type UInt5 = Atom["uint5"].
+
+/**
+ * Unsigned 6-bit integer dtype.
+ */
+pub type UInt6 = Atom["uint6"].
+
+/**
+ * Unsigned 7-bit integer dtype.
+ */
+pub type UInt7 = Atom["uint7"].
+
+/**
+ * Signed 1-bit integer dtype.
+ */
+pub type Int1 = Atom["int1"].
+
+/**
+ * Signed 2-bit integer dtype.
+ */
+pub type Int2 = Atom["int2"].
+
+/**
+ * Signed 3-bit integer dtype.
+ */
+pub type Int3 = Atom["int3"].
+
+/**
+ * Signed 4-bit integer dtype.
+ */
+pub type Int4 = Atom["int4"].
+
+/**
+ * Signed 5-bit integer dtype.
+ */
+pub type Int5 = Atom["int5"].
+
+/**
+ * Signed 6-bit integer dtype.
+ */
+pub type Int6 = Atom["int6"].
+
+/**
+ * Signed 7-bit integer dtype.
+ */
+pub type Int7 = Atom["int7"].
+
+/**
+ * 8-bit E8M0 finite floating dtype.
+ */
+pub type Float8E8M0Fnu = Atom["float8_e8m0fnu"].
+
+/**
+ * Packed 4-bit E2M1 floating dtype.
+ */
+pub type Float4E2M1FnX2 = Atom["float4_e2m1fn_x2"].
+
+/**
+ * Finite public dtype values generated from c10::ScalarType.
+ */
+pub type DType: Int = UINT8 = 0 | INT8 = 1 | INT16 = 2 | INT32 = 3 | INT64 = 4 | FLOAT16 = 5 | FLOAT32 = 6 | FLOAT64 = 7 | COMPLEX32 = 8 | COMPLEX64 = 9 | COMPLEX128 = 10 | BOOL = 11 | QINT8 = 12 | QUINT8 = 13 | QINT32 = 14 | BFLOAT16 = 15 | QUINT4X2 = 16 | QUINT2X4 = 17 | BITS1X8 = 18 | BITS2X4 = 19 | BITS4X2 = 20 | BITS8 = 21 | BITS16 = 22 | FLOAT8_E5M2 = 23 | FLOAT8_E4M3FN = 24 | FLOAT8_E5M2FNUZ = 25 | FLOAT8_E4M3FNUZ = 26 | UINT16 = 27 | UINT32 = 28 | UINT64 = 29 | UINT1 = 30 | UINT2 = 31 | UINT3 = 32 | UINT4 = 33 | UINT5 = 34 | UINT6 = 35 | UINT7 = 36 | INT1 = 37 | INT2 = 38 | INT3 = 39 | INT4 = 40 | INT5 = 41 | INT6 = 42 | INT7 = 43 | FLOAT8_E8M0FNU = 44 | FLOAT4_E2M1FN_X2 = 45.
+
+/**
+ * Dense strided tensor layout.
+ */
+pub type Strided.
+
+/**
+ * Sparse coordinate tensor layout.
+ */
+pub type SparseCoo.
+
+/**
+ * Sparse compressed-row tensor layout.
+ */
+pub type SparseCsr.
+
+/**
+ * oneDNN tensor layout.
+ */
+pub type Mkldnn.
+
+/**
+ * Sparse compressed-column tensor layout.
+ */
+pub type SparseCsc.
+
+/**
+ * Sparse block-row tensor layout.
+ */
+pub type SparseBsr.
+
+/**
+ * Sparse block-column tensor layout.
+ */
+pub type SparseBsc.
+
+/**
+ * Jagged tensor layout.
+ */
+pub type Jagged.
+
+/**
+ * Finite public layouts generated from c10::Layout.
+ */
+pub type Layout =
+      Atom["strided"]
+    | Atom["sparse_coo"]
+    | Atom["sparse_csr"]
+    | Atom["mkldnn"]
+    | Atom["sparse_csc"]
+    | Atom["sparse_bsr"]
+    | Atom["sparse_bsc"]
+    | Atom["jagged"].
+
+/**
+ * Validated LibTorch device spelling such as cpu or cuda:0.
+ */
+pub type Device = String.
+
+/**
+ * Returns the stable c10 scalar-type code used by native adapters.
+ */
+pub dtype_code(dtype: DType): Int ->
+    if {
+        dtype == DType.UINT8 -> 0;
+        dtype == DType.INT8 -> 1;
+        dtype == DType.INT16 -> 2;
+        dtype == DType.INT32 -> 3;
+        dtype == DType.INT64 -> 4;
+        dtype == DType.FLOAT16 -> 5;
+        dtype == DType.FLOAT32 -> 6;
+        dtype == DType.FLOAT64 -> 7;
+        dtype == DType.COMPLEX32 -> 8;
+        dtype == DType.COMPLEX64 -> 9;
+        dtype == DType.COMPLEX128 -> 10;
+        dtype == DType.BOOL -> 11;
+        dtype == DType.QINT8 -> 12;
+        dtype == DType.QUINT8 -> 13;
+        dtype == DType.QINT32 -> 14;
+        dtype == DType.BFLOAT16 -> 15;
+        dtype == DType.QUINT4X2 -> 16;
+        dtype == DType.QUINT2X4 -> 17;
+        dtype == DType.BITS1X8 -> 18;
+        dtype == DType.BITS2X4 -> 19;
+        dtype == DType.BITS4X2 -> 20;
+        dtype == DType.BITS8 -> 21;
+        dtype == DType.BITS16 -> 22;
+        dtype == DType.FLOAT8_E5M2 -> 23;
+        dtype == DType.FLOAT8_E4M3FN -> 24;
+        dtype == DType.FLOAT8_E5M2FNUZ -> 25;
+        dtype == DType.FLOAT8_E4M3FNUZ -> 26;
+        dtype == DType.UINT16 -> 27;
+        dtype == DType.UINT32 -> 28;
+        dtype == DType.UINT64 -> 29;
+        dtype == DType.UINT1 -> 30;
+        dtype == DType.UINT2 -> 31;
+        dtype == DType.UINT3 -> 32;
+        dtype == DType.UINT4 -> 33;
+        dtype == DType.UINT5 -> 34;
+        dtype == DType.UINT6 -> 35;
+        dtype == DType.UINT7 -> 36;
+        dtype == DType.INT1 -> 37;
+        dtype == DType.INT2 -> 38;
+        dtype == DType.INT3 -> 39;
+        dtype == DType.INT4 -> 40;
+        dtype == DType.INT5 -> 41;
+        dtype == DType.INT6 -> 42;
+        dtype == DType.INT7 -> 43;
+        dtype == DType.FLOAT8_E8M0FNU -> 44;
+        true -> 45
+    }.
+
+/**
+ * Returns the canonical CPU device spelling.
+ */
+pub cpu(): Device -> "cpu".
+
+/**
+ * Returns the numeric backend kind for a canonical device spelling.
+ */
+pub device_kind(device: Device): Int ->
+    if {
+        device == "cpu" -> 0;
+        starts_with(device, "cuda:") -> 1;
+        true -> 0
+    }.
+
+/**
+ * Returns the CUDA ordinal, or -1 for CPU.
+ */
+pub device_index_for(device: Device): Int ->
+    if {
+        device == "cpu" -> -1;
+        starts_with(device, "cuda:") -> case std.core.Int.from_string(utf8_slice(device, 5, length(device) - 5)) {
+            Some(index) -> index;
+            _ -> -1
+        };
+        true -> -1
+    }.
+
+/**
+ * Returns a canonical CUDA device spelling.
+ */
+pub cuda(index: Int): Device ->
+    "cuda:" + std.core.Int.to_string(index).
+
+/**
+ * Owned TorchScript module.
+ */
 pub opaque type TorchScriptModel.
 
-/** An owned two-tensor TorchScript output container disposed exactly once. */
-pub opaque type TensorPair.
+/**
+ * Creates a CPU tensor filled with ones.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.ones}
+pub ones(size: List[Int]): Tensor ->
+    native.
 
-/** Creates a scalar int64 tensor. */
-@compiler.native {pytorch.tensor.from_int}
-pub from_int(value: Int): Tensor -> native.
+/**
+ * Creates a CPU tensor of a reviewed LibTorch dtype filled with ones.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.ones_dtype}
+pub ones_dtype(size: List[Int], dtype: Int): Tensor ->
+    native.
 
-/** Creates a scalar float64 tensor. */
-@compiler.native {pytorch.tensor.from_float}
-pub from_float(value: Float): Tensor -> native.
+/**
+ * Creates a tensor with reviewed dtype and layout values.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.ones_layout}
+pub ones_layout(size: List[Int], dtype: Int, layout: Int): Tensor ->
+    native.
 
-/** Creates a scalar bool tensor. */
-@compiler.native {pytorch.tensor.from_bool}
-pub from_bool(value: Bool): Tensor -> native.
+/**
+ * Creates a tensor with reviewed dtype, layout, and parsed device values.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.ones_device}
+pub ones_device(size: List[Int], dtype: Int, layout: Int, device: Device): Tensor ->
+    native.
 
-/** Copies row-major float64 values into an independently owned CPU tensor with the requested shape. */
-@compiler.native {pytorch.tensor.from_floats}
-pub from_floats(values: List[Float], shape: List[Int]): Tensor -> native.
+/**
+ * Creates a tensor with all optional LibTorch factory controls supplied.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.ones_options}
+pub ones_options(size: List[Int], dtype: Int, layout: Int, device: Device, pin_memory: Bool): Tensor ->
+    native.
 
-/** Copies row-major int64 values into an independently owned CPU tensor with the requested shape. */
-@compiler.native {pytorch.tensor.from_ints}
-pub from_ints(values: List[Int], shape: List[Int]): Tensor -> native.
+/**
+ * Returns the single tensor element as a scalar.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.item}
+pub item(tensor: Tensor): Scalar ->
+    native.
 
-/** Creates a CPU float64 tensor with the requested shape and repeated value. */
-@compiler.native {pytorch.tensor.full_float}
-pub full_float(shape: List[Int], value: Float): Tensor -> native.
+/**
+ * Returns the elementwise product with an integer scalar.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.mul_int}
+pub mul_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
 
-/** Reads the scalar int64 item. */
-@compiler.native {pytorch.tensor.item}
-pub item(tensor: Tensor): Int -> native.
+/**
+ * Converts a scalar to an integer with contained errors.
+ */
+@compiler.native {pytorch.cxx_migration.scalar.to_int}
+pub scalar_to_int(scalar: Scalar): Result[Int, std.core.Error] ->
+    native.
 
-/** Reads the scalar float64 item. */
-@compiler.native {pytorch.tensor.item_float}
-pub item_float(tensor: Tensor): Float -> native.
+/**
+ * Broadcasts tensors to a common shape with generated list-input and list-output ownership.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.broadcast_tensors}
+pub broadcast_tensors(tensors: List[Tensor]): List[Tensor] ->
+    native.
 
-/** Reads the scalar bool item. */
-@compiler.native {pytorch.tensor.item_bool}
-pub item_bool(tensor: Tensor): Bool -> native.
+/**
+ * Creates coordinate grids using LibTorch's default indexing.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.meshgrid}
+pub meshgrid(tensors: List[Tensor]): List[Tensor] ->
+    native.
 
-/** Returns the tensor rank. */
-@compiler.native {pytorch.tensor.dim}
-pub dim(tensor: Tensor): Int -> native.
+/**
+ * Creates coordinate grids using explicit xy or ij indexing.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.meshgrid_indexing}
+pub meshgrid_indexing(tensors: List[Tensor], indexing: String): List[Tensor] ->
+    native.
 
-/** Returns the tensor element count. */
-@compiler.native {pytorch.tensor.numel}
-pub numel(tensor: Tensor): Int -> native.
+/**
+ * Converts a scalar to a double-precision Float through generated exception containment.
+ */
+@compiler.native {pytorch.cxx_migration.scalar.to_float}
+pub scalar_to_float(scalar: Scalar): Float ->
+    native.
 
-/** Immediately copies LibTorch's borrowed size array into an owned Terlan list. */
+/**
+ * Returns the tensor dtype as a reviewed symbolic value.
+ * Returns the tensor layout as a reviewed symbolic value.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.layout}
+pub layout(tensor: Tensor): Int ->
+    native.
+
+/**
+ * Returns the tensor device as its canonical LibTorch spelling.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.device}
+pub device(tensor: Tensor): Device ->
+    native.
+
+/**
+ * Returns whether the tensor has a defined LibTorch implementation.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.is_defined}
+pub is_defined(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Returns whether the tensor uses the CPU backend.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.is_cpu}
+pub is_cpu(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Returns whether the tensor uses the CUDA backend.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.is_cuda}
+pub is_cuda(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Returns whether autograd records operations on the tensor.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.requires_grad}
+pub requires_grad(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Returns whether the tensor is an autograd leaf.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.is_leaf}
+pub is_leaf(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Drops the uniquely owned LibTorch scalar.
+ */
+@compiler.native {pytorch.cxx_migration.scalar.dispose}
+pub dispose_scalar(scalar: Scalar): Unit ->
+    native.
+
+/**
+ * Returns the elementwise absolute-value tensor.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.abs}
+pub abs(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Returns a tensor detached from the autograd graph.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.detach}
+detach_native(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Returns the elementwise ceiling.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.ceil}
+pub ceil(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Returns the elementwise floor.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.floor}
+pub floor(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Returns the elementwise reciprocal.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.reciprocal}
+pub reciprocal(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Returns the elementwise rounded value.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.round}
+pub round(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Returns the elementwise sign.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.sign}
+pub sign(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Returns the elementwise square.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.square}
+pub square(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Returns the elementwise truncation.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.trunc}
+pub trunc(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Returns whether the tensor has storage.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.has_storage}
+pub has_storage(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Returns whether the tensor has a complex dtype.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.is_complex}
+pub is_complex(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Returns whether the tensor has a floating-point dtype.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.is_floating_point}
+pub is_floating_point(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Returns whether the tensor uses a quantized backend.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.is_quantized}
+pub is_quantized(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Returns whether the tensor has a signed dtype.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.is_signed}
+pub is_signed(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Returns whether the tensor uses a sparse backend.
+ */
+@compiler.native {pytorch.cxx_migration.tensor.is_sparse}
+pub is_sparse(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Compatibility alias that validates and copies a package-neutral TNXP value into independently owned LibTorch storage.
+ */
+@compiler.native {pytorch.tensor.import_tensor_packet}
+pub from_array(packet: Bytes): Tensor ->
+    native.
+
+/**
+ * Validates and copies a package-neutral TNXP value into independently owned LibTorch storage.
+ */
+@compiler.native {pytorch.tensor.import_packet}
+pub from_packet(packet: Bytes): Tensor ->
+    native.
+
+/**
+ * Copies a contiguous CPU snapshot into a package-neutral TNXP value.
+ */
+@compiler.native {pytorch.tensor.export_packet}
+pub to_packet(tensor: Tensor): Bytes ->
+    native.
+
+/**
+ * Copies the tensor shape from LibTorch's borrowed size view.
+ */
 @compiler.native {pytorch.tensor.shape}
-pub shape(tensor: Tensor): List[Int] -> native.
+pub shape(tensor: Tensor): List[Int] ->
+    native.
 
-/** Returns LibTorch's runtime dtype identifier. */
-@compiler.native {pytorch.tensor.dtype}
-pub dtype(tensor: Tensor): Int -> native.
+/**
+ * Copies the tensor strides from LibTorch's borrowed stride view.
+ */
+@compiler.native {pytorch.tensor.strides}
+pub strides(tensor: Tensor): List[Int] ->
+    native.
 
-/** Returns LibTorch's runtime device type identifier. */
-@compiler.native {pytorch.tensor.device_type}
-pub device_type(tensor: Tensor): Int -> native.
+/**
+ * Returns whether the tensor is contiguous in LibTorch's default memory format.
+ */
+@compiler.native {pytorch.tensor.is_contiguous}
+pub is_contiguous(tensor: Tensor): Bool ->
+    native.
 
-/** Returns the device index. */
-@compiler.native {pytorch.tensor.device_index}
-pub device_index(tensor: Tensor): Int -> native.
+/**
+ * Private memory-format contiguity leaf for the public adapter.
+ */
+@compiler.native {pytorch.tensor.is_contiguous_memory_format_native}
+is_contiguous_memory_format_native(tensor: Tensor, memory_format: Int): Bool ->
+    native.
 
-/** Clones a tensor through LibTorch's versioned StableIValue dispatcher. */
+/**
+ * Returns whether the tensor is contiguous in the requested LibTorch memory format.
+ */
+pub is_contiguous_memory_format(tensor: Tensor, memory_format: Int): Bool ->
+    is_contiguous_memory_format_native(tensor, memory_format).
+
+/**
+ * Returns a copy using the default memory-format policy.
+ */
 @compiler.native {pytorch.tensor.clone}
-pub clone(tensor: Tensor): Tensor -> native.
+pub clone(tensor: Tensor): Tensor ->
+    native.
 
-/** Inserts a dimension through a signed StableIValue dispatcher argument. */
-@compiler.native {pytorch.tensor.unsqueeze}
-pub unsqueeze(tensor: Tensor, dimension: Int): Tensor -> native.
-
-/** Multiplies two tensors through independently owned StableIValue handle inputs. */
-@compiler.native {pytorch.tensor.matmul}
-pub matmul(left: Tensor, right: Tensor): Tensor -> native.
-
-/** Transposes two dimensions through a named overload and mixed StableIValue stack. */
-@compiler.native {pytorch.tensor.transpose}
-pub transpose(tensor: Tensor, dimension0: Int, dimension1: Int): Tensor -> native.
-
-/** Multiplies two tensors through the exact named Tensor dispatcher overload. */
-@compiler.native {pytorch.tensor.multiply}
-pub multiply(left: Tensor, right: Tensor): Tensor -> native.
-
-/** Adds a scaled tensor with CPU broadcasting through LibTorch's generated stable C shim. */
-@compiler.native {pytorch.tensor.add}
-pub add(left: Tensor, right: Tensor, alpha: Float): Tensor -> native.
-
-/** Subtracts a scaled tensor through LibTorch's generated stable C shim. */
-@compiler.native {pytorch.tensor.subtract}
-pub subtract(left: Tensor, right: Tensor, alpha: Float): Tensor -> native.
-
-/** Applies the exact default aten::relu operation through the StableIValue dispatcher. */
+/**
+ * Returns the elementwise rectified tensor.
+ */
 @compiler.native {pytorch.tensor.relu}
-pub relu(tensor: Tensor): Tensor -> native.
+pub relu(tensor: Tensor): Tensor ->
+    native.
 
-/** Applies exact aten::gelu with the fixed approximate=none schema default through an owned stable string. */
-@compiler.native {pytorch.tensor.gelu}
-pub gelu(tensor: Tensor): Tensor -> native.
+/**
+ * Updates leaf autograd participation through exact aten::requires_grad_.
+ */
+@compiler.native {pytorch.tensor.requires_grad_in_place}
+pub requires_grad_in_place(tensor: Tensor, requires_grad: Bool = true): Unit ->
+    native.
 
-/** Normalizes logits through the exact aten::softmax.int dispatcher overload with inherited dtype. */
-@compiler.native {pytorch.tensor.softmax}
-pub softmax(tensor: Tensor, dimension: Int): Tensor -> native.
+/**
+ * Returns the elementwise product with another tensor.
+ */
+@compiler.native {pytorch.tensor.multiply}
+pub multiply(left: Tensor, right: Tensor): Tensor ->
+    native.
 
-/** Returns int64 maximum-value indices through the exact aten::argmax schema, including its owned optional dimension and boolean keep-dimension arguments. */
-@compiler.native {pytorch.tensor.argmax}
-pub argmax(tensor: Tensor, dimension: Int, keep_dimension: Bool): Tensor -> native.
+/**
+ * Returns the elementwise product with a floating-point scalar.
+ */
+@compiler.native {pytorch.tensor.multiply_scalar}
+pub multiply_scalar(tensor: Tensor, value: Float): Tensor ->
+    native.
 
-/** Looks up int64 indices in a rank-2 embedding table through exact aten::embedding. */
-@compiler.native {pytorch.tensor.embedding}
-pub embedding(weight: Tensor, indices: Tensor, padding_index: Int, scale_gradient_by_frequency: Bool, sparse: Bool): Tensor -> native.
+/**
+ * Returns the elementwise negated tensor.
+ */
+@compiler.native {pytorch.tensor.negate}
+pub negate(tensor: Tensor): Tensor ->
+    native.
 
-/** Applies exact aten::batch_norm with explicit affine parameters and running statistics. */
-@compiler.native {pytorch.tensor.batch_norm}
-pub batch_norm(input: Tensor, weight: Tensor, bias: Tensor, running_mean: Tensor, running_variance: Tensor, training: Bool, momentum: Float, epsilon: Float, cudnn_enabled: Bool): Tensor -> native.
+/**
+ * Returns the tensor rank through generated exception containment.
+ */
+@compiler.native {pytorch.tensor.dim}
+pub dim(tensor: Tensor): Int ->
+    native.
 
-/** Applies exact aten::layer_norm over an owned normalized-shape list with explicit affine parameters. */
-@compiler.native {pytorch.tensor.layer_norm}
-pub layer_norm(input: Tensor, normalized_shape: List[Int], weight: Tensor, bias: Tensor, epsilon: Float, cudnn_enabled: Bool): Tensor -> native.
+/**
+ * Returns the tensor element count through generated exception containment.
+ */
+@compiler.native {pytorch.tensor.numel}
+pub numel(tensor: Tensor): Int ->
+    native.
 
-/** Computes elementwise squared error through exact aten::mse_loss; reduction is 0 for none, 1 for mean, or 2 for sum. */
-@compiler.native {pytorch.tensor.mse_loss}
-pub mse_loss(predicted: Tensor, target: Tensor, reduction: Int): Tensor -> native.
-
-/** Computes the exact aten::mse_loss_backward gradient with respect to predicted values. */
-@compiler.native {pytorch.tensor.mse_loss_gradient}
-pub mse_loss_gradient(grad_output: Tensor, predicted: Tensor, target: Tensor, reduction: Int): Tensor -> native.
-
-/** Computes classification loss through exact aten::cross_entropy_loss with no class-weight tensor. */
-@compiler.native {pytorch.tensor.cross_entropy_loss}
-pub cross_entropy_loss(logits: Tensor, target: Tensor, reduction: Int, ignore_index: Int, label_smoothing: Float): Tensor -> native.
-
-/** Returns an independently owned narrowed tensor view through LibTorch's generated stable C shim. */
-@compiler.native {pytorch.tensor.narrow}
-pub narrow(tensor: Tensor, dimension: Int, start: Int, length: Int): Tensor -> native.
-
-/** Flattens an inclusive dimension range through the exact named StableIValue dispatcher overload. */
-@compiler.native {pytorch.tensor.flatten}
-pub flatten(tensor: Tensor, start_dimension: Int, end_dimension: Int): Tensor -> native.
-
-/** Reduces over copied dimensions through LibTorch's generated stable C amax shim. */
-@compiler.native {pytorch.tensor.amax}
-pub amax(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool): Tensor -> native.
-
-/** Applies NCHW 2D convolution with required bias through LibTorch's generated CPU stable C shim. */
-@compiler.native {pytorch.tensor.conv2d}
-pub conv2d(input: Tensor, weight: Tensor, bias: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): Tensor -> native.
-
-/** Reduces NCHW spatial dimensions to an exact output size through LibTorch's generated CPU adaptive-average-pooling shim. */
-@compiler.native {pytorch.tensor.adaptive_avg_pool2d}
-pub adaptive_avg_pool2d(input: Tensor, output_size: List[Int]): Tensor -> native.
-
-/** Loads a serialized TorchScript archive into a reusable thread-confined model resource. */
-@compiler.native {pytorch.torchscript.load}
-pub load_torchscript(path: String): TorchScriptModel -> native.
-
-/** Runs a loaded single-input TorchScript model and returns an independently owned tensor. */
-@compiler.native {pytorch.torchscript.forward}
-pub torchscript_forward(model: TorchScriptModel, input: Tensor): Tensor -> native.
-
-/** Runs a loaded two-positional-tensor TorchScript model and returns an independently owned tensor. */
-@compiler.native {pytorch.torchscript.forward2}
-pub torchscript_forward2(model: TorchScriptModel, first: Tensor, second: Tensor): Tensor -> native.
-
-/** Runs a loaded model whose forward result is exactly a two-tensor tuple and owns that result container. */
-@compiler.native {pytorch.torchscript.forward_pair}
-pub torchscript_forward_pair(model: TorchScriptModel, input: Tensor): TensorPair -> native.
-
-/** Runs a loaded model whose forward result is exactly a TorchScript float and copies it into Terlan. */
-@compiler.native {pytorch.torchscript.forward_float}
-pub torchscript_forward_float(model: TorchScriptModel, input: Tensor): Float -> native.
-
-/** Runs a loaded model whose forward result is exactly a TorchScript integer and copies it into Terlan. */
-@compiler.native {pytorch.torchscript.forward_int}
-pub torchscript_forward_int(model: TorchScriptModel, input: Tensor): Int -> native.
-
-/** Runs a loaded model whose forward result is exactly a TorchScript boolean and copies it into Terlan. */
-@compiler.native {pytorch.torchscript.forward_bool}
-pub torchscript_forward_bool(model: TorchScriptModel, input: Tensor): Bool -> native.
-
-/** Runs a loaded model whose forward result is exactly a TorchScript string and immediately copies its owned UTF-8 bytes into Terlan. */
-@compiler.native {pytorch.torchscript.forward_string}
-pub torchscript_forward_string(model: TorchScriptModel, input: Tensor): String -> native.
-
-/** Runs a loaded model whose forward result is exactly a TorchScript integer list and immediately copies its owned elements into Terlan. */
-@compiler.native {pytorch.torchscript.forward_int_list}
-pub torchscript_forward_int_list(model: TorchScriptModel, input: Tensor): List[Int] -> native.
-
-/** Runs a loaded model whose forward result is exactly a TorchScript floating-point list and immediately copies its owned elements into Terlan. */
-@compiler.native {pytorch.torchscript.forward_float_list}
-pub torchscript_forward_float_list(model: TorchScriptModel, input: Tensor): List[Float] -> native.
-
-/** Runs a loaded model whose forward result is exactly a TorchScript boolean list, validates its portable byte encoding, and copies it into Terlan. */
-@compiler.native {pytorch.torchscript.forward_bool_list}
-pub torchscript_forward_bool_list(model: TorchScriptModel, input: Tensor): List[Bool] -> native.
-
-/** Runs a loaded model whose forward result is exactly a TorchScript string list and copies each length-delimited UTF-8 value into Terlan before native destruction. */
-@compiler.native {pytorch.torchscript.forward_string_list}
-pub torchscript_forward_string_list(model: TorchScriptModel, input: Tensor): List[String] -> native.
-
-/** Returns an independently owned handle for the first tensor in a model-output pair. */
-@compiler.native {pytorch.torchscript.tensor_pair_first}
-pub tensor_pair_first(pair: TensorPair): Tensor -> native.
-
-/** Returns an independently owned handle for the second tensor in a model-output pair. */
-@compiler.native {pytorch.torchscript.tensor_pair_second}
-pub tensor_pair_second(pair: TensorPair): Tensor -> native.
-
-/** Loads, runs, and disposes a TorchScript module as a stateless convenience call. */
-@compiler.native {pytorch.tensor.run_torchscript}
-pub run_torchscript(input: Tensor, path: String): Tensor -> native.
-
-/** Releases the loaded TorchScript model resource. */
-@compiler.native {pytorch.torchscript.dispose}
-pub dispose_model(model: TorchScriptModel): Unit -> native.
-
-/** Releases the owned two-tensor model-output container. */
-@compiler.native {pytorch.torchscript.dispose_tensor_pair}
-pub dispose_tensor_pair(pair: TensorPair): Unit -> native.
-
-/** Releases the owned tensor handle. */
+/**
+ * Drops the uniquely owned LibTorch tensor.
+ */
 @compiler.native {pytorch.tensor.dispose}
-pub dispose(tensor: Tensor): Unit -> native.
+pub dispose(tensor: Tensor): Unit ->
+    native.
 
-/** Returns the LibTorch ABI version exported by the runtime. */
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.unsqueeze}
+pub unsqueeze(tensor: Tensor, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.matmul}
+pub matmul(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.transpose}
+pub transpose(tensor: Tensor, dimension0: Int, dimension1: Int): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.exp}
+pub exp(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.sqrt}
+pub sqrt(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.log}
+pub log(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.minimum}
+pub minimum(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.gather}
+pub gather(input: Tensor, dimension: Int, index: Tensor, sparse_gradient: Bool): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.gather_out}
+pub gather_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    sparse_gradient: Bool,
+): Unit ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.mean}
+pub mean(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.sum}
+pub sum(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.mean_dimensions}
+pub mean_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.sum_dimensions}
+pub sum_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.gelu}
+pub gelu(tensor: Tensor, approximation: String = "none"): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.softmax}
+pub softmax(tensor: Tensor, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.argmax}
+pub argmax(tensor: Tensor, dimension: Int, keep_dimension: Bool): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.embedding}
+pub embedding(
+    weight: Tensor,
+    indices: Tensor,
+    padding_index: Int,
+    scale_gradient_by_frequency: Bool,
+    sparse: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.embedding_out}
+pub embedding_out(
+    output: Tensor,
+    weight: Tensor,
+    indices: Tensor,
+    padding_index: Int = -1,
+    scale_gradient_by_frequency: Bool = false,
+    sparse: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.embedding_renorm}
+pub embedding_renorm(weight: Tensor, indices: Tensor, max_norm: Float, norm_type: Float): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.embedding_renorm_in_place}
+pub embedding_renorm_in_place(
+    weight: Tensor,
+    indices: Tensor,
+    max_norm: Float,
+    norm_type: Float,
+): Unit ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.embedding_renorm_out}
+pub embedding_renorm_out(
+    output: Tensor,
+    weight: Tensor,
+    indices: Tensor,
+    max_norm: Float,
+    norm_type: Float,
+): Unit ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.batch_norm}
+pub batch_norm(
+    input: Tensor,
+    weight: Tensor,
+    bias: Tensor,
+    running_mean: Tensor,
+    running_variance: Tensor,
+    training: Bool,
+    momentum: Float,
+    epsilon: Float,
+    cudnn_enabled: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.layer_norm}
+pub layer_norm(
+    input: Tensor,
+    normalized_shape: List[Int],
+    weight: Tensor,
+    bias: Tensor,
+    epsilon: Float,
+    cudnn_enabled: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.mse_loss}
+pub mse_loss(predicted: Tensor, target: Tensor, reduction: Int): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.narrow}
+pub narrow(tensor: Tensor, dimension: Int, start: Int, length: Int): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.flatten}
+pub flatten(tensor: Tensor, start_dimension: Int, end_dimension: Int): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.amax}
+pub amax(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.adaptive_avg_pool2d}
+pub adaptive_avg_pool2d(input: Tensor, output_size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.copy}
+pub copy(tensor: Tensor, source: Tensor, non_blocking: Bool = false): Tensor ->
+    native.
+
+/**
+ * Generated direct ATen Tensor adapter.
+ */
+@compiler.native {pytorch.tensor.copy_out}
+pub copy_out(output: Tensor, tensor: Tensor, source: Tensor, non_blocking: Bool = false): Unit ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.from_int}
+pub from_int(value: Int): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.from_float}
+pub from_float(value: Float): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.from_bool}
+pub from_bool(value: Bool): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.from_floats}
+pub from_floats(values: List[Float], shape: List[Int]): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.from_ints}
+pub from_ints(values: List[Int], shape: List[Int]): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.full_float}
+pub full_float(shape: List[Int], value: Float): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.item}
+item_int(tensor: Tensor): Int ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.item_float}
+pub item_float(tensor: Tensor): Float ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.item_bool}
+pub item_bool(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.storage_offset}
+pub storage_offset(tensor: Tensor): Int ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.dtype}
+pub dtype(tensor: Tensor): Int ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.device_type}
+pub device_type(tensor: Tensor): Int ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.device_index}
+pub device_index(tensor: Tensor): Int ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.to_device}
+pub to_device(tensor: Tensor, device_type: Int, device_index: Int): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.to_dtype}
+pub to_dtype(tensor: Tensor, dtype: Int): Tensor ->
+    native.
+
+/**
+ * Generated CXX tensor-to-other conversion adapter.
+ */
+@compiler.native {pytorch.tensor.to_other}
+pub to_other(tensor: Tensor, other: Tensor, non_blocking: Bool = false): Tensor ->
+    native.
+
+/**
+ * Generated CXX tensor device/dtype conversion adapter.
+ */
+@compiler.native {pytorch.tensor.to_device_dtype}
+pub to_device_dtype(
+    tensor: Tensor,
+    device_type: Int,
+    device_index: Int,
+    dtype: Int,
+    non_blocking: Bool = false,
+    copy: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated CXX tensor dtype/layout conversion adapter.
+ */
+@compiler.native {pytorch.tensor.to_dtype_layout}
+pub to_dtype_layout(
+    tensor: Tensor,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+    non_blocking: Bool,
+    copy: Bool,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Tensor ->
+    native.
+
+/**
+ * Constructs a nested tensor from component tensors.
+ */
+@compiler.native {pytorch.tensor.nested_from_tensor_list}
+pub nested_from_tensor_list(tensors: List[Tensor]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX adapter for aten::nested_to_padded_tensor.
+ */
+@compiler.native {pytorch.tensor.nested_to_padded_tensor}
+pub nested_to_padded_tensor(
+    tensor: Tensor,
+    padding: Float,
+    has_output_size: Bool,
+    output_size: List[Int],
+): Tensor ->
+    native.
+
+/**
+ * Converts a nested tensor to padded dense storage.
+ */
+@compiler.native {pytorch.tensor.to_padded_tensor}
+pub to_padded_tensor(
+    tensor: Tensor,
+    padding: Float,
+    has_output_size: Bool,
+    output_size: List[Int],
+): Tensor ->
+    native.
+
+/**
+ * Writes a nested tensor's padded dense representation.
+ */
+@compiler.native {pytorch.tensor.to_padded_tensor_out}
+pub to_padded_tensor_out(
+    output: Tensor,
+    tensor: Tensor,
+    padding: Float,
+    has_output_size: Bool,
+    output_size: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Maps file-backed storage into a tensor.
+ */
+@compiler.native {pytorch.tensor.from_file}
+pub from_file(
+    filename: String,
+    has_shared: Bool,
+    shared: Bool,
+    has_size: Bool,
+    size: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Int,
+    device_type: Int,
+    device_index: Int,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Maps file-backed storage into retained output.
+ */
+@compiler.native {pytorch.tensor.from_file_out}
+pub from_file_out(
+    output: Tensor,
+    filename: String,
+    has_shared: Bool,
+    shared: Bool,
+    has_size: Bool,
+    size: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.full_typed}
+pub full_typed_native(
+    shape: List[Int],
+    value: Float,
+    dtype: Int,
+    device_type: Int,
+    device_index: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.empty_typed}
+pub empty_typed_native(shape: List[Int], dtype: Int, device_type: Int, device_index: Int): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.arange_typed}
+pub arange_typed_native(
+    start: Float,
+    end: Float,
+    step: Float,
+    dtype: Int,
+    device_type: Int,
+    device_index: Int,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.linspace_typed}
+pub linspace_typed_native(
+    start: Float,
+    end: Float,
+    steps: Int,
+    dtype: Int,
+    device_type: Int,
+    device_index: Int,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.logspace_typed}
+pub logspace_typed_native(
+    start: Float,
+    end: Float,
+    steps: Int,
+    base: Float,
+    dtype: Int,
+    device_type: Int,
+    device_index: Int,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.eye_typed}
+pub eye_typed_native(
+    rows: Int,
+    columns: Int,
+    dtype: Int,
+    device_type: Int,
+    device_index: Int,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.add}
+pub add(left: Tensor, right: Tensor, alpha: Float): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.subtract}
+pub subtract(left: Tensor, right: Tensor, alpha: Float): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.divide}
+pub divide(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.add_scalar}
+pub add_scalar(tensor: Tensor, value: Float, alpha: Float): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.gelu_out}
+pub gelu_out(output: Tensor, tensor: Tensor, approximation: String = "none"): Unit ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.gelu_in_place}
+pub gelu_in_place(tensor: Tensor, approximation: String = "none"): Unit ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.copy_in_place}
+pub copy_in_place(tensor: Tensor, source: Tensor, non_blocking: Bool = false): Unit ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.require_grad}
+pub require_grad(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.backward}
+pub backward(loss: Tensor): Unit ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.backward_with_gradient}
+pub backward_with_gradient(
+    loss: Tensor,
+    gradient: Tensor,
+    retain_graph: Bool = false,
+    create_graph: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.backward_many_token}
+pub backward_many_token(
+    outputs: List[Tensor],
+    grad_outputs: List[Tensor],
+    retain_graph: Bool = false,
+    create_graph: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.autograd_grad_many}
+pub autograd_grad_many(
+    outputs: List[Tensor],
+    inputs: List[Tensor],
+    grad_outputs: List[Tensor],
+    retain_graph: Bool = false,
+    create_graph: Bool = false,
+): List[Tensor] ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.autograd_grad}
+pub autograd_grad(
+    output: Tensor,
+    input: Tensor,
+    grad_output: Tensor,
+    retain_graph: Bool = false,
+    create_graph: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.gradient}
+pub gradient(parameter: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.gradient_with_graph}
+pub gradient_with_graph(parameter: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.sgd_step}
+pub sgd_step(parameter: Tensor, learning_rate: Float): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.categorical_sample}
+pub categorical_sample(probabilities: Tensor, seed: Int): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.mse_loss_gradient}
+pub mse_loss_gradient(
+    grad_output: Tensor,
+    predicted: Tensor,
+    target: Tensor,
+    reduction: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor operation adapter.
+ */
+@compiler.native {pytorch.tensor.cross_entropy_loss}
+pub cross_entropy_loss(
+    logits: Tensor,
+    target: Tensor,
+    reduction: Int,
+    ignore_index: Int,
+    label_smoothing: Float,
+): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.clamp}
+pub clamp(tensor: Tensor, minimum: Float, maximum: Float): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.conv2d}
+pub conv2d(
+    input: Tensor,
+    weight: Tensor,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+    groups: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.embedding_bag}
+pub embedding_bag(
+    weight: Tensor,
+    indices: Tensor,
+    offsets: Tensor,
+    scale_gradient_by_frequency: Bool = false,
+    mode: Int = 0,
+    sparse: Bool = false,
+    include_last_offset: Bool = false,
+): {Tensor, Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Public-compatible embedding_bag form returning only the embedding output while releasing LibTorch auxiliary tensors.
+ */
+pub embedding_bag_public(
+    weight: Tensor,
+    indices: Tensor,
+    offsets: Tensor,
+    scale_gradient_by_frequency: Bool = false,
+    mode: Int = 0,
+    sparse: Bool = false,
+    include_last_offset: Bool = false,
+): Tensor ->
+    let {output, offset_to_bag, bag_size, maximum_indices} =
+        embedding_bag(
+            weight,
+            indices,
+            offsets,
+            scale_gradient_by_frequency,
+            mode,
+            sparse,
+            include_last_offset,
+        );
+    dispose(maximum_indices);
+    dispose(bag_size);
+    dispose(offset_to_bag);
+    output.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.embedding_bag_weighted}
+pub embedding_bag_weighted(
+    weight: Tensor,
+    indices: Tensor,
+    offsets: Tensor,
+    scale_gradient_by_frequency: Bool,
+    mode: Int,
+    sparse: Bool,
+    per_sample_weights: Tensor,
+    include_last_offset: Bool,
+): {Tensor, Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.embedding_bag_padding}
+pub embedding_bag_padding(
+    weight: Tensor,
+    indices: Tensor,
+    offsets: Tensor,
+    scale_gradient_by_frequency: Bool,
+    mode: Int,
+    sparse: Bool,
+    include_last_offset: Bool,
+    padding_index: Int,
+): {Tensor, Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.embedding_bag_padding_weighted}
+pub embedding_bag_padding_weighted(
+    weight: Tensor,
+    indices: Tensor,
+    offsets: Tensor,
+    scale_gradient_by_frequency: Bool,
+    mode: Int,
+    sparse: Bool,
+    per_sample_weights: Tensor,
+    include_last_offset: Bool,
+    padding_index: Int,
+): {Tensor, Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Generated CXX Tensor compatibility adapter.
+ */
 @compiler.native {pytorch.abi_version}
-pub abi_version(): Int -> native.
+pub abi_version(): Int ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.load}
+pub load_torchscript(path: String): TorchScriptModel ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.forward}
+pub torchscript_forward(model: TorchScriptModel, input: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.forward2}
+pub torchscript_forward2(model: TorchScriptModel, first: Tensor, second: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.forward_pair}
+pub torchscript_forward_pair(model: TorchScriptModel, input: Tensor): TensorPair ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.forward_float}
+pub torchscript_forward_float(model: TorchScriptModel, input: Tensor): Float ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.forward_int}
+pub torchscript_forward_int(model: TorchScriptModel, input: Tensor): Int ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.forward_bool}
+pub torchscript_forward_bool(model: TorchScriptModel, input: Tensor): Bool ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.forward_string}
+pub torchscript_forward_string(model: TorchScriptModel, input: Tensor): String ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.forward_int_list}
+pub torchscript_forward_int_list(model: TorchScriptModel, input: Tensor): List[Int] ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.forward_float_list}
+pub torchscript_forward_float_list(model: TorchScriptModel, input: Tensor): List[Float] ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.forward_bool_list}
+pub torchscript_forward_bool_list(model: TorchScriptModel, input: Tensor): List[Bool] ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.forward_string_list}
+pub torchscript_forward_string_list(model: TorchScriptModel, input: Tensor): List[String] ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.forward_optional_tensor}
+pub torchscript_forward_optional_tensor(model: TorchScriptModel, input: Tensor): Option[Tensor] ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.forward_tensor_list}
+pub torchscript_forward_tensor_list(model: TorchScriptModel, input: Tensor): List[Tensor] ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.tensor_pair_first}
+pub tensor_pair_first(pair: TensorPair): Tensor ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.torchscript.tensor_pair_second}
+pub tensor_pair_second(pair: TensorPair): Tensor ->
+    native.
+
+/**
+ * Generated CXX TorchScript compatibility adapter.
+ */
+@compiler.native {pytorch.tensor.run_torchscript}
+pub run_torchscript(input: Tensor, path: String): Tensor ->
+    native.
+
+/**
+ * Drops a TorchScript module.
+ */
+@compiler.native {pytorch.torchscript.dispose}
+pub dispose_model(model: TorchScriptModel): Unit ->
+    native.
+
+/**
+ * Drops a tensor pair.
+ */
+@compiler.native {pytorch.torchscript.dispose_tensor_pair}
+pub dispose_tensor_pair(pair: TensorPair): Unit ->
+    native.
+
+/**
+ * Returns the elementwise hyperbolic tangent.
+ */
+@compiler.native {pytorch.tensor.tanh_alias}
+tanh(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Computes softmin by applying softmax to the negated input.
+ */
+pub softmin(tensor: Tensor, dimension: Int): Tensor ->
+    softmax(negate(tensor), dimension).
+
+/**
+ * Computes softsign as input divided by one plus its absolute value.
+ */
+pub softsign(tensor: Tensor): Tensor ->
+    let denominator = add_scalar(abs(tensor), 1.0, 1.0);
+    divide(tensor, denominator).
+
+/**
+ * Computes tanhshrink as input minus its hyperbolic tangent.
+ */
+pub tanhshrink(tensor: Tensor): Tensor ->
+    let tangent = tanh(tensor);
+    subtract(tensor, tangent, 1.0).
+
+/**
+ * Private exact CXX leaf for aten::is_pinned.
+ */
+@compiler.native {pytorch.tensor.is_pinned_cxx}
+is_pinned_cxx(tensor: Tensor, has_device: Bool, device: Device): Bool ->
+    native.
+
+/**
+ * Public option-normalizing composition for aten::is_pinned.
+ */
+pub is_pinned(tensor: Tensor, has_device: Bool, device: Device): Bool ->
+    is_pinned_cxx(tensor, has_device, device).
+
+/**
+ * Private exact CXX leaf for aten::resize.
+ */
+@compiler.native {pytorch.tensor.resize_cxx}
+resize_cxx(tensor: Tensor, size: List[Int], has_memory_format: Bool, memory_format: Int): Tensor ->
+    native.
+
+/**
+ * Resizes a tensor to the requested shape and optional memory format.
+ */
+pub resize(tensor: Tensor, size: List[Int], has_memory_format: Bool, memory_format: Int): Tensor ->
+    resize_cxx(tensor, size, has_memory_format, memory_format).
+
+/**
+ * Private exact CXX leaf for aten::resize.out.
+ */
+@compiler.native {pytorch.tensor.resize_out_cxx}
+resize_out_cxx(
+    out: Tensor,
+    tensor: Tensor,
+    size: List[Int],
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.
+
+/**
+ * Resizes the retained output tensor to the requested shape.
+ */
+pub resize_out(
+    out: Tensor,
+    tensor: Tensor,
+    size: List[Int],
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    resize_out_cxx(out, tensor, size, has_memory_format, memory_format).
+
+/**
+ * Private exact CXX leaf for aten::resize_.
+ */
+@compiler.native {pytorch.tensor.resize_in_place_cxx}
+resize_in_place_cxx(
+    tensor: Tensor,
+    size: List[Int],
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.
+
+/**
+ * Resizes the retained tensor in place.
+ */
+pub resize_in_place(
+    tensor: Tensor,
+    size: List[Int],
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    resize_in_place_cxx(tensor, size, has_memory_format, memory_format).
+
+/**
+ * Private exact CXX leaf for aten::empty_strided.
+ */
+@compiler.native {pytorch.tensor.empty_strided_cxx}
+empty_strided_cxx(
+    size: List[Int],
+    stride: List[Int],
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Creates an uninitialized tensor with explicit shape and strides.
+ */
+pub empty_strided(
+    size: List[Int],
+    stride: List[Int],
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    empty_strided_cxx(
+        size,
+        stride,
+        has_dtype,
+        dtype,
+        has_layout,
+        layout,
+        has_device,
+        device,
+        has_pin_memory,
+        pin_memory,
+    ).
+
+/**
+ * Private exact CXX leaf for aten::empty_strided.out.
+ */
+@compiler.native {pytorch.tensor.empty_strided_out_cxx}
+empty_strided_out_cxx(out: Tensor, size: List[Int], stride: List[Int]): Unit ->
+    native.
+
+/**
+ * Reshapes retained output storage with explicit strides.
+ */
+pub empty_strided_out(out: Tensor, size: List[Int], stride: List[Int]): Unit ->
+    empty_strided_out_cxx(out, size, stride).
+
+/**
+ * Private exact CXX leaf for aten::empty_permuted.
+ */
+@compiler.native {pytorch.tensor.empty_permuted_cxx}
+empty_permuted_cxx(
+    size: List[Int],
+    physical_layout: List[Int],
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Creates a tensor with explicit physical dimension order.
+ */
+pub empty_permuted(
+    size: List[Int],
+    physical_layout: List[Int],
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    empty_permuted_cxx(
+        size,
+        physical_layout,
+        has_dtype,
+        dtype,
+        has_layout,
+        layout,
+        has_device,
+        device,
+        has_pin_memory,
+        pin_memory,
+    ).
+
+/**
+ * Private exact CXX leaf for aten::empty_permuted.out.
+ */
+@compiler.native {pytorch.tensor.empty_permuted_out_cxx}
+empty_permuted_out_cxx(out: Tensor, size: List[Int], physical_layout: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes explicit physical dimension order into retained output.
+ */
+pub empty_permuted_out(out: Tensor, size: List[Int], physical_layout: List[Int]): Unit ->
+    empty_permuted_out_cxx(out, size, physical_layout).
+
+@compiler.native {pytorch.dense.type_as}
+tensor_type_as(tensor: Tensor, other: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.type_relations.get_device}
+tensor_get_device(tensor: Tensor): Int ->
+    native.
+
+@compiler.native {pytorch.view.adjoint}
+tensor_adjoint(tensor: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.view.conj}
+tensor_conj(tensor: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.view.detach}
+tensor_detach(tensor: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.view.positive}
+tensor_positive(tensor: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.view.ravel}
+tensor_ravel(tensor: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.view.resolve_conj}
+tensor_resolve_conj(tensor: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.view.resolve_neg}
+tensor_resolve_neg(tensor: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.view.squeeze}
+tensor_squeeze(tensor: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.view.t}
+tensor_t(tensor: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.sparse.to_sparse_configured}
+tensor_to_sparse_configured(
+    tensor: Tensor,
+    layout: Int,
+    has_layout: Bool,
+    block_size: List[Int],
+    has_block_size: Bool,
+    dense_dimensions: Int,
+    has_dense_dimensions: Bool,
+): Tensor ->
+    native.
+
+@compiler.native {pytorch.sparse.to_dense_configured}
+tensor_to_dense_configured(
+    tensor: Tensor,
+    dtype: Int,
+    has_dtype: Bool,
+    masked_grad: Bool,
+    has_masked_grad: Bool,
+): Tensor ->
+    native.
+
+@compiler.native {pytorch.clamp.cxx.clamp_scalar_min_max}
+tensor_clip_float(
+    tensor: Tensor,
+    min_is_int: Bool,
+    min_int: Int,
+    min_float: Float,
+    max_is_int: Bool,
+    max_int: Int,
+    max_float: Float,
+): Tensor ->
+    native.
+
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_add_tensor_in_place_cxx}
+tensor_add_in_place(
+    left: Tensor,
+    right: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_sub_tensor_in_place_cxx}
+tensor_subtract_in_place(
+    left: Tensor,
+    right: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_mul}
+tensor_multiply_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Compatibility alias for the floating-point scalar multiplication leaf.
+ */
+pub mul_float(tensor: Tensor, value: Float): Tensor ->
+    multiply_scalar(tensor, value).
+
+/**
+ * Compatibility alias for the tensor rank projection.
+ */
+pub rank(tensor: Tensor): Int ->
+    dim(tensor).
+
+/**
+ * Compatibility alias for the tensor element-count projection.
+ */
+pub element_count(tensor: Tensor): Int ->
+    numel(tensor).
+
+/**
+ * Returns the storage width in bytes for the tensor's scalar dtype.
+ */
+pub element_size(tensor: Tensor): Int ->
+    let code = dtype(tensor);
+    if {
+        code == 0
+            or code == 1
+            or code == 11
+            or code == 12
+            or code == 13
+            or code >= 16 and code <= 26 -> 1;
+        code == 2 or code == 5 or code == 15 -> 2;
+        code == 3 or code == 8 -> 4;
+        code == 4 or code == 6 or code == 7 or code == 9 or code == 14 -> 8;
+        code == 10 -> 16;
+        true -> 1
+    }.
+
+/**
+ * Zero-filled tensor compatibility constructor for legacy Tensor imports.
+ */
+pub zeros(size: List[Int]): Tensor ->
+    multiply_scalar(ones(size), 0.0).
+
+/**
+ * Typed zero-filled tensor compatibility constructor.
+ */
+pub zeros(size: List[Int], dtype: Int): Tensor ->
+    to_dtype(zeros(size), dtype).
+
+/**
+ * Typed range constructor with the reviewed CXX range leaf.
+ */
+pub arange(start: Float, end: Float, step: Float, dtype: DType): Tensor ->
+    arange_typed_native(start, end, step, dtype_code(dtype), 0, -1, false).
+
+/**
+ * Typed evenly-spaced constructor with the reviewed CXX range leaf.
+ */
+pub linspace(start: Float, end: Float, steps: Int, dtype: DType): Tensor ->
+    linspace_typed_native(start, end, steps, dtype_code(dtype), 0, -1, false).
+
+/**
+ * Typed rectangular identity constructor with the reviewed CXX range leaf.
+ */
+pub eye(rows: Int, columns: Int, dtype: DType): Tensor ->
+    eye_typed_native(rows, columns, dtype_code(dtype), 0, -1, false).
+
+/**
+ * Tensor CPU placement convenience alias matching torch.Tensor.cpu().
+ */
+pub cpu(tensor: Tensor): Tensor ->
+    to_device(tensor, 0, -1).
+
+/**
+ * Rank compatibility alias matching torch.Tensor.ndimension().
+ */
+pub ndimension(tensor: Tensor): Int ->
+    dim(tensor).
+
+/**
+ * Element-count compatibility alias matching torch.Tensor.nelement().
+ */
+pub nelement(tensor: Tensor): Int ->
+    numel(tensor).
+
+/**
+ * Dtype-copy convenience alias matching torch.Tensor.type_as().
+ */
+pub type_as(tensor: Tensor, other: Tensor): Tensor ->
+    tensor_type_as(tensor, other).
+
+/**
+ * Default pinned-state convenience alias matching torch.Tensor.is_pinned().
+ */
+pub is_pinned(tensor: Tensor): Bool ->
+    is_pinned(tensor, false, cpu()).
+
+/**
+ * Device-index convenience alias matching torch.Tensor.get_device().
+ */
+pub get_device(tensor: Tensor): Int ->
+    tensor_get_device(tensor).
+
+/**
+ * Creates a zero-filled tensor on an explicit CPU or CUDA device.
+ */
+pub zeros_on(size: List[Int], dtype: DType, device: Device): Tensor ->
+    full_typed_native(size, 0.0, dtype_code(dtype), device_kind(device), device_index_for(device)).
+
+/**
+ * Tensor view convenience aliases matching PyTorch Tensor methods.
+ */
+pub adjoint(tensor: Tensor): Tensor ->
+    tensor_adjoint(tensor).
+
+pub conj(tensor: Tensor): Tensor ->
+    tensor_conj(tensor).
+
+pub detach(tensor: Tensor): Tensor ->
+    tensor_detach(tensor).
+
+pub positive(tensor: Tensor): Tensor ->
+    tensor_positive(tensor).
+
+pub ravel(tensor: Tensor): Tensor ->
+    tensor_ravel(tensor).
+
+pub t(tensor: Tensor): Tensor ->
+    tensor_t(tensor).
+
+pub resolve_conj(tensor: Tensor): Tensor ->
+    tensor_resolve_conj(tensor).
+
+pub resolve_neg(tensor: Tensor): Tensor ->
+    tensor_resolve_neg(tensor).
+
+pub squeeze(tensor: Tensor): Tensor ->
+    tensor_squeeze(tensor).
+
+/**
+ * Tensor CUDA placement convenience alias matching torch.Tensor.cuda().
+ */
+pub cuda(tensor: Tensor): Tensor ->
+    to_device(tensor, 1, 0).
+
+/**
+ * Tensor CUDA placement convenience alias with an explicit ordinal.
+ */
+pub cuda(tensor: Tensor, index: Int): Tensor ->
+    to_device(tensor, 1, index).
+
+/**
+ * Explicit-gradient overload matching torch.Tensor.backward(gradient).
+ */
+pub backward(loss: Tensor, gradient: Tensor): Unit ->
+    backward_with_gradient(loss, gradient, false, false).
+
+/**
+ * Explicit-gradient overload with graph-retention controls.
+ */
+pub backward(loss: Tensor, gradient: Tensor, retain_graph: Bool, create_graph: Bool): Unit ->
+    backward_with_gradient(loss, gradient, retain_graph, create_graph).
+
+/**
+ * Multiple-root backward alias with the public Unit-shaped contract.
+ */
+pub backward_many(
+    outputs: List[Tensor],
+    grad_outputs: List[Tensor],
+    retain_graph: Bool = false,
+    create_graph: Bool = false,
+): Unit ->
+    let token = backward_many_token(outputs, grad_outputs, retain_graph, create_graph);
+    dispose(token).
+
+/**
+ * Common dtype overload of torch.Tensor.to().  PyTorch exposes additional
+ * Python-only overloads (including memory-format and copy controls); these
+ * reviewed CXX overloads preserve the ownership and conversion semantics
+ * available in the generated manifest without reintroducing ABI glue.
+ */
+pub to(tensor: Tensor, dtype: Int): Tensor ->
+    to_dtype(tensor, dtype).
+
+/**
+ * Device overload of torch.Tensor.to().
+ */
+pub to(tensor: Tensor, device_type: Int, device_index: Int): Tensor ->
+    to_device(tensor, device_type, device_index).
+
+/**
+ * Tensor clip alias matching the common floating-point torch.Tensor.clip overload.
+ */
+pub clip(tensor: Tensor, minimum: Float, maximum: Float): Tensor ->
+    tensor_clip_float(tensor, false, 0, minimum, false, 0, maximum).
+
+/**
+ * Tensor in-place addition alias matching torch.Tensor.add_.
+ */
+pub add_in_place(left: Tensor, right: Tensor, alpha: Float): Unit ->
+    tensor_add_in_place(left, right, false, 0, alpha).
+
+/**
+ * Tensor in-place subtraction alias matching torch.Tensor.sub_ / subtract_.
+ */
+pub subtract_in_place(left: Tensor, right: Tensor, alpha: Float): Unit ->
+    tensor_subtract_in_place(left, right, false, 0, alpha).
+
+/**
+ * Tensor in-place multiplication alias matching torch.Tensor.multiply_.
+ */
+pub multiply_in_place(left: Tensor, right: Tensor): Unit ->
+    tensor_multiply_in_place(left, right).
+
+/**
+ * Dense-to-COO convenience alias matching torch.Tensor.to_sparse_coo().
+ */
+pub to_sparse_coo(tensor: Tensor): Tensor ->
+    tensor_to_sparse_configured(tensor, 1, true, [], false, 0, false).
+
+/**
+ * Sparse-to-dense convenience alias matching torch.Tensor.to_dense().
+ */
+pub to_dense(tensor: Tensor): Tensor ->
+    tensor_to_dense_configured(tensor, 0, false, false, false).
+
+/**
+ * Complex-half conversion matching torch.chalf's default policy.
+ */
+pub chalf(tensor: Tensor): Tensor ->
+    to_dtype(tensor, 8).
+
+/**
+ * Tensor dtype convenience aliases matching PyTorch's no-argument methods.
+ */
+pub float(tensor: Tensor): Tensor ->
+    to_dtype(tensor, 6).
+
+pub double(tensor: Tensor): Tensor ->
+    to_dtype(tensor, 7).
+
+pub half(tensor: Tensor): Tensor ->
+    to_dtype(tensor, 5).
+
+pub int(tensor: Tensor): Tensor ->
+    to_dtype(tensor, 3).
+
+pub long(tensor: Tensor): Tensor ->
+    to_dtype(tensor, 4).
+
+pub bool(tensor: Tensor): Tensor ->
+    to_dtype(tensor, 11).
+
+pub bfloat16(tensor: Tensor): Tensor ->
+    to_dtype(tensor, 15).
+
+pub byte(tensor: Tensor): Tensor ->
+    to_dtype(tensor, 0).
+
+pub cdouble(tensor: Tensor): Tensor ->
+    to_dtype(tensor, 10).
+
+pub cfloat(tensor: Tensor): Tensor ->
+    to_dtype(tensor, 9).
+
+pub char(tensor: Tensor): Tensor ->
+    to_dtype(tensor, 1).
+
+pub short(tensor: Tensor): Tensor ->
+    to_dtype(tensor, 2).

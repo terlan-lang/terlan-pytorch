@@ -1,0 +1,69 @@
+/**
+ * Exact cumulative trapezoid, trapezoid, trapz, and KL-divergence dispatcher primitives.
+ */
+module pytorch.IntegrationCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Computes exact aten::cumulative_trapezoid.dx with an integer Scalar spacing.
+ */
+@compiler.native {pytorch.integration_completion.cumulative_trapezoid_dx_int}
+pub cumulative_trapezoid_dx_int(y: Tensor, dx: Int, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::cumulative_trapezoid.dx with a floating Scalar spacing.
+ */
+@compiler.native {pytorch.integration_completion.cumulative_trapezoid_dx_float}
+pub cumulative_trapezoid_dx_float(y: Tensor, dx: Float, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::cumulative_trapezoid.x with tensor coordinates.
+ */
+@compiler.native {pytorch.integration_completion.cumulative_trapezoid_x}
+pub cumulative_trapezoid_x(y: Tensor, x: Tensor, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::trapezoid.dx with an integer Scalar spacing.
+ */
+@compiler.native {pytorch.integration_completion.trapezoid_dx_int}
+pub trapezoid_dx_int(y: Tensor, dx: Int, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::trapezoid.dx with a floating Scalar spacing.
+ */
+@compiler.native {pytorch.integration_completion.trapezoid_dx_float}
+pub trapezoid_dx_float(y: Tensor, dx: Float, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::trapezoid.x with tensor coordinates.
+ */
+@compiler.native {pytorch.integration_completion.trapezoid_x}
+pub trapezoid_x(y: Tensor, x: Tensor, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::trapz.dx with floating spacing.
+ */
+@compiler.native {pytorch.integration_completion.trapz_dx}
+pub trapz_dx(y: Tensor, dx: Float, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::trapz.x with tensor coordinates.
+ */
+@compiler.native {pytorch.integration_completion.trapz_x}
+pub trapz_x(y: Tensor, x: Tensor, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::kl_div with explicit reduction and target representation.
+ */
+@compiler.native {pytorch.integration_completion.kl_div}
+pub kl_div(input: Tensor, target: Tensor, reduction: Int, log_target: Bool): Tensor ->
+    native.

@@ -1,0 +1,114 @@
+/**
+ * Typed optional-bound tensor slicing, independent copies, and replacement.
+ */
+module pytorch.Slice.
+
+import pytorch.SliceNative.{slice_all, slice_bounds, slice_copy_all, slice_copy_bounds, slice_copy_from, slice_copy_out_all, slice_copy_out_bounds, slice_copy_out_from, slice_copy_out_until, slice_copy_until, slice_from, slice_scatter_all, slice_scatter_bounds, slice_scatter_from, slice_scatter_out_all, slice_scatter_out_bounds, slice_scatter_out_from, slice_scatter_out_until, slice_scatter_until, slice_until}.
+
+import type pytorch.Tensor.
+
+/**
+ * Returns an absent slice endpoint.
+ */
+pub no_bound(): List[Int] -> [].
+
+/**
+ * Returns a present slice endpoint, including zero or a negative index.
+ */
+pub bound(value: Int): List[Int] ->
+    [value].
+
+has_no_bound(values: List[Int]): Bool ->
+    case values {
+        [] -> true;
+        [_head | _tail] -> false
+    }.
+
+/**
+ * Returns the whole tensor as a shared-storage view using PyTorch defaults.
+ */
+pub slice(tensor: Tensor): Tensor ->
+    slice_all(tensor, 0, 1).
+
+/**
+ * Returns a shared-storage view with independently optional bounds.
+ */
+pub slice(tensor: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Tensor ->
+    if {
+        has_no_bound(start) and has_no_bound(end) -> slice_all(tensor, dimension, step);
+        has_no_bound(start) -> slice_until(tensor, dimension, end[0], step);
+        has_no_bound(end) -> slice_from(tensor, dimension, start[0], step);
+        true -> slice_bounds(tensor, dimension, start[0], end[0], step)
+    }.
+
+/**
+ * Returns a full independently owned copy using PyTorch defaults.
+ */
+pub slice_copy(tensor: Tensor): Tensor ->
+    slice_copy_all(tensor, 0, 1).
+
+/**
+ * Returns independently owned storage with optional slice bounds.
+ */
+pub slice_copy(tensor: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Tensor ->
+    if {
+        has_no_bound(start) and has_no_bound(end) -> slice_copy_all(tensor, dimension, step);
+        has_no_bound(start) -> slice_copy_until(tensor, dimension, end[0], step);
+        has_no_bound(end) -> slice_copy_from(tensor, dimension, start[0], step);
+        true -> slice_copy_bounds(tensor, dimension, start[0], end[0], step)
+    }.
+
+/**
+ * Writes the exact sliced result into retained output storage.
+ */
+pub slice_copy_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimension: Int,
+    start: List[Int],
+    end: List[Int],
+    step: Int,
+): Unit ->
+    if {
+        has_no_bound(start) and has_no_bound(end) -> slice_copy_out_all(output, tensor, dimension, step);
+        has_no_bound(start) -> slice_copy_out_until(output, tensor, dimension, end[0], step);
+        has_no_bound(end) -> slice_copy_out_from(output, tensor, dimension, start[0], step);
+        true -> slice_copy_out_bounds(output, tensor, dimension, start[0], end[0], step)
+    }.
+
+/**
+ * Replaces a slice and returns independently owned storage.
+ */
+pub slice_scatter(
+    tensor: Tensor,
+    source: Tensor,
+    dimension: Int,
+    start: List[Int],
+    end: List[Int],
+    step: Int,
+): Tensor ->
+    if {
+        has_no_bound(start) and has_no_bound(end) -> slice_scatter_all(tensor, source, dimension, step);
+        has_no_bound(start) -> slice_scatter_until(tensor, source, dimension, end[0], step);
+        has_no_bound(end) -> slice_scatter_from(tensor, source, dimension, start[0], step);
+        true -> slice_scatter_bounds(tensor, source, dimension, start[0], end[0], step)
+    }.
+
+/**
+ * Writes a slice replacement into retained output storage.
+ */
+pub slice_scatter_out(
+    output: Tensor,
+    tensor: Tensor,
+    source: Tensor,
+    dimension: Int,
+    start: List[Int],
+    end: List[Int],
+    step: Int,
+): Unit ->
+    if {
+        has_no_bound(start) and has_no_bound(end) -> slice_scatter_out_all(output, tensor, source, dimension, step);
+        has_no_bound(start) -> slice_scatter_out_until(output, tensor, source, dimension, end[0], step);
+        has_no_bound(end) -> slice_scatter_out_from(output, tensor, source, dimension, start[0], step);
+        true -> slice_scatter_out_bounds(output, tensor, source, dimension, start[0], end[0], step)
+    }.

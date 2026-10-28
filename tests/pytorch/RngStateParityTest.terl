@@ -1,0 +1,13 @@
+/**
+ * CPU runtime evidence for LibTorch CPU RNG-state serialization.
+ */
+module pytorch.RngStateParityTest.
+
+import pytorch.RandomCompletion.{get_rng_state, set_rng_state}.
+import pytorch.TypeRelations.{equal}.
+
+@test
+pub rng_state_roundtrips_through_libtorch(): Bool ->
+    let state = get_rng_state();
+    set_rng_state(state);
+    equal(state, get_rng_state()).

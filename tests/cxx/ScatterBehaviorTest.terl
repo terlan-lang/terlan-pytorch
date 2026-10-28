@@ -1,0 +1,7 @@
+module pytorch_cxx.ScatterBehaviorTest.
+
+import pytorch.ScatterBehaviorSupport.{scatter_contracts_on}.
+
+@test
+pub scatter_cpu_contracts(): Bool ->
+    scatter_contracts_on("cpu", false).

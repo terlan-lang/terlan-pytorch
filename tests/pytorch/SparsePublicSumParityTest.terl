@@ -1,0 +1,30 @@
+module pytorch.SparsePublicSumParityTest.
+
+import pytorch.Sparse.to_sparse_dimensions.
+import pytorch.SparseCompletion.sparse_sum.
+import pytorch.Tensor.{dispose, dtype, from_floats, item_float, shape}.
+
+import type pytorch.Tensor.
+
+/**
+ * Proves torch.sparse.sum-compatible reductions over an owned COO tensor,
+ * including all-dimension, selected-dimension, and explicit-dtype forms.
+ */
+@test
+pub public_sparse_sum_matches_libtorch(): Bool ->
+    let dense = from_floats([1.0, 0.0, 0.0, 2.0], [2, 2]);
+    let sparse = to_sparse_dimensions(dense, 2);
+    let total = sparse_sum(sparse, [], false, 0, false);
+    let rows = sparse_sum(sparse, [1], true, 0, false);
+    let typed = sparse_sum(sparse, [], false, 7, true);
+    let valid =
+        item_float(total) == 3.0
+            and shape(rows) == [2]
+            and item_float(typed) == 3.0
+            and dtype(typed) == 7;
+    dispose(typed);
+    dispose(rows);
+    dispose(total);
+    dispose(sparse);
+    dispose(dense);
+    valid.

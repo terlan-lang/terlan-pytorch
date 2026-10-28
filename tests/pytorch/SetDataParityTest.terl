@@ -1,0 +1,19 @@
+/**
+ * CPU alias/value evidence for aten::set_data.
+ */
+module pytorch.SetDataParityTest.
+
+import pytorch.LinearStorageSourceCompletion.{set_source_tensor_in_place, set_source_tensor_storage_offset_in_place}.
+import pytorch.SetDataCompletion.set_data.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+import pytorch.TypeRelations.equal.
+
+@test
+pub set_data_replaces_tensor_contents(): Bool ->
+    let self = from_floats([1.0, 2.0], [2]);
+    let new_data = from_floats([3.0, 4.0], [2]);
+    set_data(self, new_data);
+    let valid = equal(self, new_data);
+    let rebound = from_floats([0.0, 0.0], [2]);
+    let source = from_floats([5.0, 6.0], [2]);
+    (set_source_tensor_in_place(rebound, source); let storage_view = from_floats([0.0], [1]); let storage_source = from_floats([7.0, 8.0, 9.0], [3]); (set_source_tensor_storage_offset_in_place(storage_view, storage_source, 1, [2], [1]); let storage_valid = shape(rebound) == [2] and shape(storage_view) == [2]; (dispose(storage_source); dispose(storage_view); dispose(source); dispose(rebound); dispose(new_data); dispose(self); valid and storage_valid))).

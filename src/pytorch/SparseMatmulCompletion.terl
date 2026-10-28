@@ -1,0 +1,54 @@
+/**
+ * Generated exact CXX sparse matrix multiplication forms.
+ */
+module pytorch.SparseMatmulCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact hspmm form.
+ */
+@compiler.native {pytorch.hspmm.default}
+pub hspmm_default(mat1: Tensor, mat2: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact hspmm output form.
+ */
+@compiler.native {pytorch.hspmm.out}
+pub hspmm_out_default(out: Tensor, mat1: Tensor, mat2: Tensor): Unit ->
+    native.
+
+/**
+ * Exact smm form.
+ */
+@compiler.native {pytorch.smm.default}
+pub smm_default(self: Tensor, mat2: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact sspaddmm form.
+ */
+@compiler.native {pytorch.sspaddmm.default}
+pub sspaddmm_default(
+    self: Tensor,
+    mat1: Tensor,
+    mat2: Tensor,
+    beta: Float = 1.0,
+    alpha: Float = 1.0,
+): Tensor ->
+    native.
+
+/**
+ * Exact sspaddmm output form.
+ */
+@compiler.native {pytorch.sspaddmm.out}
+pub sspaddmm_out_default(
+    out: Tensor,
+    self: Tensor,
+    mat1: Tensor,
+    mat2: Tensor,
+    beta: Float = 1.0,
+    alpha: Float = 1.0,
+): Unit ->
+    native.

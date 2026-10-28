@@ -1,0 +1,153 @@
+/**
+ * Generated direct-CXX implementation of the public tensor-joining surface.
+ */
+module pytorch.TensorJoining.
+
+import type pytorch.Tensor.
+
+/**
+ * Creates a block-diagonal matrix from tensors.
+ */
+@compiler.native {pytorch.tensor_joining.block_diag}
+pub block_diag(tensors: List[Tensor]): Tensor ->
+    native.
+
+/**
+ * Computes the Cartesian product of tensors.
+ */
+@compiler.native {pytorch.tensor_joining.cartesian_prod}
+pub cartesian_prod(tensors: List[Tensor]): Tensor ->
+    native.
+
+/**
+ * Stacks tensors as columns.
+ */
+@compiler.native {pytorch.tensor_joining.column_stack}
+pub column_stack(tensors: List[Tensor]): Tensor ->
+    native.
+
+/**
+ * Stacks tensors depth-wise.
+ */
+@compiler.native {pytorch.tensor_joining.dstack}
+pub dstack(tensors: List[Tensor]): Tensor ->
+    native.
+
+/**
+ * Stacks tensors horizontally.
+ */
+@compiler.native {pytorch.tensor_joining.hstack}
+pub hstack(tensors: List[Tensor]): Tensor ->
+    native.
+
+/**
+ * Stacks tensors vertically by rows.
+ */
+@compiler.native {pytorch.tensor_joining.row_stack}
+pub row_stack(tensors: List[Tensor]): Tensor ->
+    native.
+
+/**
+ * Stacks tensors vertically.
+ */
+@compiler.native {pytorch.tensor_joining.vstack}
+pub vstack(tensors: List[Tensor]): Tensor ->
+    native.
+
+/**
+ * Writes a block-diagonal matrix into an output tensor.
+ */
+@compiler.native {pytorch.tensor_joining.block_diag_out}
+pub block_diag_out(output: Tensor, tensors: List[Tensor]): Unit ->
+    native.
+
+/**
+ * Writes tensors stacked as columns into an output tensor.
+ */
+@compiler.native {pytorch.tensor_joining.column_stack_out}
+pub column_stack_out(output: Tensor, tensors: List[Tensor]): Unit ->
+    native.
+
+/**
+ * Writes tensors stacked depth-wise into an output tensor.
+ */
+@compiler.native {pytorch.tensor_joining.dstack_out}
+pub dstack_out(output: Tensor, tensors: List[Tensor]): Unit ->
+    native.
+
+/**
+ * Writes tensors stacked horizontally into an output tensor.
+ */
+@compiler.native {pytorch.tensor_joining.hstack_out}
+pub hstack_out(output: Tensor, tensors: List[Tensor]): Unit ->
+    native.
+
+/**
+ * Writes tensors stacked vertically by rows into an output tensor.
+ */
+@compiler.native {pytorch.tensor_joining.row_stack_out}
+pub row_stack_out(output: Tensor, tensors: List[Tensor]): Unit ->
+    native.
+
+/**
+ * Writes tensors stacked vertically into an output tensor.
+ */
+@compiler.native {pytorch.tensor_joining.vstack_out}
+pub vstack_out(output: Tensor, tensors: List[Tensor]): Unit ->
+    native.
+
+/**
+ * Concatenates tensors along one dimension.
+ */
+@compiler.native {pytorch.tensor_joining.cat}
+pub cat(tensors: List[Tensor], dimension: Int = 0): Tensor ->
+    native.
+
+/**
+ * Stacks tensors along one new dimension.
+ */
+@compiler.native {pytorch.tensor_joining.stack}
+pub stack(tensors: List[Tensor], dimension: Int = 0): Tensor ->
+    native.
+
+/**
+ * Concatenates tensors along one dimension.
+ */
+@compiler.native {pytorch.tensor_joining.concat}
+pub concat(tensors: List[Tensor], dimension: Int = 0): Tensor ->
+    native.
+
+/**
+ * Concatenates tensors along one dimension.
+ */
+@compiler.native {pytorch.tensor_joining.concatenate}
+pub concatenate(tensors: List[Tensor], dimension: Int = 0): Tensor ->
+    native.
+
+/**
+ * Writes concatenated tensors into an output tensor.
+ */
+@compiler.native {pytorch.tensor_joining.cat_out}
+pub cat_out(output: Tensor, tensors: List[Tensor], dimension: Int = 0): Unit ->
+    native.
+
+/**
+ * Writes stacked tensors into an output tensor.
+ */
+@compiler.native {pytorch.tensor_joining.stack_out}
+pub stack_out(output: Tensor, tensors: List[Tensor], dimension: Int = 0): Unit ->
+    native.
+
+/**
+ * Writes concatenated tensors into an output tensor.
+ */
+@compiler.native {pytorch.tensor_joining.concat_out}
+pub concat_out(output: Tensor, tensors: List[Tensor], dimension: Int = 0): Unit ->
+    native.
+
+/**
+ * Writes concatenated tensors into an output tensor.
+ */
+@compiler.native {pytorch.tensor_joining.concatenate_out}
+pub concatenate_out(output: Tensor, tensors: List[Tensor], dimension: Int = 0): Unit ->
+    native.

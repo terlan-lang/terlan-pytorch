@@ -1,0 +1,263 @@
+/**
+ * Generated direct-CXX implementation of div, divide, and true-divide Scalar/Tensor, rounding-mode, retained-output, and in-place operations.
+ */
+module pytorch.Division.
+
+import type pytorch.Tensor.
+
+/**
+ * Divides a tensor by a integer scalar through exact aten::div.Scalar.
+ */
+@compiler.native {pytorch.division.div_right_int}
+pub div_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Divides a tensor by a integer scalar with explicit floor or trunc rounding.
+ */
+@compiler.native {pytorch.division.div_right_int_mode}
+pub div_right_int_mode(tensor: Tensor, scalar: Int, rounding_mode: String): Tensor ->
+    native.
+
+/**
+ * Divides a tensor by a integer scalar in place.
+ */
+@compiler.native {pytorch.division.div_right_int_in_place}
+pub div_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Divides a tensor by a integer scalar in place with explicit rounding.
+ */
+@compiler.native {pytorch.division.div_right_int_mode_in_place}
+pub div_right_int_mode_in_place(tensor: Tensor, scalar: Int, rounding_mode: String): Unit ->
+    native.
+
+/**
+ * Writes tensor division by a integer scalar into retained output storage.
+ */
+@compiler.native {pytorch.division.div_right_int_out}
+pub div_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Writes rounded tensor division by a integer scalar into retained output storage.
+ */
+@compiler.native {pytorch.division.div_right_int_mode_out}
+pub div_right_int_mode_out(output: Tensor, tensor: Tensor, scalar: Int, rounding_mode: String): Unit ->
+    native.
+
+/**
+ * Divides a tensor by a floating-point scalar through exact aten::div.Scalar.
+ */
+@compiler.native {pytorch.division.div_right_float}
+pub div_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Divides a tensor by a floating-point scalar with explicit floor or trunc rounding.
+ */
+@compiler.native {pytorch.division.div_right_float_mode}
+pub div_right_float_mode(tensor: Tensor, scalar: Float, rounding_mode: String): Tensor ->
+    native.
+
+/**
+ * Divides a tensor by a floating-point scalar in place.
+ */
+@compiler.native {pytorch.division.div_right_float_in_place}
+pub div_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Divides a tensor by a floating-point scalar in place with explicit rounding.
+ */
+@compiler.native {pytorch.division.div_right_float_mode_in_place}
+pub div_right_float_mode_in_place(tensor: Tensor, scalar: Float, rounding_mode: String): Unit ->
+    native.
+
+/**
+ * Writes tensor division by a floating-point scalar into retained output storage.
+ */
+@compiler.native {pytorch.division.div_right_float_out}
+pub div_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Writes rounded tensor division by a floating-point scalar into retained output storage.
+ */
+@compiler.native {pytorch.division.div_right_float_mode_out}
+pub div_right_float_mode_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+    rounding_mode: String,
+): Unit ->
+    native.
+
+/**
+ * Divides two tensors with explicit floor or trunc rounding through exact aten::div.Tensor_mode.
+ */
+@compiler.native {pytorch.division.div_tensor_mode}
+pub div_tensor_mode(left: Tensor, right: Tensor, rounding_mode: String): Tensor ->
+    native.
+
+/**
+ * Writes two-tensor division into retained output storage through exact aten::div.out.
+ */
+@compiler.native {pytorch.division.div_tensor_out}
+pub div_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes rounded two-tensor division into retained output storage.
+ */
+@compiler.native {pytorch.division.div_tensor_mode_out}
+pub div_tensor_mode_out(output: Tensor, left: Tensor, right: Tensor, rounding_mode: String): Unit ->
+    native.
+
+/**
+ * Divides the left tensor by the right tensor in place.
+ */
+@compiler.native {pytorch.division.div_tensor_in_place}
+pub div_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Divides the left tensor by the right tensor in place with explicit rounding.
+ */
+@compiler.native {pytorch.division.div_tensor_mode_in_place}
+pub div_tensor_mode_in_place(left: Tensor, right: Tensor, rounding_mode: String): Unit ->
+    native.
+
+/**
+ * Divides a tensor by a integer scalar through exact aten::divide.Scalar.
+ */
+@compiler.native {pytorch.division.divide_right_int}
+pub divide_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Divides a tensor by a integer scalar with explicit floor or trunc rounding.
+ */
+@compiler.native {pytorch.division.divide_right_int_mode}
+pub divide_right_int_mode(tensor: Tensor, scalar: Int, rounding_mode: String): Tensor ->
+    native.
+
+/**
+ * Divides a tensor by a integer scalar in place.
+ */
+@compiler.native {pytorch.division.divide_right_int_in_place}
+pub divide_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Divides a tensor by a integer scalar in place with explicit rounding.
+ */
+@compiler.native {pytorch.division.divide_right_int_mode_in_place}
+pub divide_right_int_mode_in_place(tensor: Tensor, scalar: Int, rounding_mode: String): Unit ->
+    native.
+
+/**
+ * Divides a tensor by a floating-point scalar through exact aten::divide.Scalar.
+ */
+@compiler.native {pytorch.division.divide_right_float}
+pub divide_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Divides a tensor by a floating-point scalar with explicit floor or trunc rounding.
+ */
+@compiler.native {pytorch.division.divide_right_float_mode}
+pub divide_right_float_mode(tensor: Tensor, scalar: Float, rounding_mode: String): Tensor ->
+    native.
+
+/**
+ * Divides a tensor by a floating-point scalar in place.
+ */
+@compiler.native {pytorch.division.divide_right_float_in_place}
+pub divide_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Divides a tensor by a floating-point scalar in place with explicit rounding.
+ */
+@compiler.native {pytorch.division.divide_right_float_mode_in_place}
+pub divide_right_float_mode_in_place(tensor: Tensor, scalar: Float, rounding_mode: String): Unit ->
+    native.
+
+/**
+ * Divides two tensors with explicit floor or trunc rounding through exact aten::divide.Tensor_mode.
+ */
+@compiler.native {pytorch.division.divide_tensor_mode}
+pub divide_tensor_mode(left: Tensor, right: Tensor, rounding_mode: String): Tensor ->
+    native.
+
+/**
+ * Writes two-tensor division into retained output storage through exact aten::divide.out.
+ */
+@compiler.native {pytorch.division.divide_tensor_out}
+pub divide_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes rounded two-tensor division into retained output storage.
+ */
+@compiler.native {pytorch.division.divide_tensor_mode_out}
+pub divide_tensor_mode_out(output: Tensor, left: Tensor, right: Tensor, rounding_mode: String): Unit ->
+    native.
+
+/**
+ * Divides the left tensor by the right tensor in place.
+ */
+@compiler.native {pytorch.division.divide_tensor_in_place}
+pub divide_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Divides the left tensor by the right tensor in place with explicit rounding.
+ */
+@compiler.native {pytorch.division.divide_tensor_mode_in_place}
+pub divide_tensor_mode_in_place(left: Tensor, right: Tensor, rounding_mode: String): Unit ->
+    native.
+
+/**
+ * Performs true division by a integer scalar.
+ */
+@compiler.native {pytorch.division.true_divide_right_int}
+pub true_divide_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Performs true division by a integer scalar in place.
+ */
+@compiler.native {pytorch.division.true_divide_right_int_in_place}
+pub true_divide_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Performs true division by a floating-point scalar.
+ */
+@compiler.native {pytorch.division.true_divide_right_float}
+pub true_divide_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Performs true division by a floating-point scalar in place.
+ */
+@compiler.native {pytorch.division.true_divide_right_float_in_place}
+pub true_divide_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Writes two-tensor true division into retained output storage.
+ */
+@compiler.native {pytorch.division.true_divide_tensor_out}
+pub true_divide_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Performs true division by a tensor in place.
+ */
+@compiler.native {pytorch.division.true_divide_tensor_in_place}
+pub true_divide_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    native.

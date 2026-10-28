@@ -1,0 +1,22 @@
+/**
+ * Executable CXX evidence for the tensor-list einsum operator.
+ */
+module pytorch.EinsumCxxParityTest.
+
+import pytorch.Tensor.{dispose, from_floats, item_float, shape, sum}.
+import pytorch.TensorListTransforms.einsum.
+
+import type pytorch.Tensor.
+
+@test
+pub einsum_composition_matches_libtorch(): Bool ->
+    let left = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let right = from_floats([5.0, 6.0, 7.0, 8.0], [2, 2]);
+    let product = einsum("ij,jk->ik", [left, right]);
+    let total = sum(product);
+    let valid = shape(product) == [2, 2] and item_float(total) == 134.0;
+    dispose(total);
+    dispose(product);
+    dispose(right);
+    dispose(left);
+    valid.

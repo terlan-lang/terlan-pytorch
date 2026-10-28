@@ -1,0 +1,7 @@
+module pytorch_cxx.SpecialBehaviorTest.
+
+import pytorch.SpecialBehaviorSupport.{special_contracts_on}.
+
+@test
+pub cpu_special_contracts(): Bool ->
+    special_contracts_on("cpu", false).

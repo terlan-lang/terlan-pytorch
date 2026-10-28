@@ -1,0 +1,15 @@
+/**
+ * CPU runtime evidence for LibTorch implementation-generated seeding.
+ */
+module pytorch.SeedParityTest.
+
+import pytorch.RandomCompletion.{generator_dispose, initial_seed, manual_seed, seed}.
+
+@test
+pub generated_seed_matches_libtorch_state(): Bool ->
+    let restore = manual_seed(0);
+    generator_dispose(restore);
+    let generated = seed();
+    let observed = initial_seed();
+    let reset = manual_seed(0);
+    (generator_dispose(reset); generated == observed and initial_seed() == 0).

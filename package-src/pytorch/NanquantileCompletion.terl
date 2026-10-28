@@ -1,0 +1,48 @@
+/**
+ * Generated CXX NaN-quantile completion surface.
+ */
+module pytorch.NanquantileCompletion.
+
+import type pytorch.Tensor.
+
+@compiler.native {pytorch.nanquantile.tensor}
+pub nanquantile_tensor(
+    input: Tensor,
+    q: Tensor,
+    dimension: Int,
+    keep_dimension: Bool,
+    interpolation: String,
+): Tensor ->
+    native.
+
+@compiler.native {pytorch.nanquantile.tensor_out}
+pub nanquantile_tensor_out(
+    output: Tensor,
+    input: Tensor,
+    q: Tensor,
+    dimension: Int,
+    keep_dimension: Bool,
+    interpolation: String,
+): Unit ->
+    native.
+
+@compiler.native {pytorch.nanquantile.scalar}
+pub nanquantile_scalar(
+    input: Tensor,
+    q: Float,
+    dimension: Int,
+    keep_dimension: Bool,
+    interpolation: String,
+): Tensor ->
+    native.
+
+@compiler.native {pytorch.nanquantile.scalar_out}
+pub nanquantile_scalar_out(
+    output: Tensor,
+    input: Tensor,
+    q: Float,
+    dimension: Int,
+    keep_dimension: Bool,
+    interpolation: String,
+): Unit ->
+    native.

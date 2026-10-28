@@ -1,0 +1,20 @@
+/**
+ * CPU shape evidence for scaled dot-product attention with default optional settings.
+ */
+module pytorch.AttentionParityTest.
+
+import pytorch.AttentionCompletion.{scaled_dot_product_attention_default}.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+
+@test
+pub scaled_dot_product_attention_preserves_query_shape(): Bool ->
+    let query = from_floats([1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0], [1, 2, 4]);
+    let key = from_floats([1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0], [1, 2, 4]);
+    let value = from_floats([0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0], [1, 2, 4]);
+    let output = scaled_dot_product_attention_default(query, key, value, 0.0, false);
+    let valid = shape(output) == [1, 2, 4];
+    dispose(output);
+    dispose(value);
+    dispose(key);
+    dispose(query);
+    valid.

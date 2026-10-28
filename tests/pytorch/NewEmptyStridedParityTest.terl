@@ -1,0 +1,25 @@
+/**
+ * CPU parity evidence for aten::new_empty_strided.out.
+ */
+module pytorch.NewEmptyStridedParityTest.
+
+import pytorch.NewEmptyStrided.new_empty_strided.
+import pytorch.NewEmptyStridedCompletion.new_empty_strided_out.
+import pytorch.Tensor.{dispose, from_floats, shape, strides}.
+
+@test
+pub new_empty_strided_allocates_with_inherited_options(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [4]);
+    let actual = new_empty_strided(input, [2, 2], [2, 1]);
+    let valid = shape(actual) == [2, 2] and strides(actual) == [2, 1];
+    dispose(actual);
+    dispose(input);
+    valid.
+
+@test
+pub new_empty_strided_out_matches(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [4]);
+    let output = from_floats([], [0]);
+    new_empty_strided_out(output, input, [2, 2], [2, 1]);
+    let valid = shape(output) == [2, 2] and strides(output) == [2, 1];
+    (dispose(output); dispose(input); valid).

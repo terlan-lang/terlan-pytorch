@@ -1,0 +1,133 @@
+/**
+ * Typed tensor partition surface and retained-output compositions.
+ */
+module pytorch.ShapePartition.
+
+import pytorch.Tensor.{copy_in_place, dispose}.
+
+import type pytorch.Tensor.
+
+@compiler.native {pytorch.shape_partition.chunk}
+pub chunk(input: Tensor, chunks: Int, dimension: Int = 0): List[Tensor] ->
+    native.
+
+@compiler.native {pytorch.shape_partition.split_size}
+pub split_size(input: Tensor, size: Int, dimension: Int = 0): List[Tensor] ->
+    native.
+
+@compiler.native {pytorch.shape_partition.split_sizes}
+pub split_sizes(input: Tensor, sizes: List[Int], dimension: Int = 0): List[Tensor] ->
+    native.
+
+@compiler.native {pytorch.shape_partition.tensor_split_sections}
+pub tensor_split_sections(input: Tensor, sections: Int, dimension: Int = 0): List[Tensor] ->
+    native.
+
+@compiler.native {pytorch.shape_partition.tensor_split_indices}
+pub tensor_split_indices(input: Tensor, indices: List[Int], dimension: Int = 0): List[Tensor] ->
+    native.
+
+@compiler.native {pytorch.shape_partition.tensor_split_tensor}
+pub tensor_split_tensor(
+    input: Tensor,
+    indices_or_sections: Tensor,
+    dimension: Int = 0,
+): List[Tensor] ->
+    native.
+
+@compiler.native {pytorch.shape_partition.unbind}
+pub unbind(input: Tensor, dimension: Int = 0): List[Tensor] ->
+    native.
+
+/**
+ * Splits a tensor along its depth axis (dimension 2).
+ */
+pub dsplit_sections(input: Tensor, sections: Int): List[Tensor] ->
+    tensor_split_sections(input, sections, 2).
+
+/**
+ * Splits a tensor at depth-axis indices (dimension 2).
+ */
+pub dsplit_indices(input: Tensor, indices: List[Int]): List[Tensor] ->
+    tensor_split_indices(input, indices, 2).
+
+/**
+ * Splits a tensor along its horizontal axis (dimension 1).
+ */
+pub hsplit_sections(input: Tensor, sections: Int): List[Tensor] ->
+    tensor_split_sections(input, sections, 1).
+
+/**
+ * Splits a tensor at horizontal-axis indices (dimension 1).
+ */
+pub hsplit_indices(input: Tensor, indices: List[Int]): List[Tensor] ->
+    tensor_split_indices(input, indices, 1).
+
+/**
+ * Splits a tensor along its vertical axis (dimension 0).
+ */
+pub vsplit_sections(input: Tensor, sections: Int): List[Tensor] ->
+    tensor_split_sections(input, sections, 0).
+
+/**
+ * Splits a tensor at vertical-axis indices (dimension 0).
+ */
+pub vsplit_indices(input: Tensor, indices: List[Int]): List[Tensor] ->
+    tensor_split_indices(input, indices, 0).
+
+pub split_copy_tensor_out(input: Tensor, outputs: List[Tensor], size: Int, dimension: Int = 0): Unit ->
+    let values = split_size(input, size, dimension);
+    copy_parts(values, outputs).
+
+pub split_with_sizes_copy_out(
+    input: Tensor,
+    outputs: List[Tensor],
+    sizes: List[Int],
+    dimension: Int = 0,
+): Unit ->
+    let values = split_sizes(input, sizes, dimension);
+    copy_parts(values, outputs).
+
+pub unbind_copy_int_out(input: Tensor, outputs: List[Tensor], dimension: Int = 0): Unit ->
+    let values = unbind(input, dimension);
+    copy_parts(values, outputs).
+
+pub unsafe_split_tensor_out(
+    input: Tensor,
+    outputs: List[Tensor],
+    size: Int,
+    dimension: Int = 0,
+): Unit ->
+    let values = split_size(input, size, dimension);
+    copy_parts(values, outputs).
+
+pub unsafe_split_with_sizes_out(
+    input: Tensor,
+    outputs: List[Tensor],
+    sizes: List[Int],
+    dimension: Int = 0,
+): Unit ->
+    let values = split_sizes(input, sizes, dimension);
+    copy_parts(values, outputs).
+
+copy_parts(values: List[Tensor], outputs: List[Tensor]): Unit ->
+    case values {
+        [] -> Unit;
+        [value | rest_values] -> copy_item(value, rest_values, outputs)
+    }.
+
+copy_item(value: Tensor, rest_values: List[Tensor], outputs: List[Tensor]): Unit ->
+    case outputs {
+        [] -> dispose(value);
+        [target | rest_out] -> copy_value(target, value, rest_values, rest_out)
+    }.
+
+copy_value(
+    target: Tensor,
+    value: Tensor,
+    rest_values: List[Tensor],
+    rest_out: List[Tensor],
+): Unit ->
+    copy_in_place(target, value);
+    dispose(value);
+    copy_parts(rest_values, rest_out).

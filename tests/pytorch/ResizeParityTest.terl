@@ -1,0 +1,42 @@
+/**
+ * Public evidence for functional, retained-output, and in-place resize forms.
+ */
+module pytorch.ResizeParityTest.
+
+import pytorch.Tensor.{cpu, dispose, empty_strided, empty_strided_out, from_floats, resize, resize_in_place, resize_out, shape, strides}.
+import pytorch.TypeRelations.equal.
+
+/**
+ * Validates shape mutation and retained-output behavior against LibTorch.
+ */
+@test
+pub resize_forms_preserve_values_and_shapes(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let functional = resize(source, [4], false, 0);
+    let output = from_floats([], [0]);
+    resize_out(output, source, [1, 4], false, 0);
+    resize_in_place(source, [4], false, 0);
+    let expected_functional = from_floats([1.0, 2.0, 3.0, 4.0], [4]);
+    let expected_output = from_floats([1.0, 2.0, 3.0, 4.0], [1, 4]);
+    let valid =
+        equal(functional, expected_functional)
+            and equal(output, expected_output)
+            and shape(functional) == [4]
+            and shape(output) == [1, 4]
+            and shape(source) == [4];
+    (dispose(expected_output); dispose(expected_functional); dispose(output); dispose(functional); dispose(source); valid).
+
+/**
+ * Validates explicit-stride allocation and retained-output stride mutation.
+ */
+@test
+pub empty_strided_forms_preserve_layout(): Bool ->
+    let allocated = empty_strided([2, 2], [1, 2], true, 6, true, 0, true, cpu(), false, false);
+    let output = from_floats([], [0]);
+    empty_strided_out(output, [2, 2], [2, 1]);
+    let valid =
+        shape(allocated) == [2, 2]
+            and strides(allocated) == [1, 2]
+            and shape(output) == [2, 2]
+            and strides(output) == [2, 1];
+    (dispose(output); dispose(allocated); valid).

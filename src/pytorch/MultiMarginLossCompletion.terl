@@ -1,0 +1,95 @@
+/**
+ * Generated CXX multi-margin-loss completion surface.
+ */
+module pytorch.MultiMarginLossCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Computes multi-margin loss without class weights.
+ */
+@compiler.native {pytorch.multi_margin_loss.multi_margin_loss_default}
+pub multi_margin_loss_default(
+    input: Tensor,
+    target: Tensor,
+    p: Float,
+    margin: Float,
+    reduction: Int,
+): Tensor ->
+    native.
+
+/**
+ * Computes multi-margin loss with class weights.
+ */
+@compiler.native {pytorch.multi_margin_loss.multi_margin_loss_weight}
+pub multi_margin_loss_weight(
+    input: Tensor,
+    target: Tensor,
+    p: Float,
+    margin: Float,
+    weight: Tensor,
+    reduction: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes multi-margin loss into retained output without class weights.
+ */
+@compiler.native {pytorch.multi_margin_loss.multi_margin_loss_out_default}
+pub multi_margin_loss_out_default(
+    output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    p: Float,
+    margin: Float,
+    reduction: Int,
+): Unit ->
+    native.
+
+/**
+ * Writes multi-margin loss into retained output with class weights.
+ */
+@compiler.native {pytorch.multi_margin_loss.multi_margin_loss_out_weight}
+pub multi_margin_loss_out_weight(
+    output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    p: Float,
+    margin: Float,
+    weight: Tensor,
+    reduction: Int,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX multi-margin-loss backward leaf.
+ */
+@compiler.native {pytorch.multi_margin_loss.backward}
+pub multi_margin_loss_backward(
+    gradient_output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    p: Float,
+    margin: Float,
+    has_weight: Bool,
+    weight: Tensor,
+    reduction: Int,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX multi-margin-loss backward retained-output leaf.
+ */
+@compiler.native {pytorch.multi_margin_loss.backward_out}
+pub multi_margin_loss_backward_out(
+    grad_input: Tensor,
+    gradient_output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    p: Float,
+    margin: Float,
+    has_weight: Bool,
+    weight: Tensor,
+    reduction: Int,
+): Unit ->
+    native.

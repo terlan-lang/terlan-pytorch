@@ -1,0 +1,569 @@
+/**
+ * Generated exact CXX membership, sorted lookup, and bucketization dispatchers.
+ */
+module pytorch.LookupNative.
+
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+
+/**
+ * Writes tensor membership results into retained output storage.
+ */
+pub isin_tensor_out(
+    output: Tensor,
+    elements: Tensor,
+    test_elements: Tensor,
+    assume_unique: Bool,
+    invert: Bool,
+): Unit ->
+    lookup_isin_tensor_tensor_out(output, elements, test_elements, assume_unique, invert).
+
+/**
+ * Evaluates tensor-scalar or scalar-tensor membership.
+ */
+pub isin_scalar(
+    tensor: Tensor,
+    mode: Int,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    assume_unique: Bool,
+    invert: Bool,
+): Tensor ->
+    if {
+        mode == 0 -> lookup_isin_tensor_scalar(
+            tensor,
+            value_is_int,
+            value_int,
+            value_float,
+            assume_unique,
+            invert,
+        );
+        true -> lookup_isin_scalar_tensor(
+            value_is_int,
+            value_int,
+            value_float,
+            tensor,
+            assume_unique,
+            invert,
+        )
+    }.
+
+/**
+ * Writes tensor-scalar or scalar-tensor membership into retained output storage.
+ */
+pub isin_scalar_out(
+    output: Tensor,
+    tensor: Tensor,
+    mode: Int,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    assume_unique: Bool,
+    invert: Bool,
+): Unit ->
+    if {
+        mode == 0 -> lookup_isin_tensor_scalar_out(
+            output,
+            tensor,
+            value_is_int,
+            value_int,
+            value_float,
+            assume_unique,
+            invert,
+        );
+        true -> lookup_isin_scalar_tensor_out(
+            output,
+            value_is_int,
+            value_int,
+            value_float,
+            tensor,
+            assume_unique,
+            invert,
+        )
+    }.
+
+/**
+ * Finds tensor insertion indices with explicit side, width, and optional sorter policy.
+ */
+pub searchsorted_tensor(
+    sorted_sequence: Tensor,
+    values: Tensor,
+    out_int32: Bool,
+    right: Bool,
+    side: Int,
+    sorter: Tensor,
+    has_sorter: Bool,
+): Tensor ->
+    if {
+        side == 0 -> lookup_searchsorted_tensor(
+            sorted_sequence,
+            values,
+            out_int32,
+            right,
+            false,
+            "",
+            has_sorter,
+            sorter,
+        );
+        side == 1 -> lookup_searchsorted_tensor(
+            sorted_sequence,
+            values,
+            out_int32,
+            right,
+            true,
+            "left",
+            has_sorter,
+            sorter,
+        );
+        side == 2 -> lookup_searchsorted_tensor(
+            sorted_sequence,
+            values,
+            out_int32,
+            right,
+            true,
+            "right",
+            has_sorter,
+            sorter,
+        );
+        true -> let _failed = fail(exit_reason(7290));
+        lookup_searchsorted_tensor(
+            sorted_sequence,
+            values,
+            out_int32,
+            right,
+            false,
+            "",
+            has_sorter,
+            sorter,
+        )
+    }.
+
+/**
+ * Writes tensor insertion indices into retained output storage.
+ */
+pub searchsorted_tensor_out(
+    output: Tensor,
+    sorted_sequence: Tensor,
+    values: Tensor,
+    out_int32: Bool,
+    right: Bool,
+    side: Int,
+    sorter: Tensor,
+    has_sorter: Bool,
+): Unit ->
+    if {
+        side == 0 -> lookup_searchsorted_tensor_out(
+            output,
+            sorted_sequence,
+            values,
+            out_int32,
+            right,
+            false,
+            "",
+            has_sorter,
+            sorter,
+        );
+        side == 1 -> lookup_searchsorted_tensor_out(
+            output,
+            sorted_sequence,
+            values,
+            out_int32,
+            right,
+            true,
+            "left",
+            has_sorter,
+            sorter,
+        );
+        side == 2 -> lookup_searchsorted_tensor_out(
+            output,
+            sorted_sequence,
+            values,
+            out_int32,
+            right,
+            true,
+            "right",
+            has_sorter,
+            sorter,
+        );
+        true -> let _failed = fail(exit_reason(7290));
+        lookup_searchsorted_tensor_out(
+            output,
+            sorted_sequence,
+            values,
+            out_int32,
+            right,
+            false,
+            "",
+            has_sorter,
+            sorter,
+        )
+    }.
+
+/**
+ * Finds one scalar insertion index with explicit side, width, and optional sorter policy.
+ */
+pub searchsorted_scalar(
+    sorted_sequence: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    out_int32: Bool,
+    right: Bool,
+    side: Int,
+    sorter: Tensor,
+    has_sorter: Bool,
+): Tensor ->
+    if {
+        side == 0 -> lookup_searchsorted_scalar(
+            sorted_sequence,
+            value_is_int,
+            value_int,
+            value_float,
+            out_int32,
+            right,
+            false,
+            "",
+            has_sorter,
+            sorter,
+        );
+        side == 1 -> lookup_searchsorted_scalar(
+            sorted_sequence,
+            value_is_int,
+            value_int,
+            value_float,
+            out_int32,
+            right,
+            true,
+            "left",
+            has_sorter,
+            sorter,
+        );
+        side == 2 -> lookup_searchsorted_scalar(
+            sorted_sequence,
+            value_is_int,
+            value_int,
+            value_float,
+            out_int32,
+            right,
+            true,
+            "right",
+            has_sorter,
+            sorter,
+        );
+        true -> let _failed = fail(exit_reason(7290));
+        lookup_searchsorted_scalar(
+            sorted_sequence,
+            value_is_int,
+            value_int,
+            value_float,
+            out_int32,
+            right,
+            false,
+            "",
+            has_sorter,
+            sorter,
+        )
+    }.
+
+/**
+ * Writes one scalar insertion index into retained output storage.
+ */
+pub searchsorted_scalar_out(
+    output: Tensor,
+    sorted_sequence: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    out_int32: Bool,
+    right: Bool,
+    side: Int,
+    sorter: Tensor,
+    has_sorter: Bool,
+): Unit ->
+    if {
+        side == 0 -> lookup_searchsorted_scalar_out(
+            output,
+            sorted_sequence,
+            value_is_int,
+            value_int,
+            value_float,
+            out_int32,
+            right,
+            false,
+            "",
+            has_sorter,
+            sorter,
+        );
+        side == 1 -> lookup_searchsorted_scalar_out(
+            output,
+            sorted_sequence,
+            value_is_int,
+            value_int,
+            value_float,
+            out_int32,
+            right,
+            true,
+            "left",
+            has_sorter,
+            sorter,
+        );
+        side == 2 -> lookup_searchsorted_scalar_out(
+            output,
+            sorted_sequence,
+            value_is_int,
+            value_int,
+            value_float,
+            out_int32,
+            right,
+            true,
+            "right",
+            has_sorter,
+            sorter,
+        );
+        true -> let _failed = fail(exit_reason(7290));
+        lookup_searchsorted_scalar_out(
+            output,
+            sorted_sequence,
+            value_is_int,
+            value_int,
+            value_float,
+            out_int32,
+            right,
+            false,
+            "",
+            has_sorter,
+            sorter,
+        )
+    }.
+
+/**
+ * Writes tensor bucket indices into retained output storage.
+ */
+pub bucketize_tensor_out(
+    output: Tensor,
+    values: Tensor,
+    boundaries: Tensor,
+    out_int32: Bool,
+    right: Bool,
+): Unit ->
+    lookup_bucketize_tensor_out(output, values, boundaries, out_int32, right).
+
+/**
+ * Returns the bucket index for an integer or floating-point scalar.
+ */
+pub bucketize_scalar(
+    boundaries: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    out_int32: Bool,
+    right: Bool,
+): Tensor ->
+    lookup_bucketize_scalar(value_is_int, value_int, value_float, boundaries, out_int32, right).
+
+/**
+ * Writes one scalar bucket index into retained output storage.
+ */
+pub bucketize_scalar_out(
+    output: Tensor,
+    boundaries: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    out_int32: Bool,
+    right: Bool,
+): Unit ->
+    lookup_bucketize_scalar_out(
+        output,
+        value_is_int,
+        value_int,
+        value_float,
+        boundaries,
+        out_int32,
+        right,
+    ).
+
+/**
+ * Generated exact CXX lookup leaf.
+ */
+@compiler.native {pytorch.lookup_native.cxx.lookup_isin_tensor_tensor_out}
+lookup_isin_tensor_tensor_out(
+    out: Tensor,
+    elements: Tensor,
+    test_elements: Tensor,
+    assume_unique: Bool,
+    invert: Bool,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX lookup leaf.
+ */
+@compiler.native {pytorch.lookup_native.cxx.lookup_isin_tensor_scalar}
+lookup_isin_tensor_scalar(
+    elements: Tensor,
+    test_element_is_integer: Bool,
+    test_element_integer: Int,
+    test_element_floating: Float,
+    assume_unique: Bool,
+    invert: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX lookup leaf.
+ */
+@compiler.native {pytorch.lookup_native.cxx.lookup_isin_scalar_tensor}
+lookup_isin_scalar_tensor(
+    element_is_integer: Bool,
+    element_integer: Int,
+    element_floating: Float,
+    test_elements: Tensor,
+    assume_unique: Bool,
+    invert: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX lookup leaf.
+ */
+@compiler.native {pytorch.lookup_native.cxx.lookup_isin_tensor_scalar_out}
+lookup_isin_tensor_scalar_out(
+    out: Tensor,
+    elements: Tensor,
+    test_element_is_integer: Bool,
+    test_element_integer: Int,
+    test_element_floating: Float,
+    assume_unique: Bool,
+    invert: Bool,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX lookup leaf.
+ */
+@compiler.native {pytorch.lookup_native.cxx.lookup_isin_scalar_tensor_out}
+lookup_isin_scalar_tensor_out(
+    out: Tensor,
+    element_is_integer: Bool,
+    element_integer: Int,
+    element_floating: Float,
+    test_elements: Tensor,
+    assume_unique: Bool,
+    invert: Bool,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX lookup leaf.
+ */
+@compiler.native {pytorch.lookup_native.cxx.lookup_searchsorted_tensor}
+lookup_searchsorted_tensor(
+    sorted_sequence: Tensor,
+    self: Tensor,
+    out_int32: Bool,
+    right: Bool,
+    has_side: Bool,
+    side: String,
+    has_sorter: Bool,
+    sorter: Tensor,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX lookup leaf.
+ */
+@compiler.native {pytorch.lookup_native.cxx.lookup_searchsorted_scalar}
+lookup_searchsorted_scalar(
+    sorted_sequence: Tensor,
+    self_is_integer: Bool,
+    self_integer: Int,
+    self_floating: Float,
+    out_int32: Bool,
+    right: Bool,
+    has_side: Bool,
+    side: String,
+    has_sorter: Bool,
+    sorter: Tensor,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX lookup leaf.
+ */
+@compiler.native {pytorch.lookup_native.cxx.lookup_searchsorted_tensor_out}
+lookup_searchsorted_tensor_out(
+    out: Tensor,
+    sorted_sequence: Tensor,
+    self: Tensor,
+    out_int32: Bool,
+    right: Bool,
+    has_side: Bool,
+    side: String,
+    has_sorter: Bool,
+    sorter: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX lookup leaf.
+ */
+@compiler.native {pytorch.lookup_native.cxx.lookup_searchsorted_scalar_out}
+lookup_searchsorted_scalar_out(
+    out: Tensor,
+    sorted_sequence: Tensor,
+    self_is_integer: Bool,
+    self_integer: Int,
+    self_floating: Float,
+    out_int32: Bool,
+    right: Bool,
+    has_side: Bool,
+    side: String,
+    has_sorter: Bool,
+    sorter: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX lookup leaf.
+ */
+@compiler.native {pytorch.lookup_native.cxx.lookup_bucketize_tensor_out}
+lookup_bucketize_tensor_out(
+    out: Tensor,
+    self: Tensor,
+    boundaries: Tensor,
+    out_int32: Bool,
+    right: Bool,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX lookup leaf.
+ */
+@compiler.native {pytorch.lookup_native.cxx.lookup_bucketize_scalar}
+lookup_bucketize_scalar(
+    self_is_integer: Bool,
+    self_integer: Int,
+    self_floating: Float,
+    boundaries: Tensor,
+    out_int32: Bool,
+    right: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX lookup leaf.
+ */
+@compiler.native {pytorch.lookup_native.cxx.lookup_bucketize_scalar_out}
+lookup_bucketize_scalar_out(
+    out: Tensor,
+    self_is_integer: Bool,
+    self_integer: Int,
+    self_floating: Float,
+    boundaries: Tensor,
+    out_int32: Bool,
+    right: Bool,
+): Unit ->
+    native.

@@ -1,0 +1,180 @@
+module pytorch.FusedArithmeticParityTest.
+
+import pytorch.Binary.eq_tensor.
+import pytorch.FusedArithmetic.{addbmm, addbmm_in_place, addbmm_out, addcdiv, addcdiv_in_place, addcdiv_out, addcmul, addcmul_in_place, addcmul_out, addmm, addmm_in_place, addmm_out, addmv, addmv_in_place, addmv_out, addr, addr_in_place, addr_out, baddbmm, baddbmm_in_place, baddbmm_out}.
+import pytorch.Scalar.{from_float as scalar_float, from_int as scalar_int}.
+import pytorch.Tensor.{clone, dispose, from_floats, item_bool}.
+import pytorch.Unary.all.
+
+import type pytorch.Tensor.
+
+/**
+ * Compares complete tensor contents and releases both operands.
+ */
+same_and_dispose(actual: Tensor, expected: Tensor): Bool ->
+    let equal = eq_tensor(actual, expected);
+    let reduced = all(equal);
+    let matches = item_bool(reduced);
+    dispose(reduced);
+    dispose(equal);
+    dispose(expected);
+    dispose(actual);
+    matches.
+
+/**
+ * Proves default scalar behavior for every fused arithmetic family.
+ */
+@test
+pub default_fused_arithmetic_matches_libtorch(): Bool ->
+    let identity_batch = from_floats([1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0], [2, 2, 2]);
+    let matrix_batch = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [2, 2, 2]);
+    let addbmm_input = from_floats([1.0, 1.0, 1.0, 1.0], [2, 2]);
+    let addbmm_result = addbmm(addbmm_input, identity_batch, matrix_batch);
+    let addbmm_ok = same_and_dispose(addbmm_result, from_floats([7.0, 9.0, 11.0, 13.0], [2, 2]));
+    let dividend = from_floats([4.0, 8.0], [2]);
+    let divisor = from_floats([2.0, 4.0], [2]);
+    let addcdiv_input = from_floats([10.0, 20.0], [2]);
+    let addcdiv_result = addcdiv(addcdiv_input, dividend, divisor);
+    let addcdiv_ok = same_and_dispose(addcdiv_result, from_floats([12.0, 22.0], [2]));
+    let factor1 = from_floats([2.0, 3.0], [2]);
+    let factor2 = from_floats([4.0, 5.0], [2]);
+    let addcmul_input = from_floats([1.0, 2.0], [2]);
+    let addcmul_result = addcmul(addcmul_input, factor1, factor2);
+    let addcmul_ok = same_and_dispose(addcmul_result, from_floats([9.0, 17.0], [2]));
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let identity = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
+    let addmm_input = from_floats([1.0, 1.0, 1.0, 1.0], [2, 2]);
+    let addmm_result = addmm(addmm_input, matrix, identity);
+    let addmm_ok = same_and_dispose(addmm_result, from_floats([2.0, 3.0, 4.0, 5.0], [2, 2]));
+    let vector = from_floats([1.0, 2.0], [2]);
+    let addmv_input = from_floats([1.0, 1.0], [2]);
+    let addmv_result = addmv(addmv_input, matrix, vector);
+    let addmv_ok = same_and_dispose(addmv_result, from_floats([6.0, 12.0], [2]));
+    let outer_left = from_floats([1.0, 2.0], [2]);
+    let outer_right = from_floats([3.0, 4.0], [2]);
+    let addr_input = from_floats([1.0, 1.0, 1.0, 1.0], [2, 2]);
+    let addr_result = addr(addr_input, outer_left, outer_right);
+    let addr_ok = same_and_dispose(addr_result, from_floats([4.0, 5.0, 7.0, 9.0], [2, 2]));
+    let baddbmm_input = from_floats([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], [2, 2, 2]);
+    let baddbmm_result = baddbmm(baddbmm_input, identity_batch, matrix_batch);
+    let baddbmm_ok =
+        same_and_dispose(
+            baddbmm_result,
+            from_floats([2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0], [2, 2, 2]),
+        );
+    dispose(baddbmm_input);
+    dispose(addr_input);
+    dispose(outer_right);
+    dispose(outer_left);
+    dispose(addmv_input);
+    dispose(vector);
+    dispose(addmm_input);
+    dispose(identity);
+    dispose(matrix);
+    dispose(addcmul_input);
+    dispose(factor2);
+    dispose(factor1);
+    dispose(addcdiv_input);
+    dispose(divisor);
+    dispose(dividend);
+    dispose(addbmm_input);
+    dispose(matrix_batch);
+    dispose(identity_batch);
+    addbmm_ok and addcdiv_ok and addcmul_ok and addmm_ok and addmv_ok and addr_ok and baddbmm_ok.
+
+/**
+ * Proves configured functional, retained-output, and mutation behavior.
+ */
+@test
+pub configured_storage_forms_match_libtorch(): Bool ->
+    let beta = scalar_int(2);
+    let alpha = scalar_float(0.5);
+    let identity_batch = from_floats([1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0], [2, 2, 2]);
+    let matrix_batch = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [2, 2, 2]);
+    let addbmm_input = from_floats([1.0, 1.0, 1.0, 1.0], [2, 2]);
+    let addbmm_functional = addbmm(addbmm_input, identity_batch, matrix_batch, beta, alpha);
+    let addbmm_output = from_floats([-99.0, -99.0, -99.0, -99.0], [2, 2]);
+    addbmm_out(addbmm_output, addbmm_input, identity_batch, matrix_batch, beta, alpha);
+    let addbmm_mutation = clone(addbmm_input);
+    (addbmm_in_place(addbmm_mutation, identity_batch, matrix_batch, beta, alpha); let addbmm_expected = from_floats([5.0, 6.0, 7.0, 8.0], [2, 2]);
+let addbmm_functional_ok = same_and_dispose(addbmm_functional, clone(addbmm_expected));
+let addbmm_output_ok = same_and_dispose(addbmm_output, clone(addbmm_expected));
+let addbmm_mutation_ok = same_and_dispose(addbmm_mutation, addbmm_expected);
+let dividend = from_floats([4.0, 8.0], [2]);
+let divisor = from_floats([2.0, 4.0], [2]);
+let addcdiv_input = from_floats([10.0, 20.0], [2]);
+let addcdiv_functional = addcdiv(addcdiv_input, dividend, divisor, alpha);
+let addcdiv_output = from_floats([-99.0, -99.0], [2]);
+(addcdiv_out(addcdiv_output, addcdiv_input, dividend, divisor, alpha); let addcdiv_mutation = clone(addcdiv_input);
+(addcdiv_in_place(addcdiv_mutation, dividend, divisor, alpha); let addcdiv_expected = from_floats([11.0, 21.0], [2]);
+let addcdiv_functional_ok = same_and_dispose(addcdiv_functional, clone(addcdiv_expected));
+let addcdiv_output_ok = same_and_dispose(addcdiv_output, clone(addcdiv_expected));
+let addcdiv_mutation_ok = same_and_dispose(addcdiv_mutation, addcdiv_expected);
+let factor1 = from_floats([2.0, 3.0], [2]);
+let factor2 = from_floats([4.0, 5.0], [2]);
+let addcmul_input = from_floats([1.0, 2.0], [2]);
+let addcmul_functional = addcmul(addcmul_input, factor1, factor2, alpha);
+let addcmul_output = from_floats([-99.0, -99.0], [2]);
+(addcmul_out(addcmul_output, addcmul_input, factor1, factor2, alpha); let addcmul_mutation = clone(addcmul_input);
+(addcmul_in_place(addcmul_mutation, factor1, factor2, alpha); let addcmul_expected = from_floats([5.0, 9.5], [2]);
+let addcmul_functional_ok = same_and_dispose(addcmul_functional, clone(addcmul_expected));
+let addcmul_output_ok = same_and_dispose(addcmul_output, clone(addcmul_expected));
+let addcmul_mutation_ok = same_and_dispose(addcmul_mutation, addcmul_expected);
+let matrix = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+let identity = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
+let addmm_input = from_floats([1.0, 1.0, 1.0, 1.0], [2, 2]);
+let addmm_functional = addmm(addmm_input, matrix, identity, beta, alpha);
+let addmm_output = from_floats([-99.0, -99.0, -99.0, -99.0], [2, 2]);
+(addmm_out(addmm_output, addmm_input, matrix, identity, beta, alpha); let addmm_mutation = clone(addmm_input);
+(addmm_in_place(addmm_mutation, matrix, identity, beta, alpha); let addmm_expected = from_floats([2.5, 3.0, 3.5, 4.0], [2, 2]);
+let addmm_functional_ok = same_and_dispose(addmm_functional, clone(addmm_expected));
+let addmm_output_ok = same_and_dispose(addmm_output, clone(addmm_expected));
+let addmm_mutation_ok = same_and_dispose(addmm_mutation, addmm_expected);
+let vector = from_floats([1.0, 2.0], [2]);
+let addmv_input = from_floats([1.0, 1.0], [2]);
+let addmv_functional = addmv(addmv_input, matrix, vector, beta, alpha);
+let addmv_output = from_floats([-99.0, -99.0], [2]);
+(addmv_out(addmv_output, addmv_input, matrix, vector, beta, alpha); let addmv_mutation = clone(addmv_input);
+(addmv_in_place(addmv_mutation, matrix, vector, beta, alpha); let addmv_expected = from_floats([4.5, 7.5], [2]);
+let addmv_functional_ok = same_and_dispose(addmv_functional, clone(addmv_expected));
+let addmv_output_ok = same_and_dispose(addmv_output, clone(addmv_expected));
+let addmv_mutation_ok = same_and_dispose(addmv_mutation, addmv_expected);
+let outer_left = from_floats([1.0, 2.0], [2]);
+let outer_right = from_floats([3.0, 4.0], [2]);
+let addr_input = from_floats([1.0, 1.0, 1.0, 1.0], [2, 2]);
+let addr_functional = addr(addr_input, outer_left, outer_right, beta, alpha);
+let addr_output = from_floats([-99.0, -99.0, -99.0, -99.0], [2, 2]);
+(addr_out(addr_output, addr_input, outer_left, outer_right, beta, alpha); let addr_mutation = clone(addr_input);
+(addr_in_place(addr_mutation, outer_left, outer_right, beta, alpha); let addr_expected = from_floats([3.5, 4.0, 5.0, 6.0], [2, 2]);
+let addr_functional_ok = same_and_dispose(addr_functional, clone(addr_expected));
+let addr_output_ok = same_and_dispose(addr_output, clone(addr_expected));
+let addr_mutation_ok = same_and_dispose(addr_mutation, addr_expected);
+let baddbmm_input = from_floats([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], [2, 2, 2]);
+let baddbmm_functional = baddbmm(baddbmm_input, identity_batch, matrix_batch, beta, alpha);
+let baddbmm_output = from_floats([-99.0, -99.0, -99.0, -99.0, -99.0, -99.0, -99.0, -99.0], [2, 2, 2]);
+(baddbmm_out(baddbmm_output, baddbmm_input, identity_batch, matrix_batch, beta, alpha); let baddbmm_mutation = clone(baddbmm_input);
+(baddbmm_in_place(baddbmm_mutation, identity_batch, matrix_batch, beta, alpha); let baddbmm_expected = from_floats([2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0], [2, 2, 2]);
+let baddbmm_functional_ok = same_and_dispose(baddbmm_functional, clone(baddbmm_expected));
+let baddbmm_output_ok = same_and_dispose(baddbmm_output, clone(baddbmm_expected));
+let baddbmm_mutation_ok = same_and_dispose(baddbmm_mutation, baddbmm_expected);
+(dispose(baddbmm_input); dispose(addr_input); dispose(outer_right); dispose(outer_left); dispose(addmv_input); dispose(vector); dispose(addmm_input); dispose(identity); dispose(matrix); dispose(addcmul_input); dispose(factor2); dispose(factor1); dispose(addcdiv_input); dispose(divisor); dispose(dividend); dispose(addbmm_input); dispose(matrix_batch); dispose(identity_batch); addbmm_functional_ok
+    and addbmm_output_ok
+    and addbmm_mutation_ok
+    and addcdiv_functional_ok
+    and addcdiv_output_ok
+    and addcdiv_mutation_ok
+    and addcmul_functional_ok
+    and addcmul_output_ok
+    and addcmul_mutation_ok
+    and addmm_functional_ok
+    and addmm_output_ok
+    and addmm_mutation_ok
+    and addmv_functional_ok
+    and addmv_output_ok
+    and addmv_mutation_ok
+    and addr_functional_ok
+    and addr_output_ok
+    and addr_mutation_ok
+    and baddbmm_functional_ok
+    and baddbmm_output_ok
+    and baddbmm_mutation_ok)))))))))))))).

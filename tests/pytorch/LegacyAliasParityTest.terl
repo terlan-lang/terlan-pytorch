@@ -1,0 +1,35 @@
+module pytorch.LegacyAliasParityTest.
+
+import pytorch.LegacyCompletion.symeig_legacy.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+import pytorch.TypeRelations.{allclose, equal}.
+
+/**
+ * Proves Tensor.symeig's eigenvalue-only branch and empty-vector contract.
+ */
+@test
+pub symeig_without_vectors_matches_libtorch(): Bool ->
+    let input = from_floats([2.0, 1.0, 1.0, 2.0], [2, 2]);
+    let {values, vectors} = symeig_legacy(input, false);
+    let expected = from_floats([1.0, 3.0], [2]);
+    let valid = equal(values, expected) and shape(vectors) == [0];
+    dispose(vectors);
+    dispose(values);
+    dispose(expected);
+    dispose(input);
+    valid.
+
+/**
+ * Proves Tensor.symeig's upper-triangle eigenvector branch.
+ */
+@test
+pub symeig_with_vectors_matches_libtorch(): Bool ->
+    let input = from_floats([2.0, 1.0, 1.0, 2.0], [2, 2]);
+    let {values, vectors} = symeig_legacy(input, true);
+    let expected_values = from_floats([1.0, 3.0], [2]);
+    let valid = allclose(values, expected_values) and shape(vectors) == [2, 2];
+    dispose(vectors);
+    dispose(values);
+    dispose(expected_values);
+    dispose(input);
+    valid.

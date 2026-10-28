@@ -1,0 +1,100 @@
+/**
+ * Generated CXX-owned Adam and SGD optimizer surface.
+ */
+module pytorch.Optimizer.
+
+import type pytorch.Tensor.
+
+/**
+ * Owned optimizer resource.
+ */
+pub opaque type Adam.
+
+/**
+ * Generated CXX optimizer adapter.
+ */
+@compiler.native {pytorch.optimizer.adam.create}
+pub adam(
+    learning_rate: Float,
+    beta1: Float,
+    beta2: Float,
+    epsilon: Float,
+    weight_decay: Float,
+): Adam ->
+    native.
+
+/**
+ * Generated CXX optimizer adapter.
+ */
+@compiler.native {pytorch.optimizer.adam.add_parameter}
+pub add_parameter(optimizer: Adam, parameter: Tensor): Unit ->
+    native.
+
+/**
+ * Generated CXX optimizer adapter.
+ */
+@compiler.native {pytorch.optimizer.sgd.create}
+pub sgd(
+    learning_rate: Float,
+    momentum: Float,
+    dampening: Float,
+    weight_decay: Float,
+    nesterov: Bool,
+): Adam ->
+    native.
+
+/**
+ * Generated CXX optimizer adapter.
+ */
+@compiler.native {pytorch.optimizer.adam.zero_grad}
+pub zero_grad(optimizer: Adam): Unit ->
+    native.
+
+/**
+ * Generated CXX optimizer adapter.
+ */
+@compiler.native {pytorch.optimizer.adam.step}
+pub step(optimizer: Adam): Unit ->
+    native.
+
+/**
+ * Generated CXX optimizer adapter.
+ */
+@compiler.native {pytorch.optimizer.adam.parameter_count}
+pub parameter_count(optimizer: Adam): Int ->
+    native.
+
+/**
+ * Generated CXX optimizer adapter.
+ */
+@compiler.native {pytorch.optimizer.adam.step_count}
+pub step_count(optimizer: Adam): Int ->
+    native.
+
+/**
+ * Generated CXX optimizer adapter.
+ */
+@compiler.native {pytorch.optimizer.adam.checkpoint}
+pub checkpoint(optimizer: Adam): Bytes ->
+    native.
+
+/**
+ * Generated CXX optimizer adapter.
+ */
+@compiler.native {pytorch.optimizer.adam.restore}
+pub restore(optimizer: Adam, checkpoint: Bytes): Unit ->
+    native.
+
+/**
+ * Generated CXX optimizer adapter.
+ */
+@compiler.native {pytorch.optimizer.adam.cancel}
+pub cancel(optimizer: Adam): Unit ->
+    native.
+
+/**
+ * Generated CXX optimizer adapter.
+ */
+@compiler.native {pytorch.optimizer.adam.dispose}
+pub dispose(optimizer: Adam): Unit ->
+    native.

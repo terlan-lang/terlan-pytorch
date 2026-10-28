@@ -1,0 +1,1309 @@
+/**
+ * Generated direct CXX range, identity, and endpoint-spacing primitives.
+ */
+module pytorch.RangeNative.
+
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+import type pytorch.Tensor.{DType, Device, Layout}.
+
+/**
+ * Creates an exact arange overload with integer-preserving scalar inference and explicit option presence.
+ */
+pub arange_exact_native(
+    form: Int,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    step_is_integer: Bool,
+    step_integer: Int,
+    step_floating: Float,
+    dtype: Int,
+    has_dtype: Bool,
+    layout: Int,
+    has_layout: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool,
+): Tensor ->
+    if {
+        form == 0 -> range_arange_end(
+            end_is_integer,
+            end_integer,
+            end_floating,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        );
+        form == 1 -> range_arange_start_end(
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        );
+        true -> range_arange_start_end_step(
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            step_is_integer,
+            step_integer,
+            step_floating,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        )
+    }.
+
+/**
+ * Writes an exact arange overload into retained tensor storage.
+ */
+pub arange_out_exact_native(
+    output: Tensor,
+    form: Int,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    step_is_integer: Bool,
+    step_integer: Int,
+    step_floating: Float,
+): Unit ->
+    if {
+        form == 0 -> range_arange_out_end(output, end_is_integer, end_integer, end_floating);
+        true -> range_arange_out_start_end_step(
+            output,
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            step_is_integer,
+            step_integer,
+            step_floating,
+        )
+    }.
+
+/**
+ * Creates an exact square or rectangular identity overload with explicit option presence.
+ */
+pub eye_exact_native(
+    rows: Int,
+    columns: Int,
+    rectangular: Bool,
+    dtype: Int,
+    has_dtype: Bool,
+    layout: Int,
+    has_layout: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool,
+): Tensor ->
+    if {
+        rectangular -> range_eye_rect(
+            rows,
+            columns,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        );
+        true -> range_eye_square(
+            rows,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        )
+    }.
+
+/**
+ * Writes a square or rectangular identity into retained tensor storage.
+ */
+pub eye_out_exact_native(output: Tensor, rows: Int, columns: Int, rectangular: Bool): Unit ->
+    if {
+        rectangular -> range_eye_out_rect(output, rows, columns);
+        true -> range_eye_out_square(output, rows)
+    }.
+
+/**
+ * Creates exact scalar-endpoint linspace or logspace output.
+ */
+pub spacing_scalar_exact_native(
+    operation: Int,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    steps: Int,
+    base: Float,
+    dtype: Int,
+    has_dtype: Bool,
+    layout: Int,
+    has_layout: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool,
+): Tensor ->
+    if {
+        operation == 0 -> range_linspace_scalar_scalar(
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            steps,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        );
+        true -> range_logspace_scalar_scalar(
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            steps,
+            base,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        )
+    }.
+
+/**
+ * Creates exact tensor-endpoint linspace or logspace output.
+ */
+pub spacing_tensor_tensor_exact_native(
+    operation: Int,
+    start: Tensor,
+    end: Tensor,
+    steps: Int,
+    base: Float,
+    dtype: Int,
+    has_dtype: Bool,
+    layout: Int,
+    has_layout: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool,
+): Tensor ->
+    if {
+        operation == 0 -> range_linspace_tensor_tensor(
+            start,
+            end,
+            steps,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        );
+        true -> range_logspace_tensor_tensor(
+            start,
+            end,
+            steps,
+            base,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        )
+    }.
+
+/**
+ * Creates exact tensor-to-scalar linspace or logspace output.
+ */
+pub spacing_tensor_scalar_exact_native(
+    operation: Int,
+    start: Tensor,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    steps: Int,
+    base: Float,
+    dtype: Int,
+    has_dtype: Bool,
+    layout: Int,
+    has_layout: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool,
+): Tensor ->
+    if {
+        operation == 0 -> range_linspace_tensor_scalar(
+            start,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            steps,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        );
+        true -> range_logspace_tensor_scalar(
+            start,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            steps,
+            base,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        )
+    }.
+
+/**
+ * Creates exact scalar-to-tensor linspace or logspace output.
+ */
+pub spacing_scalar_tensor_exact_native(
+    operation: Int,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end: Tensor,
+    steps: Int,
+    base: Float,
+    dtype: Int,
+    has_dtype: Bool,
+    layout: Int,
+    has_layout: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool,
+): Tensor ->
+    if {
+        operation == 0 -> range_linspace_scalar_tensor(
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end,
+            steps,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        );
+        true -> range_logspace_scalar_tensor(
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end,
+            steps,
+            base,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        )
+    }.
+
+/**
+ * Writes scalar-endpoint linspace or logspace output into retained storage.
+ */
+pub spacing_scalar_out_exact_native(
+    output: Tensor,
+    operation: Int,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    steps: Int,
+    base: Float,
+): Unit ->
+    if {
+        operation == 0 -> range_linspace_out_scalar_scalar(
+            output,
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            steps,
+        );
+        true -> range_logspace_out_scalar_scalar(
+            output,
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            steps,
+            base,
+        )
+    }.
+
+/**
+ * Writes tensor-endpoint linspace or logspace output into retained storage.
+ */
+pub spacing_tensor_tensor_out_exact_native(
+    output: Tensor,
+    operation: Int,
+    start: Tensor,
+    end: Tensor,
+    steps: Int,
+    base: Float,
+): Unit ->
+    if {
+        operation == 0 -> range_linspace_out_tensor_tensor(output, start, end, steps);
+        true -> range_logspace_out_tensor_tensor(output, start, end, steps, base)
+    }.
+
+/**
+ * Writes tensor-to-scalar linspace or logspace output into retained storage.
+ */
+pub spacing_tensor_scalar_out_exact_native(
+    output: Tensor,
+    operation: Int,
+    start: Tensor,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    steps: Int,
+    base: Float,
+): Unit ->
+    if {
+        operation == 0 -> range_linspace_out_tensor_scalar(
+            output,
+            start,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            steps,
+        );
+        true -> range_logspace_out_tensor_scalar(
+            output,
+            start,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            steps,
+            base,
+        )
+    }.
+
+/**
+ * Writes scalar-to-tensor linspace or logspace output into retained storage.
+ */
+pub spacing_scalar_tensor_out_exact_native(
+    output: Tensor,
+    operation: Int,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end: Tensor,
+    steps: Int,
+    base: Float,
+): Unit ->
+    if {
+        operation == 0 -> range_linspace_out_scalar_tensor(
+            output,
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end,
+            steps,
+        );
+        true -> range_logspace_out_scalar_tensor(
+            output,
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end,
+            steps,
+            base,
+        )
+    }.
+
+/**
+ * Creates an inclusive legacy range with exact scalar kinds and option presence.
+ */
+pub range_exact_native(
+    explicit_step: Bool,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    step_is_integer: Bool,
+    step_integer: Int,
+    step_floating: Float,
+    dtype: Int,
+    has_dtype: Bool,
+    layout: Int,
+    has_layout: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool,
+): Tensor ->
+    if {
+        explicit_step -> range_range_start_end_step(
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            step_is_integer,
+            step_integer,
+            step_floating,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        );
+        true -> range_range_start_end(
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            has_dtype,
+            range_dtype(dtype),
+            has_layout,
+            0,
+            has_device,
+            range_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        )
+    }.
+
+/**
+ * Writes an inclusive legacy range into retained tensor storage.
+ */
+pub range_out_exact_native(
+    output: Tensor,
+    explicit_step: Bool,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    step_is_integer: Bool,
+    step_integer: Int,
+    step_floating: Float,
+): Unit ->
+    if {
+        explicit_step -> range_range_out_start_end_step(
+            output,
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end_is_integer,
+            end_integer,
+            end_floating,
+            step_is_integer,
+            step_integer,
+            step_floating,
+        );
+        true -> range_range_out_start_end(
+            output,
+            start_is_integer,
+            start_integer,
+            start_floating,
+            end_is_integer,
+            end_integer,
+            end_floating,
+        )
+    }.
+
+/**
+ * Maps stable dtype selectors.
+ */
+range_dtype(code: Int): Int ->
+    if {
+        code == 0 -> 0;
+        code == 1 -> 1;
+        code == 2 -> 2;
+        code == 3 -> 3;
+        code == 4 -> 4;
+        code == 5 -> 5;
+        code == 6 -> 6;
+        code == 7 -> 7;
+        code == 8 -> 8;
+        code == 9 -> 9;
+        code == 10 -> 10;
+        code == 11 -> 11;
+        code == 12 -> 12;
+        code == 13 -> 13;
+        code == 14 -> 14;
+        code == 15 -> 15;
+        code == 16 -> 16;
+        code == 17 -> 17;
+        code == 18 -> 18;
+        code == 19 -> 19;
+        code == 20 -> 20;
+        code == 21 -> 21;
+        code == 22 -> 22;
+        code == 23 -> 23;
+        code == 24 -> 24;
+        code == 25 -> 25;
+        code == 26 -> 26;
+        code == 27 -> 27;
+        code == 28 -> 28;
+        code == 29 -> 29;
+        code == 30 -> 30;
+        code == 31 -> 31;
+        code == 32 -> 32;
+        code == 33 -> 33;
+        code == 34 -> 34;
+        code == 35 -> 35;
+        code == 36 -> 36;
+        code == 37 -> 37;
+        code == 38 -> 38;
+        code == 39 -> 39;
+        code == 40 -> 40;
+        code == 41 -> 41;
+        code == 42 -> 42;
+        code == 43 -> 43;
+        code == 44 -> 44;
+        code == 45 -> 45;
+        true -> let _failed = fail(exit_reason(7260));
+        6
+    }.
+
+/**
+ * Maps stable device selectors.
+ */
+range_device(kind: Int, index: Int): Device ->
+    if {
+        kind == 0 -> "cpu";
+        kind == 1 -> "cuda:" + std.core.Int.to_string(index);
+        true -> let _failed = fail(exit_reason(7260));
+        "cpu"
+    }.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_arange_end}
+range_arange_end(
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_arange_start_end}
+range_arange_start_end(
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_arange_start_end_step}
+range_arange_start_end_step(
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    step_is_integer: Bool,
+    step_integer: Int,
+    step_floating: Float,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_arange_out_end}
+range_arange_out_end(
+    output: Tensor,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+): Unit ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_arange_out_start_end_step}
+range_arange_out_start_end_step(
+    output: Tensor,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    step_is_integer: Bool,
+    step_integer: Int,
+    step_floating: Float,
+): Unit ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_eye_square}
+range_eye_square(
+    rows: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_eye_rect}
+range_eye_rect(
+    rows: Int,
+    columns: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_eye_out_square}
+range_eye_out_square(output: Tensor, rows: Int): Unit ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_eye_out_rect}
+range_eye_out_rect(output: Tensor, rows: Int, columns: Int): Unit ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_linspace_scalar_scalar}
+range_linspace_scalar_scalar(
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    steps: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_linspace_tensor_tensor}
+range_linspace_tensor_tensor(
+    start: Tensor,
+    end: Tensor,
+    steps: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_linspace_tensor_scalar}
+range_linspace_tensor_scalar(
+    start: Tensor,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    steps: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_linspace_scalar_tensor}
+range_linspace_scalar_tensor(
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end: Tensor,
+    steps: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_linspace_out_scalar_scalar}
+range_linspace_out_scalar_scalar(
+    output: Tensor,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    steps: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_linspace_out_tensor_tensor}
+range_linspace_out_tensor_tensor(output: Tensor, start: Tensor, end: Tensor, steps: Int): Unit ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_linspace_out_tensor_scalar}
+range_linspace_out_tensor_scalar(
+    output: Tensor,
+    start: Tensor,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    steps: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_linspace_out_scalar_tensor}
+range_linspace_out_scalar_tensor(
+    output: Tensor,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end: Tensor,
+    steps: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_logspace_scalar_scalar}
+range_logspace_scalar_scalar(
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    steps: Int,
+    base: Float,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_logspace_tensor_tensor}
+range_logspace_tensor_tensor(
+    start: Tensor,
+    end: Tensor,
+    steps: Int,
+    base: Float,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_logspace_tensor_scalar}
+range_logspace_tensor_scalar(
+    start: Tensor,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    steps: Int,
+    base: Float,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_logspace_scalar_tensor}
+range_logspace_scalar_tensor(
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end: Tensor,
+    steps: Int,
+    base: Float,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_logspace_out_scalar_scalar}
+range_logspace_out_scalar_scalar(
+    output: Tensor,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    steps: Int,
+    base: Float,
+): Unit ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_logspace_out_tensor_tensor}
+range_logspace_out_tensor_tensor(
+    output: Tensor,
+    start: Tensor,
+    end: Tensor,
+    steps: Int,
+    base: Float,
+): Unit ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_logspace_out_tensor_scalar}
+range_logspace_out_tensor_scalar(
+    output: Tensor,
+    start: Tensor,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    steps: Int,
+    base: Float,
+): Unit ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_logspace_out_scalar_tensor}
+range_logspace_out_scalar_tensor(
+    output: Tensor,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end: Tensor,
+    steps: Int,
+    base: Float,
+): Unit ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_range_start_end}
+range_range_start_end(
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_range_start_end_step}
+range_range_start_end_step(
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    step_is_integer: Bool,
+    step_integer: Int,
+    step_floating: Float,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_range_out_start_end}
+range_range_out_start_end(
+    output: Tensor,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+): Unit ->
+    native.
+
+/**
+ * Generated exact range CXX leaf.
+ */
+@compiler.native {pytorch.range.cxx.range_range_out_start_end_step}
+range_range_out_start_end_step(
+    output: Tensor,
+    start_is_integer: Bool,
+    start_integer: Int,
+    start_floating: Float,
+    end_is_integer: Bool,
+    end_integer: Int,
+    end_floating: Float,
+    step_is_integer: Bool,
+    step_integer: Int,
+    step_floating: Float,
+): Unit ->
+    native.
+
+/**
+ * Generated exact triangular-index CXX leaf.
+ */
+@compiler.native {pytorch.range.tril_indices_cxx}
+tril_indices_cxx(
+    row: Int,
+    col: Int,
+    offset: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Public option-normalizing triangular-index composition.
+ */
+pub tril_indices_exact(
+    row: Int,
+    col: Int,
+    offset: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    tril_indices_cxx(
+        row,
+        col,
+        offset,
+        has_dtype,
+        dtype,
+        has_layout,
+        layout,
+        has_device,
+        device,
+        has_pin_memory,
+        pin_memory,
+    ).
+
+/**
+ * Generated exact triangular-index retained-output CXX leaf.
+ */
+@compiler.native {pytorch.range.tril_indices_out}
+tril_indices_out_exact(output: Tensor, row: Int, col: Int, offset: Int): Unit ->
+    native.
+
+/**
+ * Public retained-output triangular-index composition.
+ */
+pub tril_indices_out_composed(output: Tensor, row: Int, col: Int, offset: Int): Unit ->
+    tril_indices_out_exact(output, row, col, offset).
+
+/**
+ * Generated exact triangular-index CXX leaf.
+ */
+@compiler.native {pytorch.range.triu_indices_cxx}
+triu_indices_cxx(
+    row: Int,
+    col: Int,
+    offset: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Public option-normalizing triangular-index composition.
+ */
+pub triu_indices_exact(
+    row: Int,
+    col: Int,
+    offset: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    triu_indices_cxx(
+        row,
+        col,
+        offset,
+        has_dtype,
+        dtype,
+        has_layout,
+        layout,
+        has_device,
+        device,
+        has_pin_memory,
+        pin_memory,
+    ).
+
+/**
+ * Generated exact triangular-index retained-output CXX leaf.
+ */
+@compiler.native {pytorch.range.triu_indices_out}
+triu_indices_out_exact(output: Tensor, row: Int, col: Int, offset: Int): Unit ->
+    native.
+
+/**
+ * Public retained-output triangular-index composition.
+ */
+pub triu_indices_out_composed(output: Tensor, row: Int, col: Int, offset: Int): Unit ->
+    triu_indices_out_exact(output, row, col, offset).

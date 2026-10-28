@@ -1,0 +1,7 @@
+module pytorch_cxx.WindowNativeCudaBehaviorTest.
+
+import pytorch.WindowNativeBehaviorSupport.{window_contracts_on}.
+
+@test
+pub cuda_window_contracts(): Bool ->
+    window_contracts_on("cuda:0", true).

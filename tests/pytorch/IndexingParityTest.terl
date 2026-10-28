@@ -1,0 +1,284 @@
+module pytorch.IndexingParityTest.
+
+import pytorch.Binary.greater_tensor.
+import pytorch.Indexing.{argsort_stable, bucketize, diag_embed, diagonal_copy, diagonal_scatter, index_copy, index_select, isin, masked_fill_tensor, masked_scatter, put, scatter, scatter_add, select_scatter, unfold_copy, where_tensor}.
+import pytorch.Tensor.{dispose, flatten, from_float, from_floats, from_ints, item, item_bool, item_float, narrow, shape, zeros}.
+
+import type pytorch.Tensor.
+
+/**
+ * Creates an independently owned flat view for one element read.
+ */
+flat_element(tensor: Tensor, index: Int): Tensor ->
+    let values = flatten(tensor, 0, -1);
+    let element = narrow(values, 0, index, 1);
+    dispose(values);
+    element.
+
+/**
+ * Reads one floating-point value from a flattened tensor.
+ */
+flat_float(tensor: Tensor, index: Int): Float ->
+    let element = flat_element(tensor, index);
+    let value = item_float(element);
+    dispose(element);
+    value.
+
+/**
+ * Reads one integer value from a flattened tensor.
+ */
+flat_int(tensor: Tensor, index: Int): Int ->
+    let element = flat_element(tensor, index);
+    let value = item(element);
+    dispose(element);
+    value.
+
+/**
+ * Reads one boolean value from a flattened tensor.
+ */
+flat_bool(tensor: Tensor, index: Int): Bool ->
+    let element = flat_element(tensor, index);
+    let value = item_bool(element);
+    dispose(element);
+    value.
+
+/**
+ * Proves stable sorting, boundary placement, and tensor membership semantics.
+ */
+@test
+pub ordering_and_membership_match_libtorch(): Bool ->
+    let sortable = from_floats([2.0, 1.0, 1.0], [3]);
+    let ordered = argsort_stable(sortable, true, 0, false);
+    let values = from_floats([0.5, 2.5], [2]);
+    let boundaries = from_floats([1.0, 2.0, 3.0], [3]);
+    let buckets = bucketize(values, boundaries, false, false);
+    let elements = from_ints([1, 2, 3], [3]);
+    let test_elements = from_ints([2, 4], [2]);
+    let membership = isin(elements, test_elements, false, false);
+    let valid =
+        shape(ordered) == [3]
+            and flat_int(ordered, 0) == 1
+            and flat_int(ordered, 1) == 2
+            and flat_int(ordered, 2) == 0
+            and shape(buckets) == [2]
+            and flat_int(buckets, 0) == 0
+            and flat_int(buckets, 1) == 2
+            and shape(membership) == [3]
+            and not flat_bool(membership, 0)
+            and flat_bool(membership, 1)
+            and not flat_bool(membership, 2)
+            and shape(sortable) == [3]
+            and shape(boundaries) == [3]
+            and shape(elements) == [3];
+    dispose(membership);
+    dispose(test_elements);
+    dispose(elements);
+    dispose(buckets);
+    dispose(boundaries);
+    dispose(values);
+    dispose(ordered);
+    dispose(sortable);
+    valid.
+
+/**
+ * Proves diagonal embedding, owned extraction, and functional replacement.
+ */
+@test
+pub diagonal_operations_match_libtorch(): Bool ->
+    let diagonal = from_floats([1.0, 2.0], [2]);
+    let embedded = diag_embed(diagonal, 0, -2, -1);
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let copied = diagonal_copy(matrix, 0, 0, 1);
+    let empty = zeros([2, 2]);
+    let replacement = from_floats([5.0, 6.0], [2]);
+    let scattered = diagonal_scatter(empty, replacement, 0, 0, 1);
+    let valid =
+        shape(embedded) == [2, 2]
+            and flat_float(embedded, 0) == 1.0
+            and flat_float(embedded, 1) == 0.0
+            and flat_float(embedded, 2) == 0.0
+            and flat_float(embedded, 3) == 2.0
+            and shape(copied) == [2]
+            and flat_float(copied, 0) == 1.0
+            and flat_float(copied, 1) == 4.0
+            and shape(scattered) == [2, 2]
+            and flat_float(scattered, 0) == 5.0
+            and flat_float(scattered, 1) == 0.0
+            and flat_float(scattered, 2) == 0.0
+            and flat_float(scattered, 3) == 6.0
+            and shape(matrix) == [2, 2]
+            and shape(empty) == [2, 2];
+    dispose(scattered);
+    dispose(replacement);
+    dispose(empty);
+    dispose(copied);
+    dispose(matrix);
+    dispose(embedded);
+    dispose(diagonal);
+    valid.
+
+/**
+ * Proves indexed selection and flat replacement preserve their sources.
+ */
+@test
+pub index_select_and_put_match_libtorch(): Bool ->
+    let empty = from_floats([0.0, 0.0, 0.0], [3]);
+    let indices = from_ints([2, 0], [2]);
+    let source = from_floats([5.0, 6.0], [2]);
+    let values = from_floats([10.0, 20.0, 30.0], [3]);
+    let selected = index_select(values, 0, indices);
+    let replaced = put(empty, indices, source, false);
+    let valid =
+        shape(selected) == [2]
+            and flat_float(selected, 0) == 30.0
+            and flat_float(selected, 1) == 10.0
+            and shape(replaced) == [3]
+            and flat_float(replaced, 0) == 6.0
+            and flat_float(replaced, 1) == 0.0
+            and flat_float(replaced, 2) == 5.0
+            and shape(empty) == [3]
+            and shape(source) == [2];
+    dispose(replaced);
+    dispose(selected);
+    dispose(values);
+    dispose(source);
+    dispose(indices);
+    dispose(empty);
+    valid.
+
+/**
+ * Proves indexed copy replaces selected destination slices without mutation.
+ */
+@test
+pub index_copy_matches_libtorch(): Bool ->
+    let empty = from_floats([0.0, 0.0, 0.0], [3]);
+    let indices = from_ints([2, 0], [2]);
+    let source = from_floats([5.0, 6.0], [2]);
+    let copied = index_copy(empty, 0, indices, source);
+    let valid =
+        shape(copied) == [3]
+            and flat_float(copied, 0) == 6.0
+            and flat_float(copied, 1) == 0.0
+            and flat_float(copied, 2) == 5.0
+            and shape(empty) == [3]
+            and shape(indices) == [2]
+            and shape(source) == [2];
+    dispose(copied);
+    dispose(source);
+    dispose(indices);
+    dispose(empty);
+    valid.
+
+/**
+ * Proves masked fill, sequential scatter, and conditional selection behavior.
+ */
+@test
+pub mask_operations_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0], [3]);
+    let mask_values = from_floats([0.0, 1.0, 0.0], [3]);
+    let zero = from_float(0.0);
+    let mask = greater_tensor(mask_values, zero);
+    let fill_value = from_float(9.0);
+    let filled = masked_fill_tensor(input, mask, fill_value);
+    let source = from_floats([8.0], [1]);
+    let scattered = masked_scatter(input, mask, source);
+    let other = from_floats([4.0, 5.0, 6.0], [3]);
+    let selected = where_tensor(mask, input, other);
+    let valid =
+        flat_float(filled, 0) == 1.0
+            and flat_float(filled, 1) == 9.0
+            and flat_float(filled, 2) == 3.0
+            and flat_float(scattered, 0) == 1.0
+            and flat_float(scattered, 1) == 8.0
+            and flat_float(scattered, 2) == 3.0
+            and flat_float(selected, 0) == 4.0
+            and flat_float(selected, 1) == 2.0
+            and flat_float(selected, 2) == 6.0
+            and shape(input) == [3]
+            and shape(mask) == [3]
+            and shape(other) == [3];
+    dispose(selected);
+    dispose(other);
+    dispose(scattered);
+    dispose(source);
+    dispose(filled);
+    dispose(fill_value);
+    dispose(mask);
+    dispose(zero);
+    dispose(mask_values);
+    dispose(input);
+    valid.
+
+/**
+ * Proves accumulation and slice scatter operations are functional.
+ */
+@test
+pub scatter_add_and_select_scatter_match_libtorch(): Bool ->
+    let ones = from_floats([1.0, 1.0, 1.0], [3]);
+    let repeated_indices = from_ints([0, 0], [2]);
+    let additions = from_floats([2.0, 3.0], [2]);
+    let accumulated = scatter_add(ones, 0, repeated_indices, additions);
+    let matrix = zeros([2, 2]);
+    let row = from_floats([7.0, 8.0], [2]);
+    let row_replaced = select_scatter(matrix, row, 0, 1);
+    let valid =
+        flat_float(accumulated, 0) == 6.0
+            and flat_float(accumulated, 1) == 1.0
+            and flat_float(accumulated, 2) == 1.0
+            and shape(row_replaced) == [2, 2]
+            and flat_float(row_replaced, 0) == 0.0
+            and flat_float(row_replaced, 1) == 0.0
+            and flat_float(row_replaced, 2) == 7.0
+            and flat_float(row_replaced, 3) == 8.0
+            and shape(ones) == [3]
+            and shape(matrix) == [2, 2];
+    dispose(row_replaced);
+    dispose(row);
+    dispose(matrix);
+    dispose(accumulated);
+    dispose(additions);
+    dispose(repeated_indices);
+    dispose(ones);
+    valid.
+
+/**
+ * Proves source scatter replaces selected destination elements without mutation.
+ */
+@test
+pub scatter_matches_libtorch(): Bool ->
+    let empty = from_floats([0.0, 0.0, 0.0], [3]);
+    let indices = from_ints([2, 0], [2]);
+    let source = from_floats([5.0, 6.0], [2]);
+    let replaced = scatter(empty, 0, indices, source);
+    let valid =
+        flat_float(replaced, 0) == 6.0
+            and flat_float(replaced, 1) == 0.0
+            and flat_float(replaced, 2) == 5.0
+            and shape(empty) == [3]
+            and shape(indices) == [2]
+            and shape(source) == [2];
+    dispose(replaced);
+    dispose(source);
+    dispose(indices);
+    dispose(empty);
+    valid.
+
+/**
+ * Proves copied sliding windows preserve overlap order and source ownership.
+ */
+@test
+pub unfold_copy_matches_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [4]);
+    let windows = unfold_copy(input, 0, 2, 1);
+    let valid =
+        shape(windows) == [3, 2]
+            and flat_float(windows, 0) == 1.0
+            and flat_float(windows, 1) == 2.0
+            and flat_float(windows, 2) == 2.0
+            and flat_float(windows, 3) == 3.0
+            and flat_float(windows, 4) == 3.0
+            and flat_float(windows, 5) == 4.0
+            and shape(input) == [4];
+    dispose(windows);
+    dispose(input);
+    valid.

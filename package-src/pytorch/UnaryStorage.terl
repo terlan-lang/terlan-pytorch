@@ -1,0 +1,944 @@
+/**
+ * Retained-output and in-place unary tensor operations.
+ */
+module pytorch.UnaryStorage.
+
+import pytorch.UnaryStorageNative.{abs_in_place as native_abs_in_place, abs_out as native_abs_out, absolute_in_place as native_absolute_in_place, absolute_out as native_absolute_out, acos_in_place as native_acos_in_place, acos_out as native_acos_out, acosh_in_place as native_acosh_in_place, acosh_out as native_acosh_out, alias_copy_out as native_alias_copy_out, all_all_out as native_all_all_out, angle_out as native_angle_out, any_all_out as native_any_all_out, arccos_in_place as native_arccos_in_place, arccos_out as native_arccos_out, arccosh_in_place as native_arccosh_in_place, arccosh_out as native_arccosh_out, arcsin_in_place as native_arcsin_in_place, arcsin_out as native_arcsin_out, arcsinh_in_place as native_arcsinh_in_place, arcsinh_out as native_arcsinh_out, arctan_in_place as native_arctan_in_place, arctan_out as native_arctan_out, arctanh_in_place as native_arctanh_in_place, arctanh_out as native_arctanh_out, asin_in_place as native_asin_in_place, asin_out as native_asin_out, asinh_in_place as native_asinh_in_place, asinh_out as native_asinh_out, atan_in_place as native_atan_in_place, atan_out as native_atan_out, atanh_in_place as native_atanh_in_place, atanh_out as native_atanh_out, bitwise_not_in_place as native_bitwise_not_in_place, bitwise_not_out as native_bitwise_not_out, ceil_in_place as native_ceil_in_place, ceil_out as native_ceil_out, conj_physical_in_place as native_conj_physical_in_place, conj_physical_out as native_conj_physical_out, cos_in_place as native_cos_in_place, cos_out as native_cos_out, cosh_in_place as native_cosh_in_place, cosh_out as native_cosh_out, deg2rad_in_place as native_deg2rad_in_place, deg2rad_out as native_deg2rad_out, detach_copy_out as native_detach_copy_out, detach_in_place as native_detach_in_place, digamma_in_place as native_digamma_in_place, digamma_out as native_digamma_out, erf_in_place as native_erf_in_place, erf_out as native_erf_out, erfc_in_place as native_erfc_in_place, erfc_out as native_erfc_out, erfinv_in_place as native_erfinv_in_place, erfinv_out as native_erfinv_out, exp2_in_place as native_exp2_in_place, exp2_out as native_exp2_out, exp_in_place as native_exp_in_place, exp_out as native_exp_out, expm1_in_place as native_expm1_in_place, expm1_out as native_expm1_out, fix_in_place as native_fix_in_place, fix_out as native_fix_out, floor_in_place as native_floor_in_place, floor_out as native_floor_out, frac_in_place as native_frac_in_place, frac_out as native_frac_out, frexp_out as native_frexp_out, hardsigmoid_backward_out as native_hardsigmoid_backward_out, hardsigmoid_in_place as native_hardsigmoid_in_place, hardsigmoid_out as native_hardsigmoid_out, hardswish_backward_out as native_hardswish_backward_out, hardswish_in_place as native_hardswish_in_place, hardswish_out as native_hardswish_out, i0_in_place as native_i0_in_place, i0_out as native_i0_out, inverse_out as native_inverse_out, isinf_out as native_isinf_out, isnan_out as native_isnan_out, isneginf_out as native_isneginf_out, isposinf_out as native_isposinf_out, lgamma_in_place as native_lgamma_in_place, lgamma_out as native_lgamma_out, lift_fresh_copy_out as native_lift_fresh_copy_out, lift_out as native_lift_out, log10_in_place as native_log10_in_place, log10_out as native_log10_out, log1p_in_place as native_log1p_in_place, log1p_out as native_log1p_out, log2_in_place as native_log2_in_place, log2_out as native_log2_out, log_in_place as native_log_in_place, log_out as native_log_out, log_sigmoid_out as native_log_sigmoid_out, logical_not_in_place as native_logical_not_in_place, logical_not_out as native_logical_not_out, max_unary_out as native_max_unary_out, median_out as native_median_out, min_unary_out as native_min_unary_out, mish_in_place as native_mish_in_place, mish_out as native_mish_out, msort_out as native_msort_out, neg_in_place as native_neg_in_place, neg_out as native_neg_out, negative_in_place as native_negative_in_place, negative_out as native_negative_out, nonzero_out as native_nonzero_out, rad2deg_in_place as native_rad2deg_in_place, rad2deg_out as native_rad2deg_out, reciprocal_in_place as native_reciprocal_in_place, reciprocal_out as native_reciprocal_out, relu6_in_place as native_relu6_in_place, relu_in_place as native_relu_in_place, relu_out as native_relu_out, round_decimals as native_round_decimals, round_decimals_in_place as native_round_decimals_in_place, round_decimals_out as native_round_decimals_out, round_in_place as native_round_in_place, round_out as native_round_out, rsqrt_in_place as native_rsqrt_in_place, rsqrt_out as native_rsqrt_out, selu_in_place as native_selu_in_place, sgn_in_place as native_sgn_in_place, sgn_out as native_sgn_out, sigmoid_backward_out as native_sigmoid_backward_out, sigmoid_in_place as native_sigmoid_in_place, sigmoid_out as native_sigmoid_out, sign_in_place as native_sign_in_place, sign_out as native_sign_out, signbit_out as native_signbit_out, silu_backward_out as native_silu_backward_out, silu_in_place as native_silu_in_place, silu_out as native_silu_out, sin_in_place as native_sin_in_place, sin_out as native_sin_out, sinc_in_place as native_sinc_in_place, sinc_out as native_sinc_out, sinh_in_place as native_sinh_in_place, sinh_out as native_sinh_out, sqrt_in_place as native_sqrt_in_place, sqrt_out as native_sqrt_out, square_in_place as native_square_in_place, square_out as native_square_out, squeeze_in_place as native_squeeze_in_place, t_copy_out as native_t_copy_out, t_in_place as native_t_in_place, tan_in_place as native_tan_in_place, tan_out as native_tan_out, tanh_backward_out as native_tanh_backward_out, tanh_in_place as native_tanh_in_place, tanh_out as native_tanh_out, trace_out as native_trace_out, trunc_in_place as native_trunc_in_place, trunc_out as native_trunc_out, view_as_complex_copy_out as native_view_as_complex_copy_out, view_as_real_copy_out as native_view_as_real_copy_out, zero_in_place as native_zero_in_place}.
+
+import type pytorch.Tensor.
+
+/**
+ * Writes the elementwise acos result into retained output storage.
+ */
+pub acos_out(output: Tensor, tensor: Tensor): Unit ->
+    native_acos_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise acos.
+ */
+pub acos_in_place(tensor: Tensor): Unit ->
+    native_acos_in_place(tensor).
+
+/**
+ * Writes the elementwise acosh result into retained output storage.
+ */
+pub acosh_out(output: Tensor, tensor: Tensor): Unit ->
+    native_acosh_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise acosh.
+ */
+pub acosh_in_place(tensor: Tensor): Unit ->
+    native_acosh_in_place(tensor).
+
+/**
+ * Writes the elementwise asin result into retained output storage.
+ */
+pub asin_out(output: Tensor, tensor: Tensor): Unit ->
+    native_asin_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise asin.
+ */
+pub asin_in_place(tensor: Tensor): Unit ->
+    native_asin_in_place(tensor).
+
+/**
+ * Writes the elementwise asinh result into retained output storage.
+ */
+pub asinh_out(output: Tensor, tensor: Tensor): Unit ->
+    native_asinh_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise asinh.
+ */
+pub asinh_in_place(tensor: Tensor): Unit ->
+    native_asinh_in_place(tensor).
+
+/**
+ * Writes the elementwise atan result into retained output storage.
+ */
+pub atan_out(output: Tensor, tensor: Tensor): Unit ->
+    native_atan_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise atan.
+ */
+pub atan_in_place(tensor: Tensor): Unit ->
+    native_atan_in_place(tensor).
+
+/**
+ * Writes the elementwise atanh result into retained output storage.
+ */
+pub atanh_out(output: Tensor, tensor: Tensor): Unit ->
+    native_atanh_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise atanh.
+ */
+pub atanh_in_place(tensor: Tensor): Unit ->
+    native_atanh_in_place(tensor).
+
+/**
+ * Writes the elementwise cos result into retained output storage.
+ */
+pub cos_out(output: Tensor, tensor: Tensor): Unit ->
+    native_cos_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise cos.
+ */
+pub cos_in_place(tensor: Tensor): Unit ->
+    native_cos_in_place(tensor).
+
+/**
+ * Writes the elementwise cosh result into retained output storage.
+ */
+pub cosh_out(output: Tensor, tensor: Tensor): Unit ->
+    native_cosh_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise cosh.
+ */
+pub cosh_in_place(tensor: Tensor): Unit ->
+    native_cosh_in_place(tensor).
+
+/**
+ * Writes the elementwise sin result into retained output storage.
+ */
+pub sin_out(output: Tensor, tensor: Tensor): Unit ->
+    native_sin_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise sin.
+ */
+pub sin_in_place(tensor: Tensor): Unit ->
+    native_sin_in_place(tensor).
+
+/**
+ * Writes the elementwise sinh result into retained output storage.
+ */
+pub sinh_out(output: Tensor, tensor: Tensor): Unit ->
+    native_sinh_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise sinh.
+ */
+pub sinh_in_place(tensor: Tensor): Unit ->
+    native_sinh_in_place(tensor).
+
+/**
+ * Writes the elementwise tan result into retained output storage.
+ */
+pub tan_out(output: Tensor, tensor: Tensor): Unit ->
+    native_tan_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise tan.
+ */
+pub tan_in_place(tensor: Tensor): Unit ->
+    native_tan_in_place(tensor).
+
+/**
+ * Writes the elementwise tanh result into retained output storage.
+ */
+pub tanh_out(output: Tensor, tensor: Tensor): Unit ->
+    native_tanh_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise tanh.
+ */
+pub tanh_in_place(tensor: Tensor): Unit ->
+    native_tanh_in_place(tensor).
+
+/**
+ * Writes the elementwise abs result into retained output storage.
+ */
+pub abs_out(output: Tensor, tensor: Tensor): Unit ->
+    native_abs_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise abs.
+ */
+pub abs_in_place(tensor: Tensor): Unit ->
+    native_abs_in_place(tensor).
+
+/**
+ * Writes the elementwise bitwise_not result into retained output storage.
+ */
+pub bitwise_not_out(output: Tensor, tensor: Tensor): Unit ->
+    native_bitwise_not_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise bitwise_not.
+ */
+pub bitwise_not_in_place(tensor: Tensor): Unit ->
+    native_bitwise_not_in_place(tensor).
+
+/**
+ * Writes the elementwise ceil result into retained output storage.
+ */
+pub ceil_out(output: Tensor, tensor: Tensor): Unit ->
+    native_ceil_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise ceil.
+ */
+pub ceil_in_place(tensor: Tensor): Unit ->
+    native_ceil_in_place(tensor).
+
+/**
+ * Writes the elementwise deg2rad result into retained output storage.
+ */
+pub deg2rad_out(output: Tensor, tensor: Tensor): Unit ->
+    native_deg2rad_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise deg2rad.
+ */
+pub deg2rad_in_place(tensor: Tensor): Unit ->
+    native_deg2rad_in_place(tensor).
+
+/**
+ * Writes the elementwise erf result into retained output storage.
+ */
+pub erf_out(output: Tensor, tensor: Tensor): Unit ->
+    native_erf_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise erf.
+ */
+pub erf_in_place(tensor: Tensor): Unit ->
+    native_erf_in_place(tensor).
+
+/**
+ * Writes the elementwise erfc result into retained output storage.
+ */
+pub erfc_out(output: Tensor, tensor: Tensor): Unit ->
+    native_erfc_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise erfc.
+ */
+pub erfc_in_place(tensor: Tensor): Unit ->
+    native_erfc_in_place(tensor).
+
+/**
+ * Writes the elementwise erfinv result into retained output storage.
+ */
+pub erfinv_out(output: Tensor, tensor: Tensor): Unit ->
+    native_erfinv_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise erfinv.
+ */
+pub erfinv_in_place(tensor: Tensor): Unit ->
+    native_erfinv_in_place(tensor).
+
+/**
+ * Writes the elementwise exp2 result into retained output storage.
+ */
+pub exp2_out(output: Tensor, tensor: Tensor): Unit ->
+    native_exp2_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise exp2.
+ */
+pub exp2_in_place(tensor: Tensor): Unit ->
+    native_exp2_in_place(tensor).
+
+/**
+ * Writes the elementwise expm1 result into retained output storage.
+ */
+pub expm1_out(output: Tensor, tensor: Tensor): Unit ->
+    native_expm1_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise expm1.
+ */
+pub expm1_in_place(tensor: Tensor): Unit ->
+    native_expm1_in_place(tensor).
+
+/**
+ * Writes the elementwise floor result into retained output storage.
+ */
+pub floor_out(output: Tensor, tensor: Tensor): Unit ->
+    native_floor_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise floor.
+ */
+pub floor_in_place(tensor: Tensor): Unit ->
+    native_floor_in_place(tensor).
+
+/**
+ * Writes the elementwise frac result into retained output storage.
+ */
+pub frac_out(output: Tensor, tensor: Tensor): Unit ->
+    native_frac_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise frac.
+ */
+pub frac_in_place(tensor: Tensor): Unit ->
+    native_frac_in_place(tensor).
+
+/**
+ * Writes the elementwise hardsigmoid result into retained output storage.
+ */
+pub hardsigmoid_out(output: Tensor, tensor: Tensor): Unit ->
+    native_hardsigmoid_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise hardsigmoid.
+ */
+pub hardsigmoid_in_place(tensor: Tensor): Unit ->
+    native_hardsigmoid_in_place(tensor).
+
+/**
+ * Writes the elementwise hardswish result into retained output storage.
+ */
+pub hardswish_out(output: Tensor, tensor: Tensor): Unit ->
+    native_hardswish_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise hardswish.
+ */
+pub hardswish_in_place(tensor: Tensor): Unit ->
+    native_hardswish_in_place(tensor).
+
+/**
+ * Writes the elementwise log10 result into retained output storage.
+ */
+pub log10_out(output: Tensor, tensor: Tensor): Unit ->
+    native_log10_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise log10.
+ */
+pub log10_in_place(tensor: Tensor): Unit ->
+    native_log10_in_place(tensor).
+
+/**
+ * Writes the elementwise log1p result into retained output storage.
+ */
+pub log1p_out(output: Tensor, tensor: Tensor): Unit ->
+    native_log1p_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise log1p.
+ */
+pub log1p_in_place(tensor: Tensor): Unit ->
+    native_log1p_in_place(tensor).
+
+/**
+ * Writes the elementwise log2 result into retained output storage.
+ */
+pub log2_out(output: Tensor, tensor: Tensor): Unit ->
+    native_log2_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise log2.
+ */
+pub log2_in_place(tensor: Tensor): Unit ->
+    native_log2_in_place(tensor).
+
+/**
+ * Writes the elementwise logical_not result into retained output storage.
+ */
+pub logical_not_out(output: Tensor, tensor: Tensor): Unit ->
+    native_logical_not_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise logical_not.
+ */
+pub logical_not_in_place(tensor: Tensor): Unit ->
+    native_logical_not_in_place(tensor).
+
+/**
+ * Writes the elementwise mish result into retained output storage.
+ */
+pub mish_out(output: Tensor, tensor: Tensor): Unit ->
+    native_mish_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise mish.
+ */
+pub mish_in_place(tensor: Tensor): Unit ->
+    native_mish_in_place(tensor).
+
+/**
+ * Writes the elementwise rad2deg result into retained output storage.
+ */
+pub rad2deg_out(output: Tensor, tensor: Tensor): Unit ->
+    native_rad2deg_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise rad2deg.
+ */
+pub rad2deg_in_place(tensor: Tensor): Unit ->
+    native_rad2deg_in_place(tensor).
+
+/**
+ * Writes the elementwise reciprocal result into retained output storage.
+ */
+pub reciprocal_out(output: Tensor, tensor: Tensor): Unit ->
+    native_reciprocal_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise reciprocal.
+ */
+pub reciprocal_in_place(tensor: Tensor): Unit ->
+    native_reciprocal_in_place(tensor).
+
+/**
+ * Writes the elementwise round result into retained output storage.
+ */
+pub round_out(output: Tensor, tensor: Tensor): Unit ->
+    native_round_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise round.
+ */
+pub round_in_place(tensor: Tensor): Unit ->
+    native_round_in_place(tensor).
+
+/**
+ * Writes the elementwise rsqrt result into retained output storage.
+ */
+pub rsqrt_out(output: Tensor, tensor: Tensor): Unit ->
+    native_rsqrt_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise rsqrt.
+ */
+pub rsqrt_in_place(tensor: Tensor): Unit ->
+    native_rsqrt_in_place(tensor).
+
+/**
+ * Writes the elementwise sigmoid result into retained output storage.
+ */
+pub sigmoid_out(output: Tensor, tensor: Tensor): Unit ->
+    native_sigmoid_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise sigmoid.
+ */
+pub sigmoid_in_place(tensor: Tensor): Unit ->
+    native_sigmoid_in_place(tensor).
+
+/**
+ * Writes the elementwise sign result into retained output storage.
+ */
+pub sign_out(output: Tensor, tensor: Tensor): Unit ->
+    native_sign_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise sign.
+ */
+pub sign_in_place(tensor: Tensor): Unit ->
+    native_sign_in_place(tensor).
+
+/**
+ * Writes the elementwise silu result into retained output storage.
+ */
+pub silu_out(output: Tensor, tensor: Tensor): Unit ->
+    native_silu_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise silu.
+ */
+pub silu_in_place(tensor: Tensor): Unit ->
+    native_silu_in_place(tensor).
+
+/**
+ * Writes the elementwise sinc result into retained output storage.
+ */
+pub sinc_out(output: Tensor, tensor: Tensor): Unit ->
+    native_sinc_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise sinc.
+ */
+pub sinc_in_place(tensor: Tensor): Unit ->
+    native_sinc_in_place(tensor).
+
+/**
+ * Writes the elementwise square result into retained output storage.
+ */
+pub square_out(output: Tensor, tensor: Tensor): Unit ->
+    native_square_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise square.
+ */
+pub square_in_place(tensor: Tensor): Unit ->
+    native_square_in_place(tensor).
+
+/**
+ * Writes the elementwise trunc result into retained output storage.
+ */
+pub trunc_out(output: Tensor, tensor: Tensor): Unit ->
+    native_trunc_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise trunc.
+ */
+pub trunc_in_place(tensor: Tensor): Unit ->
+    native_trunc_in_place(tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise relu6.
+ */
+pub relu6_in_place(tensor: Tensor): Unit ->
+    native_relu6_in_place(tensor).
+
+/**
+ * Mutates retained tensor storage with elementwise selu.
+ */
+pub selu_in_place(tensor: Tensor): Unit ->
+    native_selu_in_place(tensor).
+
+/**
+ * Writes the exact absolute alias result into retained output storage.
+ */
+pub absolute_out(output: Tensor, tensor: Tensor): Unit ->
+    native_absolute_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage through the exact absolute alias.
+ */
+pub absolute_in_place(tensor: Tensor): Unit ->
+    native_absolute_in_place(tensor).
+
+/**
+ * Writes the exact arccos alias result into retained output storage.
+ */
+pub arccos_out(output: Tensor, tensor: Tensor): Unit ->
+    native_arccos_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage through the exact arccos alias.
+ */
+pub arccos_in_place(tensor: Tensor): Unit ->
+    native_arccos_in_place(tensor).
+
+/**
+ * Writes the exact arccosh alias result into retained output storage.
+ */
+pub arccosh_out(output: Tensor, tensor: Tensor): Unit ->
+    native_arccosh_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage through the exact arccosh alias.
+ */
+pub arccosh_in_place(tensor: Tensor): Unit ->
+    native_arccosh_in_place(tensor).
+
+/**
+ * Writes the exact arcsin alias result into retained output storage.
+ */
+pub arcsin_out(output: Tensor, tensor: Tensor): Unit ->
+    native_arcsin_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage through the exact arcsin alias.
+ */
+pub arcsin_in_place(tensor: Tensor): Unit ->
+    native_arcsin_in_place(tensor).
+
+/**
+ * Writes the exact arcsinh alias result into retained output storage.
+ */
+pub arcsinh_out(output: Tensor, tensor: Tensor): Unit ->
+    native_arcsinh_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage through the exact arcsinh alias.
+ */
+pub arcsinh_in_place(tensor: Tensor): Unit ->
+    native_arcsinh_in_place(tensor).
+
+/**
+ * Writes the exact arctan alias result into retained output storage.
+ */
+pub arctan_out(output: Tensor, tensor: Tensor): Unit ->
+    native_arctan_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage through the exact arctan alias.
+ */
+pub arctan_in_place(tensor: Tensor): Unit ->
+    native_arctan_in_place(tensor).
+
+/**
+ * Writes the exact arctanh alias result into retained output storage.
+ */
+pub arctanh_out(output: Tensor, tensor: Tensor): Unit ->
+    native_arctanh_out(output, tensor).
+
+/**
+ * Mutates retained tensor storage through the exact arctanh alias.
+ */
+pub arctanh_in_place(tensor: Tensor): Unit ->
+    native_arctanh_in_place(tensor).
+
+/**
+ * Writes the exact all all out result into retained output storage.
+ */
+pub all_all_out(output: Tensor, tensor: Tensor): Unit ->
+    native_all_all_out(output, tensor).
+
+/**
+ * Writes the exact any all out result into retained output storage.
+ */
+pub any_all_out(output: Tensor, tensor: Tensor): Unit ->
+    native_any_all_out(output, tensor).
+
+/**
+ * Writes the exact isinf out result into retained output storage.
+ */
+pub isinf_out(output: Tensor, tensor: Tensor): Unit ->
+    native_isinf_out(output, tensor).
+
+/**
+ * Writes the exact isnan out result into retained output storage.
+ */
+pub isnan_out(output: Tensor, tensor: Tensor): Unit ->
+    native_isnan_out(output, tensor).
+
+/**
+ * Writes the exact isneginf out result into retained output storage.
+ */
+pub isneginf_out(output: Tensor, tensor: Tensor): Unit ->
+    native_isneginf_out(output, tensor).
+
+/**
+ * Writes the exact isposinf out result into retained output storage.
+ */
+pub isposinf_out(output: Tensor, tensor: Tensor): Unit ->
+    native_isposinf_out(output, tensor).
+
+/**
+ * Writes the exact signbit out result into retained output storage.
+ */
+pub signbit_out(output: Tensor, tensor: Tensor): Unit ->
+    native_signbit_out(output, tensor).
+
+/**
+ * Writes the exact max unary out result into retained output storage.
+ */
+pub max_unary_out(output: Tensor, tensor: Tensor): Unit ->
+    native_max_unary_out(output, tensor).
+
+/**
+ * Writes the exact median out result into retained output storage.
+ */
+pub median_out(output: Tensor, tensor: Tensor): Unit ->
+    native_median_out(output, tensor).
+
+/**
+ * Writes the exact min unary out result into retained output storage.
+ */
+pub min_unary_out(output: Tensor, tensor: Tensor): Unit ->
+    native_min_unary_out(output, tensor).
+
+/**
+ * Writes the exact nonzero out result into retained output storage.
+ */
+pub nonzero_out(output: Tensor, tensor: Tensor): Unit ->
+    native_nonzero_out(output, tensor).
+
+/**
+ * Writes the exact trace out result into retained output storage.
+ */
+pub trace_out(output: Tensor, tensor: Tensor): Unit ->
+    native_trace_out(output, tensor).
+
+/**
+ * Writes the exact hardsigmoid_backward result into retained gradient storage.
+ */
+pub hardsigmoid_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit ->
+    native_hardsigmoid_backward_out(output, gradient, input).
+
+/**
+ * Writes the exact hardswish_backward result into retained gradient storage.
+ */
+pub hardswish_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit ->
+    native_hardswish_backward_out(output, gradient, input).
+
+/**
+ * Writes the exact sigmoid_backward result into retained gradient storage.
+ */
+pub sigmoid_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit ->
+    native_sigmoid_backward_out(output, gradient, input).
+
+/**
+ * Writes the exact silu_backward result into retained gradient storage.
+ */
+pub silu_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit ->
+    native_silu_backward_out(output, gradient, input).
+
+/**
+ * Writes the exact tanh_backward result into retained gradient storage.
+ */
+pub tanh_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit ->
+    native_tanh_backward_out(output, gradient, input).
+
+/**
+ * Rounds tensor values to the requested decimal precision.
+ */
+pub round_decimals(tensor: Tensor, decimals: Int): Tensor ->
+    native_round_decimals(tensor, decimals).
+
+/**
+ * Writes decimal rounding into retained output storage.
+ */
+pub round_decimals_out(output: Tensor, tensor: Tensor, decimals: Int): Unit ->
+    native_round_decimals_out(output, tensor, decimals).
+
+/**
+ * Rounds retained tensor storage to the requested decimal precision.
+ */
+pub round_decimals_in_place(tensor: Tensor, decimals: Int): Unit ->
+    native_round_decimals_in_place(tensor, decimals).
+
+/**
+ * Writes mantissa and exponent decomposition into retained output storage.
+ */
+pub frexp_out(mantissa: Tensor, exponent: Tensor, tensor: Tensor): Unit ->
+    native_frexp_out(mantissa, exponent, tensor).
+
+/**
+ * Writes an explicit alias copy into retained output storage.
+ */
+pub alias_copy_out(output: Tensor, tensor: Tensor): Unit ->
+    native_alias_copy_out(output, tensor).
+
+/**
+ * Writes elementwise phase angles into retained output storage.
+ */
+pub angle_out(output: Tensor, tensor: Tensor): Unit ->
+    native_angle_out(output, tensor).
+
+/**
+ * Writes physical conjugates into retained output storage.
+ */
+pub conj_physical_out(output: Tensor, tensor: Tensor): Unit ->
+    native_conj_physical_out(output, tensor).
+
+/**
+ * Computes physical conjugates in place.
+ */
+pub conj_physical_in_place(tensor: Tensor): Unit ->
+    native_conj_physical_in_place(tensor).
+
+/**
+ * Writes a detached copy into retained output storage.
+ */
+pub detach_copy_out(output: Tensor, tensor: Tensor): Unit ->
+    native_detach_copy_out(output, tensor).
+
+/**
+ * Writes elementwise exponentials into retained output storage.
+ */
+pub exp_out(output: Tensor, tensor: Tensor): Unit ->
+    native_exp_out(output, tensor).
+
+/**
+ * Computes elementwise exponentials in place.
+ */
+pub exp_in_place(tensor: Tensor): Unit ->
+    native_exp_in_place(tensor).
+
+/**
+ * Writes elementwise truncation toward zero into retained output storage.
+ */
+pub fix_out(output: Tensor, tensor: Tensor): Unit ->
+    native_fix_out(output, tensor).
+
+/**
+ * Truncates values toward zero in place.
+ */
+pub fix_in_place(tensor: Tensor): Unit ->
+    native_fix_in_place(tensor).
+
+/**
+ * Writes the modified Bessel function I0 into retained output storage.
+ */
+pub i0_out(output: Tensor, tensor: Tensor): Unit ->
+    native_i0_out(output, tensor).
+
+/**
+ * Computes the modified Bessel function I0 in place.
+ */
+pub i0_in_place(tensor: Tensor): Unit ->
+    native_i0_in_place(tensor).
+
+/**
+ * Writes elementwise log-gamma values into retained output storage.
+ */
+pub lgamma_out(output: Tensor, tensor: Tensor): Unit ->
+    native_lgamma_out(output, tensor).
+
+/**
+ * Computes elementwise log-gamma values in place.
+ */
+pub lgamma_in_place(tensor: Tensor): Unit ->
+    native_lgamma_in_place(tensor).
+
+/**
+ * Writes a lifted tensor into retained output storage.
+ */
+pub lift_out(output: Tensor, tensor: Tensor): Unit ->
+    native_lift_out(output, tensor).
+
+/**
+ * Writes a fresh lifted copy into retained output storage.
+ */
+pub lift_fresh_copy_out(output: Tensor, tensor: Tensor): Unit ->
+    native_lift_fresh_copy_out(output, tensor).
+
+/**
+ * Writes elementwise natural logarithms into retained output storage.
+ */
+pub log_out(output: Tensor, tensor: Tensor): Unit ->
+    native_log_out(output, tensor).
+
+/**
+ * Computes elementwise natural logarithms in place.
+ */
+pub log_in_place(tensor: Tensor): Unit ->
+    native_log_in_place(tensor).
+
+/**
+ * Writes elementwise digamma values into retained output storage.
+ */
+pub digamma_out(output: Tensor, tensor: Tensor): Unit ->
+    native_digamma_out(output, tensor).
+
+/**
+ * Writes a matrix inverse into retained output storage.
+ */
+pub inverse_out(output: Tensor, tensor: Tensor): Unit ->
+    native_inverse_out(output, tensor).
+
+/**
+ * Writes elementwise log-sigmoid values into retained output storage.
+ */
+pub log_sigmoid_out(output: Tensor, tensor: Tensor): Unit ->
+    native_log_sigmoid_out(output, tensor).
+
+/**
+ * Writes the ascending last-dimension sort into retained output storage.
+ */
+pub msort_out(output: Tensor, tensor: Tensor): Unit ->
+    native_msort_out(output, tensor).
+
+/**
+ * Writes the exact negation result into retained output storage.
+ */
+pub neg_out(output: Tensor, tensor: Tensor): Unit ->
+    native_neg_out(output, tensor).
+
+/**
+ * Writes the exact negative alias result into retained output storage.
+ */
+pub negative_out(output: Tensor, tensor: Tensor): Unit ->
+    native_negative_out(output, tensor).
+
+/**
+ * Writes rectified linear values into retained output storage.
+ */
+pub relu_out(output: Tensor, tensor: Tensor): Unit ->
+    native_relu_out(output, tensor).
+
+/**
+ * Writes elementwise complex-aware signs into retained output storage.
+ */
+pub sgn_out(output: Tensor, tensor: Tensor): Unit ->
+    native_sgn_out(output, tensor).
+
+/**
+ * Writes elementwise square roots into retained output storage.
+ */
+pub sqrt_out(output: Tensor, tensor: Tensor): Unit ->
+    native_sqrt_out(output, tensor).
+
+/**
+ * Writes a copied matrix transpose into retained output storage.
+ */
+pub t_copy_out(output: Tensor, tensor: Tensor): Unit ->
+    native_t_copy_out(output, tensor).
+
+/**
+ * Writes a copied complex view into retained output storage.
+ */
+pub view_as_complex_copy_out(output: Tensor, tensor: Tensor): Unit ->
+    native_view_as_complex_copy_out(output, tensor).
+
+/**
+ * Writes a copied real view into retained output storage.
+ */
+pub view_as_real_copy_out(output: Tensor, tensor: Tensor): Unit ->
+    native_view_as_real_copy_out(output, tensor).
+
+/**
+ * Computes elementwise digamma values in place.
+ */
+pub digamma_in_place(tensor: Tensor): Unit ->
+    native_digamma_in_place(tensor).
+
+/**
+ * Negates every element in place through the exact negation operation.
+ */
+pub neg_in_place(tensor: Tensor): Unit ->
+    native_neg_in_place(tensor).
+
+/**
+ * Negates every element in place through the exact negative alias.
+ */
+pub negative_in_place(tensor: Tensor): Unit ->
+    native_negative_in_place(tensor).
+
+/**
+ * Applies rectified linear activation in place.
+ */
+pub relu_in_place(tensor: Tensor): Unit ->
+    native_relu_in_place(tensor).
+
+/**
+ * Computes complex-aware signs in place.
+ */
+pub sgn_in_place(tensor: Tensor): Unit ->
+    native_sgn_in_place(tensor).
+
+/**
+ * Computes elementwise square roots in place.
+ */
+pub sqrt_in_place(tensor: Tensor): Unit ->
+    native_sqrt_in_place(tensor).
+
+/**
+ * Transposes a tensor with at most two dimensions in place.
+ */
+pub t_in_place(tensor: Tensor): Unit ->
+    native_t_in_place(tensor).
+
+/**
+ * Detaches retained tensor storage from its autograd graph in place.
+ */
+pub detach_in_place(tensor: Tensor): Unit ->
+    native_detach_in_place(tensor).
+
+/**
+ * Removes every singleton dimension from retained tensor storage in place.
+ */
+pub squeeze_in_place(tensor: Tensor): Unit ->
+    native_squeeze_in_place(tensor).
+
+/**
+ * Fills retained tensor storage with zeros in place.
+ */
+pub zero_in_place(tensor: Tensor): Unit ->
+    native_zero_in_place(tensor).

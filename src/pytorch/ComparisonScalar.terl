@@ -1,0 +1,536 @@
+/**
+ * Typed scalar, retained-output, and in-place comparison operations.
+ */
+module pytorch.ComparisonScalar.
+
+import pytorch.BinaryScalarNative.{binary_scalar_right_float, binary_scalar_right_float_in_place, binary_scalar_right_float_out, binary_scalar_right_int, binary_scalar_right_int_in_place, binary_scalar_right_int_out, binary_tensor_in_place, binary_tensor_out}.
+
+import type pytorch.Tensor.
+
+/**
+ * Writes eq comparison for two tensors into retained output storage.
+ */
+pub eq_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 11, right).
+
+/**
+ * Applies eq comparison with a tensor right operand in place.
+ */
+pub eq_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 11, right).
+
+/**
+ * Returns eq comparison with a Int scalar right operand.
+ */
+pub eq_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 11, scalar).
+
+/**
+ * Writes eq comparison with a Int scalar right operand.
+ */
+pub eq_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 11, scalar).
+
+/**
+ * Applies eq comparison with a Int scalar right operand in place.
+ */
+pub eq_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 11, scalar).
+
+/**
+ * Returns eq comparison with a Float scalar right operand.
+ */
+pub eq_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 11, scalar).
+
+/**
+ * Writes eq comparison with a Float scalar right operand.
+ */
+pub eq_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 11, scalar).
+
+/**
+ * Applies eq comparison with a Float scalar right operand in place.
+ */
+pub eq_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 11, scalar).
+
+/**
+ * Writes ne comparison for two tensors into retained output storage.
+ */
+pub ne_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 12, right).
+
+/**
+ * Applies ne comparison with a tensor right operand in place.
+ */
+pub ne_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 12, right).
+
+/**
+ * Returns ne comparison with a Int scalar right operand.
+ */
+pub ne_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 12, scalar).
+
+/**
+ * Writes ne comparison with a Int scalar right operand.
+ */
+pub ne_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 12, scalar).
+
+/**
+ * Applies ne comparison with a Int scalar right operand in place.
+ */
+pub ne_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 12, scalar).
+
+/**
+ * Returns ne comparison with a Float scalar right operand.
+ */
+pub ne_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 12, scalar).
+
+/**
+ * Writes ne comparison with a Float scalar right operand.
+ */
+pub ne_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 12, scalar).
+
+/**
+ * Applies ne comparison with a Float scalar right operand in place.
+ */
+pub ne_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 12, scalar).
+
+/**
+ * Writes not_equal comparison for two tensors into retained output storage.
+ */
+pub not_equal_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 12, right).
+
+/**
+ * Applies not_equal comparison with a tensor right operand in place.
+ */
+pub not_equal_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 12, right).
+
+/**
+ * Returns not_equal comparison with a Int scalar right operand.
+ */
+pub not_equal_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 12, scalar).
+
+/**
+ * Writes not_equal comparison with a Int scalar right operand.
+ */
+pub not_equal_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 12, scalar).
+
+/**
+ * Applies not_equal comparison with a Int scalar right operand in place.
+ */
+pub not_equal_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 12, scalar).
+
+/**
+ * Returns not_equal comparison with a Float scalar right operand.
+ */
+pub not_equal_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 12, scalar).
+
+/**
+ * Writes not_equal comparison with a Float scalar right operand.
+ */
+pub not_equal_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 12, scalar).
+
+/**
+ * Applies not_equal comparison with a Float scalar right operand in place.
+ */
+pub not_equal_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 12, scalar).
+
+/**
+ * Writes lt comparison for two tensors into retained output storage.
+ */
+pub lt_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 13, right).
+
+/**
+ * Applies lt comparison with a tensor right operand in place.
+ */
+pub lt_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 13, right).
+
+/**
+ * Returns lt comparison with a Int scalar right operand.
+ */
+pub lt_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 13, scalar).
+
+/**
+ * Writes lt comparison with a Int scalar right operand.
+ */
+pub lt_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 13, scalar).
+
+/**
+ * Applies lt comparison with a Int scalar right operand in place.
+ */
+pub lt_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 13, scalar).
+
+/**
+ * Returns lt comparison with a Float scalar right operand.
+ */
+pub lt_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 13, scalar).
+
+/**
+ * Writes lt comparison with a Float scalar right operand.
+ */
+pub lt_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 13, scalar).
+
+/**
+ * Applies lt comparison with a Float scalar right operand in place.
+ */
+pub lt_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 13, scalar).
+
+/**
+ * Writes less comparison for two tensors into retained output storage.
+ */
+pub less_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 13, right).
+
+/**
+ * Applies less comparison with a tensor right operand in place.
+ */
+pub less_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 13, right).
+
+/**
+ * Returns less comparison with a Int scalar right operand.
+ */
+pub less_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 13, scalar).
+
+/**
+ * Writes less comparison with a Int scalar right operand.
+ */
+pub less_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 13, scalar).
+
+/**
+ * Applies less comparison with a Int scalar right operand in place.
+ */
+pub less_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 13, scalar).
+
+/**
+ * Returns less comparison with a Float scalar right operand.
+ */
+pub less_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 13, scalar).
+
+/**
+ * Writes less comparison with a Float scalar right operand.
+ */
+pub less_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 13, scalar).
+
+/**
+ * Applies less comparison with a Float scalar right operand in place.
+ */
+pub less_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 13, scalar).
+
+/**
+ * Writes le comparison for two tensors into retained output storage.
+ */
+pub le_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 14, right).
+
+/**
+ * Applies le comparison with a tensor right operand in place.
+ */
+pub le_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 14, right).
+
+/**
+ * Returns le comparison with a Int scalar right operand.
+ */
+pub le_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 14, scalar).
+
+/**
+ * Writes le comparison with a Int scalar right operand.
+ */
+pub le_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 14, scalar).
+
+/**
+ * Applies le comparison with a Int scalar right operand in place.
+ */
+pub le_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 14, scalar).
+
+/**
+ * Returns le comparison with a Float scalar right operand.
+ */
+pub le_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 14, scalar).
+
+/**
+ * Writes le comparison with a Float scalar right operand.
+ */
+pub le_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 14, scalar).
+
+/**
+ * Applies le comparison with a Float scalar right operand in place.
+ */
+pub le_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 14, scalar).
+
+/**
+ * Writes less_equal comparison for two tensors into retained output storage.
+ */
+pub less_equal_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 14, right).
+
+/**
+ * Applies less_equal comparison with a tensor right operand in place.
+ */
+pub less_equal_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 14, right).
+
+/**
+ * Returns less_equal comparison with a Int scalar right operand.
+ */
+pub less_equal_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 14, scalar).
+
+/**
+ * Writes less_equal comparison with a Int scalar right operand.
+ */
+pub less_equal_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 14, scalar).
+
+/**
+ * Applies less_equal comparison with a Int scalar right operand in place.
+ */
+pub less_equal_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 14, scalar).
+
+/**
+ * Returns less_equal comparison with a Float scalar right operand.
+ */
+pub less_equal_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 14, scalar).
+
+/**
+ * Writes less_equal comparison with a Float scalar right operand.
+ */
+pub less_equal_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 14, scalar).
+
+/**
+ * Applies less_equal comparison with a Float scalar right operand in place.
+ */
+pub less_equal_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 14, scalar).
+
+/**
+ * Writes gt comparison for two tensors into retained output storage.
+ */
+pub gt_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 15, right).
+
+/**
+ * Applies gt comparison with a tensor right operand in place.
+ */
+pub gt_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 15, right).
+
+/**
+ * Returns gt comparison with a Int scalar right operand.
+ */
+pub gt_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 15, scalar).
+
+/**
+ * Writes gt comparison with a Int scalar right operand.
+ */
+pub gt_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 15, scalar).
+
+/**
+ * Applies gt comparison with a Int scalar right operand in place.
+ */
+pub gt_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 15, scalar).
+
+/**
+ * Returns gt comparison with a Float scalar right operand.
+ */
+pub gt_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 15, scalar).
+
+/**
+ * Writes gt comparison with a Float scalar right operand.
+ */
+pub gt_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 15, scalar).
+
+/**
+ * Applies gt comparison with a Float scalar right operand in place.
+ */
+pub gt_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 15, scalar).
+
+/**
+ * Writes greater comparison for two tensors into retained output storage.
+ */
+pub greater_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 15, right).
+
+/**
+ * Applies greater comparison with a tensor right operand in place.
+ */
+pub greater_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 15, right).
+
+/**
+ * Returns greater comparison with a Int scalar right operand.
+ */
+pub greater_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 15, scalar).
+
+/**
+ * Writes greater comparison with a Int scalar right operand.
+ */
+pub greater_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 15, scalar).
+
+/**
+ * Applies greater comparison with a Int scalar right operand in place.
+ */
+pub greater_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 15, scalar).
+
+/**
+ * Returns greater comparison with a Float scalar right operand.
+ */
+pub greater_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 15, scalar).
+
+/**
+ * Writes greater comparison with a Float scalar right operand.
+ */
+pub greater_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 15, scalar).
+
+/**
+ * Applies greater comparison with a Float scalar right operand in place.
+ */
+pub greater_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 15, scalar).
+
+/**
+ * Writes ge comparison for two tensors into retained output storage.
+ */
+pub ge_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 16, right).
+
+/**
+ * Applies ge comparison with a tensor right operand in place.
+ */
+pub ge_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 16, right).
+
+/**
+ * Returns ge comparison with a Int scalar right operand.
+ */
+pub ge_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 16, scalar).
+
+/**
+ * Writes ge comparison with a Int scalar right operand.
+ */
+pub ge_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 16, scalar).
+
+/**
+ * Applies ge comparison with a Int scalar right operand in place.
+ */
+pub ge_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 16, scalar).
+
+/**
+ * Returns ge comparison with a Float scalar right operand.
+ */
+pub ge_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 16, scalar).
+
+/**
+ * Writes ge comparison with a Float scalar right operand.
+ */
+pub ge_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 16, scalar).
+
+/**
+ * Applies ge comparison with a Float scalar right operand in place.
+ */
+pub ge_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 16, scalar).
+
+/**
+ * Writes greater_equal comparison for two tensors into retained output storage.
+ */
+pub greater_equal_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 16, right).
+
+/**
+ * Applies greater_equal comparison with a tensor right operand in place.
+ */
+pub greater_equal_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 16, right).
+
+/**
+ * Returns greater_equal comparison with a Int scalar right operand.
+ */
+pub greater_equal_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 16, scalar).
+
+/**
+ * Writes greater_equal comparison with a Int scalar right operand.
+ */
+pub greater_equal_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 16, scalar).
+
+/**
+ * Applies greater_equal comparison with a Int scalar right operand in place.
+ */
+pub greater_equal_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 16, scalar).
+
+/**
+ * Returns greater_equal comparison with a Float scalar right operand.
+ */
+pub greater_equal_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 16, scalar).
+
+/**
+ * Writes greater_equal comparison with a Float scalar right operand.
+ */
+pub greater_equal_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 16, scalar).
+
+/**
+ * Applies greater_equal comparison with a Float scalar right operand in place.
+ */
+pub greater_equal_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 16, scalar).

@@ -1,0 +1,544 @@
+module pytorch.SpecialScalarFamilyParityTest.
+
+import pytorch.Binary.{special_xlog1py as special_xlog1py_tensor, special_xlogy as special_xlogy_tensor, special_zeta as special_zeta_tensor}.
+import pytorch.Dense.{special_chebyshev_polynomial_u as special_chebyshev_polynomial_u_tensor, special_chebyshev_polynomial_v as special_chebyshev_polynomial_v_tensor, special_chebyshev_polynomial_w as special_chebyshev_polynomial_w_tensor, special_hermite_polynomial_h as special_hermite_polynomial_h_tensor, special_hermite_polynomial_he as special_hermite_polynomial_he_tensor, special_laguerre_polynomial_l as special_laguerre_polynomial_l_tensor, special_legendre_polynomial_p as special_legendre_polynomial_p_tensor, special_shifted_chebyshev_polynomial_t as special_shifted_chebyshev_polynomial_t_tensor, special_shifted_chebyshev_polynomial_u as special_shifted_chebyshev_polynomial_u_tensor, special_shifted_chebyshev_polynomial_v as special_shifted_chebyshev_polynomial_v_tensor, special_shifted_chebyshev_polynomial_w as special_shifted_chebyshev_polynomial_w_tensor}.
+import pytorch.SpecialScalar.{special_chebyshev_polynomial_u_left_float, special_chebyshev_polynomial_u_left_float_out, special_chebyshev_polynomial_u_left_int, special_chebyshev_polynomial_u_left_int_out, special_chebyshev_polynomial_u_right_float, special_chebyshev_polynomial_u_right_float_out, special_chebyshev_polynomial_u_right_int, special_chebyshev_polynomial_u_right_int_out, special_chebyshev_polynomial_v_left_float, special_chebyshev_polynomial_v_left_float_out, special_chebyshev_polynomial_v_left_int, special_chebyshev_polynomial_v_left_int_out, special_chebyshev_polynomial_v_right_float, special_chebyshev_polynomial_v_right_float_out, special_chebyshev_polynomial_v_right_int, special_chebyshev_polynomial_v_right_int_out, special_chebyshev_polynomial_w_left_float, special_chebyshev_polynomial_w_left_float_out, special_chebyshev_polynomial_w_left_int, special_chebyshev_polynomial_w_left_int_out, special_chebyshev_polynomial_w_right_float, special_chebyshev_polynomial_w_right_float_out, special_chebyshev_polynomial_w_right_int, special_chebyshev_polynomial_w_right_int_out, special_hermite_polynomial_h_left_float, special_hermite_polynomial_h_left_float_out, special_hermite_polynomial_h_left_int, special_hermite_polynomial_h_left_int_out, special_hermite_polynomial_h_right_float, special_hermite_polynomial_h_right_float_out, special_hermite_polynomial_h_right_int, special_hermite_polynomial_h_right_int_out, special_hermite_polynomial_he_left_float, special_hermite_polynomial_he_left_float_out, special_hermite_polynomial_he_left_int, special_hermite_polynomial_he_left_int_out, special_hermite_polynomial_he_right_float, special_hermite_polynomial_he_right_float_out, special_hermite_polynomial_he_right_int, special_hermite_polynomial_he_right_int_out, special_laguerre_polynomial_l_left_float, special_laguerre_polynomial_l_left_float_out, special_laguerre_polynomial_l_left_int, special_laguerre_polynomial_l_left_int_out, special_laguerre_polynomial_l_right_float, special_laguerre_polynomial_l_right_float_out, special_laguerre_polynomial_l_right_int, special_laguerre_polynomial_l_right_int_out, special_legendre_polynomial_p_left_float, special_legendre_polynomial_p_left_float_out, special_legendre_polynomial_p_left_int, special_legendre_polynomial_p_left_int_out, special_legendre_polynomial_p_right_float, special_legendre_polynomial_p_right_float_out, special_legendre_polynomial_p_right_int, special_legendre_polynomial_p_right_int_out, special_shifted_chebyshev_polynomial_t_left_float, special_shifted_chebyshev_polynomial_t_left_float_out, special_shifted_chebyshev_polynomial_t_left_int, special_shifted_chebyshev_polynomial_t_left_int_out, special_shifted_chebyshev_polynomial_t_right_float, special_shifted_chebyshev_polynomial_t_right_float_out, special_shifted_chebyshev_polynomial_t_right_int, special_shifted_chebyshev_polynomial_t_right_int_out, special_shifted_chebyshev_polynomial_u_left_float, special_shifted_chebyshev_polynomial_u_left_float_out, special_shifted_chebyshev_polynomial_u_left_int, special_shifted_chebyshev_polynomial_u_left_int_out, special_shifted_chebyshev_polynomial_u_right_float, special_shifted_chebyshev_polynomial_u_right_float_out, special_shifted_chebyshev_polynomial_u_right_int, special_shifted_chebyshev_polynomial_u_right_int_out, special_shifted_chebyshev_polynomial_v_left_float, special_shifted_chebyshev_polynomial_v_left_float_out, special_shifted_chebyshev_polynomial_v_left_int, special_shifted_chebyshev_polynomial_v_left_int_out, special_shifted_chebyshev_polynomial_v_right_float, special_shifted_chebyshev_polynomial_v_right_float_out, special_shifted_chebyshev_polynomial_v_right_int, special_shifted_chebyshev_polynomial_v_right_int_out, special_shifted_chebyshev_polynomial_w_left_float, special_shifted_chebyshev_polynomial_w_left_float_out, special_shifted_chebyshev_polynomial_w_left_int, special_shifted_chebyshev_polynomial_w_left_int_out, special_shifted_chebyshev_polynomial_w_right_float, special_shifted_chebyshev_polynomial_w_right_float_out, special_shifted_chebyshev_polynomial_w_right_int, special_shifted_chebyshev_polynomial_w_right_int_out, special_xlog1py_left_float, special_xlog1py_left_float_out, special_xlog1py_left_int, special_xlog1py_left_int_out, special_xlog1py_right_float, special_xlog1py_right_float_out, special_xlog1py_right_int, special_xlog1py_right_int_out, special_xlogy_left_float, special_xlogy_left_float_out, special_xlogy_left_int, special_xlogy_left_int_out, special_xlogy_right_float, special_xlogy_right_float_out, special_xlogy_right_int, special_xlogy_right_int_out, special_zeta_left_float, special_zeta_left_float_out, special_zeta_left_int, special_zeta_left_int_out, special_zeta_right_float, special_zeta_right_float_out, special_zeta_right_int, special_zeta_right_int_out}.
+import pytorch.Tensor.{dispose, from_floats, item_float, mse_loss, shape, zeros}.
+
+import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Compares a Scalar-overload result with an independently dispatched tensor reference.
+ */
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let error = mse_loss(actual, expected, 1);
+    let value = item_float(error);
+    dispose(error);
+    value == 0.0.
+
+/**
+ * Proves every Scalar overload for special_chebyshev_polynomial_u.
+ */
+@test
+pub chebyshev_u_scalar_overloads_match_libtorch(): Bool ->
+    let input = from_floats([0.25, 0.5], [2]);
+    let orders = from_floats([2.0, 2.0], [2]);
+    let zero_inputs = from_floats([0.0, 0.0], [2]);
+    let half_inputs = from_floats([0.5, 0.5], [2]);
+    let right_expected = special_chebyshev_polynomial_u_tensor(input, orders);
+    let left_int_expected = special_chebyshev_polynomial_u_tensor(zero_inputs, orders);
+    let left_float_expected = special_chebyshev_polynomial_u_tensor(half_inputs, orders);
+    let right_int = special_chebyshev_polynomial_u_right_int(input, 2);
+    let right_float = special_chebyshev_polynomial_u_right_float(input, 2.0);
+    let left_int = special_chebyshev_polynomial_u_left_int(0, orders);
+    let left_float = special_chebyshev_polynomial_u_left_float(0.5, orders);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_chebyshev_polynomial_u_right_int_out(right_int_output, input, 2);
+    special_chebyshev_polynomial_u_right_float_out(right_float_output, input, 2.0);
+    special_chebyshev_polynomial_u_left_int_out(left_int_output, 0, orders);
+    special_chebyshev_polynomial_u_left_float_out(left_float_output, 0.5, orders);
+    let valid =
+        matches(right_int, right_expected)
+            and matches(right_float, right_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_expected)
+            and matches(right_float_output, right_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(input) == [2]
+            and shape(orders) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_expected); dispose(half_inputs); dispose(zero_inputs); dispose(orders); dispose(input); valid).
+
+/**
+ * Proves every Scalar overload for special_chebyshev_polynomial_v.
+ */
+@test
+pub chebyshev_v_scalar_overloads_match_libtorch(): Bool ->
+    let input = from_floats([0.25, 0.5], [2]);
+    let orders = from_floats([2.0, 2.0], [2]);
+    let zero_inputs = from_floats([0.0, 0.0], [2]);
+    let half_inputs = from_floats([0.5, 0.5], [2]);
+    let right_expected = special_chebyshev_polynomial_v_tensor(input, orders);
+    let left_int_expected = special_chebyshev_polynomial_v_tensor(zero_inputs, orders);
+    let left_float_expected = special_chebyshev_polynomial_v_tensor(half_inputs, orders);
+    let right_int = special_chebyshev_polynomial_v_right_int(input, 2);
+    let right_float = special_chebyshev_polynomial_v_right_float(input, 2.0);
+    let left_int = special_chebyshev_polynomial_v_left_int(0, orders);
+    let left_float = special_chebyshev_polynomial_v_left_float(0.5, orders);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_chebyshev_polynomial_v_right_int_out(right_int_output, input, 2);
+    special_chebyshev_polynomial_v_right_float_out(right_float_output, input, 2.0);
+    special_chebyshev_polynomial_v_left_int_out(left_int_output, 0, orders);
+    special_chebyshev_polynomial_v_left_float_out(left_float_output, 0.5, orders);
+    let valid =
+        matches(right_int, right_expected)
+            and matches(right_float, right_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_expected)
+            and matches(right_float_output, right_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(input) == [2]
+            and shape(orders) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_expected); dispose(half_inputs); dispose(zero_inputs); dispose(orders); dispose(input); valid).
+
+/**
+ * Proves every Scalar overload for special_chebyshev_polynomial_w.
+ */
+@test
+pub chebyshev_w_scalar_overloads_match_libtorch(): Bool ->
+    let input = from_floats([0.25, 0.5], [2]);
+    let orders = from_floats([2.0, 2.0], [2]);
+    let zero_inputs = from_floats([0.0, 0.0], [2]);
+    let half_inputs = from_floats([0.5, 0.5], [2]);
+    let right_expected = special_chebyshev_polynomial_w_tensor(input, orders);
+    let left_int_expected = special_chebyshev_polynomial_w_tensor(zero_inputs, orders);
+    let left_float_expected = special_chebyshev_polynomial_w_tensor(half_inputs, orders);
+    let right_int = special_chebyshev_polynomial_w_right_int(input, 2);
+    let right_float = special_chebyshev_polynomial_w_right_float(input, 2.0);
+    let left_int = special_chebyshev_polynomial_w_left_int(0, orders);
+    let left_float = special_chebyshev_polynomial_w_left_float(0.5, orders);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_chebyshev_polynomial_w_right_int_out(right_int_output, input, 2);
+    special_chebyshev_polynomial_w_right_float_out(right_float_output, input, 2.0);
+    special_chebyshev_polynomial_w_left_int_out(left_int_output, 0, orders);
+    special_chebyshev_polynomial_w_left_float_out(left_float_output, 0.5, orders);
+    let valid =
+        matches(right_int, right_expected)
+            and matches(right_float, right_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_expected)
+            and matches(right_float_output, right_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(input) == [2]
+            and shape(orders) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_expected); dispose(half_inputs); dispose(zero_inputs); dispose(orders); dispose(input); valid).
+
+/**
+ * Proves every Scalar overload for special_hermite_polynomial_h.
+ */
+@test
+pub hermite_h_scalar_overloads_match_libtorch(): Bool ->
+    let input = from_floats([0.25, 0.5], [2]);
+    let orders = from_floats([2.0, 2.0], [2]);
+    let zero_inputs = from_floats([0.0, 0.0], [2]);
+    let half_inputs = from_floats([0.5, 0.5], [2]);
+    let right_expected = special_hermite_polynomial_h_tensor(input, orders);
+    let left_int_expected = special_hermite_polynomial_h_tensor(zero_inputs, orders);
+    let left_float_expected = special_hermite_polynomial_h_tensor(half_inputs, orders);
+    let right_int = special_hermite_polynomial_h_right_int(input, 2);
+    let right_float = special_hermite_polynomial_h_right_float(input, 2.0);
+    let left_int = special_hermite_polynomial_h_left_int(0, orders);
+    let left_float = special_hermite_polynomial_h_left_float(0.5, orders);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_hermite_polynomial_h_right_int_out(right_int_output, input, 2);
+    special_hermite_polynomial_h_right_float_out(right_float_output, input, 2.0);
+    special_hermite_polynomial_h_left_int_out(left_int_output, 0, orders);
+    special_hermite_polynomial_h_left_float_out(left_float_output, 0.5, orders);
+    let valid =
+        matches(right_int, right_expected)
+            and matches(right_float, right_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_expected)
+            and matches(right_float_output, right_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(input) == [2]
+            and shape(orders) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_expected); dispose(half_inputs); dispose(zero_inputs); dispose(orders); dispose(input); valid).
+
+/**
+ * Proves every Scalar overload for special_hermite_polynomial_he.
+ */
+@test
+pub hermite_he_scalar_overloads_match_libtorch(): Bool ->
+    let input = from_floats([0.25, 0.5], [2]);
+    let orders = from_floats([2.0, 2.0], [2]);
+    let zero_inputs = from_floats([0.0, 0.0], [2]);
+    let half_inputs = from_floats([0.5, 0.5], [2]);
+    let right_expected = special_hermite_polynomial_he_tensor(input, orders);
+    let left_int_expected = special_hermite_polynomial_he_tensor(zero_inputs, orders);
+    let left_float_expected = special_hermite_polynomial_he_tensor(half_inputs, orders);
+    let right_int = special_hermite_polynomial_he_right_int(input, 2);
+    let right_float = special_hermite_polynomial_he_right_float(input, 2.0);
+    let left_int = special_hermite_polynomial_he_left_int(0, orders);
+    let left_float = special_hermite_polynomial_he_left_float(0.5, orders);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_hermite_polynomial_he_right_int_out(right_int_output, input, 2);
+    special_hermite_polynomial_he_right_float_out(right_float_output, input, 2.0);
+    special_hermite_polynomial_he_left_int_out(left_int_output, 0, orders);
+    special_hermite_polynomial_he_left_float_out(left_float_output, 0.5, orders);
+    let valid =
+        matches(right_int, right_expected)
+            and matches(right_float, right_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_expected)
+            and matches(right_float_output, right_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(input) == [2]
+            and shape(orders) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_expected); dispose(half_inputs); dispose(zero_inputs); dispose(orders); dispose(input); valid).
+
+/**
+ * Proves every Scalar overload for special_laguerre_polynomial_l.
+ */
+@test
+pub laguerre_l_scalar_overloads_match_libtorch(): Bool ->
+    let input = from_floats([0.25, 0.5], [2]);
+    let orders = from_floats([2.0, 2.0], [2]);
+    let zero_inputs = from_floats([0.0, 0.0], [2]);
+    let half_inputs = from_floats([0.5, 0.5], [2]);
+    let right_expected = special_laguerre_polynomial_l_tensor(input, orders);
+    let left_int_expected = special_laguerre_polynomial_l_tensor(zero_inputs, orders);
+    let left_float_expected = special_laguerre_polynomial_l_tensor(half_inputs, orders);
+    let right_int = special_laguerre_polynomial_l_right_int(input, 2);
+    let right_float = special_laguerre_polynomial_l_right_float(input, 2.0);
+    let left_int = special_laguerre_polynomial_l_left_int(0, orders);
+    let left_float = special_laguerre_polynomial_l_left_float(0.5, orders);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_laguerre_polynomial_l_right_int_out(right_int_output, input, 2);
+    special_laguerre_polynomial_l_right_float_out(right_float_output, input, 2.0);
+    special_laguerre_polynomial_l_left_int_out(left_int_output, 0, orders);
+    special_laguerre_polynomial_l_left_float_out(left_float_output, 0.5, orders);
+    let valid =
+        matches(right_int, right_expected)
+            and matches(right_float, right_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_expected)
+            and matches(right_float_output, right_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(input) == [2]
+            and shape(orders) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_expected); dispose(half_inputs); dispose(zero_inputs); dispose(orders); dispose(input); valid).
+
+/**
+ * Proves every Scalar overload for special_legendre_polynomial_p.
+ */
+@test
+pub legendre_p_scalar_overloads_match_libtorch(): Bool ->
+    let input = from_floats([0.25, 0.5], [2]);
+    let orders = from_floats([2.0, 2.0], [2]);
+    let zero_inputs = from_floats([0.0, 0.0], [2]);
+    let half_inputs = from_floats([0.5, 0.5], [2]);
+    let right_expected = special_legendre_polynomial_p_tensor(input, orders);
+    let left_int_expected = special_legendre_polynomial_p_tensor(zero_inputs, orders);
+    let left_float_expected = special_legendre_polynomial_p_tensor(half_inputs, orders);
+    let right_int = special_legendre_polynomial_p_right_int(input, 2);
+    let right_float = special_legendre_polynomial_p_right_float(input, 2.0);
+    let left_int = special_legendre_polynomial_p_left_int(0, orders);
+    let left_float = special_legendre_polynomial_p_left_float(0.5, orders);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_legendre_polynomial_p_right_int_out(right_int_output, input, 2);
+    special_legendre_polynomial_p_right_float_out(right_float_output, input, 2.0);
+    special_legendre_polynomial_p_left_int_out(left_int_output, 0, orders);
+    special_legendre_polynomial_p_left_float_out(left_float_output, 0.5, orders);
+    let valid =
+        matches(right_int, right_expected)
+            and matches(right_float, right_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_expected)
+            and matches(right_float_output, right_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(input) == [2]
+            and shape(orders) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_expected); dispose(half_inputs); dispose(zero_inputs); dispose(orders); dispose(input); valid).
+
+/**
+ * Proves every Scalar overload for special_shifted_chebyshev_polynomial_t.
+ */
+@test
+pub shifted_chebyshev_t_scalar_overloads_match_libtorch(): Bool ->
+    let input = from_floats([0.25, 0.5], [2]);
+    let orders = from_floats([2.0, 2.0], [2]);
+    let zero_inputs = from_floats([0.0, 0.0], [2]);
+    let half_inputs = from_floats([0.5, 0.5], [2]);
+    let right_expected = special_shifted_chebyshev_polynomial_t_tensor(input, orders);
+    let left_int_expected = special_shifted_chebyshev_polynomial_t_tensor(zero_inputs, orders);
+    let left_float_expected = special_shifted_chebyshev_polynomial_t_tensor(half_inputs, orders);
+    let right_int = special_shifted_chebyshev_polynomial_t_right_int(input, 2);
+    let right_float = special_shifted_chebyshev_polynomial_t_right_float(input, 2.0);
+    let left_int = special_shifted_chebyshev_polynomial_t_left_int(0, orders);
+    let left_float = special_shifted_chebyshev_polynomial_t_left_float(0.5, orders);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_shifted_chebyshev_polynomial_t_right_int_out(right_int_output, input, 2);
+    special_shifted_chebyshev_polynomial_t_right_float_out(right_float_output, input, 2.0);
+    special_shifted_chebyshev_polynomial_t_left_int_out(left_int_output, 0, orders);
+    special_shifted_chebyshev_polynomial_t_left_float_out(left_float_output, 0.5, orders);
+    let valid =
+        matches(right_int, right_expected)
+            and matches(right_float, right_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_expected)
+            and matches(right_float_output, right_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(input) == [2]
+            and shape(orders) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_expected); dispose(half_inputs); dispose(zero_inputs); dispose(orders); dispose(input); valid).
+
+/**
+ * Proves every Scalar overload for special_shifted_chebyshev_polynomial_u.
+ */
+@test
+pub shifted_chebyshev_u_scalar_overloads_match_libtorch(): Bool ->
+    let input = from_floats([0.25, 0.5], [2]);
+    let orders = from_floats([2.0, 2.0], [2]);
+    let zero_inputs = from_floats([0.0, 0.0], [2]);
+    let half_inputs = from_floats([0.5, 0.5], [2]);
+    let right_expected = special_shifted_chebyshev_polynomial_u_tensor(input, orders);
+    let left_int_expected = special_shifted_chebyshev_polynomial_u_tensor(zero_inputs, orders);
+    let left_float_expected = special_shifted_chebyshev_polynomial_u_tensor(half_inputs, orders);
+    let right_int = special_shifted_chebyshev_polynomial_u_right_int(input, 2);
+    let right_float = special_shifted_chebyshev_polynomial_u_right_float(input, 2.0);
+    let left_int = special_shifted_chebyshev_polynomial_u_left_int(0, orders);
+    let left_float = special_shifted_chebyshev_polynomial_u_left_float(0.5, orders);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_shifted_chebyshev_polynomial_u_right_int_out(right_int_output, input, 2);
+    special_shifted_chebyshev_polynomial_u_right_float_out(right_float_output, input, 2.0);
+    special_shifted_chebyshev_polynomial_u_left_int_out(left_int_output, 0, orders);
+    special_shifted_chebyshev_polynomial_u_left_float_out(left_float_output, 0.5, orders);
+    let valid =
+        matches(right_int, right_expected)
+            and matches(right_float, right_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_expected)
+            and matches(right_float_output, right_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(input) == [2]
+            and shape(orders) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_expected); dispose(half_inputs); dispose(zero_inputs); dispose(orders); dispose(input); valid).
+
+/**
+ * Proves every Scalar overload for special_shifted_chebyshev_polynomial_v.
+ */
+@test
+pub shifted_chebyshev_v_scalar_overloads_match_libtorch(): Bool ->
+    let input = from_floats([0.25, 0.5], [2]);
+    let orders = from_floats([2.0, 2.0], [2]);
+    let zero_inputs = from_floats([0.0, 0.0], [2]);
+    let half_inputs = from_floats([0.5, 0.5], [2]);
+    let right_expected = special_shifted_chebyshev_polynomial_v_tensor(input, orders);
+    let left_int_expected = special_shifted_chebyshev_polynomial_v_tensor(zero_inputs, orders);
+    let left_float_expected = special_shifted_chebyshev_polynomial_v_tensor(half_inputs, orders);
+    let right_int = special_shifted_chebyshev_polynomial_v_right_int(input, 2);
+    let right_float = special_shifted_chebyshev_polynomial_v_right_float(input, 2.0);
+    let left_int = special_shifted_chebyshev_polynomial_v_left_int(0, orders);
+    let left_float = special_shifted_chebyshev_polynomial_v_left_float(0.5, orders);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_shifted_chebyshev_polynomial_v_right_int_out(right_int_output, input, 2);
+    special_shifted_chebyshev_polynomial_v_right_float_out(right_float_output, input, 2.0);
+    special_shifted_chebyshev_polynomial_v_left_int_out(left_int_output, 0, orders);
+    special_shifted_chebyshev_polynomial_v_left_float_out(left_float_output, 0.5, orders);
+    let valid =
+        matches(right_int, right_expected)
+            and matches(right_float, right_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_expected)
+            and matches(right_float_output, right_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(input) == [2]
+            and shape(orders) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_expected); dispose(half_inputs); dispose(zero_inputs); dispose(orders); dispose(input); valid).
+
+/**
+ * Proves every Scalar overload for special_shifted_chebyshev_polynomial_w.
+ */
+@test
+pub shifted_chebyshev_w_scalar_overloads_match_libtorch(): Bool ->
+    let input = from_floats([0.25, 0.5], [2]);
+    let orders = from_floats([2.0, 2.0], [2]);
+    let zero_inputs = from_floats([0.0, 0.0], [2]);
+    let half_inputs = from_floats([0.5, 0.5], [2]);
+    let right_expected = special_shifted_chebyshev_polynomial_w_tensor(input, orders);
+    let left_int_expected = special_shifted_chebyshev_polynomial_w_tensor(zero_inputs, orders);
+    let left_float_expected = special_shifted_chebyshev_polynomial_w_tensor(half_inputs, orders);
+    let right_int = special_shifted_chebyshev_polynomial_w_right_int(input, 2);
+    let right_float = special_shifted_chebyshev_polynomial_w_right_float(input, 2.0);
+    let left_int = special_shifted_chebyshev_polynomial_w_left_int(0, orders);
+    let left_float = special_shifted_chebyshev_polynomial_w_left_float(0.5, orders);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_shifted_chebyshev_polynomial_w_right_int_out(right_int_output, input, 2);
+    special_shifted_chebyshev_polynomial_w_right_float_out(right_float_output, input, 2.0);
+    special_shifted_chebyshev_polynomial_w_left_int_out(left_int_output, 0, orders);
+    special_shifted_chebyshev_polynomial_w_left_float_out(left_float_output, 0.5, orders);
+    let valid =
+        matches(right_int, right_expected)
+            and matches(right_float, right_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_expected)
+            and matches(right_float_output, right_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(input) == [2]
+            and shape(orders) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_expected); dispose(half_inputs); dispose(zero_inputs); dispose(orders); dispose(input); valid).
+
+/**
+ * Proves every Scalar overload for special_xlog1py.
+ */
+@test
+pub xlog1py_scalar_overloads_match_libtorch(): Bool ->
+    let left = from_floats([2.0, 3.0], [2]);
+    let right = from_floats([1.0, 2.0], [2]);
+    let right_int_tensor = from_floats([1.0, 1.0], [2]);
+    let right_float_tensor = from_floats([1.5, 1.5], [2]);
+    let left_int_tensor = from_floats([2.0, 2.0], [2]);
+    let left_float_tensor = from_floats([2.5, 2.5], [2]);
+    let right_int_expected = special_xlog1py_tensor(left, right_int_tensor);
+    let right_float_expected = special_xlog1py_tensor(left, right_float_tensor);
+    let left_int_expected = special_xlog1py_tensor(left_int_tensor, right);
+    let left_float_expected = special_xlog1py_tensor(left_float_tensor, right);
+    let right_int = special_xlog1py_right_int(left, 1);
+    let right_float = special_xlog1py_right_float(left, 1.5);
+    let left_int = special_xlog1py_left_int(2, right);
+    let left_float = special_xlog1py_left_float(2.5, right);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_xlog1py_right_int_out(right_int_output, left, 1);
+    special_xlog1py_right_float_out(right_float_output, left, 1.5);
+    special_xlog1py_left_int_out(left_int_output, 2, right);
+    special_xlog1py_left_float_out(left_float_output, 2.5, right);
+    let valid =
+        matches(right_int, right_int_expected)
+            and matches(right_float, right_float_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_int_expected)
+            and matches(right_float_output, right_float_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(left) == [2]
+            and shape(right) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_float_expected); dispose(right_int_expected); dispose(left_float_tensor); dispose(left_int_tensor); dispose(right_float_tensor); dispose(right_int_tensor); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every Scalar overload for special_xlogy.
+ */
+@test
+pub xlogy_scalar_overloads_match_libtorch(): Bool ->
+    let left = from_floats([2.0, 3.0], [2]);
+    let right = from_floats([1.0, 2.0], [2]);
+    let right_int_tensor = from_floats([1.0, 1.0], [2]);
+    let right_float_tensor = from_floats([1.5, 1.5], [2]);
+    let left_int_tensor = from_floats([2.0, 2.0], [2]);
+    let left_float_tensor = from_floats([2.5, 2.5], [2]);
+    let right_int_expected = special_xlogy_tensor(left, right_int_tensor);
+    let right_float_expected = special_xlogy_tensor(left, right_float_tensor);
+    let left_int_expected = special_xlogy_tensor(left_int_tensor, right);
+    let left_float_expected = special_xlogy_tensor(left_float_tensor, right);
+    let right_int = special_xlogy_right_int(left, 1);
+    let right_float = special_xlogy_right_float(left, 1.5);
+    let left_int = special_xlogy_left_int(2, right);
+    let left_float = special_xlogy_left_float(2.5, right);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_xlogy_right_int_out(right_int_output, left, 1);
+    special_xlogy_right_float_out(right_float_output, left, 1.5);
+    special_xlogy_left_int_out(left_int_output, 2, right);
+    special_xlogy_left_float_out(left_float_output, 2.5, right);
+    let valid =
+        matches(right_int, right_int_expected)
+            and matches(right_float, right_float_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_int_expected)
+            and matches(right_float_output, right_float_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(left) == [2]
+            and shape(right) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_float_expected); dispose(right_int_expected); dispose(left_float_tensor); dispose(left_int_tensor); dispose(right_float_tensor); dispose(right_int_tensor); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every Scalar overload for special_zeta.
+ */
+@test
+pub zeta_scalar_overloads_match_libtorch(): Bool ->
+    let left = from_floats([2.0, 3.0], [2]);
+    let right = from_floats([1.0, 2.0], [2]);
+    let right_int_tensor = from_floats([1.0, 1.0], [2]);
+    let right_float_tensor = from_floats([1.5, 1.5], [2]);
+    let left_int_tensor = from_floats([2.0, 2.0], [2]);
+    let left_float_tensor = from_floats([2.5, 2.5], [2]);
+    let right_int_expected = special_zeta_tensor(left, right_int_tensor);
+    let right_float_expected = special_zeta_tensor(left, right_float_tensor);
+    let left_int_expected = special_zeta_tensor(left_int_tensor, right);
+    let left_float_expected = special_zeta_tensor(left_float_tensor, right);
+    let right_int = special_zeta_right_int(left, 1);
+    let right_float = special_zeta_right_float(left, 1.5);
+    let left_int = special_zeta_left_int(2, right);
+    let left_float = special_zeta_left_float(2.5, right);
+    let right_int_output = zeros([0], DType.FLOAT64);
+    let right_float_output = zeros([0], DType.FLOAT64);
+    let left_int_output = zeros([0], DType.FLOAT64);
+    let left_float_output = zeros([0], DType.FLOAT64);
+    special_zeta_right_int_out(right_int_output, left, 1);
+    special_zeta_right_float_out(right_float_output, left, 1.5);
+    special_zeta_left_int_out(left_int_output, 2, right);
+    special_zeta_left_float_out(left_float_output, 2.5, right);
+    let valid =
+        matches(right_int, right_int_expected)
+            and matches(right_float, right_float_expected)
+            and matches(left_int, left_int_expected)
+            and matches(left_float, left_float_expected)
+            and matches(right_int_output, right_int_expected)
+            and matches(right_float_output, right_float_expected)
+            and matches(left_int_output, left_int_expected)
+            and matches(left_float_output, left_float_expected)
+            and shape(left) == [2]
+            and shape(right) == [2];
+    (dispose(left_float_output); dispose(left_int_output); dispose(right_float_output); dispose(right_int_output); dispose(left_float); dispose(left_int); dispose(right_float); dispose(right_int); dispose(left_float_expected); dispose(left_int_expected); dispose(right_float_expected); dispose(right_int_expected); dispose(left_float_tensor); dispose(left_int_tensor); dispose(right_float_tensor); dispose(right_int_tensor); dispose(right); dispose(left); valid).

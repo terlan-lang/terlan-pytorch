@@ -1,0 +1,12 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{add, from_floats, full_float}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let attention_scores = full_float([2, 2, 2], 0.0);
+    let malformed_mask = from_floats(
+        [0.0, -1000.0, -1000.0, 0.0, 0.0, -1000.0, 0.0, 0.0, 0.0], [3, 3]
+    );
+    let masked_scores = add(attention_scores, malformed_mask, 1.0);
+    println("PYTORCH_CAUSAL_MASK_SHAPE_NOT_REJECTED").

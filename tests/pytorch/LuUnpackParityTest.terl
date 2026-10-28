@@ -1,0 +1,26 @@
+/**
+ * CPU runtime evidence for LU unpacking functional and output forms.
+ */
+module pytorch.LuUnpackParityTest.
+
+import pytorch.Linalg.{linalg_lu_factor}.
+import pytorch.LuUnpackCompletion.{lu_unpack_default, lu_unpack_out_default}.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+
+@test
+pub lu_unpack_preserves_factor_shapes(): Bool ->
+    let input = from_floats([4.0, 3.0, 6.0, 3.0], [2, 2]);
+    let {lu_data, lu_pivots} = linalg_lu_factor(input, true);
+    let {p, l, u} = lu_unpack_default(lu_data, lu_pivots, true, true);
+    let p_out = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let l_out = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let u_out = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    lu_unpack_out_default(p_out, l_out, u_out, lu_data, lu_pivots, true, true);
+    let valid =
+        shape(p) == [2, 2]
+            and shape(l) == [2, 2]
+            and shape(u) == [2, 2]
+            and shape(p_out) == [2, 2]
+            and shape(l_out) == [2, 2]
+            and shape(u_out) == [2, 2];
+    (dispose(u_out); dispose(l_out); dispose(p_out); dispose(u); dispose(l); dispose(p); dispose(lu_pivots); dispose(lu_data); dispose(input); valid).

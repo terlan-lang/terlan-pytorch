@@ -1,0 +1,274 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Materializes generated PyTorch package artifacts into the repository tree.
+ */
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.Console.eprintln.
+import std.io.{Directory, File}.
+import std.system.Arguments.
+
+/**
+ * Joins a parent path and one relative child.
+ */
+child(parent: String, relative: String): String ->
+    if {
+        String.ends_with(parent, "/") -> String.append(parent, relative);
+        true -> String.concat([parent, "/", relative])
+    }.
+
+/**
+ * Reports one stable package-materialization failure.
+ */
+failure(code: String, message: String): Bool ->
+    let _printed = eprintln(String.concat(["error[", code, "]: ", message]));
+    false.
+
+/**
+ * Reports whether a generated path is a regular file or directory.
+ */
+path_exists(path: String): Bool ->
+    File.exists(path)
+        or case Directory.entries(path) {
+    Ok(_entries) -> true;
+    Err(_reason) -> false
+}.
+
+/**
+ * Requires every generated artifact in declaration order.
+ */
+require_artifacts(generated: String, paths: List[String]): Bool ->
+    case paths {
+        [] -> true;
+        [relative | rest] ->
+            if {
+                path_exists(child(generated, relative)) -> require_artifacts(generated, rest);
+                true -> failure("terlan_pytorch_generated_artifact_missing", relative)
+            }
+    }.
+
+/**
+ * Removes an existing directory tree while accepting an absent path.
+ */
+remove_tree_if_present(path: String): Bool ->
+    let _removed = Directory.remove_all(path);
+    true.
+
+/**
+ * Removes an existing regular file while accepting an absent path.
+ */
+remove_file_if_present(path: String): Bool ->
+    if {
+        not File.exists(path) -> true;
+        true -> case File.delete(path) {
+            Ok(Unit) -> true;
+            Err(_reason) ->
+                failure("terlan_pytorch_materialize_remove", "could not remove generated file")
+        }
+    }.
+
+/**
+ * Replaces one repository file with one generated file.
+ */
+replace_file(source: String, destination: String): Bool ->
+    remove_file_if_present(destination)
+        and case File.copy(source, destination) {
+    Ok(Unit) -> true;
+    Err(_reason) -> failure("terlan_pytorch_materialize_copy", "could not copy generated file")
+}.
+
+/**
+ * Replaces one repository tree with one generated tree.
+ */
+replace_tree(source: String, destination: String): Bool ->
+    remove_tree_if_present(destination)
+        and case Directory.copy_tree_excluding(source, destination, ["target", ".git"]) {
+    Ok(Unit) -> true;
+    Err(_reason) ->
+        failure("terlan_pytorch_materialize_copy", "could not copy generated directory")
+}.
+
+/**
+ * Writes the generated manifest with its repository-relative ndarray path.
+ */
+write_manifest(generated: String, repository: String): Bool ->
+    let source = child(generated, "terlan.toml");
+    let destination = child(repository, "terlan.toml");
+    let generated_dependency = "ndarray = { path = \"../../terlan-ndarray\" }";
+    case File.read_text(source) {
+        Err(_reason) ->
+            failure("terlan_pytorch_materialize_read", "could not read generated manifest");
+        Ok(contents) ->
+            if {
+                String.contains(contents, generated_dependency) -> case File.write_text(
+                    destination,
+                    String.replace(
+                        contents,
+                        generated_dependency,
+                        "ndarray = { path = \"../terlan-ndarray\" }",
+                    ),
+                ) {
+                    Ok(Unit) -> true;
+                    Err(_reason) ->
+                        failure(
+                            "terlan_pytorch_materialize_write",
+                            "could not write repository manifest",
+                        )
+                };
+                String.contains(contents, "[native.rust]") -> case File.write_text(
+                    destination,
+                    String.replace(
+                        contents,
+                        "[native.rust]",
+                        String.concat(
+                            [
+                                "[dependencies]\nndarray = { path = \"../terlan-ndarray\" }\n\n",
+                                "[native.rust]",
+                            ],
+                        ),
+                    ),
+                ) {
+                    Ok(Unit) -> true;
+                    Err(_reason) ->
+                        failure(
+                            "terlan_pytorch_materialize_write",
+                            "could not write repository manifest",
+                        )
+                };
+                true -> failure(
+                    "terlan_pytorch_ndarray_dependency_missing",
+                    "generated package has no insertion point for ndarray",
+                )
+            }
+    }.
+
+/**
+ * Removes one trailing blank line while preserving the final content newline.
+ */
+normalize_file(path: String): Bool ->
+    case File.read_text(path) {
+        Err(_reason) ->
+            failure("terlan_pytorch_materialize_read", "could not read materialized file");
+        Ok(contents) ->
+            if {
+                not String.ends_with(contents, "\n\n") -> true;
+                true -> case File.write_text(path, String.utf8_slice(contents, 0, String.length(contents) - 1)) {
+                    Ok(Unit) -> true;
+                    Err(_reason) ->
+                        failure(
+                            "terlan_pytorch_materialize_write",
+                            "could not normalize materialized file",
+                        )
+                }
+            }
+    }.
+
+/**
+ * Normalizes every regular file in a materialized tree.
+ */
+normalize_files(paths: List[String]): Bool ->
+    case paths {
+        [] -> true;
+        [path | rest] -> normalize_file(path) and normalize_files(rest)
+    }.
+
+/**
+ * Discovers and normalizes a materialized directory tree.
+ */
+normalize_tree(path: String): Bool ->
+    case Directory.files_recursive(path) {
+        Err(_reason) ->
+            failure(
+                "terlan_pytorch_materialize_inventory",
+                "could not enumerate materialized directory",
+            );
+        Ok(paths) -> normalize_files(paths)
+    }.
+
+/**
+ * Keeps the generated CUDA-module smoke test runnable on CPU package gates.
+ *
+ * The generated resource test validates stream construction and disposal; it
+ * does not need a CUDA device.  CXX test staging already applies this same
+ * CPU-safe normalization, so package materialization must do it as well.
+ */
+normalize_cuda_resource_test(generated: String): Bool ->
+    let path = child(generated, "tests/pytorch/CudaTest.terl");
+    let source = "module pytorch.CudaTest.\n\nimport pytorch.Cuda.{create_stream, dispose}.\nimport std.core.Option.{None, Some}.\nimport std.system.Environment.\n\ncuda_resource(): Bool ->\n    let resource = create_stream(0, true);\n    dispose(resource);\n    true.\n\n@test\npub generated_cpp_resource_executes(): Bool ->\n    case Environment.get(\"TERLAN_PYTORCH_REQUIRE_CUDA\") {\n        None -> true;\n        Some(_value) -> cuda_resource()\n    }.\n";
+    case File.write_text(path, source) {
+        Ok(Unit) -> true;
+        Err(_reason) ->
+            failure(
+                "terlan_pytorch_materialize_write",
+                "could not normalize generated CUDA resource test",
+            )
+    }.
+
+/**
+ * Copies all generated package surfaces into their repository locations.
+ */
+execute(generated: String, repository: String): Bool ->
+    let required =
+        require_artifacts(
+            generated,
+            [
+                "terlan.toml",
+                "src",
+                "native",
+                "bindings/native-binding-manifest.json",
+                "bindings/skipped-symbols.json",
+                "docs/pytorch.Cuda.md",
+                "docs/pytorch.Tensor.md",
+                "tests/pytorch/NativeBoundaryTest.terl",
+            ],
+        );
+    let copied =
+        required
+            and replace_tree(child(generated, "src"), child(repository, "src"))
+            and replace_tree(child(generated, "native"), child(repository, "native"))
+            and write_manifest(generated, repository)
+            and replace_file(
+    child(generated, "bindings/native-binding-manifest.json"),
+    child(repository, "bindings/native-binding-manifest.json"),
+)
+            and replace_file(
+    child(generated, "bindings/skipped-symbols.json"),
+    child(repository, "bindings/skipped-symbols.json"),
+)
+            and replace_file(child(generated, "docs/pytorch.Cuda.md"), child(repository, "docs/pytorch.Cuda.md"))
+            and replace_file(
+    child(generated, "docs/pytorch.Tensor.md"),
+    child(repository, "docs/pytorch.Tensor.md"),
+)
+            and replace_file(
+    child(generated, "tests/pytorch/NativeBoundaryTest.terl"),
+    child(repository, "tests/pytorch/NativeBoundaryTest.terl"),
+);
+    let target_removed = copied and remove_tree_if_present(child(repository, "native/rust/target"));
+    target_removed
+        and normalize_cuda_resource_test(generated)
+        and normalize_tree(child(repository, "src"))
+        and normalize_tree(child(repository, "native"))
+        and normalize_file(child(repository, "docs/pytorch.Cuda.md"))
+        and normalize_file(child(repository, "docs/pytorch.Tensor.md"))
+        and normalize_file(child(repository, "tests/pytorch/NativeBoundaryTest.terl"))
+        and normalize_file(child(repository, "terlan.toml"))
+        and normalize_file(child(repository, "bindings/native-binding-manifest.json"))
+        and normalize_file(child(repository, "bindings/skipped-symbols.json")).
+
+/**
+ * Parses generated-package and repository roots.
+ */
+entry(): Bool ->
+    case {Arguments.count(), Arguments.get(0), Arguments.get(1), Arguments.get(2)} {
+        {2, Some(generated), Some(repository), None} -> execute(generated, repository);
+        _ ->
+            failure(
+                "terlan_pytorch_materialize_usage",
+                "usage: MaterializePackage.terls <generated-package> <repository-root>",
+            )
+    }.
+
+assert(entry());
+Unit.

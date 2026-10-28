@@ -1,0 +1,328 @@
+/**
+ * Generated direct-CXX implementation of extended activation forward, backward, output, and in-place operations.
+ */
+module pytorch.ExtendedActivationCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes the exact frozen ATen celu schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.celu_int}
+pub celu_int(input: Tensor, alpha: Int): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen celu schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.celu_float}
+pub celu_float(input: Tensor, alpha: Float): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen celu.out schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.celu_out_int}
+pub celu_out_int(output: Tensor, input: Tensor, alpha: Int): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen celu.out schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.celu_out_float}
+pub celu_out_float(output: Tensor, input: Tensor, alpha: Float): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen celu_ schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.celu_in_place_int}
+pub celu_in_place_int(input: Tensor, alpha: Int): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen celu_ schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.celu_in_place_float}
+pub celu_in_place_float(input: Tensor, alpha: Float): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen elu schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.elu_int}
+pub elu_int(input: Tensor, alpha: Int, scale: Int, input_scale: Int): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen elu schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.elu_float}
+pub elu_float(input: Tensor, alpha: Float, scale: Float, input_scale: Float): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen elu.out schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.elu_out_int}
+pub elu_out_int(output: Tensor, input: Tensor, alpha: Int, scale: Int, input_scale: Int): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen elu.out schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.elu_out_float}
+pub elu_out_float(
+    output: Tensor,
+    input: Tensor,
+    alpha: Float,
+    scale: Float,
+    input_scale: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen elu_ schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.elu_in_place_int}
+pub elu_in_place_int(input: Tensor, alpha: Int, scale: Int, input_scale: Int): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen elu_ schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.elu_in_place_float}
+pub elu_in_place_float(input: Tensor, alpha: Float, scale: Float, input_scale: Float): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen elu_backward schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.elu_backward_int}
+pub elu_backward_int(
+    gradient: Tensor,
+    alpha: Int,
+    scale: Int,
+    input_scale: Int,
+    is_result: Bool,
+    input: Tensor,
+): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen elu_backward schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.elu_backward_float}
+pub elu_backward_float(
+    gradient: Tensor,
+    alpha: Float,
+    scale: Float,
+    input_scale: Float,
+    is_result: Bool,
+    input: Tensor,
+): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen elu_backward.out schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.elu_backward_out_int}
+pub elu_backward_out_int(
+    output: Tensor,
+    gradient: Tensor,
+    alpha: Int,
+    scale: Int,
+    input_scale: Int,
+    is_result: Bool,
+    input: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen elu_backward.out schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.elu_backward_out_float}
+pub elu_backward_out_float(
+    output: Tensor,
+    gradient: Tensor,
+    alpha: Float,
+    scale: Float,
+    input_scale: Float,
+    is_result: Bool,
+    input: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen hardtanh schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.hardtanh_int}
+pub hardtanh_int(input: Tensor, minimum: Int, maximum: Int): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen hardtanh schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.hardtanh_float}
+pub hardtanh_float(input: Tensor, minimum: Float, maximum: Float): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen hardtanh.out schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.hardtanh_out_int}
+pub hardtanh_out_int(output: Tensor, input: Tensor, minimum: Int, maximum: Int): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen hardtanh.out schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.hardtanh_out_float}
+pub hardtanh_out_float(output: Tensor, input: Tensor, minimum: Float, maximum: Float): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen hardtanh_ schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.hardtanh_in_place_int}
+pub hardtanh_in_place_int(input: Tensor, minimum: Int, maximum: Int): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen hardtanh_ schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.hardtanh_in_place_float}
+pub hardtanh_in_place_float(input: Tensor, minimum: Float, maximum: Float): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen hardtanh_backward schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.hardtanh_backward_int}
+pub hardtanh_backward_int(gradient: Tensor, input: Tensor, minimum: Int, maximum: Int): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen hardtanh_backward schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.hardtanh_backward_float}
+pub hardtanh_backward_float(gradient: Tensor, input: Tensor, minimum: Float, maximum: Float): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen hardtanh_backward.out schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.hardtanh_backward_out_int}
+pub hardtanh_backward_out_int(
+    output: Tensor,
+    gradient: Tensor,
+    input: Tensor,
+    minimum: Int,
+    maximum: Int,
+): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen hardtanh_backward.out schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.hardtanh_backward_out_float}
+pub hardtanh_backward_out_float(
+    output: Tensor,
+    gradient: Tensor,
+    input: Tensor,
+    minimum: Float,
+    maximum: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen leaky_relu schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.leaky_relu_int}
+pub leaky_relu_int(input: Tensor, negative_slope: Int): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen leaky_relu schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.leaky_relu_float}
+pub leaky_relu_float(input: Tensor, negative_slope: Float): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen leaky_relu.out schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.leaky_relu_out_int}
+pub leaky_relu_out_int(output: Tensor, input: Tensor, negative_slope: Int): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen leaky_relu.out schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.leaky_relu_out_float}
+pub leaky_relu_out_float(output: Tensor, input: Tensor, negative_slope: Float): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen leaky_relu_ schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.leaky_relu_in_place_int}
+pub leaky_relu_in_place_int(input: Tensor, negative_slope: Int): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen leaky_relu_ schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.leaky_relu_in_place_float}
+pub leaky_relu_in_place_float(input: Tensor, negative_slope: Float): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen leaky_relu_backward schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.leaky_relu_backward_int}
+pub leaky_relu_backward_int(
+    gradient: Tensor,
+    input: Tensor,
+    negative_slope: Int,
+    self_is_result: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen leaky_relu_backward schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.leaky_relu_backward_float}
+pub leaky_relu_backward_float(
+    gradient: Tensor,
+    input: Tensor,
+    negative_slope: Float,
+    self_is_result: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Executes the exact frozen ATen leaky_relu_backward.out schema with integer Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.leaky_relu_backward_out_int}
+pub leaky_relu_backward_out_int(
+    output: Tensor,
+    gradient: Tensor,
+    input: Tensor,
+    negative_slope: Int,
+    self_is_result: Bool,
+): Unit ->
+    native.
+
+/**
+ * Executes the exact frozen ATen leaky_relu_backward.out schema with floating Scalar parameters through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.extended_activation_completion.leaky_relu_backward_out_float}
+pub leaky_relu_backward_out_float(
+    output: Tensor,
+    gradient: Tensor,
+    input: Tensor,
+    negative_slope: Float,
+    self_is_result: Bool,
+): Unit ->
+    native.

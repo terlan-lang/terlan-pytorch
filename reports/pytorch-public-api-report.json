@@ -1,0 +1,12 @@
+{
+  "build_hash": "cf30153c4c131c8164ee7798e5022d810682e2cb",
+  "equivalent": 1,
+  "implemented": 1391,
+  "inventory_sha256": "c7ccb9322ac8202810f345f425143574f495b6e03ef260b316414dfe9134051f",
+  "missing": 0,
+  "non_applicable": 2033,
+  "pytorch_version": "2.13.0+cpu",
+  "schema": "terlan.pytorch.public-api-report.v1",
+  "status": "passed",
+  "total": 3425
+}

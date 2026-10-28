@@ -1,0 +1,8 @@
+module=pytorch.SymbolicConstraints
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=7259155379074701240
+interface_hash=6750469715565562503
+interface_doc_hash=4034640050177784931
+deps=0

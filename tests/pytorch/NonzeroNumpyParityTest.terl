@@ -1,0 +1,29 @@
+/**
+ * CPU runtime evidence for the exact nonzero_numpy tensor-list leaf.
+ */
+module pytorch.NonzeroNumpyParityTest.
+
+import pytorch.Tensor.{dispose, from_ints, shape}.
+import pytorch.WhereNative.nonzero_numpy.
+
+import type pytorch.Tensor.
+
+@test
+pub nonzero_numpy_cpu_forms_match_libtorch(): Bool ->
+    let input = from_ints([0, 2, 0, 3], [2, 2]);
+    let indices = nonzero_numpy(input);
+    let valid = validate_indices(indices);
+    dispose(input);
+    valid.
+
+validate_indices(indices: List[Tensor]): Bool ->
+    case indices {
+        [rows, columns] -> validate_pair(rows, columns);
+        _ -> false
+    }.
+
+validate_pair(rows: Tensor, columns: Tensor): Bool ->
+    let valid = shape(rows) == [2] and shape(columns) == [2];
+    dispose(columns);
+    dispose(rows);
+    valid.

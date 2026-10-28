@@ -1,0 +1,9 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{from_floats, softmax}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let logits = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let probabilities = softmax(logits, 2);
+    println("PYTORCH_SOFTMAX_DIMENSION_NOT_REJECTED").

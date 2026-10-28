@@ -1,0 +1,103 @@
+/**
+ * Typed Tensor.new_* compatibility wrappers with inherited device and dtype.
+ */
+module pytorch.CreationAliasCompletion.
+
+import pytorch.CreationCompletion.{configured, configured_float}.
+import pytorch.ResizeAsCompletion.resize_as_in_place.
+import pytorch.Tensor.{copy_in_place, device_index, device_type, dispose, dtype}.
+
+import type pytorch.{Scalar, Tensor}.
+
+new_configured(input: Tensor, operation: Int, size: List[Int]): Tensor ->
+    configured(
+        operation,
+        size,
+        0,
+        dtype(input),
+        true,
+        0,
+        false,
+        device_type(input),
+        device_index(input),
+        true,
+        false,
+        false,
+        0,
+        false,
+    ).
+
+new_configured_int(input: Tensor, operation: Int, size: List[Int], fill: Int): Tensor ->
+    configured(
+        operation,
+        size,
+        fill,
+        dtype(input),
+        true,
+        0,
+        false,
+        device_type(input),
+        device_index(input),
+        true,
+        false,
+        false,
+        0,
+        false,
+    ).
+
+new_configured_float(input: Tensor, operation: Int, size: List[Int], fill: Float): Tensor ->
+    configured_float(
+        operation,
+        size,
+        fill,
+        dtype(input),
+        true,
+        0,
+        false,
+        device_type(input),
+        device_index(input),
+        true,
+        false,
+        false,
+        0,
+        false,
+    ).
+
+pub new_empty(input: Tensor, size: List[Int]): Tensor ->
+    new_configured(input, 0, size).
+
+pub new_ones(input: Tensor, size: List[Int]): Tensor ->
+    new_configured(input, 2, size).
+
+pub new_zeros(input: Tensor, size: List[Int]): Tensor ->
+    new_configured(input, 3, size).
+
+pub new_full(input: Tensor, size: List[Int], fill: Scalar): Tensor ->
+    if {
+        fill.is_integer -> new_configured_int(input, 1, size, fill.integer_value);
+        true -> new_configured_float(input, 1, size, fill.floating_value)
+    }.
+
+new_out(output: Tensor, input: Tensor, operation: Int, size: List[Int]): Unit ->
+    let result = new_configured(input, operation, size);
+    resize_as_in_place(output, result, false, 0);
+    copy_in_place(output, result, false);
+    dispose(result).
+
+new_full_out(output: Tensor, input: Tensor, size: List[Int], fill: Scalar): Unit ->
+    let result = new_full(input, size, fill);
+    resize_as_in_place(output, result, false, 0);
+    copy_in_place(output, result, false);
+    dispose(result).
+
+pub new_empty_out(output: Tensor, input: Tensor, size: List[Int]): Unit ->
+    new_out(output, input, 0, size).
+
+pub new_ones_out(output: Tensor, input: Tensor, size: List[Int]): Unit ->
+    new_out(output, input, 2, size).
+
+pub new_zeros_out(output: Tensor, input: Tensor, size: List[Int]): Unit ->
+    new_out(output, input, 3, size).
+
+pub new_full_scalar_out(output: Tensor, input: Tensor, size: List[Int], fill: Scalar): Unit ->
+    new_full_out(output, input, size, fill).

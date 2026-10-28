@@ -1,0 +1,20 @@
+/**
+ * Generated CXX nearest upsampling completion surface.
+ */
+module pytorch.UpsampleNearest2dCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Upsamples a 3-D tensor to an explicit output size.
+ */
+@compiler.native {pytorch.upsample_nearest2d.upsample_nearest2d}
+pub upsample_nearest2d(input: Tensor, output_size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Writes an upsampled tensor into retained output storage.
+ */
+@compiler.native {pytorch.upsample_nearest2d.upsample_nearest2d_out}
+pub upsample_nearest2d_out(output: Tensor, input: Tensor, output_size: List[Int]): Unit ->
+    native.

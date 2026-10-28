@@ -1,0 +1,255 @@
+//! Generated exact CXX random tensor completion surface.
+
+module pytorch.RandomCompletion.
+
+/// Owned seeded CPU random generator.
+
+pub opaque type Generator.
+
+/// Creates an owned seeded CPU generator.
+
+pub generator_create(seed: Int): Generator.
+
+/// Releases an owned seeded CPU generator.
+
+pub generator_dispose(generator: Generator): Unit.
+
+/// Generates like the input with an explicit seeded generator.
+
+pub generator_rand_like(generator: Generator, input: Tensor, has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device_type: Int, device_index: Int, has_pin_memory: Bool, pin_memory: Bool, has_memory_format: Bool, memory_format: Int): Tensor.
+
+/// Writes like the input with an explicit seeded generator.
+
+pub generator_rand_like_out(out: Tensor, input: Tensor, generator: Generator, has_memory_format: Bool, memory_format: Int): Unit.
+
+/// Generates bounded integer values with an explicit seeded generator.
+
+pub generator_randint(generator: Generator, high: Int, size: List[Int], has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device_type: Int, device_index: Int, has_pin_memory: Bool, pin_memory: Bool): Tensor.
+
+/// Generates scalar-bounded integer values like an input with an explicit generator.
+
+pub generator_randint_like(generator: Generator, input: Tensor, high: Int, has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device_type: Int, device_index: Int, has_pin_memory: Bool, pin_memory: Bool, has_memory_format: Bool, memory_format: Int): Tensor.
+
+/// Generates low/high integer values like an input with an explicit generator.
+
+pub generator_randint_like_low(generator: Generator, input: Tensor, low: Int, high: Int, has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device_type: Int, device_index: Int, has_pin_memory: Bool, pin_memory: Bool, has_memory_format: Bool, memory_format: Int): Tensor.
+
+/// Writes low/high integer values like an input with an explicit generator.
+
+pub generator_randint_like_low_out(out: Tensor, input: Tensor, low: Int, high: Int, generator: Generator, has_memory_format: Bool, memory_format: Int): Unit.
+
+/// Writes scalar-bounded integer values like an input with an explicit generator.
+
+pub generator_randint_like_out(out: Tensor, input: Tensor, high: Int, generator: Generator, has_memory_format: Bool, memory_format: Int): Unit.
+
+/// Generates tensor-bounded integer values like an input with an explicit generator.
+
+pub generator_randint_like_tensor(generator: Generator, input: Tensor, high: Tensor, has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device_type: Int, device_index: Int, has_pin_memory: Bool, pin_memory: Bool, has_memory_format: Bool, memory_format: Int): Tensor.
+
+/// Writes tensor-bounded integer values like an input with an explicit generator.
+
+pub generator_randint_like_tensor_out(out: Tensor, input: Tensor, high: Tensor, generator: Generator, has_memory_format: Bool, memory_format: Int): Unit.
+
+/// Generates low/high bounded integers with an explicit seeded generator.
+
+pub generator_randint_low(generator: Generator, low: Int, high: Int, size: List[Int], has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device_type: Int, device_index: Int, has_pin_memory: Bool, pin_memory: Bool): Tensor.
+
+/// Writes low/high bounded integers with an explicit seeded generator.
+
+pub generator_randint_low_out(out: Tensor, low: Int, high: Int, size: List[Int], generator: Generator): Unit.
+
+/// Writes bounded integer values with an explicit seeded generator.
+
+pub generator_randint_out(out: Tensor, high: Int, size: List[Int], generator: Generator): Unit.
+
+/// Generates normally distributed values like the input with an explicit seeded generator.
+
+pub generator_randn_like(generator: Generator, input: Tensor, has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device_type: Int, device_index: Int, has_pin_memory: Bool, pin_memory: Bool, has_memory_format: Bool, memory_format: Int): Tensor.
+
+/// Writes normally distributed values like the input with an explicit seeded generator.
+
+pub generator_randn_like_out(out: Tensor, input: Tensor, generator: Generator, has_memory_format: Bool, memory_format: Int): Unit.
+
+/// Returns the serialized LibTorch CPU generator state.
+
+pub get_rng_state(): Tensor.
+
+/// Returns the current LibTorch CPU generator seed.
+
+pub initial_seed(): Int.
+
+/// Seeds LibTorch's global generators and returns the seeded CPU generator.
+
+pub manual_seed(seed: Int): Generator.
+
+/// Exact generated CXX rand leaf.
+
+pub rand_default(size: List[Int]): Tensor.
+
+/// Generates random values with an explicit seeded generator and option presence.
+
+pub rand_generator(generator: Generator, size: List[Int], has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device_type: Int, device_index: Int, has_pin_memory: Bool, pin_memory: Bool): Tensor.
+
+/// Writes random values with an explicit seeded generator.
+
+pub rand_generator_out(out: Tensor, size: List[Int], generator: Generator): Unit.
+
+/// Exact generated CXX rand_like leaf.
+
+pub rand_like_default(input: Tensor): Tensor.
+
+/// Exact generated CXX rand_like output leaf.
+
+pub rand_like_out(out: Tensor, input: Tensor): Unit.
+
+/// Exact generated CXX rand output leaf.
+
+pub rand_out(out: Tensor, size: List[Int]): Unit.
+
+/// Exact generated CXX randint high leaf.
+
+pub randint_default(high: Int, size: List[Int]): Tensor.
+
+/// Exact generated CXX randint_like high leaf.
+
+pub randint_like_default(input: Tensor, high: Int): Tensor.
+
+/// Exact generated CXX randint_like low/high leaf.
+
+pub randint_like_low_dtype_default(input: Tensor, low: Int, high: Int): Tensor.
+
+/// Exact generated CXX randint_like low/high output leaf.
+
+pub randint_like_low_dtype_out_default(out: Tensor, input: Tensor, low: Int, high: Int): Unit.
+
+/// Exact generated CXX randint_like high output leaf.
+
+pub randint_like_out_default(out: Tensor, input: Tensor, high: Int): Unit.
+
+/// Exact generated CXX tensor-bound randint_like leaf.
+
+pub randint_like_tensor_default(input: Tensor, high: Tensor): Tensor.
+
+/// Exact generated CXX tensor-bound randint_like output leaf.
+
+pub randint_like_tensor_out_default(out: Tensor, input: Tensor, high: Tensor): Unit.
+
+/// Exact generated CXX randint low/high leaf.
+
+pub randint_low_default(low: Int, high: Int, size: List[Int]): Tensor.
+
+/// Exact generated CXX randint low/high output leaf.
+
+pub randint_low_out(out: Tensor, low: Int, high: Int, size: List[Int]): Unit.
+
+/// Exact generated CXX randint high output leaf.
+
+pub randint_out(out: Tensor, high: Int, size: List[Int]): Unit.
+
+/// Exact generated CXX randn leaf.
+
+pub randn_default(size: List[Int]): Tensor.
+
+/// Generates normally distributed values with an explicit seeded generator.
+
+pub randn_generator(generator: Generator, size: List[Int], has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device_type: Int, device_index: Int, has_pin_memory: Bool, pin_memory: Bool): Tensor.
+
+/// Writes normally distributed values with an explicit seeded generator.
+
+pub randn_generator_out(out: Tensor, size: List[Int], generator: Generator): Unit.
+
+/// Exact generated CXX randn_like leaf.
+
+pub randn_like_default(input: Tensor): Tensor.
+
+/// Exact generated CXX randn_like output leaf.
+
+pub randn_like_out(out: Tensor, input: Tensor): Unit.
+
+/// Exact generated CXX randn output leaf.
+
+pub randn_out(out: Tensor, size: List[Int]): Unit.
+
+/// Exact generated CXX random leaf.
+
+pub random_default(input: Tensor): Tensor.
+
+/// Exact generated CXX random from leaf.
+
+pub random_from(input: Tensor, from: Int, to: Int): Tensor.
+
+/// Exact generated CXX random from in-place leaf.
+
+pub random_from_in_place(input: Tensor, from: Int, to: Int): Unit.
+
+/// Exact generated CXX random from output leaf.
+
+pub random_from_out(out: Tensor, input: Tensor, from: Int, to: Int): Unit.
+
+/// Exact generated CXX random in-place leaf.
+
+pub random_in_place(input: Tensor): Unit.
+
+/// Exact generated CXX random output leaf.
+
+pub random_out(out: Tensor, input: Tensor): Unit.
+
+/// Exact generated CXX random to leaf.
+
+pub random_to(input: Tensor, to: Int): Tensor.
+
+/// Exact generated CXX random to in-place leaf.
+
+pub random_to_in_place(input: Tensor, to: Int): Unit.
+
+/// Exact generated CXX random to output leaf.
+
+pub random_to_out(out: Tensor, input: Tensor, to: Int): Unit.
+
+/// Generates a random permutation with an explicit seeded generator.
+
+pub randperm_generator(generator: Generator, n: Int, has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device_type: Int, device_index: Int, has_pin_memory: Bool, pin_memory: Bool): Tensor.
+
+/// Writes a random permutation with an explicit seeded generator.
+
+pub randperm_generator_out(out: Tensor, n: Int, generator: Generator): Unit.
+
+/// Exact generated CXX rrelu leaf.
+
+pub rrelu_default(input: Tensor, lower: Float = 0.125, upper: Float = 0.3333333333333333, training: Bool = false): Tensor.
+
+/// Exact generated CXX rrelu in-place leaf.
+
+pub rrelu_in_place(input: Tensor, lower: Float = 0.125, upper: Float = 0.3333333333333333, training: Bool = false): Unit.
+
+/// Exact generated CXX rrelu-with-noise value leaf.
+
+pub rrelu_with_noise(input: Tensor, noise: Tensor, has_generator: Bool, generator: Generator, lower: Float = 0.125, upper: Float = 0.3333333333333333, training: Bool = false): Tensor.
+
+/// Exact generated CXX rrelu-with-noise backward leaf.
+
+pub rrelu_with_noise_backward(gradient_output: Tensor, input: Tensor, noise: Tensor, lower: Float, upper: Float, training: Bool, self_is_result: Bool): Tensor.
+
+/// Exact generated CXX rrelu-with-noise backward retained-output leaf.
+
+pub rrelu_with_noise_backward_out(output: Tensor, gradient_output: Tensor, input: Tensor, noise: Tensor, lower: Float, upper: Float, training: Bool, self_is_result: Bool): Unit.
+
+/// Exact generated CXX functional rrelu-with-noise leaf.
+
+pub rrelu_with_noise_functional(input: Tensor, noise: Tensor, has_generator: Bool, generator: Generator, lower: Float = 0.125, upper: Float = 0.3333333333333333, training: Bool = false): {Tensor, Tensor}.
+
+/// Exact generated CXX rrelu-with-noise in-place leaf.
+
+pub rrelu_with_noise_in_place(input: Tensor, noise: Tensor, lower: Float = 0.125, upper: Float = 0.3333333333333333, training: Bool = false): Unit.
+
+/// Exact generated CXX retained-output rrelu-with-noise value leaf.
+
+pub rrelu_with_noise_out(output: Tensor, input: Tensor, noise: Tensor, has_generator: Bool, generator: Generator, lower: Float = 0.125, upper: Float = 0.3333333333333333, training: Bool = false): Unit.
+
+/// Seeds the LibTorch CPU generator from an implementation-generated seed.
+
+pub seed(): Int.
+
+/// Restores the serialized LibTorch CPU generator state.
+
+pub set_rng_state(state: Tensor): Unit.

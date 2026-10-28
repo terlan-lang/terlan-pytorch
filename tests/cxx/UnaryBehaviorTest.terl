@@ -1,0 +1,7 @@
+module pytorch_cxx.UnaryBehaviorTest.
+
+import pytorch.UnaryBehaviorSupport.{unary_contracts_on}.
+
+@test
+pub cpu_unary_contracts(): Bool ->
+    unary_contracts_on("cpu", false).

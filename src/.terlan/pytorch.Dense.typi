@@ -1,0 +1,191 @@
+//! Generated direct-CXX implementation of public dense tensor operations.
+
+module pytorch.Dense.
+
+/// Executes the exact aten::bmm dense two-tensor schema.
+
+pub bmm(left: Tensor, right: Tensor): Tensor.
+
+/// Writes the exact aten::bmm.out result into retained output storage.
+
+pub bmm_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+
+/// Executes the exact aten::complex dense two-tensor schema.
+
+pub complex(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::divide.Tensor dense two-tensor schema.
+
+pub divide_tensor(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::expand_as dense two-tensor schema.
+
+pub expand_as(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::fill.Tensor dense two-tensor schema.
+
+pub fill_tensor(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::ger dense two-tensor schema.
+
+pub ger(left: Tensor, right: Tensor): Tensor.
+
+/// Writes the exact aten::ger.out result into retained output storage.
+
+pub ger_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+
+/// Executes the exact aten::hardsigmoid_backward dense two-tensor schema.
+
+pub hardsigmoid_backward(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::hardswish_backward dense two-tensor schema.
+
+pub hardswish_backward(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::infinitely_differentiable_gelu_backward dense two-tensor schema.
+
+pub infinitely_differentiable_gelu_backward(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::linalg_householder_product dense two-tensor schema.
+
+pub linalg_householder_product(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::linalg_matmul dense two-tensor schema.
+
+pub linalg_matmul(left: Tensor, right: Tensor): Tensor.
+
+/// Writes the exact aten::matmul.out result into retained output storage.
+
+pub matmul_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+
+/// Executes the exact aten::matrix_exp_backward dense two-tensor schema.
+
+pub matrix_exp_backward(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::mish_backward dense two-tensor schema.
+
+pub mish_backward(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::mm dense two-tensor schema.
+
+pub mm(left: Tensor, right: Tensor): Tensor.
+
+/// Writes the exact aten::mm.out result into retained output storage.
+
+pub mm_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+
+/// Executes the exact aten::multiply.Tensor dense two-tensor schema.
+
+pub multiply_tensor(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::mv dense two-tensor schema.
+
+pub mv(left: Tensor, right: Tensor): Tensor.
+
+/// Writes the exact aten::mv.out result into retained output storage.
+
+pub mv_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+
+/// Executes the exact aten::orgqr dense two-tensor schema.
+
+pub orgqr(left: Tensor, right: Tensor): Tensor.
+
+/// Writes the exact aten::orgqr.out result into retained output storage.
+
+pub orgqr_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+
+/// Executes the exact aten::outer dense two-tensor schema.
+
+pub outer(left: Tensor, right: Tensor): Tensor.
+
+/// Writes the exact aten::outer.out result into retained output storage.
+
+pub outer_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+
+/// Executes the exact aten::polar dense two-tensor schema.
+
+pub polar(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::prelu dense two-tensor schema.
+
+pub prelu(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::reshape_as dense two-tensor schema.
+
+pub reshape_as(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::sigmoid_backward dense two-tensor schema.
+
+pub sigmoid_backward(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::silu_backward dense two-tensor schema.
+
+pub silu_backward(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_chebyshev_polynomial_t dense two-tensor schema.
+
+pub special_chebyshev_polynomial_t(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_chebyshev_polynomial_u dense two-tensor schema.
+
+pub special_chebyshev_polynomial_u(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_chebyshev_polynomial_v dense two-tensor schema.
+
+pub special_chebyshev_polynomial_v(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_chebyshev_polynomial_w dense two-tensor schema.
+
+pub special_chebyshev_polynomial_w(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_gammainc dense two-tensor schema.
+
+pub special_gammainc(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_gammaincc dense two-tensor schema.
+
+pub special_gammaincc(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_hermite_polynomial_h dense two-tensor schema.
+
+pub special_hermite_polynomial_h(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_hermite_polynomial_he dense two-tensor schema.
+
+pub special_hermite_polynomial_he(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_laguerre_polynomial_l dense two-tensor schema.
+
+pub special_laguerre_polynomial_l(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_legendre_polynomial_p dense two-tensor schema.
+
+pub special_legendre_polynomial_p(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_shifted_chebyshev_polynomial_t dense two-tensor schema.
+
+pub special_shifted_chebyshev_polynomial_t(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_shifted_chebyshev_polynomial_u dense two-tensor schema.
+
+pub special_shifted_chebyshev_polynomial_u(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_shifted_chebyshev_polynomial_v dense two-tensor schema.
+
+pub special_shifted_chebyshev_polynomial_v(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::special_shifted_chebyshev_polynomial_w dense two-tensor schema.
+
+pub special_shifted_chebyshev_polynomial_w(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::tanh_backward dense two-tensor schema.
+
+pub tanh_backward(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::type_as dense two-tensor schema.
+
+pub type_as(left: Tensor, right: Tensor): Tensor.
+
+/// Executes the exact aten::view_as dense two-tensor schema.
+
+pub view_as(left: Tensor, right: Tensor): Tensor.

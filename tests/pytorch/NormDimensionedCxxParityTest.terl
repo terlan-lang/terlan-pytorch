@@ -1,0 +1,24 @@
+/**
+ * Verifies generated CXX compositions for dimensioned ATen norm overloads.
+ */
+module pytorch.NormDimensionedCxxParityTest.
+
+import pytorch.Statistics.{norm_dimensions_dtype, norm_dimensions_dtype_out, norm_dimensions_out}.
+import pytorch.Tensor.{dispose, from_floats, item_float, shape, sum, zeros}.
+
+@test
+pub dimensioned_norm_compositions_match_libtorch(): Bool ->
+    let input = from_floats([3.0, 4.0, 0.0, 10.0], [2, 2]);
+    let converted = norm_dimensions_dtype(input, 2.0, [1], 6, false);
+    let dtype_output = zeros([2], 7);
+    norm_dimensions_dtype_out(dtype_output, input, 2.0, [1], 6, false);
+    let plain_output = zeros([2], 7);
+    (norm_dimensions_out(plain_output, input, 1.0, [1], false); let converted_sum = sum(converted);
+let dtype_output_sum = sum(dtype_output);
+let plain_output_sum = sum(plain_output);
+let valid =
+    item_float(converted_sum) == 15.0
+        and item_float(dtype_output_sum) == 15.0
+        and item_float(plain_output_sum) == 17.0
+        and shape(converted) == [2];
+(dispose(plain_output_sum); dispose(dtype_output_sum); dispose(converted_sum); dispose(plain_output); dispose(dtype_output); dispose(converted); dispose(input); valid)).

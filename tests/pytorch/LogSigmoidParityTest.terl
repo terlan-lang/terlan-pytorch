@@ -1,0 +1,45 @@
+/**
+ * CPU runtime evidence for log_sigmoid forward/backward and retained-output forms.
+ */
+module pytorch.LogSigmoidParityTest.
+
+import pytorch.Regularization.{log_sigmoid_backward, log_sigmoid_backward_out, log_sigmoid_forward, log_sigmoid_forward_out}.
+import pytorch.Special.{log_sigmoid}.
+import pytorch.Tensor.{backward, clone, dispose, from_floats, full_float, gradient, item_float, mse_loss, require_grad, shape, sum, to_dtype}.
+
+import type pytorch.Tensor.
+
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let error = mse_loss(actual, expected, 1);
+    let distance = item_float(error);
+    dispose(error);
+    distance == 0.0.
+
+@test
+pub log_sigmoid_forms_match_autograd(): Bool ->
+    let expected_source = from_floats([-2.0, 0.0, 2.0], [3]);
+    let expected_input = require_grad(expected_source);
+    let expected_output = log_sigmoid(expected_input);
+    let expected_loss = sum(expected_output);
+    backward(expected_loss);
+    let expected_gradient = gradient(expected_input);
+    let native_input = from_floats([-2.0, 0.0, 2.0], [3]);
+    let {native_output, native_buffer} = log_sigmoid_forward(native_input);
+    let native_grad_output_base = full_float([3], 1.0);
+    let native_grad_output = to_dtype(native_grad_output_base, 7);
+    let native_gradient = log_sigmoid_backward(native_grad_output, native_input, native_buffer);
+    let output_slot = clone(native_input);
+    let buffer_slot = clone(native_input);
+    (log_sigmoid_forward_out(output_slot, buffer_slot, native_input); let gradient_slot = clone(native_grad_output);
+(log_sigmoid_backward_out(gradient_slot, native_grad_output, native_input, buffer_slot); let valid =
+    shape(native_output) == [3]
+        and shape(native_buffer) == [3]
+        and shape(output_slot) == [3]
+        and shape(buffer_slot) == [3]
+        and shape(native_gradient) == [3]
+        and shape(gradient_slot) == [3]
+        and matches(native_output, expected_output)
+        and matches(output_slot, expected_output)
+        and matches(native_gradient, expected_gradient)
+        and matches(gradient_slot, expected_gradient);
+(dispose(gradient_slot); dispose(buffer_slot); dispose(output_slot); dispose(native_gradient); dispose(native_grad_output); dispose(native_grad_output_base); dispose(native_buffer); dispose(native_output); dispose(native_input); dispose(expected_gradient); dispose(expected_loss); dispose(expected_output); dispose(expected_input); dispose(expected_source); valid))).

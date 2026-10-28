@@ -1,0 +1,18 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{dispose, dispose_model, from_int, item, load_torchscript, torchscript_forward_string_list}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let model = load_torchscript("$string_list_model");
+    let input = from_int(1);
+    let output = torchscript_forward_string_list(model, input);
+    let observed_input = item(input);
+    dispose(input);
+    dispose_model(model);
+    if {
+        observed_input == 1 and output.length() == 3 and
+            output[0] == "positive" and output[1] == "" and output[2] == "ready" ->
+            println("PYTORCH_STRING_LIST_OUTPUT_CONSUMER_OK");
+        true -> println("PYTORCH_STRING_LIST_OUTPUT_CONSUMER_FAILED")
+    }.

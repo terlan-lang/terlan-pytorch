@@ -1,0 +1,209 @@
+/**
+ * Indexed ordering, cumulative extrema, ranked selection, and dimension reduction operations.
+ */
+module pytorch.Selection.
+
+import type pytorch.Tensor.
+
+/**
+ * Returns cumulative maximum values and source indices along one dimension.
+ */
+@compiler.native {pytorch.selection.cummax}
+pub cummax(tensor: Tensor, dimension: Int): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Returns cumulative minimum values and source indices along one dimension.
+ */
+@compiler.native {pytorch.selection.cummin}
+pub cummin(tensor: Tensor, dimension: Int): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Returns the kth smallest values and source indices along one dimension.
+ */
+@compiler.native {pytorch.selection.kthvalue}
+pub kthvalue(
+    tensor: Tensor,
+    k: Int,
+    dimension: Int = -1,
+    keep_dimension: Bool = false,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Returns maximum values and source indices along one dimension.
+ */
+@compiler.native {pytorch.selection.max_dim}
+pub max_dim(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Returns median values and source indices along one dimension.
+ */
+@compiler.native {pytorch.selection.median_dim}
+pub median_dim(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Returns minimum values and source indices along one dimension.
+ */
+@compiler.native {pytorch.selection.min_dim}
+pub min_dim(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Returns modal values and source indices along one dimension.
+ */
+@compiler.native {pytorch.selection.mode}
+pub mode(tensor: Tensor, dimension: Int = -1, keep_dimension: Bool = false): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Returns NaN-ignoring median values and source indices along one dimension.
+ */
+@compiler.native {pytorch.selection.nanmedian_dim}
+pub nanmedian_dim(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Returns sorted values and source indices along one dimension.
+ */
+@compiler.native {pytorch.selection.sort}
+pub sort(tensor: Tensor, dimension: Int = -1, descending: Bool = false): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Returns the largest or smallest ranked values and source indices along one dimension.
+ */
+@compiler.native {pytorch.selection.topk}
+pub topk(
+    tensor: Tensor,
+    k: Int,
+    dimension: Int = -1,
+    largest: Bool = true,
+    sorted: Bool = true,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Writes exact aten::cummax.out values and indices into retained storage.
+ */
+@compiler.native {pytorch.selection.cummax_out}
+pub cummax_out(values: Tensor, indices: Tensor, tensor: Tensor, dimension: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::cummin.out values and indices into retained storage.
+ */
+@compiler.native {pytorch.selection.cummin_out}
+pub cummin_out(values: Tensor, indices: Tensor, tensor: Tensor, dimension: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::median.dim_values values and indices into retained storage.
+ */
+@compiler.native {pytorch.selection.median_dim_out}
+pub median_dim_out(
+    values: Tensor,
+    indices: Tensor,
+    tensor: Tensor,
+    dimension: Int = -1,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Writes exact aten::mode.values values and indices into retained storage.
+ */
+@compiler.native {pytorch.selection.mode_out}
+pub mode_out(
+    values: Tensor,
+    indices: Tensor,
+    tensor: Tensor,
+    dimension: Int = -1,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Writes exact aten::nanmedian.dim_values values and indices into retained storage.
+ */
+@compiler.native {pytorch.selection.nanmedian_dim_out}
+pub nanmedian_dim_out(
+    values: Tensor,
+    indices: Tensor,
+    tensor: Tensor,
+    dimension: Int = -1,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Writes exact aten::kthvalue.values values and indices into retained storage.
+ */
+@compiler.native {pytorch.selection.kthvalue_out}
+pub kthvalue_out(
+    values: Tensor,
+    indices: Tensor,
+    tensor: Tensor,
+    k: Int,
+    dimension: Int = -1,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Writes exact aten::sort.values values and indices into retained storage.
+ */
+@compiler.native {pytorch.selection.sort_out}
+pub sort_out(
+    values: Tensor,
+    indices: Tensor,
+    tensor: Tensor,
+    dimension: Int = -1,
+    descending: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Writes exact aten::topk.values values and indices into retained storage.
+ */
+@compiler.native {pytorch.selection.topk_out}
+pub topk_out(
+    values: Tensor,
+    indices: Tensor,
+    tensor: Tensor,
+    k: Int,
+    dimension: Int = -1,
+    largest: Bool = true,
+    sorted: Bool = true,
+): Unit ->
+    native.
+
+/**
+ * Returns fixed-size nonzero coordinates with padding.
+ */
+@compiler.native {pytorch.selection.nonzero_static}
+pub nonzero_static(tensor: Tensor, size: Int, fill_value: Int = -1): Tensor ->
+    native.
+
+/**
+ * Writes fixed-size nonzero coordinates with padding.
+ */
+@compiler.native {pytorch.selection.nonzero_static_out}
+pub nonzero_static_out(output: Tensor, tensor: Tensor, size: Int, fill_value: Int = -1): Unit ->
+    native.
+
+/**
+ * Exact generated CXX leaf for aten::value_selecting_reduction_backward.
+ */
+@compiler.native {pytorch.selection.value_selecting_reduction_backward_exact}
+pub value_selecting_reduction_backward_exact(
+    gradient: Tensor,
+    dimension: Int,
+    indices: Tensor,
+    sizes: List[Int],
+    keep_dimension: Bool,
+): Tensor ->
+    native.

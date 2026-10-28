@@ -1,0 +1,100 @@
+/**
+ * CPU runtime evidence for native_batch_norm and its retained-output form.
+ */
+module pytorch.NativeBatchNormParityTest.
+
+import pytorch.Regularization.{batch_norm_update_stats, batch_norm_update_stats_out, native_batch_norm, native_batch_norm_out}.
+import pytorch.Tensor.{batch_norm, clone, dispose, from_floats, full_float, item_float, mse_loss, numel, shape}.
+import pytorch.TypeRelations.allclose.
+
+import type pytorch.Tensor.
+
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let error = mse_loss(actual, expected, 1);
+    let distance = item_float(error);
+    dispose(error);
+    distance == 0.0.
+
+@test
+pub native_batch_norm_forms_match_high_level_inference(): Bool ->
+    let input = full_float([1, 2, 2, 2], 3.0);
+    let weight = full_float([2], 2.0);
+    let bias = full_float([2], 1.0);
+    let running_mean = full_float([2], 1.0);
+    let running_var = full_float([2], 4.0);
+    let expected = batch_norm(input, weight, bias, running_mean, running_var, false, 0.1, 0.0, false);
+    let {actual, save_mean, save_invstd} =
+        native_batch_norm(
+            input,
+            true,
+            weight,
+            true,
+            bias,
+            true,
+            running_mean,
+            true,
+            running_var,
+            false,
+            0.1,
+            0.0,
+        );
+    let output = clone(input);
+    let output_mean = full_float([0], 0.0);
+    let output_invstd = full_float([0], 0.0);
+    native_batch_norm_out(
+        output,
+        output_mean,
+        output_invstd,
+        input,
+        true,
+        weight,
+        true,
+        bias,
+        true,
+        running_mean,
+        true,
+        running_var,
+        false,
+        0.1,
+        0.0,
+    );
+    let valid =
+        shape(actual) == [1, 2, 2, 2]
+            and shape(output) == [1, 2, 2, 2]
+            and numel(save_mean) == 0
+            and numel(save_invstd) == 0
+            and numel(output_mean) == 0
+            and numel(output_invstd) == 0
+            and matches(actual, expected)
+            and matches(output, expected);
+    (dispose(output_invstd); dispose(output_mean); dispose(output); dispose(save_invstd); dispose(save_mean); dispose(actual); dispose(expected); dispose(running_var); dispose(running_mean); dispose(bias); dispose(weight); dispose(input); valid).
+
+@test
+pub batch_norm_update_stats_forms_match_cpu_reference(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [2, 2, 2, 1]);
+    let ignored = full_float([0], 0.0);
+    let {mean, variance} = batch_norm_update_stats(input, false, ignored, false, ignored, 0.1);
+    let output_mean = from_floats([0.0, 0.0], [2]);
+    let output_variance = from_floats([0.0, 0.0], [2]);
+    batch_norm_update_stats_out(
+        output_mean,
+        output_variance,
+        input,
+        false,
+        ignored,
+        false,
+        ignored,
+        0.1,
+    );
+    let expected_mean = from_floats([3.5, 5.5], [2]);
+    let expected_variance = from_floats([4.25, 4.25], [2]);
+    let valid =
+        shape(mean) == [2]
+            and shape(variance) == [2]
+            and shape(output_mean) == [2]
+            and shape(output_variance) == [2]
+            and allclose(mean, expected_mean, 0.000001, 0.000001, false)
+            and allclose(variance, expected_variance, 0.000001, 0.000001, false)
+            and allclose(output_mean, expected_mean, 0.000001, 0.000001, false)
+            and allclose(output_variance, expected_variance, 0.000001, 0.000001, false);
+    (dispose(expected_variance); dispose(expected_mean); dispose(output_variance); dispose(output_mean); dispose(variance); dispose(mean); dispose(ignored); dispose(input); valid).

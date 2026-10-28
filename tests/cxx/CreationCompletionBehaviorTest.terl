@@ -1,0 +1,7 @@
+module pytorch_cxx.CreationCompletionBehaviorTest.
+
+import pytorch.CreationCompletionBehaviorSupport.{creation_contracts_on}.
+
+@test
+pub cpu_creation_contracts(): Bool ->
+    creation_contracts_on("cpu", false).

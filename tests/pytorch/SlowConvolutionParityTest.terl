@@ -1,0 +1,104 @@
+/**
+ * CPU runtime evidence for exact slow convolution CXX leaves.
+ */
+module pytorch.SlowConvolutionParityTest.
+
+import pytorch.LegacyConvolution.{slow_conv3d, slow_conv3d_forward_out, slow_conv3d_out, slow_conv_dilated2d, slow_conv_dilated2d_out, slow_conv_dilated3d, slow_conv_dilated3d_out, slow_conv_transpose2d, slow_conv_transpose2d_out, slow_conv_transpose3d, slow_conv_transpose3d_out}.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+import pytorch.TypeRelations.allclose.
+
+@test
+pub slow_convolution_cpu_forms_match_libtorch(): Bool ->
+    let input_3d = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [1, 1, 2, 2, 2]);
+    let weight_3d = from_floats([1.0], [1, 1, 1, 1, 1]);
+    let input_2d = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2]);
+    let weight_2d = from_floats([1.0], [1, 1, 1, 1]);
+    let bias = from_floats([0.5], [1]);
+    let forward_output_3d = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [1, 1, 2, 2, 2]);
+    let output_3d_out = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [1, 1, 2, 2, 2]);
+    let output_3d = slow_conv3d(input_3d, weight_3d, [1, 1, 1], true, bias, [1, 1, 1], [0, 0, 0]);
+    slow_conv3d_forward_out(
+        forward_output_3d,
+        input_3d,
+        weight_3d,
+        [1, 1, 1],
+        true,
+        bias,
+        [1, 1, 1],
+        [0, 0, 0],
+    );
+    let output_2d = slow_conv_dilated2d(input_2d, weight_2d, [1, 1], true, bias, [1, 1], [0, 0], [1, 1]);
+    let output_2d_out = from_floats([0.0, 0.0, 0.0, 0.0], [1, 1, 2, 2]);
+    (slow_conv_dilated2d_out(
+    output_2d_out,
+    input_2d,
+    weight_2d,
+    [1, 1],
+    true,
+    bias,
+    [1, 1],
+    [0, 0],
+    [1, 1],
+); let output_dilated_3d = slow_conv_dilated3d(input_3d, weight_3d, [1, 1, 1], true, bias, [1, 1, 1], [0, 0, 0], [1, 1, 1]);
+let output_dilated_3d_out = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [1, 1, 2, 2, 2]);
+(slow_conv_dilated3d_out(
+    output_dilated_3d_out,
+    input_3d,
+    weight_3d,
+    [1, 1, 1],
+    true,
+    bias,
+    [1, 1, 1],
+    [0, 0, 0],
+    [1, 1, 1],
+); let output_transpose_2d = slow_conv_transpose2d(input_2d, weight_2d, [1, 1], true, bias, [1, 1], [0, 0], [0, 0], [1, 1]);
+let output_transpose_2d_out = from_floats([0.0, 0.0, 0.0, 0.0], [1, 1, 2, 2]);
+(slow_conv_transpose2d_out(
+    output_transpose_2d_out,
+    input_2d,
+    weight_2d,
+    [1, 1],
+    true,
+    bias,
+    [1, 1],
+    [0, 0],
+    [0, 0],
+    [1, 1],
+); let output_transpose_3d =
+    slow_conv_transpose3d(
+        input_3d,
+        weight_3d,
+        [1, 1, 1],
+        true,
+        bias,
+        [1, 1, 1],
+        [0, 0, 0],
+        [0, 0, 0],
+        [1, 1, 1],
+    );
+let output_transpose_3d_out = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [1, 1, 2, 2, 2]);
+(slow_conv_transpose3d_out(
+    output_transpose_3d_out,
+    input_3d,
+    weight_3d,
+    [1, 1, 1],
+    true,
+    bias,
+    [1, 1, 1],
+    [0, 0, 0],
+    [0, 0, 0],
+    [1, 1, 1],
+); slow_conv3d_out(output_3d_out, input_3d, weight_3d, [1, 1, 1], true, bias, [1, 1, 1], [0, 0, 0]); let valid =
+    shape(output_3d) == [1, 1, 2, 2, 2]
+        and shape(forward_output_3d) == [1, 1, 2, 2, 2]
+        and allclose(forward_output_3d, output_3d)
+        and allclose(output_3d_out, output_3d)
+        and shape(output_2d) == [1, 1, 2, 2]
+        and allclose(output_2d_out, output_2d)
+        and shape(output_dilated_3d) == [1, 1, 2, 2, 2]
+        and allclose(output_dilated_3d_out, output_dilated_3d)
+        and shape(output_transpose_2d) == [1, 1, 2, 2]
+        and allclose(output_transpose_2d_out, output_transpose_2d)
+        and shape(output_transpose_3d) == [1, 1, 2, 2, 2]
+        and allclose(output_transpose_3d_out, output_transpose_3d);
+(dispose(output_transpose_3d_out); dispose(output_transpose_3d); dispose(output_transpose_2d_out); dispose(output_transpose_2d); dispose(output_dilated_3d_out); dispose(output_dilated_3d); dispose(output_2d_out); dispose(output_2d); dispose(output_3d_out); dispose(output_3d); dispose(forward_output_3d); dispose(bias); dispose(weight_2d); dispose(input_2d); dispose(weight_3d); dispose(input_3d); valid))))).

@@ -1,0 +1,133 @@
+/**
+ * Behavioral evidence for residual single-input retained-output schemas.
+ */
+module pytorch.UnaryOutputCompletionTest.
+
+import pytorch.Special.{digamma, inverse, log_sigmoid, msort, negative, sgn}.
+import pytorch.Tensor.{Tensor, clone, dispose, from_float, from_floats, item_float, mse_loss, negate, relu, sqrt}.
+import pytorch.UnaryStorage.{digamma_in_place, digamma_out, inverse_out, log_sigmoid_out, msort_out, neg_in_place, neg_out, negative_in_place, negative_out, relu_in_place, relu_out, sgn_in_place, sgn_out, sqrt_in_place, sqrt_out, t_copy_out, t_in_place, view_as_complex_copy_out, view_as_real_copy_out}.
+import pytorch.View.{t_copy, view_as_complex_copy, view_as_real_copy}.
+
+/**
+ * Returns whether two tensors have identical numeric values.
+ */
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let loss = mse_loss(actual, expected, 1);
+    let valid = item_float(loss) == 0.0;
+    dispose(loss);
+    valid.
+
+/**
+ * Proves scalar numerical and activation retained-output behavior.
+ */
+@test
+pub scalar_output_forms_match_libtorch(): Bool ->
+    let scalar = from_float(2.0);
+    let negative_scalar = from_float(-2.0);
+    let four = from_float(4.0);
+    let expected_digamma = digamma(scalar);
+    let expected_log_sigmoid = log_sigmoid(scalar);
+    let expected_neg = negate(negative_scalar);
+    let expected_negative = negative(negative_scalar);
+    let expected_relu = relu(negative_scalar);
+    let expected_sgn = sgn(negative_scalar);
+    let expected_sqrt = sqrt(four);
+    let output_digamma = clone(expected_digamma);
+    let output_log_sigmoid = clone(expected_log_sigmoid);
+    let output_neg = clone(expected_neg);
+    let output_negative = clone(expected_negative);
+    let output_relu = clone(expected_relu);
+    let output_sgn = clone(expected_sgn);
+    let output_sqrt = clone(expected_sqrt);
+    digamma_out(output_digamma, scalar);
+    log_sigmoid_out(output_log_sigmoid, scalar);
+    neg_out(output_neg, negative_scalar);
+    negative_out(output_negative, negative_scalar);
+    relu_out(output_relu, negative_scalar);
+    sgn_out(output_sgn, negative_scalar);
+    sqrt_out(output_sqrt, four);
+    let valid =
+        matches(output_digamma, expected_digamma)
+            and matches(output_log_sigmoid, expected_log_sigmoid)
+            and matches(output_neg, expected_neg)
+            and matches(output_negative, expected_negative)
+            and matches(output_relu, expected_relu)
+            and matches(output_sgn, expected_sgn)
+            and matches(output_sqrt, expected_sqrt);
+    (dispose(output_sqrt); dispose(output_sgn); dispose(output_relu); dispose(output_negative); dispose(output_neg); dispose(output_log_sigmoid); dispose(output_digamma); dispose(expected_sqrt); dispose(expected_sgn); dispose(expected_relu); dispose(expected_negative); dispose(expected_neg); dispose(expected_log_sigmoid); dispose(expected_digamma); dispose(four); dispose(negative_scalar); dispose(scalar); valid).
+
+/**
+ * Proves scalar numerical and activation in-place behavior.
+ */
+@test
+pub scalar_in_place_forms_match_libtorch(): Bool ->
+    let scalar = from_float(2.0);
+    let negative_scalar = from_float(-2.0);
+    let four = from_float(4.0);
+    let expected_digamma = digamma(scalar);
+    let expected_neg = negate(negative_scalar);
+    let expected_negative = negative(negative_scalar);
+    let expected_relu = relu(negative_scalar);
+    let expected_sgn = sgn(negative_scalar);
+    let expected_sqrt = sqrt(four);
+    let mutation_digamma = clone(scalar);
+    let mutation_neg = clone(negative_scalar);
+    let mutation_negative = clone(negative_scalar);
+    let mutation_relu = clone(negative_scalar);
+    let mutation_sgn = clone(negative_scalar);
+    let mutation_sqrt = clone(four);
+    digamma_in_place(mutation_digamma);
+    neg_in_place(mutation_neg);
+    negative_in_place(mutation_negative);
+    relu_in_place(mutation_relu);
+    sgn_in_place(mutation_sgn);
+    sqrt_in_place(mutation_sqrt);
+    let valid =
+        matches(mutation_digamma, expected_digamma)
+            and matches(mutation_neg, expected_neg)
+            and matches(mutation_negative, expected_negative)
+            and matches(mutation_relu, expected_relu)
+            and matches(mutation_sgn, expected_sgn)
+            and matches(mutation_sqrt, expected_sqrt);
+    (dispose(mutation_sqrt); dispose(mutation_sgn); dispose(mutation_relu); dispose(mutation_negative); dispose(mutation_neg); dispose(mutation_digamma); dispose(expected_sqrt); dispose(expected_sgn); dispose(expected_relu); dispose(expected_negative); dispose(expected_neg); dispose(expected_digamma); dispose(four); dispose(negative_scalar); dispose(scalar); valid).
+
+/**
+ * Proves matrix, sorting, and transpose-copy retained-output behavior.
+ */
+@test
+pub shaped_output_forms_match_libtorch(): Bool ->
+    let values = from_floats([3.0, 1.0, 2.0], [3]);
+    let matrix = from_floats([4.0, 7.0, 2.0, 6.0], [2, 2]);
+    let expected_inverse = inverse(matrix);
+    let expected_msort = msort(values);
+    let expected_t_copy = t_copy(matrix);
+    let output_inverse = clone(expected_inverse);
+    let output_msort = clone(expected_msort);
+    let output_t_copy = clone(expected_t_copy);
+    let mutation_t = clone(matrix);
+    inverse_out(output_inverse, matrix);
+    msort_out(output_msort, values);
+    t_copy_out(output_t_copy, matrix);
+    t_in_place(mutation_t);
+    let valid =
+        matches(output_inverse, expected_inverse)
+            and matches(output_msort, expected_msort)
+            and matches(output_t_copy, expected_t_copy)
+            and matches(mutation_t, expected_t_copy);
+    (dispose(mutation_t); dispose(output_t_copy); dispose(output_msort); dispose(output_inverse); dispose(expected_t_copy); dispose(expected_msort); dispose(expected_inverse); dispose(matrix); dispose(values); valid).
+
+/**
+ * Proves copied real and complex view retained-output behavior.
+ */
+@test
+pub complex_view_output_forms_match_libtorch(): Bool ->
+    let real_pairs = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let expected_complex = view_as_complex_copy(real_pairs);
+    let expected_real = view_as_real_copy(expected_complex);
+    let output_complex = clone(expected_complex);
+    let output_real = clone(expected_real);
+    view_as_complex_copy_out(output_complex, real_pairs);
+    view_as_real_copy_out(output_real, expected_complex);
+    let output_complex_as_real = view_as_real_copy(output_complex);
+    let valid = matches(output_complex_as_real, expected_real) and matches(output_real, expected_real);
+    (dispose(output_complex_as_real); dispose(output_real); dispose(output_complex); dispose(expected_real); dispose(expected_complex); dispose(real_pairs); valid).

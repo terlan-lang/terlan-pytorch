@@ -1,0 +1,231 @@
+//! Generated exact CXX immutable unary, predicate, reduction, and coordinate operations.
+
+module pytorch.Unary.
+
+/// Exact generated CXX unary leaf for abs.
+
+pub abs(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for acos.
+
+pub acos(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for acosh.
+
+pub acosh(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for all.
+
+pub all(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for any.
+
+pub any(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for argwhere.
+
+pub argwhere(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for asin.
+
+pub asin(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for asinh.
+
+pub asinh(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for atan.
+
+pub atan(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for atanh.
+
+pub atanh(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for bitwise_not.
+
+pub bitwise_not(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for ceil.
+
+pub ceil(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for cos.
+
+pub cos(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for cosh.
+
+pub cosh(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for deg2rad.
+
+pub deg2rad(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for erf.
+
+pub erf(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for erfc.
+
+pub erfc(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for erfinv.
+
+pub erfinv(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for exp2.
+
+pub exp2(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for expm1.
+
+pub expm1(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for floor.
+
+pub floor(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for frac.
+
+pub frac(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for frexp.
+
+pub frexp(tensor: Tensor): {Tensor, Tensor}.
+
+/// Exact generated CXX unary leaf for hardsigmoid.
+
+pub hardsigmoid(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for hardswish.
+
+pub hardswish(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for isfinite.
+
+pub isfinite(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for isinf.
+
+pub isinf(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for isnan.
+
+pub isnan(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for isneginf.
+
+pub isneginf(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for isposinf.
+
+pub isposinf(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for log10.
+
+pub log10(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for log1p.
+
+pub log1p(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for log2.
+
+pub log2(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for logical_not.
+
+pub logical_not(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for max.
+
+pub max(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for median.
+
+pub median(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for min.
+
+pub min(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for mish.
+
+pub mish(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for nonzero.
+
+pub nonzero(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for rad2deg.
+
+pub rad2deg(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for reciprocal.
+
+pub reciprocal(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for relu6.
+
+pub relu6(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for round.
+
+pub round(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for rsqrt.
+
+pub rsqrt(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for selu.
+
+pub selu(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for sigmoid.
+
+pub sigmoid(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for sign.
+
+pub sign(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for signbit.
+
+pub signbit(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for silu.
+
+pub silu(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for sin.
+
+pub sin(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for sinc.
+
+pub sinc(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for sinh.
+
+pub sinh(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for square.
+
+pub square(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for tan.
+
+pub tan(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for tanh.
+
+pub tanh(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for trace.
+
+pub trace(tensor: Tensor): Tensor.
+
+/// Exact generated CXX unary leaf for trunc.
+
+pub trunc(tensor: Tensor): Tensor.

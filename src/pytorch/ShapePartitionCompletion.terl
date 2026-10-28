@@ -1,0 +1,51 @@
+/**
+ * Compatibility aliases for ATen's unsafe partition schemas.
+ *
+ * Terlan tensors do not expose autograd view metadata, so these aliases use
+ * the same CXX partition leaves as the corresponding safe operations.
+ */
+module pytorch.ShapePartitionCompletion.
+
+import pytorch.ShapePartition.{chunk, split_size, split_sizes, unbind}.
+import pytorch.Tensor.clone.
+
+import type pytorch.Tensor.
+
+@compiler.native {pytorch.shape_partition_completion.unsafe_chunk}
+pub unsafe_chunk_native(input: Tensor, chunks: Int, dimension: Int): List[Tensor] ->
+    native.
+
+pub unsafe_chunk(input: Tensor, chunks: Int, dimension: Int = 0): List[Tensor] ->
+    unsafe_chunk_native(input, chunks, dimension).
+
+pub unsafe_split(input: Tensor, split_size: Int, dimension: Int = 0): List[Tensor] ->
+    split_size(input, split_size, dimension).
+
+pub unsafe_split_with_sizes(input: Tensor, split_sizes: List[Int], dimension: Int = 0): List[Tensor] ->
+    split_sizes(input, split_sizes, dimension).
+
+/**
+ * Copies each split result into independently owned storage, matching
+ * aten::split_copy.Tensor's non-view contract.
+ */
+pub split_copy(input: Tensor, split_size: Int, dimension: Int = 0): List[Tensor] ->
+    clone_parts(split_size(input, split_size, dimension)).
+
+/**
+ * Copies each explicitly sized split result into independently owned storage.
+ */
+pub split_with_sizes_copy(input: Tensor, split_sizes: List[Int], dimension: Int = 0): List[Tensor] ->
+    clone_parts(split_sizes(input, split_sizes, dimension)).
+
+/**
+ * Copies each unbound slice into independently owned storage, matching
+ * aten::unbind_copy.int's copy semantics.
+ */
+pub unbind_copy(input: Tensor, dimension: Int = 0): List[Tensor] ->
+    clone_parts(unbind(input, dimension)).
+
+clone_parts(parts: List[Tensor]): List[Tensor] ->
+    case parts {
+        [] -> [];
+        [head | tail] -> [clone(head) | clone_parts(tail)]
+    }.

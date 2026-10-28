@@ -1,0 +1,15 @@
+module pytorch_cxx.RepeatInterleaveNativeBehaviorTest.
+
+import pytorch.RepeatInterleaveNativeBehaviorSupport.{repeat_index_contracts_on, repeat_scalar_contracts_on, repeat_tensor_contracts_on}.
+
+@test
+pub generated_cxx_repeat_interleave_index_contracts(): Bool ->
+    repeat_index_contracts_on("cpu").
+
+@test
+pub generated_cxx_repeat_interleave_tensor_contracts(): Bool ->
+    repeat_tensor_contracts_on("cpu").
+
+@test
+pub generated_cxx_repeat_interleave_scalar_contracts(): Bool ->
+    repeat_scalar_contracts_on("cpu").

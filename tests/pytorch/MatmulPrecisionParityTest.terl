@@ -1,0 +1,37 @@
+/**
+ * CPU runtime evidence for LibTorch float32 matmul precision configuration.
+ */
+module pytorch.MatmulPrecisionParityTest.
+
+import pytorch.BackendAvailability.{dispose_float32_matmul_precision, enter_float32_matmul_precision_code, get_float32_matmul_precision, set_float32_matmul_precision}.
+
+@test
+pub matmul_precision_configuration_matches_libtorch(): Bool ->
+    let original = get_float32_matmul_precision();
+    set_float32_matmul_precision("highest");
+    let highest = get_float32_matmul_precision() == "highest";
+    (set_float32_matmul_precision("high"); let high = get_float32_matmul_precision() == "high"; (set_float32_matmul_precision("medium"); let medium = get_float32_matmul_precision() == "medium"; (set_float32_matmul_precision(original); highest and high and medium))).
+
+@test
+pub matmul_precision_guard_restores_prior_state(): Bool ->
+    let original = get_float32_matmul_precision();
+    let guard =
+        enter_float32_matmul_precision_code(
+            if {
+                original == "highest" -> 1;
+                true -> 0
+            },
+        );
+    let entered = get_float32_matmul_precision() != original;
+    dispose_float32_matmul_precision(guard);
+    entered and get_float32_matmul_precision() == original.
+
+@test
+pub matmul_precision_guards_nest_and_restore(): Bool ->
+    let original = get_float32_matmul_precision();
+    let outer = enter_float32_matmul_precision_code(1);
+    let inner = enter_float32_matmul_precision_code(2);
+    let inner_state = get_float32_matmul_precision() == "medium";
+    dispose_float32_matmul_precision(inner);
+    let outer_state = get_float32_matmul_precision() == "high";
+    (dispose_float32_matmul_precision(outer); inner_state and outer_state and get_float32_matmul_precision() == original).

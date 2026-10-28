@@ -1,0 +1,30 @@
+/**
+ * CPU runtime evidence for the internal nll_loss_nd form.
+ */
+module pytorch.NllLossNdInternalParityTest.
+
+import pytorch.Loss.{nll_loss_nd}.
+import pytorch.NllLoss2dCompletion.{nll_loss2d_default}.
+import pytorch.Tensor.{dispose, from_floats, from_ints, item_float, mse_loss, shape}.
+
+import type pytorch.Tensor.
+
+@test
+pub nll_loss_nd_matches_2d_autograd(): Bool ->
+    let values = [-1.0, -2.0, -3.0, -1.0, -2.0, -3.0, -1.0, -2.0, -3.0, -1.0, -2.0, -3.0];
+    let expected_source = from_floats(values, [1, 3, 2, 2]);
+    let target = from_ints([1, 2, 1, 2], [1, 2, 2]);
+    let expected_loss = nll_loss2d_default(expected_source, target, 1, -100);
+    let native_input = from_floats(values, [1, 3, 2, 2]);
+    let ignored_weight = from_floats([1.0, 2.0, 3.0], [3]);
+    let actual = nll_loss_nd(native_input, target, false, ignored_weight, 1, -100);
+    let error = mse_loss(actual, expected_loss, 1);
+    let valid = shape(actual) == [] and item_float(error) == 0.0;
+    dispose(error);
+    dispose(actual);
+    dispose(ignored_weight);
+    dispose(native_input);
+    dispose(expected_loss);
+    dispose(target);
+    dispose(expected_source);
+    valid.

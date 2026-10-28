@@ -1,0 +1,9 @@
+module=pytorch.SetDataCompletion
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=814128510178731947
+interface_hash=2916435567101855644
+interface_doc_hash=4353941199206288746
+deps=1
+pytorch.Tensor=13489932768568026575

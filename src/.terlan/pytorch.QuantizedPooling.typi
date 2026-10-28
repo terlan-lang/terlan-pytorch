@@ -1,0 +1,27 @@
+//! Generated exact CXX quantized CPU pooling surface.
+
+module pytorch.QuantizedPooling.
+
+/// Exact generated CXX quantized 1D max-pooling leaf.
+
+pub quantized_max_pool1d(self: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], ceil_mode: Bool): Tensor.
+
+/// Exact generated CXX quantized 1D max-pooling output leaf.
+
+pub quantized_max_pool1d_out(out: Tensor, self: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], ceil_mode: Bool): Unit.
+
+/// Exact generated CXX quantized 2D max-pooling leaf.
+
+pub quantized_max_pool2d(self: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], ceil_mode: Bool): Tensor.
+
+/// Exact generated CXX quantized 2D max-pooling output leaf.
+
+pub quantized_max_pool2d_out(out: Tensor, self: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], ceil_mode: Bool): Unit.
+
+/// Exact generated CXX quantized 3D max-pooling leaf.
+
+pub quantized_max_pool3d(self: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], ceil_mode: Bool): Tensor.
+
+/// Exact generated CXX quantized 3D max-pooling output leaf.
+
+pub quantized_max_pool3d_out(out: Tensor, self: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], ceil_mode: Bool): Unit.

@@ -1,0 +1,50 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Verifies that the host exposes at least one driver-visible CUDA device.
+ */
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.Console.{eprintln, println}.
+import std.system.{Environment, Process}.
+
+/**
+ * Reports a stable CUDA device diagnostic.
+ */
+failure(): Bool ->
+    let _printed =
+        eprintln(
+            "error[terlan_pytorch_cuda_device]: no driver-visible CUDA device or device discovery is unavailable",
+        );
+    false.
+
+/**
+ * Returns the configured NVIDIA device discovery command.
+ */
+discovery_program(): String ->
+    case Environment.get("NVIDIA_SMI") {
+        Some(program) -> program;
+        None -> "nvidia-smi"
+    }.
+
+/**
+ * Executes bounded CUDA device discovery and validates nonempty output.
+ */
+entry(): Bool ->
+    let request =
+        Process.with_arguments(
+            Process.command(discovery_program()),
+            ["--query-gpu=index", "--format=csv,noheader"],
+        );
+    case Process.run(request) {
+        Ok(output) ->
+            if {
+                output.status == 0 and String.trim(output.stdout) != "" -> let _printed = println("[terlan-pytorch-cuda-device] status=available");
+                true;
+                true -> failure()
+            };
+        Err(_reason) -> failure()
+    }.
+
+assert(entry());
+Unit.

@@ -1,0 +1,24 @@
+module pytorch.TriangularSolveOutParityTest.
+
+import pytorch.Linalg.{triangular_solve}.
+import pytorch.LinalgCompletion.{triangular_solve_out}.
+import pytorch.Tensor.{dispose, empty_typed_native, from_floats, shape}.
+import pytorch.TypeRelations.equal.
+
+/**
+ * Proves retained-output parity for the legacy triangular-solve tuple.
+ */
+@test
+pub triangular_solve_out_matches_libtorch(): Bool ->
+    let coefficient = from_floats([2.0, 1.0, 0.0, 4.0], [2, 2]);
+    let right = from_floats([1.0, 1.0], [2, 1]);
+    let {expected_solution, expected_coefficient} = triangular_solve(right, coefficient, true, false, false);
+    let solution = empty_typed_native([0], 7, 0, -1);
+    let cloned_coefficient = empty_typed_native([0], 7, 0, -1);
+    triangular_solve_out(solution, cloned_coefficient, right, coefficient, true, false, false);
+    let valid =
+        equal(solution, expected_solution)
+            and equal(cloned_coefficient, expected_coefficient)
+            and shape(solution) == [2, 1]
+            and shape(cloned_coefficient) == [2, 2];
+    (dispose(cloned_coefficient); dispose(solution); dispose(expected_coefficient); dispose(expected_solution); dispose(right); dispose(coefficient); valid).

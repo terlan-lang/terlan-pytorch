@@ -1,0 +1,100 @@
+/**
+ * CXX-owned LibTorch storage handles and set adapters.
+ */
+module pytorch.StorageNative.
+
+import type pytorch.Tensor.
+
+/**
+ * Owned LibTorch storage handle.
+ */
+pub opaque type StorageHandle.
+
+/**
+ * Creates an owned storage handle from a tensor.
+ */
+@compiler.native {pytorch.storage.from_tensor}
+pub storage_from_tensor(tensor: Tensor): StorageHandle ->
+    native.
+
+/**
+ * Reports the LibTorch storage shared-memory flag.
+ */
+@compiler.native {pytorch.storage.is_shared}
+pub storage_is_shared(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Moves tensor storage into LibTorch shared memory.
+ */
+@compiler.native {pytorch.storage.share_memory}
+pub storage_share_memory(tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Sets tensor metadata from storage.
+ */
+@compiler.native {pytorch.storage.set}
+pub storage_set(tensor: Tensor, source: StorageHandle): Tensor ->
+    native.
+
+/**
+ * Writes storage metadata to retained output.
+ */
+@compiler.native {pytorch.storage.set_out}
+pub storage_set_out(output: Tensor, tensor: Tensor, source: StorageHandle): Unit ->
+    native.
+
+/**
+ * Sets tensor storage metadata with offset and strides.
+ */
+@compiler.native {pytorch.storage.set_offset}
+pub storage_set_offset(
+    tensor: Tensor,
+    source: StorageHandle,
+    storage_offset: Int,
+    size: List[Int],
+    stride: List[Int],
+): Tensor ->
+    native.
+
+/**
+ * Writes tensor storage metadata with offset and strides.
+ */
+@compiler.native {pytorch.storage.set_offset_out}
+pub storage_set_offset_out(
+    output: Tensor,
+    tensor: Tensor,
+    source: StorageHandle,
+    storage_offset: Int,
+    size: List[Int],
+    stride: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Sets tensor storage in place.
+ */
+@compiler.native {pytorch.storage.set_in_place}
+pub storage_set_in_place(tensor: Tensor, source: StorageHandle): Unit ->
+    native.
+
+/**
+ * Sets tensor storage metadata in place with offset and strides.
+ */
+@compiler.native {pytorch.storage.set_in_place_offset}
+pub storage_set_in_place_offset(
+    tensor: Tensor,
+    source: StorageHandle,
+    storage_offset: Int,
+    size: List[Int],
+    stride: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Drops an owned storage handle.
+ */
+@compiler.native {pytorch.storage.dispose}
+pub storage_dispose(source: StorageHandle): Unit ->
+    native.

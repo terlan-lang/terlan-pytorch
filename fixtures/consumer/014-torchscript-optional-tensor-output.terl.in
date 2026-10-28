@@ -1,0 +1,44 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{dispose, dispose_model, from_float, item_float, load_torchscript, torchscript_forward_optional_tensor}.
+import std.core.Option.{None, Some}.
+import type pytorch.Tensor.{Tensor}.
+import type std.core.Option.{Option}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let model = load_torchscript("$optional_tensor_model");
+    let positive = from_float(3.0);
+    let zero = from_float(0.0);
+    let present_valid = validate_present(torchscript_forward_optional_tensor(model, positive));
+    let absent_valid = validate_absent(torchscript_forward_optional_tensor(model, zero));
+    let inputs_unchanged = item_float(positive) == 3.0 and item_float(zero) == 0.0;
+    dispose(zero);
+    dispose(positive);
+    dispose_model(model);
+    if {
+        present_valid and absent_valid and inputs_unchanged ->
+            println("PYTORCH_OPTIONAL_TENSOR_OUTPUT_CONSUMER_OK");
+        true -> println("PYTORCH_OPTIONAL_TENSOR_OUTPUT_CONSUMER_FAILED")
+    }.
+
+validate_present(value: Option[Tensor]): Bool ->
+    case value {
+        Some(tensor) -> validate_present_tensor(tensor);
+        None -> false
+    }.
+
+validate_present_tensor(tensor: Tensor): Bool ->
+    let valid = item_float(tensor) == 6.0;
+    dispose(tensor);
+    valid.
+
+validate_absent(value: Option[Tensor]): Bool ->
+    case value {
+        Some(tensor) -> dispose_and_false(tensor);
+        None -> true
+    }.
+
+dispose_and_false(tensor: Tensor): Bool ->
+    dispose(tensor);
+    false.

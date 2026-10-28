@@ -1,0 +1,220 @@
+/**
+ * Exact generated CXX low-level convolution leaves.
+ */
+module pytorch.LegacyConvolution.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX THNN 2D convolution leaf.
+ */
+@compiler.native {pytorch.legacy_convolution.thnn_conv2d}
+pub thnn_conv2d(
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    has_bias: Bool,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX THNN 2D convolution retained-output leaf.
+ */
+@compiler.native {pytorch.legacy_convolution.thnn_conv2d_out}
+pub thnn_conv2d_out(
+    output: Tensor,
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    has_bias: Bool,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX slow_conv3d_forward retained-output leaf.
+ */
+@compiler.native {pytorch.legacy_convolution.slow_conv3d_forward_out}
+pub slow_conv3d_forward_out(
+    output: Tensor,
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    has_bias: Bool,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX slow_conv3d retained-output leaf.
+ */
+@compiler.native {pytorch.legacy_convolution.slow_conv3d_out}
+pub slow_conv3d_out(
+    output: Tensor,
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    has_bias: Bool,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX slow_conv_dilated2d retained-output leaf.
+ */
+@compiler.native {pytorch.legacy_convolution.slow_conv_dilated2d_out}
+pub slow_conv_dilated2d_out(
+    output: Tensor,
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    has_bias: Bool,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX slow_conv_dilated3d retained-output leaf.
+ */
+@compiler.native {pytorch.legacy_convolution.slow_conv_dilated3d_out}
+pub slow_conv_dilated3d_out(
+    output: Tensor,
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    has_bias: Bool,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX slow_conv_transpose2d retained-output leaf.
+ */
+@compiler.native {pytorch.legacy_convolution.slow_conv_transpose2d_out}
+pub slow_conv_transpose2d_out(
+    output: Tensor,
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    has_bias: Bool,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    output_padding: List[Int],
+    dilation: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX slow_conv_transpose3d retained-output leaf.
+ */
+@compiler.native {pytorch.legacy_convolution.slow_conv_transpose3d_out}
+pub slow_conv_transpose3d_out(
+    output: Tensor,
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    has_bias: Bool,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    output_padding: List[Int],
+    dilation: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX slow 3D convolution leaf.
+ */
+@compiler.native {pytorch.legacy_convolution.slow_conv3d}
+pub slow_conv3d(
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    has_bias: Bool,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX slow dilated 2D convolution leaf.
+ */
+@compiler.native {pytorch.legacy_convolution.slow_conv_dilated2d}
+pub slow_conv_dilated2d(
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    has_bias: Bool,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX slow dilated 3D convolution leaf.
+ */
+@compiler.native {pytorch.legacy_convolution.slow_conv_dilated3d}
+pub slow_conv_dilated3d(
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    has_bias: Bool,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX slow transposed 2D convolution leaf.
+ */
+@compiler.native {pytorch.legacy_convolution.slow_conv_transpose2d}
+pub slow_conv_transpose2d(
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    has_bias: Bool,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    output_padding: List[Int],
+    dilation: List[Int],
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX slow transposed 3D convolution leaf.
+ */
+@compiler.native {pytorch.legacy_convolution.slow_conv_transpose3d}
+pub slow_conv_transpose3d(
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    has_bias: Bool,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    output_padding: List[Int],
+    dilation: List[Int],
+): Tensor ->
+    native.

@@ -1,0 +1,43 @@
+/**
+ * CPU evidence for nested-to-padded ATen conversions and retained output.
+ */
+module pytorch.ToPaddedTensorParityTest.
+
+import pytorch.Tensor.{dispose, flatten, from_floats, item_float, narrow, nested_from_tensor_list, nested_to_padded_tensor, shape, to_padded_tensor, to_padded_tensor_out, zeros}.
+
+import type pytorch.Tensor.
+
+flat_item(tensor: Tensor, index: Int): Float ->
+    let values = flatten(tensor, 0, -1);
+    let element = narrow(values, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    dispose(values);
+    value.
+
+@test
+pub nested_to_padded_paths_match_libtorch(): Bool ->
+    let first = from_floats([1.0, 2.0], [2]);
+    let second = from_floats([3.0, 4.0, 5.0], [3]);
+    let nested = nested_from_tensor_list([first, second]);
+    let padded = to_padded_tensor(nested, -1.0, false, []);
+    let internal_padded = nested_to_padded_tensor(nested, -1.0, false, []);
+    let padded_out = zeros([0]);
+    to_padded_tensor_out(padded_out, nested, -1.0, false, []);
+    let valid =
+        shape(padded) == [2, 3]
+            and flat_item(padded, 0) == 1.0
+            and flat_item(padded, 2) == -1.0
+            and flat_item(padded, 4) == 4.0
+            and flat_item(padded, 5) == 5.0
+            and shape(internal_padded) == [2, 3]
+            and flat_item(internal_padded, 0) == 1.0
+            and flat_item(internal_padded, 2) == -1.0
+            and flat_item(internal_padded, 4) == 4.0
+            and flat_item(internal_padded, 5) == 5.0
+            and shape(padded_out) == [2, 3]
+            and flat_item(padded_out, 0) == 1.0
+            and flat_item(padded_out, 2) == -1.0
+            and flat_item(padded_out, 4) == 4.0
+            and flat_item(padded_out, 5) == 5.0;
+    (dispose(padded_out); dispose(internal_padded); dispose(padded); dispose(nested); dispose(second); dispose(first); valid).

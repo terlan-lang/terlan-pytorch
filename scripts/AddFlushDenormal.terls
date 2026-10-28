@@ -1,0 +1,262 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Adds the ownership-neutral CPU flush-denormal toggle to the CXX manifest.
+ */
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{Int, String, Unit}.
+import std.data.Json.
+import std.io.Console.eprintln.
+import std.io.File.
+import std.system.Arguments.
+
+import type std.core.Option.
+
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[terlan_pytorch_manifest]: ", message));
+    false.
+
+bool_type(): Json ->
+    Json.object()
+        .put("spelling", Json.string("bool"))
+        .put("canonical", Json.string("bool"))
+        .put("is_const", Json.bool(false))
+        .put("pointer_depth", Json.int(0))
+        .put("reference", Json.string("none"))
+        .put("function_pointer", Json.bool(false))
+        .put("template_dependent", Json.bool(false))
+        .put("enum_type", Json.bool(false)).
+
+bool_parameter(): Json ->
+    Json.object()
+        .put("name", Json.string("enabled"))
+        .put("ty", bool_type())
+        .put("direction", Json.string("input"))
+        .put("default", Json.null()).
+
+has_field(array: Json, field: String, needle: String, index: Int, count: Int): Bool ->
+    if {
+        index == count -> false;
+        true -> case array.at(index) {
+            Err(_) -> false;
+            Ok(item) ->
+                let {
+                    Ok(value) <- item.get(field);
+                    Ok(actual) <- value.as_string()
+                } else {
+                    _ -> has_field(array, field, needle, index + 1, count)
+                };
+                if {
+                    actual == needle -> true;
+                    true -> has_field(array, field, needle, index + 1, count)
+                }
+        }
+    }.
+
+array_has(array: Json, field: String, needle: String): Bool ->
+    case array.length() {
+        Err(_) -> false;
+        Ok(count) -> has_field(array, field, needle, 0, count)
+    }.
+
+metadata_symbol(metadata: Json): Option[Json] ->
+    let {
+        Ok(symbols) <- metadata.get("symbols");
+        Ok(count) <- symbols.length()
+    } else {
+        _ -> None
+    };
+    find_symbol(symbols, "id", "function:at::native::set_num_threads_exact(long)", 0, count).
+
+json_length(value: Json): Int ->
+    case value.length() {
+        Ok(count) -> count;
+        Err(_) -> 0
+    }.
+
+find_symbol(array: Json, field: String, needle: String, index: Int, count: Int): Option[Json] ->
+    if {
+        index == count -> None;
+        true -> let {
+            Ok(item) <- array.at(index);
+            Ok(value) <- item.get(field);
+            Ok(actual) <- value.as_string()
+        } else {
+            _ -> find_symbol(array, field, needle, index + 1, count)
+        };
+        if {
+            actual == needle -> Some(item);
+            true -> find_symbol(array, field, needle, index + 1, count)
+        }
+    }.
+
+updated_metadata_symbol(symbol: Json): Json ->
+    symbol
+        .put("id", Json.string("function:at::native::set_flush_denormal_exact(bool)"))
+        .put("cpp_name", Json.string("set_flush_denormal_exact"))
+        .put(
+            "documentation",
+            Json.string("Package-owned exact floating-point denormal handling toggle."),
+        )
+        .put("overload_set", Json.string("at::native::set_flush_denormal_exact"))
+        .put("parameters", Json.array().push(bool_parameter()))
+        .put("returns", bool_type()).
+
+updated_mapping_symbol(symbol: Json): Json ->
+    symbol
+        .put("symbol", Json.string("function:at::native::set_flush_denormal_exact(bool)"))
+        .put(
+            "exception",
+            Json.object()
+                .put("error_code", Json.string("pytorch_operation_failed"))
+                .put("message", Json.string("LibTorch flush-denormal configuration failed.")),
+        ).
+
+updated_module_function(function_value: Json): Json ->
+    function_value
+        .put("name", Json.string("set_flush_denormal"))
+        .put("operation", Json.string("pytorch.backend_availability.set_flush_denormal"))
+        .put("cpp_symbol", Json.string("function:at::native::set_flush_denormal_exact(bool)"))
+        .put(
+            "documentation",
+            Json.string("Exact generated CXX floating-point denormal handling toggle."),
+        )
+        .put(
+            "args",
+            Json.array()
+                .push(
+                    Json.object()
+                        .put("name", Json.string("enabled"))
+                        .put("ty", Json.string("Bool"))
+                        .put("fields", Json.array()),
+                ),
+        )
+        .put("returns", Json.string("Bool")).
+
+replace_metadata(metadata: Json, symbol: Json): Json ->
+    case metadata.get("symbols") {
+        Err(_) -> metadata;
+        Ok(symbols) -> metadata.put("symbols", symbols.push(symbol))
+    }.
+
+replace_mapping(mapping: Json, symbol: Json): Json ->
+    case mapping.get("symbols") {
+        Err(_) -> mapping;
+        Ok(symbols) -> mapping.put("symbols", symbols.push(symbol))
+    }.
+
+locate_backend(modules: Json, index: Int, count: Int): Option[Int] ->
+    if {
+        index == count -> None;
+        true -> let {
+            Ok(module_value) <- modules.at(index);
+            Ok(name) <- module_value.get("module");
+            Ok(value) <- name.as_string()
+        } else {
+            _ -> locate_backend(modules, index + 1, count)
+        };
+        if {
+            value == "pytorch.BackendAvailability" -> Some(index);
+            true -> locate_backend(modules, index + 1, count)
+        }
+    }.
+
+update_module(backend: Json, function_value: Json): Json ->
+    case backend.get("functions") {
+        Err(_) -> backend;
+        Ok(functions) -> backend.put("functions", functions.push(function_value))
+    }.
+
+replace_at(values: Json, index: Int, value: Json): Json ->
+    values.set(index, value).
+
+execute(root: String): Bool ->
+    case File.read_text(root) {
+        Err(_) -> failure("could not read libtorch-cxx.json");
+        Ok(source) ->
+            case Json.parse(source) {
+                Err(_) -> failure("could not parse libtorch-cxx.json");
+                Ok(document) ->
+                    let {
+                        {Ok(metadata), Ok(mapping), Ok(modules)} <-
+                            {
+                                document.get("cpp_metadata"),
+                                document.get("mapping"),
+                                document.get("modules"),
+                            };
+                        {Some(metadata_template), Ok(mapping_symbols), Some(module_index)} <-
+                            {
+                                metadata_symbol(metadata),
+                                mapping.get("symbols"),
+                                locate_backend(modules, 0, json_length(modules)),
+                            };
+                        Some(mapping_template) <-
+                            find_symbol(
+                                mapping_symbols,
+                                "symbol",
+                                "function:at::native::set_num_threads_exact(long)",
+                                0,
+                                json_length(mapping_symbols),
+                            );
+                        Ok(backend) <- modules.at(module_index);
+                        Ok(functions) <- backend.get("functions");
+                        Some(function_template) <-
+                            find_symbol(
+                                functions,
+                                "name",
+                                "set_num_threads",
+                                0,
+                                json_length(functions),
+                            )
+                    } else {
+                        _ -> false
+                    };
+                    if {
+                        array_has(functions, "name", "set_flush_denormal") -> true;
+                        true -> let {
+                            Ok(rendered) <-
+                                Json.stringify_pretty(
+                                    document
+                                        .put(
+                                            "cpp_metadata",
+                                            replace_metadata(
+                                                metadata,
+                                                updated_metadata_symbol(metadata_template),
+                                            ),
+                                        )
+                                        .put(
+                                            "mapping",
+                                            replace_mapping(
+                                                mapping,
+                                                updated_mapping_symbol(mapping_template),
+                                            ),
+                                        )
+                                        .put(
+                                            "modules",
+                                            replace_at(
+                                                modules,
+                                                module_index,
+                                                update_module(
+                                                    backend,
+                                                    updated_module_function(function_template),
+                                                ),
+                                            ),
+                                        ),
+                                );
+                            Ok(Unit) <- File.write_text(root, String.append(rendered, "\n"))
+                        } else {
+                            _ -> false
+                        };
+                        true
+                    }
+            }
+    }.
+
+entry(): Bool ->
+    case Arguments.get(0) {
+        Some(value) -> execute(value);
+        None -> execute("libtorch-cxx.json")
+    }.
+
+assert(entry());
+Unit.

@@ -1,0 +1,21 @@
+module pytorch.DevicePlacementTest.
+
+import pytorch.Tensor.{device_index, device_type, dispose, from_floats, item_float, mse_loss, shape, to_device}.
+
+@test
+pub synchronous_cpu_placement_preserves_owned_tensor_semantics(): Bool ->
+    let source = from_floats([2.0, 3.0], [1, 2]);
+    let placed = to_device(source, 0, -1);
+    let loss = mse_loss(placed, source, 1);
+    let exact = item_float(loss);
+    let valid =
+        device_type(source) == 0
+            and device_index(source) == -1
+            and device_type(placed) == 0
+            and device_index(placed) == -1
+            and shape(placed) == [1, 2]
+            and exact == 0.0;
+    dispose(loss);
+    dispose(placed);
+    dispose(source);
+    valid.

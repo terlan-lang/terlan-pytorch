@@ -1,0 +1,130 @@
+/**
+ * Exact native repeat-interleave paths for every optional dimension and output-size state.
+ */
+module pytorch.RepeatInterleaveNative.
+
+import type pytorch.Tensor.
+
+/**
+ * Builds repeated source indices with inferred output size.
+ */
+@compiler.native {pytorch.repeat_interleave_native.indices}
+pub repeat_indices_native(repeats: Tensor): Tensor ->
+    native.
+
+/**
+ * Builds repeated source indices with a validated output-size hint.
+ */
+@compiler.native {pytorch.repeat_interleave_native.indices_output_size}
+pub repeat_indices_output_size_native(repeats: Tensor, output_size: Int): Tensor ->
+    native.
+
+/**
+ * Writes repeated source indices into retained storage with inferred size.
+ */
+@compiler.native {pytorch.repeat_interleave_native.indices_out}
+pub repeat_indices_out_native(output: Tensor, repeats: Tensor): Unit ->
+    native.
+
+/**
+ * Writes repeated source indices into retained storage with a validated size hint.
+ */
+@compiler.native {pytorch.repeat_interleave_native.indices_out_output_size}
+pub repeat_indices_out_output_size_native(output: Tensor, repeats: Tensor, output_size: Int): Unit ->
+    native.
+
+/**
+ * Repeats flattened input values from a tensor count without an output-size hint.
+ */
+@compiler.native {pytorch.repeat_interleave_native.tensor_flat}
+pub repeat_tensor_flat_native(
+    input: Tensor,
+    repeats: Tensor,
+    unused_dimension: Int,
+    unused_output_size: Int,
+): Tensor ->
+    native.
+
+/**
+ * Repeats flattened input values from tensor counts with a validated size hint.
+ */
+@compiler.native {pytorch.repeat_interleave_native.tensor_flat_output_size}
+pub repeat_tensor_flat_output_size_native(
+    input: Tensor,
+    repeats: Tensor,
+    unused_dimension: Int,
+    output_size: Int,
+): Tensor ->
+    native.
+
+/**
+ * Repeats input values along an explicit dimension from tensor counts.
+ */
+@compiler.native {pytorch.repeat_interleave_native.tensor_dimension}
+pub repeat_tensor_dimension_native(
+    input: Tensor,
+    repeats: Tensor,
+    dimension: Int,
+    unused_output_size: Int,
+): Tensor ->
+    native.
+
+/**
+ * Repeats input values along a dimension from tensor counts with a validated size hint.
+ */
+@compiler.native {pytorch.repeat_interleave_native.tensor_dimension_output_size}
+pub repeat_tensor_dimension_output_size_native(
+    input: Tensor,
+    repeats: Tensor,
+    dimension: Int,
+    output_size: Int,
+): Tensor ->
+    native.
+
+/**
+ * Repeats every flattened input value a scalar number of times.
+ */
+@compiler.native {pytorch.repeat_interleave_native.scalar_flat}
+pub repeat_scalar_flat_native(
+    input: Tensor,
+    repeats: Int,
+    unused_dimension: Int,
+    unused_output_size: Int,
+): Tensor ->
+    native.
+
+/**
+ * Repeats flattened values by a scalar count with a validated size hint.
+ */
+@compiler.native {pytorch.repeat_interleave_native.scalar_flat_output_size}
+pub repeat_scalar_flat_output_size_native(
+    input: Tensor,
+    repeats: Int,
+    unused_dimension: Int,
+    output_size: Int,
+): Tensor ->
+    native.
+
+/**
+ * Repeats values along an explicit dimension by a scalar count.
+ */
+@compiler.native {pytorch.repeat_interleave_native.scalar_dimension}
+pub repeat_scalar_dimension_native(
+    input: Tensor,
+    repeats: Int,
+    dimension: Int,
+    unused_output_size: Int,
+): Tensor ->
+    native.
+
+/**
+ * Repeats values along a dimension by a scalar count with a validated size hint.
+ */
+@compiler.native {pytorch.repeat_interleave_native.scalar_dimension_output_size}
+pub repeat_scalar_dimension_output_size_native(
+    input: Tensor,
+    repeats: Int,
+    dimension: Int,
+    output_size: Int,
+): Tensor ->
+    native.

@@ -1,0 +1,13 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{amax, embedding, from_ints, full_float, matmul}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let embedding_weight = full_float([3, 2], 2.0);
+    let token_indices = from_ints([0, 2], [1, 2]);
+    let embedded = embedding(embedding_weight, token_indices, -1, false, false);
+    let pooled = amax(embedded, [1], false);
+    let incompatible_weight = full_float([3, 2], 1.0);
+    let projected = matmul(pooled, incompatible_weight);
+    println("PYTORCH_SEQUENCE_PROJECTION_SHAPE_NOT_REJECTED").

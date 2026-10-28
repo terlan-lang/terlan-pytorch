@@ -1,0 +1,9 @@
+//! Compatibility wrapper for the legacy `aten::vander` schema.
+//!
+//! The generated linalg leaves provide the exact descending Vandermonde
+//! construction.  Reversing the output columns supplies PyTorch's
+//! `increasing=True` form without adding another native boundary.
+
+module pytorch.VanderCompletion.
+
+pub vander(input: Tensor, columns: Int = - 1, increasing: Bool = false): Tensor.

@@ -1,0 +1,101 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{add, amax, dispose, dtype, from_floats, full_float, gelu, item_float, layer_norm, matmul, mse_loss, multiply, shape, softmax, transpose}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
+    let normalization_weight = full_float([2], 1.0);
+    let normalization_bias = full_float([2], 0.0);
+    let attention_normalized = layer_norm(
+        input, [2], normalization_weight, normalization_bias, 0.0, false
+    );
+    let query_weight = full_float([2, 2], 0.0);
+    let key_weight = full_float([2, 2], 0.0);
+    let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
+    let queries = matmul(attention_normalized, query_weight);
+    let keys = matmul(attention_normalized, key_weight);
+    let projected_values = matmul(attention_normalized, value_weight);
+    let value_bias = full_float([2], 1.0);
+    let values = add(projected_values, value_bias, 1.0);
+    let transposed_keys = transpose(keys, 0, 1);
+    let scores = matmul(queries, transposed_keys);
+    let scale = full_float([1], 0.7071067811865476);
+    let scaled_scores = multiply(scores, scale);
+    let attention = softmax(scaled_scores, 1);
+    let context = matmul(attention, values);
+    let attention_residual = add(input, context, 1.0);
+    let feed_forward_normalized = layer_norm(
+        attention_residual, [2], normalization_weight, normalization_bias, 0.0, false
+    );
+    let expansion_weight = from_floats(
+        [1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]
+    );
+    let expansion_bias = full_float([4], 0.0);
+    let expanded = matmul(feed_forward_normalized, expansion_weight);
+    let biased_expansion = add(expanded, expansion_bias, 1.0);
+    let activated = gelu(biased_expansion);
+    let projection_weight = from_floats(
+        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]
+    );
+    let projection_bias = full_float([2], 0.0);
+    let projected = matmul(activated, projection_weight);
+    let biased_projection = add(projected, projection_bias, 1.0);
+    let encoder_output = add(attention_residual, biased_projection, 1.0);
+    let expected = from_floats(
+        [1.8413447461, 4.8413447461, 5.8413447461, 2.8413447461], [2, 2]
+    );
+    let loss = mse_loss(encoder_output, expected, 1);
+    let output_columns = amax(encoder_output, [0], false);
+    let output_maximum = amax(output_columns, [0], false);
+    let input_columns = amax(input, [0], false);
+    let input_maximum = amax(input_columns, [0], false);
+    let observed_loss = item_float(loss);
+    let observed_output = item_float(output_maximum);
+    let observed_input = item_float(input_maximum);
+    let observed_shape = shape(encoder_output);
+    let observed_dtype = dtype(encoder_output);
+    dispose(input_maximum);
+    dispose(input_columns);
+    dispose(output_maximum);
+    dispose(output_columns);
+    dispose(loss);
+    dispose(expected);
+    dispose(encoder_output);
+    dispose(biased_projection);
+    dispose(projected);
+    dispose(projection_bias);
+    dispose(projection_weight);
+    dispose(activated);
+    dispose(biased_expansion);
+    dispose(expanded);
+    dispose(expansion_bias);
+    dispose(expansion_weight);
+    dispose(feed_forward_normalized);
+    dispose(attention_residual);
+    dispose(context);
+    dispose(attention);
+    dispose(scaled_scores);
+    dispose(scale);
+    dispose(scores);
+    dispose(transposed_keys);
+    dispose(values);
+    dispose(value_bias);
+    dispose(projected_values);
+    dispose(keys);
+    dispose(queries);
+    dispose(value_weight);
+    dispose(key_weight);
+    dispose(query_weight);
+    dispose(attention_normalized);
+    dispose(normalization_bias);
+    dispose(normalization_weight);
+    dispose(input);
+    if {
+        observed_shape.length() == 2 and observed_shape[0] == 2 and
+            observed_shape[1] == 2 and observed_dtype == 7 and
+            observed_input == 4.0 and observed_loss < 0.0000001 and
+            observed_output > 5.84 and observed_output < 5.85 ->
+                println("PYTORCH_ENCODER_BLOCK_CONSUMER_OK");
+        true -> println("PYTORCH_ENCODER_BLOCK_CONSUMER_FAILED")
+    }.

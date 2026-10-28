@@ -1,0 +1,179 @@
+/**
+ * Exact CELU, ELU, hardtanh, leaky-ReLU, mutation, and backward parity.
+ */
+module pytorch.ExtendedActivationCompletionParityTest.
+
+import pytorch.ExtendedActivationCompletion.{celu_float, celu_in_place_float, celu_in_place_int, celu_int, celu_out_float, celu_out_int, elu_backward_float, elu_backward_int, elu_backward_out_float, elu_backward_out_int, elu_float, elu_in_place_float, elu_in_place_int, elu_int, elu_out_float, elu_out_int, hardtanh_backward_float, hardtanh_backward_int, hardtanh_backward_out_float, hardtanh_backward_out_int, hardtanh_float, hardtanh_in_place_float, hardtanh_in_place_int, hardtanh_int, hardtanh_out_float, hardtanh_out_int, leaky_relu_backward_float, leaky_relu_backward_int, leaky_relu_backward_out_float, leaky_relu_backward_out_int, leaky_relu_float, leaky_relu_in_place_float, leaky_relu_in_place_int, leaky_relu_int, leaky_relu_out_float, leaky_relu_out_int}.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, shape, to_device}.
+import pytorch.TypeRelations.{allclose, equal}.
+import std.collections.List.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], device: Int): Tensor ->
+    let host = from_floats(values, [values.length()]);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(actual: Tensor, values: List[Float], device: Int): Bool ->
+    let expected = placed(values, device);
+    let valid =
+        allclose(actual, expected, 1e-12, 1e-12, false)
+            and shape(actual) == [values.length()]
+            and dtype(actual) == 7
+            and device_type(actual) == device;
+    dispose(expected);
+    valid.
+
+zeros3(device: Int): Tensor ->
+    placed([0.0, 0.0, 0.0], device).
+
+zeros5(device: Int): Tensor ->
+    placed([0.0, 0.0, 0.0, 0.0, 0.0], device).
+
+zeros7(device: Int): Tensor ->
+    placed([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], device).
+
+verify_celu(device: Int): Bool ->
+    let input = placed([-2.0, -1.0, 0.0, 1.0, 2.0], device);
+    let int_value = celu_int(input, 1);
+    let float_value = celu_float(input, 0.5);
+    let int_out = zeros5(device);
+    let float_out = zeros5(device);
+    let int_mutation = placed([-2.0, -1.0, 0.0, 1.0, 2.0], device);
+    let float_mutation = placed([-2.0, -1.0, 0.0, 1.0, 2.0], device);
+    celu_out_int(int_out, input, 1);
+    celu_out_float(float_out, input, 0.5);
+    celu_in_place_int(int_mutation, 1);
+    celu_in_place_float(float_mutation, 0.5);
+    let valid =
+        matches(int_value, [-0.8646647167633873, -0.6321205588285577, 0.0, 1.0, 2.0], device)
+            and matches(float_value, [-0.4908421805556329, -0.43233235838169365, 0.0, 1.0, 2.0], device)
+            and equal(int_out, int_value)
+            and equal(float_out, float_value)
+            and equal(int_mutation, int_value)
+            and equal(float_mutation, float_value);
+    (dispose(float_mutation); dispose(int_mutation); dispose(float_out); dispose(int_out); dispose(float_value); dispose(int_value); dispose(input); valid).
+
+verify_elu(device: Int): Bool ->
+    let input = placed([-2.0, -1.0, 0.0, 1.0, 2.0], device);
+    let gradient = placed([1.0, 2.0, 3.0, 4.0, 5.0], device);
+    let int_value = elu_int(input, 1, 1, 1);
+    let float_value = elu_float(input, 0.5, 2.0, 0.5);
+    let int_out = zeros5(device);
+    let float_out = zeros5(device);
+    let int_mutation = placed([-2.0, -1.0, 0.0, 1.0, 2.0], device);
+    let float_mutation = placed([-2.0, -1.0, 0.0, 1.0, 2.0], device);
+    let int_backward = elu_backward_int(gradient, 1, 1, 1, false, input);
+    let float_backward = elu_backward_float(gradient, 0.5, 2.0, 0.5, false, input);
+    let result_backward = elu_backward_float(gradient, 0.5, 2.0, 0.5, true, float_value);
+    let int_backward_out = zeros5(device);
+    let float_backward_out = zeros5(device);
+    elu_out_int(int_out, input, 1, 1, 1);
+    elu_out_float(float_out, input, 0.5, 2.0, 0.5);
+    elu_in_place_int(int_mutation, 1, 1, 1);
+    elu_in_place_float(float_mutation, 0.5, 2.0, 0.5);
+    elu_backward_out_int(int_backward_out, gradient, 1, 1, 1, false, input);
+    elu_backward_out_float(float_backward_out, gradient, 0.5, 2.0, 0.5, false, input);
+    let valid =
+        matches(int_value, [-0.8646647167633873, -0.6321205588285577, 0.0, 1.0, 2.0], device)
+            and matches(float_value, [-0.6321205588285577, -0.3934693402873666, 0.0, 2.0, 4.0], device)
+            and equal(int_out, int_value)
+            and equal(float_out, float_value)
+            and equal(int_mutation, int_value)
+            and equal(float_mutation, float_value)
+            and matches(int_backward, [0.1353352832366127, 0.7357588823428847, 3.0, 4.0, 5.0], device)
+            and matches(float_backward, [0.18393972058572117, 0.6065306597126334, 1.5, 8.0, 10.0], device)
+            and equal(result_backward, float_backward)
+            and equal(int_backward_out, int_backward)
+            and equal(float_backward_out, float_backward);
+    (dispose(float_backward_out); dispose(int_backward_out); dispose(result_backward); dispose(float_backward); dispose(int_backward); dispose(float_mutation); dispose(int_mutation); dispose(float_out); dispose(int_out); dispose(float_value); dispose(int_value); dispose(gradient); dispose(input); valid).
+
+verify_hardtanh(device: Int): Bool ->
+    let input = placed([-2.0, -1.0, -0.5, 0.0, 0.5, 1.0, 2.0], device);
+    let gradient = placed([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0], device);
+    let int_value = hardtanh_int(input, -1, 1);
+    let float_value = hardtanh_float(input, -0.5, 0.5);
+    let inverted = hardtanh_int(input, 2, 1);
+    let int_out = zeros7(device);
+    let float_out = zeros7(device);
+    let int_mutation = placed([-2.0, -1.0, -0.5, 0.0, 0.5, 1.0, 2.0], device);
+    let float_mutation = placed([-2.0, -1.0, -0.5, 0.0, 0.5, 1.0, 2.0], device);
+    let int_backward = hardtanh_backward_int(gradient, input, -1, 1);
+    let float_backward = hardtanh_backward_float(gradient, input, -0.5, 0.5);
+    let int_backward_out = zeros7(device);
+    let float_backward_out = zeros7(device);
+    hardtanh_out_int(int_out, input, -1, 1);
+    hardtanh_out_float(float_out, input, -0.5, 0.5);
+    hardtanh_in_place_int(int_mutation, -1, 1);
+    hardtanh_in_place_float(float_mutation, -0.5, 0.5);
+    hardtanh_backward_out_int(int_backward_out, gradient, input, -1, 1);
+    hardtanh_backward_out_float(float_backward_out, gradient, input, -0.5, 0.5);
+    let valid =
+        matches(int_value, [-1.0, -1.0, -0.5, 0.0, 0.5, 1.0, 1.0], device)
+            and matches(float_value, [-0.5, -0.5, -0.5, 0.0, 0.5, 0.5, 0.5], device)
+            and matches(inverted, [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], device)
+            and equal(int_out, int_value)
+            and equal(float_out, float_value)
+            and equal(int_mutation, int_value)
+            and equal(float_mutation, float_value)
+            and matches(int_backward, [0.0, 0.0, 3.0, 4.0, 5.0, 0.0, 0.0], device)
+            and matches(float_backward, [0.0, 0.0, 0.0, 4.0, 0.0, 0.0, 0.0], device)
+            and equal(int_backward_out, int_backward)
+            and equal(float_backward_out, float_backward);
+    (dispose(float_backward_out); dispose(int_backward_out); dispose(float_backward); dispose(int_backward); dispose(float_mutation); dispose(int_mutation); dispose(float_out); dispose(int_out); dispose(inverted); dispose(float_value); dispose(int_value); dispose(gradient); dispose(input); valid).
+
+verify_leaky(device: Int): Bool ->
+    let input = placed([-2.0, 0.0, 2.0], device);
+    let gradient = placed([1.0, 2.0, 3.0], device);
+    let int_value = leaky_relu_int(input, 1);
+    let float_value = leaky_relu_float(input, 0.25);
+    let int_out = zeros3(device);
+    let float_out = zeros3(device);
+    let int_mutation = placed([-2.0, 0.0, 2.0], device);
+    let float_mutation = placed([-2.0, 0.0, 2.0], device);
+    let int_backward = leaky_relu_backward_int(gradient, input, 1, false);
+    let float_backward = leaky_relu_backward_float(gradient, input, 0.25, false);
+    let result_backward = leaky_relu_backward_float(gradient, float_value, 0.25, true);
+    let int_backward_out = zeros3(device);
+    let float_backward_out = zeros3(device);
+    leaky_relu_out_int(int_out, input, 1);
+    leaky_relu_out_float(float_out, input, 0.25);
+    leaky_relu_in_place_int(int_mutation, 1);
+    leaky_relu_in_place_float(float_mutation, 0.25);
+    leaky_relu_backward_out_int(int_backward_out, gradient, input, 1, false);
+    leaky_relu_backward_out_float(float_backward_out, gradient, input, 0.25, false);
+    let valid =
+        matches(int_value, [-2.0, 0.0, 2.0], device)
+            and matches(float_value, [-0.5, 0.0, 2.0], device)
+            and equal(int_out, int_value)
+            and equal(float_out, float_value)
+            and equal(int_mutation, int_value)
+            and equal(float_mutation, float_value)
+            and matches(int_backward, [1.0, 2.0, 3.0], device)
+            and matches(float_backward, [0.25, 0.5, 3.0], device)
+            and equal(result_backward, float_backward)
+            and equal(int_backward_out, int_backward)
+            and equal(float_backward_out, float_backward);
+    (dispose(float_backward_out); dispose(int_backward_out); dispose(result_backward); dispose(float_backward); dispose(int_backward); dispose(float_mutation); dispose(int_mutation); dispose(float_out); dispose(int_out); dispose(float_value); dispose(int_value); dispose(gradient); dispose(input); valid).
+
+verify(device: Int): Bool ->
+    verify_celu(device) and verify_elu(device) and verify_hardtanh(device) and verify_leaky(device).
+
+@test
+pub extended_activation_on_cpu_and_required_cuda(): Bool ->
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    let cpu_valid = verify(0);
+    cpu_valid and cuda_valid.

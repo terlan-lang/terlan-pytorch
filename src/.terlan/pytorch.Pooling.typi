@@ -1,0 +1,227 @@
+//! Generated direct-CXX implementation of adaptive, average, maximum, fractional, backward, and unpooling operations.
+
+module pytorch.Pooling.
+
+/// Executes the exact aten::adaptive_avg_pool1d schema.
+
+pub adaptive_avg_pool1d(tensor: Tensor, output_size: List[Int]): Tensor.
+
+/// Writes adaptive one-dimensional average-pool values into retained storage.
+
+pub adaptive_avg_pool1d_out(output: Tensor, tensor: Tensor, output_size: List[Int]): Unit.
+
+/// Writes adaptive two-dimensional average-pool values into retained storage.
+
+pub adaptive_avg_pool2d_out(output: Tensor, tensor: Tensor, output_size: List[Int]): Unit.
+
+/// Writes adaptive three-dimensional average-pool gradients into retained storage.
+
+pub adaptive_avg_pool3d_backward_out(output: Tensor, gradient: Tensor, tensor: Tensor): Unit.
+
+/// Writes adaptive three-dimensional average-pool values into retained storage.
+
+pub adaptive_avg_pool3d_out(output: Tensor, tensor: Tensor, output_size: List[Int]): Unit.
+
+/// Executes the exact aten::adaptive_max_pool1d schema and returns values with indices.
+
+pub adaptive_max_pool1d(tensor: Tensor, output_size: List[Int]): {Tensor, Tensor}.
+
+/// Executes the exact aten::adaptive_max_pool2d schema and returns values with indices.
+
+pub adaptive_max_pool2d(tensor: Tensor, output_size: List[Int]): {Tensor, Tensor}.
+
+/// Routes adaptive two-dimensional maximum-pool gradients through saved source indices.
+
+pub adaptive_max_pool2d_backward(gradient: Tensor, tensor: Tensor, indices: Tensor): Tensor.
+
+/// Writes adaptive two-dimensional maximum-pool gradients into retained storage.
+
+pub adaptive_max_pool2d_backward_out(output: Tensor, gradient: Tensor, tensor: Tensor, indices: Tensor): Unit.
+
+/// Writes adaptive two-dimensional maximum-pool values and indices into retained storage.
+
+pub adaptive_max_pool2d_out(output: Tensor, indices_output: Tensor, tensor: Tensor, output_size: List[Int]): Unit.
+
+/// Executes the exact aten::adaptive_max_pool3d schema and returns values with indices.
+
+pub adaptive_max_pool3d(tensor: Tensor, output_size: List[Int]): {Tensor, Tensor}.
+
+/// Routes adaptive three-dimensional maximum-pool gradients through saved source indices.
+
+pub adaptive_max_pool3d_backward(gradient: Tensor, tensor: Tensor, indices: Tensor): Tensor.
+
+/// Writes adaptive three-dimensional maximum-pool gradients into retained storage.
+
+pub adaptive_max_pool3d_backward_out(output: Tensor, gradient: Tensor, tensor: Tensor, indices: Tensor): Unit.
+
+/// Writes adaptive three-dimensional maximum-pool values and indices into retained storage.
+
+pub adaptive_max_pool3d_out(output: Tensor, indices_output: Tensor, tensor: Tensor, output_size: List[Int]): Unit.
+
+/// Executes the exact aten::avg_pool1d schema with all trailing defaults.
+
+pub avg_pool1d(tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], ceil_mode: Bool = false, count_include_pad: Bool = true): Tensor.
+
+/// Writes one-dimensional average-pool values into retained storage.
+
+pub avg_pool1d_out(output: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], ceil_mode: Bool = false, count_include_pad: Bool = true): Unit.
+
+/// Computes two-dimensional average pooling with no divisor override.
+
+pub avg_pool2d(tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], ceil_mode: Bool = false, count_include_pad: Bool = true): Tensor.
+
+/// Routes a two-dimensional average-pool gradient back to the input shape.
+
+pub avg_pool2d_backward(gradient: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], ceil_mode: Bool, count_include_pad: Bool): Tensor.
+
+/// Routes a two-dimensional average-pool gradient with an explicit divisor override.
+
+pub avg_pool2d_backward_divisor(gradient: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], ceil_mode: Bool, count_include_pad: Bool, divisor: Int): Tensor.
+
+/// Writes two-dimensional average-pool gradients without a divisor override into retained storage.
+
+pub avg_pool2d_backward_out(output: Tensor, gradient: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], ceil_mode: Bool, count_include_pad: Bool): Unit.
+
+/// Writes two-dimensional average-pool gradients with an explicit divisor override into retained storage.
+
+pub avg_pool2d_backward_out_divisor(output: Tensor, gradient: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], ceil_mode: Bool, count_include_pad: Bool, divisor: Int): Unit.
+
+/// Computes two-dimensional average pooling with an explicit divisor override.
+
+pub avg_pool2d_divisor(tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], ceil_mode: Bool, count_include_pad: Bool, divisor: Int): Tensor.
+
+/// Writes two-dimensional average-pool values without a divisor override into retained storage.
+
+pub avg_pool2d_out(output: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], ceil_mode: Bool = false, count_include_pad: Bool = true): Unit.
+
+/// Writes two-dimensional average-pool values with an explicit divisor override into retained storage.
+
+pub avg_pool2d_out_divisor(output: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], ceil_mode: Bool, count_include_pad: Bool, divisor: Int): Unit.
+
+/// Computes three-dimensional average pooling with no divisor override.
+
+pub avg_pool3d(tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], ceil_mode: Bool = false, count_include_pad: Bool = true): Tensor.
+
+/// Routes a three-dimensional average-pool gradient back to the input shape.
+
+pub avg_pool3d_backward(gradient: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], ceil_mode: Bool, count_include_pad: Bool): Tensor.
+
+/// Routes a three-dimensional average-pool gradient with an explicit divisor override.
+
+pub avg_pool3d_backward_divisor(gradient: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], ceil_mode: Bool, count_include_pad: Bool, divisor: Int): Tensor.
+
+/// Writes three-dimensional average-pool gradients without a divisor override into retained storage.
+
+pub avg_pool3d_backward_out(output: Tensor, gradient: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], ceil_mode: Bool, count_include_pad: Bool): Unit.
+
+/// Writes three-dimensional average-pool gradients with an explicit divisor override into retained storage.
+
+pub avg_pool3d_backward_out_divisor(output: Tensor, gradient: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], ceil_mode: Bool, count_include_pad: Bool, divisor: Int): Unit.
+
+/// Computes three-dimensional average pooling with an explicit divisor override.
+
+pub avg_pool3d_divisor(tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], ceil_mode: Bool, count_include_pad: Bool, divisor: Int): Tensor.
+
+/// Writes three-dimensional average-pool values without a divisor override into retained storage.
+
+pub avg_pool3d_out(output: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], ceil_mode: Bool = false, count_include_pad: Bool = true): Unit.
+
+/// Writes three-dimensional average-pool values with an explicit divisor override into retained storage.
+
+pub avg_pool3d_out_divisor(output: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], ceil_mode: Bool, count_include_pad: Bool, divisor: Int): Unit.
+
+/// Executes exact two-dimensional fractional maximum pooling and returns values with source indices.
+
+pub fractional_max_pool2d(tensor: Tensor, kernel_size: List[Int], output_size: List[Int], random_samples: Tensor): {Tensor, Tensor}.
+
+/// Routes fractional two-dimensional maximum-pool gradients through saved source indices.
+
+pub fractional_max_pool2d_backward(gradient: Tensor, tensor: Tensor, kernel_size: List[Int], output_size: List[Int], indices: Tensor): Tensor.
+
+/// Writes fractional two-dimensional maximum-pool gradients into retained storage.
+
+pub fractional_max_pool2d_backward_out(output: Tensor, gradient: Tensor, tensor: Tensor, kernel_size: List[Int], output_size: List[Int], indices: Tensor): Unit.
+
+/// Writes fractional two-dimensional maximum-pool values and indices into retained storage.
+
+pub fractional_max_pool2d_out(output: Tensor, indices_output: Tensor, tensor: Tensor, kernel_size: List[Int], output_size: List[Int], random_samples: Tensor): Unit.
+
+/// Executes exact three-dimensional fractional maximum pooling and returns values with source indices.
+
+pub fractional_max_pool3d(tensor: Tensor, kernel_size: List[Int], output_size: List[Int], random_samples: Tensor): {Tensor, Tensor}.
+
+/// Routes fractional three-dimensional maximum-pool gradients through saved source indices.
+
+pub fractional_max_pool3d_backward(gradient: Tensor, tensor: Tensor, kernel_size: List[Int], output_size: List[Int], indices: Tensor): Tensor.
+
+/// Writes fractional three-dimensional maximum-pool gradients into retained storage.
+
+pub fractional_max_pool3d_backward_out(output: Tensor, gradient: Tensor, tensor: Tensor, kernel_size: List[Int], output_size: List[Int], indices: Tensor): Unit.
+
+/// Writes fractional three-dimensional maximum-pool values and indices into retained storage.
+
+pub fractional_max_pool3d_out(output: Tensor, indices_output: Tensor, tensor: Tensor, kernel_size: List[Int], output_size: List[Int], random_samples: Tensor): Unit.
+
+/// Executes the exact aten::max_pool1d schema with all trailing defaults.
+
+pub max_pool1d(tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], dilation: List[Int] = [1], ceil_mode: Bool = false): Tensor.
+
+/// Executes the exact aten::max_pool1d_with_indices schema with all trailing defaults.
+
+pub max_pool1d_with_indices(tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], dilation: List[Int] = [1], ceil_mode: Bool = false): {Tensor, Tensor}.
+
+/// Executes the exact aten::max_pool2d schema with all trailing defaults.
+
+pub max_pool2d(tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], dilation: List[Int] = [1], ceil_mode: Bool = false): Tensor.
+
+/// Executes the exact aten::max_pool2d_with_indices schema with all trailing defaults.
+
+pub max_pool2d_with_indices(tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], dilation: List[Int] = [1], ceil_mode: Bool = false): {Tensor, Tensor}.
+
+/// Routes indexed two-dimensional maximum-pool gradients to source positions.
+
+pub max_pool2d_with_indices_backward(gradient: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], ceil_mode: Bool, indices: Tensor): Tensor.
+
+/// Writes indexed two-dimensional maximum-pool gradients into retained storage.
+
+pub max_pool2d_with_indices_backward_out(output: Tensor, gradient: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], ceil_mode: Bool, indices: Tensor): Unit.
+
+/// Writes indexed two-dimensional maximum-pool values and indices into retained storage.
+
+pub max_pool2d_with_indices_out(output: Tensor, indices_output: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], dilation: List[Int] = [1], ceil_mode: Bool = false): Unit.
+
+/// Executes the exact aten::max_pool3d schema with all trailing defaults.
+
+pub max_pool3d(tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], dilation: List[Int] = [1], ceil_mode: Bool = false): Tensor.
+
+/// Executes the exact aten::max_pool3d_with_indices schema with all trailing defaults.
+
+pub max_pool3d_with_indices(tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], dilation: List[Int] = [1], ceil_mode: Bool = false): {Tensor, Tensor}.
+
+/// Routes indexed three-dimensional maximum-pool gradients to source positions.
+
+pub max_pool3d_with_indices_backward(gradient: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], ceil_mode: Bool, indices: Tensor): Tensor.
+
+/// Writes indexed three-dimensional maximum-pool gradients into retained storage.
+
+pub max_pool3d_with_indices_backward_out(output: Tensor, gradient: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int], padding: List[Int], dilation: List[Int], ceil_mode: Bool, indices: Tensor): Unit.
+
+/// Writes indexed three-dimensional maximum-pool values and indices into retained storage.
+
+pub max_pool3d_with_indices_out(output: Tensor, indices_output: Tensor, tensor: Tensor, kernel_size: List[Int], stride: List[Int] = [], padding: List[Int] = [0], dilation: List[Int] = [1], ceil_mode: Bool = false): Unit.
+
+/// Scatters two-dimensional maximum-pool values back to their indexed output positions.
+
+pub max_unpool2d(tensor: Tensor, indices: Tensor, output_size: List[Int]): Tensor.
+
+/// Writes two-dimensional maximum-unpool values into retained storage.
+
+pub max_unpool2d_out(output: Tensor, tensor: Tensor, indices: Tensor, output_size: List[Int]): Unit.
+
+/// Scatters three-dimensional maximum-pool values back to their indexed output positions.
+
+pub max_unpool3d(tensor: Tensor, indices: Tensor, output_size: List[Int], stride: List[Int], padding: List[Int]): Tensor.
+
+/// Writes three-dimensional maximum-unpool values into retained storage.
+
+pub max_unpool3d_out(output: Tensor, tensor: Tensor, indices: Tensor, output_size: List[Int], stride: List[Int], padding: List[Int]): Unit.

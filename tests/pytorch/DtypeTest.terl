@@ -1,0 +1,31 @@
+module pytorch.DtypeTest.
+
+import pytorch.Tensor.{device_index, device_type, dispose, dtype, from_float, from_floats, item_bool, item_float, shape, to_dtype}.
+
+@test
+pub conversion_preserves_shape_device_and_source_ownership(): Bool ->
+    let source = from_float(3.75);
+    let integer = to_dtype(source, 4);
+    let restored = to_dtype(integer, 7);
+    let truth = to_dtype(source, 11);
+    let matrix = from_floats([1.25, 2.5, 3.75, 4.0], [2, 2]);
+    let matrix_float32 = to_dtype(matrix, 6);
+    let valid =
+        item_float(source) == 3.75
+            and item_float(integer) == 3.0
+            and item_float(restored) == 3.0
+            and item_bool(truth)
+            and dtype(integer) == 4
+            and dtype(restored) == 7
+            and dtype(truth) == 11
+            and dtype(matrix_float32) == 6
+            and shape(matrix_float32) == [2, 2]
+            and device_type(matrix_float32) == 0
+            and device_index(matrix_float32) == -1;
+    dispose(matrix_float32);
+    dispose(matrix);
+    dispose(truth);
+    dispose(restored);
+    dispose(integer);
+    dispose(source);
+    valid.

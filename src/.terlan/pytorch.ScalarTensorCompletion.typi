@@ -1,0 +1,14 @@
+//! Typed scalar-tensor construction compatibility wrapper.
+
+module pytorch.ScalarTensorCompletion.
+
+pub scalar_tensor(scalar: Scalar): Tensor.
+
+/// Constructs a zero-dimensional tensor while preserving integer versus
+/// floating scalar dtype inference.
+
+pub scalar_tensor_native(scalar_is_integer: Bool, scalar_integer: Int, scalar_floating: Float): Tensor.
+
+/// Writes a scalar tensor into caller-owned output storage.
+
+pub scalar_tensor_out(output: Tensor, scalar: Scalar): Unit.

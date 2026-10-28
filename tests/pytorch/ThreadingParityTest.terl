@@ -1,0 +1,11 @@
+/**
+ * CPU runtime evidence for LibTorch thread configuration.
+ */
+module pytorch.ThreadingParityTest.
+
+import pytorch.BackendAvailability.{get_num_interop_threads, get_num_threads, init_num_threads, set_num_interop_threads, set_num_threads}.
+
+@test
+pub threading_configuration_matches_libtorch(): Bool ->
+    init_num_threads();
+    let threads = get_num_threads(); let interop = get_num_interop_threads(); (set_num_threads(threads); set_num_interop_threads(interop); threads > 0 and interop > 0).

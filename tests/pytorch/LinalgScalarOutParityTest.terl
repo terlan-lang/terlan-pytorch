@@ -1,0 +1,90 @@
+module pytorch.LinalgScalarOutParityTest.
+
+import pytorch.Linalg.{linalg_cond_default_out, linalg_cond_float_out, linalg_cond_int_out, linalg_matrix_norm_float_configured_out, linalg_matrix_norm_float_out, linalg_matrix_norm_int_configured_out, linalg_matrix_norm_int_out, linalg_norm_default_out, linalg_norm_float_configured_out, linalg_norm_float_out, linalg_norm_int_configured_out, linalg_norm_int_out, linalg_vector_norm_float_configured_out, linalg_vector_norm_float_out, linalg_vector_norm_int_configured_out, linalg_vector_norm_int_out}.
+import pytorch.Tensor.{dispose, dtype, from_float, from_floats, item_float, shape, zeros}.
+
+import type pytorch.Tensor.DType.
+
+/**
+ * Proves absent, integer, and floating condition-number output orders.
+ */
+@test
+pub scalar_condition_out_orders_match_libtorch(): Bool ->
+    let condition_matrix = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let condition = from_float(0.0);
+    linalg_cond_default_out(condition, condition_matrix);
+    let condition_default = item_float(condition);
+    (linalg_cond_int_out(condition, condition_matrix, 1); let condition_int = item_float(condition);
+(linalg_cond_float_out(condition, condition_matrix, 2.0); let condition_float = item_float(condition);
+let valid =
+    condition_default > 14.92
+        and condition_default < 14.94
+        and condition_int > 20.99
+        and condition_int < 21.01
+        and condition_float > 14.92
+        and condition_float < 14.94
+        and shape(condition) == []
+        and shape(condition_matrix) == [2, 2];
+(dispose(condition); dispose(condition_matrix); valid))).
+
+/**
+ * Proves all matrix and general Scalar norm output forms.
+ */
+@test
+pub scalar_matrix_and_general_norm_outputs_match_libtorch(): Bool ->
+    let matrix = from_floats([3.0, 4.0, 0.0, 0.0], [2, 2]);
+    let matrix_default = zeros([0], DType.FLOAT64);
+    let matrix_configured = zeros([0], DType.FLOAT64);
+    let norm_default = zeros([0], DType.FLOAT64);
+    let norm_configured = zeros([0], DType.FLOAT64);
+    let scalar_type = dtype(matrix);
+    linalg_matrix_norm_int_out(matrix_default, matrix, 1);
+    let matrix_int = item_float(matrix_default);
+    (linalg_matrix_norm_float_out(matrix_default, matrix, 2.0); let matrix_float = item_float(matrix_default);
+(linalg_matrix_norm_int_configured_out(matrix_configured, matrix, 1, [0, 1], true, scalar_type); let matrix_int_configured = item_float(matrix_configured);
+(linalg_matrix_norm_float_configured_out(matrix_configured, matrix, 2.0, [0, 1], true, scalar_type); let matrix_float_configured = item_float(matrix_configured);
+(linalg_norm_default_out(norm_default, matrix); let norm_absent = item_float(norm_default);
+(linalg_norm_int_out(norm_default, matrix, 1); let norm_int = item_float(norm_default);
+(linalg_norm_float_out(norm_default, matrix, 2.0); let norm_float = item_float(norm_default);
+(linalg_norm_int_configured_out(norm_configured, matrix, 1, [0, 1], true, scalar_type); let norm_int_configured = item_float(norm_configured);
+(linalg_norm_float_configured_out(norm_configured, matrix, 2.0, [0, 1], true, scalar_type); let norm_float_configured = item_float(norm_configured);
+let valid =
+    matrix_int == 4.0
+        and matrix_float == 5.0
+        and matrix_int_configured == 4.0
+        and matrix_float_configured == 5.0
+        and norm_absent == 5.0
+        and norm_int == 4.0
+        and norm_float == 5.0
+        and norm_int_configured == 4.0
+        and norm_float_configured == 5.0
+        and shape(matrix_default) == []
+        and shape(matrix_configured) == [1, 1]
+        and shape(norm_default) == []
+        and shape(norm_configured) == [1, 1]
+        and shape(matrix) == [2, 2];
+(dispose(norm_configured); dispose(norm_default); dispose(matrix_configured); dispose(matrix_default); dispose(matrix); valid))))))))).
+
+/**
+ * Proves all vector Scalar norm output forms.
+ */
+@test
+pub scalar_vector_norm_outputs_match_libtorch(): Bool ->
+    let matrix = from_floats([3.0, 4.0, 0.0, 0.0], [2, 2]);
+    let vector_default = zeros([0], DType.FLOAT64);
+    let vector_configured = zeros([0], DType.FLOAT64);
+    let scalar_type = dtype(matrix);
+    linalg_vector_norm_int_out(vector_default, matrix);
+    let vector_int = item_float(vector_default);
+    (linalg_vector_norm_float_out(vector_default, matrix, 1.0); let vector_float = item_float(vector_default);
+(linalg_vector_norm_int_configured_out(vector_configured, matrix, 1, [0, 1], true, scalar_type); let vector_int_configured = item_float(vector_configured);
+(linalg_vector_norm_float_configured_out(vector_configured, matrix, 2.0, [0, 1], true, scalar_type); let vector_float_configured = item_float(vector_configured);
+let valid =
+    vector_int == 5.0
+        and vector_float == 7.0
+        and vector_int_configured == 7.0
+        and vector_float_configured == 5.0
+        and shape(vector_default) == []
+        and shape(vector_configured) == [1, 1]
+        and shape(matrix) == [2, 2];
+(dispose(vector_configured); dispose(vector_default); dispose(matrix); valid)))).

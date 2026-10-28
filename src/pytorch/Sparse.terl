@@ -1,0 +1,507 @@
+/**
+ * Generated CXX sparse tensor operations.
+ */
+module pytorch.Sparse.
+
+import type pytorch.Tensor.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.sparse_dim}
+pub sparse_dim(tensor: Tensor): Int ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.dense_dim}
+pub dense_dim(tensor: Tensor): Int ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.is_coalesced}
+pub is_coalesced(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.to_sparse_dimensions}
+pub to_sparse_dimensions(tensor: Tensor, sparse_dimensions: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.to_dense}
+pub to_dense(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.coalesce}
+pub coalesce(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.indices}
+pub indices(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.values}
+pub values(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.crow_indices}
+pub crow_indices(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.col_indices}
+pub col_indices(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.ccol_indices}
+pub ccol_indices(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.row_indices}
+pub row_indices(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.sparse_mask_out}
+pub sparse_mask_out(output: Tensor, tensor: Tensor, mask: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.to_sparse_csr}
+pub to_sparse_csr(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.to_sparse_csr_configured}
+pub to_sparse_csr_configured(tensor: Tensor, dense_dimensions: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.to_sparse_csc}
+pub to_sparse_csc(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.to_sparse_csc_configured}
+pub to_sparse_csc_configured(tensor: Tensor, dense_dimensions: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.to_sparse_bsr}
+pub to_sparse_bsr(tensor: Tensor, block_size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.to_sparse_bsr_configured}
+pub to_sparse_bsr_configured(tensor: Tensor, block_size: List[Int], dense_dimensions: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.to_sparse_bsc}
+pub to_sparse_bsc(tensor: Tensor, block_size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.to_sparse_bsc_configured}
+pub to_sparse_bsc_configured(tensor: Tensor, block_size: List[Int], dense_dimensions: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.copy_sparse_to_sparse}
+pub copy_sparse_to_sparse(tensor: Tensor, source: Tensor, non_blocking: Bool = false): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.copy_sparse_to_sparse_out}
+pub copy_sparse_to_sparse_out(
+    output: Tensor,
+    tensor: Tensor,
+    source: Tensor,
+    non_blocking: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.resize_as_sparse}
+pub resize_as_sparse(tensor: Tensor, sparse_template: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.resize_as_sparse_in_place}
+pub resize_as_sparse_in_place(tensor: Tensor, sparse_template: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.sparse_resize}
+pub sparse_resize(
+    tensor: Tensor,
+    size: List[Int],
+    sparse_dimensions: Int,
+    dense_dimensions: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.sparse_resize_in_place}
+pub sparse_resize_in_place(
+    tensor: Tensor,
+    size: List[Int],
+    sparse_dimensions: Int,
+    dense_dimensions: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.sparse_resize_and_clear}
+pub sparse_resize_and_clear(
+    tensor: Tensor,
+    size: List[Int],
+    sparse_dimensions: Int,
+    dense_dimensions: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.sparse_resize_and_clear_in_place}
+pub sparse_resize_and_clear_in_place(
+    tensor: Tensor,
+    size: List[Int],
+    sparse_dimensions: Int,
+    dense_dimensions: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.crow_indices_copy}
+pub crow_indices_copy(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.crow_indices_copy_out}
+pub crow_indices_copy_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.col_indices_copy}
+pub col_indices_copy(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.col_indices_copy_out}
+pub col_indices_copy_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.ccol_indices_copy}
+pub ccol_indices_copy(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.ccol_indices_copy_out}
+pub ccol_indices_copy_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.row_indices_copy}
+pub row_indices_copy(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.row_indices_copy_out}
+pub row_indices_copy_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.indices_copy}
+pub indices_copy(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.indices_copy_out}
+pub indices_copy_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.values_copy}
+pub values_copy(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.values_copy_out}
+pub values_copy_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.sparse_mask}
+pub sparse_mask(tensor: Tensor, mask: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.copy_sparse_to_sparse_in_place}
+pub copy_sparse_to_sparse_in_place(tensor: Tensor, source: Tensor, non_blocking: Bool = false): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.resize_as_sparse_out}
+pub resize_as_sparse_out(output: Tensor, tensor: Tensor, sparse_template: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.sparse_resize_out}
+pub sparse_resize_out(
+    output: Tensor,
+    tensor: Tensor,
+    size: List[Int],
+    sparse_dimensions: Int,
+    dense_dimensions: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.sparse_resize_and_clear_out}
+pub sparse_resize_and_clear_out(
+    output: Tensor,
+    tensor: Tensor,
+    size: List[Int],
+    sparse_dimensions: Int,
+    dense_dimensions: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.to_dense_configured}
+pub to_dense_configured(
+    tensor: Tensor,
+    dtype: Int,
+    has_dtype: Bool,
+    masked_grad: Bool,
+    has_masked_grad: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.to_sparse_configured}
+pub to_sparse_configured(
+    tensor: Tensor,
+    layout: Int,
+    has_layout: Bool,
+    block_size: List[Int],
+    has_block_size: Bool,
+    dense_dimensions: Int,
+    has_dense_dimensions: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.coo_empty_configured}
+pub coo_empty_configured(
+    size: List[Int],
+    dtype: Int,
+    has_dtype: Bool,
+    layout: Int,
+    has_layout: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.coo_empty_out}
+pub coo_empty_out(output: Tensor, size: List[Int]): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.coo_from_components_configured}
+pub coo_from_components_configured(
+    indices: Tensor,
+    values: Tensor,
+    size: List[Int],
+    has_size: Bool,
+    dtype: Int,
+    has_dtype: Bool,
+    layout: Int,
+    has_layout: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool,
+    is_coalesced: Bool,
+    has_is_coalesced: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.compressed_from_components_configured}
+pub compressed_from_components_configured(
+    kind: Int,
+    compressed_indices: Tensor,
+    plain_indices: Tensor,
+    values: Tensor,
+    size: List[Int],
+    has_size: Bool,
+    dtype: Int,
+    has_dtype: Bool,
+    layout: Int,
+    has_layout: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.sampled_addmm_numeric}
+pub sampled_addmm_numeric(
+    mask: Tensor,
+    left: Tensor,
+    right: Tensor,
+    beta: Float,
+    beta_is_integer: Bool,
+    alpha: Float,
+    alpha_is_integer: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.sampled_addmm_numeric_out}
+pub sampled_addmm_numeric_out(
+    output: Tensor,
+    mask: Tensor,
+    left: Tensor,
+    right: Tensor,
+    beta: Float,
+    beta_is_integer: Bool,
+    alpha: Float,
+    alpha_is_integer: Bool,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX sparse operation.
+ */
+@compiler.native {pytorch.sparse.to_dense_backward_configured}
+pub to_dense_backward_configured(
+    gradient: Tensor,
+    input: Tensor,
+    masked_grad: Bool,
+    has_masked_grad: Bool,
+): Tensor ->
+    native.

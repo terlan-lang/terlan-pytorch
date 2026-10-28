@@ -1,0 +1,10 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{amax, from_int, unsqueeze}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let scalar = from_int(4);
+    let vector = unsqueeze(scalar, -1);
+    let result = amax(vector, [2], false);
+    println("PYTORCH_AMAX_DIMENSION_NOT_REJECTED").

@@ -1,0 +1,140 @@
+/**
+ * Public affine-grid and spatial-sampling numerical evidence.
+ */
+module pytorch.SpatialParityTest.
+
+import pytorch.Spatial.{affine_grid_generator, affine_grid_generator_backward, affine_grid_generator_out, grid_sample, grid_sampler, grid_sampler_2d, grid_sampler_2d_backward, grid_sampler_2d_backward_out, grid_sampler_2d_out, grid_sampler_3d, grid_sampler_3d_backward, grid_sampler_3d_backward_out, grid_sampler_3d_out}.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+import pytorch.TypeRelations.equal.
+
+/**
+ * Checks exact corner grids, 2-D identity sampling, retained output, and gradients.
+ */
+@test
+pub planar_affine_sampling_and_gradients(): Bool ->
+    let theta = from_floats([1.0, 0.0, 0.0, 0.0, 1.0, 0.0], [1, 2, 3]);
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2]);
+    let grid = affine_grid_generator(theta, [1, 1, 2, 2], true);
+    let wanted_grid = from_floats([-1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0], [1, 2, 2, 2]);
+    let grid_output = from_floats([], [0]);
+    affine_grid_generator_out(grid_output, theta, [1, 1, 2, 2], true);
+    let sampled = grid_sampler_2d(input, grid, 0, 0, true);
+    let generic = grid_sampler(input, grid, 1, 1, true);
+    let public_sample = grid_sample(input, grid, "bilinear", "zeros", true);
+    let output = from_floats([], [0]);
+    (grid_sampler_2d_out(output, input, grid, 2, 2, true); let gradient = from_floats([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], [1, 2, 2, 2]);
+let theta_gradient = affine_grid_generator_backward(gradient, [1, 1, 2, 2], true);
+let wanted_gradient = from_floats([0.0, 0.0, 4.0, 0.0, 0.0, 4.0], [1, 2, 3]);
+let valid =
+    equal(grid, wanted_grid)
+        and equal(grid_output, wanted_grid)
+        and equal(sampled, input)
+        and equal(generic, input)
+        and equal(public_sample, input)
+        and equal(output, input)
+        and shape(output) == [1, 1, 2, 2]
+        and equal(theta_gradient, wanted_gradient);
+(dispose(wanted_gradient); dispose(theta_gradient); dispose(gradient); dispose(output); dispose(public_sample); dispose(generic); dispose(sampled); dispose(grid_output); dispose(wanted_grid); dispose(grid); dispose(input); dispose(theta); valid)).
+
+/**
+ * Checks 3-D identity grids and trilinear interpolation at the volume center.
+ */
+@test
+pub volumetric_sampling_and_center_interpolation(): Bool ->
+    let theta = from_floats([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], [1, 3, 4]);
+    let input = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [1, 1, 2, 2, 2]);
+    let grid = affine_grid_generator(theta, [1, 1, 2, 2, 2], false);
+    let sampled = grid_sampler_3d(input, grid, 0, 0, false);
+    let generic = grid_sampler(input, grid, 1, 1, false);
+    let output = from_floats([], [0]);
+    grid_sampler_3d_out(output, input, grid, 1, 2, false);
+    let center = from_floats([0.0, 0.0, 0.0], [1, 1, 1, 1, 3]);
+    let average = grid_sampler_3d(input, center, 0, 0, true);
+    let wanted = from_floats([4.5], [1, 1, 1, 1, 1]);
+    let valid =
+        equal(sampled, input)
+            and equal(generic, input)
+            and equal(output, input)
+            and equal(average, wanted);
+    (dispose(wanted); dispose(average); dispose(center); dispose(output); dispose(generic); dispose(sampled); dispose(grid); dispose(input); dispose(theta); valid).
+
+/**
+ * Checks 2-D sampler backward functional and retained-output forms.
+ */
+@test
+pub planar_sampler_backward_forms(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2]);
+    let grid = from_floats([-1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0], [1, 2, 2, 2]);
+    let grad_output = from_floats([1.0, 1.0, 1.0, 1.0], [1, 1, 2, 2]);
+    let {grad_input, grad_grid} = grid_sampler_2d_backward(grad_output, input, grid, 0, 0, true, true, true);
+    let grad_input_out = from_floats([], [0]);
+    let grad_grid_out = from_floats([], [0]);
+    grid_sampler_2d_backward_out(
+        grad_input_out,
+        grad_grid_out,
+        grad_output,
+        input,
+        grid,
+        0,
+        0,
+        true,
+        true,
+        true,
+    );
+    let valid = equal(grad_input, grad_input_out) and equal(grad_grid, grad_grid_out);
+    (dispose(grad_grid_out); dispose(grad_input_out); dispose(grad_grid); dispose(grad_input); dispose(grad_output); dispose(grid); dispose(input); valid).
+
+/**
+ * Checks 3-D sampler backward functional and retained-output forms.
+ */
+@test
+pub volumetric_sampler_backward_forms(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [1, 1, 2, 2, 2]);
+    let grid =
+        from_floats(
+            [
+                -1.0,
+                -1.0,
+                -1.0,
+                1.0,
+                -1.0,
+                -1.0,
+                -1.0,
+                1.0,
+                -1.0,
+                1.0,
+                1.0,
+                -1.0,
+                -1.0,
+                -1.0,
+                1.0,
+                1.0,
+                -1.0,
+                1.0,
+                -1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+            ],
+            [1, 2, 2, 2, 3],
+        );
+    let grad_output = from_floats([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], [1, 1, 2, 2, 2]);
+    let {grad_input, grad_grid} = grid_sampler_3d_backward(grad_output, input, grid, 0, 0, true, true, true);
+    let grad_input_out = from_floats([], [0]);
+    let grad_grid_out = from_floats([], [0]);
+    grid_sampler_3d_backward_out(
+        grad_input_out,
+        grad_grid_out,
+        grad_output,
+        input,
+        grid,
+        0,
+        0,
+        true,
+        true,
+        true,
+    );
+    let valid = equal(grad_input, grad_input_out) and equal(grad_grid, grad_grid_out);
+    (dispose(grad_grid_out); dispose(grad_input_out); dispose(grad_grid); dispose(grad_input); dispose(grad_output); dispose(grid); dispose(input); valid).

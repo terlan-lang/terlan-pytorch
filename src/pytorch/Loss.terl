@@ -1,0 +1,362 @@
+/**
+ * Generated direct-CXX implementation of the public loss surface.
+ */
+module pytorch.Loss.
+
+import type pytorch.Tensor.
+
+/**
+ * Computes cosine embedding loss with explicit margin and reduction.
+ */
+@compiler.native {pytorch.loss.cosine_embedding_loss}
+pub cosine_embedding_loss(
+    input1: Tensor,
+    input2: Tensor,
+    target: Tensor,
+    margin: Float = 0.0,
+    reduction: Int = 1,
+): Tensor ->
+    native.
+
+/**
+ * Computes hinge embedding loss with explicit margin and reduction.
+ */
+@compiler.native {pytorch.loss.hinge_embedding_loss}
+pub hinge_embedding_loss(
+    input: Tensor,
+    target: Tensor,
+    margin: Float = 1.0,
+    reduction: Int = 1,
+): Tensor ->
+    native.
+
+/**
+ * Computes Huber loss with explicit reduction and transition delta.
+ */
+@compiler.native {pytorch.loss.huber_loss}
+pub huber_loss(input: Tensor, target: Tensor, reduction: Int = 1, delta: Float = 1.0): Tensor ->
+    native.
+
+/**
+ * Computes the Huber loss input gradient with explicit reduction and transition delta.
+ */
+@compiler.native {pytorch.loss.huber_loss_backward}
+pub huber_loss_backward(
+    gradient_output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    reduction: Int,
+    delta: Float,
+): Tensor ->
+    native.
+
+/**
+ * Computes absolute-error loss with explicit reduction.
+ */
+@compiler.native {pytorch.loss.l1_loss}
+pub l1_loss(input: Tensor, target: Tensor, reduction: Int = 1): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX tuple leaf for aten::nll_loss_forward.
+ */
+@compiler.native {pytorch.loss.nll_loss_forward}
+pub nll_loss_forward(
+    input: Tensor,
+    target: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    reduction: Int,
+    ignore_index: Int,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::nll_loss_forward.output.
+ */
+@compiler.native {pytorch.loss.nll_loss_forward_out}
+pub nll_loss_forward_out(
+    output: Tensor,
+    total_weight: Tensor,
+    input: Tensor,
+    target: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    reduction: Int,
+    ignore_index: Int,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX leaf for aten::nll_loss_backward.
+ */
+@compiler.native {pytorch.loss.nll_loss_backward}
+pub nll_loss_backward(
+    grad_output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    reduction: Int,
+    ignore_index: Int,
+    total_weight: Tensor,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::nll_loss_backward.grad_input.
+ */
+@compiler.native {pytorch.loss.nll_loss_backward_out}
+pub nll_loss_backward_out(
+    grad_input: Tensor,
+    grad_output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    reduction: Int,
+    ignore_index: Int,
+    total_weight: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX tuple leaf for aten::nll_loss2d_forward.
+ */
+@compiler.native {pytorch.loss.nll_loss2d_forward}
+pub nll_loss2d_forward(
+    input: Tensor,
+    target: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    reduction: Int,
+    ignore_index: Int,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::nll_loss2d_forward.output.
+ */
+@compiler.native {pytorch.loss.nll_loss2d_forward_out}
+pub nll_loss2d_forward_out(
+    output: Tensor,
+    total_weight: Tensor,
+    input: Tensor,
+    target: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    reduction: Int,
+    ignore_index: Int,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX leaf for aten::nll_loss2d_backward.
+ */
+@compiler.native {pytorch.loss.nll_loss2d_backward}
+pub nll_loss2d_backward(
+    grad_output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    reduction: Int,
+    ignore_index: Int,
+    total_weight: Tensor,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::nll_loss2d_backward.grad_input.
+ */
+@compiler.native {pytorch.loss.nll_loss2d_backward_out}
+pub nll_loss2d_backward_out(
+    grad_input: Tensor,
+    grad_output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    reduction: Int,
+    ignore_index: Int,
+    total_weight: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX leaf for aten::nll_loss_nd.
+ */
+@compiler.native {pytorch.loss.nll_loss_nd}
+pub nll_loss_nd(
+    input: Tensor,
+    target: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    reduction: Int,
+    ignore_index: Int,
+): Tensor ->
+    native.
+
+/**
+ * Computes pairwise margin ranking loss with explicit reduction.
+ */
+@compiler.native {pytorch.loss.margin_ranking_loss}
+pub margin_ranking_loss(
+    input1: Tensor,
+    input2: Tensor,
+    target: Tensor,
+    margin: Float = 0.0,
+    reduction: Int = 1,
+): Tensor ->
+    native.
+
+/**
+ * Computes Poisson negative log-likelihood with explicit input and Stirling policies.
+ */
+@compiler.native {pytorch.loss.poisson_nll_loss}
+pub poisson_nll_loss(
+    input: Tensor,
+    target: Tensor,
+    log_input: Bool,
+    full: Bool,
+    epsilon: Float,
+    reduction: Int,
+): Tensor ->
+    native.
+
+/**
+ * Computes smooth absolute-error loss with explicit reduction and transition beta.
+ */
+@compiler.native {pytorch.loss.smooth_l1_loss}
+pub smooth_l1_loss(input: Tensor, target: Tensor, reduction: Int = 1, beta: Float = 1.0): Tensor ->
+    native.
+
+/**
+ * Computes the smooth-L1 input gradient with explicit reduction and transition beta.
+ */
+@compiler.native {pytorch.loss.smooth_l1_loss_backward}
+pub smooth_l1_loss_backward(
+    gradient_output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    reduction: Int,
+    beta: Float,
+): Tensor ->
+    native.
+
+/**
+ * Computes logistic soft-margin loss with explicit reduction.
+ */
+@compiler.native {pytorch.loss.soft_margin_loss}
+pub soft_margin_loss(input: Tensor, target: Tensor, reduction: Int = 1): Tensor ->
+    native.
+
+/**
+ * Computes triplet margin loss with explicit norm, swap, epsilon, and reduction policy.
+ */
+@compiler.native {pytorch.loss.triplet_margin_loss}
+pub triplet_margin_loss(
+    anchor: Tensor,
+    positive: Tensor,
+    negative: Tensor,
+    margin: Float = 1.0,
+    order: Float = 2.0,
+    epsilon: Float = 0.000001,
+    swap: Bool = false,
+    reduction: Int = 1,
+): Tensor ->
+    native.
+
+/**
+ * Writes exact Huber loss into retained output storage.
+ */
+@compiler.native {pytorch.loss.huber_loss_out}
+pub huber_loss_out(
+    output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    reduction: Int,
+    delta: Float,
+): Unit ->
+    native.
+
+/**
+ * Writes exact Huber input gradients into retained storage.
+ */
+@compiler.native {pytorch.loss.huber_loss_backward_out}
+pub huber_loss_backward_out(
+    output: Tensor,
+    gradient_output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    reduction: Int,
+    delta: Float,
+): Unit ->
+    native.
+
+/**
+ * Writes exact mean-squared-error loss into retained storage.
+ */
+@compiler.native {pytorch.loss.mse_loss_out}
+pub mse_loss_out(output: Tensor, input: Tensor, target: Tensor, reduction: Int): Unit ->
+    native.
+
+/**
+ * Writes exact mean-squared-error input gradients into retained storage.
+ */
+@compiler.native {pytorch.loss.mse_loss_backward_out}
+pub mse_loss_backward_out(
+    output: Tensor,
+    gradient_output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    reduction: Int,
+): Unit ->
+    native.
+
+/**
+ * Writes exact smooth-L1 loss into retained output storage.
+ */
+@compiler.native {pytorch.loss.smooth_l1_loss_out}
+pub smooth_l1_loss_out(
+    output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    reduction: Int,
+    beta: Float,
+): Unit ->
+    native.
+
+/**
+ * Writes exact smooth-L1 input gradients into retained storage.
+ */
+@compiler.native {pytorch.loss.smooth_l1_loss_backward_out}
+pub smooth_l1_loss_backward_out(
+    output: Tensor,
+    gradient_output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    reduction: Int,
+    beta: Float,
+): Unit ->
+    native.
+
+/**
+ * Writes exact soft-margin loss into retained output storage.
+ */
+@compiler.native {pytorch.loss.soft_margin_loss_out}
+pub soft_margin_loss_out(output: Tensor, input: Tensor, target: Tensor, reduction: Int): Unit ->
+    native.
+
+/**
+ * Writes exact soft-margin input gradients into retained storage.
+ */
+@compiler.native {pytorch.loss.soft_margin_loss_backward_out}
+pub soft_margin_loss_backward_out(
+    output: Tensor,
+    gradient_output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    reduction: Int,
+): Unit ->
+    native.

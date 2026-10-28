@@ -1,0 +1,28 @@
+/**
+ * CPU structural parity evidence for aten::randperm forms.
+ */
+module pytorch.RandpermParityTest.
+
+import pytorch.RandpermCompletion.{randperm_default, randperm_out}.
+import pytorch.Tensor.{dispose, dtype, from_int, shape}.
+
+@test
+pub randperm_functional_shape(): Bool ->
+    let actual = randperm_default(4);
+    let valid = shape(actual) == [4];
+    dispose(actual);
+    valid.
+
+@test
+pub randperm_functional_dtype(): Bool ->
+    let actual = randperm_default(4);
+    let valid = dtype(actual) == 4;
+    dispose(actual);
+    valid.
+
+@test
+pub randperm_output_shape(): Bool ->
+    let output = from_int(0);
+    randperm_out(output, 4);
+    let valid = shape(output) == [4];
+    (dispose(output); valid).

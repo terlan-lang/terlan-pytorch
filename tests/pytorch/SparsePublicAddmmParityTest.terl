@@ -1,0 +1,41 @@
+/**
+ * CPU runtime evidence for the public sparse.addmm family.
+ */
+module pytorch.SparsePublicAddmmParityTest.
+
+import pytorch.Binary.eq_tensor.
+import pytorch.FusedArithmetic.saddmm.
+import pytorch.FusedArithmeticNative.fused_arithmetic.
+import pytorch.Sparse.to_sparse_dimensions.
+import pytorch.Tensor.{dispose, from_floats, item_bool}.
+import pytorch.Unary.all.
+
+import type pytorch.Tensor.
+
+@test
+pub public_sparse_addmm_matches_libtorch(): Bool ->
+    let dense = from_floats([1.0, 0.0, 0.0, 2.0], [2, 2]);
+    let sparse = to_sparse_dimensions(dense, 2);
+    let rhs = from_floats([2.0, 3.0, 4.0, 5.0], [2, 2]);
+    let accumulator = from_floats([1.0, 1.0, 1.0, 1.0], [2, 2]);
+    let result = fused_arithmetic(accumulator, sparse, rhs, 3, true, 1, 1.0, true, 1, 1.0, false, 0);
+    let public_result = saddmm(accumulator, sparse, rhs);
+    let expected = from_floats([3.0, 4.0, 9.0, 11.0], [2, 2]);
+    let equal = eq_tensor(result, expected);
+    let public_equal = eq_tensor(public_result, expected);
+    let reduced = all(equal);
+    let public_reduced = all(public_equal);
+    let valid = item_bool(reduced);
+    let public_valid = item_bool(public_reduced);
+    dispose(public_reduced);
+    dispose(public_equal);
+    dispose(public_result);
+    dispose(reduced);
+    dispose(equal);
+    dispose(expected);
+    dispose(result);
+    dispose(accumulator);
+    dispose(rhs);
+    dispose(sparse);
+    dispose(dense);
+    valid and public_valid.

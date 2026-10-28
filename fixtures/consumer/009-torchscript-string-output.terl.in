@@ -1,0 +1,17 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{dispose, dispose_model, from_int, item, load_torchscript, torchscript_forward_string}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let model = load_torchscript("$scalar_string_model");
+    let input = from_int(1);
+    let output = torchscript_forward_string(model, input);
+    let observed_input = item(input);
+    dispose(input);
+    dispose_model(model);
+    if {
+        observed_input == 1 and output == "positive" ->
+            println("PYTORCH_STRING_OUTPUT_CONSUMER_OK");
+        true -> println("PYTORCH_STRING_OUTPUT_CONSUMER_FAILED")
+    }.

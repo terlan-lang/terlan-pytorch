@@ -1,13 +1,15 @@
 # LibTorch target surface
 
-The package targets PyTorch's stable C/AOTI symbols shipped by a released
-LibTorch distribution. It does not bind the public C++ frontend and it does not
-build the PyTorch source tree. The PT0 metadata is a reviewed declaration
-snapshot of the released `2.13.0+cpu` distribution at build commit
-`cf30153c4c131c8164ee7798e5022d810682e2cb`; it identifies itself as curated
-metadata rather than claiming to be live Clang output. The pinned official
-archive has SHA-256
-`edbf4cbed78433d803e90a65f1752e57783d164bce66c95c0872b2ab8f5c159e`.
+The active package targets LibTorch through generated CXX bindings. It does
+not require PyTorch's stable C/AOTI exports and does not build the PyTorch
+source tree. The CXX surface is pinned to the released `2.13.0` distribution
+at build commit `cf30153c4c131c8164ee7798e5022d810682e2cb`; admission validates
+the C++ headers, TorchScript support, exact build version, and exact build
+hash. The PT0–PT39 sections below retain the historical migration record; any
+reference to Stable-C describes the retired compatibility target, not a runtime
+dependency of the current package. CUDA admission resolves the repository's
+bundled `libcusparseLt` and `nvshmem` SONAME directories before validating
+LibTorch, so the runtime check is reproducible without a system CUDA package.
 
 ## PT0: scalar tensor lifecycle
 
@@ -17,7 +19,8 @@ defined tensor without exposing a caller-owned buffer or deleter callback.
 
 The accepted surface is lifecycle, scalar item, dimension, element count,
 owned shape lists copied from borrowed size arrays, dtype, device type/index,
-and ABI version. It is CPU-only at the package level.
+and ABI version. CPU is the pinned release baseline. CUDA execution is admitted
+only by the separate opt-in gate with a CUDA-enabled LibTorch distribution.
 
 ## PT1: copied shape arrays
 
@@ -377,8 +380,10 @@ weight `2.0`, bias `1.0`, running mean `1.0`, running variance `4.0`, and zero
 epsilon yield exact output `3.0` with identical shape and float64 dtype. MSE
 `0.0` proves complete contents while all public sources remain readable. A
 running-mean shape `[3]` must be rejected for two input channels. Training mode
-is intentionally deferred because its running-stat mutation contract differs
-from immutable inference.
+is exposed separately through `pytorch.Training.batch_norm_training`. The
+wrapper clones both running statistics before selecting `training = true`, then
+returns an ordinary struct owning the output and updated statistic tensors.
+This functional contract does not mutate caller-owned statistics.
 
 ## PT29: layer normalization and transformer residual
 
@@ -778,21 +783,53 @@ The pinned model maps integer input `1` to exact list
 non-string-list result is stable status `7056`. The surface contains 56
 generated functions.
 
+## MI12: optional owned tensor model result
+
+`torchscript_forward_optional_tensor(model, input)` requires an exact
+TorchScript `Optional[Tensor]` result. A null output pointer becomes ordinary
+Terlan `None`; a non-null output becomes `Some(Tensor)` with independent native
+ownership and a VM resource identity. No placeholder tensor is allocated for
+the absent case.
+
+The pinned model maps positive input `3.0` to `Some(6.0)` and input `0.0` to
+`None` while preserving both inputs. A model whose schema returns an ordinary
+tensor is rejected as stable status `7057`.
+
+## MI13: independently owned tensor-list model result
+
+`torchscript_forward_tensor_list(model, input)` requires an exact TorchScript
+`List[Tensor]` result. The C++ adapter allocates one independent tensor object
+per list element and transfers their identities in a temporary `uint64_t`
+array. Generated Rust copies and destroys that array, rejects null elements
+while cleaning every valid transferred tensor, and returns `List[Tensor]`
+through the generic `ok_handles` NativeBoundary reply. Every element receives
+its own VM resource identity and can be disposed independently.
+
+The pinned model maps input `3.0` through `[input * 2.0, input]` to exact values
+`[6.0,3.0]` while preserving the input. A tensor or other non-tensor-list result
+is rejected as stable status `7058`.
+
 ## Deferred surfaces
 
-- additional dispatcher-list element types, tuples, absent optional public
-  values, and multiple results.
+- additional dispatcher-list element types, dictionaries, and nested mixed
+  model results.
 - zero-copy caller-buffer construction and deleter callback ownership; the
   current shaped-data constructor deliberately performs an owned copy.
-- `Tensor.from_array` through the external `terlan-ndarray` package's versioned
-  DLPack handoff. PyTorch remains independent of Polars; the Polars package owns
-  `DataFrame.to_torch`.
-- synchronous CUDA discovery, placement, and CPU/CUDA operation parity; streams follow later.
-- exceptions and thread-local text: copied error detail with a reviewed lifetime.
+- zero-copy tensor exchange; `Tensor.from_packet` and `Tensor.to_packet` now
+  provide bidirectional pointer-free copied TNXP exchange for Bool, UInt8,
+  Int32, Int64, Float32, and Float64. PyTorch remains independent of Polars;
+  Polars and ndarray own their packet conversion APIs.
+- synchronous CUDA placement, CPU/CUDA operation parity, and opaque explicit
+  streams are implemented in the opt-in CUDA lane. Device-count discovery
+  remains owned by `terlan-cuda`, and non-blocking transfers remain future
+  work.
+- richer exception classification and thread-local text: the CXX bridge now
+  translates every direct compatibility call through `Result<T>` and preserves
+  a bounded native error payload at the Terlan protocol boundary.
 
-The ordered milestones and gates are defined in [ROADMAP.md](ROADMAP.md). These
-are generic binder milestones plus package-owned stable-C adapter milestones;
-no PyTorch special case lives in the compiler.
+The ordered milestones and gates are defined in [ROADMAP.md](ROADMAP.md). They
+are generic binder milestones plus package-owned CXX adapter milestones; no
+PyTorch special case lives in the compiler.
 
 This CUDA surface is specifically LibTorch tensor placement. Direct Rust CUDA
 bindings remain available through a separate external `terlan-cuda` package and

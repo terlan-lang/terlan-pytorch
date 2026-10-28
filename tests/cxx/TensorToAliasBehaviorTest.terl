@@ -1,0 +1,7 @@
+module pytorch_cxx.TensorToAliasBehaviorTest.
+
+import pytorch.TensorToAliasBehaviorSupport.{tensor_clip_and_element_size_on, tensor_in_place_aliases_on, tensor_to_overloads_on}.
+
+@test
+pub generated_cxx_tensor_to_overloads(): Bool ->
+    tensor_to_overloads_on() and tensor_in_place_aliases_on() and tensor_clip_and_element_size_on().

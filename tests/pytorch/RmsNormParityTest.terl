@@ -1,0 +1,30 @@
+/**
+ * CPU parity evidence for aten::rms_norm optional forms.
+ */
+module pytorch.RmsNormParityTest.
+
+import pytorch.RmsNormCompletion.{rms_norm_default, rms_norm_eps, rms_norm_weight, rms_norm_weight_eps}.
+import pytorch.Tensor.{dispose, dtype, from_floats, shape}.
+
+@test
+pub rms_norm_optional_forms_match(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let weight = from_floats([1.0, 0.5], [2]);
+    let default_value = rms_norm_default(input, [2]);
+    let weighted_value = rms_norm_weight(input, [2], weight);
+    let eps_value = rms_norm_eps(input, [2], 0.000001);
+    let weighted_eps_value = rms_norm_weight_eps(input, [2], weight, 0.000001);
+    let valid =
+        shape(default_value) == [2, 2]
+            and shape(weighted_value) == [2, 2]
+            and shape(eps_value) == [2, 2]
+            and shape(weighted_eps_value) == [2, 2]
+            and dtype(default_value) == dtype(input)
+            and dtype(weighted_eps_value) == dtype(input);
+    dispose(weighted_eps_value);
+    dispose(eps_value);
+    dispose(weighted_value);
+    dispose(default_value);
+    dispose(weight);
+    dispose(input);
+    valid.

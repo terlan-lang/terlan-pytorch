@@ -1,0 +1,398 @@
+/**
+ * Exact dimensional convolution and transposed-convolution operators.
+ */
+module pytorch.Convolution.
+
+import pytorch.ConvolutionNative.{conv1d_no_bias, conv1d_padding_no_bias, conv1d_padding_with_bias, conv1d_with_bias, conv2d_no_bias, conv2d_padding_no_bias, conv2d_padding_with_bias, conv2d_with_bias, conv3d_no_bias, conv3d_padding_no_bias, conv3d_padding_with_bias, conv3d_with_bias, conv_transpose1d_no_bias, conv_transpose1d_with_bias, conv_transpose2d_no_bias, conv_transpose2d_with_bias, conv_transpose3d_no_bias, conv_transpose3d_with_bias}.
+import pytorch.Tensor.{copy_in_place, dispose, shape}.
+
+import type pytorch.Tensor.
+
+/**
+ * Derives the channel-group count used by a depthwise convolution.
+ *
+ * The frozen `conv_depthwise3d` schema has no CPU kernel in the pinned
+ * LibTorch build. Its depthwise contract is nevertheless exactly ordinary
+ * 3-D convolution with one group per input channel.
+ */
+depthwise_groups(input: Tensor): Int ->
+    let {
+        [_batch | rest] <- shape(input);
+        [channels | _tail] <- rest
+    } else {
+        _ -> 1
+    };
+    channels.
+
+/**
+ * Performs one-dimensional convolution with PyTorch defaults and absent bias.
+ */
+pub conv1d(input: Tensor, weight: Tensor): Tensor ->
+    conv1d_no_bias(input, weight, [1], [0], [1], 1).
+
+/**
+ * Performs one-dimensional convolution with numeric padding and absent bias.
+ */
+pub conv1d(
+    input: Tensor,
+    weight: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+    groups: Int,
+): Tensor ->
+    conv1d_no_bias(input, weight, stride, padding, dilation, groups).
+
+/**
+ * Performs one-dimensional convolution with numeric padding and present bias.
+ */
+pub conv1d(
+    input: Tensor,
+    weight: Tensor,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+    groups: Int,
+): Tensor ->
+    conv1d_with_bias(input, weight, bias, stride, padding, dilation, groups).
+
+/**
+ * Performs one-dimensional convolution with named padding and absent bias.
+ */
+pub conv1d_padding(
+    input: Tensor,
+    weight: Tensor,
+    stride: List[Int],
+    padding: String,
+    dilation: List[Int],
+    groups: Int,
+): Tensor ->
+    conv1d_padding_no_bias(input, weight, stride, padding, dilation, groups).
+
+/**
+ * Performs one-dimensional convolution with named padding and present bias.
+ */
+pub conv1d_padding(
+    input: Tensor,
+    weight: Tensor,
+    bias: Tensor,
+    stride: List[Int],
+    padding: String,
+    dilation: List[Int],
+    groups: Int,
+): Tensor ->
+    conv1d_padding_with_bias(input, weight, bias, stride, padding, dilation, groups).
+
+/**
+ * Performs two-dimensional convolution with PyTorch defaults and absent bias.
+ */
+pub conv2d(input: Tensor, weight: Tensor): Tensor ->
+    conv2d_no_bias(input, weight, [1, 1], [0, 0], [1, 1], 1).
+
+/**
+ * Performs two-dimensional convolution with numeric padding and absent bias.
+ */
+pub conv2d(
+    input: Tensor,
+    weight: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+    groups: Int,
+): Tensor ->
+    conv2d_no_bias(input, weight, stride, padding, dilation, groups).
+
+/**
+ * Performs two-dimensional convolution with numeric padding and present bias.
+ */
+pub conv2d(
+    input: Tensor,
+    weight: Tensor,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+    groups: Int,
+): Tensor ->
+    conv2d_with_bias(input, weight, bias, stride, padding, dilation, groups).
+
+/**
+ * Performs two-dimensional convolution with named padding and absent bias.
+ */
+pub conv2d_padding(
+    input: Tensor,
+    weight: Tensor,
+    stride: List[Int],
+    padding: String,
+    dilation: List[Int],
+    groups: Int,
+): Tensor ->
+    conv2d_padding_no_bias(input, weight, stride, padding, dilation, groups).
+
+/**
+ * Performs two-dimensional convolution with named padding and present bias.
+ */
+pub conv2d_padding(
+    input: Tensor,
+    weight: Tensor,
+    bias: Tensor,
+    stride: List[Int],
+    padding: String,
+    dilation: List[Int],
+    groups: Int,
+): Tensor ->
+    conv2d_padding_with_bias(input, weight, bias, stride, padding, dilation, groups).
+
+/**
+ * Performs three-dimensional convolution with PyTorch defaults and absent bias.
+ */
+pub conv3d(input: Tensor, weight: Tensor): Tensor ->
+    conv3d_no_bias(input, weight, [1, 1, 1], [0, 0, 0], [1, 1, 1], 1).
+
+/**
+ * Performs three-dimensional convolution with numeric padding and absent bias.
+ */
+pub conv3d(
+    input: Tensor,
+    weight: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+    groups: Int,
+): Tensor ->
+    conv3d_no_bias(input, weight, stride, padding, dilation, groups).
+
+/**
+ * Performs three-dimensional convolution with numeric padding and present bias.
+ */
+pub conv3d(
+    input: Tensor,
+    weight: Tensor,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+    groups: Int,
+): Tensor ->
+    conv3d_with_bias(input, weight, bias, stride, padding, dilation, groups).
+
+/**
+ * Generates the CPU-equivalent depthwise 3-D convolution from `conv3d`.
+ * `kernel_size` is retained for frozen-schema compatibility.
+ */
+pub conv_depthwise3d(
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+): Tensor ->
+    conv3d_no_bias(input, weight, stride, padding, dilation, depthwise_groups(input)).
+
+/**
+ * Generates the depthwise 3-D equivalent with an additive bias tensor.
+ */
+pub conv_depthwise3d(
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+): Tensor ->
+    conv3d_with_bias(input, weight, bias, stride, padding, dilation, depthwise_groups(input)).
+
+/**
+ * Writes the depthwise 3-D equivalent into retained output storage.
+ */
+pub conv_depthwise3d_out(
+    output: Tensor,
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+): Unit ->
+    let result = conv_depthwise3d(input, weight, kernel_size, stride, padding, dilation);
+    copy_in_place(output, result);
+    dispose(result).
+
+/**
+ * Writes the biased depthwise 3-D equivalent into retained output storage.
+ */
+pub conv_depthwise3d_out(
+    output: Tensor,
+    input: Tensor,
+    weight: Tensor,
+    kernel_size: List[Int],
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+): Unit ->
+    let result = conv_depthwise3d(input, weight, kernel_size, bias, stride, padding, dilation);
+    copy_in_place(output, result);
+    dispose(result).
+
+/**
+ * Performs three-dimensional convolution with named padding and absent bias.
+ */
+pub conv3d_padding(
+    input: Tensor,
+    weight: Tensor,
+    stride: List[Int],
+    padding: String,
+    dilation: List[Int],
+    groups: Int,
+): Tensor ->
+    conv3d_padding_no_bias(input, weight, stride, padding, dilation, groups).
+
+/**
+ * Performs three-dimensional convolution with named padding and present bias.
+ */
+pub conv3d_padding(
+    input: Tensor,
+    weight: Tensor,
+    bias: Tensor,
+    stride: List[Int],
+    padding: String,
+    dilation: List[Int],
+    groups: Int,
+): Tensor ->
+    conv3d_padding_with_bias(input, weight, bias, stride, padding, dilation, groups).
+
+/**
+ * Performs one-dimensional transposed convolution with PyTorch defaults and absent bias.
+ */
+pub conv_transpose1d(input: Tensor, weight: Tensor): Tensor ->
+    conv_transpose1d_no_bias(input, weight, [1], [0], [0], 1, [1]).
+
+/**
+ * Performs one-dimensional transposed convolution with absent bias.
+ */
+pub conv_transpose1d(
+    input: Tensor,
+    weight: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    output_padding: List[Int],
+    groups: Int,
+    dilation: List[Int],
+): Tensor ->
+    conv_transpose1d_no_bias(input, weight, stride, padding, output_padding, groups, dilation).
+
+/**
+ * Performs one-dimensional transposed convolution with present bias.
+ */
+pub conv_transpose1d(
+    input: Tensor,
+    weight: Tensor,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    output_padding: List[Int],
+    groups: Int,
+    dilation: List[Int],
+): Tensor ->
+    conv_transpose1d_with_bias(
+        input,
+        weight,
+        bias,
+        stride,
+        padding,
+        output_padding,
+        groups,
+        dilation,
+    ).
+
+/**
+ * Performs two-dimensional transposed convolution with PyTorch defaults and absent bias.
+ */
+pub conv_transpose2d(input: Tensor, weight: Tensor): Tensor ->
+    conv_transpose2d_no_bias(input, weight, [1, 1], [0, 0], [0, 0], 1, [1, 1]).
+
+/**
+ * Performs two-dimensional transposed convolution with absent bias.
+ */
+pub conv_transpose2d(
+    input: Tensor,
+    weight: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    output_padding: List[Int],
+    groups: Int,
+    dilation: List[Int],
+): Tensor ->
+    conv_transpose2d_no_bias(input, weight, stride, padding, output_padding, groups, dilation).
+
+/**
+ * Performs two-dimensional transposed convolution with present bias.
+ */
+pub conv_transpose2d(
+    input: Tensor,
+    weight: Tensor,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    output_padding: List[Int],
+    groups: Int,
+    dilation: List[Int],
+): Tensor ->
+    conv_transpose2d_with_bias(
+        input,
+        weight,
+        bias,
+        stride,
+        padding,
+        output_padding,
+        groups,
+        dilation,
+    ).
+
+/**
+ * Performs three-dimensional transposed convolution with PyTorch defaults and absent bias.
+ */
+pub conv_transpose3d(input: Tensor, weight: Tensor): Tensor ->
+    conv_transpose3d_no_bias(input, weight, [1, 1, 1], [0, 0, 0], [0, 0, 0], 1, [1, 1, 1]).
+
+/**
+ * Performs three-dimensional transposed convolution with absent bias.
+ */
+pub conv_transpose3d(
+    input: Tensor,
+    weight: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    output_padding: List[Int],
+    groups: Int,
+    dilation: List[Int],
+): Tensor ->
+    conv_transpose3d_no_bias(input, weight, stride, padding, output_padding, groups, dilation).
+
+/**
+ * Performs three-dimensional transposed convolution with present bias.
+ */
+pub conv_transpose3d(
+    input: Tensor,
+    weight: Tensor,
+    bias: Tensor,
+    stride: List[Int],
+    padding: List[Int],
+    output_padding: List[Int],
+    groups: Int,
+    dilation: List[Int],
+): Tensor ->
+    conv_transpose3d_with_bias(
+        input,
+        weight,
+        bias,
+        stride,
+        padding,
+        output_padding,
+        groups,
+        dilation,
+    ).

@@ -1,0 +1,31 @@
+//! Compiler-generated exact indexed addition, copying, selection output, and selection-gradient primitives.
+
+module pytorch.IndexMutationNative.
+
+/// Returns exact indexed addition with a tagged integer or floating-point Scalar alpha.
+
+pub index_add(input: Tensor, dimension: Int, index: Tensor, source: Tensor, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Tensor.
+
+/// Executes exact dispatcher-backed Tensor::index_add_ with a tagged Scalar alpha.
+
+pub index_add_in_place(input: Tensor, dimension: Int, index: Tensor, source: Tensor, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
+
+/// Writes exact indexed addition into retained output storage.
+
+pub index_add_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, source: Tensor, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
+
+/// Executes exact dispatcher-backed Tensor::index_copy_ in place.
+
+pub index_copy_in_place(input: Tensor, dimension: Int, index: Tensor, source: Tensor): Unit.
+
+/// Writes exact indexed copies into retained output storage.
+
+pub index_copy_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, source: Tensor): Unit.
+
+/// Scatters selected gradients into the exact original integer shape.
+
+pub index_select_backward(gradient: Tensor, input_shape: List[Int], dimension: Int, index: Tensor): Tensor.
+
+/// Writes exact indexed selection into retained output storage.
+
+pub index_select_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor): Unit.

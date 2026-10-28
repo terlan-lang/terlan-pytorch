@@ -1,0 +1,109 @@
+module pytorch.RepeatInterleaveNativeBehaviorSupport.
+
+import pytorch.RepeatInterleaveNative.{repeat_indices_native, repeat_indices_out_native, repeat_indices_out_output_size_native, repeat_indices_output_size_native, repeat_scalar_dimension_native, repeat_scalar_dimension_output_size_native, repeat_scalar_flat_native, repeat_scalar_flat_output_size_native, repeat_tensor_dimension_native, repeat_tensor_dimension_output_size_native, repeat_tensor_flat_native, repeat_tensor_flat_output_size_native}.
+import pytorch.ShapeCompletion.{narrow_view}.
+import pytorch.Tensor.{Float64, Int64, Strided, dispose, dispose_scalar, dtype, is_cuda, item, ones_device, scalar_to_int, shape}.
+import std.core.Result.{Err, Ok}.
+
+import type pytorch.Tensor.
+
+integer_element(tensor: Tensor, index: Int): Int ->
+    let element = narrow_view(tensor, 0, index, 1);
+    let scalar = item(element);
+    let observed = scalar_to_int(scalar);
+    dispose_scalar(scalar);
+    dispose(element);
+    case observed {
+        Ok(value) -> value;
+        Err(_reason) -> -1
+    }.
+
+/**
+ * Executes all index-only and retained-output repeat-interleave contracts.
+ */
+pub repeat_index_contracts_on(device_name: String): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let repeats = ones_device([4], Int64, Strided, device_name);
+    let inferred = repeat_indices_native(repeats);
+    let sized = repeat_indices_output_size_native(repeats, 4);
+    let output = ones_device([0], Int64, Strided, device_name);
+    repeat_indices_out_native(output, repeats);
+    let inferred_output_valid = shape(output) == [4] and integer_element(output, 0) == 0 and integer_element(output, 3) == 3;
+    (repeat_indices_out_output_size_native(output, repeats, 4); let valid =
+    shape(inferred) == [4]
+        and shape(sized) == [4]
+        and shape(output) == [4]
+        and dtype(inferred) == Int64
+        and dtype(sized) == Int64
+        and dtype(output) == Int64
+        and integer_element(inferred, 0) == 0
+        and integer_element(inferred, 3) == 3
+        and integer_element(sized, 0) == 0
+        and integer_element(sized, 3) == 3
+        and integer_element(output, 0) == 0
+        and integer_element(output, 3) == 3
+        and inferred_output_valid
+        and is_cuda(inferred) == expected_cuda
+        and is_cuda(output) == expected_cuda
+        and shape(repeats) == [4];
+(dispose(output); dispose(sized); dispose(inferred); dispose(repeats); valid)).
+
+/**
+ * Executes every tensor-count repeat-interleave optional state.
+ */
+pub repeat_tensor_contracts_on(device_name: String): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let input = ones_device([2, 2], Float64, Strided, device_name);
+    let flat_repeats = ones_device([4], Int64, Strided, device_name);
+    let dimension_repeats = ones_device([2], Int64, Strided, device_name);
+    let flat = repeat_tensor_flat_native(input, flat_repeats, 971, -113);
+    let flat_sized = repeat_tensor_flat_output_size_native(input, flat_repeats, -997, 4);
+    let dimension = repeat_tensor_dimension_native(input, dimension_repeats, 1, -211);
+    let dimension_sized = repeat_tensor_dimension_output_size_native(input, dimension_repeats, 1, 2);
+    let valid =
+        shape(flat) == [4]
+            and shape(flat_sized) == [4]
+            and shape(dimension) == [2, 2]
+            and shape(dimension_sized) == [2, 2]
+            and dtype(flat) == Float64
+            and dtype(dimension_sized) == Float64
+            and is_cuda(flat) == expected_cuda
+            and is_cuda(dimension_sized) == expected_cuda
+            and shape(input) == [2, 2]
+            and shape(flat_repeats) == [4]
+            and shape(dimension_repeats) == [2];
+    dispose(dimension_sized);
+    dispose(dimension);
+    dispose(flat_sized);
+    dispose(flat);
+    dispose(dimension_repeats);
+    dispose(flat_repeats);
+    dispose(input);
+    valid.
+
+/**
+ * Executes every scalar-count repeat-interleave optional state.
+ */
+pub repeat_scalar_contracts_on(device_name: String): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let input = ones_device([2, 2], Float64, Strided, device_name);
+    let flat = repeat_scalar_flat_native(input, 2, 313, -317);
+    let flat_sized = repeat_scalar_flat_output_size_native(input, 2, -331, 8);
+    let dimension = repeat_scalar_dimension_native(input, 2, 0, -337);
+    let dimension_sized = repeat_scalar_dimension_output_size_native(input, 2, 1, 4);
+    let valid =
+        shape(flat) == [8]
+            and shape(flat_sized) == [8]
+            and shape(dimension) == [4, 2]
+            and shape(dimension_sized) == [2, 4]
+            and dtype(flat) == Float64
+            and dtype(dimension_sized) == Float64
+            and is_cuda(flat) == expected_cuda
+            and is_cuda(dimension_sized) == expected_cuda
+            and shape(input) == [2, 2];
+    dispose(dimension_sized);
+    dispose(dimension);
+    dispose(flat_sized);
+    dispose(flat);
+    dispose(input);
+    valid.

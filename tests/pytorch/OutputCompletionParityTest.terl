@@ -1,0 +1,132 @@
+/**
+ * Exact retained-output parity for established functional kernels.
+ */
+module pytorch.OutputCompletionParityTest.
+
+import pytorch.Dense.{complex, polar}.
+import pytorch.Linalg.{geqrf, linalg_lu_factor, lu_solve, ormqr, slogdet}.
+import pytorch.OutputCompletion.{complex_out, dist_out, expand_copy_out, lu_solve_out, native_dropout_backward_out, ormqr_out, polar_out, reflection_pad1d_out, reflection_pad2d_out, reflection_pad3d_out, renorm_out, replication_pad1d_out, replication_pad2d_out, replication_pad3d_out, slogdet_out, softmax_out}.
+import pytorch.Regularization.native_dropout_backward.
+import pytorch.Shape.{expand_copy, reflection_pad1d, reflection_pad2d, reflection_pad3d, replication_pad1d, replication_pad2d, replication_pad3d}.
+import pytorch.Statistics.{dist, renorm}.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, shape, softmax, to_device, to_dtype}.
+import pytorch.TypeRelations.allclose.
+import pytorch.UnaryStorage.zero_in_place.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+empty(device: Int): Tensor ->
+    placed([], [0], device).
+
+matches(actual: Tensor, expected: Tensor, device: Int): Bool ->
+    let valid =
+        allclose(actual, expected, 1e-11, 1e-11, false)
+            and shape(actual) == shape(expected)
+            and dtype(actual) == dtype(expected)
+            and device_type(actual) == device;
+    dispose(expected);
+    valid.
+
+verify(device: Int): Bool ->
+    let real = placed([1.0, 2.0], [2], device);
+    let imaginary = placed([3.0, 4.0], [2], device);
+    let complex_value = complex(real, imaginary);
+    let complex_output = complex(real, imaginary);
+    zero_in_place(complex_output);
+    complex_out(complex_output, real, imaginary);
+    let complex_valid = matches(complex_output, complex_value, device);
+    let left = placed([1.0, 2.0], [2], device);
+    let right = placed([4.0, 6.0], [2], device);
+    let distance = dist(left, right, 2.0);
+    let distance_output = empty(device);
+    (dist_out(distance_output, left, right, 2.0); let distance_valid = matches(distance_output, distance, device);
+let expandable = placed([1.0, 2.0], [1, 2], device);
+let expanded = expand_copy(expandable, [3, 2], false);
+let expanded_output = empty(device);
+(expand_copy_out(expanded_output, expandable, [3, 2], false); let expanded_valid = matches(expanded_output, expanded, device);
+let coefficient = placed([2.0, 1.0, 1.0, 3.0], [2, 2], device);
+let {factor, pivots} = linalg_lu_factor(coefficient, true);
+let rhs = placed([3.0, 4.0], [2, 1], device);
+let solution = lu_solve(rhs, factor, pivots);
+let solution_output = empty(device);
+(lu_solve_out(solution_output, rhs, factor, pivots); let solution_valid = matches(solution_output, solution, device);
+let gradient = placed([1.0, 2.0], [2], device);
+let mask_float = placed([1.0, 0.0], [2], device);
+let mask = to_dtype(mask_float, 11);
+let dropout_gradient = native_dropout_backward(gradient, mask, 2.0);
+let dropout_output = empty(device);
+(native_dropout_backward_out(dropout_output, gradient, mask, 2.0); let dropout_valid = matches(dropout_output, dropout_gradient, device);
+let qr_source = placed([1.0, 2.0, 3.0, 5.0], [2, 2], device);
+let {qr_factor, tau} = geqrf(qr_source);
+let other = placed([1.0, 0.0, 0.0, 1.0], [2, 2], device);
+let applied_q = ormqr(qr_factor, tau, other, true, false);
+let ormqr_output = empty(device);
+(ormqr_out(ormqr_output, qr_factor, tau, other, true, false); let ormqr_valid = matches(ormqr_output, applied_q, device);
+let absolute = placed([1.0, 2.0], [2], device);
+let angle = placed([0.0, 1.0], [2], device);
+let polar_value = polar(absolute, angle);
+let polar_output = polar(absolute, angle);
+(zero_in_place(polar_output); polar_out(polar_output, absolute, angle); let polar_valid = matches(polar_output, polar_value, device);
+let one_d = placed([1.0, 2.0], [1, 1, 2], device);
+let two_d = placed([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2], device);
+let three_d = placed([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [1, 1, 2, 2, 2], device);
+let reflection1 = empty(device);
+let reflection2 = empty(device);
+let reflection3 = empty(device);
+let replication1 = empty(device);
+let replication2 = empty(device);
+let replication3 = empty(device);
+(reflection_pad1d_out(reflection1, one_d, [1, 1]); reflection_pad2d_out(reflection2, two_d, [1, 1, 1, 1]); reflection_pad3d_out(reflection3, three_d, [1, 1, 1, 1, 1, 1]); replication_pad1d_out(replication1, one_d, [1, 1]); replication_pad2d_out(replication2, two_d, [1, 1, 1, 1]); replication_pad3d_out(replication3, three_d, [1, 1, 1, 1, 1, 1]); let padding_valid =
+    matches(reflection1, reflection_pad1d(one_d, [1, 1]), device)
+        and matches(reflection2, reflection_pad2d(two_d, [1, 1, 1, 1]), device)
+        and matches(reflection3, reflection_pad3d(three_d, [1, 1, 1, 1, 1, 1]), device)
+        and matches(replication1, replication_pad1d(one_d, [1, 1]), device)
+        and matches(replication2, replication_pad2d(two_d, [1, 1, 1, 1]), device)
+        and matches(replication3, replication_pad3d(three_d, [1, 1, 1, 1, 1, 1]), device);
+let renormed = renorm(coefficient, 2.0, 0, 1.0);
+let renorm_output = empty(device);
+(renorm_out(renorm_output, coefficient, 2.0, 0, 1.0); let renorm_valid = matches(renorm_output, renormed, device);
+let determinant_input = placed([2.0, 0.0, 0.0, 3.0], [2, 2], device);
+let {sign, log_absolute} = slogdet(determinant_input);
+let sign_output = empty(device);
+let log_output = empty(device);
+(slogdet_out(sign_output, log_output, determinant_input); let slogdet_valid = matches(sign_output, sign, device) and matches(log_output, log_absolute, device);
+let logits = placed([1.0, 2.0, 3.0, 4.0], [2, 2], device);
+let probabilities = softmax(logits, 1);
+let softmax_output = empty(device);
+(softmax_out(softmax_output, logits, 1); let valid =
+    complex_valid
+        and distance_valid
+        and expanded_valid
+        and solution_valid
+        and dropout_valid
+        and ormqr_valid
+        and polar_valid
+        and padding_valid
+        and renorm_valid
+        and slogdet_valid
+        and matches(softmax_output, probabilities, device);
+(dispose(softmax_output); dispose(logits); dispose(log_output); dispose(sign_output); dispose(determinant_input); dispose(renorm_output); dispose(replication3); dispose(replication2); dispose(replication1); dispose(reflection3); dispose(reflection2); dispose(reflection1); dispose(three_d); dispose(two_d); dispose(one_d); dispose(polar_output); dispose(angle); dispose(absolute); dispose(ormqr_output); dispose(other); dispose(tau); dispose(qr_factor); dispose(qr_source); dispose(dropout_output); dispose(mask); dispose(mask_float); dispose(gradient); dispose(solution_output); dispose(rhs); dispose(pivots); dispose(factor); dispose(coefficient); dispose(expanded_output); dispose(expandable); dispose(distance_output); dispose(right); dispose(left); dispose(complex_output); dispose(imaginary); dispose(real); valid))))))))))).
+
+@test
+pub output_completion_on_cpu_and_required_cuda(): Bool ->
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    let cpu_valid = verify(0);
+    cpu_valid and cuda_valid.

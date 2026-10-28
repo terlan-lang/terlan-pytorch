@@ -1,0 +1,33 @@
+/**
+ * CPU value evidence for aten::ctc_loss overloads.
+ */
+module pytorch.CtcLossParityTest.
+
+import pytorch.CtcLossCompletion.{ctc_loss_intlist, ctc_loss_tensor}.
+import pytorch.Tensor.{dispose, dtype, from_floats, from_ints, shape}.
+import pytorch.TypeRelations.allclose.
+
+@test
+pub ctc_loss_overloads_match_reference(): Bool ->
+    let log_probs = from_floats([-0.6931472, -0.6931472, -0.6931472, -0.6931472], [2, 1, 2]);
+    let targets = from_ints([1], [1]);
+    let input_lengths = from_ints([2], [1]);
+    let target_lengths = from_ints([1], [1]);
+    let intlist_actual = ctc_loss_intlist(log_probs, targets, [2], [1], 0, 1, false);
+    let tensor_actual = ctc_loss_tensor(log_probs, targets, input_lengths, target_lengths, 0, 1, false);
+    let expected = from_floats([0.2876821], []);
+    let valid =
+        shape(intlist_actual) == []
+            and shape(tensor_actual) == []
+            and dtype(intlist_actual) == dtype(log_probs)
+            and dtype(tensor_actual) == dtype(log_probs)
+            and allclose(intlist_actual, expected, 0.0001, 0.0001, false)
+            and allclose(tensor_actual, expected, 0.0001, 0.0001, false);
+    dispose(expected);
+    dispose(tensor_actual);
+    dispose(intlist_actual);
+    dispose(target_lengths);
+    dispose(input_lengths);
+    dispose(targets);
+    dispose(log_probs);
+    valid.

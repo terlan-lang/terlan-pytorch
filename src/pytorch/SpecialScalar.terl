@@ -1,0 +1,796 @@
+/**
+ * Typed Scalar overloads for special functions backed by one reviewed direct-ATen boundary.
+ */
+module pytorch.SpecialScalar.
+
+import pytorch.SpecialScalarNative.{scalar_left_float as native_scalar_left_float, scalar_left_float_out as native_scalar_left_float_out, scalar_left_int as native_scalar_left_int, scalar_left_int_out as native_scalar_left_int_out, scalar_right_float as native_scalar_right_float, scalar_right_float_out as native_scalar_right_float_out, scalar_right_int as native_scalar_right_int, scalar_right_int_out as native_scalar_right_int_out}.
+
+import type pytorch.Tensor.
+
+/**
+ * Computes the Chebyshev U polynomial with an integer scalar right operand.
+ */
+pub special_chebyshev_polynomial_u_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 1, scalar).
+
+/**
+ * Computes the Chebyshev U polynomial with a floating-point scalar right operand.
+ */
+pub special_chebyshev_polynomial_u_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 1, scalar).
+
+/**
+ * Computes the Chebyshev U polynomial with an integer scalar left operand.
+ */
+pub special_chebyshev_polynomial_u_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(1, scalar, tensor).
+
+/**
+ * Computes the Chebyshev U polynomial with a floating-point scalar left operand.
+ */
+pub special_chebyshev_polynomial_u_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(1, scalar, tensor).
+
+/**
+ * Writes the Chebyshev U polynomial with an integer scalar right operand.
+ */
+pub special_chebyshev_polynomial_u_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native_scalar_right_int_out(output, tensor, 1, scalar).
+
+/**
+ * Writes the Chebyshev U polynomial with a floating-point scalar right operand.
+ */
+pub special_chebyshev_polynomial_u_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native_scalar_right_float_out(output, tensor, 1, scalar).
+
+/**
+ * Writes the Chebyshev U polynomial with an integer scalar left operand.
+ */
+pub special_chebyshev_polynomial_u_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native_scalar_left_int_out(output, 1, scalar, tensor).
+
+/**
+ * Writes the Chebyshev U polynomial with a floating-point scalar left operand.
+ */
+pub special_chebyshev_polynomial_u_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_float_out(output, 1, scalar, tensor).
+
+/**
+ * Computes the Chebyshev V polynomial with an integer scalar right operand.
+ */
+pub special_chebyshev_polynomial_v_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 2, scalar).
+
+/**
+ * Computes the Chebyshev V polynomial with a floating-point scalar right operand.
+ */
+pub special_chebyshev_polynomial_v_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 2, scalar).
+
+/**
+ * Computes the Chebyshev V polynomial with an integer scalar left operand.
+ */
+pub special_chebyshev_polynomial_v_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(2, scalar, tensor).
+
+/**
+ * Computes the Chebyshev V polynomial with a floating-point scalar left operand.
+ */
+pub special_chebyshev_polynomial_v_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(2, scalar, tensor).
+
+/**
+ * Writes the Chebyshev V polynomial with an integer scalar right operand.
+ */
+pub special_chebyshev_polynomial_v_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native_scalar_right_int_out(output, tensor, 2, scalar).
+
+/**
+ * Writes the Chebyshev V polynomial with a floating-point scalar right operand.
+ */
+pub special_chebyshev_polynomial_v_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native_scalar_right_float_out(output, tensor, 2, scalar).
+
+/**
+ * Writes the Chebyshev V polynomial with an integer scalar left operand.
+ */
+pub special_chebyshev_polynomial_v_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native_scalar_left_int_out(output, 2, scalar, tensor).
+
+/**
+ * Writes the Chebyshev V polynomial with a floating-point scalar left operand.
+ */
+pub special_chebyshev_polynomial_v_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_float_out(output, 2, scalar, tensor).
+
+/**
+ * Computes the Chebyshev W polynomial with an integer scalar right operand.
+ */
+pub special_chebyshev_polynomial_w_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 3, scalar).
+
+/**
+ * Computes the Chebyshev W polynomial with a floating-point scalar right operand.
+ */
+pub special_chebyshev_polynomial_w_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 3, scalar).
+
+/**
+ * Computes the Chebyshev W polynomial with an integer scalar left operand.
+ */
+pub special_chebyshev_polynomial_w_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(3, scalar, tensor).
+
+/**
+ * Computes the Chebyshev W polynomial with a floating-point scalar left operand.
+ */
+pub special_chebyshev_polynomial_w_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(3, scalar, tensor).
+
+/**
+ * Writes the Chebyshev W polynomial with an integer scalar right operand.
+ */
+pub special_chebyshev_polynomial_w_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native_scalar_right_int_out(output, tensor, 3, scalar).
+
+/**
+ * Writes the Chebyshev W polynomial with a floating-point scalar right operand.
+ */
+pub special_chebyshev_polynomial_w_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native_scalar_right_float_out(output, tensor, 3, scalar).
+
+/**
+ * Writes the Chebyshev W polynomial with an integer scalar left operand.
+ */
+pub special_chebyshev_polynomial_w_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native_scalar_left_int_out(output, 3, scalar, tensor).
+
+/**
+ * Writes the Chebyshev W polynomial with a floating-point scalar left operand.
+ */
+pub special_chebyshev_polynomial_w_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_float_out(output, 3, scalar, tensor).
+
+/**
+ * Computes the Hermite H polynomial with an integer scalar right operand.
+ */
+pub special_hermite_polynomial_h_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 4, scalar).
+
+/**
+ * Computes the Hermite H polynomial with a floating-point scalar right operand.
+ */
+pub special_hermite_polynomial_h_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 4, scalar).
+
+/**
+ * Computes the Hermite H polynomial with an integer scalar left operand.
+ */
+pub special_hermite_polynomial_h_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(4, scalar, tensor).
+
+/**
+ * Computes the Hermite H polynomial with a floating-point scalar left operand.
+ */
+pub special_hermite_polynomial_h_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(4, scalar, tensor).
+
+/**
+ * Writes the Hermite H polynomial with an integer scalar right operand.
+ */
+pub special_hermite_polynomial_h_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native_scalar_right_int_out(output, tensor, 4, scalar).
+
+/**
+ * Writes the Hermite H polynomial with a floating-point scalar right operand.
+ */
+pub special_hermite_polynomial_h_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native_scalar_right_float_out(output, tensor, 4, scalar).
+
+/**
+ * Writes the Hermite H polynomial with an integer scalar left operand.
+ */
+pub special_hermite_polynomial_h_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native_scalar_left_int_out(output, 4, scalar, tensor).
+
+/**
+ * Writes the Hermite H polynomial with a floating-point scalar left operand.
+ */
+pub special_hermite_polynomial_h_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native_scalar_left_float_out(output, 4, scalar, tensor).
+
+/**
+ * Computes the Hermite He polynomial with an integer scalar right operand.
+ */
+pub special_hermite_polynomial_he_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 5, scalar).
+
+/**
+ * Computes the Hermite He polynomial with a floating-point scalar right operand.
+ */
+pub special_hermite_polynomial_he_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 5, scalar).
+
+/**
+ * Computes the Hermite He polynomial with an integer scalar left operand.
+ */
+pub special_hermite_polynomial_he_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(5, scalar, tensor).
+
+/**
+ * Computes the Hermite He polynomial with a floating-point scalar left operand.
+ */
+pub special_hermite_polynomial_he_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(5, scalar, tensor).
+
+/**
+ * Writes the Hermite He polynomial with an integer scalar right operand.
+ */
+pub special_hermite_polynomial_he_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native_scalar_right_int_out(output, tensor, 5, scalar).
+
+/**
+ * Writes the Hermite He polynomial with a floating-point scalar right operand.
+ */
+pub special_hermite_polynomial_he_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native_scalar_right_float_out(output, tensor, 5, scalar).
+
+/**
+ * Writes the Hermite He polynomial with an integer scalar left operand.
+ */
+pub special_hermite_polynomial_he_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native_scalar_left_int_out(output, 5, scalar, tensor).
+
+/**
+ * Writes the Hermite He polynomial with a floating-point scalar left operand.
+ */
+pub special_hermite_polynomial_he_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_float_out(output, 5, scalar, tensor).
+
+/**
+ * Computes the Laguerre L polynomial with an integer scalar right operand.
+ */
+pub special_laguerre_polynomial_l_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 6, scalar).
+
+/**
+ * Computes the Laguerre L polynomial with a floating-point scalar right operand.
+ */
+pub special_laguerre_polynomial_l_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 6, scalar).
+
+/**
+ * Computes the Laguerre L polynomial with an integer scalar left operand.
+ */
+pub special_laguerre_polynomial_l_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(6, scalar, tensor).
+
+/**
+ * Computes the Laguerre L polynomial with a floating-point scalar left operand.
+ */
+pub special_laguerre_polynomial_l_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(6, scalar, tensor).
+
+/**
+ * Writes the Laguerre L polynomial with an integer scalar right operand.
+ */
+pub special_laguerre_polynomial_l_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native_scalar_right_int_out(output, tensor, 6, scalar).
+
+/**
+ * Writes the Laguerre L polynomial with a floating-point scalar right operand.
+ */
+pub special_laguerre_polynomial_l_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native_scalar_right_float_out(output, tensor, 6, scalar).
+
+/**
+ * Writes the Laguerre L polynomial with an integer scalar left operand.
+ */
+pub special_laguerre_polynomial_l_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native_scalar_left_int_out(output, 6, scalar, tensor).
+
+/**
+ * Writes the Laguerre L polynomial with a floating-point scalar left operand.
+ */
+pub special_laguerre_polynomial_l_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_float_out(output, 6, scalar, tensor).
+
+/**
+ * Computes the Legendre P polynomial with an integer scalar right operand.
+ */
+pub special_legendre_polynomial_p_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 7, scalar).
+
+/**
+ * Computes the Legendre P polynomial with a floating-point scalar right operand.
+ */
+pub special_legendre_polynomial_p_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 7, scalar).
+
+/**
+ * Computes the Legendre P polynomial with an integer scalar left operand.
+ */
+pub special_legendre_polynomial_p_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(7, scalar, tensor).
+
+/**
+ * Computes the Legendre P polynomial with a floating-point scalar left operand.
+ */
+pub special_legendre_polynomial_p_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(7, scalar, tensor).
+
+/**
+ * Writes the Legendre P polynomial with an integer scalar right operand.
+ */
+pub special_legendre_polynomial_p_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native_scalar_right_int_out(output, tensor, 7, scalar).
+
+/**
+ * Writes the Legendre P polynomial with a floating-point scalar right operand.
+ */
+pub special_legendre_polynomial_p_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native_scalar_right_float_out(output, tensor, 7, scalar).
+
+/**
+ * Writes the Legendre P polynomial with an integer scalar left operand.
+ */
+pub special_legendre_polynomial_p_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native_scalar_left_int_out(output, 7, scalar, tensor).
+
+/**
+ * Writes the Legendre P polynomial with a floating-point scalar left operand.
+ */
+pub special_legendre_polynomial_p_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_float_out(output, 7, scalar, tensor).
+
+/**
+ * Computes the shifted Chebyshev T polynomial with an integer scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_t_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 8, scalar).
+
+/**
+ * Computes the shifted Chebyshev T polynomial with a floating-point scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_t_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 8, scalar).
+
+/**
+ * Computes the shifted Chebyshev T polynomial with an integer scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_t_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(8, scalar, tensor).
+
+/**
+ * Computes the shifted Chebyshev T polynomial with a floating-point scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_t_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(8, scalar, tensor).
+
+/**
+ * Writes the shifted Chebyshev T polynomial with an integer scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_t_right_int_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Int,
+): Unit ->
+    native_scalar_right_int_out(output, tensor, 8, scalar).
+
+/**
+ * Writes the shifted Chebyshev T polynomial with a floating-point scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_t_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native_scalar_right_float_out(output, tensor, 8, scalar).
+
+/**
+ * Writes the shifted Chebyshev T polynomial with an integer scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_t_left_int_out(
+    output: Tensor,
+    scalar: Int,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_int_out(output, 8, scalar, tensor).
+
+/**
+ * Writes the shifted Chebyshev T polynomial with a floating-point scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_t_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_float_out(output, 8, scalar, tensor).
+
+/**
+ * Computes the shifted Chebyshev U polynomial with an integer scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_u_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 9, scalar).
+
+/**
+ * Computes the shifted Chebyshev U polynomial with a floating-point scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_u_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 9, scalar).
+
+/**
+ * Computes the shifted Chebyshev U polynomial with an integer scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_u_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(9, scalar, tensor).
+
+/**
+ * Computes the shifted Chebyshev U polynomial with a floating-point scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_u_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(9, scalar, tensor).
+
+/**
+ * Writes the shifted Chebyshev U polynomial with an integer scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_u_right_int_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Int,
+): Unit ->
+    native_scalar_right_int_out(output, tensor, 9, scalar).
+
+/**
+ * Writes the shifted Chebyshev U polynomial with a floating-point scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_u_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native_scalar_right_float_out(output, tensor, 9, scalar).
+
+/**
+ * Writes the shifted Chebyshev U polynomial with an integer scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_u_left_int_out(
+    output: Tensor,
+    scalar: Int,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_int_out(output, 9, scalar, tensor).
+
+/**
+ * Writes the shifted Chebyshev U polynomial with a floating-point scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_u_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_float_out(output, 9, scalar, tensor).
+
+/**
+ * Computes the shifted Chebyshev V polynomial with an integer scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_v_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 10, scalar).
+
+/**
+ * Computes the shifted Chebyshev V polynomial with a floating-point scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_v_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 10, scalar).
+
+/**
+ * Computes the shifted Chebyshev V polynomial with an integer scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_v_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(10, scalar, tensor).
+
+/**
+ * Computes the shifted Chebyshev V polynomial with a floating-point scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_v_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(10, scalar, tensor).
+
+/**
+ * Writes the shifted Chebyshev V polynomial with an integer scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_v_right_int_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Int,
+): Unit ->
+    native_scalar_right_int_out(output, tensor, 10, scalar).
+
+/**
+ * Writes the shifted Chebyshev V polynomial with a floating-point scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_v_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native_scalar_right_float_out(output, tensor, 10, scalar).
+
+/**
+ * Writes the shifted Chebyshev V polynomial with an integer scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_v_left_int_out(
+    output: Tensor,
+    scalar: Int,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_int_out(output, 10, scalar, tensor).
+
+/**
+ * Writes the shifted Chebyshev V polynomial with a floating-point scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_v_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_float_out(output, 10, scalar, tensor).
+
+/**
+ * Computes the shifted Chebyshev W polynomial with an integer scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_w_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 11, scalar).
+
+/**
+ * Computes the shifted Chebyshev W polynomial with a floating-point scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_w_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 11, scalar).
+
+/**
+ * Computes the shifted Chebyshev W polynomial with an integer scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_w_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(11, scalar, tensor).
+
+/**
+ * Computes the shifted Chebyshev W polynomial with a floating-point scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_w_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(11, scalar, tensor).
+
+/**
+ * Writes the shifted Chebyshev W polynomial with an integer scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_w_right_int_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Int,
+): Unit ->
+    native_scalar_right_int_out(output, tensor, 11, scalar).
+
+/**
+ * Writes the shifted Chebyshev W polynomial with a floating-point scalar right operand.
+ */
+pub special_shifted_chebyshev_polynomial_w_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native_scalar_right_float_out(output, tensor, 11, scalar).
+
+/**
+ * Writes the shifted Chebyshev W polynomial with an integer scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_w_left_int_out(
+    output: Tensor,
+    scalar: Int,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_int_out(output, 11, scalar, tensor).
+
+/**
+ * Writes the shifted Chebyshev W polynomial with a floating-point scalar left operand.
+ */
+pub special_shifted_chebyshev_polynomial_w_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native_scalar_left_float_out(output, 11, scalar, tensor).
+
+/**
+ * Computes the x-log-one-plus-y function with an integer scalar right operand.
+ */
+pub special_xlog1py_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 12, scalar).
+
+/**
+ * Computes the x-log-one-plus-y function with a floating-point scalar right operand.
+ */
+pub special_xlog1py_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 12, scalar).
+
+/**
+ * Computes the x-log-one-plus-y function with an integer scalar left operand.
+ */
+pub special_xlog1py_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(12, scalar, tensor).
+
+/**
+ * Computes the x-log-one-plus-y function with a floating-point scalar left operand.
+ */
+pub special_xlog1py_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(12, scalar, tensor).
+
+/**
+ * Writes the x-log-one-plus-y function with an integer scalar right operand.
+ */
+pub special_xlog1py_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native_scalar_right_int_out(output, tensor, 12, scalar).
+
+/**
+ * Writes the x-log-one-plus-y function with a floating-point scalar right operand.
+ */
+pub special_xlog1py_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native_scalar_right_float_out(output, tensor, 12, scalar).
+
+/**
+ * Writes the x-log-one-plus-y function with an integer scalar left operand.
+ */
+pub special_xlog1py_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native_scalar_left_int_out(output, 12, scalar, tensor).
+
+/**
+ * Writes the x-log-one-plus-y function with a floating-point scalar left operand.
+ */
+pub special_xlog1py_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native_scalar_left_float_out(output, 12, scalar, tensor).
+
+/**
+ * Computes the x-log-y function with an integer scalar right operand.
+ */
+pub special_xlogy_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 13, scalar).
+
+/**
+ * Computes the x-log-y function with a floating-point scalar right operand.
+ */
+pub special_xlogy_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 13, scalar).
+
+/**
+ * Computes the x-log-y function with an integer scalar left operand.
+ */
+pub special_xlogy_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(13, scalar, tensor).
+
+/**
+ * Computes the x-log-y function with a floating-point scalar left operand.
+ */
+pub special_xlogy_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(13, scalar, tensor).
+
+/**
+ * Writes the x-log-y function with an integer scalar right operand.
+ */
+pub special_xlogy_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native_scalar_right_int_out(output, tensor, 13, scalar).
+
+/**
+ * Writes the x-log-y function with a floating-point scalar right operand.
+ */
+pub special_xlogy_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native_scalar_right_float_out(output, tensor, 13, scalar).
+
+/**
+ * Writes the x-log-y function with an integer scalar left operand.
+ */
+pub special_xlogy_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native_scalar_left_int_out(output, 13, scalar, tensor).
+
+/**
+ * Writes the x-log-y function with a floating-point scalar left operand.
+ */
+pub special_xlogy_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native_scalar_left_float_out(output, 13, scalar, tensor).
+
+/**
+ * Computes the Hurwitz zeta function with an integer scalar right operand.
+ */
+pub special_zeta_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native_scalar_right_int(tensor, 14, scalar).
+
+/**
+ * Computes the Hurwitz zeta function with a floating-point scalar right operand.
+ */
+pub special_zeta_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native_scalar_right_float(tensor, 14, scalar).
+
+/**
+ * Computes the Hurwitz zeta function with an integer scalar left operand.
+ */
+pub special_zeta_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native_scalar_left_int(14, scalar, tensor).
+
+/**
+ * Computes the Hurwitz zeta function with a floating-point scalar left operand.
+ */
+pub special_zeta_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native_scalar_left_float(14, scalar, tensor).
+
+/**
+ * Writes the Hurwitz zeta function with an integer scalar right operand.
+ */
+pub special_zeta_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native_scalar_right_int_out(output, tensor, 14, scalar).
+
+/**
+ * Writes the Hurwitz zeta function with a floating-point scalar right operand.
+ */
+pub special_zeta_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native_scalar_right_float_out(output, tensor, 14, scalar).
+
+/**
+ * Writes the Hurwitz zeta function with an integer scalar left operand.
+ */
+pub special_zeta_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native_scalar_left_int_out(output, 14, scalar, tensor).
+
+/**
+ * Writes the Hurwitz zeta function with a floating-point scalar left operand.
+ */
+pub special_zeta_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native_scalar_left_float_out(output, 14, scalar, tensor).

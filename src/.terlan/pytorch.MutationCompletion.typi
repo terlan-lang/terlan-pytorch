@@ -1,0 +1,24 @@
+//! Typed in-place compatibility wrappers for scalar mutation schemas.
+
+module pytorch.MutationCompletion.
+
+/// Preserves Tensor.module_load's assign branch and detached return contract.
+
+pub module_load_legacy(input: Tensor, other: Tensor, assign: Bool = false): Tensor.
+
+/// Applies bounded renormalization while retaining the caller's tensor handle.
+
+pub renorm_in_place(input: Tensor, order: Float, dimension: Int, maximum_norm: Float): Unit.
+
+/// Preserves the deprecated Tensor.solve receiver ordering: self is the
+/// right-hand side and the explicit argument is the coefficient matrix.
+
+pub solve_legacy(right: Tensor, coefficient: Tensor): Tensor.
+
+/// Applies floating thresholding while retaining the caller's tensor handle.
+
+pub threshold_in_place_float(input: Tensor, threshold: Float, value: Float): Unit.
+
+/// Applies integer thresholding while retaining the caller's tensor handle.
+
+pub threshold_in_place_int(input: Tensor, threshold: Int, value: Int): Unit.

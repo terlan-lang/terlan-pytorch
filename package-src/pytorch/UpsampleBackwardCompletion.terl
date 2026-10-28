@@ -1,0 +1,133 @@
+/**
+ * Generated CXX upsampling backward completion surface.
+ */
+module pytorch.UpsampleBackwardCompletion.
+
+import type pytorch.Tensor.
+
+@compiler.native {pytorch.upsample_backward.upsample_nearest1d_backward}
+pub upsample_nearest1d_backward(
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+): Tensor ->
+    native.
+
+@compiler.native {pytorch.upsample_backward.upsample_nearest1d_backward_out}
+pub upsample_nearest1d_backward_out(
+    grad_input: Tensor,
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+): Unit ->
+    native.
+
+@compiler.native {pytorch.upsample_backward.upsample_nearest2d_backward}
+pub upsample_nearest2d_backward(
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+): Tensor ->
+    native.
+
+@compiler.native {pytorch.upsample_backward.upsample_nearest2d_backward_out}
+pub upsample_nearest2d_backward_out(
+    grad_input: Tensor,
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+): Unit ->
+    native.
+
+@compiler.native {pytorch.upsample_backward.upsample_nearest3d_backward}
+pub upsample_nearest3d_backward(
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+): Tensor ->
+    native.
+
+@compiler.native {pytorch.upsample_backward.upsample_nearest3d_backward_out}
+pub upsample_nearest3d_backward_out(
+    grad_input: Tensor,
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+): Unit ->
+    native.
+
+@compiler.native {pytorch.upsample_backward.upsample_linear1d_backward}
+pub upsample_linear1d_backward(
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+    align_corners: Bool,
+): Tensor ->
+    native.
+
+@compiler.native {pytorch.upsample_backward.upsample_linear1d_backward_out}
+pub upsample_linear1d_backward_out(
+    grad_input: Tensor,
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+    align_corners: Bool,
+): Unit ->
+    native.
+
+@compiler.native {pytorch.upsample_backward.upsample_trilinear3d_backward}
+pub upsample_trilinear3d_backward(
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+    align_corners: Bool,
+): Tensor ->
+    native.
+
+@compiler.native {pytorch.upsample_backward.upsample_trilinear3d_backward_out}
+pub upsample_trilinear3d_backward_out(
+    grad_input: Tensor,
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+    align_corners: Bool,
+): Unit ->
+    native.
+
+@compiler.native {pytorch.upsample_backward.upsample_bilinear2d_backward}
+pub upsample_bilinear2d_backward(
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+    align_corners: Bool,
+): Tensor ->
+    native.
+
+@compiler.native {pytorch.upsample_backward.upsample_bilinear2d_backward_out}
+pub upsample_bilinear2d_backward_out(
+    grad_input: Tensor,
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+    align_corners: Bool,
+): Unit ->
+    native.
+
+@compiler.native {pytorch.upsample_backward.upsample_bicubic2d_backward}
+pub upsample_bicubic2d_backward(
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+    align_corners: Bool,
+): Tensor ->
+    native.
+
+@compiler.native {pytorch.upsample_backward.upsample_bicubic2d_backward_out}
+pub upsample_bicubic2d_backward_out(
+    grad_input: Tensor,
+    grad_output: Tensor,
+    output_size: List[Int],
+    input_size: List[Int],
+    align_corners: Bool,
+): Unit ->
+    native.

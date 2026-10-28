@@ -1,0 +1,29 @@
+/**
+ * Public local-response normalization parity for the pinned LibTorch C++ API.
+ */
+module pytorch.LocalResponseNormParityTest.
+
+import pytorch.FunctionalCompletion.local_response_norm.
+import pytorch.Tensor.{dispose, dtype, from_floats, shape}.
+import pytorch.TypeRelations.allclose.
+
+@test
+pub local_response_norm_matches_channel_window_defaults_and_empty_input(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0], [1, 3, 1, 1]);
+    let configured = local_response_norm(input, 3, 1.0, 1.0, 1.0);
+    let configured_expected = from_floats([0.375, 6.0 / 17.0, 0.5625], [1, 3, 1, 1]);
+    let configured_valid = allclose(configured, configured_expected, 0.000001, 0.000001, false);
+    let default_result = local_response_norm(input, 3);
+    let default_expected = from_floats([0.999875018226382, 1.999300285711114, 2.999025369540712], [1, 3, 1, 1]);
+    let default_valid = allclose(default_result, default_expected, 0.000001, 0.000001, false);
+    let empty_input = from_floats([], [1, 3, 1, 0]);
+    let empty_result = local_response_norm(empty_input, 3);
+    let empty_valid = shape(empty_result) == [1, 3, 1, 0] and dtype(empty_result) == 7;
+    dispose(empty_result);
+    dispose(empty_input);
+    dispose(default_expected);
+    dispose(default_result);
+    dispose(configured_expected);
+    dispose(configured);
+    dispose(input);
+    configured_valid and default_valid and empty_valid.

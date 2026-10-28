@@ -1,0 +1,47 @@
+/**
+ * Public lp_pool1d parity for integer/float norms, stride, and ceil mode.
+ */
+module pytorch.LpPool1dParityTest.
+
+import pytorch.FunctionalCompletion.lp_pool1d.
+import pytorch.Tensor.{dispose, from_floats}.
+import pytorch.TypeRelationsNative.allclose_native.
+
+@test
+pub lp_pool1d_matches_integer_float_stride_and_ceil_modes(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [1, 1, 6]);
+    let default_expected = from_floats([2.23606797749979, 5.0, 7.810249675906654], [1, 1, 3]);
+    let default_result = lp_pool1d(input, 2, 2);
+    let default_valid = allclose_native(default_result, default_expected, 0.000001, 0.000001, false);
+    let stride_expected =
+        from_floats(
+            [2.23606797749979, 3.605551275463989, 5.0, 6.4031242374328485, 7.810249675906654],
+            [1, 1, 5],
+        );
+    let stride_result = lp_pool1d(input, 2.0, 2, 1);
+    let stride_valid = allclose_native(stride_result, stride_expected, 0.000001, 0.000001, false);
+    let ceil_input = from_floats([1.0, 2.0, 3.0, 4.0, 5.0], [1, 1, 5]);
+    let ceil_expected = from_floats([3.7416573867739413, 7.0710678118654755], [1, 1, 2]);
+    let ceil_result = lp_pool1d(ceil_input, 2.0, 3, 2, true);
+    let ceil_valid = allclose_native(ceil_result, ceil_expected, 0.000001, 0.000001, false);
+    let ceil_default_stride_expected = from_floats([3.7416573867739413, 7.842193570679061], [1, 1, 2]);
+    let ceil_default_stride = lp_pool1d(ceil_input, 2.0, 3, true);
+    let ceil_default_stride_valid =
+        allclose_native(
+            ceil_default_stride,
+            ceil_default_stride_expected,
+            0.000001,
+            0.000001,
+            false,
+        );
+    dispose(ceil_default_stride);
+    dispose(ceil_default_stride_expected);
+    dispose(ceil_result);
+    dispose(ceil_expected);
+    dispose(ceil_input);
+    dispose(stride_result);
+    dispose(stride_expected);
+    dispose(default_result);
+    dispose(default_expected);
+    dispose(input);
+    default_valid and stride_valid and ceil_valid and ceil_default_stride_valid.

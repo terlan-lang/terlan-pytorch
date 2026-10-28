@@ -1,0 +1,11 @@
+//! Generated CXX linear upsampling completion surface.
+
+module pytorch.UpsampleLinear1dCompletion.
+
+/// Upsamples a 3-D tensor to an explicit output size.
+
+pub upsample_linear1d(input: Tensor, output_size: List[Int], align_corners: Bool): Tensor.
+
+/// Writes an upsampled tensor into retained output storage.
+
+pub upsample_linear1d_out(output: Tensor, input: Tensor, output_size: List[Int], align_corners: Bool): Unit.

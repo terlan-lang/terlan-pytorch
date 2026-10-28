@@ -1,0 +1,50 @@
+/**
+ * CPU runtime evidence for LibTorch autocast global state.
+ */
+module pytorch.AutocastStateParityTest.
+
+import pytorch.BackendAvailability.{dispose_autocast_cpu, enter_autocast_cpu, get_autocast_cpu_dtype, is_autocast_cache_enabled, is_autocast_cpu_enabled, set_autocast_cache_enabled, set_autocast_cpu_dtype, set_autocast_cpu_enabled}.
+
+@test
+pub autocast_state_matches_libtorch(): Bool ->
+    let original_enabled = is_autocast_cpu_enabled();
+    let original_cache = is_autocast_cache_enabled();
+    let original_dtype = get_autocast_cpu_dtype();
+    set_autocast_cpu_enabled(true);
+    let enabled = is_autocast_cpu_enabled();
+    (set_autocast_cpu_enabled(false); let disabled = not is_autocast_cpu_enabled(); (set_autocast_cache_enabled(not original_cache); let cache_changed = is_autocast_cache_enabled() == not original_cache; (set_autocast_cpu_dtype(5); let dtype_changed = get_autocast_cpu_dtype() == 5; (set_autocast_cpu_dtype(original_dtype); set_autocast_cache_enabled(original_cache); set_autocast_cpu_enabled(original_enabled); enabled and disabled and cache_changed and dtype_changed)))).
+
+@test
+pub autocast_guard_restores_all_cpu_state(): Bool ->
+    let original_enabled = is_autocast_cpu_enabled();
+    let original_cache = is_autocast_cache_enabled();
+    let original_dtype = get_autocast_cpu_dtype();
+    let guard = enter_autocast_cpu(true, 5, not original_cache);
+    let entered =
+        is_autocast_cpu_enabled()
+            and get_autocast_cpu_dtype() == 5
+            and is_autocast_cache_enabled() == not original_cache;
+    dispose_autocast_cpu(guard);
+    entered
+        and is_autocast_cpu_enabled() == original_enabled
+        and get_autocast_cpu_dtype() == original_dtype
+        and is_autocast_cache_enabled() == original_cache.
+
+@test
+pub autocast_guards_nest_and_restore(): Bool ->
+    let original_enabled = is_autocast_cpu_enabled();
+    let original_cache = is_autocast_cache_enabled();
+    let original_dtype = get_autocast_cpu_dtype();
+    let outer = enter_autocast_cpu(true, 5, true);
+    let inner = enter_autocast_cpu(false, 6, false);
+    let inner_state =
+        not is_autocast_cpu_enabled()
+            and get_autocast_cpu_dtype() == 6
+            and not is_autocast_cache_enabled();
+    dispose_autocast_cpu(inner);
+    let outer_state = is_autocast_cpu_enabled() and get_autocast_cpu_dtype() == 5 and is_autocast_cache_enabled();
+    (dispose_autocast_cpu(outer); inner_state
+    and outer_state
+    and is_autocast_cpu_enabled() == original_enabled
+    and get_autocast_cpu_dtype() == original_dtype
+    and is_autocast_cache_enabled() == original_cache).

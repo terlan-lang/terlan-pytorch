@@ -1,0 +1,31 @@
+/**
+ * Typed scalar-tensor construction compatibility wrapper.
+ */
+module pytorch.ScalarTensorCompletion.
+
+import pytorch.Tensor.{copy_in_place, dispose, from_float, from_int}.
+
+import type pytorch.{Scalar, Tensor}.
+
+/**
+ * Constructs a zero-dimensional tensor while preserving integer versus
+ * floating scalar dtype inference.
+ */
+@compiler.native {pytorch.scalar_tensor_completion.scalar_tensor}
+pub scalar_tensor_native(
+    scalar_is_integer: Bool,
+    scalar_integer: Int,
+    scalar_floating: Float,
+): Tensor ->
+    native.
+
+pub scalar_tensor(scalar: Scalar): Tensor ->
+    scalar_tensor_native(scalar.is_integer, scalar.integer_value, scalar.floating_value).
+
+/**
+ * Writes a scalar tensor into caller-owned output storage.
+ */
+pub scalar_tensor_out(output: Tensor, scalar: Scalar): Unit ->
+    let value = scalar_tensor(scalar);
+    copy_in_place(output, value, false);
+    dispose(value).

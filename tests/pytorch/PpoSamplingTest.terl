@@ -1,0 +1,58 @@
+module pytorch.PpoSamplingTest.
+
+import pytorch.Tensor.{amax, backward, categorical_sample, dispose, from_floats, from_ints, gather, gradient, item, item_float, require_grad, shape, sum}.
+
+@test
+pub categorical_sampling_replays_from_an_isolated_seed(): Bool ->
+    let probabilities = from_floats([0.2, 0.3, 0.5], [1, 3]);
+    let first = categorical_sample(probabilities, 42);
+    let second = categorical_sample(probabilities, 42);
+    let observed_first = item(first);
+    let observed_second = item(second);
+    let observed_shape = shape(first);
+    let probability_total = sum(probabilities);
+    let observed_total = item_float(probability_total);
+    dispose(probability_total);
+    dispose(second);
+    dispose(first);
+    dispose(probabilities);
+    observed_first == observed_second
+        and observed_first >= 0
+        and observed_first < 3
+        and observed_shape == [1, 1]
+        and observed_total == 1.0.
+
+@test
+pub sampled_action_selects_values_without_host_probability_transfer(): Bool ->
+    let values = from_floats([10.0, 20.0, 30.0], [1, 3]);
+    let probabilities = from_floats([0.0, 0.0, 1.0], [1, 3]);
+    let action = categorical_sample(probabilities, 7);
+    let selected = gather(values, 1, action, false);
+    let observed_action = item(action);
+    let observed_value = item_float(selected);
+    let observed_shape = shape(selected);
+    dispose(selected);
+    dispose(action);
+    dispose(probabilities);
+    dispose(values);
+    observed_action == 2 and observed_value == 30.0 and observed_shape == [1, 1].
+
+@test
+pub gathered_action_values_propagate_dense_gradients(): Bool ->
+    let initial = from_floats([1.0, 2.0, 3.0], [1, 3]);
+    let parameter = require_grad(initial);
+    let action = from_ints([2], [1, 1]);
+    let selected = gather(parameter, 1, action, false);
+    let loss = sum(selected);
+    backward(loss);
+    let accumulated = gradient(parameter);
+    let gradient_total = sum(accumulated);
+    let gradient_columns = amax(accumulated, [0], false);
+    let gradient_maximum = amax(gradient_columns, [0], false);
+    let parameter_total = sum(parameter);
+    let observed_gradient_total = item_float(gradient_total);
+    let observed_gradient_maximum = item_float(gradient_maximum);
+    let observed_parameter_total = item_float(parameter_total);
+    (dispose(parameter_total); dispose(gradient_maximum); dispose(gradient_columns); dispose(gradient_total); dispose(accumulated); dispose(loss); dispose(selected); dispose(action); dispose(parameter); dispose(initial); observed_gradient_total == 1.0
+    and observed_gradient_maximum == 1.0
+    and observed_parameter_total == 6.0).

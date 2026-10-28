@@ -1,0 +1,16 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{batch_norm, full_float}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = full_float([1, 2, 2, 2], 3.0);
+    let weight = full_float([2], 2.0);
+    let bias = full_float([2], 1.0);
+    let running_mean = full_float([3], 1.0);
+    let running_variance = full_float([2], 4.0);
+    let output = batch_norm(
+        input, weight, bias, running_mean, running_variance,
+        false, 0.1, 0.0, false
+    );
+    println("PYTORCH_BATCH_NORM_CHANNELS_NOT_REJECTED").

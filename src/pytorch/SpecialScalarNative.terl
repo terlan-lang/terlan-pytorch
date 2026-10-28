@@ -1,0 +1,1040 @@
+/**
+ * Generated exact CXX special-scalar dispatchers.
+ */
+module pytorch.SpecialScalarNative.
+
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX special-scalar dispatcher.
+ */
+pub scalar_right_int(tensor: Tensor, operation: Int, scalar: Int): Tensor ->
+    if {
+        operation == 1 -> ss_chebyshev_polynomial_u_right_int(tensor, scalar);
+        operation == 2 -> ss_chebyshev_polynomial_v_right_int(tensor, scalar);
+        operation == 3 -> ss_chebyshev_polynomial_w_right_int(tensor, scalar);
+        operation == 4 -> ss_hermite_polynomial_h_right_int(tensor, scalar);
+        operation == 5 -> ss_hermite_polynomial_he_right_int(tensor, scalar);
+        operation == 6 -> ss_laguerre_polynomial_l_right_int(tensor, scalar);
+        operation == 7 -> ss_legendre_polynomial_p_right_int(tensor, scalar);
+        operation == 8 -> ss_shifted_chebyshev_polynomial_t_right_int(tensor, scalar);
+        operation == 9 -> ss_shifted_chebyshev_polynomial_u_right_int(tensor, scalar);
+        operation == 10 -> ss_shifted_chebyshev_polynomial_v_right_int(tensor, scalar);
+        operation == 11 -> ss_shifted_chebyshev_polynomial_w_right_int(tensor, scalar);
+        operation == 12 -> ss_xlog1py_right_int(tensor, scalar);
+        operation == 13 -> ss_xlogy_right_int(tensor, scalar);
+        operation == 14 -> ss_zeta_right_int(tensor, scalar);
+        true -> let _failed = fail(exit_reason(7310));
+        ss_chebyshev_polynomial_u_right_int(tensor, scalar)
+    }.
+
+/**
+ * Exact generated CXX special-scalar dispatcher.
+ */
+pub scalar_right_float(tensor: Tensor, operation: Int, scalar: Float): Tensor ->
+    if {
+        operation == 1 -> ss_chebyshev_polynomial_u_right_float(tensor, scalar);
+        operation == 2 -> ss_chebyshev_polynomial_v_right_float(tensor, scalar);
+        operation == 3 -> ss_chebyshev_polynomial_w_right_float(tensor, scalar);
+        operation == 4 -> ss_hermite_polynomial_h_right_float(tensor, scalar);
+        operation == 5 -> ss_hermite_polynomial_he_right_float(tensor, scalar);
+        operation == 6 -> ss_laguerre_polynomial_l_right_float(tensor, scalar);
+        operation == 7 -> ss_legendre_polynomial_p_right_float(tensor, scalar);
+        operation == 8 -> ss_shifted_chebyshev_polynomial_t_right_float(tensor, scalar);
+        operation == 9 -> ss_shifted_chebyshev_polynomial_u_right_float(tensor, scalar);
+        operation == 10 -> ss_shifted_chebyshev_polynomial_v_right_float(tensor, scalar);
+        operation == 11 -> ss_shifted_chebyshev_polynomial_w_right_float(tensor, scalar);
+        operation == 12 -> ss_xlog1py_right_float(tensor, scalar);
+        operation == 13 -> ss_xlogy_right_float(tensor, scalar);
+        operation == 14 -> ss_zeta_right_float(tensor, scalar);
+        true -> let _failed = fail(exit_reason(7310));
+        ss_chebyshev_polynomial_u_right_float(tensor, scalar)
+    }.
+
+/**
+ * Exact generated CXX special-scalar dispatcher.
+ */
+pub scalar_left_int(operation: Int, scalar: Int, tensor: Tensor): Tensor ->
+    if {
+        operation == 1 -> ss_chebyshev_polynomial_u_left_int(scalar, tensor);
+        operation == 2 -> ss_chebyshev_polynomial_v_left_int(scalar, tensor);
+        operation == 3 -> ss_chebyshev_polynomial_w_left_int(scalar, tensor);
+        operation == 4 -> ss_hermite_polynomial_h_left_int(scalar, tensor);
+        operation == 5 -> ss_hermite_polynomial_he_left_int(scalar, tensor);
+        operation == 6 -> ss_laguerre_polynomial_l_left_int(scalar, tensor);
+        operation == 7 -> ss_legendre_polynomial_p_left_int(scalar, tensor);
+        operation == 8 -> ss_shifted_chebyshev_polynomial_t_left_int(scalar, tensor);
+        operation == 9 -> ss_shifted_chebyshev_polynomial_u_left_int(scalar, tensor);
+        operation == 10 -> ss_shifted_chebyshev_polynomial_v_left_int(scalar, tensor);
+        operation == 11 -> ss_shifted_chebyshev_polynomial_w_left_int(scalar, tensor);
+        operation == 12 -> ss_xlog1py_left_int(scalar, tensor);
+        operation == 13 -> ss_xlogy_left_int(scalar, tensor);
+        operation == 14 -> ss_zeta_left_int(scalar, tensor);
+        true -> let _failed = fail(exit_reason(7310));
+        ss_chebyshev_polynomial_u_left_int(scalar, tensor)
+    }.
+
+/**
+ * Exact generated CXX special-scalar dispatcher.
+ */
+pub scalar_left_float(operation: Int, scalar: Float, tensor: Tensor): Tensor ->
+    if {
+        operation == 1 -> ss_chebyshev_polynomial_u_left_float(scalar, tensor);
+        operation == 2 -> ss_chebyshev_polynomial_v_left_float(scalar, tensor);
+        operation == 3 -> ss_chebyshev_polynomial_w_left_float(scalar, tensor);
+        operation == 4 -> ss_hermite_polynomial_h_left_float(scalar, tensor);
+        operation == 5 -> ss_hermite_polynomial_he_left_float(scalar, tensor);
+        operation == 6 -> ss_laguerre_polynomial_l_left_float(scalar, tensor);
+        operation == 7 -> ss_legendre_polynomial_p_left_float(scalar, tensor);
+        operation == 8 -> ss_shifted_chebyshev_polynomial_t_left_float(scalar, tensor);
+        operation == 9 -> ss_shifted_chebyshev_polynomial_u_left_float(scalar, tensor);
+        operation == 10 -> ss_shifted_chebyshev_polynomial_v_left_float(scalar, tensor);
+        operation == 11 -> ss_shifted_chebyshev_polynomial_w_left_float(scalar, tensor);
+        operation == 12 -> ss_xlog1py_left_float(scalar, tensor);
+        operation == 13 -> ss_xlogy_left_float(scalar, tensor);
+        operation == 14 -> ss_zeta_left_float(scalar, tensor);
+        true -> let _failed = fail(exit_reason(7310));
+        ss_chebyshev_polynomial_u_left_float(scalar, tensor)
+    }.
+
+/**
+ * Exact generated CXX special-scalar dispatcher.
+ */
+pub scalar_right_int_out(output: Tensor, tensor: Tensor, operation: Int, scalar: Int): Unit ->
+    if {
+        operation == 1 -> ss_chebyshev_polynomial_u_right_int_out(output, tensor, scalar);
+        operation == 2 -> ss_chebyshev_polynomial_v_right_int_out(output, tensor, scalar);
+        operation == 3 -> ss_chebyshev_polynomial_w_right_int_out(output, tensor, scalar);
+        operation == 4 -> ss_hermite_polynomial_h_right_int_out(output, tensor, scalar);
+        operation == 5 -> ss_hermite_polynomial_he_right_int_out(output, tensor, scalar);
+        operation == 6 -> ss_laguerre_polynomial_l_right_int_out(output, tensor, scalar);
+        operation == 7 -> ss_legendre_polynomial_p_right_int_out(output, tensor, scalar);
+        operation == 8 -> ss_shifted_chebyshev_polynomial_t_right_int_out(output, tensor, scalar);
+        operation == 9 -> ss_shifted_chebyshev_polynomial_u_right_int_out(output, tensor, scalar);
+        operation == 10 -> ss_shifted_chebyshev_polynomial_v_right_int_out(output, tensor, scalar);
+        operation == 11 -> ss_shifted_chebyshev_polynomial_w_right_int_out(output, tensor, scalar);
+        operation == 12 -> ss_xlog1py_right_int_out(output, tensor, scalar);
+        operation == 13 -> ss_xlogy_right_int_out(output, tensor, scalar);
+        operation == 14 -> ss_zeta_right_int_out(output, tensor, scalar);
+        true -> let _failed = fail(exit_reason(7310));
+        ss_chebyshev_polynomial_u_right_int_out(output, tensor, scalar)
+    }.
+
+/**
+ * Exact generated CXX special-scalar dispatcher.
+ */
+pub scalar_right_float_out(output: Tensor, tensor: Tensor, operation: Int, scalar: Float): Unit ->
+    if {
+        operation == 1 -> ss_chebyshev_polynomial_u_right_float_out(output, tensor, scalar);
+        operation == 2 -> ss_chebyshev_polynomial_v_right_float_out(output, tensor, scalar);
+        operation == 3 -> ss_chebyshev_polynomial_w_right_float_out(output, tensor, scalar);
+        operation == 4 -> ss_hermite_polynomial_h_right_float_out(output, tensor, scalar);
+        operation == 5 -> ss_hermite_polynomial_he_right_float_out(output, tensor, scalar);
+        operation == 6 -> ss_laguerre_polynomial_l_right_float_out(output, tensor, scalar);
+        operation == 7 -> ss_legendre_polynomial_p_right_float_out(output, tensor, scalar);
+        operation == 8 -> ss_shifted_chebyshev_polynomial_t_right_float_out(output, tensor, scalar);
+        operation == 9 -> ss_shifted_chebyshev_polynomial_u_right_float_out(output, tensor, scalar);
+        operation == 10 -> ss_shifted_chebyshev_polynomial_v_right_float_out(output, tensor, scalar);
+        operation == 11 -> ss_shifted_chebyshev_polynomial_w_right_float_out(output, tensor, scalar);
+        operation == 12 -> ss_xlog1py_right_float_out(output, tensor, scalar);
+        operation == 13 -> ss_xlogy_right_float_out(output, tensor, scalar);
+        operation == 14 -> ss_zeta_right_float_out(output, tensor, scalar);
+        true -> let _failed = fail(exit_reason(7310));
+        ss_chebyshev_polynomial_u_right_float_out(output, tensor, scalar)
+    }.
+
+/**
+ * Exact generated CXX special-scalar dispatcher.
+ */
+pub scalar_left_int_out(output: Tensor, operation: Int, scalar: Int, tensor: Tensor): Unit ->
+    if {
+        operation == 1 -> ss_chebyshev_polynomial_u_left_int_out(output, scalar, tensor);
+        operation == 2 -> ss_chebyshev_polynomial_v_left_int_out(output, scalar, tensor);
+        operation == 3 -> ss_chebyshev_polynomial_w_left_int_out(output, scalar, tensor);
+        operation == 4 -> ss_hermite_polynomial_h_left_int_out(output, scalar, tensor);
+        operation == 5 -> ss_hermite_polynomial_he_left_int_out(output, scalar, tensor);
+        operation == 6 -> ss_laguerre_polynomial_l_left_int_out(output, scalar, tensor);
+        operation == 7 -> ss_legendre_polynomial_p_left_int_out(output, scalar, tensor);
+        operation == 8 -> ss_shifted_chebyshev_polynomial_t_left_int_out(output, scalar, tensor);
+        operation == 9 -> ss_shifted_chebyshev_polynomial_u_left_int_out(output, scalar, tensor);
+        operation == 10 -> ss_shifted_chebyshev_polynomial_v_left_int_out(output, scalar, tensor);
+        operation == 11 -> ss_shifted_chebyshev_polynomial_w_left_int_out(output, scalar, tensor);
+        operation == 12 -> ss_xlog1py_left_int_out(output, scalar, tensor);
+        operation == 13 -> ss_xlogy_left_int_out(output, scalar, tensor);
+        operation == 14 -> ss_zeta_left_int_out(output, scalar, tensor);
+        true -> let _failed = fail(exit_reason(7310));
+        ss_chebyshev_polynomial_u_left_int_out(output, scalar, tensor)
+    }.
+
+/**
+ * Exact generated CXX special-scalar dispatcher.
+ */
+pub scalar_left_float_out(output: Tensor, operation: Int, scalar: Float, tensor: Tensor): Unit ->
+    if {
+        operation == 1 -> ss_chebyshev_polynomial_u_left_float_out(output, scalar, tensor);
+        operation == 2 -> ss_chebyshev_polynomial_v_left_float_out(output, scalar, tensor);
+        operation == 3 -> ss_chebyshev_polynomial_w_left_float_out(output, scalar, tensor);
+        operation == 4 -> ss_hermite_polynomial_h_left_float_out(output, scalar, tensor);
+        operation == 5 -> ss_hermite_polynomial_he_left_float_out(output, scalar, tensor);
+        operation == 6 -> ss_laguerre_polynomial_l_left_float_out(output, scalar, tensor);
+        operation == 7 -> ss_legendre_polynomial_p_left_float_out(output, scalar, tensor);
+        operation == 8 -> ss_shifted_chebyshev_polynomial_t_left_float_out(output, scalar, tensor);
+        operation == 9 -> ss_shifted_chebyshev_polynomial_u_left_float_out(output, scalar, tensor);
+        operation == 10 -> ss_shifted_chebyshev_polynomial_v_left_float_out(output, scalar, tensor);
+        operation == 11 -> ss_shifted_chebyshev_polynomial_w_left_float_out(output, scalar, tensor);
+        operation == 12 -> ss_xlog1py_left_float_out(output, scalar, tensor);
+        operation == 13 -> ss_xlogy_left_float_out(output, scalar, tensor);
+        operation == 14 -> ss_zeta_left_float_out(output, scalar, tensor);
+        true -> let _failed = fail(exit_reason(7310));
+        ss_chebyshev_polynomial_u_left_float_out(output, scalar, tensor)
+    }.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_u_right_int}
+ss_chebyshev_polynomial_u_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_u_left_int}
+ss_chebyshev_polynomial_u_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_u_right_int_out}
+ss_chebyshev_polynomial_u_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_u_left_int_out}
+ss_chebyshev_polynomial_u_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_u_right_float}
+ss_chebyshev_polynomial_u_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_u_left_float}
+ss_chebyshev_polynomial_u_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_u_right_float_out}
+ss_chebyshev_polynomial_u_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_u_left_float_out}
+ss_chebyshev_polynomial_u_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_v_right_int}
+ss_chebyshev_polynomial_v_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_v_left_int}
+ss_chebyshev_polynomial_v_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_v_right_int_out}
+ss_chebyshev_polynomial_v_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_v_left_int_out}
+ss_chebyshev_polynomial_v_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_v_right_float}
+ss_chebyshev_polynomial_v_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_v_left_float}
+ss_chebyshev_polynomial_v_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_v_right_float_out}
+ss_chebyshev_polynomial_v_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_v_left_float_out}
+ss_chebyshev_polynomial_v_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_w_right_int}
+ss_chebyshev_polynomial_w_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_w_left_int}
+ss_chebyshev_polynomial_w_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_w_right_int_out}
+ss_chebyshev_polynomial_w_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_w_left_int_out}
+ss_chebyshev_polynomial_w_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_w_right_float}
+ss_chebyshev_polynomial_w_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_w_left_float}
+ss_chebyshev_polynomial_w_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_w_right_float_out}
+ss_chebyshev_polynomial_w_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_chebyshev_polynomial_w_left_float_out}
+ss_chebyshev_polynomial_w_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_h_right_int}
+ss_hermite_polynomial_h_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_h_left_int}
+ss_hermite_polynomial_h_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_h_right_int_out}
+ss_hermite_polynomial_h_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_h_left_int_out}
+ss_hermite_polynomial_h_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_h_right_float}
+ss_hermite_polynomial_h_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_h_left_float}
+ss_hermite_polynomial_h_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_h_right_float_out}
+ss_hermite_polynomial_h_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_h_left_float_out}
+ss_hermite_polynomial_h_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_he_right_int}
+ss_hermite_polynomial_he_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_he_left_int}
+ss_hermite_polynomial_he_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_he_right_int_out}
+ss_hermite_polynomial_he_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_he_left_int_out}
+ss_hermite_polynomial_he_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_he_right_float}
+ss_hermite_polynomial_he_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_he_left_float}
+ss_hermite_polynomial_he_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_he_right_float_out}
+ss_hermite_polynomial_he_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_hermite_polynomial_he_left_float_out}
+ss_hermite_polynomial_he_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_laguerre_polynomial_l_right_int}
+ss_laguerre_polynomial_l_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_laguerre_polynomial_l_left_int}
+ss_laguerre_polynomial_l_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_laguerre_polynomial_l_right_int_out}
+ss_laguerre_polynomial_l_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_laguerre_polynomial_l_left_int_out}
+ss_laguerre_polynomial_l_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_laguerre_polynomial_l_right_float}
+ss_laguerre_polynomial_l_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_laguerre_polynomial_l_left_float}
+ss_laguerre_polynomial_l_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_laguerre_polynomial_l_right_float_out}
+ss_laguerre_polynomial_l_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_laguerre_polynomial_l_left_float_out}
+ss_laguerre_polynomial_l_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_legendre_polynomial_p_right_int}
+ss_legendre_polynomial_p_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_legendre_polynomial_p_left_int}
+ss_legendre_polynomial_p_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_legendre_polynomial_p_right_int_out}
+ss_legendre_polynomial_p_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_legendre_polynomial_p_left_int_out}
+ss_legendre_polynomial_p_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_legendre_polynomial_p_right_float}
+ss_legendre_polynomial_p_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_legendre_polynomial_p_left_float}
+ss_legendre_polynomial_p_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_legendre_polynomial_p_right_float_out}
+ss_legendre_polynomial_p_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_legendre_polynomial_p_left_float_out}
+ss_legendre_polynomial_p_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_t_right_int}
+ss_shifted_chebyshev_polynomial_t_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_t_left_int}
+ss_shifted_chebyshev_polynomial_t_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_t_right_int_out}
+ss_shifted_chebyshev_polynomial_t_right_int_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Int,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_t_left_int_out}
+ss_shifted_chebyshev_polynomial_t_left_int_out(
+    output: Tensor,
+    scalar: Int,
+    tensor: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_t_right_float}
+ss_shifted_chebyshev_polynomial_t_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_t_left_float}
+ss_shifted_chebyshev_polynomial_t_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_t_right_float_out}
+ss_shifted_chebyshev_polynomial_t_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_t_left_float_out}
+ss_shifted_chebyshev_polynomial_t_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_u_right_int}
+ss_shifted_chebyshev_polynomial_u_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_u_left_int}
+ss_shifted_chebyshev_polynomial_u_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_u_right_int_out}
+ss_shifted_chebyshev_polynomial_u_right_int_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Int,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_u_left_int_out}
+ss_shifted_chebyshev_polynomial_u_left_int_out(
+    output: Tensor,
+    scalar: Int,
+    tensor: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_u_right_float}
+ss_shifted_chebyshev_polynomial_u_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_u_left_float}
+ss_shifted_chebyshev_polynomial_u_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_u_right_float_out}
+ss_shifted_chebyshev_polynomial_u_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_u_left_float_out}
+ss_shifted_chebyshev_polynomial_u_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_v_right_int}
+ss_shifted_chebyshev_polynomial_v_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_v_left_int}
+ss_shifted_chebyshev_polynomial_v_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_v_right_int_out}
+ss_shifted_chebyshev_polynomial_v_right_int_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Int,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_v_left_int_out}
+ss_shifted_chebyshev_polynomial_v_left_int_out(
+    output: Tensor,
+    scalar: Int,
+    tensor: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_v_right_float}
+ss_shifted_chebyshev_polynomial_v_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_v_left_float}
+ss_shifted_chebyshev_polynomial_v_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_v_right_float_out}
+ss_shifted_chebyshev_polynomial_v_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_v_left_float_out}
+ss_shifted_chebyshev_polynomial_v_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_w_right_int}
+ss_shifted_chebyshev_polynomial_w_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_w_left_int}
+ss_shifted_chebyshev_polynomial_w_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_w_right_int_out}
+ss_shifted_chebyshev_polynomial_w_right_int_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Int,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_w_left_int_out}
+ss_shifted_chebyshev_polynomial_w_left_int_out(
+    output: Tensor,
+    scalar: Int,
+    tensor: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_w_right_float}
+ss_shifted_chebyshev_polynomial_w_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_w_left_float}
+ss_shifted_chebyshev_polynomial_w_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_w_right_float_out}
+ss_shifted_chebyshev_polynomial_w_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    scalar: Float,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_shifted_chebyshev_polynomial_w_left_float_out}
+ss_shifted_chebyshev_polynomial_w_left_float_out(
+    output: Tensor,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlog1py_right_int}
+ss_xlog1py_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlog1py_left_int}
+ss_xlog1py_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlog1py_right_int_out}
+ss_xlog1py_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlog1py_left_int_out}
+ss_xlog1py_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlog1py_right_float}
+ss_xlog1py_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlog1py_left_float}
+ss_xlog1py_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlog1py_right_float_out}
+ss_xlog1py_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlog1py_left_float_out}
+ss_xlog1py_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlogy_right_int}
+ss_xlogy_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlogy_left_int}
+ss_xlogy_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlogy_right_int_out}
+ss_xlogy_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlogy_left_int_out}
+ss_xlogy_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlogy_right_float}
+ss_xlogy_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlogy_left_float}
+ss_xlogy_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlogy_right_float_out}
+ss_xlogy_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_xlogy_left_float_out}
+ss_xlogy_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_zeta_right_int}
+ss_zeta_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_zeta_left_int}
+ss_zeta_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_zeta_right_int_out}
+ss_zeta_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_zeta_left_int_out}
+ss_zeta_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_zeta_right_float}
+ss_zeta_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_zeta_left_float}
+ss_zeta_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_zeta_right_float_out}
+ss_zeta_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special-scalar output leaf.
+ */
+@compiler.native {pytorch.special_scalar_native.cxx.ss_zeta_left_float_out}
+ss_zeta_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    native.

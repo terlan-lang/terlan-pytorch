@@ -1,0 +1,119 @@
+/**
+ * CPU and required-CUDA evidence for the public variadic minimum-rank family.
+ */
+module pytorch.AtleastSequenceParityTest.
+
+import pytorch.Tensor.{dispose, from_floats, item_float, shape, sum, to_device}.
+import pytorch.UnaryStorage.zero_in_place.
+import pytorch.View.{atleast_1d_sequence, atleast_2d_sequence, atleast_3d_sequence}.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+total(tensor: Tensor): Float ->
+    let reduced = sum(tensor);
+    let value = item_float(reduced);
+    dispose(reduced);
+    value.
+
+validate_three(
+    tensors: List[Tensor],
+    scalar_shape: List[Int],
+    vector_shape: List[Int],
+    matrix_shape: List[Int],
+): Bool ->
+    case tensors {
+        [scalar, vector, matrix] ->
+            validate_values(scalar, scalar_shape, vector, vector_shape, matrix, matrix_shape);
+        _ -> false
+    }.
+
+validate_values(
+    scalar: Tensor,
+    scalar_shape: List[Int],
+    vector: Tensor,
+    vector_shape: List[Int],
+    matrix: Tensor,
+    matrix_shape: List[Int],
+): Bool ->
+    let valid =
+        shape(scalar) == scalar_shape
+            and total(scalar) == 5.0
+            and shape(vector) == vector_shape
+            and total(vector) == 3.0
+            and shape(matrix) == matrix_shape
+            and total(matrix) == 10.0;
+    dispose(matrix);
+    dispose(vector);
+    dispose(scalar);
+    valid.
+
+rank_one(device: Int): Bool ->
+    let scalar = placed([5.0], [], device);
+    let vector = placed([1.0, 2.0], [2], device);
+    let matrix = placed([1.0, 2.0, 3.0, 4.0], [2, 2], device);
+    let normalized = atleast_1d_sequence(scalar, [vector, matrix]);
+    dispose(matrix);
+    dispose(vector);
+    dispose(scalar);
+    validate_three(normalized, [1], [2], [2, 2]).
+
+rank_two(device: Int): Bool ->
+    let scalar = placed([5.0], [], device);
+    let vector = placed([1.0, 2.0], [2], device);
+    let matrix = placed([1.0, 2.0, 3.0, 4.0], [2, 2], device);
+    let normalized = atleast_2d_sequence(scalar, [vector, matrix]);
+    dispose(matrix);
+    dispose(vector);
+    dispose(scalar);
+    validate_three(normalized, [1, 1], [1, 2], [2, 2]).
+
+rank_three(device: Int): Bool ->
+    let scalar = placed([5.0], [], device);
+    let vector = placed([1.0, 2.0], [2], device);
+    let matrix = placed([1.0, 2.0, 3.0, 4.0], [2, 2], device);
+    let normalized = atleast_3d_sequence(scalar, [vector, matrix]);
+    dispose(matrix);
+    dispose(vector);
+    dispose(scalar);
+    validate_three(normalized, [1, 1, 1], [1, 2, 1], [2, 2, 1]).
+
+validate_alias(source: Tensor, view: Tensor): Bool ->
+    zero_in_place(view);
+    let valid = item_float(source) == 0.0; (dispose(view); dispose(source); valid).
+
+dispose_false(tensor: Tensor): Bool ->
+    dispose(tensor);
+    false.
+
+aliasing(device: Int): Bool ->
+    let source = placed([9.0], [], device);
+    case atleast_1d_sequence(source, []) {
+        [view] -> validate_alias(source, view);
+        _ -> dispose_false(source)
+    }.
+
+verify(device: Int): Bool ->
+    rank_one(device) and rank_two(device) and rank_three(device) and aliasing(device).
+
+@test
+pub variadic_minimum_rank_on_cpu_and_required_cuda(): Bool ->
+    let cpu_valid = verify(0);
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    cpu_valid and cuda_valid.

@@ -1,0 +1,15 @@
+//! Generated direct-CXX implementation of the public tensor-distance surface.
+
+module pytorch.Distance.
+
+/// Exact generated CXX complex-half conversion.
+
+pub chalf(input: Tensor): Tensor.
+
+/// Computes cosine similarity along one dimension with an explicit denominator floor.
+
+pub cosine_similarity(x1: Tensor, x2: Tensor, dimension: Int = 1, epsilon: Float = 1e-8): Tensor.
+
+/// Computes batched pairwise p-distance with explicit epsilon and dimension retention.
+
+pub pairwise_distance(x1: Tensor, x2: Tensor, order: Float = 2.0, epsilon: Float = 0.000001, keep_dimension: Bool = false): Tensor.

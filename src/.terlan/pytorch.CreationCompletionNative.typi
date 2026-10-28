@@ -1,0 +1,47 @@
+//! Generated exact CXX dense creation and like dispatchers.
+
+module pytorch.CreationCompletionNative.
+
+/// Channels-last memory format.
+
+pub type ChannelsLast =
+    Atom["channels_last"].
+
+/// Channels-last 3D memory format.
+
+pub type ChannelsLast3d =
+    Atom["channels_last_3d"].
+
+/// Contiguous memory format.
+
+pub type Contiguous =
+    Atom["contiguous"].
+
+/// Finite public memory-format values.
+
+pub type MemoryFormat =
+    Atom["contiguous"]
+  | Atom["preserve"]
+  | Atom["channels_last"]
+  | Atom["channels_last_3d"].
+
+/// Preserve memory format.
+
+pub type Preserve =
+    Atom["preserve"].
+
+/// Creates an empty, full, ones, or zeros tensor with exact optional arguments.
+
+pub create_configured(operation: Int, shape: List[Int], fill_is_integer: Bool, fill_integer: Int, fill_floating: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool, memory_format: Int, has_memory_format: Bool): Tensor.
+
+/// Writes an empty, full, ones, or zeros result into retained output storage.
+
+pub create_out(output: Tensor, operation: Int, shape: List[Int], fill_is_integer: Bool, fill_integer: Int, fill_floating: Float, memory_format: Int, has_memory_format: Bool): Unit.
+
+/// Creates an empty, full, ones, or zeros tensor like an input with exact optional arguments.
+
+pub like_configured(input: Tensor, operation: Int, fill_is_integer: Bool, fill_integer: Int, fill_floating: Float, dtype: Int, has_dtype: Bool, layout: Int, has_layout: Bool, device_type: Int, device_index: Int, has_device: Bool, pin_memory: Bool, has_pin_memory: Bool, memory_format: Int, has_memory_format: Bool): Tensor.
+
+/// Writes an empty, full, ones, or zeros like-result into retained output storage.
+
+pub like_out(output: Tensor, input: Tensor, operation: Int, fill_is_integer: Bool, fill_integer: Int, fill_floating: Float, memory_format: Int, has_memory_format: Bool): Unit.

@@ -1,0 +1,27 @@
+/**
+ * CPU runtime evidence for the exact thnn_conv2d CXX leaf.
+ */
+module pytorch.ThnnConv2dParityTest.
+
+import pytorch.LegacyConvolution.{thnn_conv2d, thnn_conv2d_out}.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+import pytorch.TypeRelations.allclose.
+
+@test
+pub thnn_conv2d_optional_bias_forms_match_libtorch(): Bool ->
+    let input =
+        from_floats(
+            [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0],
+            [1, 1, 4, 4],
+        );
+    let weight = from_floats([1.0, 0.0, 0.0, 1.0], [1, 1, 2, 2]);
+    let bias = from_floats([0.5], [1]);
+    let output_out = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [1, 1, 3, 3]);
+    let output = thnn_conv2d(input, weight, [2, 2], true, bias, [1, 1], [0, 0]);
+    let output_no_bias = thnn_conv2d(input, weight, [2, 2], false, bias, [1, 1], [0, 0]);
+    thnn_conv2d_out(output_out, input, weight, [2, 2], true, bias, [1, 1], [0, 0]);
+    let valid =
+        shape(output) == [1, 1, 3, 3]
+            and shape(output_no_bias) == [1, 1, 3, 3]
+            and allclose(output_out, output);
+    (dispose(output_out); dispose(output_no_bias); dispose(output); dispose(bias); dispose(weight); dispose(input); valid).

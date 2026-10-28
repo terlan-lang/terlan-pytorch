@@ -1,0 +1,9 @@
+module=pytorch.Loss
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=5033346619424201540
+interface_hash=14118466778511442026
+interface_doc_hash=10712843758349669993
+deps=1
+pytorch.Tensor=13489932768568026575

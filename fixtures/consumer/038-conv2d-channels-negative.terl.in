@@ -1,0 +1,11 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{conv2d, full_float}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = full_float([1, 2, 3, 3], 1.0);
+    let weight = full_float([1, 1, 2, 2], 1.0);
+    let bias = full_float([1], 0.0);
+    let output = conv2d(input, weight, bias, [1, 1], [0, 0], [1, 1], 1);
+    println("PYTORCH_CONV2D_CHANNELS_NOT_REJECTED").

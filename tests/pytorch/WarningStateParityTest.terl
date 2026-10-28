@@ -1,0 +1,31 @@
+/**
+ * CPU runtime evidence for LibTorch warning-mode global state.
+ */
+module pytorch.WarningStateParityTest.
+
+import pytorch.BackendAvailability.{dispose_warning_mode, enter_warning_mode, is_warn_always_enabled, set_warn_always}.
+
+@test
+pub warning_state_matches_libtorch(): Bool ->
+    let original = is_warn_always_enabled();
+    set_warn_always(true);
+    let enabled = is_warn_always_enabled();
+    (set_warn_always(false); let disabled = not is_warn_always_enabled(); (set_warn_always(original); enabled and disabled)).
+
+@test
+pub warning_guard_restores_prior_state(): Bool ->
+    let original = is_warn_always_enabled();
+    let guard = enter_warning_mode(not original);
+    let entered = is_warn_always_enabled() == not original;
+    dispose_warning_mode(guard);
+    entered and is_warn_always_enabled() == original.
+
+@test
+pub warning_guards_nest_and_restore(): Bool ->
+    let original = is_warn_always_enabled();
+    let outer = enter_warning_mode(true);
+    let inner = enter_warning_mode(false);
+    let inner_state = not is_warn_always_enabled();
+    dispose_warning_mode(inner);
+    let outer_state = is_warn_always_enabled();
+    (dispose_warning_mode(outer); inner_state and outer_state and is_warn_always_enabled() == original).

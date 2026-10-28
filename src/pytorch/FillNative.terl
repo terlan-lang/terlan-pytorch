@@ -1,0 +1,119 @@
+/**
+ * Compiler-generated exact full-tensor, diagonal, and masked filling primitives.
+ */
+module pytorch.FillNative.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes exact fill scalar behavior through the selected upstream overload.
+ */
+@compiler.native {pytorch.fill.scalar}
+pub fill_scalar(input: Tensor, value_is_int: Bool, value_int: Int, value_float: Float): Tensor ->
+    native.
+
+/**
+ * Executes exact fill scalar out behavior through the selected upstream overload.
+ */
+@compiler.native {pytorch.fill.scalar_out}
+pub fill_scalar_out(
+    output: Tensor,
+    input: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes exact fill scalar in place behavior through the selected upstream overload.
+ */
+@compiler.native {pytorch.fill.scalar_in_place}
+pub fill_scalar_in_place(
+    input: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes exact fill tensor out behavior through the selected upstream overload.
+ */
+@compiler.native {pytorch.fill.tensor_out}
+pub fill_tensor_out(output: Tensor, input: Tensor, value: Tensor): Unit ->
+    native.
+
+/**
+ * Executes exact fill tensor in place behavior through the selected upstream overload.
+ */
+@compiler.native {pytorch.fill.tensor_in_place}
+pub fill_tensor_in_place(input: Tensor, value: Tensor): Unit ->
+    native.
+
+/**
+ * Executes exact fill diagonal in place behavior through the selected upstream overload.
+ */
+@compiler.native {pytorch.fill.diagonal_in_place}
+pub fill_diagonal_in_place(
+    input: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    wrap: Bool,
+): Unit ->
+    native.
+
+/**
+ * Executes exact masked fill scalar behavior through the selected upstream overload.
+ */
+@compiler.native {pytorch.fill.masked_scalar}
+pub masked_fill_scalar(
+    input: Tensor,
+    mask: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Executes exact masked fill scalar out behavior through the selected upstream overload.
+ */
+@compiler.native {pytorch.fill.masked_scalar_out}
+pub masked_fill_scalar_out(
+    output: Tensor,
+    input: Tensor,
+    mask: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes exact masked fill scalar in place behavior through the selected upstream overload.
+ */
+@compiler.native {pytorch.fill.masked_scalar_in_place}
+pub masked_fill_scalar_in_place(
+    input: Tensor,
+    mask: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes exact masked fill tensor out behavior through the selected upstream overload.
+ */
+@compiler.native {pytorch.fill.masked_tensor_out}
+pub masked_fill_tensor_out(output: Tensor, input: Tensor, mask: Tensor, value: Tensor): Unit ->
+    native.
+
+/**
+ * Executes exact masked fill tensor in place behavior through the selected upstream overload.
+ */
+@compiler.native {pytorch.fill.masked_tensor_in_place}
+pub masked_fill_tensor_in_place(input: Tensor, mask: Tensor, value: Tensor): Unit ->
+    native.

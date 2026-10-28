@@ -1,0 +1,260 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Builds the TorchScript fixtures used by package and consumer validation.
+ */
+import std.collections.List.
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.Console.eprintln.
+import std.io.{Directory, File, Path}.
+import std.system.{Arguments, Environment, Process}.
+
+import type std.core.Option.
+
+/**
+ * Fixture pairs one output path with its stable placeholder description.
+ */
+struct Fixture {
+    path: String,
+    description: String,
+}.
+
+/**
+ * Joins a parent path and one relative child.
+ */
+child(parent: String, relative: String): String ->
+    if {
+        String.ends_with(parent, "/") -> String.append(parent, relative);
+        true -> String.concat([parent, "/", relative])
+    }.
+
+/**
+ * Reports one stable fixture-build failure.
+ */
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[terlan_pytorch_torchscript_fixture]: ", message));
+    false.
+
+/**
+ * Creates the parent directory for one output path.
+ */
+prepare_parent(path: String): Bool ->
+    case Path.from_string(path) {
+        Err(_reason) -> failure(String.append("invalid output path: ", path));
+        Ok(parsed) ->
+            case parsed.parent() {
+                None -> true;
+                Some(parent) ->
+                    let rendered = parent.to_string();
+                    if {
+                        rendered == "" -> true;
+                        true -> case Directory.create_all(rendered) {
+                            Ok(Unit) -> true;
+                            Err(reason) -> failure(reason.message)
+                        }
+                    }
+            }
+    }.
+
+/**
+ * Creates every output parent in declaration order.
+ */
+prepare_outputs(fixtures: List[Fixture]): Bool ->
+    case fixtures {
+        [] -> true;
+        [fixture | rest] ->
+            let path = fixture.path;
+            prepare_parent(path) and prepare_outputs(rest)
+    }.
+
+/**
+ * Writes deterministic placeholders when a fixture LibTorch omits C++ headers.
+ */
+write_placeholders(fixtures: List[Fixture]): Bool ->
+    case fixtures {
+        [] -> true;
+        [fixture | rest] ->
+            let path = fixture.path;
+            let description = fixture.description;
+            case File.write_text(
+                path,
+                String.concat(["terlan fixture TorchScript placeholder: ", description, "\n"]),
+            ) {
+                Ok(Unit) -> write_placeholders(rest);
+                Err(reason) -> failure(reason.message)
+            }
+    }.
+
+/**
+ * Projects fixture output paths for the native fixture-builder argument vector.
+ */
+fixture_paths(fixtures: List[Fixture]): List[String] ->
+    case fixtures {
+        [] -> [];
+        [fixture | rest] ->
+            let path = fixture.path;
+            [path | fixture_paths(rest)]
+    }.
+
+/**
+ * Runs one bounded command and reports its captured diagnostics on failure.
+ */
+run_command(program: String, arguments: List[String], working_directory: String): Bool ->
+    let request =
+        Process.with_output_limit_bytes(
+            Process.with_timeout_ms(
+                Process.with_working_directory(
+                    Process.with_arguments(Process.command(program), arguments),
+                    working_directory,
+                ),
+                600000,
+            ),
+            16777216,
+        );
+    case Process.run(request) {
+        Err(reason) -> failure(reason.message);
+        Ok(output) ->
+            if {
+                output.status == 0 -> true;
+                true -> failure(String.append(output.stderr, output.stdout))
+            }
+    }.
+
+/**
+ * Builds and executes the native fixture generator against a real LibTorch.
+ */
+build_real(libtorch: String, fixtures: List[Fixture]): Bool ->
+    case Directory.create_temporary("terlan-torchscript-builder") {
+        Err(reason) -> failure(reason.message);
+        Ok(temporary) ->
+            let root = Environment.current_directory();
+            let builder = child(temporary, "fixture-builder");
+            let include_root = child(libtorch, "include");
+            let library = child(libtorch, "lib");
+            let compiled =
+                run_command(
+                    "c++",
+                    [
+                        "-std=c++20",
+                        "-O0",
+                        "-D_GLIBCXX_USE_CXX11_ABI=1",
+                        String.append("-I", include_root),
+                        String.append("-I", child(include_root, "torch/csrc/api/include")),
+                        child(root, "scripts/build-torchscript-fixture.cpp"),
+                        String.append("-L", library),
+                        String.concat(["-Wl,-rpath,", library]),
+                        "-ltorch",
+                        "-ltorch_cpu",
+                        "-lc10",
+                        "-o",
+                        builder,
+                    ],
+                    root,
+                );
+            let generated = compiled and run_command(builder, fixture_paths(fixtures), root);
+            let cleaned =
+                case Directory.remove_all(temporary) {
+                    Ok(Unit) -> true;
+                    Err(reason) -> failure(reason.message)
+                };
+            generated and cleaned
+    }.
+
+/**
+ * Materializes all declared fixture outputs.
+ */
+materialize_fixtures(libtorch: String, fixtures: List[Fixture]): Bool ->
+    case prepare_outputs(fixtures) {
+        false -> false;
+        true ->
+            if {
+                File.exists(child(libtorch, "include/torch/script.h")) -> build_real(libtorch, fixtures);
+                true -> write_placeholders(fixtures)
+            }
+    }.
+
+/**
+ * Collects a bounded argument suffix without constructing a large product
+ * pattern over fourteen independent Option values.  Keeping the argument
+ * vector as a list also makes the checker budget independent of its width.
+ */
+collect_arguments_at(index: Int, remaining: Int, collected: List[String]): Option[List[String]] ->
+    if {
+        remaining == 0 -> Some(collected);
+        true -> case Arguments.get(index) {
+            None -> None;
+            Some(value) ->
+                let _pushed = collected.push(value);
+                collect_arguments_at(index + 1, remaining - 1, collected)
+        }
+    }.
+
+collect_arguments(index: Int, remaining: Int): Option[List[String]] ->
+    collect_arguments_at(index, remaining, List.new[String]()).
+
+/**
+ * Zips the thirteen generated output paths with their stable descriptions.
+ */
+fixture_contract_at(
+    paths: List[String],
+    descriptions: List[String],
+    collected: List[Fixture],
+): Option[List[Fixture]] ->
+    case {paths, descriptions} {
+        {[], []} -> Some(collected);
+        {[path | rest_paths], [description | rest_descriptions]} ->
+            let _pushed = collected.push(Fixture(path = path, description = description));
+            fixture_contract_at(rest_paths, rest_descriptions, collected);
+        _ -> None
+    }.
+
+fixture_contract(paths: List[String], descriptions: List[String]): Option[List[Fixture]] ->
+    fixture_contract_at(paths, descriptions, List.new[Fixture]()).
+
+/**
+ * Materializes the collected LibTorch root and output-path contract.
+ */
+fixture_descriptions(): List[String] ->
+    [
+        "double",
+        "weighted difference",
+        "tensor pair",
+        "scalar float",
+        "scalar int",
+        "scalar bool",
+        "scalar string",
+        "int list",
+        "float list",
+        "bool list",
+        "string list",
+        "optional tensor",
+        "tensor list",
+    ].
+
+materialize_contract(libtorch: String, paths: List[String]): Bool ->
+    case fixture_contract(paths, fixture_descriptions()) {
+        None -> failure("fixture argument vector changed during execution");
+        Some(fixtures) -> materialize_fixtures(libtorch, fixtures)
+    }.
+
+materialize_arguments(arguments: List[String]): Bool ->
+    case arguments {
+        [libtorch | paths] -> materialize_contract(libtorch, paths);
+        _ -> failure("fixture argument vector changed during execution")
+    }.
+
+/**
+ * Parses the complete fixture output contract and starts generation.
+ */
+entry(): Bool ->
+    if {
+        Arguments.count() != 14 -> failure("usage: BuildTorchScriptFixture.terls <libtorch-root> <thirteen-output-paths>");
+        true -> case collect_arguments(0, 14) {
+            None -> failure("fixture argument vector changed during execution");
+            Some(arguments) -> materialize_arguments(arguments)
+        }
+    }.
+
+assert(entry());
+Unit.

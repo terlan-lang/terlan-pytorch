@@ -1,0 +1,279 @@
+//! Typed scalar and tensor clamp operations with functional, output, and in-place storage contracts.
+
+module pytorch.Clamp.
+
+/// Clamps a tensor with floating-point minimum and maximum bounds.
+
+pub clamp_float(input: Tensor, minimum: Float, maximum: Float): Tensor.
+
+/// Clamps tensor storage in place with floating-point minimum and maximum bounds.
+
+pub clamp_float_in_place(input: Tensor, minimum: Float, maximum: Float): Unit.
+
+/// Clamps a tensor with floating-point minimum and integer maximum bounds.
+
+pub clamp_float_int(input: Tensor, minimum: Float, maximum: Int): Tensor.
+
+/// Clamps tensor storage in place with floating-point minimum and integer maximum bounds.
+
+pub clamp_float_int_in_place(input: Tensor, minimum: Float, maximum: Int): Unit.
+
+/// Writes a clamp with floating-point minimum and integer maximum bounds into retained output storage.
+
+pub clamp_float_int_out(output: Tensor, input: Tensor, minimum: Float, maximum: Int): Unit.
+
+/// Writes a clamp with floating-point minimum and maximum bounds into retained output storage.
+
+pub clamp_float_out(output: Tensor, input: Tensor, minimum: Float, maximum: Float): Unit.
+
+/// Top-level `torch.clamp_` alias using the common floating-point bounds contract.
+
+pub clamp_in_place(input: Tensor, minimum: Float, maximum: Float): Unit.
+
+/// Clamps a tensor with integer minimum and maximum bounds.
+
+pub clamp_int(input: Tensor, minimum: Int, maximum: Int): Tensor.
+
+/// Clamps a tensor with integer minimum and floating-point maximum bounds.
+
+pub clamp_int_float(input: Tensor, minimum: Int, maximum: Float): Tensor.
+
+/// Clamps tensor storage in place with integer minimum and floating-point maximum bounds.
+
+pub clamp_int_float_in_place(input: Tensor, minimum: Int, maximum: Float): Unit.
+
+/// Writes a clamp with integer minimum and floating-point maximum bounds into retained output storage.
+
+pub clamp_int_float_out(output: Tensor, input: Tensor, minimum: Int, maximum: Float): Unit.
+
+/// Clamps tensor storage in place with integer minimum and maximum bounds.
+
+pub clamp_int_in_place(input: Tensor, minimum: Int, maximum: Int): Unit.
+
+/// Writes a clamp with integer minimum and maximum bounds into retained output storage.
+
+pub clamp_int_out(output: Tensor, input: Tensor, minimum: Int, maximum: Int): Unit.
+
+/// Clamps a tensor with a floating-point maximum bound.
+
+pub clamp_max_float(input: Tensor, maximum: Float): Tensor.
+
+/// Clamps tensor storage in place with a floating-point maximum bound.
+
+pub clamp_max_float_in_place(input: Tensor, maximum: Float): Unit.
+
+/// Writes a clamp with a floating-point maximum bound into retained output storage.
+
+pub clamp_max_float_out(output: Tensor, input: Tensor, maximum: Float): Unit.
+
+/// Clamps a tensor with an integer maximum bound.
+
+pub clamp_max_int(input: Tensor, maximum: Int): Tensor.
+
+/// Clamps tensor storage in place with an integer maximum bound.
+
+pub clamp_max_int_in_place(input: Tensor, maximum: Int): Unit.
+
+/// Writes a clamp with an integer maximum bound into retained output storage.
+
+pub clamp_max_int_out(output: Tensor, input: Tensor, maximum: Int): Unit.
+
+/// Clamps a tensor with a floating-point minimum bound.
+
+pub clamp_min_float(input: Tensor, minimum: Float): Tensor.
+
+/// Clamps tensor storage in place with a floating-point minimum bound.
+
+pub clamp_min_float_in_place(input: Tensor, minimum: Float): Unit.
+
+/// Writes a clamp with a floating-point minimum bound into retained output storage.
+
+pub clamp_min_float_out(output: Tensor, input: Tensor, minimum: Float): Unit.
+
+/// Clamps a tensor with an integer minimum bound.
+
+pub clamp_min_int(input: Tensor, minimum: Int): Tensor.
+
+/// Clamps tensor storage in place with an integer minimum bound.
+
+pub clamp_min_int_in_place(input: Tensor, minimum: Int): Unit.
+
+/// Writes a clamp with an integer minimum bound into retained output storage.
+
+pub clamp_min_int_out(output: Tensor, input: Tensor, minimum: Int): Unit.
+
+/// Clamps a tensor with minimum and maximum tensors.
+
+pub clamp_tensor(input: Tensor, minimum: Tensor, maximum: Tensor): Tensor.
+
+/// Clamps tensor storage in place with minimum and maximum tensors.
+
+pub clamp_tensor_in_place(input: Tensor, minimum: Tensor, maximum: Tensor): Unit.
+
+/// Clamps a tensor with a maximum tensor.
+
+pub clamp_tensor_max(input: Tensor, maximum: Tensor): Tensor.
+
+/// Clamps tensor storage in place with a maximum tensor.
+
+pub clamp_tensor_max_in_place(input: Tensor, maximum: Tensor): Unit.
+
+/// Writes a clamp with a maximum tensor into retained output storage.
+
+pub clamp_tensor_max_out(output: Tensor, input: Tensor, maximum: Tensor): Unit.
+
+/// Clamps a tensor with a minimum tensor.
+
+pub clamp_tensor_min(input: Tensor, minimum: Tensor): Tensor.
+
+/// Clamps tensor storage in place with a minimum tensor.
+
+pub clamp_tensor_min_in_place(input: Tensor, minimum: Tensor): Unit.
+
+/// Writes a clamp with a minimum tensor into retained output storage.
+
+pub clamp_tensor_min_out(output: Tensor, input: Tensor, minimum: Tensor): Unit.
+
+/// Writes a clamp with minimum and maximum tensors into retained output storage.
+
+pub clamp_tensor_out(output: Tensor, input: Tensor, minimum: Tensor, maximum: Tensor): Unit.
+
+/// Top-level `torch.clip` alias using the common floating-point bounds contract.
+
+pub clip(input: Tensor, minimum: Float, maximum: Float): Tensor.
+
+/// Provides the clip alias for clamp_float.
+
+pub clip_float(input: Tensor, minimum: Float, maximum: Float): Tensor.
+
+/// Provides the in-place clip alias for clamp_float.
+
+pub clip_float_in_place(input: Tensor, minimum: Float, maximum: Float): Unit.
+
+/// Provides the clip alias for clamp_float_int.
+
+pub clip_float_int(input: Tensor, minimum: Float, maximum: Int): Tensor.
+
+/// Provides the in-place clip alias for clamp_float_int.
+
+pub clip_float_int_in_place(input: Tensor, minimum: Float, maximum: Int): Unit.
+
+/// Provides the output-storage clip alias for clamp_float_int.
+
+pub clip_float_int_out(output: Tensor, input: Tensor, minimum: Float, maximum: Int): Unit.
+
+/// Provides the output-storage clip alias for clamp_float.
+
+pub clip_float_out(output: Tensor, input: Tensor, minimum: Float, maximum: Float): Unit.
+
+/// Top-level `torch.clip_` alias using the common floating-point bounds contract.
+
+pub clip_in_place(input: Tensor, minimum: Float, maximum: Float): Unit.
+
+/// Provides the clip alias for clamp_int.
+
+pub clip_int(input: Tensor, minimum: Int, maximum: Int): Tensor.
+
+/// Provides the clip alias for clamp_int_float.
+
+pub clip_int_float(input: Tensor, minimum: Int, maximum: Float): Tensor.
+
+/// Provides the in-place clip alias for clamp_int_float.
+
+pub clip_int_float_in_place(input: Tensor, minimum: Int, maximum: Float): Unit.
+
+/// Provides the output-storage clip alias for clamp_int_float.
+
+pub clip_int_float_out(output: Tensor, input: Tensor, minimum: Int, maximum: Float): Unit.
+
+/// Provides the in-place clip alias for clamp_int.
+
+pub clip_int_in_place(input: Tensor, minimum: Int, maximum: Int): Unit.
+
+/// Provides the output-storage clip alias for clamp_int.
+
+pub clip_int_out(output: Tensor, input: Tensor, minimum: Int, maximum: Int): Unit.
+
+/// Provides the clip alias for clamp_max_float.
+
+pub clip_max_float(input: Tensor, maximum: Float): Tensor.
+
+/// Provides the in-place clip alias for clamp_max_float.
+
+pub clip_max_float_in_place(input: Tensor, maximum: Float): Unit.
+
+/// Provides the output-storage clip alias for clamp_max_float.
+
+pub clip_max_float_out(output: Tensor, input: Tensor, maximum: Float): Unit.
+
+/// Provides the clip alias for clamp_max_int.
+
+pub clip_max_int(input: Tensor, maximum: Int): Tensor.
+
+/// Provides the in-place clip alias for clamp_max_int.
+
+pub clip_max_int_in_place(input: Tensor, maximum: Int): Unit.
+
+/// Provides the output-storage clip alias for clamp_max_int.
+
+pub clip_max_int_out(output: Tensor, input: Tensor, maximum: Int): Unit.
+
+/// Provides the clip alias for clamp_min_float.
+
+pub clip_min_float(input: Tensor, minimum: Float): Tensor.
+
+/// Provides the in-place clip alias for clamp_min_float.
+
+pub clip_min_float_in_place(input: Tensor, minimum: Float): Unit.
+
+/// Provides the output-storage clip alias for clamp_min_float.
+
+pub clip_min_float_out(output: Tensor, input: Tensor, minimum: Float): Unit.
+
+/// Provides the clip alias for clamp_min_int.
+
+pub clip_min_int(input: Tensor, minimum: Int): Tensor.
+
+/// Provides the in-place clip alias for clamp_min_int.
+
+pub clip_min_int_in_place(input: Tensor, minimum: Int): Unit.
+
+/// Provides the output-storage clip alias for clamp_min_int.
+
+pub clip_min_int_out(output: Tensor, input: Tensor, minimum: Int): Unit.
+
+/// Provides the clip alias for clamp_tensor.
+
+pub clip_tensor(input: Tensor, minimum: Tensor, maximum: Tensor): Tensor.
+
+/// Provides the in-place clip alias for clamp_tensor.
+
+pub clip_tensor_in_place(input: Tensor, minimum: Tensor, maximum: Tensor): Unit.
+
+/// Provides the clip alias for clamp_tensor_max.
+
+pub clip_tensor_max(input: Tensor, maximum: Tensor): Tensor.
+
+/// Provides the in-place clip alias for clamp_tensor_max.
+
+pub clip_tensor_max_in_place(input: Tensor, maximum: Tensor): Unit.
+
+/// Provides the output-storage clip alias for clamp_tensor_max.
+
+pub clip_tensor_max_out(output: Tensor, input: Tensor, maximum: Tensor): Unit.
+
+/// Provides the clip alias for clamp_tensor_min.
+
+pub clip_tensor_min(input: Tensor, minimum: Tensor): Tensor.
+
+/// Provides the in-place clip alias for clamp_tensor_min.
+
+pub clip_tensor_min_in_place(input: Tensor, minimum: Tensor): Unit.
+
+/// Provides the output-storage clip alias for clamp_tensor_min.
+
+pub clip_tensor_min_out(output: Tensor, input: Tensor, minimum: Tensor): Unit.
+
+/// Provides the output-storage clip alias for clamp_tensor.
+
+pub clip_tensor_out(output: Tensor, input: Tensor, minimum: Tensor, maximum: Tensor): Unit.

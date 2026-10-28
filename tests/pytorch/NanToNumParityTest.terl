@@ -1,0 +1,170 @@
+/**
+ * CPU and required-CUDA evidence for every nan-to-number optional state.
+ */
+module pytorch.NanToNumParityTest.
+
+import pytorch.NanToNum.{nan_to_num, nan_to_num_all, nan_to_num_all_in_place, nan_to_num_all_out, nan_to_num_in_place, nan_to_num_nan, nan_to_num_nan_in_place, nan_to_num_nan_neginf, nan_to_num_nan_neginf_in_place, nan_to_num_nan_neginf_out, nan_to_num_nan_out, nan_to_num_nan_posinf, nan_to_num_nan_posinf_in_place, nan_to_num_nan_posinf_out, nan_to_num_neginf, nan_to_num_neginf_in_place, nan_to_num_neginf_out, nan_to_num_out, nan_to_num_posinf, nan_to_num_posinf_in_place, nan_to_num_posinf_neginf, nan_to_num_posinf_neginf_in_place, nan_to_num_posinf_neginf_out, nan_to_num_posinf_out}.
+import pytorch.Tensor.{clone, device_type, dispose, dtype, from_float, from_floats, item_bool, item_float, narrow, negate, sqrt, to_device}.
+import pytorch.TensorJoining.stack.
+import pytorch.Unary.{all, any, isfinite, isinf, isnan, reciprocal}.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed_scalar(value: Float, device: Int): Tensor ->
+    let host = from_float(value);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+placed_empty(device: Int): Tensor ->
+    let host = from_floats([], [0]);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+nonfinite_vector(device: Int): Tensor ->
+    let zero = placed_scalar(0.0, device);
+    let negative = placed_scalar(-1.0, device);
+    let finite = placed_scalar(2.0, device);
+    let positive_infinity = reciprocal(zero);
+    let negative_infinity = negate(positive_infinity);
+    let nan = sqrt(negative);
+    let result = stack([nan, positive_infinity, negative_infinity, finite], 0);
+    dispose(nan);
+    dispose(negative_infinity);
+    dispose(positive_infinity);
+    dispose(finite);
+    dispose(negative);
+    dispose(zero);
+    result.
+
+vector_float(tensor: Tensor, index: Int): Float ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    value.
+
+is_entirely_finite(tensor: Tensor): Bool ->
+    let classes = isfinite(tensor);
+    let reduced = all(classes);
+    let result = item_bool(reduced);
+    dispose(reduced);
+    dispose(classes);
+    result.
+
+matches(
+    tensor: Tensor,
+    nan: Float,
+    has_posinf: Bool,
+    posinf: Float,
+    has_neginf: Bool,
+    neginf: Float,
+    device: Int,
+): Bool ->
+    let positive_matches =
+        if {
+            has_posinf -> vector_float(tensor, 1) == posinf;
+            true -> vector_float(tensor, 1) > 1e300
+        };
+    let negative_matches =
+        if {
+            has_neginf -> vector_float(tensor, 2) == neginf;
+            true -> vector_float(tensor, 2) < -1e300
+        };
+    dtype(tensor) == 7
+        and device_type(tensor) == device
+        and is_entirely_finite(tensor)
+        and vector_float(tensor, 0) == nan
+        and positive_matches
+        and negative_matches
+        and vector_float(tensor, 3) == 2.0.
+
+verify(device: Int): Bool ->
+    let source = nonfinite_vector(device);
+    let f_none = nan_to_num(source);
+    let f_nan = nan_to_num_nan(source, -1.0);
+    let f_pos = nan_to_num_posinf(source, 10.0);
+    let f_neg = nan_to_num_neginf(source, -10.0);
+    let f_nan_pos = nan_to_num_nan_posinf(source, -1.0, 10.0);
+    let f_nan_neg = nan_to_num_nan_neginf(source, -1.0, -10.0);
+    let f_pos_neg = nan_to_num_posinf_neginf(source, 10.0, -10.0);
+    let f_all = nan_to_num_all(source, -1.0, 10.0, -10.0);
+    let functional_valid =
+        matches(f_none, 0.0, false, 0.0, false, 0.0, device)
+            and matches(f_nan, -1.0, false, 0.0, false, 0.0, device)
+            and matches(f_pos, 0.0, true, 10.0, false, 0.0, device)
+            and matches(f_neg, 0.0, false, 0.0, true, -10.0, device)
+            and matches(f_nan_pos, -1.0, true, 10.0, false, 0.0, device)
+            and matches(f_nan_neg, -1.0, false, 0.0, true, -10.0, device)
+            and matches(f_pos_neg, 0.0, true, 10.0, true, -10.0, device)
+            and matches(f_all, -1.0, true, 10.0, true, -10.0, device);
+    let o_none = placed_empty(device);
+    let o_nan = placed_empty(device);
+    let o_pos = placed_empty(device);
+    let o_neg = placed_empty(device);
+    let o_nan_pos = placed_empty(device);
+    let o_nan_neg = placed_empty(device);
+    let o_pos_neg = placed_empty(device);
+    let o_all = placed_empty(device);
+    nan_to_num_out(o_none, source);
+    nan_to_num_nan_out(o_nan, source, -1.0);
+    nan_to_num_posinf_out(o_pos, source, 10.0);
+    nan_to_num_neginf_out(o_neg, source, -10.0);
+    nan_to_num_nan_posinf_out(o_nan_pos, source, -1.0, 10.0);
+    nan_to_num_nan_neginf_out(o_nan_neg, source, -1.0, -10.0);
+    nan_to_num_posinf_neginf_out(o_pos_neg, source, 10.0, -10.0);
+    nan_to_num_all_out(o_all, source, -1.0, 10.0, -10.0);
+    let output_valid =
+        matches(o_none, 0.0, false, 0.0, false, 0.0, device)
+            and matches(o_nan, -1.0, false, 0.0, false, 0.0, device)
+            and matches(o_pos, 0.0, true, 10.0, false, 0.0, device)
+            and matches(o_neg, 0.0, false, 0.0, true, -10.0, device)
+            and matches(o_nan_pos, -1.0, true, 10.0, false, 0.0, device)
+            and matches(o_nan_neg, -1.0, false, 0.0, true, -10.0, device)
+            and matches(o_pos_neg, 0.0, true, 10.0, true, -10.0, device)
+            and matches(o_all, -1.0, true, 10.0, true, -10.0, device);
+    let m_none = clone(source);
+    let m_nan = clone(source);
+    let m_pos = clone(source);
+    let m_neg = clone(source);
+    let m_nan_pos = clone(source);
+    let m_nan_neg = clone(source);
+    let m_pos_neg = clone(source);
+    let m_all = clone(source);
+    (nan_to_num_in_place(m_none); nan_to_num_nan_in_place(m_nan, -1.0); nan_to_num_posinf_in_place(m_pos, 10.0); nan_to_num_neginf_in_place(m_neg, -10.0); nan_to_num_nan_posinf_in_place(m_nan_pos, -1.0, 10.0); nan_to_num_nan_neginf_in_place(m_nan_neg, -1.0, -10.0); nan_to_num_posinf_neginf_in_place(m_pos_neg, 10.0, -10.0); nan_to_num_all_in_place(m_all, -1.0, 10.0, -10.0); let mutation_valid =
+    matches(m_none, 0.0, false, 0.0, false, 0.0, device)
+        and matches(m_nan, -1.0, false, 0.0, false, 0.0, device)
+        and matches(m_pos, 0.0, true, 10.0, false, 0.0, device)
+        and matches(m_neg, 0.0, false, 0.0, true, -10.0, device)
+        and matches(m_nan_pos, -1.0, true, 10.0, false, 0.0, device)
+        and matches(m_nan_neg, -1.0, false, 0.0, true, -10.0, device)
+        and matches(m_pos_neg, 0.0, true, 10.0, true, -10.0, device)
+        and matches(m_all, -1.0, true, 10.0, true, -10.0, device);
+let source_nan = isnan(source);
+let source_inf = isinf(source);
+let source_nan_any = any(source_nan);
+let source_inf_any = any(source_inf);
+let source_preserved = item_bool(source_nan_any) and item_bool(source_inf_any);
+(dispose(source_inf_any); dispose(source_nan_any); dispose(source_inf); dispose(source_nan); dispose(m_all); dispose(m_pos_neg); dispose(m_nan_neg); dispose(m_nan_pos); dispose(m_neg); dispose(m_pos); dispose(m_nan); dispose(m_none); dispose(o_all); dispose(o_pos_neg); dispose(o_nan_neg); dispose(o_nan_pos); dispose(o_neg); dispose(o_pos); dispose(o_nan); dispose(o_none); dispose(f_all); dispose(f_pos_neg); dispose(f_nan_neg); dispose(f_nan_pos); dispose(f_neg); dispose(f_pos); dispose(f_nan); dispose(f_none); dispose(source); functional_valid and output_valid and mutation_valid and source_preserved)).
+
+@test
+pub every_optional_state_executes_on_cpu_and_required_cuda(): Bool ->
+    let cpu_valid = verify(0);
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    cpu_valid and cuda_valid.

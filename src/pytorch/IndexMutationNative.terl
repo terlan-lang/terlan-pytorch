@@ -1,0 +1,91 @@
+/**
+ * Compiler-generated exact indexed addition, copying, selection output, and selection-gradient primitives.
+ */
+module pytorch.IndexMutationNative.
+
+import type pytorch.Tensor.
+
+/**
+ * Returns exact indexed addition with a tagged integer or floating-point Scalar alpha.
+ */
+@compiler.native {pytorch.index_mutation.add}
+pub index_add(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Writes exact indexed addition into retained output storage.
+ */
+@compiler.native {pytorch.index_mutation.add_out}
+pub index_add_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes exact dispatcher-backed Tensor::index_add_ with a tagged Scalar alpha.
+ */
+@compiler.native {pytorch.index_mutation.add_in_place}
+pub index_add_in_place(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Writes exact indexed copies into retained output storage.
+ */
+@compiler.native {pytorch.index_mutation.copy_out}
+pub index_copy_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Executes exact dispatcher-backed Tensor::index_copy_ in place.
+ */
+@compiler.native {pytorch.index_mutation.copy_in_place}
+pub index_copy_in_place(input: Tensor, dimension: Int, index: Tensor, source: Tensor): Unit ->
+    native.
+
+/**
+ * Writes exact indexed selection into retained output storage.
+ */
+@compiler.native {pytorch.index_mutation.select_out}
+pub index_select_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor): Unit ->
+    native.
+
+/**
+ * Scatters selected gradients into the exact original integer shape.
+ */
+@compiler.native {pytorch.index_mutation.select_backward}
+pub index_select_backward(
+    gradient: Tensor,
+    input_shape: List[Int],
+    dimension: Int,
+    index: Tensor,
+): Tensor ->
+    native.

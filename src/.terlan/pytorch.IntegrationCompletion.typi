@@ -1,0 +1,39 @@
+//! Exact cumulative trapezoid, trapezoid, trapz, and KL-divergence dispatcher primitives.
+
+module pytorch.IntegrationCompletion.
+
+/// Computes exact aten::cumulative_trapezoid.dx with a floating Scalar spacing.
+
+pub cumulative_trapezoid_dx_float(y: Tensor, dx: Float, dimension: Int): Tensor.
+
+/// Computes exact aten::cumulative_trapezoid.dx with an integer Scalar spacing.
+
+pub cumulative_trapezoid_dx_int(y: Tensor, dx: Int, dimension: Int): Tensor.
+
+/// Computes exact aten::cumulative_trapezoid.x with tensor coordinates.
+
+pub cumulative_trapezoid_x(y: Tensor, x: Tensor, dimension: Int): Tensor.
+
+/// Computes exact aten::kl_div with explicit reduction and target representation.
+
+pub kl_div(input: Tensor, target: Tensor, reduction: Int, log_target: Bool): Tensor.
+
+/// Computes exact aten::trapezoid.dx with a floating Scalar spacing.
+
+pub trapezoid_dx_float(y: Tensor, dx: Float, dimension: Int): Tensor.
+
+/// Computes exact aten::trapezoid.dx with an integer Scalar spacing.
+
+pub trapezoid_dx_int(y: Tensor, dx: Int, dimension: Int): Tensor.
+
+/// Computes exact aten::trapezoid.x with tensor coordinates.
+
+pub trapezoid_x(y: Tensor, x: Tensor, dimension: Int): Tensor.
+
+/// Computes exact aten::trapz.dx with floating spacing.
+
+pub trapz_dx(y: Tensor, dx: Float, dimension: Int): Tensor.
+
+/// Computes exact aten::trapz.x with tensor coordinates.
+
+pub trapz_x(y: Tensor, x: Tensor, dimension: Int): Tensor.

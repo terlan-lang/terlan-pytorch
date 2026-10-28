@@ -1,0 +1,130 @@
+/**
+ * Strided views, independent copies, metadata mutations, and scatter operations with exact optional storage offsets.
+ */
+module pytorch.Strided.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes exact aten::as_strided with the input storage offset. The result shares storage with the input; overlapping in-place writes have undefined upstream behavior.
+ */
+@compiler.native {pytorch.strided.as_strided}
+pub as_strided(tensor: Tensor, size: List[Int], stride: List[Int]): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::as_strided_copy with the input storage offset. Returns independently owned storage.
+ */
+@compiler.native {pytorch.strided.as_strided_copy}
+pub as_strided_copy(tensor: Tensor, size: List[Int], stride: List[Int]): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::as_strided_ with the input storage offset. Mutates the retained tensor's size, strides, and offset.
+ */
+@compiler.native {pytorch.strided.as_strided_in_place}
+pub as_strided_in_place(tensor: Tensor, size: List[Int], stride: List[Int]): Unit ->
+    native.
+
+/**
+ * Executes exact aten::as_strided_copy.out with the input storage offset. Writes into retained output storage.
+ */
+@compiler.native {pytorch.strided.as_strided_copy_out}
+pub as_strided_copy_out(output: Tensor, tensor: Tensor, size: List[Int], stride: List[Int]): Unit ->
+    native.
+
+/**
+ * Executes exact aten::as_strided_scatter with the input storage offset. Returns independently owned storage.
+ */
+@compiler.native {pytorch.strided.as_strided_scatter}
+pub as_strided_scatter(tensor: Tensor, source: Tensor, size: List[Int], stride: List[Int]): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::as_strided_scatter.out with the input storage offset. Writes into retained output storage.
+ */
+@compiler.native {pytorch.strided.as_strided_scatter_out}
+pub as_strided_scatter_out(
+    output: Tensor,
+    tensor: Tensor,
+    source: Tensor,
+    size: List[Int],
+    stride: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::as_strided with an explicit storage offset. The result shares storage with the input; overlapping in-place writes have undefined upstream behavior.
+ */
+@compiler.native {pytorch.strided.as_strided_offset}
+pub as_strided_offset(
+    tensor: Tensor,
+    size: List[Int],
+    stride: List[Int],
+    storage_offset: Int,
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::as_strided_copy with an explicit storage offset. Returns independently owned storage.
+ */
+@compiler.native {pytorch.strided.as_strided_copy_offset}
+pub as_strided_copy_offset(
+    tensor: Tensor,
+    size: List[Int],
+    stride: List[Int],
+    storage_offset: Int,
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::as_strided_ with an explicit storage offset. Mutates the retained tensor's size, strides, and offset.
+ */
+@compiler.native {pytorch.strided.as_strided_in_place_offset}
+pub as_strided_in_place_offset(
+    tensor: Tensor,
+    size: List[Int],
+    stride: List[Int],
+    storage_offset: Int,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::as_strided_copy.out with an explicit storage offset. Writes into retained output storage.
+ */
+@compiler.native {pytorch.strided.as_strided_copy_out_offset}
+pub as_strided_copy_out_offset(
+    output: Tensor,
+    tensor: Tensor,
+    size: List[Int],
+    stride: List[Int],
+    storage_offset: Int,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::as_strided_scatter with an explicit storage offset. Returns independently owned storage.
+ */
+@compiler.native {pytorch.strided.as_strided_scatter_offset}
+pub as_strided_scatter_offset(
+    tensor: Tensor,
+    source: Tensor,
+    size: List[Int],
+    stride: List[Int],
+    storage_offset: Int,
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::as_strided_scatter.out with an explicit storage offset. Writes into retained output storage.
+ */
+@compiler.native {pytorch.strided.as_strided_scatter_out_offset}
+pub as_strided_scatter_out_offset(
+    output: Tensor,
+    tensor: Tensor,
+    source: Tensor,
+    size: List[Int],
+    stride: List[Int],
+    storage_offset: Int,
+): Unit ->
+    native.

@@ -1,0 +1,54 @@
+/**
+ * CPU runtime evidence for the backend-visible native_group_norm schemas.
+ */
+module pytorch.NativeGroupNormParityTest.
+
+import pytorch.FunctionalCompletion.group_norm_affine.
+import pytorch.Regularization.{native_group_norm, native_group_norm_out}.
+import pytorch.Tensor.{clone, dispose, from_floats, full_float, item_float, mse_loss, shape, to_dtype}.
+
+import type pytorch.Tensor.
+
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let error = mse_loss(actual, expected, 1);
+    let distance = item_float(error);
+    dispose(error);
+    distance == 0.0.
+
+@test
+pub native_group_norm_forms_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 3.0, 2.0, 4.0], [1, 2, 2]);
+    let weight_base = full_float([2], 1.0);
+    let bias_base = full_float([2], 0.0);
+    let weight = to_dtype(weight_base, 7);
+    let bias = to_dtype(bias_base, 7);
+    let expected = group_norm_affine(input, 1, weight, bias, 0.0, true);
+    let {actual, mean, rstd} = native_group_norm(input, true, weight, true, bias, 1, 2, 2, 1, 0.0);
+    let output = clone(input);
+    let output_mean = clone(input);
+    let output_rstd = clone(input);
+    native_group_norm_out(
+        output,
+        output_mean,
+        output_rstd,
+        input,
+        true,
+        weight,
+        true,
+        bias,
+        1,
+        2,
+        2,
+        1,
+        0.0,
+    );
+    let valid =
+        shape(actual) == [1, 2, 2]
+            and shape(mean) == [1, 1]
+            and shape(rstd) == [1, 1]
+            and shape(output) == [1, 2, 2]
+            and shape(output_mean) == [1, 1]
+            and shape(output_rstd) == [1, 1]
+            and matches(actual, expected)
+            and matches(output, expected);
+    (dispose(output_rstd); dispose(output_mean); dispose(output); dispose(rstd); dispose(mean); dispose(actual); dispose(expected); dispose(bias); dispose(weight); dispose(bias_base); dispose(weight_base); dispose(input); valid).

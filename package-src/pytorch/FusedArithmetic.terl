@@ -1,0 +1,571 @@
+/**
+ * Fused pointwise, matrix, vector, and batched matrix arithmetic.
+ */
+module pytorch.FusedArithmetic.
+
+import pytorch.FusedArithmeticNative.{fused_arithmetic, fused_arithmetic_in_place, fused_arithmetic_out}.
+import pytorch.Scalar.one.
+import pytorch.Tensor.dtype_code.
+
+import type pytorch.Scalar.
+import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Computes sparse-matrix addmm using the same ownership-preserving CXX
+ * kernel as `torch.saddmm`.
+ */
+pub saddmm(accumulator: Tensor, sparse_mat1: Tensor, mat2: Tensor): Tensor ->
+    fused_arithmetic(accumulator, sparse_mat1, mat2, 3, true, 1, 1.0, true, 1, 1.0, false, 0).
+
+/**
+ * Executes one functional fused arithmetic operation.
+ */
+functional(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    operation: Int,
+    beta: Scalar,
+    alpha: Scalar,
+): Tensor ->
+    fused_arithmetic(
+        accumulator,
+        first,
+        second,
+        operation,
+        beta.is_integer,
+        beta.integer_value,
+        beta.floating_value,
+        alpha.is_integer,
+        alpha.integer_value,
+        alpha.floating_value,
+        false,
+        0,
+    ).
+
+/**
+ * Executes one dtype-selecting functional fused arithmetic operation.
+ */
+functional_dtype(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    operation: Int,
+    dtype: DType,
+    beta: Scalar,
+    alpha: Scalar,
+): Tensor ->
+    fused_arithmetic(
+        accumulator,
+        first,
+        second,
+        operation,
+        beta.is_integer,
+        beta.integer_value,
+        beta.floating_value,
+        alpha.is_integer,
+        alpha.integer_value,
+        alpha.floating_value,
+        true,
+        dtype_code(dtype),
+    ).
+
+/**
+ * Executes one retained-output fused arithmetic operation.
+ */
+output(
+    retained: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    operation: Int,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    fused_arithmetic_out(
+        retained,
+        accumulator,
+        first,
+        second,
+        operation,
+        beta.is_integer,
+        beta.integer_value,
+        beta.floating_value,
+        alpha.is_integer,
+        alpha.integer_value,
+        alpha.floating_value,
+        false,
+        0,
+    ).
+
+/**
+ * Executes one dtype-selecting retained-output fused arithmetic operation.
+ */
+output_dtype(
+    retained: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    operation: Int,
+    dtype: DType,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    fused_arithmetic_out(
+        retained,
+        accumulator,
+        first,
+        second,
+        operation,
+        beta.is_integer,
+        beta.integer_value,
+        beta.floating_value,
+        alpha.is_integer,
+        alpha.integer_value,
+        alpha.floating_value,
+        true,
+        dtype_code(dtype),
+    ).
+
+/**
+ * Executes one in-place fused arithmetic operation.
+ */
+mutation(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    operation: Int,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    fused_arithmetic_in_place(
+        accumulator,
+        first,
+        second,
+        operation,
+        beta.is_integer,
+        beta.integer_value,
+        beta.floating_value,
+        alpha.is_integer,
+        alpha.integer_value,
+        alpha.floating_value,
+    ).
+
+/**
+ * Computes a scaled sum of batch matrix products.
+ */
+pub addbmm(accumulator: Tensor, batch1: Tensor, batch2: Tensor): Tensor ->
+    addbmm(accumulator, batch1, batch2, one(), one()).
+
+/**
+ * Computes a scaled sum of batch matrix products with exact scalars.
+ */
+pub addbmm(accumulator: Tensor, batch1: Tensor, batch2: Tensor, beta: Scalar, alpha: Scalar): Tensor ->
+    functional(accumulator, batch1, batch2, 0, beta, alpha).
+
+/**
+ * Writes a scaled sum of batch matrix products.
+ */
+pub addbmm_out(retained: Tensor, accumulator: Tensor, batch1: Tensor, batch2: Tensor): Unit ->
+    addbmm_out(retained, accumulator, batch1, batch2, one(), one()).
+
+/**
+ * Writes a scaled sum of batch matrix products with exact scalars.
+ */
+pub addbmm_out(
+    retained: Tensor,
+    accumulator: Tensor,
+    batch1: Tensor,
+    batch2: Tensor,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    output(retained, accumulator, batch1, batch2, 0, beta, alpha).
+
+/**
+ * Mutates an accumulator with a scaled sum of batch matrix products.
+ */
+pub addbmm_in_place(accumulator: Tensor, batch1: Tensor, batch2: Tensor): Unit ->
+    addbmm_in_place(accumulator, batch1, batch2, one(), one()).
+
+/**
+ * Mutates an accumulator with a scaled sum of batch matrix products and exact scalars.
+ */
+pub addbmm_in_place(
+    accumulator: Tensor,
+    batch1: Tensor,
+    batch2: Tensor,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    mutation(accumulator, batch1, batch2, 0, beta, alpha).
+
+/**
+ * Computes accumulator plus the quotient of two tensors.
+ */
+pub addcdiv(accumulator: Tensor, first: Tensor, second: Tensor): Tensor ->
+    addcdiv(accumulator, first, second, one()).
+
+/**
+ * Computes accumulator plus a scaled quotient of two tensors.
+ */
+pub addcdiv(accumulator: Tensor, first: Tensor, second: Tensor, value: Scalar): Tensor ->
+    functional(accumulator, first, second, 1, one(), value).
+
+/**
+ * Writes accumulator plus the quotient of two tensors.
+ */
+pub addcdiv_out(retained: Tensor, accumulator: Tensor, first: Tensor, second: Tensor): Unit ->
+    addcdiv_out(retained, accumulator, first, second, one()).
+
+/**
+ * Writes accumulator plus a scaled quotient of two tensors.
+ */
+pub addcdiv_out(
+    retained: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    value: Scalar,
+): Unit ->
+    output(retained, accumulator, first, second, 1, one(), value).
+
+/**
+ * Mutates accumulator by adding the quotient of two tensors.
+ */
+pub addcdiv_in_place(accumulator: Tensor, first: Tensor, second: Tensor): Unit ->
+    addcdiv_in_place(accumulator, first, second, one()).
+
+/**
+ * Mutates accumulator by adding a scaled quotient of two tensors.
+ */
+pub addcdiv_in_place(accumulator: Tensor, first: Tensor, second: Tensor, value: Scalar): Unit ->
+    mutation(accumulator, first, second, 1, one(), value).
+
+/**
+ * Computes accumulator plus the product of two tensors.
+ */
+pub addcmul(accumulator: Tensor, first: Tensor, second: Tensor): Tensor ->
+    addcmul(accumulator, first, second, one()).
+
+/**
+ * Computes accumulator plus a scaled product of two tensors.
+ */
+pub addcmul(accumulator: Tensor, first: Tensor, second: Tensor, value: Scalar): Tensor ->
+    functional(accumulator, first, second, 2, one(), value).
+
+/**
+ * Writes accumulator plus the product of two tensors.
+ */
+pub addcmul_out(retained: Tensor, accumulator: Tensor, first: Tensor, second: Tensor): Unit ->
+    addcmul_out(retained, accumulator, first, second, one()).
+
+/**
+ * Writes accumulator plus a scaled product of two tensors.
+ */
+pub addcmul_out(
+    retained: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    value: Scalar,
+): Unit ->
+    output(retained, accumulator, first, second, 2, one(), value).
+
+/**
+ * Mutates accumulator by adding the product of two tensors.
+ */
+pub addcmul_in_place(accumulator: Tensor, first: Tensor, second: Tensor): Unit ->
+    addcmul_in_place(accumulator, first, second, one()).
+
+/**
+ * Mutates accumulator by adding a scaled product of two tensors.
+ */
+pub addcmul_in_place(accumulator: Tensor, first: Tensor, second: Tensor, value: Scalar): Unit ->
+    mutation(accumulator, first, second, 2, one(), value).
+
+/**
+ * Computes a scaled matrix product plus an accumulator.
+ */
+pub addmm(accumulator: Tensor, mat1: Tensor, mat2: Tensor): Tensor ->
+    addmm(accumulator, mat1, mat2, one(), one()).
+
+/**
+ * Computes a scaled matrix product plus an accumulator with exact scalars.
+ */
+pub addmm(accumulator: Tensor, mat1: Tensor, mat2: Tensor, beta: Scalar, alpha: Scalar): Tensor ->
+    functional(accumulator, mat1, mat2, 3, beta, alpha).
+
+/**
+ * Computes a dtype-selecting scaled matrix product plus an accumulator.
+ */
+pub addmm(accumulator: Tensor, mat1: Tensor, mat2: Tensor, dtype: DType): Tensor ->
+    addmm(accumulator, mat1, mat2, dtype, one(), one()).
+
+/**
+ * Computes a dtype-selecting scaled matrix product with exact scalars.
+ */
+pub addmm(
+    accumulator: Tensor,
+    mat1: Tensor,
+    mat2: Tensor,
+    dtype: DType,
+    beta: Scalar,
+    alpha: Scalar,
+): Tensor ->
+    functional_dtype(accumulator, mat1, mat2, 3, dtype, beta, alpha).
+
+/**
+ * Writes a scaled matrix product plus an accumulator.
+ */
+pub addmm_out(retained: Tensor, accumulator: Tensor, mat1: Tensor, mat2: Tensor): Unit ->
+    addmm_out(retained, accumulator, mat1, mat2, one(), one()).
+
+/**
+ * Writes a scaled matrix product plus an accumulator with exact scalars.
+ */
+pub addmm_out(
+    retained: Tensor,
+    accumulator: Tensor,
+    mat1: Tensor,
+    mat2: Tensor,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    output(retained, accumulator, mat1, mat2, 3, beta, alpha).
+
+/**
+ * Writes a dtype-selecting scaled matrix product plus an accumulator.
+ */
+pub addmm_out(retained: Tensor, accumulator: Tensor, mat1: Tensor, mat2: Tensor, dtype: DType): Unit ->
+    addmm_out(retained, accumulator, mat1, mat2, dtype, one(), one()).
+
+/**
+ * Writes a dtype-selecting scaled matrix product with exact scalars.
+ */
+pub addmm_out(
+    retained: Tensor,
+    accumulator: Tensor,
+    mat1: Tensor,
+    mat2: Tensor,
+    dtype: DType,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    output_dtype(retained, accumulator, mat1, mat2, 3, dtype, beta, alpha).
+
+/**
+ * Mutates an accumulator with a scaled matrix product.
+ */
+pub addmm_in_place(accumulator: Tensor, mat1: Tensor, mat2: Tensor): Unit ->
+    addmm_in_place(accumulator, mat1, mat2, one(), one()).
+
+/**
+ * Mutates an accumulator with a scaled matrix product and exact scalars.
+ */
+pub addmm_in_place(
+    accumulator: Tensor,
+    mat1: Tensor,
+    mat2: Tensor,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    mutation(accumulator, mat1, mat2, 3, beta, alpha).
+
+/**
+ * Computes a scaled matrix-vector product plus an accumulator.
+ */
+pub addmv(accumulator: Tensor, matrix: Tensor, vector: Tensor): Tensor ->
+    addmv(accumulator, matrix, vector, one(), one()).
+
+/**
+ * Computes a scaled matrix-vector product with exact scalars.
+ */
+pub addmv(accumulator: Tensor, matrix: Tensor, vector: Tensor, beta: Scalar, alpha: Scalar): Tensor ->
+    functional(accumulator, matrix, vector, 4, beta, alpha).
+
+/**
+ * Writes a scaled matrix-vector product plus an accumulator.
+ */
+pub addmv_out(retained: Tensor, accumulator: Tensor, matrix: Tensor, vector: Tensor): Unit ->
+    addmv_out(retained, accumulator, matrix, vector, one(), one()).
+
+/**
+ * Writes a scaled matrix-vector product with exact scalars.
+ */
+pub addmv_out(
+    retained: Tensor,
+    accumulator: Tensor,
+    matrix: Tensor,
+    vector: Tensor,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    output(retained, accumulator, matrix, vector, 4, beta, alpha).
+
+/**
+ * Mutates an accumulator with a scaled matrix-vector product.
+ */
+pub addmv_in_place(accumulator: Tensor, matrix: Tensor, vector: Tensor): Unit ->
+    addmv_in_place(accumulator, matrix, vector, one(), one()).
+
+/**
+ * Mutates an accumulator with a scaled matrix-vector product and exact scalars.
+ */
+pub addmv_in_place(
+    accumulator: Tensor,
+    matrix: Tensor,
+    vector: Tensor,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    mutation(accumulator, matrix, vector, 4, beta, alpha).
+
+/**
+ * Computes a scaled vector outer product plus an accumulator.
+ */
+pub addr(accumulator: Tensor, first: Tensor, second: Tensor): Tensor ->
+    addr(accumulator, first, second, one(), one()).
+
+/**
+ * Computes a scaled vector outer product with exact scalars.
+ */
+pub addr(accumulator: Tensor, first: Tensor, second: Tensor, beta: Scalar, alpha: Scalar): Tensor ->
+    functional(accumulator, first, second, 5, beta, alpha).
+
+/**
+ * Writes a scaled vector outer product plus an accumulator.
+ */
+pub addr_out(retained: Tensor, accumulator: Tensor, first: Tensor, second: Tensor): Unit ->
+    addr_out(retained, accumulator, first, second, one(), one()).
+
+/**
+ * Writes a scaled vector outer product with exact scalars.
+ */
+pub addr_out(
+    retained: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    output(retained, accumulator, first, second, 5, beta, alpha).
+
+/**
+ * Mutates an accumulator with a scaled vector outer product.
+ */
+pub addr_in_place(accumulator: Tensor, first: Tensor, second: Tensor): Unit ->
+    addr_in_place(accumulator, first, second, one(), one()).
+
+/**
+ * Mutates an accumulator with a scaled vector outer product and exact scalars.
+ */
+pub addr_in_place(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    mutation(accumulator, first, second, 5, beta, alpha).
+
+/**
+ * Computes a scaled batch matrix product plus an accumulator.
+ */
+pub baddbmm(accumulator: Tensor, batch1: Tensor, batch2: Tensor): Tensor ->
+    baddbmm(accumulator, batch1, batch2, one(), one()).
+
+/**
+ * Computes a scaled batch matrix product with exact scalars.
+ */
+pub baddbmm(
+    accumulator: Tensor,
+    batch1: Tensor,
+    batch2: Tensor,
+    beta: Scalar,
+    alpha: Scalar,
+): Tensor ->
+    functional(accumulator, batch1, batch2, 6, beta, alpha).
+
+/**
+ * Computes a dtype-selecting scaled batch matrix product.
+ */
+pub baddbmm(accumulator: Tensor, batch1: Tensor, batch2: Tensor, dtype: DType): Tensor ->
+    baddbmm(accumulator, batch1, batch2, dtype, one(), one()).
+
+/**
+ * Computes a dtype-selecting scaled batch matrix product with exact scalars.
+ */
+pub baddbmm(
+    accumulator: Tensor,
+    batch1: Tensor,
+    batch2: Tensor,
+    dtype: DType,
+    beta: Scalar,
+    alpha: Scalar,
+): Tensor ->
+    functional_dtype(accumulator, batch1, batch2, 6, dtype, beta, alpha).
+
+/**
+ * Writes a scaled batch matrix product plus an accumulator.
+ */
+pub baddbmm_out(retained: Tensor, accumulator: Tensor, batch1: Tensor, batch2: Tensor): Unit ->
+    baddbmm_out(retained, accumulator, batch1, batch2, one(), one()).
+
+/**
+ * Writes a scaled batch matrix product with exact scalars.
+ */
+pub baddbmm_out(
+    retained: Tensor,
+    accumulator: Tensor,
+    batch1: Tensor,
+    batch2: Tensor,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    output(retained, accumulator, batch1, batch2, 6, beta, alpha).
+
+/**
+ * Writes a dtype-selecting scaled batch matrix product.
+ */
+pub baddbmm_out(
+    retained: Tensor,
+    accumulator: Tensor,
+    batch1: Tensor,
+    batch2: Tensor,
+    dtype: DType,
+): Unit ->
+    baddbmm_out(retained, accumulator, batch1, batch2, dtype, one(), one()).
+
+/**
+ * Writes a dtype-selecting scaled batch matrix product with exact scalars.
+ */
+pub baddbmm_out(
+    retained: Tensor,
+    accumulator: Tensor,
+    batch1: Tensor,
+    batch2: Tensor,
+    dtype: DType,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    output_dtype(retained, accumulator, batch1, batch2, 6, dtype, beta, alpha).
+
+/**
+ * Mutates an accumulator with a scaled batch matrix product.
+ */
+pub baddbmm_in_place(accumulator: Tensor, batch1: Tensor, batch2: Tensor): Unit ->
+    baddbmm_in_place(accumulator, batch1, batch2, one(), one()).
+
+/**
+ * Mutates an accumulator with a scaled batch matrix product and exact scalars.
+ */
+pub baddbmm_in_place(
+    accumulator: Tensor,
+    batch1: Tensor,
+    batch2: Tensor,
+    beta: Scalar,
+    alpha: Scalar,
+): Unit ->
+    mutation(accumulator, batch1, batch2, 6, beta, alpha).

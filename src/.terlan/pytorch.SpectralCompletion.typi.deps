@@ -1,0 +1,9 @@
+module=pytorch.SpectralCompletion
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=4671096214434627015
+interface_hash=13332889612476371279
+interface_doc_hash=17340584128233256362
+deps=1
+pytorch.Tensor=13489932768568026575

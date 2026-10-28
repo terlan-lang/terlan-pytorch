@@ -1,0 +1,36 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{add, amax, dispose, dtype, from_floats, item_float, matmul, numel, shape}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let weights = from_floats([0.0, 0.0, 1.0], [3, 1]);
+    let bias = from_floats([1.0], [1]);
+    let projected = matmul(input, weights);
+    let output = add(projected, bias, 1.0);
+    let batch_maximum = amax(output, [0], false);
+    let scalar_maximum = amax(batch_maximum, [0], false);
+    let observed_shape = shape(output);
+    let observed_numel = numel(output);
+    let observed_dtype = dtype(output);
+    let observed = item_float(scalar_maximum);
+    let input_columns = amax(input, [0], false);
+    let input_maximum = amax(input_columns, [0], false);
+    let observed_input = item_float(input_maximum);
+    let observed_bias = item_float(bias);
+    dispose(input_maximum);
+    dispose(input_columns);
+    dispose(scalar_maximum);
+    dispose(batch_maximum);
+    dispose(output);
+    dispose(projected);
+    dispose(bias);
+    dispose(weights);
+    dispose(input);
+    if {
+        observed_shape.length() == 2 and observed_shape[0] == 2 and observed_shape[1] == 1 and
+            observed_numel == 2 and observed_dtype == 7 and observed == 7.0 and
+            observed_input == 6.0 and observed_bias == 1.0 -> println("PYTORCH_AFFINE_CONSUMER_OK");
+        true -> println("PYTORCH_AFFINE_CONSUMER_FAILED")
+    }.

@@ -1,0 +1,10 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{add, from_floats}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let left = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let right = from_floats([1.0, 2.0, 3.0, 4.0], [4]);
+    let result = add(left, right, 1.0);
+    println("PYTORCH_ADD_BROADCAST_NOT_REJECTED").

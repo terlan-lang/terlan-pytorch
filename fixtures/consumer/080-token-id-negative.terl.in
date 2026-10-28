@@ -1,0 +1,12 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{embedding, from_floats, from_ints}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let embedding_weight = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
+    let out_of_vocabulary_token = from_ints([2], [1]);
+    let embedded = embedding(
+        embedding_weight, out_of_vocabulary_token, -1, false, false
+    );
+    println("PYTORCH_TOKEN_ID_NOT_REJECTED").

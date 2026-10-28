@@ -1,0 +1,135 @@
+/**
+ * CPU runtime evidence for Tensor.backward with an explicit vector-Jacobian
+ * seed.  This exercises the public non-scalar backward contract through the
+ * CXX-backed scalar reverse-mode leaf.
+ */
+module pytorch.AutogradGradientParityTest.
+
+import pytorch.Tensor.{autograd_grad, autograd_grad_many, backward, backward_many, dispose, from_floats, gradient, gradient_with_graph, multiply, require_grad, subtract, sum}.
+import pytorch.TypeRelations.{equal}.
+
+@test
+pub explicit_gradient_matches_vector_jacobian_product(): Bool ->
+    let source = from_floats([2.0, 3.0], [2]);
+    let input = require_grad(source);
+    let output = multiply(input, input);
+    let cotangent = from_floats([0.5, 2.0], [2]);
+    backward(output, cotangent);
+    let actual = gradient(input);
+    let expected = from_floats([2.0, 12.0], [2]);
+    let valid = equal(actual, expected);
+    (dispose(expected); dispose(actual); dispose(cotangent); dispose(output); dispose(input); dispose(source); valid).
+
+@test
+pub functional_autograd_grad_returns_vector_jacobian_product(): Bool ->
+    let source = from_floats([2.0, 3.0], [2]);
+    let input = require_grad(source);
+    let output = multiply(input, input);
+    let cotangent = from_floats([0.5, 2.0], [2]);
+    let actual = autograd_grad(output, input, cotangent);
+    let expected = from_floats([2.0, 12.0], [2]);
+    let valid = equal(actual, expected);
+    dispose(expected);
+    dispose(actual);
+    dispose(cotangent);
+    dispose(output);
+    dispose(input);
+    dispose(source);
+    valid.
+
+@test
+pub functional_autograd_grad_preserves_higher_order_graph(): Bool ->
+    let source = from_floats([2.0, 3.0], [2]);
+    let input = require_grad(source);
+    let square = multiply(input, input);
+    let output = multiply(square, input);
+    let cotangent = from_floats([1.0, 1.0], [2]);
+    let first = autograd_grad(output, input, cotangent, false, true);
+    let second_loss = sum(first);
+    let second_seed = from_floats([1.0], [1]);
+    let second = autograd_grad(second_loss, input, second_seed);
+    let expected = from_floats([12.0, 18.0], [2]);
+    let valid = equal(second, expected);
+    dispose(expected);
+    dispose(second);
+    dispose(second_seed);
+    dispose(second_loss);
+    dispose(first);
+    dispose(cotangent);
+    dispose(output);
+    dispose(square);
+    dispose(input);
+    dispose(source);
+    valid.
+
+@test
+pub functional_autograd_grad_supports_multiple_roots_and_inputs(): Bool ->
+    let source_x = from_floats([2.0, 3.0], [2]);
+    let source_y = from_floats([4.0, 5.0], [2]);
+    let input_x = require_grad(source_x);
+    let input_y = require_grad(source_y);
+    let output_x = multiply(input_x, input_x);
+    let output_y = multiply(input_y, input_y);
+    let cotangent_x = from_floats([0.5, 2.0], [2]);
+    let cotangent_y = from_floats([0.5, 2.0], [2]);
+    let [actual_x, actual_y] = autograd_grad_many([output_x, output_y], [input_x, input_y], [cotangent_x, cotangent_y]);
+    let expected_x = from_floats([2.0, 12.0], [2]);
+    let expected_y = from_floats([4.0, 20.0], [2]);
+    let valid = equal(actual_x, expected_x) and equal(actual_y, expected_y);
+    dispose(expected_y);
+    dispose(expected_x);
+    dispose(actual_y);
+    dispose(actual_x);
+    dispose(cotangent_y);
+    dispose(cotangent_x);
+    dispose(output_y);
+    dispose(output_x);
+    dispose(input_y);
+    dispose(input_x);
+    dispose(source_y);
+    dispose(source_x);
+    valid.
+
+@test
+pub backward_many_accumulates_multiple_root_gradients(): Bool ->
+    let source_x = from_floats([2.0, 3.0], [2]);
+    let source_y = from_floats([4.0, 5.0], [2]);
+    let input_x = require_grad(source_x);
+    let input_y = require_grad(source_y);
+    let output_x = multiply(input_x, input_x);
+    let output_y = multiply(input_y, input_y);
+    let cotangent_x = from_floats([0.5, 2.0], [2]);
+    let cotangent_y = from_floats([0.5, 2.0], [2]);
+    backward_many([output_x, output_y], [cotangent_x, cotangent_y]);
+    let actual_x = gradient(input_x);
+    let actual_y = gradient(input_y);
+    let expected_x = from_floats([2.0, 12.0], [2]);
+    let expected_y = from_floats([4.0, 20.0], [2]);
+    let valid = equal(actual_x, expected_x) and equal(actual_y, expected_y);
+    (dispose(expected_y); dispose(expected_x); dispose(actual_y); dispose(actual_x); dispose(cotangent_y); dispose(cotangent_x); dispose(output_y); dispose(output_x); dispose(input_y); dispose(input_x); dispose(source_y); dispose(source_x); valid).
+
+@test
+pub retained_graph_can_be_reused_for_explicit_gradient(): Bool ->
+    let source = from_floats([2.0, 3.0], [2]);
+    let input = require_grad(source);
+    let output = multiply(input, input);
+    let cotangent = from_floats([0.5, 2.0], [2]);
+    backward(output, cotangent, true, false);
+    backward(output, cotangent, false, false);
+    let actual = gradient(input);
+    let expected = from_floats([4.0, 24.0], [2]);
+    let valid = equal(actual, expected);
+    (dispose(expected); dispose(actual); dispose(cotangent); dispose(output); dispose(input); dispose(source); valid).
+
+@test
+pub create_graph_preserves_second_derivative(): Bool ->
+    let source = from_floats([2.0, 3.0], [2]);
+    let input = require_grad(source);
+    let square = multiply(input, input);
+    let output = multiply(square, input);
+    let cotangent = from_floats([1.0, 1.0], [2]);
+    backward(output, cotangent, false, true);
+    let first_graph = gradient_with_graph(input);
+    let first_snapshot = gradient(input);
+    let second_loss = sum(first_graph);
+    (backward(second_loss); let accumulated = gradient(input); let second = subtract(accumulated, first_snapshot, 1.0); let expected = from_floats([12.0, 18.0], [2]); let valid = equal(second, expected); (dispose(expected); dispose(second); dispose(accumulated); dispose(second_loss); dispose(first_snapshot); dispose(first_graph); dispose(cotangent); dispose(output); dispose(square); dispose(input); dispose(source); valid)).

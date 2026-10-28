@@ -1,0 +1,58 @@
+/**
+ * Public multilabel soft-margin loss parity for weighted and legacy reductions.
+ */
+module pytorch.MultiLabelSoftMarginLossParityTest.
+
+import pytorch.FunctionalCompletion.multilabel_soft_margin_loss.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+import pytorch.TypeRelationsNative.allclose_native.
+import std.core.Option.{None, Some}.
+
+@test
+pub multilabel_soft_margin_loss_matches_weight_and_legacy_reductions(): Bool ->
+    let input = from_floats([0.0, 1.0, -1.0, 2.0, -2.0, 0.5], [2, 3]);
+    let target = from_floats([1.0, 0.0, 1.0, 0.0, 1.0, 1.0], [2, 3]);
+    let weight = from_floats([1.0, 2.0, 0.5], [3]);
+    let default_expected = from_floats([1.3412672603104072], []);
+    let default_actual = multilabel_soft_margin_loss(input, target);
+    let default_valid = allclose_native(default_actual, default_expected, 0.000001, 0.000001, false);
+    let none_expected = from_floats([1.3254337997851675, 2.205940841739657], [2]);
+    let none_actual = multilabel_soft_margin_loss(input, target, Some(weight), None, None, "none");
+    let none_valid =
+        shape(none_actual) == [2]
+            and allclose_native(none_actual, none_expected, 0.000001, 0.000001, false);
+    let mean_expected = from_floats([1.7656873207624124], []);
+    let mean_actual = multilabel_soft_margin_loss(input, target, Some(weight), None, None, "mean");
+    let mean_valid = allclose_native(mean_actual, mean_expected, 0.000001, 0.000001, false);
+    let sum_expected = from_floats([3.531374641524825], []);
+    let sum_actual = multilabel_soft_margin_loss(input, target, Some(weight), None, None, "sum");
+    let sum_valid = allclose_native(sum_actual, sum_expected, 0.000001, 0.000001, false);
+    let legacy_sum_expected = from_floats([2.6825345206208144], []);
+    let legacy_sum = multilabel_soft_margin_loss(input, target, None, Some(false), None);
+    let legacy_sum_valid = allclose_native(legacy_sum, legacy_sum_expected, 0.000001, 0.000001, false);
+    let legacy_none_expected = from_floats([1.1065568518654636, 1.5759776687553506], [2]);
+    let legacy_none = multilabel_soft_margin_loss(input, target, None, None, Some(false));
+    let legacy_none_valid =
+        shape(legacy_none) == [2]
+            and allclose_native(legacy_none, legacy_none_expected, 0.000001, 0.000001, false);
+    dispose(legacy_none);
+    dispose(legacy_none_expected);
+    dispose(legacy_sum);
+    dispose(legacy_sum_expected);
+    dispose(default_actual);
+    dispose(default_expected);
+    dispose(sum_actual);
+    dispose(sum_expected);
+    dispose(mean_actual);
+    dispose(mean_expected);
+    dispose(none_actual);
+    dispose(none_expected);
+    dispose(weight);
+    dispose(target);
+    dispose(input);
+    default_valid
+        and none_valid
+        and mean_valid
+        and sum_valid
+        and legacy_sum_valid
+        and legacy_none_valid.

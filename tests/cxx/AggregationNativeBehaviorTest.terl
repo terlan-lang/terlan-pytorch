@@ -1,0 +1,7 @@
+module pytorch_cxx.AggregationNativeBehaviorTest.
+
+import pytorch.AggregationNativeBehaviorSupport.{aggregation_contracts_on}.
+
+@test
+pub generated_cxx_aggregation_contracts(): Bool ->
+    aggregation_contracts_on("cpu").

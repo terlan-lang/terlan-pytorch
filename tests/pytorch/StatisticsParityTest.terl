@@ -1,0 +1,673 @@
+module pytorch.StatisticsParityTest.
+
+import pytorch.Binary.{eq_tensor}.
+import pytorch.Linalg.{cholesky_solve}.
+import pytorch.Shape.{logcumsumexp, reshape}.
+import pytorch.Special.{nanmedian}.
+import pytorch.Statistics.{all_dim, all_dimension_out, all_dimensions, all_dimensions_out, amax_out, amin, amin_out, aminmax, aminmax_all_out, aminmax_dim, aminmax_dim_out, any_dim, any_dimension_out, any_dimensions, any_dimensions_out, argmax_all, argmax_all_out, argmax_out, argmin, argmin_all, argmin_all_out, argmin_out, argsort, cholesky, cholesky_inverse, cholesky_inverse_out, cholesky_out, cholesky_solve_out, combinations, count_nonzero, count_nonzero_all, count_nonzero_all_out, count_nonzero_dimensions_out, count_nonzero_out, cumprod, cumprod_out, cumsum, cumsum_out, dist, frobenius_norm_dimensions, frobenius_norm_dimensions_out, linalg_matrix_rank, linalg_pinv, logcumsumexp_out, logsumexp, logsumexp_out, mean_all_dimensions_out, mean_dimensions_out, mean_out, nanmedian_out, norm, norm_dimensions, norm_except_dimension, nuclear_norm, nuclear_norm_dimensions, nuclear_norm_dimensions_out, nuclear_norm_out, pdist, pinverse, prod, prod_dim, prod_dimension_out, prod_out, renorm, std, std_all_dimensions_out, std_dimensions, std_dimensions_out, std_mean, std_mean_dimensions, sum_all_dimensions_out, sum_dimensions_out, sum_out, var, var_all_dimensions_out, var_dimensions, var_dimensions_out, var_mean, var_mean_dimensions}.
+import pytorch.Tensor.{amax, argmax, clone, dispose, flatten, from_floats, from_ints, item, item_bool, item_float, mean, mean_dimensions, narrow, shape, sum, sum_dimensions}.
+import pytorch.Unary.{all}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reduces a floating-point tensor and releases its scalar result.
+ */
+float_sum(tensor: Tensor): Float ->
+    let total = sum(tensor);
+    let value = item_float(total);
+    dispose(total);
+    value.
+
+/**
+ * Reduces an integer tensor and releases its scalar result.
+ */
+int_sum(tensor: Tensor): Int ->
+    let total = sum(tensor);
+    let value = item(total);
+    dispose(total);
+    value.
+
+/**
+ * Reads one integer vector element through an owned view.
+ */
+vector_int(tensor: Tensor, index: Int): Int ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item(element);
+    dispose(element);
+    value.
+
+/**
+ * Reads one boolean vector element through an owned view.
+ */
+vector_bool(tensor: Tensor, index: Int): Bool ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_bool(element);
+    dispose(element);
+    value.
+
+/**
+ * Reads one floating-point vector element through an owned view.
+ */
+vector_float(tensor: Tensor, index: Int): Float ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    value.
+
+/**
+ * Compares complete tensor values and releases both compared tensors.
+ */
+same_and_dispose(actual: Tensor, expected: Tensor): Bool ->
+    let comparisons = eq_tensor(actual, expected);
+    let reduced = all(comparisons);
+    let value = item_bool(reduced);
+    dispose(reduced);
+    dispose(comparisons);
+    dispose(expected);
+    dispose(actual);
+    value.
+
+/**
+ * Proves Cholesky orientation, inverse, rank, and both pseudoinverse names.
+ */
+@test
+pub decomposition_and_rank_operations_match_libtorch(): Bool ->
+    let positive_definite = from_floats([4.0, 2.0, 2.0, 3.0], [2, 2]);
+    let diagonal = from_floats([2.0, 0.0, 0.0, 3.0], [2, 2]);
+    let lower = cholesky(positive_definite, false);
+    let upper = cholesky(positive_definite, true);
+    let inverse = cholesky_inverse(lower, false);
+    let rank = linalg_matrix_rank(diagonal, 0.001, false);
+    let linalg_inverse = linalg_pinv(diagonal, 0.001, false);
+    let legacy_inverse = pinverse(diagonal, 0.001);
+    let inverse_sum = float_sum(inverse);
+    let linalg_sum = float_sum(linalg_inverse);
+    let legacy_sum = float_sum(legacy_inverse);
+    let valid =
+        shape(lower) == [2, 2]
+            and shape(upper) == [2, 2]
+            and inverse_sum > 0.37
+            and inverse_sum < 0.38
+            and item(rank) == 2
+            and linalg_sum > 0.83
+            and linalg_sum < 0.84
+            and legacy_sum > 0.83
+            and legacy_sum < 0.84
+            and shape(diagonal) == [2, 2];
+    dispose(legacy_inverse);
+    dispose(linalg_inverse);
+    dispose(rank);
+    dispose(inverse);
+    dispose(upper);
+    dispose(lower);
+    dispose(diagonal);
+    dispose(positive_definite);
+    valid.
+
+/**
+ * Proves nuclear norm, pairwise distance, sample standard deviation, and variance.
+ */
+@test
+pub statistical_values_match_libtorch(): Bool ->
+    let diagonal = from_floats([2.0, 0.0, 0.0, 3.0], [2, 2]);
+    let points = from_floats([0.0, 0.0, 3.0, 4.0], [2, 2]);
+    let values = from_floats([1.0, 2.0, 3.0], [3]);
+    let norm = nuclear_norm(diagonal, false);
+    let distances = pdist(points, 2.0);
+    let deviation = std(values, true);
+    let variance = var(values, true);
+    let valid =
+        item_float(norm) == 5.0
+            and shape(distances) == [1]
+            and item_float(distances) == 5.0
+            and item_float(deviation) == 1.0
+            and item_float(variance) == 1.0
+            and shape(values) == [3];
+    dispose(variance);
+    dispose(deviation);
+    dispose(distances);
+    dispose(norm);
+    dispose(values);
+    dispose(points);
+    dispose(diagonal);
+    valid.
+
+/**
+ * Proves paired statistical outputs, defaults, explicit population mode, and ownership.
+ */
+@test
+pub paired_moments_match_libtorch(): Bool ->
+    let values = from_floats([1.0, 2.0, 3.0, 4.0], [4]);
+    let {sample_deviation, sample_mean} = std_mean(values);
+    let {sample_variance, variance_mean} = var_mean(values);
+    let {population_deviation, population_mean} = std_mean(values, false);
+    let {population_variance, second_population_mean} = var_mean(values, false);
+    let valid =
+        item_float(sample_deviation) > 1.2909
+            and item_float(sample_deviation) < 1.291
+            and item_float(sample_mean) == 2.5
+            and item_float(sample_variance) > 1.6666
+            and item_float(sample_variance) < 1.6667
+            and item_float(variance_mean) == 2.5
+            and item_float(population_deviation) > 1.118
+            and item_float(population_deviation) < 1.1181
+            and item_float(population_mean) == 2.5
+            and item_float(population_variance) == 1.25
+            and item_float(second_population_mean) == 2.5
+            and shape(values) == [4];
+    dispose(second_population_mean);
+    dispose(population_variance);
+    dispose(population_mean);
+    dispose(population_deviation);
+    dispose(variance_mean);
+    dispose(sample_variance);
+    dispose(sample_mean);
+    dispose(sample_deviation);
+    dispose(values);
+    valid.
+
+/**
+ * Proves maximum and minimum reductions over a dimension list.
+ */
+@test
+pub dimension_extrema_match_libtorch(): Bool ->
+    let values = from_floats([3.0, 1.0, 4.0, 2.0, 6.0, 5.0], [2, 3]);
+    let maximum = amax(values, [1], false);
+    let minimum = amin(values, [1]);
+    let valid =
+        shape(maximum) == [2]
+            and vector_float(maximum, 0) == 4.0
+            and vector_float(maximum, 1) == 6.0
+            and vector_float(minimum, 0) == 1.0
+            and vector_float(minimum, 1) == 2.0
+            and shape(values) == [2, 3];
+    dispose(minimum);
+    dispose(maximum);
+    dispose(values);
+    valid.
+
+/**
+ * Proves paired extrema with omitted and explicit optional dimensions.
+ */
+@test
+pub paired_extrema_match_libtorch(): Bool ->
+    let values = from_floats([3.0, 1.0, 4.0, 2.0, 6.0, 5.0], [2, 3]);
+    let {global_minimum, global_maximum} = aminmax(values);
+    let {dimension_minimum, dimension_maximum} = aminmax_dim(values, 1);
+    let valid =
+        item_float(global_minimum) == 1.0
+            and item_float(global_maximum) == 6.0
+            and vector_float(dimension_minimum, 0) == 1.0
+            and vector_float(dimension_minimum, 1) == 2.0
+            and vector_float(dimension_maximum, 0) == 4.0
+            and vector_float(dimension_maximum, 1) == 6.0
+            and shape(values) == [2, 3];
+    dispose(dimension_maximum);
+    dispose(dimension_minimum);
+    dispose(global_maximum);
+    dispose(global_minimum);
+    dispose(values);
+    valid.
+
+/**
+ * Proves maximum and minimum indices with omitted and explicit dimensions.
+ */
+@test
+pub extrema_indices_match_libtorch(): Bool ->
+    let values = from_floats([3.0, 1.0, 4.0, 2.0, 6.0, 5.0], [2, 3]);
+    let maximum_index = argmax_all(values);
+    let maximum_indices = argmax(values, 1, false);
+    let minimum_index = argmin_all(values);
+    let minimum_indices = argmin(values, 1);
+    let valid =
+        item(maximum_index) == 4
+            and vector_int(maximum_indices, 0) == 2
+            and vector_int(maximum_indices, 1) == 1
+            and item(minimum_index) == 1
+            and vector_int(minimum_indices, 0) == 1
+            and vector_int(minimum_indices, 1) == 0
+            and shape(values) == [2, 3];
+    dispose(minimum_indices);
+    dispose(minimum_index);
+    dispose(maximum_indices);
+    dispose(maximum_index);
+    dispose(values);
+    valid.
+
+/**
+ * Proves truth and nonzero-count reductions across explicit dimensions.
+ */
+@test
+pub truth_and_count_reductions_match_libtorch(): Bool ->
+    let counted = from_ints([0, 2, 0, 3], [2, 2]);
+    let logical = from_ints([1, 0, 1, 1], [2, 2]);
+    let total_count = count_nonzero_all(counted);
+    let row_counts = count_nonzero(counted, 1);
+    let row_all = all_dimensions(logical, [1]);
+    let row_any = any_dimensions(logical, [1]);
+    let valid =
+        item(total_count) == 2
+            and vector_int(row_counts, 0) == 1
+            and vector_int(row_counts, 1) == 1
+            and not vector_bool(row_all, 0)
+            and vector_bool(row_all, 1)
+            and vector_bool(row_any, 0)
+            and vector_bool(row_any, 1)
+            and shape(counted) == [2, 2]
+            and shape(logical) == [2, 2];
+    dispose(row_any);
+    dispose(row_all);
+    dispose(row_counts);
+    dispose(total_count);
+    dispose(logical);
+    dispose(counted);
+    valid.
+
+/**
+ * Proves stable logarithmic summation and complete or dimension products.
+ */
+@test
+pub logarithmic_and_product_reductions_match_libtorch(): Bool ->
+    let zeros = from_floats([0.0, 0.0], [2]);
+    let factors = from_ints([1, 2, 3, 4], [2, 2]);
+    let logarithmic_total = logsumexp(zeros, [0]);
+    let complete_product = prod(factors);
+    let row_products = prod_dim(factors, 1);
+    let logarithmic_total_value = item_float(logarithmic_total);
+    let valid =
+        logarithmic_total_value > 0.6931
+            and logarithmic_total_value < 0.6932
+            and item(complete_product) == 24
+            and vector_int(row_products, 0) == 2
+            and vector_int(row_products, 1) == 12
+            and shape(zeros) == [2]
+            and shape(factors) == [2, 2];
+    dispose(row_products);
+    dispose(complete_product);
+    dispose(logarithmic_total);
+    dispose(factors);
+    dispose(zeros);
+    valid.
+
+/**
+ * Proves cumulative and complete or dimension mean/sum reductions.
+ */
+@test
+pub cumulative_mean_and_sum_reductions_match_libtorch(): Bool ->
+    let values = from_ints([1, 2, 3, 4], [2, 2]);
+    let floating_values = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let cumulative_sum = cumsum(values, 1);
+    let cumulative_product = cumprod(values, 1);
+    let flattened_sum = flatten(cumulative_sum, 0, 1);
+    let flattened_product = flatten(cumulative_product, 0, 1);
+    let complete_mean = mean(floating_values);
+    let row_means = mean_dimensions(floating_values, [1], false);
+    let complete_sum = sum(values);
+    let column_sums = sum_dimensions(values, [0], false);
+    let valid =
+        vector_int(flattened_sum, 0) == 1
+            and vector_int(flattened_sum, 1) == 3
+            and vector_int(flattened_sum, 2) == 3
+            and vector_int(flattened_sum, 3) == 7
+            and vector_int(flattened_product, 0) == 1
+            and vector_int(flattened_product, 1) == 2
+            and vector_int(flattened_product, 2) == 3
+            and vector_int(flattened_product, 3) == 12
+            and item_float(complete_mean) == 2.5
+            and vector_float(row_means, 0) == 1.5
+            and vector_float(row_means, 1) == 3.5
+            and item(complete_sum) == 10
+            and vector_int(column_sums, 0) == 4
+            and vector_int(column_sums, 1) == 6
+            and shape(values) == [2, 2]
+            and shape(floating_values) == [2, 2];
+    dispose(column_sums);
+    dispose(complete_sum);
+    dispose(row_means);
+    dispose(complete_mean);
+    dispose(flattened_product);
+    dispose(flattened_sum);
+    dispose(cumulative_product);
+    dispose(cumulative_sum);
+    dispose(floating_values);
+    dispose(values);
+    valid.
+
+/**
+ * Proves dimension-wise sample/population moments and tuple ownership.
+ */
+@test
+pub dimension_moments_match_libtorch(): Bool ->
+    let values = from_floats([1.0, 3.0, 5.0, 7.0], [2, 2]);
+    let population_deviation = std_dimensions(values, [1], false);
+    let sample_variance = var_dimensions(values, [1]);
+    let {paired_deviation, deviation_mean} = std_mean_dimensions(values, [1], false);
+    let {paired_variance, variance_mean} = var_mean_dimensions(values, [1]);
+    let valid =
+        vector_float(population_deviation, 0) == 1.0
+            and vector_float(population_deviation, 1) == 1.0
+            and vector_float(sample_variance, 0) == 2.0
+            and vector_float(sample_variance, 1) == 2.0
+            and vector_float(paired_deviation, 0) == 1.0
+            and vector_float(paired_deviation, 1) == 1.0
+            and vector_float(deviation_mean, 0) == 2.0
+            and vector_float(deviation_mean, 1) == 6.0
+            and vector_float(paired_variance, 0) == 2.0
+            and vector_float(paired_variance, 1) == 2.0
+            and vector_float(variance_mean, 0) == 2.0
+            and vector_float(variance_mean, 1) == 6.0
+            and shape(values) == [2, 2];
+    dispose(variance_mean);
+    dispose(paired_variance);
+    dispose(deviation_mean);
+    dispose(paired_deviation);
+    dispose(sample_variance);
+    dispose(population_deviation);
+    dispose(values);
+    valid.
+
+/**
+ * Proves scalar p-norm values and source ownership.
+ */
+@test
+pub scalar_norm_matches_libtorch(): Bool ->
+    let vector = from_floats([3.0, 4.0], [2]);
+    let complete_norm = norm(vector);
+    let valid = item_float(complete_norm) == 5.0 and shape(vector) == [2];
+    dispose(complete_norm);
+    dispose(vector);
+    valid.
+
+/**
+ * Proves p-norm distance values and source ownership.
+ */
+@test
+pub distance_matches_libtorch(): Bool ->
+    let vector = from_floats([3.0, 4.0], [2]);
+    let zero = from_floats([0.0, 0.0], [2]);
+    let distance = dist(vector, zero);
+    let valid = item_float(distance) == 5.0 and shape(vector) == [2] and shape(zero) == [2];
+    dispose(distance);
+    dispose(zero);
+    dispose(vector);
+    valid.
+
+/**
+ * Proves p-norm reduction across an explicit dimension.
+ */
+@test
+pub dimension_norm_matches_libtorch(): Bool ->
+    let matrix = from_floats([3.0, 4.0, 0.0, 10.0], [2, 2]);
+    let row_norms = norm_dimensions(matrix, 2.0, [1]);
+    let valid =
+        vector_float(row_norms, 0) == 5.0
+            and vector_float(row_norms, 1) == 10.0
+            and shape(matrix) == [2, 2];
+    dispose(row_norms);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves excluded-dimension norms and output shape.
+ */
+@test
+pub excluded_dimension_norm_matches_libtorch(): Bool ->
+    let matrix = from_floats([3.0, 4.0, 0.0, 10.0], [2, 2]);
+    let excluded_norms = norm_except_dimension(matrix);
+    let excluded_values = reshape(excluded_norms, [2]);
+    let valid =
+        shape(excluded_norms) == [2, 1]
+            and vector_float(excluded_values, 0) == 5.0
+            and vector_float(excluded_values, 1) == 10.0
+            and shape(matrix) == [2, 2];
+    dispose(excluded_values);
+    dispose(excluded_norms);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves bounded renormalization and source ownership.
+ */
+@test
+pub renorm_matches_libtorch(): Bool ->
+    let matrix = from_floats([3.0, 4.0, 0.0, 10.0], [2, 2]);
+    let bounded = renorm(matrix, 2.0, 0, 5.0);
+    let bounded_total = sum(bounded);
+    let total = item_float(bounded_total);
+    let valid = shape(bounded) == [2, 2] and total > 11.999 and total < 12.001 and shape(matrix) == [2, 2];
+    dispose(bounded_total);
+    dispose(bounded);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves dimension-wise logical reductions, sorting direction, and combinations.
+ */
+@test
+pub dimension_sorting_and_combinations_match_libtorch(): Bool ->
+    let logical = from_ints([1, 0, 1, 1], [2, 2]);
+    let values = from_floats([3.0, 1.0, 2.0], [3]);
+    let integer_values = from_ints([1, 2, 3], [3]);
+    let conjunction = all_dim(logical, 1, false);
+    let disjunction = any_dim(logical, 1, false);
+    let ascending = argsort(values, 0, false);
+    let descending = argsort(values, 0, true);
+    let pairs = combinations(integer_values, 2, false);
+    let valid =
+        shape(conjunction) == [2]
+            and not vector_bool(conjunction, 0)
+            and vector_bool(conjunction, 1)
+            and vector_bool(disjunction, 0)
+            and vector_bool(disjunction, 1)
+            and vector_int(ascending, 0) == 1
+            and vector_int(ascending, 1) == 2
+            and vector_int(ascending, 2) == 0
+            and vector_int(descending, 0) == 0
+            and vector_int(descending, 1) == 2
+            and vector_int(descending, 2) == 1
+            and shape(pairs) == [3, 2]
+            and int_sum(pairs) == 12;
+    dispose(pairs);
+    dispose(descending);
+    dispose(ascending);
+    dispose(disjunction);
+    dispose(conjunction);
+    dispose(integer_values);
+    dispose(values);
+    dispose(logical);
+    valid.
+
+/**
+ * Proves retained extrema and index outputs for explicit and omitted dimensions.
+ */
+@test
+pub extrema_retained_outputs_match_functional_results(): Bool ->
+    let values = from_floats([3.0, 1.0, 4.0, 2.0, 6.0, 5.0], [2, 3]);
+    let maximum = amax(values, [1], false);
+    let maximum_output = clone(maximum);
+    amax_out(maximum_output, values, [1], false);
+    let maximum_ok = same_and_dispose(maximum_output, maximum);
+    let minimum = amin(values, [1], false);
+    let minimum_output = clone(minimum);
+    (amin_out(minimum_output, values, [1], false); let minimum_ok = same_and_dispose(minimum_output, minimum);
+let maximum_indices = argmax(values, 1, false);
+let maximum_index_output = clone(maximum_indices);
+(argmax_out(maximum_index_output, values, 1, false); let maximum_index_ok = same_and_dispose(maximum_index_output, maximum_indices);
+let global_maximum_index = argmax_all(values, false);
+let global_maximum_index_output = clone(global_maximum_index);
+(argmax_all_out(global_maximum_index_output, values, false); let global_maximum_index_ok = same_and_dispose(global_maximum_index_output, global_maximum_index);
+let minimum_indices = argmin(values, 1, false);
+let minimum_index_output = clone(minimum_indices);
+(argmin_out(minimum_index_output, values, 1, false); let minimum_index_ok = same_and_dispose(minimum_index_output, minimum_indices);
+let global_minimum_index = argmin_all(values, false);
+let global_minimum_index_output = clone(global_minimum_index);
+(argmin_all_out(global_minimum_index_output, values, false); let global_minimum_index_ok = same_and_dispose(global_minimum_index_output, global_minimum_index);
+let {dimension_minimum, dimension_maximum} = aminmax_dim(values, 1, false);
+let dimension_minimum_output = clone(dimension_minimum);
+let dimension_maximum_output = clone(dimension_maximum);
+(aminmax_dim_out(dimension_minimum_output, dimension_maximum_output, values, 1, false); let dimension_minimum_ok = same_and_dispose(dimension_minimum_output, dimension_minimum);
+let dimension_maximum_ok = same_and_dispose(dimension_maximum_output, dimension_maximum);
+let {global_minimum, global_maximum} = aminmax(values, false);
+let global_minimum_output = clone(global_minimum);
+let global_maximum_output = clone(global_maximum);
+(aminmax_all_out(global_minimum_output, global_maximum_output, values, false); let global_minimum_ok = same_and_dispose(global_minimum_output, global_minimum);
+let global_maximum_ok = same_and_dispose(global_maximum_output, global_maximum);
+(dispose(values); maximum_ok
+    and minimum_ok
+    and maximum_index_ok
+    and global_maximum_index_ok
+    and minimum_index_ok
+    and global_minimum_index_ok
+    and dimension_minimum_ok
+    and dimension_maximum_ok
+    and global_minimum_ok
+    and global_maximum_ok)))))))).
+
+/**
+ * Proves retained truth, count, and median outputs across optional dimensions.
+ */
+@test
+pub logical_retained_outputs_match_functional_results(): Bool ->
+    let logical = from_ints([1, 0, 1, 1], [2, 2]);
+    let row_all = all_dimensions(logical, [1], false);
+    let row_all_output = clone(row_all);
+    all_dimensions_out(row_all_output, logical, [1], false);
+    let row_all_ok = same_and_dispose(row_all_output, row_all);
+    let dimension_all = all_dim(logical, 1, false);
+    let dimension_all_output = clone(dimension_all);
+    (all_dimension_out(dimension_all_output, logical, 1, false); let dimension_all_ok = same_and_dispose(dimension_all_output, dimension_all);
+let row_any = any_dimensions(logical, [1], false);
+let row_any_output = clone(row_any);
+(any_dimensions_out(row_any_output, logical, [1], false); let row_any_ok = same_and_dispose(row_any_output, row_any);
+let dimension_any = any_dim(logical, 1, false);
+let dimension_any_output = clone(dimension_any);
+(any_dimension_out(dimension_any_output, logical, 1, false); let dimension_any_ok = same_and_dispose(dimension_any_output, dimension_any);
+let counts = count_nonzero(logical, 1);
+let count_output = clone(counts);
+(count_nonzero_out(count_output, logical, 1); let count_ok = same_and_dispose(count_output, counts);
+let list_counts = count_nonzero(logical, 1);
+let list_count_output = clone(list_counts);
+(count_nonzero_dimensions_out(list_count_output, logical, [1]); let list_count_ok = same_and_dispose(list_count_output, list_counts);
+let total_count = count_nonzero_all(logical);
+let total_count_output = clone(total_count);
+(count_nonzero_all_out(total_count_output, logical); let total_count_ok = same_and_dispose(total_count_output, total_count);
+let values = from_floats([3.0, 1.0, 4.0, 2.0], [2, 2]);
+let median = nanmedian(values);
+let median_output = clone(median);
+(nanmedian_out(median_output, values); let median_ok = same_and_dispose(median_output, median);
+(dispose(values); dispose(logical); row_all_ok
+    and dimension_all_ok
+    and row_any_ok
+    and dimension_any_ok
+    and count_ok
+    and list_count_ok
+    and total_count_ok
+    and median_ok)))))))).
+
+/**
+ * Proves retained logarithmic, mean, product, and sum reductions.
+ */
+@test
+pub aggregate_retained_outputs_match_functional_results(): Bool ->
+    let values = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let logarithmic = logsumexp(values, [1], false);
+    let logarithmic_output = clone(logarithmic);
+    logsumexp_out(logarithmic_output, values, [1], false);
+    let logarithmic_ok = same_and_dispose(logarithmic_output, logarithmic);
+    let complete_mean = mean(values);
+    let complete_mean_output = clone(complete_mean);
+    (mean_out(complete_mean_output, values); let complete_mean_ok = same_and_dispose(complete_mean_output, complete_mean);
+let optional_mean = mean(values);
+let optional_mean_output = clone(optional_mean);
+(mean_all_dimensions_out(optional_mean_output, values, false); let optional_mean_ok = same_and_dispose(optional_mean_output, optional_mean);
+let row_means = mean_dimensions(values, [1], false);
+let row_mean_output = clone(row_means);
+(mean_dimensions_out(row_mean_output, values, [1], false); let row_mean_ok = same_and_dispose(row_mean_output, row_means);
+let complete_product = prod(values);
+let complete_product_output = clone(complete_product);
+(prod_out(complete_product_output, values); let complete_product_ok = same_and_dispose(complete_product_output, complete_product);
+let row_products = prod_dim(values, 1, false);
+let row_product_output = clone(row_products);
+(prod_dimension_out(row_product_output, values, 1, false); let row_product_ok = same_and_dispose(row_product_output, row_products);
+let complete_sum = sum(values);
+let complete_sum_output = clone(complete_sum);
+(sum_out(complete_sum_output, values); let complete_sum_ok = same_and_dispose(complete_sum_output, complete_sum);
+let optional_sum = sum(values);
+let optional_sum_output = clone(optional_sum);
+(sum_all_dimensions_out(optional_sum_output, values, false); let optional_sum_ok = same_and_dispose(optional_sum_output, optional_sum);
+let row_sums = sum_dimensions(values, [1], false);
+let row_sum_output = clone(row_sums);
+(sum_dimensions_out(row_sum_output, values, [1], false); let row_sum_ok = same_and_dispose(row_sum_output, row_sums);
+(dispose(values); logarithmic_ok
+    and complete_mean_ok
+    and optional_mean_ok
+    and row_mean_ok
+    and complete_product_ok
+    and row_product_ok
+    and complete_sum_ok
+    and optional_sum_ok
+    and row_sum_ok))))))))).
+
+/**
+ * Proves retained standard-deviation and variance reductions.
+ */
+@test
+pub moment_retained_outputs_match_functional_results(): Bool ->
+    let values = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let row_deviations = std_dimensions(values, [1], true, false);
+    let row_deviation_output = clone(row_deviations);
+    std_dimensions_out(row_deviation_output, values, [1], true, false);
+    let row_deviation_ok = same_and_dispose(row_deviation_output, row_deviations);
+    let complete_deviation = std(values, true);
+    let complete_deviation_output = clone(complete_deviation);
+    (std_all_dimensions_out(complete_deviation_output, values, true, false); let complete_deviation_ok = same_and_dispose(complete_deviation_output, complete_deviation); let row_variances = var_dimensions(values, [1], true, false); let row_variance_output = clone(row_variances); (var_dimensions_out(row_variance_output, values, [1], true, false); let row_variance_ok = same_and_dispose(row_variance_output, row_variances); let complete_variance = var(values, true); let complete_variance_output = clone(complete_variance); (var_all_dimensions_out(complete_variance_output, values, true, false); let complete_variance_ok = same_and_dispose(complete_variance_output, complete_variance); (dispose(values); row_deviation_ok and complete_deviation_ok and row_variance_ok and complete_variance_ok)))).
+
+/**
+ * Proves retained cumulative reduction outputs with inherited dtype.
+ */
+@test
+pub cumulative_retained_outputs_match_functional_results(): Bool ->
+    let values = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let cumulative_sum = cumsum(values, 1);
+    let cumulative_sum_output = clone(cumulative_sum);
+    cumsum_out(cumulative_sum_output, values, 1);
+    let sum_ok = same_and_dispose(cumulative_sum_output, cumulative_sum);
+    let cumulative_product = cumprod(values, 1);
+    let cumulative_product_output = clone(cumulative_product);
+    (cumprod_out(cumulative_product_output, values, 1); let product_ok = same_and_dispose(cumulative_product_output, cumulative_product); let logarithmic = logcumsumexp(values, 1); let logarithmic_output = clone(logarithmic); (logcumsumexp_out(logarithmic_output, values, 1); let logarithmic_ok = same_and_dispose(logarithmic_output, logarithmic); (dispose(values); sum_ok and product_ok and logarithmic_ok))).
+
+/**
+ * Proves retained Cholesky and matrix-norm outputs.
+ */
+@test
+pub decomposition_retained_outputs_match_functional_results(): Bool ->
+    let matrix = from_floats([4.0, 2.0, 2.0, 3.0], [2, 2]);
+    let right_hand_side = from_floats([1.0, 0.0], [2, 1]);
+    let factor = cholesky(matrix, false);
+    let factor_output = clone(factor);
+    let inverse = cholesky_inverse(factor, false);
+    let inverse_output = clone(inverse);
+    let solution = cholesky_solve(right_hand_side, factor, false);
+    let solution_output = clone(solution);
+    let complete_nuclear = nuclear_norm(matrix, false);
+    let complete_nuclear_output = clone(complete_nuclear);
+    let dimension_nuclear = nuclear_norm_dimensions(matrix, [0, 1], false);
+    let dimension_nuclear_output = clone(dimension_nuclear);
+    let frobenius = frobenius_norm_dimensions(matrix, [0, 1], false);
+    let frobenius_output = clone(frobenius);
+    let factor_for_inverse = cholesky(matrix, false);
+    cholesky_out(factor_output, matrix, false);
+    let factor_ok = same_and_dispose(factor_output, factor);
+    (cholesky_inverse_out(inverse_output, factor_for_inverse, false); dispose(factor_for_inverse); let inverse_ok = same_and_dispose(inverse_output, inverse);
+let factor_for_solution = cholesky(matrix, false);
+(cholesky_solve_out(solution_output, right_hand_side, factor_for_solution, false); let solution_ok = same_and_dispose(solution_output, solution);
+(dispose(factor_for_solution); nuclear_norm_out(complete_nuclear_output, matrix, false); let complete_nuclear_ok = same_and_dispose(complete_nuclear_output, complete_nuclear);
+(nuclear_norm_dimensions_out(dimension_nuclear_output, matrix, [0, 1], false); let dimension_nuclear_ok = same_and_dispose(dimension_nuclear_output, dimension_nuclear);
+(frobenius_norm_dimensions_out(frobenius_output, matrix, [0, 1], false); let frobenius_ok = same_and_dispose(frobenius_output, frobenius);
+(dispose(right_hand_side); dispose(matrix); factor_ok
+    and inverse_ok
+    and solution_ok
+    and complete_nuclear_ok
+    and dimension_nuclear_ok
+    and frobenius_ok)))))).

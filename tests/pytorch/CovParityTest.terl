@@ -1,0 +1,22 @@
+/**
+ * CPU value evidence for aten::cov.
+ */
+module pytorch.CovParityTest.
+
+import pytorch.CovCompletion.cov.
+import pytorch.Tensor.{dispose, dtype, from_floats, shape}.
+import pytorch.TypeRelations.allclose.
+
+@test
+pub covariance_matches_reference(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let actual = cov(input, 1);
+    let expected = from_floats([0.5, 0.5, 0.5, 0.5], [2, 2]);
+    let valid =
+        dtype(actual) == dtype(input)
+            and shape(actual) == [2, 2]
+            and allclose(actual, expected, 0.00001, 0.00001, false);
+    dispose(expected);
+    dispose(actual);
+    dispose(input);
+    valid.

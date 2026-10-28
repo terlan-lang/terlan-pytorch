@@ -1,0 +1,27 @@
+//! Generated CXX multi-margin-loss completion surface.
+
+module pytorch.MultiMarginLossCompletion.
+
+/// Exact generated CXX multi-margin-loss backward leaf.
+
+pub multi_margin_loss_backward(gradient_output: Tensor, input: Tensor, target: Tensor, p: Float, margin: Float, has_weight: Bool, weight: Tensor, reduction: Int): Tensor.
+
+/// Exact generated CXX multi-margin-loss backward retained-output leaf.
+
+pub multi_margin_loss_backward_out(grad_input: Tensor, gradient_output: Tensor, input: Tensor, target: Tensor, p: Float, margin: Float, has_weight: Bool, weight: Tensor, reduction: Int): Unit.
+
+/// Computes multi-margin loss without class weights.
+
+pub multi_margin_loss_default(input: Tensor, target: Tensor, p: Float, margin: Float, reduction: Int): Tensor.
+
+/// Writes multi-margin loss into retained output without class weights.
+
+pub multi_margin_loss_out_default(output: Tensor, input: Tensor, target: Tensor, p: Float, margin: Float, reduction: Int): Unit.
+
+/// Writes multi-margin loss into retained output with class weights.
+
+pub multi_margin_loss_out_weight(output: Tensor, input: Tensor, target: Tensor, p: Float, margin: Float, weight: Tensor, reduction: Int): Unit.
+
+/// Computes multi-margin loss with class weights.
+
+pub multi_margin_loss_weight(input: Tensor, target: Tensor, p: Float, margin: Float, weight: Tensor, reduction: Int): Tensor.

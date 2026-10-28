@@ -1,0 +1,17 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{dispose, dispose_model, from_float, item_float, load_torchscript, torchscript_forward_float}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let model = load_torchscript("$scalar_float_model");
+    let input = from_float(3.0);
+    let output = torchscript_forward_float(model, input);
+    let observed_input = item_float(input);
+    dispose(input);
+    dispose_model(model);
+    if {
+        observed_input == 3.0 and output == 6.0 ->
+            println("PYTORCH_FLOAT_OUTPUT_CONSUMER_OK");
+        true -> println("PYTORCH_FLOAT_OUTPUT_CONSUMER_FAILED")
+    }.

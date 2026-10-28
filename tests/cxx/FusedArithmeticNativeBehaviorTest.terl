@@ -1,0 +1,7 @@
+module pytorch_cxx.FusedArithmeticNativeBehaviorTest.
+
+import pytorch.FusedArithmeticNativeBehaviorSupport.{fused_arithmetic_contracts_on}.
+
+@test
+pub generated_cxx_fused_arithmetic_contracts(): Bool ->
+    fused_arithmetic_contracts_on("cpu").

@@ -1,0 +1,10 @@
+module=pytorch.SliceInverse
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=1210137755364751331
+interface_hash=8855605283970749020
+interface_doc_hash=17737504613109349155
+deps=2
+pytorch.SliceInverseCompletion=1569111301139815995
+pytorch.Tensor=13489932768568026575

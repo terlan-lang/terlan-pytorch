@@ -1,0 +1,11 @@
+module pytorch_cxx.PoolingBehaviorTest.
+
+import pytorch.PoolingBehaviorSupport.{pooling_retained_output_contracts_on, pooling_value_contracts_on}.
+
+@test
+pub generated_cxx_pooling_value_contracts(): Bool ->
+    pooling_value_contracts_on("cpu", false).
+
+@test
+pub generated_cxx_pooling_retained_output_contracts(): Bool ->
+    pooling_retained_output_contracts_on("cpu", false).

@@ -1,0 +1,334 @@
+/**
+ * Exact correction-aware standard-deviation, variance, and paired mean statistics.
+ */
+module pytorch.CorrectionStatisticsCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_correction_default}
+pub std_correction_default(input: Tensor, keep_dimension: Bool): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_correction_default}
+pub var_correction_default(input: Tensor, keep_dimension: Bool): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_correction_out_default}
+pub std_correction_out_default(output: Tensor, input: Tensor, keep_dimension: Bool): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_correction_out_default}
+pub var_correction_out_default(output: Tensor, input: Tensor, keep_dimension: Bool): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_correction_dimensions}
+pub std_correction_dimensions(input: Tensor, dimensions: List[Int], keep_dimension: Bool): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_correction_dimensions}
+pub var_correction_dimensions(input: Tensor, dimensions: List[Int], keep_dimension: Bool): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_correction_out_dimensions}
+pub std_correction_out_dimensions(
+    output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_correction_out_dimensions}
+pub var_correction_out_dimensions(
+    output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_correction_int}
+pub std_correction_int(input: Tensor, correction: Int, keep_dimension: Bool): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_correction_int}
+pub var_correction_int(input: Tensor, correction: Int, keep_dimension: Bool): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_correction_out_int}
+pub std_correction_out_int(
+    output: Tensor,
+    input: Tensor,
+    correction: Int,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_correction_out_int}
+pub var_correction_out_int(
+    output: Tensor,
+    input: Tensor,
+    correction: Int,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_correction_float}
+pub std_correction_float(input: Tensor, correction: Float, keep_dimension: Bool): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_correction_float}
+pub var_correction_float(input: Tensor, correction: Float, keep_dimension: Bool): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_correction_out_float}
+pub std_correction_out_float(
+    output: Tensor,
+    input: Tensor,
+    correction: Float,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_correction_out_float}
+pub var_correction_out_float(
+    output: Tensor,
+    input: Tensor,
+    correction: Float,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_correction_dimensions_int}
+pub std_correction_dimensions_int(
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Int,
+    keep_dimension: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_correction_dimensions_int}
+pub var_correction_dimensions_int(
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Int,
+    keep_dimension: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_correction_out_dimensions_int}
+pub std_correction_out_dimensions_int(
+    output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Int,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_correction_out_dimensions_int}
+pub var_correction_out_dimensions_int(
+    output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Int,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_correction_dimensions_float}
+pub std_correction_dimensions_float(
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Float,
+    keep_dimension: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_correction_dimensions_float}
+pub var_correction_dimensions_float(
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Float,
+    keep_dimension: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_correction_out_dimensions_float}
+pub std_correction_out_dimensions_float(
+    output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Float,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_correction_out_dimensions_float}
+pub var_correction_out_dimensions_float(
+    output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Float,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_mean_correction_default}
+pub std_mean_correction_default(input: Tensor, keep_dimension: Bool): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_mean_correction_default}
+pub var_mean_correction_default(input: Tensor, keep_dimension: Bool): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_mean_correction_out_default}
+pub std_mean_correction_out_default(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_mean_correction_out_default}
+pub var_mean_correction_out_default(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_mean_correction_dimensions}
+pub std_mean_correction_dimensions(
+    input: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_mean_correction_dimensions}
+pub var_mean_correction_dimensions(
+    input: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.std_mean_correction_out_dimensions}
+pub std_mean_correction_out_dimensions(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.correction_statistics.var_mean_correction_out_dimensions}
+pub var_mean_correction_out_dimensions(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool,
+): Unit ->
+    native.

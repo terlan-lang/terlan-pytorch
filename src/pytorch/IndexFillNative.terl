@@ -1,0 +1,76 @@
+/**
+ * Exact scalar and scalar-tensor index filling with functional, retained-output, and in-place variants.
+ */
+module pytorch.IndexFillNative.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes exact aten::index_fill with a tagged integer or floating-point Scalar value.
+ */
+@compiler.native {pytorch.index_fill.scalar}
+pub index_fill_scalar(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::index_fill.out scalar results into retained output storage.
+ */
+@compiler.native {pytorch.index_fill.scalar_out}
+pub index_fill_scalar_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes the exact dispatcher-backed Tensor::index_fill_ scalar overload in place.
+ */
+@compiler.native {pytorch.index_fill.scalar_in_place}
+pub index_fill_scalar_in_place(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::index_fill with a scalar Tensor value.
+ */
+@compiler.native {pytorch.index_fill.tensor}
+pub index_fill_tensor(input: Tensor, dimension: Int, index: Tensor, value: Tensor): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::index_fill.out Tensor-value results into retained output storage.
+ */
+@compiler.native {pytorch.index_fill.tensor_out}
+pub index_fill_tensor_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Executes the exact dispatcher-backed Tensor::index_fill_ Tensor-value overload in place.
+ */
+@compiler.native {pytorch.index_fill.tensor_in_place}
+pub index_fill_tensor_in_place(input: Tensor, dimension: Int, index: Tensor, value: Tensor): Unit ->
+    native.

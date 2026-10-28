@@ -1,0 +1,9 @@
+module=pytorch.Distance
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=15393923522045028726
+interface_hash=11109653158029756925
+interface_doc_hash=8514001427695383450
+deps=1
+pytorch.Tensor=13489932768568026575

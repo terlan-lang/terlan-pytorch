@@ -1,0 +1,26 @@
+//! Exact integer and floating-point scalar values accepted by PyTorch operators.
+
+module pytorch.Scalar.
+
+/// Preserves whether a scalar was supplied as an integer or floating-point value.
+
+pub struct Scalar {
+    is_integer: Bool,
+    integer_value: Int,
+    floating_value: Float
+}.
+
+/// Creates an exact floating-point scalar.
+
+@pure
+pub from_float(value: Float): Scalar.
+
+/// Creates an exact integer scalar.
+
+@pure
+pub from_int(value: Int): Scalar.
+
+/// Returns the integer scalar one used by PyTorch arithmetic defaults.
+
+@pure
+pub one(): Scalar.

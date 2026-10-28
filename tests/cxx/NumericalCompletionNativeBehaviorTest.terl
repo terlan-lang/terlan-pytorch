@@ -1,0 +1,7 @@
+module pytorch_cxx.NumericalCompletionNativeBehaviorTest.
+
+import pytorch.NumericalCompletionNativeBehaviorSupport.{numerical_completion_native_contracts_on}.
+
+@test
+pub generated_cxx_numerical_completion_native_contracts(): Bool ->
+    numerical_completion_native_contracts_on("cpu", false).

@@ -1,0 +1,52 @@
+/**
+ * Exact nan-to-number operations with independent optional replacement presence.
+ */
+module pytorch.NanToNumNative.
+
+import type pytorch.Tensor.
+
+/**
+ * Replaces non-finite values with independently present replacement values.
+ */
+@compiler.native {pytorch.nan_to_num.configured}
+pub nan_to_num_configured(
+    input: Tensor,
+    has_nan: Bool,
+    nan: Float,
+    has_posinf: Bool,
+    posinf: Float,
+    has_neginf: Bool,
+    neginf: Float,
+): Tensor ->
+    native.
+
+/**
+ * Writes non-finite replacement results into retained output storage.
+ */
+@compiler.native {pytorch.nan_to_num.configured_out}
+pub nan_to_num_configured_out(
+    output: Tensor,
+    input: Tensor,
+    has_nan: Bool,
+    nan: Float,
+    has_posinf: Bool,
+    posinf: Float,
+    has_neginf: Bool,
+    neginf: Float,
+): Unit ->
+    native.
+
+/**
+ * Replaces non-finite tensor values in place.
+ */
+@compiler.native {pytorch.nan_to_num.configured_in_place}
+pub nan_to_num_configured_in_place(
+    input: Tensor,
+    has_nan: Bool,
+    nan: Float,
+    has_posinf: Bool,
+    posinf: Float,
+    has_neginf: Bool,
+    neginf: Float,
+): Unit ->
+    native.

@@ -1,0 +1,7 @@
+module pytorch_cxx.StatisticsCudaBehaviorTest.
+
+import pytorch.StatisticsBehaviorSupport.{statistics_contracts_on}.
+
+@test
+pub cuda_statistics_contracts(): Bool ->
+    statistics_contracts_on("cuda:0", true).

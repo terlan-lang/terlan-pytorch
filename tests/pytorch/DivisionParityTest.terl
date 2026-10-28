@@ -1,0 +1,146 @@
+module pytorch.DivisionParityTest.
+
+import pytorch.Division.{div_right_float, div_right_float_in_place, div_right_float_mode, div_right_float_mode_in_place, div_right_float_mode_out, div_right_float_out, div_right_int, div_right_int_in_place, div_right_int_mode, div_right_int_mode_in_place, div_right_int_mode_out, div_right_int_out, div_tensor_in_place, div_tensor_mode, div_tensor_mode_in_place, div_tensor_mode_out, div_tensor_out, divide_right_float, divide_right_float_in_place, divide_right_float_mode, divide_right_float_mode_in_place, divide_right_int, divide_right_int_in_place, divide_right_int_mode, divide_right_int_mode_in_place, divide_tensor_in_place, divide_tensor_mode, divide_tensor_mode_in_place, divide_tensor_mode_out, divide_tensor_out, true_divide_right_float, true_divide_right_float_in_place, true_divide_right_int, true_divide_right_int_in_place, true_divide_tensor_in_place, true_divide_tensor_out}.
+import pytorch.Tensor.{dispose, from_float, item_float}.
+
+/**
+ * Proves every typed scalar overload for div, including retained outputs and mutation.
+ */
+@test
+pub div_scalar_overloads_match_libtorch(): Bool ->
+    let source = from_float(-7.5);
+    let plain_int = div_right_int(source, 2);
+    let floor_int = div_right_int_mode(source, 2, "floor");
+    let plain_float = div_right_float(source, 2.0);
+    let trunc_float = div_right_float_mode(source, 2.0, "trunc");
+    let int_output = from_float(0.0);
+    let floor_output = from_float(0.0);
+    let float_output = from_float(0.0);
+    let trunc_output = from_float(0.0);
+    let int_mutation = from_float(-7.5);
+    let floor_mutation = from_float(-7.5);
+    let float_mutation = from_float(-7.5);
+    let trunc_mutation = from_float(-7.5);
+    div_right_int_out(int_output, source, 2);
+    div_right_int_mode_out(floor_output, source, 2, "floor");
+    div_right_float_out(float_output, source, 2.0);
+    div_right_float_mode_out(trunc_output, source, 2.0, "trunc");
+    div_right_int_in_place(int_mutation, 2);
+    div_right_int_mode_in_place(floor_mutation, 2, "floor");
+    div_right_float_in_place(float_mutation, 2.0);
+    div_right_float_mode_in_place(trunc_mutation, 2.0, "trunc");
+    let valid =
+        item_float(plain_int) == -3.75
+            and item_float(floor_int) == -4.0
+            and item_float(plain_float) == -3.75
+            and item_float(trunc_float) == -3.0
+            and item_float(int_output) == -3.75
+            and item_float(floor_output) == -4.0
+            and item_float(float_output) == -3.75
+            and item_float(trunc_output) == -3.0
+            and item_float(int_mutation) == -3.75
+            and item_float(floor_mutation) == -4.0
+            and item_float(float_mutation) == -3.75
+            and item_float(trunc_mutation) == -3.0
+            and item_float(source) == -7.5;
+    (dispose(trunc_mutation); dispose(float_mutation); dispose(floor_mutation); dispose(int_mutation); dispose(trunc_output); dispose(float_output); dispose(floor_output); dispose(int_output); dispose(trunc_float); dispose(plain_float); dispose(floor_int); dispose(plain_int); dispose(source); valid).
+
+/**
+ * Proves every tensor overload for div, including rounding, output, and mutation.
+ */
+@test
+pub div_tensor_overloads_match_libtorch(): Bool ->
+    let left = from_float(-7.5);
+    let right = from_float(2.0);
+    let floor = div_tensor_mode(left, right, "floor");
+    let output = from_float(0.0);
+    let floor_output = from_float(0.0);
+    let mutation = from_float(-7.5);
+    let floor_mutation = from_float(-7.5);
+    div_tensor_out(output, left, right);
+    div_tensor_mode_out(floor_output, left, right, "floor");
+    div_tensor_in_place(mutation, right);
+    div_tensor_mode_in_place(floor_mutation, right, "floor");
+    let valid =
+        item_float(floor) == -4.0
+            and item_float(output) == -3.75
+            and item_float(floor_output) == -4.0
+            and item_float(mutation) == -3.75
+            and item_float(floor_mutation) == -4.0
+            and item_float(left) == -7.5
+            and item_float(right) == 2.0;
+    (dispose(floor_mutation); dispose(mutation); dispose(floor_output); dispose(output); dispose(floor); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every divide alias across scalar and tensor operands.
+ */
+@test
+pub divide_aliases_match_libtorch(): Bool ->
+    let source = from_float(-7.5);
+    let right = from_float(2.0);
+    let int_value = divide_right_int(source, 2);
+    let int_floor = divide_right_int_mode(source, 2, "floor");
+    let float_value = divide_right_float(source, 2.0);
+    let float_trunc = divide_right_float_mode(source, 2.0, "trunc");
+    let tensor_floor = divide_tensor_mode(source, right, "floor");
+    let output = from_float(0.0);
+    let floor_output = from_float(0.0);
+    let int_mutation = from_float(-7.5);
+    let int_floor_mutation = from_float(-7.5);
+    let float_mutation = from_float(-7.5);
+    let float_trunc_mutation = from_float(-7.5);
+    let tensor_mutation = from_float(-7.5);
+    let tensor_floor_mutation = from_float(-7.5);
+    divide_tensor_out(output, source, right);
+    divide_tensor_mode_out(floor_output, source, right, "floor");
+    divide_right_int_in_place(int_mutation, 2);
+    divide_right_int_mode_in_place(int_floor_mutation, 2, "floor");
+    divide_right_float_in_place(float_mutation, 2.0);
+    divide_right_float_mode_in_place(float_trunc_mutation, 2.0, "trunc");
+    divide_tensor_in_place(tensor_mutation, right);
+    divide_tensor_mode_in_place(tensor_floor_mutation, right, "floor");
+    let valid =
+        item_float(int_value) == -3.75
+            and item_float(int_floor) == -4.0
+            and item_float(float_value) == -3.75
+            and item_float(float_trunc) == -3.0
+            and item_float(tensor_floor) == -4.0
+            and item_float(output) == -3.75
+            and item_float(floor_output) == -4.0
+            and item_float(int_mutation) == -3.75
+            and item_float(int_floor_mutation) == -4.0
+            and item_float(float_mutation) == -3.75
+            and item_float(float_trunc_mutation) == -3.0
+            and item_float(tensor_mutation) == -3.75
+            and item_float(tensor_floor_mutation) == -4.0
+            and item_float(source) == -7.5
+            and item_float(right) == 2.0;
+    (dispose(tensor_floor_mutation); dispose(tensor_mutation); dispose(float_trunc_mutation); dispose(float_mutation); dispose(int_floor_mutation); dispose(int_mutation); dispose(floor_output); dispose(output); dispose(tensor_floor); dispose(float_trunc); dispose(float_value); dispose(int_floor); dispose(int_value); dispose(right); dispose(source); valid).
+
+/**
+ * Proves every true_divide overload and its floating-point semantics.
+ */
+@test
+pub true_divide_overloads_match_libtorch(): Bool ->
+    let source = from_float(7.5);
+    let right = from_float(2.0);
+    let int_value = true_divide_right_int(source, 2);
+    let float_value = true_divide_right_float(source, 2.0);
+    let output = from_float(0.0);
+    let int_mutation = from_float(7.5);
+    let float_mutation = from_float(7.5);
+    let tensor_mutation = from_float(7.5);
+    true_divide_tensor_out(output, source, right);
+    true_divide_right_int_in_place(int_mutation, 2);
+    true_divide_right_float_in_place(float_mutation, 2.0);
+    true_divide_tensor_in_place(tensor_mutation, right);
+    let valid =
+        item_float(int_value) == 3.75
+            and item_float(float_value) == 3.75
+            and item_float(output) == 3.75
+            and item_float(int_mutation) == 3.75
+            and item_float(float_mutation) == 3.75
+            and item_float(tensor_mutation) == 3.75
+            and item_float(source) == 7.5
+            and item_float(right) == 2.0;
+    (dispose(tensor_mutation); dispose(float_mutation); dispose(int_mutation); dispose(output); dispose(float_value); dispose(int_value); dispose(right); dispose(source); valid).

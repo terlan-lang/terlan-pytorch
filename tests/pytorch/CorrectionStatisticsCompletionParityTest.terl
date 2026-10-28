@@ -1,0 +1,281 @@
+/**
+ * Exact correction-based standard-deviation and variance parity.
+ */
+module pytorch.CorrectionStatisticsCompletionParityTest.
+
+import pytorch.CorrectionStatisticsCompletion.{std_correction_default, std_correction_dimensions, std_correction_dimensions_float, std_correction_dimensions_int, std_correction_float, std_correction_int, std_correction_out_default, std_correction_out_dimensions, std_correction_out_dimensions_float, std_correction_out_dimensions_int, std_correction_out_float, std_correction_out_int, std_mean_correction_default, std_mean_correction_dimensions, std_mean_correction_out_default, std_mean_correction_out_dimensions, var_correction_default, var_correction_dimensions, var_correction_dimensions_float, var_correction_dimensions_int, var_correction_float, var_correction_int, var_correction_out_default, var_correction_out_dimensions, var_correction_out_dimensions_float, var_correction_out_dimensions_int, var_correction_out_float, var_correction_out_int, var_mean_correction_default, var_mean_correction_dimensions, var_mean_correction_out_default, var_mean_correction_out_dimensions}.
+import pytorch.CorrectionStatisticsPairCompletion.{std_mean_correction_dimensions_float, std_mean_correction_dimensions_int, std_mean_correction_float, std_mean_correction_int, std_mean_correction_out_dimensions_float, std_mean_correction_out_dimensions_int, std_mean_correction_out_float, std_mean_correction_out_int, var_mean_correction_dimensions_float, var_mean_correction_dimensions_int, var_mean_correction_float, var_mean_correction_int, var_mean_correction_out_dimensions_float, var_mean_correction_out_dimensions_int, var_mean_correction_out_float, var_mean_correction_out_int}.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, shape, to_device}.
+import pytorch.TypeRelations.{allclose, equal}.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+source(device: Int): Tensor ->
+    placed([1.0, 3.0, 2.0, 4.0], [2, 2], device).
+
+output(device: Int): Tensor ->
+    placed([0.0], [1], device).
+
+matches(actual: Tensor, values: List[Float], dimensions: List[Int], device: Int): Bool ->
+    let expected = placed(values, dimensions, device);
+    let valid =
+        allclose(actual, expected, 1e-12, 1e-12, false)
+            and shape(actual) == dimensions
+            and dtype(actual) == 7
+            and device_type(actual) == device;
+    dispose(expected);
+    valid.
+
+verify_std(device: Int): Bool ->
+    let input = source(device);
+    let default_value = std_correction_default(input, false);
+    let dimensions_value = std_correction_dimensions(input, [1], false);
+    let int_value = std_correction_int(input, 0, false);
+    let float_value = std_correction_float(input, 0.5, false);
+    let dimensions_int_value = std_correction_dimensions_int(input, [1], 0, true);
+    let dimensions_float_value = std_correction_dimensions_float(input, [1], 0.5, false);
+    let default_output = output(device);
+    let dimensions_output = output(device);
+    let int_output = output(device);
+    let float_output = output(device);
+    let dimensions_int_output = output(device);
+    let dimensions_float_output = output(device);
+    std_correction_out_default(default_output, input, false);
+    std_correction_out_dimensions(dimensions_output, input, [1], false);
+    std_correction_out_int(int_output, input, 0, false);
+    std_correction_out_float(float_output, input, 0.5, false);
+    std_correction_out_dimensions_int(dimensions_int_output, input, [1], 0, true);
+    std_correction_out_dimensions_float(dimensions_float_output, input, [1], 0.5, false);
+    let valid =
+        matches(default_value, [1.2909944487358056], [], device)
+            and matches(dimensions_value, [1.4142135623730951, 1.4142135623730951], [2], device)
+            and matches(int_value, [1.118033988749895], [], device)
+            and matches(float_value, [1.1952286093343936], [], device)
+            and matches(dimensions_int_value, [1.0, 1.0], [2, 1], device)
+            and matches(dimensions_float_value, [1.1547005383792515, 1.1547005383792515], [2], device)
+            and equal(default_output, default_value)
+            and equal(dimensions_output, dimensions_value)
+            and equal(int_output, int_value)
+            and equal(float_output, float_value)
+            and equal(dimensions_int_output, dimensions_int_value)
+            and equal(dimensions_float_output, dimensions_float_value)
+            and shape(input) == [2, 2];
+    (dispose(dimensions_float_output); dispose(dimensions_int_output); dispose(float_output); dispose(int_output); dispose(dimensions_output); dispose(default_output); dispose(dimensions_float_value); dispose(dimensions_int_value); dispose(float_value); dispose(int_value); dispose(dimensions_value); dispose(default_value); dispose(input); valid).
+
+verify_var(device: Int): Bool ->
+    let input = source(device);
+    let default_value = var_correction_default(input, false);
+    let dimensions_value = var_correction_dimensions(input, [1], false);
+    let int_value = var_correction_int(input, 0, false);
+    let float_value = var_correction_float(input, 0.5, false);
+    let dimensions_int_value = var_correction_dimensions_int(input, [1], 0, true);
+    let dimensions_float_value = var_correction_dimensions_float(input, [1], 0.5, false);
+    let default_output = output(device);
+    let dimensions_output = output(device);
+    let int_output = output(device);
+    let float_output = output(device);
+    let dimensions_int_output = output(device);
+    let dimensions_float_output = output(device);
+    var_correction_out_default(default_output, input, false);
+    var_correction_out_dimensions(dimensions_output, input, [1], false);
+    var_correction_out_int(int_output, input, 0, false);
+    var_correction_out_float(float_output, input, 0.5, false);
+    var_correction_out_dimensions_int(dimensions_int_output, input, [1], 0, true);
+    var_correction_out_dimensions_float(dimensions_float_output, input, [1], 0.5, false);
+    let valid =
+        matches(default_value, [1.6666666666666667], [], device)
+            and matches(dimensions_value, [2.0, 2.0], [2], device)
+            and matches(int_value, [1.25], [], device)
+            and matches(float_value, [1.4285714285714286], [], device)
+            and matches(dimensions_int_value, [1.0, 1.0], [2, 1], device)
+            and matches(dimensions_float_value, [1.3333333333333333, 1.3333333333333333], [2], device)
+            and equal(default_output, default_value)
+            and equal(dimensions_output, dimensions_value)
+            and equal(int_output, int_value)
+            and equal(float_output, float_value)
+            and equal(dimensions_int_output, dimensions_int_value)
+            and equal(dimensions_float_output, dimensions_float_value)
+            and shape(input) == [2, 2];
+    (dispose(dimensions_float_output); dispose(dimensions_int_output); dispose(float_output); dispose(int_output); dispose(dimensions_output); dispose(default_output); dispose(dimensions_float_value); dispose(dimensions_int_value); dispose(float_value); dispose(int_value); dispose(dimensions_value); dispose(default_value); dispose(input); valid).
+
+verify_pairs(device: Int): Bool ->
+    let input = source(device);
+    let {std_default, std_mean_default} = std_mean_correction_default(input, false);
+    let {std_dimensions, std_mean_dimensions} = std_mean_correction_dimensions(input, [1], false);
+    let std_default_output = output(device);
+    let std_mean_default_output = output(device);
+    let std_dimensions_output = output(device);
+    let std_mean_dimensions_output = output(device);
+    std_mean_correction_out_default(std_default_output, std_mean_default_output, input, false);
+    std_mean_correction_out_dimensions(
+        std_dimensions_output,
+        std_mean_dimensions_output,
+        input,
+        [1],
+        false,
+    );
+    let {var_default, var_mean_default} = var_mean_correction_default(input, false);
+    let {var_dimensions, var_mean_dimensions} = var_mean_correction_dimensions(input, [1], false);
+    let var_default_output = output(device);
+    let var_mean_default_output = output(device);
+    let var_dimensions_output = output(device);
+    let var_mean_dimensions_output = output(device);
+    (var_mean_correction_out_default(var_default_output, var_mean_default_output, input, false); var_mean_correction_out_dimensions(
+    var_dimensions_output,
+    var_mean_dimensions_output,
+    input,
+    [1],
+    false,
+); let valid =
+    matches(std_default, [1.2909944487358056], [], device)
+        and matches(std_mean_default, [2.5], [], device)
+        and matches(std_dimensions, [1.4142135623730951, 1.4142135623730951], [2], device)
+        and matches(std_mean_dimensions, [2.0, 3.0], [2], device)
+        and equal(std_default_output, std_default)
+        and equal(std_mean_default_output, std_mean_default)
+        and equal(std_dimensions_output, std_dimensions)
+        and equal(std_mean_dimensions_output, std_mean_dimensions)
+        and matches(var_default, [1.6666666666666667], [], device)
+        and matches(var_mean_default, [2.5], [], device)
+        and matches(var_dimensions, [2.0, 2.0], [2], device)
+        and matches(var_mean_dimensions, [2.0, 3.0], [2], device)
+        and equal(var_default_output, var_default)
+        and equal(var_mean_default_output, var_mean_default)
+        and equal(var_dimensions_output, var_dimensions)
+        and equal(var_mean_dimensions_output, var_mean_dimensions)
+        and shape(input) == [2, 2];
+(dispose(var_mean_dimensions_output); dispose(var_dimensions_output); dispose(var_mean_default_output); dispose(var_default_output); dispose(var_mean_dimensions); dispose(var_dimensions); dispose(var_mean_default); dispose(var_default); dispose(std_mean_dimensions_output); dispose(std_dimensions_output); dispose(std_mean_default_output); dispose(std_default_output); dispose(std_mean_dimensions); dispose(std_dimensions); dispose(std_mean_default); dispose(std_default); dispose(input); valid)).
+
+verify_std_scalar_pairs(device: Int): Bool ->
+    let input = source(device);
+    let {int_value, int_mean} = std_mean_correction_int(input, 0, false);
+    let {float_value, float_mean} = std_mean_correction_float(input, 0.5, false);
+    let {dimensions_int_value, dimensions_int_mean} = std_mean_correction_dimensions_int(input, [1], 0, true);
+    let {dimensions_float_value, dimensions_float_mean} = std_mean_correction_dimensions_float(input, [1], 0.5, false);
+    let int_output = output(device);
+    let int_mean_output = output(device);
+    let float_output = output(device);
+    let float_mean_output = output(device);
+    let dimensions_int_output = output(device);
+    let dimensions_int_mean_output = output(device);
+    let dimensions_float_output = output(device);
+    let dimensions_float_mean_output = output(device);
+    std_mean_correction_out_int(int_output, int_mean_output, input, 0, false);
+    std_mean_correction_out_float(float_output, float_mean_output, input, 0.5, false);
+    std_mean_correction_out_dimensions_int(
+        dimensions_int_output,
+        dimensions_int_mean_output,
+        input,
+        [1],
+        0,
+        true,
+    );
+    std_mean_correction_out_dimensions_float(
+        dimensions_float_output,
+        dimensions_float_mean_output,
+        input,
+        [1],
+        0.5,
+        false,
+    );
+    let valid =
+        matches(int_value, [1.118033988749895], [], device)
+            and matches(int_mean, [2.5], [], device)
+            and matches(float_value, [1.1952286093343936], [], device)
+            and matches(float_mean, [2.5], [], device)
+            and matches(dimensions_int_value, [1.0, 1.0], [2, 1], device)
+            and matches(dimensions_int_mean, [2.0, 3.0], [2, 1], device)
+            and matches(dimensions_float_value, [1.1547005383792515, 1.1547005383792515], [2], device)
+            and matches(dimensions_float_mean, [2.0, 3.0], [2], device)
+            and equal(int_output, int_value)
+            and equal(int_mean_output, int_mean)
+            and equal(float_output, float_value)
+            and equal(float_mean_output, float_mean)
+            and equal(dimensions_int_output, dimensions_int_value)
+            and equal(dimensions_int_mean_output, dimensions_int_mean)
+            and equal(dimensions_float_output, dimensions_float_value)
+            and equal(dimensions_float_mean_output, dimensions_float_mean)
+            and shape(input) == [2, 2];
+    (dispose(dimensions_float_mean_output); dispose(dimensions_float_output); dispose(dimensions_int_mean_output); dispose(dimensions_int_output); dispose(float_mean_output); dispose(float_output); dispose(int_mean_output); dispose(int_output); dispose(dimensions_float_mean); dispose(dimensions_float_value); dispose(dimensions_int_mean); dispose(dimensions_int_value); dispose(float_mean); dispose(float_value); dispose(int_mean); dispose(int_value); dispose(input); valid).
+
+verify_var_scalar_pairs(device: Int): Bool ->
+    let input = source(device);
+    let {int_value, int_mean} = var_mean_correction_int(input, 0, false);
+    let {float_value, float_mean} = var_mean_correction_float(input, 0.5, false);
+    let {dimensions_int_value, dimensions_int_mean} = var_mean_correction_dimensions_int(input, [1], 0, true);
+    let {dimensions_float_value, dimensions_float_mean} = var_mean_correction_dimensions_float(input, [1], 0.5, false);
+    let int_output = output(device);
+    let int_mean_output = output(device);
+    let float_output = output(device);
+    let float_mean_output = output(device);
+    let dimensions_int_output = output(device);
+    let dimensions_int_mean_output = output(device);
+    let dimensions_float_output = output(device);
+    let dimensions_float_mean_output = output(device);
+    var_mean_correction_out_int(int_output, int_mean_output, input, 0, false);
+    var_mean_correction_out_float(float_output, float_mean_output, input, 0.5, false);
+    var_mean_correction_out_dimensions_int(
+        dimensions_int_output,
+        dimensions_int_mean_output,
+        input,
+        [1],
+        0,
+        true,
+    );
+    var_mean_correction_out_dimensions_float(
+        dimensions_float_output,
+        dimensions_float_mean_output,
+        input,
+        [1],
+        0.5,
+        false,
+    );
+    let valid =
+        matches(int_value, [1.25], [], device)
+            and matches(int_mean, [2.5], [], device)
+            and matches(float_value, [1.4285714285714286], [], device)
+            and matches(float_mean, [2.5], [], device)
+            and matches(dimensions_int_value, [1.0, 1.0], [2, 1], device)
+            and matches(dimensions_int_mean, [2.0, 3.0], [2, 1], device)
+            and matches(dimensions_float_value, [1.3333333333333333, 1.3333333333333333], [2], device)
+            and matches(dimensions_float_mean, [2.0, 3.0], [2], device)
+            and equal(int_output, int_value)
+            and equal(int_mean_output, int_mean)
+            and equal(float_output, float_value)
+            and equal(float_mean_output, float_mean)
+            and equal(dimensions_int_output, dimensions_int_value)
+            and equal(dimensions_int_mean_output, dimensions_int_mean)
+            and equal(dimensions_float_output, dimensions_float_value)
+            and equal(dimensions_float_mean_output, dimensions_float_mean)
+            and shape(input) == [2, 2];
+    (dispose(dimensions_float_mean_output); dispose(dimensions_float_output); dispose(dimensions_int_mean_output); dispose(dimensions_int_output); dispose(float_mean_output); dispose(float_output); dispose(int_mean_output); dispose(int_output); dispose(dimensions_float_mean); dispose(dimensions_float_value); dispose(dimensions_int_mean); dispose(dimensions_int_value); dispose(float_mean); dispose(float_value); dispose(int_mean); dispose(int_value); dispose(input); valid).
+
+verify(device: Int): Bool ->
+    verify_std(device)
+        and verify_var(device)
+        and verify_pairs(device)
+        and verify_std_scalar_pairs(device)
+        and verify_var_scalar_pairs(device).
+
+@test
+pub correction_statistics_on_cpu_and_required_cuda(): Bool ->
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    let cpu_valid = verify(0);
+    cpu_valid and cuda_valid.

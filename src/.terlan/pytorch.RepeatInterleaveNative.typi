@@ -1,0 +1,51 @@
+//! Exact native repeat-interleave paths for every optional dimension and output-size state.
+
+module pytorch.RepeatInterleaveNative.
+
+/// Builds repeated source indices with inferred output size.
+
+pub repeat_indices_native(repeats: Tensor): Tensor.
+
+/// Writes repeated source indices into retained storage with inferred size.
+
+pub repeat_indices_out_native(output: Tensor, repeats: Tensor): Unit.
+
+/// Writes repeated source indices into retained storage with a validated size hint.
+
+pub repeat_indices_out_output_size_native(output: Tensor, repeats: Tensor, output_size: Int): Unit.
+
+/// Builds repeated source indices with a validated output-size hint.
+
+pub repeat_indices_output_size_native(repeats: Tensor, output_size: Int): Tensor.
+
+/// Repeats values along an explicit dimension by a scalar count.
+
+pub repeat_scalar_dimension_native(input: Tensor, repeats: Int, dimension: Int, unused_output_size: Int): Tensor.
+
+/// Repeats values along a dimension by a scalar count with a validated size hint.
+
+pub repeat_scalar_dimension_output_size_native(input: Tensor, repeats: Int, dimension: Int, output_size: Int): Tensor.
+
+/// Repeats every flattened input value a scalar number of times.
+
+pub repeat_scalar_flat_native(input: Tensor, repeats: Int, unused_dimension: Int, unused_output_size: Int): Tensor.
+
+/// Repeats flattened values by a scalar count with a validated size hint.
+
+pub repeat_scalar_flat_output_size_native(input: Tensor, repeats: Int, unused_dimension: Int, output_size: Int): Tensor.
+
+/// Repeats input values along an explicit dimension from tensor counts.
+
+pub repeat_tensor_dimension_native(input: Tensor, repeats: Tensor, dimension: Int, unused_output_size: Int): Tensor.
+
+/// Repeats input values along a dimension from tensor counts with a validated size hint.
+
+pub repeat_tensor_dimension_output_size_native(input: Tensor, repeats: Tensor, dimension: Int, output_size: Int): Tensor.
+
+/// Repeats flattened input values from a tensor count without an output-size hint.
+
+pub repeat_tensor_flat_native(input: Tensor, repeats: Tensor, unused_dimension: Int, unused_output_size: Int): Tensor.
+
+/// Repeats flattened input values from tensor counts with a validated size hint.
+
+pub repeat_tensor_flat_output_size_native(input: Tensor, repeats: Tensor, unused_dimension: Int, output_size: Int): Tensor.

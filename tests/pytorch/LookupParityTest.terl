@@ -1,0 +1,115 @@
+module pytorch.LookupParityTest.
+
+import pytorch.Lookup.{Side, bucketize_float, bucketize_float_out, bucketize_int, bucketize_int_out, bucketize_tensor_out, isin_element_float, isin_element_float_out, isin_element_int, isin_element_int_out, isin_tensor_float, isin_tensor_float_out, isin_tensor_int, isin_tensor_int_out, isin_tensor_out, searchsorted_float, searchsorted_float_out, searchsorted_float_with_sorter, searchsorted_float_with_sorter_out, searchsorted_int, searchsorted_int_out, searchsorted_int_with_sorter, searchsorted_int_with_sorter_out, searchsorted_tensor, searchsorted_tensor_out, searchsorted_tensor_with_sorter, searchsorted_tensor_with_sorter_out}.
+import pytorch.Tensor.{DType, Tensor, dispose, dtype, empty, from_int, from_ints, item, item_bool, sum}.
+
+/**
+ * Reads and disposes the integer sum of a tensor.
+ */
+integer_sum(tensor: Tensor): Int ->
+    let total = sum(tensor);
+    let value = item(total);
+    dispose(total);
+    value.
+
+/**
+ * Proves every scalar direction and retained-output membership contract.
+ */
+@test
+pub membership_forms_match_libtorch(): Bool ->
+    let tests = from_ints([1, 3, 5], [3]);
+    let elements = from_ints([1, 2, 1], [3]);
+    let scalar_int = isin_element_int(3, tests);
+    let scalar_float = isin_element_float(2.5, tests, false, true);
+    let scalar_int_output = empty([0], DType.BOOL);
+    let scalar_float_output = empty([0], DType.BOOL);
+    isin_element_int_out(scalar_int_output, 3, tests);
+    isin_element_float_out(scalar_float_output, 2.5, tests, false, true);
+    let tensor_int = isin_tensor_int(elements, 1);
+    let tensor_float = isin_tensor_float(elements, 1.0);
+    let tensor_int_output = empty([3], DType.BOOL);
+    let tensor_float_output = empty([3], DType.BOOL);
+    let tensor_output = empty([3], DType.BOOL);
+    (isin_tensor_int_out(tensor_int_output, elements, 1); isin_tensor_float_out(tensor_float_output, elements, 1.0); isin_tensor_out(tensor_output, elements, tests); let valid =
+    item_bool(scalar_int)
+        and item_bool(scalar_float)
+        and item_bool(scalar_int_output)
+        and item_bool(scalar_float_output)
+        and integer_sum(tensor_int) == 2
+        and integer_sum(tensor_float) == 2
+        and integer_sum(tensor_int_output) == 2
+        and integer_sum(tensor_float_output) == 2
+        and integer_sum(tensor_output) == 2
+        and integer_sum(elements) == 4
+        and integer_sum(tests) == 9;
+(dispose(tensor_output); dispose(tensor_float_output); dispose(tensor_int_output); dispose(tensor_float); dispose(tensor_int); dispose(scalar_float_output); dispose(scalar_int_output); dispose(scalar_float); dispose(scalar_int); dispose(elements); dispose(tests); valid)).
+
+/**
+ * Proves tensor, scalar, sorter, side, width, and retained-output search contracts.
+ */
+@test
+pub searchsorted_forms_match_libtorch(): Bool ->
+    let sorted = from_ints([1, 3, 5, 7], [4]);
+    let values = from_ints([0, 3, 8], [3]);
+    let unsorted = from_ints([5, 1, 7, 3], [4]);
+    let sorter = from_ints([1, 3, 0, 2], [4]);
+    let sorter_values = from_ints([3, 6], [2]);
+    let tensor = searchsorted_tensor(sorted, values);
+    let tensor_sorted = searchsorted_tensor_with_sorter(unsorted, sorter_values, sorter);
+    let tensor_output = empty([3], DType.INT64);
+    let tensor_sorted_output = empty([2], DType.INT64);
+    searchsorted_tensor_out(tensor_output, sorted, values);
+    searchsorted_tensor_with_sorter_out(tensor_sorted_output, unsorted, sorter_values, sorter);
+    let integer = searchsorted_int(sorted, 3);
+    let floating = searchsorted_float(sorted, 3.0, true, true, Side.RIGHT);
+    let integer_output = from_int(0);
+    let floating_output = from_int(0);
+    (searchsorted_int_out(integer_output, sorted, 3); searchsorted_float_out(floating_output, sorted, 3.0, false, true, Side.RIGHT); let sorted_integer = searchsorted_int_with_sorter(unsorted, 3, sorter);
+let sorted_float = searchsorted_float_with_sorter(unsorted, 6.0, sorter, false, false, Side.LEFT);
+let sorted_integer_output = from_int(0);
+let sorted_float_output = from_int(0);
+(searchsorted_int_with_sorter_out(sorted_integer_output, unsorted, 3, sorter); searchsorted_float_with_sorter_out(
+    sorted_float_output,
+    unsorted,
+    6.0,
+    sorter,
+    false,
+    false,
+    Side.LEFT,
+); let valid =
+    integer_sum(tensor) == 5
+        and integer_sum(tensor_sorted) == 4
+        and integer_sum(tensor_output) == 5
+        and integer_sum(tensor_sorted_output) == 4
+        and item(integer) == 1
+        and item(floating) == 2
+        and dtype(floating) == 3
+        and item(integer_output) == 1
+        and item(floating_output) == 2
+        and item(sorted_integer) == 1
+        and item(sorted_float) == 3
+        and item(sorted_integer_output) == 1
+        and item(sorted_float_output) == 3;
+(dispose(sorted_float_output); dispose(sorted_integer_output); dispose(sorted_float); dispose(sorted_integer); dispose(floating_output); dispose(integer_output); dispose(floating); dispose(integer); dispose(tensor_sorted_output); dispose(tensor_output); dispose(tensor_sorted); dispose(tensor); dispose(sorter_values); dispose(sorter); dispose(unsorted); dispose(values); dispose(sorted); valid))).
+
+/**
+ * Proves tensor and scalar bucketization width, side, and output contracts.
+ */
+@test
+pub bucketize_forms_match_libtorch(): Bool ->
+    let boundaries = from_ints([1, 3, 5, 7], [4]);
+    let values = from_ints([0, 3, 8], [3]);
+    let tensor_output = empty([3], DType.INT64);
+    bucketize_tensor_out(tensor_output, values, boundaries);
+    let integer = bucketize_int(3, boundaries);
+    let floating = bucketize_float(3.0, boundaries, true, true);
+    let integer_output = from_int(0);
+    let floating_output = from_int(0);
+    (bucketize_int_out(integer_output, 3, boundaries); bucketize_float_out(floating_output, 3.0, boundaries, false, true); let valid =
+    integer_sum(tensor_output) == 5
+        and item(integer) == 1
+        and item(floating) == 2
+        and dtype(floating) == 3
+        and item(integer_output) == 1
+        and item(floating_output) == 2;
+(dispose(floating_output); dispose(integer_output); dispose(floating); dispose(integer); dispose(tensor_output); dispose(values); dispose(boundaries); valid)).

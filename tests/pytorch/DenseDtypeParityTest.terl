@@ -1,0 +1,53 @@
+module pytorch.DenseDtypeParityTest.
+
+import pytorch.Binary.{eq_tensor}.
+import pytorch.DenseCompletion.{bmm_dtype, bmm_dtype_out, mm_dtype, mm_dtype_out}.
+import pytorch.Tensor.{dispose, dtype, from_floats, item_bool, ones_dtype}.
+import pytorch.Unary.{all}.
+
+import type pytorch.Tensor.
+
+same_and_dispose(actual: Tensor, expected: Tensor): Bool ->
+    let comparisons = eq_tensor(actual, expected);
+    let reduced = all(comparisons);
+    let value = item_bool(reduced);
+    dispose(reduced);
+    dispose(comparisons);
+    dispose(expected);
+    dispose(actual);
+    value.
+
+@test
+pub explicit_output_dtype_matches_libtorch(): Bool ->
+    let left = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let right = from_floats([2.0, 0.0, 1.0, 2.0], [2, 2]);
+    let result = mm_dtype(left, right, 7);
+    let expected = from_floats([4.0, 4.0, 10.0, 8.0], [2, 2]);
+    let dtype_ok = dtype(result) == 7;
+    let values_ok = same_and_dispose(result, expected);
+    dispose(right);
+    dispose(left);
+    dtype_ok and values_ok.
+
+@test
+pub retained_output_dtype_matches_functional_result(): Bool ->
+    let left = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let right = from_floats([2.0, 0.0, 1.0, 2.0], [2, 2]);
+    let functional = mm_dtype(left, right, 7);
+    let output = ones_dtype([0], 7);
+    mm_dtype_out(output, left, right, 7);
+    let valid = same_and_dispose(output, functional);
+    (dispose(right); dispose(left); valid).
+
+@test
+pub batched_output_dtype_matches_libtorch(): Bool ->
+    let left = from_floats([1.0, 2.0, 3.0, 4.0], [1, 2, 2]);
+    let right = from_floats([2.0, 0.0, 1.0, 2.0], [1, 2, 2]);
+    let functional = bmm_dtype(left, right, 7);
+    let output = ones_dtype([0], 7);
+    bmm_dtype_out(output, left, right, 7);
+    let expected_functional = from_floats([4.0, 4.0, 10.0, 8.0], [1, 2, 2]);
+    let expected_output = from_floats([4.0, 4.0, 10.0, 8.0], [1, 2, 2]);
+    let values_ok = same_and_dispose(functional, expected_functional);
+    let retained_ok = same_and_dispose(output, expected_output);
+    (dispose(right); dispose(left); values_ok and retained_ok).

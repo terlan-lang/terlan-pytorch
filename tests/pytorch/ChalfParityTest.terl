@@ -1,0 +1,12 @@
+module pytorch.ChalfParityTest.
+
+import pytorch.Tensor.{chalf, dispose, dtype, from_floats, shape}.
+
+@test
+pub chalf_converts_to_complex_half(): Bool ->
+    let source = from_floats([1.0, 2.0], [2]);
+    let converted = chalf(source);
+    let valid = dtype(converted) == 8 and shape(converted) == [2];
+    dispose(converted);
+    dispose(source);
+    valid.

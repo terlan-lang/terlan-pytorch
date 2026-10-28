@@ -1,0 +1,87 @@
+//! Generated direct-CXX implementation of the public tensor-joining surface.
+
+module pytorch.TensorJoining.
+
+/// Creates a block-diagonal matrix from tensors.
+
+pub block_diag(tensors: List[Tensor]): Tensor.
+
+/// Writes a block-diagonal matrix into an output tensor.
+
+pub block_diag_out(output: Tensor, tensors: List[Tensor]): Unit.
+
+/// Computes the Cartesian product of tensors.
+
+pub cartesian_prod(tensors: List[Tensor]): Tensor.
+
+/// Concatenates tensors along one dimension.
+
+pub cat(tensors: List[Tensor], dimension: Int = 0): Tensor.
+
+/// Writes concatenated tensors into an output tensor.
+
+pub cat_out(output: Tensor, tensors: List[Tensor], dimension: Int = 0): Unit.
+
+/// Stacks tensors as columns.
+
+pub column_stack(tensors: List[Tensor]): Tensor.
+
+/// Writes tensors stacked as columns into an output tensor.
+
+pub column_stack_out(output: Tensor, tensors: List[Tensor]): Unit.
+
+/// Concatenates tensors along one dimension.
+
+pub concat(tensors: List[Tensor], dimension: Int = 0): Tensor.
+
+/// Writes concatenated tensors into an output tensor.
+
+pub concat_out(output: Tensor, tensors: List[Tensor], dimension: Int = 0): Unit.
+
+/// Concatenates tensors along one dimension.
+
+pub concatenate(tensors: List[Tensor], dimension: Int = 0): Tensor.
+
+/// Writes concatenated tensors into an output tensor.
+
+pub concatenate_out(output: Tensor, tensors: List[Tensor], dimension: Int = 0): Unit.
+
+/// Stacks tensors depth-wise.
+
+pub dstack(tensors: List[Tensor]): Tensor.
+
+/// Writes tensors stacked depth-wise into an output tensor.
+
+pub dstack_out(output: Tensor, tensors: List[Tensor]): Unit.
+
+/// Stacks tensors horizontally.
+
+pub hstack(tensors: List[Tensor]): Tensor.
+
+/// Writes tensors stacked horizontally into an output tensor.
+
+pub hstack_out(output: Tensor, tensors: List[Tensor]): Unit.
+
+/// Stacks tensors vertically by rows.
+
+pub row_stack(tensors: List[Tensor]): Tensor.
+
+/// Writes tensors stacked vertically by rows into an output tensor.
+
+pub row_stack_out(output: Tensor, tensors: List[Tensor]): Unit.
+
+/// Stacks tensors along one new dimension.
+
+pub stack(tensors: List[Tensor], dimension: Int = 0): Tensor.
+
+/// Writes stacked tensors into an output tensor.
+
+pub stack_out(output: Tensor, tensors: List[Tensor], dimension: Int = 0): Unit.
+
+/// Stacks tensors vertically.
+
+pub vstack(tensors: List[Tensor]): Tensor.
+
+/// Writes tensors stacked vertically into an output tensor.
+
+pub vstack_out(output: Tensor, tensors: List[Tensor]): Unit.

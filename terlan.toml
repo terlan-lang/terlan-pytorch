@@ -1,14 +1,17 @@
 [package]
-name = "terlan-pytorch"
-version = "0.0.7"
+name = "terlan-pytorch-cxx"
+version = "0.0.0"
 namespace = "pytorch"
 
 [build]
 source_roots = ["src"]
 artifact = "library"
 
+[dependencies]
+ndarray = { path = "../terlan-ndarray" }
+
 [native.rust]
-crate = "terlan-pytorch-native"
+crate = "terlan-pytorch-cxx"
 path = "native/rust"
 helper = "native-boundary-helper"
-helper_env = "TERLAN_NATIVE_BOUNDARY_HELPER_PATH"
+helper_env = "TERLAN_PYTORCH_NATIVE_BOUNDARY_HELPER_PATH"

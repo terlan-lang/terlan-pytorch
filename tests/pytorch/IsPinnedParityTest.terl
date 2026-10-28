@@ -1,0 +1,15 @@
+module pytorch.IsPinnedParityTest.
+
+import pytorch.Tensor.{cpu, dispose, from_floats, is_pinned}.
+
+/**
+ * Validates default and explicit-device is_pinned behavior on CPU tensors.
+ */
+@test
+pub cpu_tensor_is_not_pinned(): Bool ->
+    let tensor = from_floats([1.0, 2.0], [2]);
+    let default_result = is_pinned(tensor, false, cpu());
+    let explicit_result = is_pinned(tensor, true, cpu());
+    let valid = not default_result and not explicit_result;
+    dispose(tensor);
+    valid.

@@ -1,0 +1,7 @@
+module pytorch_cxx.SelectionBehaviorTest.
+
+import pytorch.SelectionBehaviorSupport.{selection_contracts_on}.
+
+@test
+pub generated_cxx_selection_contracts(): Bool ->
+    selection_contracts_on("cpu", false).

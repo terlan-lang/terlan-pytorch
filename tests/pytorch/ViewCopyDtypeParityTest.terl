@@ -1,0 +1,16 @@
+/**
+ * CPU value and dtype evidence for aten::view_copy.dtype.
+ */
+module pytorch.ViewCopyDtypeParityTest.
+
+import pytorch.Tensor.{dispose, dtype, from_floats, shape, to_dtype}.
+import pytorch.ViewCopyDtypeCompletion.{view_copy_dtype, view_copy_dtype_out}.
+
+@test
+pub view_copy_dtype_forms_match(): Bool ->
+    let input = from_floats([1.5, -2.25], [2]);
+    let actual = view_copy_dtype(input, 6);
+    let output = to_dtype(from_floats([], [0]), 6);
+    view_copy_dtype_out(output, input, 6);
+    let valid = dtype(actual) == 6 and dtype(output) == 6 and shape(actual) == [4] and shape(output) == [4];
+    (dispose(output); dispose(actual); dispose(input); valid).

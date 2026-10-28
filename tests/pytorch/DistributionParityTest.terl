@@ -1,0 +1,76 @@
+/**
+ * CPU evidence for generated random-distribution bindings.
+ */
+module pytorch.DistributionParityTest.
+
+import pytorch.DistributionCompletion.{binomial, binomial_out, cauchy, cauchy_out, exponential, exponential_out, geometric, geometric_out, log_normal, log_normal_out, normal_float_tensor, normal_float_tensor_out, normal_tensor_float, normal_tensor_float_out, normal_tensor_tensor, normal_tensor_tensor_out, poisson, poisson_out, uniform, uniform_inplace, uniform_out}.
+import pytorch.Tensor.{dispose, dtype, from_floats, shape}.
+
+@test
+pub exponential_preserves_shape_and_dtype(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let actual = exponential(source, 1.0);
+    let output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    exponential_out(output, source, 1.0);
+    let rates = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let poisson_actual = poisson(rates);
+    let poisson_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    (poisson_out(poisson_output, rates); let probability = from_floats([0.25, 0.5, 0.75, 0.9], [2, 2]);
+let binomial_actual = binomial(rates, probability);
+let binomial_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+(binomial_out(binomial_output, rates, probability); let cauchy_actual = cauchy(source, 0.0, 1.0);
+let cauchy_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+(cauchy_out(cauchy_output, source, 0.0, 1.0); let geometric_actual = geometric(source, 0.5);
+let geometric_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+(geometric_out(geometric_output, source, 0.5); let log_actual = log_normal(source, 1.0, 2.0);
+let log_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+(log_normal_out(log_output, source, 1.0, 2.0); let uniform_actual = uniform(source, 0.0, 1.0);
+let uniform_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+(uniform_out(uniform_output, source, 0.0, 1.0); uniform_inplace(source, 0.0, 1.0); let normal_actual = normal_tensor_tensor(source, source);
+let normal_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+(normal_tensor_tensor_out(normal_output, source, source); let normal_scalar_actual = normal_tensor_float(source, 1.0);
+let normal_scalar_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+(normal_tensor_float_out(normal_scalar_output, source, 1.0); let normal_float_actual = normal_float_tensor(0.0, source);
+let normal_float_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+(normal_float_tensor_out(normal_float_output, 0.0, source); let valid =
+    shape(actual) == [2, 2]
+        and dtype(actual) == dtype(source)
+        and shape(output) == [2, 2]
+        and dtype(output) == dtype(source)
+        and shape(poisson_actual) == [2, 2]
+        and dtype(poisson_actual) == dtype(rates)
+        and shape(poisson_output) == [2, 2]
+        and dtype(poisson_output) == dtype(rates)
+        and shape(binomial_actual) == [2, 2]
+        and dtype(binomial_actual) == dtype(rates)
+        and shape(binomial_output) == [2, 2]
+        and dtype(binomial_output) == dtype(rates)
+        and shape(cauchy_actual) == [2, 2]
+        and dtype(cauchy_actual) == dtype(source)
+        and shape(cauchy_output) == [2, 2]
+        and dtype(cauchy_output) == dtype(source)
+        and shape(geometric_actual) == [2, 2]
+        and dtype(geometric_actual) == dtype(source)
+        and shape(geometric_output) == [2, 2]
+        and dtype(geometric_output) == dtype(source)
+        and shape(log_actual) == [2, 2]
+        and dtype(log_actual) == dtype(source)
+        and shape(log_output) == [2, 2]
+        and dtype(log_output) == dtype(source)
+        and shape(uniform_actual) == [2, 2]
+        and dtype(uniform_actual) == dtype(source)
+        and shape(uniform_output) == [2, 2]
+        and dtype(uniform_output) == dtype(source)
+        and shape(normal_actual) == [2, 2]
+        and dtype(normal_actual) == dtype(source)
+        and shape(normal_output) == [2, 2]
+        and dtype(normal_output) == dtype(source)
+        and shape(normal_scalar_actual) == [2, 2]
+        and dtype(normal_scalar_actual) == dtype(source)
+        and shape(normal_scalar_output) == [2, 2]
+        and dtype(normal_scalar_output) == dtype(source)
+        and shape(normal_float_actual) == [2, 2]
+        and dtype(normal_float_actual) == dtype(source)
+        and shape(normal_float_output) == [2, 2]
+        and dtype(normal_float_output) == dtype(source);
+(dispose(normal_float_output); dispose(normal_float_actual); dispose(normal_scalar_output); dispose(normal_scalar_actual); dispose(normal_output); dispose(normal_actual); dispose(uniform_output); dispose(uniform_actual); dispose(log_output); dispose(log_actual); dispose(geometric_output); dispose(geometric_actual); dispose(cauchy_output); dispose(cauchy_actual); dispose(binomial_output); dispose(binomial_actual); dispose(probability); dispose(poisson_output); dispose(poisson_actual); dispose(rates); dispose(output); dispose(actual); dispose(source); valid)))))))))).

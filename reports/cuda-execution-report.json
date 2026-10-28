@@ -1,0 +1,46 @@
+{
+  "backend": "libtorch-cxx-generated",
+  "cleanup": "generation-tagged-explicit-dispose",
+  "device": "0, NVIDIA RTX A4500 Laptop GPU, 8.6",
+  "device_pointer_exposed": false,
+  "distribution": {
+    "build_version": "2.13.0+cu129",
+    "cuda_library": "libtorch_cuda.so",
+    "cuda_library_sha256": "36170ce2aebdcb7f517663e06581f2066e2f73c3a458fa61fcef46a43a0efa7b"
+  },
+  "operations": [
+    "stream-create",
+    "stream-set-current",
+    "cpu-to-cuda",
+    "matmul",
+    "autograd-explicit-gradient",
+    "autograd-functional-grad",
+    "autograd-multiple-roots",
+    "autograd-multiple-roots-backward",
+    "autograd-inference-mode-guard",
+    "autograd-autocast-cpu-guard",
+    "autograd-anomaly-mode-guard",
+    "autograd-warning-mode-guard",
+    "autograd-deterministic-algorithms-guard",
+    "autograd-float32-matmul-precision-guard",
+    "autograd-default-dtype-guard",
+    "cuda-dtype-float32",
+    "cuda-dtype-float64",
+    "deterministic-categorical-sample",
+    "ppo-minibatch",
+    "adam-step",
+    "stream-synchronize",
+    "cuda-to-cpu"
+  ],
+  "rejections": [
+    "invalid-device",
+    "stale-stream"
+  ],
+  "schema": "terlan.pytorch-cuda-execution.v4",
+  "status": "passed",
+  "stream_ownership": "opaque-generation-tagged-package-resource",
+  "synchronization": {
+    "copy": "at::Tensor::copy_ (generated CXX wrapper)",
+    "stream": "at::native::cuda_stream_synchronize (generated CXX wrapper; upstream runtime export)"
+  }
+}

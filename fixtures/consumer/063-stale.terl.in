@@ -1,0 +1,11 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{dispose, from_int, item}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let tensor = from_int(7);
+    let stale = tensor;
+    dispose(tensor);
+    let observed = item(stale);
+    println("PYTORCH_STALE_HANDLE_NOT_REJECTED").

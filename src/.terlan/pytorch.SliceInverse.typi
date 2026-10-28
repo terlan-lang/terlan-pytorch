@@ -1,0 +1,17 @@
+//! Typed slice-inverse mutation with independently optional bounds.
+
+module pytorch.SliceInverse.
+
+/// Returns a present slice endpoint.
+
+@pure
+pub bound(value: Int): List[Int].
+
+/// Returns an absent slice endpoint.
+
+@pure
+pub no_bound(): List[Int].
+
+/// Writes source into input using independently optional bounds.
+
+pub slice_inverse(input: Tensor, source: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Tensor.

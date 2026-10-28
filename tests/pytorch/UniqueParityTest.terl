@@ -1,0 +1,72 @@
+/**
+ * CPU shape evidence for unique and consecutive-unique tuple/output forms.
+ */
+module pytorch.UniqueParityTest.
+
+import pytorch.Tensor.{dispose, from_floats, shape, to_dtype}.
+import pytorch.TypeRelations.equal.
+import pytorch.UniqueCompletion.{unique_consecutive, unique_consecutive_out, unique_dim, unique_dim_consecutive, unique_dim_consecutive_out, unique_dim_out, unique_legacy}.
+import std.core.Option.{None, Some}.
+
+@test
+pub legacy_unique_preserves_flatten_and_dim_branches(): Bool ->
+    let input = from_floats([3.0, 1.0, 3.0, 2.0], [2, 2]);
+    let {values, inverse, counts} = unique_legacy(input, None, true, true, true);
+    let expected = from_floats([1.0, 2.0, 3.0], [3]);
+    let matrix = from_floats([1.0, 1.0, 2.0, 2.0], [2, 2]);
+    let {dim_values, dim_inverse, dim_counts} = unique_legacy(matrix, Some(0), true, true, true);
+    let valid =
+        equal(values, expected)
+            and shape(inverse) == [4]
+            and shape(counts) == [3]
+            and shape(dim_values) == [2, 2]
+            and shape(dim_inverse) == [2]
+            and shape(dim_counts) == [2];
+    dispose(dim_counts);
+    dispose(dim_inverse);
+    dispose(dim_values);
+    dispose(matrix);
+    dispose(expected);
+    dispose(counts);
+    dispose(inverse);
+    dispose(values);
+    dispose(input);
+    valid.
+
+@test
+pub unique_tuple_and_output_forms_preserve_shapes(): Bool ->
+    let input = from_floats([1.0, 1.0, 2.0, 2.0, 3.0], [5]);
+    let {values, inverse, counts} = unique_consecutive(input, true, true);
+    let out_values = from_floats([0.0], [1]);
+    let out_inverse = to_dtype(from_floats([0.0], [1]), 4);
+    let out_counts = to_dtype(from_floats([0.0], [1]), 4);
+    unique_consecutive_out(out_values, out_inverse, out_counts, input, true, true);
+    let matrix = from_floats([1.0, 1.0, 2.0, 2.0, 1.0, 1.0], [2, 3]);
+    let {dim_values, dim_inverse, dim_counts} = unique_dim(matrix, 0, true, true, true);
+    let dim_out_values = from_floats([0.0], [1]);
+    let dim_out_inverse = to_dtype(from_floats([0.0], [1]), 4);
+    let dim_out_counts = to_dtype(from_floats([0.0], [1]), 4);
+    (unique_dim_out(dim_out_values, dim_out_inverse, dim_out_counts, matrix, 0, true, true, true); let {con_values, con_inverse, con_counts} = unique_dim_consecutive(matrix, 0, true, true);
+let con_out_values = from_floats([0.0], [1]);
+let con_out_inverse = to_dtype(from_floats([0.0], [1]), 4);
+let con_out_counts = to_dtype(from_floats([0.0], [1]), 4);
+(unique_dim_consecutive_out(con_out_values, con_out_inverse, con_out_counts, matrix, 0, true, true); let valid =
+    shape(values) == [3]
+        and shape(inverse) == [5]
+        and shape(counts) == [3]
+        and shape(out_values) == [3]
+        and shape(out_inverse) == [5]
+        and shape(out_counts) == [3]
+        and shape(dim_values) == [2, 3]
+        and shape(dim_inverse) == [2]
+        and shape(dim_counts) == [2]
+        and shape(dim_out_values) == [2, 3]
+        and shape(dim_out_inverse) == [2]
+        and shape(dim_out_counts) == [2]
+        and shape(con_values) == [2, 3]
+        and shape(con_inverse) == [2]
+        and shape(con_counts) == [2]
+        and shape(con_out_values) == [2, 3]
+        and shape(con_out_inverse) == [2]
+        and shape(con_out_counts) == [2];
+(dispose(con_out_counts); dispose(con_out_inverse); dispose(con_out_values); dispose(con_counts); dispose(con_inverse); dispose(con_values); dispose(dim_out_counts); dispose(dim_out_inverse); dispose(dim_out_values); dispose(dim_counts); dispose(dim_inverse); dispose(dim_values); dispose(matrix); dispose(out_counts); dispose(out_inverse); dispose(out_values); dispose(counts); dispose(inverse); dispose(values); dispose(input); valid))).

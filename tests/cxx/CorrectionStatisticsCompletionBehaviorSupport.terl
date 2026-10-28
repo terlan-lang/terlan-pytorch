@@ -1,0 +1,190 @@
+module pytorch.CorrectionStatisticsCompletionBehaviorSupport.
+
+import pytorch.CorrectionStatisticsCompletion.{std_correction_default, std_correction_dimensions, std_correction_dimensions_float, std_correction_dimensions_int, std_correction_float, std_correction_int, std_correction_out_default, std_correction_out_dimensions, std_correction_out_dimensions_float, std_correction_out_dimensions_int, std_correction_out_float, std_correction_out_int, std_mean_correction_default, std_mean_correction_dimensions, std_mean_correction_out_default, std_mean_correction_out_dimensions, var_correction_default, var_correction_dimensions, var_correction_dimensions_float, var_correction_dimensions_int, var_correction_float, var_correction_int, var_correction_out_default, var_correction_out_dimensions, var_correction_out_dimensions_float, var_correction_out_dimensions_int, var_correction_out_float, var_correction_out_int, var_mean_correction_default, var_mean_correction_dimensions, var_mean_correction_out_default, var_mean_correction_out_dimensions}.
+import pytorch.FillNative.{fill_diagonal_in_place}.
+import pytorch.ShapeCompletion.{narrow_view}.
+import pytorch.Tensor.{Float64, Strided, dispose, dispose_scalar, is_cuda, item, ones_device, scalar_to_float, shape}.
+
+import type pytorch.Tensor.
+
+value(tensor: Tensor): Float ->
+    let scalar = item(tensor);
+    let observed = scalar_to_float(scalar);
+    dispose_scalar(scalar);
+    observed.
+
+first_value(tensor: Tensor): Float ->
+    if {
+        shape(tensor) == [] -> value(tensor);
+        true -> let first = narrow_view(tensor, 0, 0, 1);
+        let observed = value(first);
+        dispose(first);
+        observed
+    }.
+
+near(observed: Float, expected: Float): Bool ->
+    observed > expected - 0.000001 and observed < expected + 0.000001.
+
+input_on(device_name: String): Tensor ->
+    let input = ones_device([2, 2], Float64, Strided, device_name);
+    fill_diagonal_in_place(input, true, 0, 0.0, false);
+    input.
+
+empty_on(device_name: String): Tensor ->
+    ones_device([0], Float64, Strided, device_name).
+
+/**
+ * Executes every scalar standard-deviation correction contract.
+ */
+pub standard_deviation_contracts_on(device_name: String): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let input = input_on(device_name);
+    let default_value = std_correction_default(input, false);
+    let dimensions_value = std_correction_dimensions(input, [1], true);
+    let integer_value = std_correction_int(input, 0, false);
+    let floating_value = std_correction_float(input, 0.5, false);
+    let dimensions_integer_value = std_correction_dimensions_int(input, [1], 0, false);
+    let dimensions_floating_value = std_correction_dimensions_float(input, [1], 0.5, true);
+    let default_output = empty_on(device_name);
+    let dimensions_output = empty_on(device_name);
+    let integer_output = empty_on(device_name);
+    let floating_output = empty_on(device_name);
+    let dimensions_integer_output = empty_on(device_name);
+    let dimensions_floating_output = empty_on(device_name);
+    std_correction_out_default(default_output, input, false);
+    std_correction_out_dimensions(dimensions_output, input, [1], true);
+    std_correction_out_int(integer_output, input, 0, false);
+    std_correction_out_float(floating_output, input, 0.5, false);
+    std_correction_out_dimensions_int(dimensions_integer_output, input, [1], 0, false);
+    std_correction_out_dimensions_float(dimensions_floating_output, input, [1], 0.5, true);
+    let valid =
+        shape(default_value) == []
+            and near(value(default_value), 0.5773502691896257)
+            and shape(dimensions_value) == [2, 1]
+            and near(first_value(dimensions_value), 0.7071067811865476)
+            and near(value(integer_value), 0.5)
+            and near(value(floating_value), 0.5345224838248488)
+            and shape(dimensions_integer_value) == [2]
+            and near(first_value(dimensions_integer_value), 0.5)
+            and shape(dimensions_floating_value) == [2, 1]
+            and near(first_value(dimensions_floating_value), 0.5773502691896257)
+            and near(value(default_output), 0.5773502691896257)
+            and shape(dimensions_output) == [2, 1]
+            and near(first_value(dimensions_output), 0.7071067811865476)
+            and near(value(integer_output), 0.5)
+            and near(value(floating_output), 0.5345224838248488)
+            and shape(dimensions_integer_output) == [2]
+            and near(first_value(dimensions_integer_output), 0.5)
+            and shape(dimensions_floating_output) == [2, 1]
+            and near(first_value(dimensions_floating_output), 0.5773502691896257)
+            and is_cuda(default_value) == expected_cuda
+            and is_cuda(dimensions_floating_output) == expected_cuda;
+    (dispose(dimensions_floating_output); dispose(dimensions_integer_output); dispose(floating_output); dispose(integer_output); dispose(dimensions_output); dispose(default_output); dispose(dimensions_floating_value); dispose(dimensions_integer_value); dispose(floating_value); dispose(integer_value); dispose(dimensions_value); dispose(default_value); dispose(input); valid).
+
+/**
+ * Executes every scalar variance correction contract.
+ */
+pub variance_contracts_on(device_name: String): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let input = input_on(device_name);
+    let default_value = var_correction_default(input, false);
+    let dimensions_value = var_correction_dimensions(input, [1], true);
+    let integer_value = var_correction_int(input, 0, false);
+    let floating_value = var_correction_float(input, 0.5, false);
+    let dimensions_integer_value = var_correction_dimensions_int(input, [1], 0, false);
+    let dimensions_floating_value = var_correction_dimensions_float(input, [1], 0.5, true);
+    let default_output = empty_on(device_name);
+    let dimensions_output = empty_on(device_name);
+    let integer_output = empty_on(device_name);
+    let floating_output = empty_on(device_name);
+    let dimensions_integer_output = empty_on(device_name);
+    let dimensions_floating_output = empty_on(device_name);
+    var_correction_out_default(default_output, input, false);
+    var_correction_out_dimensions(dimensions_output, input, [1], true);
+    var_correction_out_int(integer_output, input, 0, false);
+    var_correction_out_float(floating_output, input, 0.5, false);
+    var_correction_out_dimensions_int(dimensions_integer_output, input, [1], 0, false);
+    var_correction_out_dimensions_float(dimensions_floating_output, input, [1], 0.5, true);
+    let valid =
+        shape(default_value) == []
+            and near(value(default_value), 0.3333333333333333)
+            and shape(dimensions_value) == [2, 1]
+            and near(first_value(dimensions_value), 0.5)
+            and near(value(integer_value), 0.25)
+            and near(value(floating_value), 0.2857142857142857)
+            and shape(dimensions_integer_value) == [2]
+            and near(first_value(dimensions_integer_value), 0.25)
+            and shape(dimensions_floating_value) == [2, 1]
+            and near(first_value(dimensions_floating_value), 0.3333333333333333)
+            and near(value(default_output), 0.3333333333333333)
+            and shape(dimensions_output) == [2, 1]
+            and near(first_value(dimensions_output), 0.5)
+            and near(value(integer_output), 0.25)
+            and near(value(floating_output), 0.2857142857142857)
+            and shape(dimensions_integer_output) == [2]
+            and near(first_value(dimensions_integer_output), 0.25)
+            and shape(dimensions_floating_output) == [2, 1]
+            and near(first_value(dimensions_floating_output), 0.3333333333333333)
+            and is_cuda(default_value) == expected_cuda
+            and is_cuda(dimensions_floating_output) == expected_cuda;
+    (dispose(dimensions_floating_output); dispose(dimensions_integer_output); dispose(floating_output); dispose(integer_output); dispose(dimensions_output); dispose(default_output); dispose(dimensions_floating_value); dispose(dimensions_integer_value); dispose(floating_value); dispose(integer_value); dispose(dimensions_value); dispose(default_value); dispose(input); valid).
+
+/**
+ * Executes every paired standard-deviation/mean contract.
+ */
+pub standard_deviation_mean_contracts_on(device_name: String): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let input = input_on(device_name);
+    let {default_value, default_mean} = std_mean_correction_default(input, false);
+    let {dimensions_value, dimensions_mean} = std_mean_correction_dimensions(input, [1], true);
+    let default_output = empty_on(device_name);
+    let default_mean_output = empty_on(device_name);
+    let dimensions_output = empty_on(device_name);
+    let dimensions_mean_output = empty_on(device_name);
+    std_mean_correction_out_default(default_output, default_mean_output, input, false);
+    std_mean_correction_out_dimensions(dimensions_output, dimensions_mean_output, input, [1], true);
+    let valid =
+        shape(default_value) == []
+            and near(value(default_value), 0.5773502691896257)
+            and near(value(default_mean), 0.5)
+            and shape(dimensions_value) == [2, 1]
+            and near(first_value(dimensions_value), 0.7071067811865476)
+            and near(first_value(dimensions_mean), 0.5)
+            and near(value(default_output), 0.5773502691896257)
+            and near(value(default_mean_output), 0.5)
+            and shape(dimensions_output) == [2, 1]
+            and near(first_value(dimensions_output), 0.7071067811865476)
+            and near(first_value(dimensions_mean_output), 0.5)
+            and is_cuda(default_value) == expected_cuda
+            and is_cuda(dimensions_mean_output) == expected_cuda;
+    (dispose(dimensions_mean_output); dispose(dimensions_output); dispose(default_mean_output); dispose(default_output); dispose(dimensions_mean); dispose(dimensions_value); dispose(default_mean); dispose(default_value); dispose(input); valid).
+
+/**
+ * Executes every paired variance/mean contract.
+ */
+pub variance_mean_contracts_on(device_name: String): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let input = input_on(device_name);
+    let {default_value, default_mean} = var_mean_correction_default(input, false);
+    let {dimensions_value, dimensions_mean} = var_mean_correction_dimensions(input, [1], true);
+    let default_output = empty_on(device_name);
+    let default_mean_output = empty_on(device_name);
+    let dimensions_output = empty_on(device_name);
+    let dimensions_mean_output = empty_on(device_name);
+    var_mean_correction_out_default(default_output, default_mean_output, input, false);
+    var_mean_correction_out_dimensions(dimensions_output, dimensions_mean_output, input, [1], true);
+    let valid =
+        shape(default_value) == []
+            and near(value(default_value), 0.3333333333333333)
+            and near(value(default_mean), 0.5)
+            and shape(dimensions_value) == [2, 1]
+            and near(first_value(dimensions_value), 0.5)
+            and near(first_value(dimensions_mean), 0.5)
+            and near(value(default_output), 0.3333333333333333)
+            and near(value(default_mean_output), 0.5)
+            and shape(dimensions_output) == [2, 1]
+            and near(first_value(dimensions_output), 0.5)
+            and near(first_value(dimensions_mean_output), 0.5)
+            and is_cuda(default_value) == expected_cuda
+            and is_cuda(dimensions_mean_output) == expected_cuda;
+    (dispose(dimensions_mean_output); dispose(dimensions_output); dispose(default_mean_output); dispose(default_output); dispose(dimensions_mean); dispose(dimensions_value); dispose(default_mean); dispose(default_value); dispose(input); valid).

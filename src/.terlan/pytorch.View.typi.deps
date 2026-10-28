@@ -1,0 +1,9 @@
+module=pytorch.View
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=4431740608254310723
+interface_hash=12650245910116137922
+interface_doc_hash=4415486797484315897
+deps=1
+pytorch.Tensor=13489932768568026575

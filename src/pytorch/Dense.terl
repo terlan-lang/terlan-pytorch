@@ -1,0 +1,335 @@
+/**
+ * Generated direct-CXX implementation of public dense tensor operations.
+ */
+module pytorch.Dense.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes the exact aten::bmm dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.bmm}
+pub bmm(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::complex dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.complex}
+pub complex(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::divide.Tensor dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.divide_tensor}
+pub divide_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::expand_as dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.expand_as}
+pub expand_as(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::fill.Tensor dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.fill_tensor}
+pub fill_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::ger dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.ger}
+pub ger(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::hardsigmoid_backward dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.hardsigmoid_backward}
+pub hardsigmoid_backward(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::hardswish_backward dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.hardswish_backward}
+pub hardswish_backward(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::infinitely_differentiable_gelu_backward dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.infinitely_differentiable_gelu_backward}
+pub infinitely_differentiable_gelu_backward(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::linalg_householder_product dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.linalg_householder_product}
+pub linalg_householder_product(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::linalg_matmul dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.linalg_matmul}
+pub linalg_matmul(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::matrix_exp_backward dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.matrix_exp_backward}
+pub matrix_exp_backward(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::mish_backward dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.mish_backward}
+pub mish_backward(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::mm dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.mm}
+pub mm(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::multiply.Tensor dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.multiply_tensor}
+pub multiply_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::mv dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.mv}
+pub mv(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::orgqr dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.orgqr}
+pub orgqr(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::outer dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.outer}
+pub outer(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::polar dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.polar}
+pub polar(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::prelu dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.prelu}
+pub prelu(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::reshape_as dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.reshape_as}
+pub reshape_as(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::sigmoid_backward dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.sigmoid_backward}
+pub sigmoid_backward(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::silu_backward dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.silu_backward}
+pub silu_backward(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_chebyshev_polynomial_t dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_chebyshev_polynomial_t}
+pub special_chebyshev_polynomial_t(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_chebyshev_polynomial_u dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_chebyshev_polynomial_u}
+pub special_chebyshev_polynomial_u(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_chebyshev_polynomial_v dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_chebyshev_polynomial_v}
+pub special_chebyshev_polynomial_v(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_chebyshev_polynomial_w dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_chebyshev_polynomial_w}
+pub special_chebyshev_polynomial_w(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_gammainc dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_gammainc}
+pub special_gammainc(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_gammaincc dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_gammaincc}
+pub special_gammaincc(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_hermite_polynomial_h dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_hermite_polynomial_h}
+pub special_hermite_polynomial_h(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_hermite_polynomial_he dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_hermite_polynomial_he}
+pub special_hermite_polynomial_he(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_laguerre_polynomial_l dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_laguerre_polynomial_l}
+pub special_laguerre_polynomial_l(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_legendre_polynomial_p dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_legendre_polynomial_p}
+pub special_legendre_polynomial_p(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_shifted_chebyshev_polynomial_t dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_shifted_chebyshev_polynomial_t}
+pub special_shifted_chebyshev_polynomial_t(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_shifted_chebyshev_polynomial_u dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_shifted_chebyshev_polynomial_u}
+pub special_shifted_chebyshev_polynomial_u(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_shifted_chebyshev_polynomial_v dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_shifted_chebyshev_polynomial_v}
+pub special_shifted_chebyshev_polynomial_v(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_shifted_chebyshev_polynomial_w dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.special_shifted_chebyshev_polynomial_w}
+pub special_shifted_chebyshev_polynomial_w(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::tanh_backward dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.tanh_backward}
+pub tanh_backward(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::type_as dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.type_as}
+pub type_as(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::view_as dense two-tensor schema.
+ */
+@compiler.native {pytorch.dense.view_as}
+pub view_as(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Writes the exact aten::bmm.out result into retained output storage.
+ */
+@compiler.native {pytorch.dense.bmm_out}
+pub bmm_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::ger.out result into retained output storage.
+ */
+@compiler.native {pytorch.dense.ger_out}
+pub ger_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::matmul.out result into retained output storage.
+ */
+@compiler.native {pytorch.dense.matmul_out}
+pub matmul_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::mm.out result into retained output storage.
+ */
+@compiler.native {pytorch.dense.mm_out}
+pub mm_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::mv.out result into retained output storage.
+ */
+@compiler.native {pytorch.dense.mv_out}
+pub mv_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::orgqr.out result into retained output storage.
+ */
+@compiler.native {pytorch.dense.orgqr_out}
+pub orgqr_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::outer.out result into retained output storage.
+ */
+@compiler.native {pytorch.dense.outer_out}
+pub outer_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.

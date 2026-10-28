@@ -1,0 +1,255 @@
+/**
+ * Generated direct-CXX implementation of public gradient kernels.
+ */
+module pytorch.Gradients.
+
+import type pytorch.Tensor.
+
+/**
+ * Computes numerical gradients along requested dimensions.
+ */
+@compiler.native {pytorch.gradients.gradient_array}
+pub gradient_array(input: Tensor, dimensions: List[Int], edge_order: Int = 1): List[Tensor] ->
+    native.
+
+/**
+ * Computes numerical gradients with scalar spacing.
+ */
+@compiler.native {pytorch.gradients.gradient_scalar_array}
+pub gradient_scalar_array(
+    input: Tensor,
+    spacing: Float,
+    dimensions: List[Int],
+    edge_order: Int = 1,
+): List[Tensor] ->
+    native.
+
+/**
+ * Computes numerical gradients with optional scalar spacing and dimension.
+ */
+@compiler.native {pytorch.gradients.gradient_scalar_int}
+pub gradient_scalar_int(
+    input: Tensor,
+    has_spacing: Bool,
+    spacing: Float,
+    has_dimension: Bool,
+    dimension: Int,
+    edge_order: Int = 1,
+): List[Tensor] ->
+    native.
+
+/**
+ * Computes numerical gradients with scalar spacing per dimension.
+ */
+@compiler.native {pytorch.gradients.gradient_scalar_array_array}
+pub gradient_scalar_array_array(
+    input: Tensor,
+    spacing: List[Float],
+    dimensions: List[Int],
+    edge_order: Int = 1,
+): List[Tensor] ->
+    native.
+
+/**
+ * Computes numerical gradients with scalar spacing and optional dimension.
+ */
+@compiler.native {pytorch.gradients.gradient_scalar_array_int}
+pub gradient_scalar_array_int(
+    input: Tensor,
+    spacing: List[Float],
+    has_dimension: Bool,
+    dimension: Int,
+    edge_order: Int = 1,
+): List[Tensor] ->
+    native.
+
+/**
+ * Computes numerical gradients with tensor spacing per dimension.
+ */
+@compiler.native {pytorch.gradients.gradient_tensor_array}
+pub gradient_tensor_array(
+    input: Tensor,
+    spacing: List[Tensor],
+    dimensions: List[Int],
+    edge_order: Int = 1,
+): List[Tensor] ->
+    native.
+
+/**
+ * Computes numerical gradients with tensor spacing and optional dimension.
+ */
+@compiler.native {pytorch.gradients.gradient_tensor_array_int}
+pub gradient_tensor_array_int(
+    input: Tensor,
+    spacing: List[Tensor],
+    has_dimension: Bool,
+    dimension: Int,
+    edge_order: Int = 1,
+): List[Tensor] ->
+    native.
+
+/**
+ * Computes the cumulative-product input gradient from the forward output along one dimension.
+ */
+@compiler.native {pytorch.gradients.cumprod_backward}
+pub cumprod_backward(gradient: Tensor, input: Tensor, dimension: Int, output: Tensor): Tensor ->
+    native.
+
+/**
+ * Computes embedding-table gradients with explicit padding, frequency scaling, and sparse-output policy.
+ */
+@compiler.native {pytorch.gradients.embedding_backward}
+pub embedding_backward(
+    gradient: Tensor,
+    indices: Tensor,
+    weight_count: Int,
+    padding_index: Int = -1,
+    scale_gradient_by_frequency: Bool = false,
+    sparse: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Computes a dense embedding-table gradient with explicit padding and frequency scaling.
+ */
+@compiler.native {pytorch.gradients.embedding_dense_backward}
+pub embedding_dense_backward(
+    gradient_output: Tensor,
+    indices: Tensor,
+    weight_count: Int,
+    padding_index: Int = -1,
+    scale_gradient_by_frequency: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Writes dense embedding-table gradients into retained caller-owned storage.
+ */
+@compiler.native {pytorch.gradients.embedding_dense_backward_out}
+pub embedding_dense_backward_out(
+    output: Tensor,
+    gradient_output: Tensor,
+    indices: Tensor,
+    weight_count: Int,
+    padding_index: Int = -1,
+    scale_gradient_by_frequency: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Computes a sparse embedding-table gradient from output gradients and row indices.
+ */
+@compiler.native {pytorch.gradients.embedding_sparse_backward}
+pub embedding_sparse_backward(
+    gradient: Tensor,
+    indices: Tensor,
+    weight_count: Int,
+    padding_index: Int = -1,
+    scale_gradient_by_frequency: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Masks a gradient using the cached per-channel affine fake-quantization mask.
+ */
+@compiler.native {pytorch.gradients.fake_quantize_per_channel_affine_cachemask_backward}
+pub fake_quantize_per_channel_affine_cachemask_backward(gradient: Tensor, mask: Tensor): Tensor ->
+    native.
+
+/**
+ * Masks a gradient using the cached per-tensor affine fake-quantization mask.
+ */
+@compiler.native {pytorch.gradients.fake_quantize_per_tensor_affine_cachemask_backward}
+pub fake_quantize_per_tensor_affine_cachemask_backward(gradient: Tensor, mask: Tensor): Tensor ->
+    native.
+
+/**
+ * Scatters a gather output gradient back into the input shape with explicit sparse policy.
+ */
+@compiler.native {pytorch.gradients.gather_backward}
+pub gather_backward(
+    gradient: Tensor,
+    input: Tensor,
+    dimension: Int,
+    indices: Tensor,
+    sparse_gradient: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Computes the GELU input gradient using the selected exact or tanh approximation.
+ */
+@compiler.native {pytorch.gradients.gelu_backward}
+pub gelu_backward(gradient_output: Tensor, input: Tensor, approximation: String = "none"): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::gelu_backward.grad_input values with caller-selected approximation into retained storage.
+ */
+@compiler.native {pytorch.gradients.gelu_backward_out}
+pub gelu_backward_out(
+    output: Tensor,
+    gradient_output: Tensor,
+    input: Tensor,
+    approximation: String = "none",
+): Unit ->
+    native.
+
+/**
+ * Computes exact aten::logit_backward values without epsilon clamping.
+ */
+@compiler.native {pytorch.gradients.logit_backward}
+pub logit_backward(gradient_output: Tensor, input: Tensor): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::logit_backward values with explicit epsilon clamping.
+ */
+@compiler.native {pytorch.gradients.logit_backward_epsilon}
+pub logit_backward_epsilon(gradient_output: Tensor, input: Tensor, epsilon: Float): Tensor ->
+    native.
+
+/**
+ * Writes unclamped aten::logit_backward.grad_input values into retained output storage.
+ */
+@compiler.native {pytorch.gradients.logit_backward_out}
+pub logit_backward_out(output: Tensor, gradient_output: Tensor, input: Tensor): Unit ->
+    native.
+
+/**
+ * Writes epsilon-clamped aten::logit_backward.grad_input values into retained output storage.
+ */
+@compiler.native {pytorch.gradients.logit_backward_epsilon_out}
+pub logit_backward_epsilon_out(
+    output: Tensor,
+    gradient_output: Tensor,
+    input: Tensor,
+    epsilon: Float,
+): Unit ->
+    native.
+
+/**
+ * Computes the gated-linear-unit input gradient along one split dimension.
+ */
+@compiler.native {pytorch.gradients.glu_backward}
+pub glu_backward(gradient_output: Tensor, input: Tensor, dimension: Int = -1): Tensor ->
+    native.
+
+/**
+ * Scatters a selected-value gradient back into the input shape through a boolean mask.
+ */
+@compiler.native {pytorch.gradients.masked_select_backward}
+pub masked_select_backward(gradient: Tensor, input: Tensor, mask: Tensor): Tensor ->
+    native.
+
+/**
+ * Computes the soft-margin loss input gradient with explicit reduction policy.
+ */
+@compiler.native {pytorch.gradients.soft_margin_loss_backward}
+pub soft_margin_loss_backward(
+    gradient_output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    reduction: Int = 1,
+): Tensor ->
+    native.

@@ -1,0 +1,83 @@
+module pytorch.UnaryParityTest.
+
+import pytorch.Tensor.{dispose, from_float, item_float}.
+import pytorch.Unary.{abs, ceil, floor, frac, reciprocal, round, sign, square, trunc}.
+
+@test
+pub absolute_fraction_and_truncation_match_libtorch(): Bool ->
+    let source = from_float(-2.75);
+    let absolute = abs(source);
+    let fraction = frac(source);
+    let truncated = trunc(source);
+    let valid =
+        item_float(absolute) == 2.75
+            and item_float(fraction) == -0.75
+            and item_float(truncated) == -2.0
+            and item_float(source) == -2.75;
+    dispose(truncated);
+    dispose(fraction);
+    dispose(absolute);
+    dispose(source);
+    valid.
+
+@test
+pub directed_rounding_matches_libtorch(): Bool ->
+    let source = from_float(-1.25);
+    let ceiling = ceil(source);
+    let flooring = floor(source);
+    let valid = item_float(ceiling) == -1.0 and item_float(flooring) == -2.0 and item_float(source) == -1.25;
+    dispose(flooring);
+    dispose(ceiling);
+    dispose(source);
+    valid.
+
+@test
+pub reciprocal_and_square_match_libtorch(): Bool ->
+    let source = from_float(4.0);
+    let inverse = reciprocal(source);
+    let squared = square(source);
+    let valid = item_float(inverse) == 0.25 and item_float(squared) == 16.0 and item_float(source) == 4.0;
+    dispose(squared);
+    dispose(inverse);
+    dispose(source);
+    valid.
+
+@test
+pub nearest_rounding_uses_ties_to_even(): Bool ->
+    let lower_source = from_float(2.5);
+    let upper_source = from_float(3.5);
+    let lower = round(lower_source);
+    let upper = round(upper_source);
+    let valid =
+        item_float(lower) == 2.0
+            and item_float(upper) == 4.0
+            and item_float(lower_source) == 2.5
+            and item_float(upper_source) == 3.5;
+    dispose(upper);
+    dispose(lower);
+    dispose(upper_source);
+    dispose(lower_source);
+    valid.
+
+@test
+pub sign_matches_libtorch_for_all_finite_classes(): Bool ->
+    let negative_source = from_float(-7.0);
+    let zero_source = from_float(0.0);
+    let positive_source = from_float(7.0);
+    let negative = sign(negative_source);
+    let zero = sign(zero_source);
+    let positive = sign(positive_source);
+    let valid =
+        item_float(negative) == -1.0
+            and item_float(zero) == 0.0
+            and item_float(positive) == 1.0
+            and item_float(negative_source) == -7.0
+            and item_float(zero_source) == 0.0
+            and item_float(positive_source) == 7.0;
+    dispose(positive);
+    dispose(zero);
+    dispose(negative);
+    dispose(positive_source);
+    dispose(zero_source);
+    dispose(negative_source);
+    valid.

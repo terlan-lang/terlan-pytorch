@@ -1,0 +1,204 @@
+/**
+ * Native tensor comparison, safe-casting, promotion, and result-type queries.
+ */
+module pytorch.TypeRelationsNative.
+
+import type pytorch.Tensor.
+
+/**
+ * Tests complete tensor contents with explicit PyTorch tolerance and NaN policy.
+ */
+@compiler.native {pytorch.type_relations.allclose}
+pub allclose_native(
+    left: Tensor,
+    right: Tensor,
+    relative_tolerance: Float,
+    absolute_tolerance: Float,
+    equal_nan: Bool,
+): Bool ->
+    native.
+
+/**
+ * Tests exact shape and element equality for two tensors.
+ */
+@compiler.native {pytorch.type_relations.equal}
+pub equal_native(left: Tensor, right: Tensor): Bool ->
+    native.
+
+/**
+ * Tests whether two tensors have identical dimensions and extents.
+ */
+@compiler.native {pytorch.type_relations.is_same_size}
+pub is_same_size_native(left: Tensor, right: Tensor): Bool ->
+    native.
+
+/**
+ * Tests the exact complex-dtype tensor predicate.
+ */
+@compiler.native {pytorch.type_relations.is_complex}
+pub is_complex_native(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Tests the exact lazy-conjugate tensor predicate.
+ */
+@compiler.native {pytorch.type_relations.is_conj}
+pub is_conj_native(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Tests the exact distributed-tensor predicate.
+ */
+@compiler.native {pytorch.type_relations.is_distributed}
+pub is_distributed_native(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Tests the exact floating-point dtype predicate.
+ */
+@compiler.native {pytorch.type_relations.is_floating_point}
+pub is_floating_point_native(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Tests the exact inference-tensor predicate.
+ */
+@compiler.native {pytorch.type_relations.is_inference}
+pub is_inference_native(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Tests the exact autograd leaf predicate.
+ */
+@compiler.native {pytorch.type_relations.is_leaf}
+pub is_leaf_native(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Tests the exact lazy-negative-view predicate.
+ */
+@compiler.native {pytorch.type_relations.is_neg}
+pub is_neg_native(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Returns the exact single-element tensor truth value.
+ */
+@compiler.native {pytorch.type_relations.is_nonzero}
+pub is_nonzero_native(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Tests the exact signed-dtype predicate.
+ */
+@compiler.native {pytorch.type_relations.is_signed}
+pub is_signed_native(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Tests whether a non-leaf tensor retains its gradient.
+ */
+@compiler.native {pytorch.type_relations.retains_grad}
+pub retains_grad_native(tensor: Tensor): Bool ->
+    native.
+
+/**
+ * Tests whether two tensors share the exact same storage view.
+ */
+@compiler.native {pytorch.type_relations.is_set_to}
+pub is_set_to_native(tensor: Tensor, other: Tensor): Bool ->
+    native.
+
+/**
+ * Returns the exact backend device index.
+ */
+@compiler.native {pytorch.type_relations.get_device}
+pub get_device_native(tensor: Tensor): Int ->
+    native.
+
+/**
+ * Returns the exact autograd output number.
+ */
+@compiler.native {pytorch.type_relations.output_nr}
+pub output_nr_native(tensor: Tensor): Int ->
+    native.
+
+/**
+ * Returns one exact dimension extent.
+ */
+@compiler.native {pytorch.type_relations.size_dimension}
+pub size_dimension_native(tensor: Tensor, dimension: Int): Int ->
+    native.
+
+/**
+ * Returns one exact dimension stride.
+ */
+@compiler.native {pytorch.type_relations.stride_dimension}
+pub stride_dimension_native(tensor: Tensor, dimension: Int): Int ->
+    native.
+
+/**
+ * Enables retained gradients on an eligible non-leaf tensor.
+ */
+@compiler.native {pytorch.type_relations.retain_grad}
+pub retain_grad_native(tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Tests PyTorch's safe-casting relation for two validated scalar-type identifiers.
+ */
+@compiler.native {pytorch.type_relations.can_cast}
+pub can_cast_native(from_dtype: Int, to_dtype: Int): Bool ->
+    native.
+
+/**
+ * Returns PyTorch's promoted scalar-type identifier for two validated dtype tags.
+ */
+@compiler.native {pytorch.type_relations.promote_types}
+pub promote_types_native(first_dtype: Int, second_dtype: Int): Int ->
+    native.
+
+/**
+ * Returns the result dtype selected for two tensor operands.
+ */
+@compiler.native {pytorch.type_relations.result_type_tensor}
+pub result_type_tensor_native(tensor: Tensor, other: Tensor): Int ->
+    native.
+
+/**
+ * Returns the result dtype selected for a tensor followed by an exact scalar.
+ */
+@compiler.native {pytorch.type_relations.result_type_scalar}
+pub result_type_scalar_native(
+    tensor: Tensor,
+    scalar_is_integer: Bool,
+    scalar_integer: Int,
+    scalar_floating: Float,
+): Int ->
+    native.
+
+/**
+ * Returns the result dtype selected for an exact scalar followed by a tensor.
+ */
+@compiler.native {pytorch.type_relations.result_type_scalar_tensor}
+pub result_type_scalar_tensor_native(
+    tensor: Tensor,
+    scalar_is_integer: Bool,
+    scalar_integer: Int,
+    scalar_floating: Float,
+): Int ->
+    native.
+
+/**
+ * Returns the result dtype selected for two exact scalar operands.
+ */
+@compiler.native {pytorch.type_relations.result_type_scalar_scalar}
+pub result_type_scalar_scalar_native(
+    first_is_integer: Bool,
+    first_integer: Int,
+    first_floating: Float,
+    second_is_integer: Bool,
+    second_integer: Int,
+    second_floating: Float,
+): Int ->
+    native.

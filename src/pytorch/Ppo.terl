@@ -1,0 +1,127 @@
+module pytorch.Ppo.
+
+import pytorch.Optimizer.{Adam, step}.
+import pytorch.Tensor.{Tensor, add, add_scalar, backward, categorical_sample, clamp, dispose, divide, exp, gather, log, mean, minimum, mse_loss, multiply, multiply_scalar, negate, softmax, sqrt, subtract, sum_dimensions}.
+
+/**
+ * Returns the negative clipped policy objective for one PPO minibatch.
+ */
+pub clipped_policy_loss(
+    new_log_probabilities: Tensor,
+    old_log_probabilities: Tensor,
+    advantages: Tensor,
+    clip_epsilon: Float,
+): Tensor ->
+    let log_ratio = subtract(new_log_probabilities, old_log_probabilities, 1.0);
+    let ratio = exp(log_ratio);
+    let unclipped_objective = multiply(ratio, advantages);
+    let clipped_ratio = clamp(ratio, 1.0 - clip_epsilon, 1.0 + clip_epsilon);
+    let clipped_objective = multiply(clipped_ratio, advantages);
+    let conservative_objective = minimum(unclipped_objective, clipped_objective);
+    let average_objective = mean(conservative_objective);
+    let loss = negate(average_objective);
+    dispose(average_objective);
+    dispose(conservative_objective);
+    dispose(clipped_objective);
+    dispose(clipped_ratio);
+    dispose(unclipped_objective);
+    dispose(ratio);
+    dispose(log_ratio);
+    loss.
+
+/**
+ * Returns mean squared value-function loss for one PPO minibatch.
+ */
+pub value_loss(predicted_values: Tensor, returns: Tensor): Tensor ->
+    mse_loss(predicted_values, returns, 1).
+
+/**
+ * Returns mean categorical entropy after stabilizing logarithms with epsilon.
+ */
+pub categorical_entropy(probabilities: Tensor, epsilon: Float): Tensor ->
+    let bounded = clamp(probabilities, epsilon, 1.0);
+    let log_probabilities = log(bounded);
+    let weighted_log_probabilities = multiply(probabilities, log_probabilities);
+    let row_sums = sum_dimensions(weighted_log_probabilities, [-1], false);
+    let average = mean(row_sums);
+    let entropy = negate(average);
+    dispose(average);
+    dispose(row_sums);
+    dispose(weighted_log_probabilities);
+    dispose(log_probabilities);
+    dispose(bounded);
+    entropy.
+
+/**
+ * Returns zero-mean, unit-variance advantages using a positive stability epsilon.
+ */
+pub normalize_advantages(advantages: Tensor, epsilon: Float): Tensor ->
+    let average = mean(advantages);
+    let centered = subtract(advantages, average, 1.0);
+    let squared = multiply(centered, centered);
+    let variance = mean(squared);
+    let stabilized_variance = add_scalar(variance, epsilon, 1.0);
+    let deviation = sqrt(stabilized_variance);
+    let normalized = divide(centered, deviation);
+    dispose(deviation);
+    dispose(stabilized_variance);
+    dispose(variance);
+    dispose(squared);
+    dispose(centered);
+    dispose(average);
+    normalized.
+
+/**
+ * Combines policy loss, scaled value loss, and an entropy reward into one loss.
+ */
+pub combined_loss(
+    policy: Tensor,
+    value: Tensor,
+    entropy: Tensor,
+    value_coefficient: Float,
+    entropy_coefficient: Float,
+): Tensor ->
+    let scaled_value = multiply_scalar(value, value_coefficient);
+    let actor_critic = add(policy, scaled_value, 1.0);
+    let scaled_entropy = multiply_scalar(entropy, entropy_coefficient);
+    let combined = subtract(actor_critic, scaled_entropy, 1.0);
+    dispose(scaled_entropy);
+    dispose(actor_critic);
+    dispose(scaled_value);
+    combined.
+
+/**
+ * Executes one deterministic PPO minibatch update for registered actor and critic leaves.
+ */
+pub minibatch_update(
+    actor_logits: Tensor,
+    critic_values: Tensor,
+    old_log_probabilities: Tensor,
+    raw_advantages: Tensor,
+    returns: Tensor,
+    optimizer: Adam,
+    seed: Int,
+    clip_epsilon: Float,
+    value_coefficient: Float,
+    entropy_coefficient: Float,
+): Tensor ->
+    let probabilities = softmax(actor_logits, 1);
+    let actions = categorical_sample(probabilities, seed);
+    let selected_probabilities = gather(probabilities, 1, actions, false);
+    let new_log_probabilities = log(selected_probabilities);
+    let advantages = normalize_advantages(raw_advantages, 0.000001);
+    let policy = clipped_policy_loss(new_log_probabilities, old_log_probabilities, advantages, clip_epsilon);
+    let value = value_loss(critic_values, returns);
+    let entropy = categorical_entropy(probabilities, 0.000001);
+    let loss = combined_loss(policy, value, entropy, value_coefficient, entropy_coefficient);
+    backward(loss);
+    step(optimizer);
+    dispose(entropy);
+    dispose(value);
+    dispose(policy);
+    dispose(advantages);
+    dispose(new_log_probabilities);
+    dispose(selected_probabilities);
+    dispose(actions);
+    dispose(probabilities);
+    loss.

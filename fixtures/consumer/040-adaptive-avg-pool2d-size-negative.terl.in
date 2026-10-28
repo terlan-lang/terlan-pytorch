@@ -1,0 +1,9 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{adaptive_avg_pool2d, full_float}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = full_float([1, 1, 4, 4], 1.0);
+    let output = adaptive_avg_pool2d(input, [2]);
+    println("PYTORCH_ADAPTIVE_AVG_POOL2D_SIZE_NOT_REJECTED").

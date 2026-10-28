@@ -1,0 +1,35 @@
+module pytorch.BinaryScalarBehaviorSupport.
+
+import pytorch.BinaryScalarNative.{binary_scalar_left_float, binary_scalar_left_float_out, binary_scalar_left_int, binary_scalar_left_int_out, binary_scalar_right_float, binary_scalar_right_float_in_place, binary_scalar_right_float_out, binary_scalar_right_int, binary_scalar_right_int_in_place, binary_scalar_right_int_out, binary_tensor_in_place, binary_tensor_out}.
+import pytorch.Tensor.{Float64, Int64, Strided, Tensor, clone, dispose, dtype, is_cuda, ones_device, shape}.
+
+/**
+ * Exercises generated tensor/scalar binary leaves across forms.
+ */
+pub binary_scalar_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let left = ones_device([2], Float64, Strided, device_name);
+    let right = ones_device([2], Float64, Strided, device_name);
+    let tensor_out = ones_device([0], Float64, Strided, device_name);
+    binary_tensor_out(tensor_out, left, 5, right);
+    let tensor_in = clone(left);
+    (binary_tensor_in_place(tensor_in, 5, right); let right_int = binary_scalar_right_int(left, 6, 2);
+let left_int = binary_scalar_left_int(6, 2, left);
+let right_float = binary_scalar_right_float(left, 10, 1.5);
+let left_float = binary_scalar_left_float(10, 1.5, left);
+let right_int_out = ones_device([0], Float64, Strided, device_name);
+(binary_scalar_right_int_out(right_int_out, left, 6, 2); let left_int_out = ones_device([0], Float64, Strided, device_name);
+(binary_scalar_left_int_out(left_int_out, 6, 2, left); let right_float_out = ones_device([0], Float64, Strided, device_name);
+(binary_scalar_right_float_out(right_float_out, left, 10, 1.5); let left_float_out = ones_device([0], Float64, Strided, device_name);
+(binary_scalar_left_float_out(left_float_out, 10, 1.5, left); let int_in = ones_device([2], Int64, Strided, device_name);
+(binary_scalar_right_int_in_place(int_in, 0, 1); let float_in = clone(left);
+(binary_scalar_right_float_in_place(float_in, 5, 1.5); let valid =
+    shape(tensor_out) == [2]
+        and shape(tensor_in) == [2]
+        and shape(right_int) == [2]
+        and shape(left_float) == [2]
+        and shape(right_int_out) == [2]
+        and shape(left_float_out) == [2]
+        and dtype(right_float) == Float64
+        and is_cuda(right_float) == expected_cuda
+        and is_cuda(left_float_out) == expected_cuda;
+(dispose(float_in); dispose(int_in); dispose(left_float_out); dispose(right_float_out); dispose(left_int_out); dispose(right_int_out); dispose(left_float); dispose(right_float); dispose(left_int); dispose(right_int); dispose(tensor_in); dispose(tensor_out); dispose(right); dispose(left); valid)))))))).

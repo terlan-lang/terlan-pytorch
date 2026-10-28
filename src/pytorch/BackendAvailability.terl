@@ -1,0 +1,381 @@
+/**
+ * Generated CXX backend-availability predicates.
+ */
+module pytorch.BackendAvailability.
+
+import type pytorch.Tensor.
+
+/**
+ * Owned inference-mode scope guard.
+ */
+pub opaque type InferenceModeGuard.
+
+/**
+ * Owned CPU autocast scope guard.
+ */
+pub opaque type AutocastCpuGuard.
+
+/**
+ * Owned anomaly-detection scope guard.
+ */
+pub opaque type AnomalyModeGuard.
+
+/**
+ * Owned warning-policy scope guard.
+ */
+pub opaque type WarningModeGuard.
+
+/**
+ * Owned deterministic-algorithm scope guard.
+ */
+pub opaque type DeterministicAlgorithmsGuard.
+
+/**
+ * Owned float32 matmul precision scope guard.
+ */
+pub opaque type Float32MatmulPrecisionGuard.
+
+/**
+ * Owned default-dtype scope guard.
+ */
+pub opaque type DefaultDtypeGuard.
+
+/**
+ * Exact generated CXX Vulkan availability predicate.
+ */
+@compiler.native {pytorch.backend_availability.is_vulkan_available}
+pub is_vulkan_available(): Bool ->
+    native.
+
+/**
+ * Exact generated CXX cuDNN acceptability predicate.
+ */
+@compiler.native {pytorch.backend_availability.cudnn_is_acceptable}
+pub cudnn_is_acceptable(input: Tensor): Bool ->
+    native.
+
+/**
+ * Exact generated CXX symbolic contiguity predicate.
+ */
+@compiler.native {pytorch.backend_availability.sym_is_contiguous}
+pub sym_is_contiguous(input: Tensor, memory_format: Int = 0): Bool ->
+    native.
+
+/**
+ * Exact generated CXX deterministic algorithm enablement predicate.
+ */
+@compiler.native {pytorch.backend_availability.deterministic_algorithms_enabled}
+pub are_deterministic_algorithms_enabled(): Bool ->
+    native.
+
+/**
+ * Exact generated CXX deterministic algorithm warn-only predicate.
+ */
+@compiler.native {pytorch.backend_availability.deterministic_algorithms_warn_only}
+pub is_deterministic_algorithms_warn_only_enabled(): Bool ->
+    native.
+
+/**
+ * Exact generated CXX deterministic debug mode query.
+ */
+@compiler.native {pytorch.backend_availability.deterministic_debug_mode}
+pub get_deterministic_debug_mode(): Int ->
+    native.
+
+/**
+ * Exact generated CXX deterministic algorithm configuration setter.
+ */
+@compiler.native {pytorch.backend_availability.set_deterministic_algorithms}
+pub use_deterministic_algorithms(enabled: Bool, warn_only: Bool): Unit ->
+    native.
+
+/**
+ * Exact generated CXX deterministic debug mode setter.
+ */
+@compiler.native {pytorch.backend_availability.set_deterministic_debug_mode}
+pub set_deterministic_debug_mode(mode: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX float32 matmul precision query.
+ */
+@compiler.native {pytorch.backend_availability.float32_matmul_precision}
+pub get_float32_matmul_precision(): String ->
+    native.
+
+/**
+ * Exact generated CXX float32 matmul precision code setter.
+ */
+@compiler.native {pytorch.backend_availability.set_float32_matmul_precision_code}
+pub set_float32_matmul_precision_code(code: Int): Unit ->
+    native.
+
+/**
+ * Sets LibTorch's float32 matmul precision mode.
+ */
+pub set_float32_matmul_precision(precision: String): Unit ->
+    if {
+        precision == "highest" -> set_float32_matmul_precision_code(0);
+        precision == "high" -> set_float32_matmul_precision_code(1);
+        precision == "medium" -> set_float32_matmul_precision_code(2);
+        true -> set_float32_matmul_precision_code(-1)
+    }.
+
+/**
+ * Exact generated CXX gradient-mode query.
+ */
+@compiler.native {pytorch.backend_availability.grad_mode_enabled}
+pub is_grad_enabled(): Bool ->
+    native.
+
+/**
+ * Exact generated CXX gradient-mode setter.
+ */
+@compiler.native {pytorch.backend_availability.set_grad_mode_enabled}
+pub set_grad_enabled(mode: Bool): Unit ->
+    native.
+
+/**
+ * Exact generated CXX anomaly-mode query.
+ */
+@compiler.native {pytorch.backend_availability.anomaly_mode_enabled}
+pub is_anomaly_enabled(): Bool ->
+    native.
+
+/**
+ * Exact generated CXX anomaly NaN-check query.
+ */
+@compiler.native {pytorch.backend_availability.anomaly_check_nan_enabled}
+pub is_anomaly_check_nan_enabled(): Bool ->
+    native.
+
+/**
+ * Exact generated CXX anomaly-mode setter.
+ */
+@compiler.native {pytorch.backend_availability.set_anomaly_mode}
+pub set_anomaly_enabled(enabled: Bool, check_nan: Bool): Unit ->
+    native.
+
+/**
+ * Exact generated CXX warning-mode query.
+ */
+@compiler.native {pytorch.backend_availability.warn_always_enabled}
+pub is_warn_always_enabled(): Bool ->
+    native.
+
+/**
+ * Exact generated CXX warning-mode setter.
+ */
+@compiler.native {pytorch.backend_availability.set_warn_always}
+pub set_warn_always(enabled: Bool): Unit ->
+    native.
+
+/**
+ * Exact generated CXX CPU thread-count query.
+ */
+@compiler.native {pytorch.backend_availability.num_threads}
+pub get_num_threads(): Int ->
+    native.
+
+/**
+ * Exact generated CXX CPU thread-count setter.
+ */
+@compiler.native {pytorch.backend_availability.set_num_threads}
+pub set_num_threads(count: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX CPU thread initialization.
+ */
+@compiler.native {pytorch.backend_availability.init_num_threads}
+pub init_num_threads(): Unit ->
+    native.
+
+/**
+ * Exact generated CXX inter-op thread-count query.
+ */
+@compiler.native {pytorch.backend_availability.num_interop_threads}
+pub get_num_interop_threads(): Int ->
+    native.
+
+/**
+ * Exact generated CXX inter-op thread-count setter.
+ */
+@compiler.native {pytorch.backend_availability.set_num_interop_threads}
+pub set_num_interop_threads(count: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX CPU autocast-enabled query.
+ */
+@compiler.native {pytorch.backend_availability.autocast_cpu_enabled}
+pub is_autocast_cpu_enabled(): Bool ->
+    native.
+
+/**
+ * Exact generated CXX CPU autocast-enabled setter.
+ */
+@compiler.native {pytorch.backend_availability.set_autocast_cpu_enabled}
+pub set_autocast_cpu_enabled(enabled: Bool): Unit ->
+    native.
+
+/**
+ * Exact generated CXX CPU autocast dtype query.
+ */
+@compiler.native {pytorch.backend_availability.autocast_cpu_dtype}
+pub get_autocast_cpu_dtype(): Int ->
+    native.
+
+/**
+ * Exact generated CXX CPU autocast dtype setter.
+ */
+@compiler.native {pytorch.backend_availability.set_autocast_cpu_dtype}
+pub set_autocast_cpu_dtype(dtype: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX autocast-cache query.
+ */
+@compiler.native {pytorch.backend_availability.autocast_cache_enabled}
+pub is_autocast_cache_enabled(): Bool ->
+    native.
+
+/**
+ * Exact generated CXX autocast-cache setter.
+ */
+@compiler.native {pytorch.backend_availability.set_autocast_cache_enabled}
+pub set_autocast_cache_enabled(enabled: Bool): Unit ->
+    native.
+
+/**
+ * Exact generated CXX default-dtype query.
+ */
+@compiler.native {pytorch.backend_availability.default_dtype}
+pub get_default_dtype(): Int ->
+    native.
+
+/**
+ * Exact generated CXX default-dtype setter.
+ */
+@compiler.native {pytorch.backend_availability.set_default_dtype}
+pub set_default_dtype(dtype: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX inference-mode query.
+ */
+@compiler.native {pytorch.backend_availability.inference_mode_enabled}
+pub is_inference_mode_enabled(): Bool ->
+    native.
+
+/**
+ * Exact generated CXX inference-mode transition probe.
+ */
+@compiler.native {pytorch.backend_availability.inference_mode_transition_probe}
+pub probe_inference_mode_transition(): Bool ->
+    native.
+
+/**
+ * Enters LibTorch inference mode for the guard lifetime.
+ */
+@compiler.native {pytorch.backend_availability.inference_mode_enter}
+pub enter_inference_mode(enabled: Bool = true): InferenceModeGuard ->
+    native.
+
+/**
+ * Releases the inference-mode guard and restores prior state.
+ */
+@compiler.native {pytorch.backend_availability.inference_mode_dispose}
+pub dispose_inference_mode(guard: InferenceModeGuard): Unit ->
+    native.
+
+/**
+ * Enters CPU autocast for the guard lifetime.
+ */
+@compiler.native {pytorch.backend_availability.autocast_cpu_enter}
+pub enter_autocast_cpu(enabled: Bool, dtype: Int, cache_enabled: Bool): AutocastCpuGuard ->
+    native.
+
+/**
+ * Restores CPU autocast state and releases the guard.
+ */
+@compiler.native {pytorch.backend_availability.autocast_cpu_dispose}
+pub dispose_autocast_cpu(guard: AutocastCpuGuard): Unit ->
+    native.
+
+/**
+ * Enters anomaly detection for the guard lifetime.
+ */
+@compiler.native {pytorch.backend_availability.anomaly_mode_enter}
+pub enter_anomaly_mode(enabled: Bool, check_nan: Bool): AnomalyModeGuard ->
+    native.
+
+/**
+ * Restores anomaly detection state and releases the guard.
+ */
+@compiler.native {pytorch.backend_availability.anomaly_mode_dispose}
+pub dispose_anomaly_mode(guard: AnomalyModeGuard): Unit ->
+    native.
+
+/**
+ * Enters warning policy for the guard lifetime.
+ */
+@compiler.native {pytorch.backend_availability.warning_mode_enter}
+pub enter_warning_mode(enabled: Bool): WarningModeGuard ->
+    native.
+
+/**
+ * Restores warning policy and releases the guard.
+ */
+@compiler.native {pytorch.backend_availability.warning_mode_dispose}
+pub dispose_warning_mode(guard: WarningModeGuard): Unit ->
+    native.
+
+/**
+ * Enters deterministic-algorithm mode for the guard lifetime.
+ */
+@compiler.native {pytorch.backend_availability.deterministic_algorithms_enter}
+pub enter_deterministic_algorithms(enabled: Bool, warn_only: Bool): DeterministicAlgorithmsGuard ->
+    native.
+
+/**
+ * Restores deterministic-algorithm state and releases the guard.
+ */
+@compiler.native {pytorch.backend_availability.deterministic_algorithms_dispose}
+pub dispose_deterministic_algorithms(guard: DeterministicAlgorithmsGuard): Unit ->
+    native.
+
+/**
+ * Enters float32 matmul precision for the guard lifetime.
+ */
+@compiler.native {pytorch.backend_availability.float32_matmul_precision_enter}
+pub enter_float32_matmul_precision_code(code: Int): Float32MatmulPrecisionGuard ->
+    native.
+
+/**
+ * Restores float32 matmul precision and releases the guard.
+ */
+@compiler.native {pytorch.backend_availability.float32_matmul_precision_dispose}
+pub dispose_float32_matmul_precision(guard: Float32MatmulPrecisionGuard): Unit ->
+    native.
+
+/**
+ * Enters the default dtype for the guard lifetime.
+ */
+@compiler.native {pytorch.backend_availability.default_dtype_enter}
+pub enter_default_dtype(dtype: Int): DefaultDtypeGuard ->
+    native.
+
+/**
+ * Restores default dtype and releases the guard.
+ */
+@compiler.native {pytorch.backend_availability.default_dtype_dispose}
+pub dispose_default_dtype(guard: DefaultDtypeGuard): Unit ->
+    native.
+
+/**
+ * Exact generated CXX floating-point denormal handling toggle.
+ */
+@compiler.native {pytorch.backend_availability.set_flush_denormal}
+pub set_flush_denormal(enabled: Bool): Bool ->
+    native.

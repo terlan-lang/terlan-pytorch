@@ -1,0 +1,49 @@
+module pytorch.LookupBehaviorSupport.
+
+import pytorch.LookupNative.{bucketize_scalar, bucketize_scalar_out, bucketize_tensor_out, isin_scalar, isin_scalar_out, isin_tensor_out, searchsorted_scalar, searchsorted_scalar_out, searchsorted_tensor, searchsorted_tensor_out}.
+import pytorch.Tensor.{Float64, Int64, Strided, clone, dispose, dtype, is_cuda, ones_device, shape}.
+
+/**
+ * Exercises generated membership, sorted lookup, and bucketization leaves.
+ */
+pub lookup_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let values = ones_device([2], Float64, Strided, device_name);
+    let boundaries = ones_device([3], Float64, Strided, device_name);
+    let membership = isin_scalar(values, 0, true, 1, 0.0, false, false);
+    let membership_out = clone(membership);
+    isin_scalar_out(membership_out, values, 0, true, 1, 0.0, false, false);
+    let membership_tensor_out = clone(membership);
+    (isin_tensor_out(membership_tensor_out, values, values, false, false); let searched = searchsorted_tensor(boundaries, values, false, false, 0, boundaries, false);
+let searched_scalar = searchsorted_scalar(boundaries, true, 1, 0.0, false, false, 0, boundaries, false);
+let searched_out = ones_device([0], Int64, Strided, device_name);
+(searchsorted_tensor_out(searched_out, boundaries, values, false, false, 0, boundaries, false); let searched_scalar_out = ones_device([0], Int64, Strided, device_name);
+(searchsorted_scalar_out(
+    searched_scalar_out,
+    boundaries,
+    true,
+    1,
+    0.0,
+    false,
+    false,
+    0,
+    boundaries,
+    false,
+); let buckets_out = ones_device([0], Int64, Strided, device_name);
+(bucketize_tensor_out(buckets_out, values, boundaries, false, false); let bucket = bucketize_scalar(boundaries, true, 1, 0.0, false, false);
+let bucket_out = ones_device([0], Int64, Strided, device_name);
+(bucketize_scalar_out(bucket_out, boundaries, true, 1, 0.0, false, false); let valid =
+    shape(membership) == [2]
+        and shape(membership_out) == [2]
+        and shape(membership_tensor_out) == [2]
+        and shape(searched) == [2]
+        and shape(searched_scalar) == []
+        and shape(searched_out) == [2]
+        and shape(searched_scalar_out) == []
+        and shape(buckets_out) == [2]
+        and shape(bucket) == []
+        and shape(bucket_out) == []
+        and dtype(searched) == Int64
+        and dtype(bucket) == Int64
+        and is_cuda(membership) == expected_cuda
+        and is_cuda(bucket_out) == expected_cuda;
+(dispose(bucket_out); dispose(bucket); dispose(buckets_out); dispose(searched_scalar_out); dispose(searched_out); dispose(searched_scalar); dispose(searched); dispose(membership_tensor_out); dispose(membership_out); dispose(membership); dispose(boundaries); dispose(values); valid)))))).

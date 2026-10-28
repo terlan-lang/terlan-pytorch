@@ -1,0 +1,2147 @@
+module pytorch_cxx.TensorBehaviorTest.
+
+import pytorch.ActivationCompletion.{hardshrink_backward_float, hardshrink_backward_int, hardshrink_backward_out_float, hardshrink_backward_out_int, hardshrink_float, hardshrink_int, hardshrink_out_float, hardshrink_out_int, softplus_backward_float, softplus_backward_int, softplus_backward_out_float, softplus_backward_out_int, softplus_float, softplus_int, softplus_out_float, softplus_out_int, softshrink_backward_float, softshrink_backward_int, softshrink_backward_out_float, softshrink_backward_out_int, softshrink_float, softshrink_int, softshrink_out_float, softshrink_out_int, threshold_backward_float, threshold_backward_int, threshold_backward_out_float, threshold_backward_out_int, threshold_float, threshold_int, threshold_out_float, threshold_out_int}.
+import pytorch.BinaryCrossEntropyCompletion.{binary_cross_entropy, binary_cross_entropy_backward, binary_cross_entropy_backward_out, binary_cross_entropy_backward_weight, binary_cross_entropy_backward_weight_out, binary_cross_entropy_out, binary_cross_entropy_weight, binary_cross_entropy_weight_out, binary_cross_entropy_with_logits, binary_cross_entropy_with_logits_both_weights, binary_cross_entropy_with_logits_both_weights_out, binary_cross_entropy_with_logits_out, binary_cross_entropy_with_logits_positive_weight, binary_cross_entropy_with_logits_positive_weight_out, binary_cross_entropy_with_logits_weight, binary_cross_entropy_with_logits_weight_out}.
+import pytorch.Dense.{bmm, bmm_out, complex, divide_tensor, expand_as, fill_tensor, ger, ger_out, hardsigmoid_backward, hardswish_backward, infinitely_differentiable_gelu_backward, linalg_householder_product, linalg_matmul, matmul_out, matrix_exp_backward, mish_backward, mm, mm_out, multiply_tensor, mv, mv_out, orgqr, orgqr_out, outer, outer_out, polar, prelu, reshape_as, sigmoid_backward, silu_backward, special_chebyshev_polynomial_t, special_chebyshev_polynomial_u, special_chebyshev_polynomial_v, special_chebyshev_polynomial_w, special_gammainc, special_gammaincc, special_hermite_polynomial_h, special_hermite_polynomial_he, special_laguerre_polynomial_l, special_legendre_polynomial_p, special_shifted_chebyshev_polynomial_t, special_shifted_chebyshev_polynomial_u, special_shifted_chebyshev_polynomial_v, special_shifted_chebyshev_polynomial_w, tanh_backward, type_as, view_as}.
+import pytorch.Distance.{cosine_similarity, pairwise_distance}.
+import pytorch.Division.{div_right_float, div_right_float_in_place, div_right_float_mode, div_right_float_mode_in_place, div_right_float_mode_out, div_right_float_out, div_right_int, div_right_int_in_place, div_right_int_mode, div_right_int_mode_in_place, div_right_int_mode_out, div_right_int_out, div_tensor_in_place, div_tensor_mode, div_tensor_mode_in_place, div_tensor_mode_out, div_tensor_out, divide_right_float, divide_right_float_in_place, divide_right_float_mode, divide_right_float_mode_in_place, divide_right_int, divide_right_int_in_place, divide_right_int_mode, divide_right_int_mode_in_place, divide_tensor_in_place, divide_tensor_mode, divide_tensor_mode_in_place, divide_tensor_mode_out, divide_tensor_out, true_divide_right_float, true_divide_right_float_in_place, true_divide_right_int, true_divide_right_int_in_place, true_divide_tensor_in_place, true_divide_tensor_out}.
+import pytorch.DropoutCompletion.{alpha_dropout_in_place, dropout_in_place, feature_alpha_dropout, feature_alpha_dropout_in_place, feature_dropout_in_place}.
+import pytorch.ExtendedActivationCompletion.{celu_float, celu_in_place_float, celu_in_place_int, celu_int, celu_out_float, celu_out_int, elu_backward_float, elu_backward_int, elu_backward_out_float, elu_backward_out_int, elu_float, elu_in_place_float, elu_in_place_int, elu_int, elu_out_float, elu_out_int, hardtanh_backward_float, hardtanh_backward_int, hardtanh_backward_out_float, hardtanh_backward_out_int, hardtanh_float, hardtanh_in_place_float, hardtanh_in_place_int, hardtanh_int, hardtanh_out_float, hardtanh_out_int, leaky_relu_backward_float, leaky_relu_backward_int, leaky_relu_backward_out_float, leaky_relu_backward_out_int, leaky_relu_float, leaky_relu_in_place_float, leaky_relu_in_place_int, leaky_relu_int, leaky_relu_out_float, leaky_relu_out_int}.
+import pytorch.Fft.{fft, fft2, fft2_out, fft_out, fftfreq, fftfreq_out, fftn, fftn_out, fftshift, fftshift_all, hfft, hfft2, hfft2_out, hfft_out, hfftn, hfftn_out, ifft, ifft2, ifft2_out, ifft_out, ifftn, ifftn_out, ifftshift, ifftshift_all, ihfft, ihfft2, ihfft2_out, ihfft_out, ihfftn, ihfftn_out, irfft, irfft2, irfft2_out, irfft_out, irfftn, irfftn_out, rfft, rfft2, rfft2_out, rfft_out, rfftfreq, rfftfreq_out, rfftn, rfftn_out}.
+import pytorch.FillNative.{fill_diagonal_in_place, fill_scalar, fill_scalar_in_place, fill_scalar_out, fill_tensor_in_place, fill_tensor_out, masked_fill_scalar, masked_fill_scalar_in_place, masked_fill_scalar_out, masked_fill_tensor_in_place, masked_fill_tensor_out}.
+import pytorch.FunctionalCompletion.{diff_append, diff_basic, diff_both, diff_out_append, diff_out_basic, diff_out_both, diff_out_prepend, diff_prepend, group_norm_affine, group_norm_bias, group_norm_no_affine, group_norm_weight, linear_no_bias, linear_out_no_bias, linear_out_with_bias, linear_with_bias, log_softmax_default_dtype, log_softmax_dtype, log_softmax_out_default_dtype, log_softmax_out_dtype, masked_scatter_backward}.
+import pytorch.GluCompletion.{glu_backward_jvp, glu_backward_jvp_out, glu_backward_out, glu_jvp, glu_jvp_out, glu_out}.
+import pytorch.Gradients.{cumprod_backward, embedding_backward, embedding_dense_backward, embedding_dense_backward_out, embedding_sparse_backward, fake_quantize_per_channel_affine_cachemask_backward, fake_quantize_per_tensor_affine_cachemask_backward, gather_backward, gelu_backward, gelu_backward_out, glu_backward, logit_backward, logit_backward_epsilon, logit_backward_epsilon_out, logit_backward_out, masked_select_backward, soft_margin_loss_backward}.
+import pytorch.IndexFillNative.{index_fill_scalar, index_fill_scalar_in_place, index_fill_scalar_out, index_fill_tensor, index_fill_tensor_in_place, index_fill_tensor_out}.
+import pytorch.IndexMutationNative.{index_add, index_add_in_place, index_add_out, index_copy_in_place, index_copy_out, index_select_backward, index_select_out}.
+import pytorch.Indexing.{argsort_stable, bucketize, diag_embed, diagonal_copy, diagonal_scatter, index_copy, index_select, isin, masked_fill_tensor, masked_scatter, masked_scatter_in_place, masked_scatter_out, put, put_in_place, put_out, scatter, scatter_add, select_scatter, unfold_copy, where_tensor}.
+import pytorch.IntegrationCompletion.{cumulative_trapezoid_dx_float, cumulative_trapezoid_dx_int, cumulative_trapezoid_x, kl_div, trapezoid_dx_float, trapezoid_dx_int, trapezoid_x, trapz_dx, trapz_x}.
+import pytorch.LerpNative.{lerp_scalar, lerp_scalar_out, lerp_tensor, lerp_tensor_in_place, lerp_tensor_out}.
+import pytorch.Loss.{cosine_embedding_loss, hinge_embedding_loss, huber_loss, huber_loss_backward, huber_loss_backward_out, huber_loss_out, l1_loss, margin_ranking_loss, mse_loss_backward_out, mse_loss_out, poisson_nll_loss, smooth_l1_loss, smooth_l1_loss_backward, smooth_l1_loss_backward_out, smooth_l1_loss_out, soft_margin_loss, soft_margin_loss_backward_out, soft_margin_loss_out, triplet_margin_loss}.
+import pytorch.NanToNumNative.{nan_to_num_configured, nan_to_num_configured_in_place, nan_to_num_configured_out}.
+import pytorch.PaddingBackwardCompletion.{reflection_pad1d_backward, reflection_pad1d_backward_out, reflection_pad2d_backward, reflection_pad2d_backward_out, reflection_pad3d_backward, reflection_pad3d_backward_out, replication_pad1d_backward, replication_pad1d_backward_out, replication_pad2d_backward, replication_pad2d_backward_out, replication_pad3d_backward, replication_pad3d_backward_out}.
+import pytorch.PaddingNative.{constant_pad_configured, constant_pad_configured_out, pad_with_value, pad_without_value}.
+import pytorch.Regularization.{alpha_dropout, dropout, feature_dropout, native_dropout_backward}.
+import pytorch.ShapeCompletion.{channel_shuffle_out, col2im, col2im_out, im2col, im2col_out, narrow_copy_out, narrow_tensor, narrow_view, select_copy_out, select_scatter_out, tensordot, tensordot_out, trace_backward, transpose_copy_out, unfold, unfold_copy_out, zero, zero_out}.
+import pytorch.ShapeGradient.{diagonal, diagonal_backward, diagonal_backward_out, diagonal_scatter_out, select_backward, select_backward_out, slice_backward, slice_backward_out, unfold_backward, unfold_backward_out}.
+import pytorch.ShapePartition.{chunk, dsplit_indices, dsplit_sections, hsplit_indices, hsplit_sections, split_size, split_sizes, tensor_split_indices, tensor_split_sections, tensor_split_tensor, unbind, vsplit_indices, vsplit_sections}.
+import pytorch.SliceNative.{slice_all, slice_bounds, slice_copy_all, slice_copy_bounds, slice_copy_from, slice_copy_out_all, slice_copy_out_bounds, slice_copy_out_from, slice_copy_out_until, slice_copy_until, slice_from, slice_scatter_all, slice_scatter_bounds, slice_scatter_from, slice_scatter_out_all, slice_scatter_out_bounds, slice_scatter_out_from, slice_scatter_out_until, slice_scatter_until, slice_until}.
+import pytorch.Spatial.{affine_grid_generator, affine_grid_generator_backward, affine_grid_generator_out, grid_sampler, grid_sampler_2d, grid_sampler_2d_out, grid_sampler_3d, grid_sampler_3d_out}.
+import pytorch.Strided.{as_strided, as_strided_copy, as_strided_copy_offset, as_strided_copy_out, as_strided_copy_out_offset, as_strided_in_place, as_strided_in_place_offset, as_strided_offset, as_strided_scatter, as_strided_scatter_offset, as_strided_scatter_out, as_strided_scatter_out_offset}.
+import pytorch.Tensor.{Bool, Float64, Int64, Strided, Tensor, broadcast_tensors, ceil, clone, device, dispose, dispose_scalar, dtype, element_count, floor, from_ints, has_storage, is_complex, is_contiguous, is_cpu, is_cuda, is_defined, is_floating_point, is_leaf, is_quantized, is_signed, is_sparse, item, layout, meshgrid, meshgrid_indexing, mul_float, mul_int, ones, ones_device, ones_dtype, ones_layout, ones_options, rank, reciprocal, requires_grad, round, scalar_to_float, scalar_to_int, shape, sign, square, strides, trunc}.
+import pytorch.TensorJoining.{block_diag, block_diag_out, cartesian_prod, cat, cat_out, column_stack, column_stack_out, concat, concat_out, concatenate, concatenate_out, dstack, dstack_out, hstack, hstack_out, row_stack, row_stack_out, stack, stack_out, vstack, vstack_out}.
+import pytorch.WhereNative.{where_indices, where_scalar, where_scalar_other, where_scalar_self, where_tensor_out}.
+import std.core.Result.{Err, Ok}.
+
+@test
+pub generated_cxx_scalar_behavior(): Bool ->
+    let tensor = ones([1]);
+    let scaled = mul_int(tensor, 3);
+    let scalar = item(scaled);
+    let observed = scalar_to_int(scalar);
+    dispose_scalar(scalar);
+    dispose(scaled);
+    dispose(tensor);
+    case observed {
+        Ok(value) -> value == 3;
+        Err(_reason) -> false
+    }.
+
+@test
+pub generated_cxx_optional_dtype_behavior(): Bool ->
+    let tensor = ones_dtype([1], Float64);
+    let selected_dtype = dtype(tensor);
+    let scaled = mul_float(tensor, 3.5);
+    let scalar = item(scaled);
+    let observed = scalar_to_float(scalar);
+    dispose_scalar(scalar);
+    dispose(scaled);
+    dispose(tensor);
+    observed == 3.5 and selected_dtype == Float64.
+
+@test
+pub generated_cxx_optional_layout_behavior(): Bool ->
+    let tensor = ones_layout([2, 2], Float64, Strided);
+    let selected_dtype = dtype(tensor);
+    let selected_layout = layout(tensor);
+    let selected_rank = rank(tensor);
+    let selected_element_count = element_count(tensor);
+    let selected_shape = shape(tensor);
+    let selected_strides = strides(tensor);
+    let selected_flags =
+        is_defined(tensor)
+            and has_storage(tensor)
+            and is_contiguous(tensor)
+            and is_cpu(tensor)
+            and not is_cuda(tensor)
+            and not is_complex(tensor)
+            and is_floating_point(tensor)
+            and not is_quantized(tensor)
+            and is_signed(tensor)
+            and not is_sparse(tensor)
+            and not requires_grad(tensor)
+            and is_leaf(tensor);
+    dispose(tensor);
+    selected_dtype == Float64
+        and selected_layout == Strided
+        and selected_rank == 2
+        and selected_element_count == 4
+        and selected_shape == [2, 2]
+        and selected_strides == [2, 1]
+        and selected_flags.
+
+@test
+pub generated_cxx_optional_device_and_bool_behavior(): Bool ->
+    let device_tensor = ones_device([2], Float64, Strided, "cpu");
+    let options_tensor = ones_options([2], Float64, Strided, "cpu", false);
+    let device_ok =
+        dtype(device_tensor) == Float64
+            and layout(device_tensor) == Strided
+            and device(device_tensor) == "cpu";
+    let options_ok =
+        dtype(options_tensor) == Float64
+            and layout(options_tensor) == Strided
+            and device(options_tensor) == "cpu";
+    dispose(options_tensor);
+    dispose(device_tensor);
+    device_ok and options_ok.
+
+@test
+pub generated_cxx_distance_behavior(): Bool ->
+    let first = ones([1, 1]);
+    let second = mul_float(first, 2.0);
+    let cosine_explicit = cosine_similarity(first, second, 1, 1e-8);
+    let cosine_default = cosine_similarity(first, second);
+    let distance_explicit = pairwise_distance(first, second, 2.0, 0.000001, false);
+    let distance_default = pairwise_distance(first, second);
+    let cosine_explicit_scalar = item(cosine_explicit);
+    let cosine_default_scalar = item(cosine_default);
+    let distance_explicit_scalar = item(distance_explicit);
+    let distance_default_scalar = item(distance_default);
+    let cosine_explicit_value = scalar_to_float(cosine_explicit_scalar);
+    let cosine_default_value = scalar_to_float(cosine_default_scalar);
+    let distance_explicit_value = scalar_to_float(distance_explicit_scalar);
+    let distance_default_value = scalar_to_float(distance_default_scalar);
+    dispose_scalar(distance_default_scalar);
+    dispose_scalar(distance_explicit_scalar);
+    dispose_scalar(cosine_default_scalar);
+    dispose_scalar(cosine_explicit_scalar);
+    dispose(distance_default);
+    dispose(distance_explicit);
+    dispose(cosine_default);
+    dispose(cosine_explicit);
+    dispose(second);
+    dispose(first);
+    cosine_explicit_value == 1.0
+        and cosine_default_value == 1.0
+        and distance_explicit_value > 0.999
+        and distance_explicit_value < 1.001
+        and distance_default_value > 0.999
+        and distance_default_value < 1.001.
+
+@test
+pub generated_cxx_regularization_behavior(): Bool ->
+    let input = ones([1, 1, 1, 1]);
+    let mask = ones_dtype([1, 1, 1, 1], Bool);
+    let alpha = alpha_dropout(input, 0.5, false);
+    let element = dropout(input, 0.5, false);
+    let feature = feature_dropout(input, 0.5, false);
+    let backward = native_dropout_backward(input, mask, 2.0);
+    let alpha_scalar = item(alpha);
+    let element_scalar = item(element);
+    let feature_scalar = item(feature);
+    let backward_scalar = item(backward);
+    let valid =
+        scalar_to_float(alpha_scalar) == 1.0
+            and scalar_to_float(element_scalar) == 1.0
+            and scalar_to_float(feature_scalar) == 1.0
+            and scalar_to_float(backward_scalar) == 2.0;
+    dispose_scalar(backward_scalar);
+    dispose_scalar(feature_scalar);
+    dispose_scalar(element_scalar);
+    dispose_scalar(alpha_scalar);
+    dispose(backward);
+    dispose(feature);
+    dispose(element);
+    dispose(alpha);
+    dispose(mask);
+    dispose(input);
+    valid.
+
+@test
+pub generated_cxx_dropout_completion_behavior(): Bool ->
+    let input = ones([1, 1, 1, 1]);
+    let feature = feature_alpha_dropout(input, 0.5, false);
+    alpha_dropout_in_place(input, 0.5, false);
+    dropout_in_place(input, 0.5, false);
+    feature_alpha_dropout_in_place(input, 0.5, false);
+    feature_dropout_in_place(input, 0.5, false);
+    let input_scalar = item(input);
+    let feature_scalar = item(feature);
+    let valid = scalar_to_float(input_scalar) == 1.0 and scalar_to_float(feature_scalar) == 1.0;
+    (dispose_scalar(feature_scalar); dispose_scalar(input_scalar); dispose(feature); dispose(input); valid).
+
+@test
+pub generated_cxx_glu_completion_behavior(): Bool ->
+    let input = ones_dtype([1, 2], Float64);
+    let gradient_glu = ones_dtype([1, 1], Float64);
+    let input_tangent = ones_dtype([1, 2], Float64);
+    let gradient_glu_tangent = ones_dtype([1, 1], Float64);
+    let forward = ones_dtype([0], Float64);
+    glu_out(forward, input, 1);
+    let gradient_input = ones_dtype([0], Float64);
+    (glu_backward_out(gradient_input, gradient_glu, input, 1); let forward_jvp = glu_jvp(forward, input, input_tangent, 1);
+let forward_jvp_output = ones_dtype([0], Float64);
+(glu_jvp_out(forward_jvp_output, forward, input, input_tangent, 1); let backward_jvp = glu_backward_jvp(gradient_input, gradient_glu, input, gradient_glu_tangent, input_tangent, 1);
+let backward_jvp_output = ones_dtype([0], Float64);
+(glu_backward_jvp_out(
+    backward_jvp_output,
+    gradient_input,
+    gradient_glu,
+    input,
+    gradient_glu_tangent,
+    input_tangent,
+    1,
+); let forward_valid = tensor_scalar_between(forward, 0.73, 0.74);
+let forward_jvp_valid =
+    tensor_scalar_between(forward_jvp, 0.92, 0.94)
+        and tensor_scalar_between(forward_jvp_output, 0.92, 0.94);
+let gradient_valid = glu_scalar_pair_between(tensor_split_sections(gradient_input, 2, 1), 0.73, 0.74, 0.19, 0.2);
+let backward_jvp_valid =
+    glu_scalar_pair_between(tensor_split_sections(backward_jvp, 2, 1), 0.92, 0.94, 0.29, 0.31)
+        and glu_scalar_pair_between(tensor_split_sections(backward_jvp_output, 2, 1), 0.92, 0.94, 0.29, 0.31);
+let shapes_valid =
+    shape(input) == [1, 2]
+        and shape(forward) == [1, 1]
+        and shape(gradient_input) == [1, 2]
+        and shape(forward_jvp) == [1, 1]
+        and shape(backward_jvp) == [1, 2];
+(dispose(backward_jvp_output); dispose(backward_jvp); dispose(forward_jvp_output); dispose(forward_jvp); dispose(gradient_input); dispose(forward); dispose(gradient_glu_tangent); dispose(input_tangent); dispose(gradient_glu); dispose(input); forward_valid and forward_jvp_valid and gradient_valid and backward_jvp_valid and shapes_valid)))).
+
+@test
+pub generated_cxx_shape_gradient_behavior(): Bool ->
+    let matrix = ones_dtype([2, 2], Float64);
+    let diagonal_result = diagonal(matrix, 0, 0, 1);
+    let source = ones_dtype([2], Float64);
+    let diagonal_scatter_output = ones_dtype([0], Float64);
+    diagonal_scatter_out(diagonal_scatter_output, matrix, source, 0, 0, 1);
+    let gradient = ones_dtype([2], Float64);
+    let diagonal_gradient = diagonal_backward(gradient, [2, 2], 0, 0, 1);
+    let diagonal_gradient_output = ones_dtype([0], Float64);
+    (diagonal_backward_out(diagonal_gradient_output, gradient, [2, 2], 0, 0, 1); let selected_gradient = select_backward(gradient, [2, 2], 0, 0);
+let selected_gradient_output = ones_dtype([0], Float64);
+(select_backward_out(selected_gradient_output, gradient, [2, 2], 0, 0); let slice_gradient_input = ones_dtype([1, 2], Float64);
+let sliced_gradient = slice_backward(slice_gradient_input, [2, 2], 0, 0, 1, 1);
+let sliced_gradient_output = ones_dtype([0], Float64);
+(slice_backward_out(sliced_gradient_output, slice_gradient_input, [2, 2], 0, 0, 1, 1); let unfold_gradient_input = ones_dtype([2, 2], Float64);
+let unfolded_gradient = unfold_backward(unfold_gradient_input, [3], 0, 2, 1);
+let unfolded_gradient_output = ones_dtype([0], Float64);
+(unfold_backward_out(unfolded_gradient_output, unfold_gradient_input, [3], 0, 2, 1); let diagonal_values = glu_scalar_pair_between(tensor_split_sections(diagonal_result, 2, 0), 0.99, 1.01, 0.99, 1.01);
+let shapes_valid =
+    shape(diagonal_result) == [2]
+        and shape(diagonal_scatter_output) == [2, 2]
+        and shape(diagonal_gradient) == [2, 2]
+        and shape(diagonal_gradient_output) == [2, 2]
+        and shape(selected_gradient) == [2, 2]
+        and shape(selected_gradient_output) == [2, 2]
+        and shape(sliced_gradient) == [2, 2]
+        and shape(sliced_gradient_output) == [2, 2]
+        and shape(unfolded_gradient) == [3]
+        and shape(unfolded_gradient_output) == [3];
+let placement_valid =
+    is_cpu(diagonal_result)
+        and is_cpu(diagonal_scatter_output)
+        and is_cpu(diagonal_gradient)
+        and is_cpu(diagonal_gradient_output)
+        and is_cpu(selected_gradient)
+        and is_cpu(selected_gradient_output)
+        and is_cpu(sliced_gradient)
+        and is_cpu(sliced_gradient_output)
+        and is_cpu(unfolded_gradient)
+        and is_cpu(unfolded_gradient_output);
+(dispose(unfolded_gradient_output); dispose(unfolded_gradient); dispose(unfold_gradient_input); dispose(sliced_gradient_output); dispose(sliced_gradient); dispose(slice_gradient_input); dispose(selected_gradient_output); dispose(selected_gradient); dispose(diagonal_gradient_output); dispose(diagonal_gradient); dispose(gradient); dispose(diagonal_scatter_output); dispose(source); dispose(diagonal_result); dispose(matrix); diagonal_values and shapes_valid and placement_valid))))).
+
+@test
+pub generated_cxx_padding_backward_completion_behavior(): Bool ->
+    let input1 = ones_dtype([1, 1, 2], Float64);
+    let gradient1 = ones_dtype([1, 1, 4], Float64);
+    let reflection1 = reflection_pad1d_backward(gradient1, input1, [1, 1]);
+    let replication1 = replication_pad1d_backward(gradient1, input1, [1, 1]);
+    let reflection1_output = ones_dtype([0], Float64);
+    let replication1_output = ones_dtype([0], Float64);
+    reflection_pad1d_backward_out(reflection1_output, gradient1, input1, [1, 1]);
+    replication_pad1d_backward_out(replication1_output, gradient1, input1, [1, 1]);
+    let input2 = ones_dtype([1, 1, 2, 2], Float64);
+    let gradient2 = ones_dtype([1, 1, 4, 4], Float64);
+    let reflection2 = reflection_pad2d_backward(gradient2, input2, [1, 1, 1, 1]);
+    let replication2 = replication_pad2d_backward(gradient2, input2, [1, 1, 1, 1]);
+    let reflection2_output = ones_dtype([0], Float64);
+    let replication2_output = ones_dtype([0], Float64);
+    (reflection_pad2d_backward_out(reflection2_output, gradient2, input2, [1, 1, 1, 1]); replication_pad2d_backward_out(replication2_output, gradient2, input2, [1, 1, 1, 1]); let input3 = ones_dtype([1, 1, 2, 2, 2], Float64);
+let gradient3 = ones_dtype([1, 1, 4, 4, 4], Float64);
+let reflection3 = reflection_pad3d_backward(gradient3, input3, [1, 1, 1, 1, 1, 1]);
+let replication3 = replication_pad3d_backward(gradient3, input3, [1, 1, 1, 1, 1, 1]);
+let reflection3_output = ones_dtype([0], Float64);
+let replication3_output = ones_dtype([0], Float64);
+(reflection_pad3d_backward_out(reflection3_output, gradient3, input3, [1, 1, 1, 1, 1, 1]); replication_pad3d_backward_out(replication3_output, gradient3, input3, [1, 1, 1, 1, 1, 1]); let shapes_valid =
+    shape(reflection1) == [1, 1, 2]
+        and shape(replication1) == [1, 1, 2]
+        and shape(reflection1_output) == [1, 1, 2]
+        and shape(replication1_output) == [1, 1, 2]
+        and shape(reflection2) == [1, 1, 2, 2]
+        and shape(replication2) == [1, 1, 2, 2]
+        and shape(reflection2_output) == [1, 1, 2, 2]
+        and shape(replication2_output) == [1, 1, 2, 2]
+        and shape(reflection3) == [1, 1, 2, 2, 2]
+        and shape(replication3) == [1, 1, 2, 2, 2]
+        and shape(reflection3_output) == [1, 1, 2, 2, 2]
+        and shape(replication3_output) == [1, 1, 2, 2, 2];
+let placement_valid =
+    is_cpu(reflection1)
+        and is_cpu(replication1)
+        and is_cpu(reflection1_output)
+        and is_cpu(replication1_output)
+        and is_cpu(reflection2)
+        and is_cpu(replication2)
+        and is_cpu(reflection2_output)
+        and is_cpu(replication2_output)
+        and is_cpu(reflection3)
+        and is_cpu(replication3)
+        and is_cpu(reflection3_output)
+        and is_cpu(replication3_output);
+(dispose(replication3_output); dispose(reflection3_output); dispose(replication3); dispose(reflection3); dispose(gradient3); dispose(input3); dispose(replication2_output); dispose(reflection2_output); dispose(replication2); dispose(reflection2); dispose(gradient2); dispose(input2); dispose(replication1_output); dispose(reflection1_output); dispose(replication1); dispose(reflection1); dispose(gradient1); dispose(input1); shapes_valid and placement_valid))).
+
+@test
+pub generated_cxx_integration_completion_behavior(): Bool ->
+    let y = ones_dtype([3], Float64);
+    let x = ones_dtype([3], Float64);
+    let cumulative_int = cumulative_trapezoid_dx_int(y, 1, 0);
+    let cumulative_float = cumulative_trapezoid_dx_float(y, 0.5, 0);
+    let cumulative_x = cumulative_trapezoid_x(y, x, 0);
+    let trapezoid_int = trapezoid_dx_int(y, 2, 0);
+    let trapezoid_float = trapezoid_dx_float(y, 0.5, 0);
+    let trapezoid_coordinates = trapezoid_x(y, x, 0);
+    let trapz_spacing = trapz_dx(y, 1.0, 0);
+    let trapz_coordinates = trapz_x(y, x, 0);
+    let divergence = kl_div(y, x, 2, false);
+    let cumulative_valid = glu_scalar_pair_between(tensor_split_sections(cumulative_int, 2, 0), 0.99, 1.01, 1.99, 2.01);
+    let scalar_valid =
+        tensor_scalar_between(trapezoid_int, 3.99, 4.01)
+            and tensor_scalar_between(trapezoid_float, 0.99, 1.01)
+            and tensor_scalar_between(trapz_spacing, 1.99, 2.01);
+    let shapes_valid =
+        shape(cumulative_int) == [2]
+            and shape(cumulative_float) == [2]
+            and shape(cumulative_x) == [2]
+            and shape(trapezoid_int) == []
+            and shape(trapezoid_float) == []
+            and shape(trapezoid_coordinates) == []
+            and shape(trapz_spacing) == []
+            and shape(trapz_coordinates) == []
+            and shape(divergence) == [];
+    let placement_valid =
+        is_cpu(cumulative_int)
+            and is_cpu(cumulative_float)
+            and is_cpu(cumulative_x)
+            and is_cpu(trapezoid_int)
+            and is_cpu(trapezoid_float)
+            and is_cpu(trapezoid_coordinates)
+            and is_cpu(trapz_spacing)
+            and is_cpu(trapz_coordinates)
+            and is_cpu(divergence);
+    dispose(divergence);
+    dispose(trapz_coordinates);
+    dispose(trapz_spacing);
+    dispose(trapezoid_coordinates);
+    dispose(trapezoid_float);
+    dispose(trapezoid_int);
+    dispose(cumulative_x);
+    dispose(cumulative_float);
+    dispose(cumulative_int);
+    dispose(x);
+    dispose(y);
+    cumulative_valid and scalar_valid and shapes_valid and placement_valid.
+
+@test
+pub generated_cxx_nan_to_num_native_behavior(): Bool ->
+    let input = ones_dtype([2], Float64);
+    let replaced = nan_to_num_configured(input, false, 0.0, false, 0.0, false, 0.0);
+    let output = ones_dtype([0], Float64);
+    nan_to_num_configured_out(output, input, true, 7.0, true, 8.0, true, -9.0);
+    nan_to_num_configured_in_place(input, true, 3.0, false, 0.0, true, -4.0);
+    let values_valid =
+        glu_scalar_pair_between(tensor_split_sections(replaced, 2, 0), 0.99, 1.01, 0.99, 1.01)
+            and glu_scalar_pair_between(tensor_split_sections(output, 2, 0), 0.99, 1.01, 0.99, 1.01)
+            and glu_scalar_pair_between(tensor_split_sections(input, 2, 0), 0.99, 1.01, 0.99, 1.01);
+    let valid =
+        values_valid
+            and shape(replaced) == [2]
+            and shape(output) == [2]
+            and shape(input) == [2]
+            and is_cpu(replaced)
+            and is_cpu(output)
+            and is_cpu(input);
+    (dispose(output); dispose(replaced); dispose(input); valid).
+
+@test
+pub generated_cxx_strided_behavior(): Bool ->
+    let base = ones_dtype([8], Float64);
+    let view = as_strided(base, [2, 2], [3, 1]);
+    let offset_view = as_strided_offset(base, [2, 2], [3, 1], 1);
+    let copied = as_strided_copy(base, [2, 2], [3, 1]);
+    let offset_copy = as_strided_copy_offset(base, [2, 2], [3, 1], 1);
+    let copy_output = ones_dtype([0], Float64);
+    let offset_copy_output = ones_dtype([0], Float64);
+    as_strided_copy_out(copy_output, base, [2, 2], [3, 1]);
+    as_strided_copy_out_offset(offset_copy_output, base, [2, 2], [3, 1], 1);
+    let mutated = ones_dtype([8], Float64);
+    (as_strided_in_place(mutated, [2, 2], [3, 1]); as_strided_in_place_offset(mutated, [2, 2], [3, 1], 1); let source = ones_dtype([2, 2], Float64);
+let scattered = as_strided_scatter(base, source, [2, 2], [3, 1]);
+let offset_scattered = as_strided_scatter_offset(base, source, [2, 2], [3, 1], 1);
+let scatter_output = ones_dtype([0], Float64);
+let offset_scatter_output = ones_dtype([0], Float64);
+(as_strided_scatter_out(scatter_output, base, source, [2, 2], [3, 1]); as_strided_scatter_out_offset(offset_scatter_output, base, source, [2, 2], [3, 1], 1); let metadata_valid =
+    shape(view) == [2, 2]
+        and strides(view) == [3, 1]
+        and shape(offset_view) == [2, 2]
+        and strides(offset_view) == [3, 1]
+        and shape(mutated) == [2, 2]
+        and strides(mutated) == [3, 1];
+let shapes_valid =
+    shape(copied) == [2, 2]
+        and shape(offset_copy) == [2, 2]
+        and shape(copy_output) == [2, 2]
+        and shape(offset_copy_output) == [2, 2]
+        and shape(scattered) == [8]
+        and shape(offset_scattered) == [8]
+        and shape(scatter_output) == [8]
+        and shape(offset_scatter_output) == [8];
+let placement_valid =
+    is_cpu(view)
+        and is_cpu(offset_view)
+        and is_cpu(copied)
+        and is_cpu(offset_copy)
+        and is_cpu(copy_output)
+        and is_cpu(offset_copy_output)
+        and is_cpu(mutated)
+        and is_cpu(scattered)
+        and is_cpu(offset_scattered)
+        and is_cpu(scatter_output)
+        and is_cpu(offset_scatter_output);
+(dispose(offset_scatter_output); dispose(scatter_output); dispose(offset_scattered); dispose(scattered); dispose(source); dispose(mutated); dispose(offset_copy_output); dispose(copy_output); dispose(offset_copy); dispose(copied); dispose(offset_view); dispose(view); dispose(base); metadata_valid and shapes_valid and placement_valid))).
+
+tensor_scalar_between(tensor: Tensor, lower: Float, upper: Float): Bool ->
+    let scalar = item(tensor);
+    let value = scalar_to_float(scalar);
+    dispose_scalar(scalar);
+    value > lower and value < upper.
+
+glu_scalar_pair_between(
+    parts: List[Tensor],
+    first_lower: Float,
+    first_upper: Float,
+    second_lower: Float,
+    second_upper: Float,
+): Bool ->
+    case parts {
+        [first, second] ->
+            let valid =
+                tensor_scalar_between(first, first_lower, first_upper)
+                    and tensor_scalar_between(second, second_lower, second_upper);
+            (dispose(second); dispose(first); valid);
+        _ -> false
+    }.
+
+@test
+pub generated_cxx_spatial_behavior(): Bool ->
+    let theta = ones_dtype([1, 2, 3], Float64);
+    let affine = affine_grid_generator(theta, [1, 1, 2, 2], false);
+    let affine_output = ones_dtype([0], Float64);
+    affine_grid_generator_out(affine_output, theta, [1, 1, 2, 2], false);
+    let affine_backward = affine_grid_generator_backward(affine, [1, 1, 2, 2], false);
+    let input_2d = ones_dtype([1, 1, 2, 2], Float64);
+    let grid_2d = ones_dtype([1, 1, 1, 2], Float64);
+    let generic = grid_sampler(input_2d, grid_2d, 0, 0, true);
+    let sampled_2d = grid_sampler_2d(input_2d, grid_2d, 0, 0, true);
+    let sampled_2d_output = ones_dtype([0], Float64);
+    (grid_sampler_2d_out(sampled_2d_output, input_2d, grid_2d, 0, 0, true); let input_3d = ones_dtype([1, 1, 2, 2, 2], Float64);
+let grid_3d = ones_dtype([1, 1, 1, 1, 3], Float64);
+let sampled_3d = grid_sampler_3d(input_3d, grid_3d, 0, 0, true);
+let sampled_3d_output = ones_dtype([0], Float64);
+(grid_sampler_3d_out(sampled_3d_output, input_3d, grid_3d, 0, 0, true); let affine_valid =
+    shape(affine) == [1, 2, 2, 2]
+        and shape(affine_output) == [1, 2, 2, 2]
+        and shape(affine_backward) == [1, 2, 3];
+let sampling_valid =
+    tensor_scalar_between(generic, 0.99, 1.01)
+        and tensor_scalar_between(sampled_2d, 0.99, 1.01)
+        and tensor_scalar_between(sampled_2d_output, 0.99, 1.01)
+        and tensor_scalar_between(sampled_3d, 0.99, 1.01)
+        and tensor_scalar_between(sampled_3d_output, 0.99, 1.01);
+(dispose(sampled_3d_output); dispose(sampled_3d); dispose(grid_3d); dispose(input_3d); dispose(sampled_2d_output); dispose(sampled_2d); dispose(generic); dispose(grid_2d); dispose(input_2d); dispose(affine_backward); dispose(affine_output); dispose(affine); dispose(theta); affine_valid and sampling_valid))).
+
+@test
+pub generated_cxx_unary_family_behavior(): Bool ->
+    let original = ones([1]);
+    let ceiled = ceil(original);
+    let cloned = clone(ceiled);
+    let floored = floor(cloned);
+    let inverted = reciprocal(floored);
+    let rounded = round(inverted);
+    let signed = sign(rounded);
+    let squared = square(signed);
+    let truncated = trunc(squared);
+    let scalar = item(truncated);
+    let observed = scalar_to_int(scalar);
+    dispose_scalar(scalar);
+    dispose(truncated);
+    dispose(squared);
+    dispose(signed);
+    dispose(rounded);
+    dispose(inverted);
+    dispose(floored);
+    dispose(cloned);
+    dispose(ceiled);
+    dispose(original);
+    case observed {
+        Ok(value) -> value == 1;
+        Err(_reason) -> false
+    }.
+
+@test
+pub generated_cxx_owned_tensor_list_behavior(): Bool ->
+    let tensor = ones([2, 3]);
+    let rows = unbind(tensor);
+    let columns = unbind(tensor, 1);
+    dispose(tensor);
+    owned_row_pair(rows) and owned_column_triplet(columns).
+
+owned_row_pair(rows: List[Tensor]): Bool ->
+    case rows {
+        [first, second] -> validate_owned_row_pair(first, second);
+        _ -> false
+    }.
+
+validate_owned_row_pair(first: Tensor, second: Tensor): Bool ->
+    let valid = shape(first) == [3] and shape(second) == [3] and is_cpu(first) and is_cpu(second);
+    dispose(second);
+    dispose(first);
+    valid.
+
+owned_column_triplet(columns: List[Tensor]): Bool ->
+    case columns {
+        [first, second, third] -> validate_owned_column_triplet(first, second, third);
+        _ -> false
+    }.
+
+validate_owned_column_triplet(first: Tensor, second: Tensor, third: Tensor): Bool ->
+    let valid =
+        shape(first) == [2]
+            and shape(second) == [2]
+            and shape(third) == [2]
+            and is_cpu(first)
+            and is_cpu(second)
+            and is_cpu(third);
+    dispose(third);
+    dispose(second);
+    dispose(first);
+    valid.
+
+@test
+pub generated_cxx_tensor_partition_family_behavior(): Bool ->
+    let tensor = ones([4, 2]);
+    let chunked = chunk(tensor, 2);
+    let split_by_size = split_size(tensor, 2);
+    let split_by_sizes = split_sizes(tensor, [1, 3]);
+    let split_by_sections = tensor_split_sections(tensor, 2);
+    let split_by_indices = tensor_split_indices(tensor, [1, 3]);
+    let tensor_indices = ones_dtype([1], Int64);
+    let split_by_tensor = tensor_split_tensor(tensor, tensor_indices);
+    dispose(tensor_indices);
+    dispose(tensor);
+    let chunk_ok = owned_partition_pair(chunked, 2, 2);
+    let size_ok = owned_partition_pair(split_by_size, 2, 2);
+    let sizes_ok = owned_partition_pair(split_by_sizes, 1, 3);
+    let sections_ok = owned_partition_pair(split_by_sections, 2, 2);
+    let indices_ok = owned_partition_triplet(split_by_indices, 1, 2, 1);
+    let tensor_ok = owned_partition_pair(split_by_tensor, 1, 3);
+    let cube = ones([2, 2, 2]);
+    let depth_sections = dsplit_sections(cube, 2);
+    let depth_indices = dsplit_indices(cube, [1]);
+    let horizontal_sections = hsplit_sections(cube, 2);
+    let horizontal_indices = hsplit_indices(cube, [1]);
+    let vertical_sections = vsplit_sections(cube, 2);
+    let vertical_indices = vsplit_indices(cube, [1]);
+    (dispose(cube); let depth_ok =
+    owned_partition_shape_pair(depth_sections, [2, 2, 1])
+        and owned_partition_shape_pair(depth_indices, [2, 2, 1]);
+let horizontal_ok =
+    owned_partition_shape_pair(horizontal_sections, [2, 1, 2])
+        and owned_partition_shape_pair(horizontal_indices, [2, 1, 2]);
+let vertical_ok =
+    owned_partition_shape_pair(vertical_sections, [1, 2, 2])
+        and owned_partition_shape_pair(vertical_indices, [1, 2, 2]);
+chunk_ok
+    and size_ok
+    and sizes_ok
+    and sections_ok
+    and indices_ok
+    and tensor_ok
+    and depth_ok
+    and horizontal_ok
+    and vertical_ok).
+
+@test
+pub generated_cxx_resource_list_input_behavior(): Bool ->
+    let first = ones([1, 2]);
+    let second = ones([1, 2]);
+    let joined = cat([first, second], 0);
+    let repeated = cat([first, first]);
+    let stacked = stack([first, second], 1);
+    let stacked_default = stack([second, second]);
+    dispose(second);
+    dispose(first);
+    let valid =
+        shape(joined) == [2, 2]
+            and shape(repeated) == [2, 2]
+            and shape(stacked) == [1, 2, 2]
+            and shape(stacked_default) == [2, 1, 2]
+            and is_cpu(joined)
+            and is_cpu(repeated)
+            and is_cpu(stacked)
+            and is_cpu(stacked_default);
+    (dispose(stacked_default); dispose(stacked); dispose(repeated); dispose(joined); valid).
+
+@test
+pub generated_cxx_tensor_joining_family_behavior(): Bool ->
+    let first = ones([2]);
+    let second = ones([2]);
+    let vertical = vstack([first, second]);
+    let horizontal = hstack([first, second]);
+    let columns = column_stack([first, second]);
+    let depth = dstack([first, second]);
+    let blocks = block_diag([first, second]);
+    let product_axis = ones([3]);
+    let product = cartesian_prod([first, product_axis]);
+    let concatenated = concat([first, second], 0);
+    let concatenated_default = concat([first, second]);
+    let long_concatenated = concatenate([first, second], 0);
+    let long_concatenated_default = concatenate([first, second]);
+    let rows = row_stack([first, second]);
+    dispose(product_axis);
+    dispose(second);
+    dispose(first);
+    let valid =
+        shape(vertical) == [2, 2]
+            and shape(horizontal) == [4]
+            and shape(columns) == [2, 2]
+            and shape(depth) == [1, 2, 2]
+            and shape(blocks) == [2, 4]
+            and shape(product) == [6, 2]
+            and shape(concatenated) == [4]
+            and shape(concatenated_default) == [4]
+            and shape(long_concatenated) == [4]
+            and shape(long_concatenated_default) == [4]
+            and shape(rows) == [2, 2]
+            and is_cpu(vertical)
+            and is_cpu(horizontal)
+            and is_cpu(columns)
+            and is_cpu(depth)
+            and is_cpu(blocks)
+            and is_cpu(product)
+            and is_cpu(concatenated)
+            and is_cpu(concatenated_default)
+            and is_cpu(long_concatenated)
+            and is_cpu(long_concatenated_default)
+            and is_cpu(rows);
+    (dispose(rows); dispose(long_concatenated_default); dispose(long_concatenated); dispose(concatenated_default); dispose(concatenated); dispose(product); dispose(blocks); dispose(depth); dispose(columns); dispose(horizontal); dispose(vertical); valid).
+
+@test
+pub generated_cxx_tensor_joining_out_family_behavior(): Bool ->
+    let first = ones([2]);
+    let second = ones([2]);
+    let vertical = ones([0]);
+    let horizontal = ones([0]);
+    let columns = ones([0]);
+    let depth = ones([0]);
+    let blocks = ones([0]);
+    let cat_explicit = ones([0]);
+    let cat_default_output = ones([0]);
+    let stack_explicit = ones([0]);
+    let stack_default_output = ones([0]);
+    let concat_explicit = ones([0]);
+    let concat_default_output = ones([0]);
+    let concatenate_explicit = ones([0]);
+    let concatenate_default_output = ones([0]);
+    let rows = ones([0]);
+    vstack_out(vertical, [first, second]);
+    hstack_out(horizontal, [first, second]);
+    column_stack_out(columns, [first, second]);
+    dstack_out(depth, [first, second]);
+    block_diag_out(blocks, [first, second]);
+    cat_out(cat_explicit, [first, second], 0);
+    cat_out(cat_default_output, [first, second]);
+    stack_out(stack_explicit, [first, second], 0);
+    stack_out(stack_default_output, [first, second]);
+    concat_out(concat_explicit, [first, second], 0);
+    concat_out(concat_default_output, [first, second]);
+    concatenate_out(concatenate_explicit, [first, second], 0);
+    concatenate_out(concatenate_default_output, [first, second]);
+    row_stack_out(rows, [first, second]);
+    dispose(second);
+    dispose(first);
+    let valid =
+        shape(vertical) == [2, 2]
+            and shape(horizontal) == [4]
+            and shape(columns) == [2, 2]
+            and shape(depth) == [1, 2, 2]
+            and shape(blocks) == [2, 4]
+            and shape(cat_explicit) == [4]
+            and shape(cat_default_output) == [4]
+            and shape(stack_explicit) == [2, 2]
+            and shape(stack_default_output) == [2, 2]
+            and shape(concat_explicit) == [4]
+            and shape(concat_default_output) == [4]
+            and shape(concatenate_explicit) == [4]
+            and shape(concatenate_default_output) == [4]
+            and shape(rows) == [2, 2]
+            and is_cpu(vertical)
+            and is_cpu(horizontal)
+            and is_cpu(columns)
+            and is_cpu(depth)
+            and is_cpu(blocks)
+            and is_cpu(cat_explicit)
+            and is_cpu(cat_default_output)
+            and is_cpu(stack_explicit)
+            and is_cpu(stack_default_output)
+            and is_cpu(concat_explicit)
+            and is_cpu(concat_default_output)
+            and is_cpu(concatenate_explicit)
+            and is_cpu(concatenate_default_output)
+            and is_cpu(rows);
+    (dispose(rows); dispose(concatenate_default_output); dispose(concatenate_explicit); dispose(concat_default_output); dispose(concat_explicit); dispose(stack_default_output); dispose(stack_explicit); dispose(cat_default_output); dispose(cat_explicit); dispose(blocks); dispose(depth); dispose(columns); dispose(horizontal); dispose(vertical); valid).
+
+@test
+pub generated_cxx_free_resource_list_round_trip_behavior(): Bool ->
+    let row = ones([1, 2]);
+    let column = ones([2, 1]);
+    let broadcast = broadcast_tensors([row, column]);
+    dispose(column);
+    dispose(row);
+    validate_cpu_broadcast_pair(broadcast).
+
+validate_cpu_broadcast_pair(values: List[Tensor]): Bool ->
+    case values {
+        [first, second] -> validate_cpu_broadcast_values(first, second);
+        _ -> false
+    }.
+
+validate_cpu_broadcast_values(first: Tensor, second: Tensor): Bool ->
+    let valid = shape(first) == [2, 2] and shape(second) == [2, 2] and is_cpu(first) and is_cpu(second);
+    dispose(second);
+    dispose(first);
+    valid.
+
+@test
+pub generated_cxx_meshgrid_behavior(): Bool ->
+    let first_axis = ones([2]);
+    let second_axis = ones([3]);
+    let default_grid = meshgrid([first_axis, second_axis]);
+    let xy_grid = meshgrid_indexing([first_axis, second_axis], "xy");
+    dispose(second_axis);
+    dispose(first_axis);
+    validate_cpu_grid_pair(default_grid, [2, 3]) and validate_cpu_grid_pair(xy_grid, [3, 2]).
+
+@test
+pub generated_cxx_index_fill_behavior(): Bool ->
+    let input = ones_dtype([2, 2], Float64);
+    let index = ones_dtype([1], Int64);
+    let scalar_result = index_fill_scalar(input, 0, index, true, 3, 0.0);
+    let scalar_output = ones_dtype([0], Float64);
+    index_fill_scalar_out(scalar_output, input, 0, index, false, 0, 4.0);
+    let scalar_mutated = ones_dtype([2, 2], Float64);
+    (index_fill_scalar_in_place(scalar_mutated, 0, index, true, 5, 0.0); let tensor_value = ones_dtype([], Float64);
+let tensor_result = index_fill_tensor(input, 0, index, tensor_value);
+let tensor_output = ones_dtype([0], Float64);
+(index_fill_tensor_out(tensor_output, input, 0, index, tensor_value); let tensor_mutated = ones_dtype([2, 2], Float64);
+(index_fill_tensor_in_place(tensor_mutated, 0, index, tensor_value); let valid =
+    shape(tensor_value) == []
+        and shape(scalar_result) == [2, 2]
+        and shape(scalar_output) == [2, 2]
+        and shape(scalar_mutated) == [2, 2]
+        and shape(tensor_result) == [2, 2]
+        and shape(tensor_output) == [2, 2]
+        and shape(tensor_mutated) == [2, 2]
+        and is_cpu(scalar_result)
+        and is_cpu(scalar_output)
+        and is_cpu(scalar_mutated)
+        and is_cpu(tensor_result)
+        and is_cpu(tensor_output)
+        and is_cpu(tensor_mutated);
+(dispose(tensor_mutated); dispose(tensor_output); dispose(tensor_result); dispose(tensor_value); dispose(scalar_mutated); dispose(scalar_output); dispose(scalar_result); dispose(index); dispose(input); valid)))).
+
+@test
+pub generated_cxx_lerp_behavior(): Bool ->
+    let input = ones_dtype([1], Float64);
+    let end = mul_float(input, 3.0);
+    let scalar_result = lerp_scalar(input, end, false, 0, 0.5);
+    let scalar_output = ones_dtype([0], Float64);
+    lerp_scalar_out(scalar_output, input, end, true, 1, 0.0);
+    let weight = ones_dtype([1], Float64);
+    let tensor_result = lerp_tensor(input, end, weight);
+    let tensor_output = ones_dtype([0], Float64);
+    (lerp_tensor_out(tensor_output, input, end, weight); let tensor_mutated = ones_dtype([1], Float64);
+(lerp_tensor_in_place(tensor_mutated, end, weight); let scalar_result_value = item(scalar_result);
+let scalar_output_value = item(scalar_output);
+let tensor_result_value = item(tensor_result);
+let tensor_output_value = item(tensor_output);
+let tensor_mutated_value = item(tensor_mutated);
+let valid =
+    scalar_to_float(scalar_result_value) == 2.0
+        and scalar_to_float(scalar_output_value) == 3.0
+        and scalar_to_float(tensor_result_value) == 3.0
+        and scalar_to_float(tensor_output_value) == 3.0
+        and scalar_to_float(tensor_mutated_value) == 3.0;
+(dispose_scalar(tensor_mutated_value); dispose_scalar(tensor_output_value); dispose_scalar(tensor_result_value); dispose_scalar(scalar_output_value); dispose_scalar(scalar_result_value); dispose(tensor_mutated); dispose(tensor_output); dispose(tensor_result); dispose(weight); dispose(scalar_output); dispose(scalar_result); dispose(end); dispose(input); valid))).
+
+@test
+pub generated_cxx_where_native_behavior(): Bool ->
+    let condition = ones_dtype([1], Bool);
+    let base = ones_dtype([1], Float64);
+    let when_true = mul_float(base, 4.0);
+    let when_false = mul_float(base, 5.0);
+    let indices = where_indices(condition);
+    let scalar_result = where_scalar(condition, true, 2, 0.0, false, 0, 3.0);
+    let scalar_other_result = where_scalar_other(condition, when_true, false, 0, 5.0);
+    let scalar_self_result = where_scalar_self(condition, false, 0, 6.0, when_false);
+    let tensor_output = ones_dtype([0], Float64);
+    where_tensor_out(tensor_output, condition, when_true, when_false);
+    let scalar_value = item(scalar_result);
+    let scalar_other_value = item(scalar_other_result);
+    let scalar_self_value = item(scalar_self_result);
+    let tensor_output_value = item(tensor_output);
+    let indices_valid = validate_cpu_where_indices(indices);
+    let valid =
+        indices_valid
+            and scalar_to_float(scalar_value) == 2.0
+            and scalar_to_float(scalar_other_value) == 4.0
+            and scalar_to_float(scalar_self_value) == 6.0
+            and scalar_to_float(tensor_output_value) == 4.0
+            and is_cpu(scalar_result)
+            and is_cpu(scalar_other_result)
+            and is_cpu(scalar_self_result)
+            and is_cpu(tensor_output);
+    (dispose_scalar(tensor_output_value); dispose_scalar(scalar_self_value); dispose_scalar(scalar_other_value); dispose_scalar(scalar_value); dispose(tensor_output); dispose(scalar_self_result); dispose(scalar_other_result); dispose(scalar_result); dispose(when_false); dispose(when_true); dispose(base); dispose(condition); valid).
+
+@test
+pub generated_cxx_index_mutation_native_behavior(): Bool ->
+    let input = ones_dtype([2], Float64);
+    let index = ones_dtype([1], Int64);
+    let source_base = ones_dtype([1], Float64);
+    let source = mul_float(source_base, 2.0);
+    let added = index_add(input, 0, index, source, true, 2, 0.0);
+    let added_output = ones_dtype([0], Float64);
+    index_add_out(added_output, input, 0, index, source, true, 3, 0.0);
+    let added_mutated = ones_dtype([2], Float64);
+    (index_add_in_place(added_mutated, 0, index, source, false, 0, 0.5); let copied_output = ones_dtype([0], Float64);
+(index_copy_out(copied_output, input, 0, index, source); let copied_mutated = ones_dtype([2], Float64);
+(index_copy_in_place(copied_mutated, 0, index, source); let backward = index_select_backward(source, [2], 0, index);
+let added_selected = ones_dtype([0], Float64);
+let added_output_selected = ones_dtype([0], Float64);
+let added_mutated_selected = ones_dtype([0], Float64);
+let copied_output_selected = ones_dtype([0], Float64);
+let copied_mutated_selected = ones_dtype([0], Float64);
+let input_selected = ones_dtype([0], Float64);
+let backward_selected = ones_dtype([0], Float64);
+(index_select_out(added_selected, added, 0, index); index_select_out(added_output_selected, added_output, 0, index); index_select_out(added_mutated_selected, added_mutated, 0, index); index_select_out(copied_output_selected, copied_output, 0, index); index_select_out(copied_mutated_selected, copied_mutated, 0, index); index_select_out(input_selected, input, 0, index); index_select_out(backward_selected, backward, 0, index); let added_value = item(added_selected);
+let added_output_value = item(added_output_selected);
+let added_mutated_value = item(added_mutated_selected);
+let copied_output_value = item(copied_output_selected);
+let copied_mutated_value = item(copied_mutated_selected);
+let input_value = item(input_selected);
+let backward_value = item(backward_selected);
+let valid =
+    shape(added) == [2]
+        and shape(added_output) == [2]
+        and shape(added_mutated) == [2]
+        and shape(copied_output) == [2]
+        and shape(copied_mutated) == [2]
+        and shape(backward) == [2]
+        and scalar_to_float(added_value) == 5.0
+        and scalar_to_float(added_output_value) == 7.0
+        and scalar_to_float(added_mutated_value) == 2.0
+        and scalar_to_float(copied_output_value) == 2.0
+        and scalar_to_float(copied_mutated_value) == 2.0
+        and scalar_to_float(input_value) == 1.0
+        and scalar_to_float(backward_value) == 2.0
+        and is_cpu(added)
+        and is_cpu(added_output)
+        and is_cpu(added_mutated)
+        and is_cpu(copied_output)
+        and is_cpu(copied_mutated)
+        and is_cpu(backward);
+(dispose_scalar(backward_value); dispose_scalar(input_value); dispose_scalar(copied_mutated_value); dispose_scalar(copied_output_value); dispose_scalar(added_mutated_value); dispose_scalar(added_output_value); dispose_scalar(added_value); dispose(backward_selected); dispose(input_selected); dispose(copied_mutated_selected); dispose(copied_output_selected); dispose(added_mutated_selected); dispose(added_output_selected); dispose(added_selected); dispose(backward); dispose(copied_mutated); dispose(copied_output); dispose(added_mutated); dispose(added_output); dispose(added); dispose(source); dispose(source_base); dispose(index); dispose(input); valid))))).
+
+@test
+pub generated_cxx_fill_native_behavior(): Bool ->
+    let input = ones_dtype([1], Float64);
+    let mask = ones_dtype([1], Bool);
+    let tensor_value_base = ones_dtype([], Float64);
+    let tensor_value = mul_float(tensor_value_base, 7.0);
+    let scalar_result = fill_scalar(input, true, 2, 0.0);
+    let scalar_output = ones_dtype([0], Float64);
+    fill_scalar_out(scalar_output, input, false, 0, 3.0);
+    let scalar_mutated = ones_dtype([1], Float64);
+    (fill_scalar_in_place(scalar_mutated, true, 4, 0.0); let tensor_output = ones_dtype([0], Float64);
+(fill_tensor_out(tensor_output, input, tensor_value); let tensor_mutated = ones_dtype([1], Float64);
+(fill_tensor_in_place(tensor_mutated, tensor_value); let diagonal_mutated = ones_dtype([1, 1], Float64);
+(fill_diagonal_in_place(diagonal_mutated, false, 0, 8.0, false); let masked_scalar_result = masked_fill_scalar(input, mask, true, 9, 0.0);
+let masked_scalar_output = ones_dtype([0], Float64);
+(masked_fill_scalar_out(masked_scalar_output, input, mask, false, 0, 10.0); let masked_scalar_mutated = ones_dtype([1], Float64);
+(masked_fill_scalar_in_place(masked_scalar_mutated, mask, true, 11, 0.0); let masked_tensor_output = ones_dtype([0], Float64);
+(masked_fill_tensor_out(masked_tensor_output, input, mask, tensor_value); let masked_tensor_mutated = ones_dtype([1], Float64);
+(masked_fill_tensor_in_place(masked_tensor_mutated, mask, tensor_value); let valid =
+    tensor_scalar_between(scalar_result, 1.99, 2.01)
+        and tensor_scalar_between(scalar_output, 2.99, 3.01)
+        and tensor_scalar_between(scalar_mutated, 3.99, 4.01)
+        and tensor_scalar_between(tensor_output, 6.99, 7.01)
+        and tensor_scalar_between(tensor_mutated, 6.99, 7.01)
+        and tensor_scalar_between(diagonal_mutated, 7.99, 8.01)
+        and tensor_scalar_between(masked_scalar_result, 8.99, 9.01)
+        and tensor_scalar_between(masked_scalar_output, 9.99, 10.01)
+        and tensor_scalar_between(masked_scalar_mutated, 10.99, 11.01)
+        and tensor_scalar_between(masked_tensor_output, 6.99, 7.01)
+        and tensor_scalar_between(masked_tensor_mutated, 6.99, 7.01)
+        and is_cpu(scalar_result)
+        and is_cpu(masked_tensor_mutated);
+(dispose(masked_tensor_mutated); dispose(masked_tensor_output); dispose(masked_scalar_mutated); dispose(masked_scalar_output); dispose(masked_scalar_result); dispose(diagonal_mutated); dispose(tensor_mutated); dispose(tensor_output); dispose(scalar_mutated); dispose(scalar_output); dispose(scalar_result); dispose(tensor_value); dispose(tensor_value_base); dispose(mask); dispose(input); valid))))))))).
+
+@test
+pub generated_cxx_activation_completion_behavior(): Bool ->
+    let input = ones_dtype([1], Float64);
+    let gradient = ones_dtype([1], Float64);
+    let hard_forward =
+        activation_pair(
+            hardshrink_int(input, 2),
+            hardshrink_float(input, 0.5),
+            -0.01,
+            0.01,
+            0.99,
+            1.01,
+        );
+    let hard_out_int = ones_dtype([0], Float64);
+    let hard_out_float = ones_dtype([0], Float64);
+    hardshrink_out_int(hard_out_int, input, 2);
+    hardshrink_out_float(hard_out_float, input, 0.5);
+    let hard_out = activation_pair(hard_out_int, hard_out_float, -0.01, 0.01, 0.99, 1.01);
+    let hard_backward =
+        activation_pair(
+            hardshrink_backward_int(gradient, input, 2),
+            hardshrink_backward_float(gradient, input, 0.5),
+            -0.01,
+            0.01,
+            0.99,
+            1.01,
+        );
+    let hard_backward_out_int_value = ones_dtype([0], Float64);
+    let hard_backward_out_float_value = ones_dtype([0], Float64);
+    (hardshrink_backward_out_int(hard_backward_out_int_value, gradient, input, 2); hardshrink_backward_out_float(hard_backward_out_float_value, gradient, input, 0.5); let hard_backward_out =
+    activation_pair(
+        hard_backward_out_int_value,
+        hard_backward_out_float_value,
+        -0.01,
+        0.01,
+        0.99,
+        1.01,
+    );
+let soft_forward = activation_pair(softshrink_int(input, 2), softshrink_float(input, 0.5), -0.01, 0.01, 0.49, 0.51);
+let soft_out_int = ones_dtype([0], Float64);
+let soft_out_float = ones_dtype([0], Float64);
+(softshrink_out_int(soft_out_int, input, 2); softshrink_out_float(soft_out_float, input, 0.5); let soft_out = activation_pair(soft_out_int, soft_out_float, -0.01, 0.01, 0.49, 0.51);
+let soft_backward =
+    activation_pair(
+        softshrink_backward_int(gradient, input, 2),
+        softshrink_backward_float(gradient, input, 0.5),
+        -0.01,
+        0.01,
+        0.99,
+        1.01,
+    );
+let soft_backward_out_int_value = ones_dtype([0], Float64);
+let soft_backward_out_float_value = ones_dtype([0], Float64);
+(softshrink_backward_out_int(soft_backward_out_int_value, gradient, input, 2); softshrink_backward_out_float(soft_backward_out_float_value, gradient, input, 0.5); let soft_backward_out =
+    activation_pair(
+        soft_backward_out_int_value,
+        soft_backward_out_float_value,
+        -0.01,
+        0.01,
+        0.99,
+        1.01,
+    );
+let plus_forward =
+    activation_pair(
+        softplus_int(input, 1, 20),
+        softplus_float(input, 1.0, 20.0),
+        1.31,
+        1.32,
+        1.31,
+        1.32,
+    );
+let plus_out_int = ones_dtype([0], Float64);
+let plus_out_float = ones_dtype([0], Float64);
+(softplus_out_int(plus_out_int, input, 1, 20); softplus_out_float(plus_out_float, input, 1.0, 20.0); let plus_out = activation_pair(plus_out_int, plus_out_float, 1.31, 1.32, 1.31, 1.32);
+let plus_backward =
+    activation_pair(
+        softplus_backward_int(gradient, input, 1, 20),
+        softplus_backward_float(gradient, input, 1.0, 20.0),
+        0.73,
+        0.74,
+        0.73,
+        0.74,
+    );
+let plus_backward_out_int_value = ones_dtype([0], Float64);
+let plus_backward_out_float_value = ones_dtype([0], Float64);
+(softplus_backward_out_int(plus_backward_out_int_value, gradient, input, 1, 20); softplus_backward_out_float(plus_backward_out_float_value, gradient, input, 1.0, 20.0); let plus_backward_out =
+    activation_pair(
+        plus_backward_out_int_value,
+        plus_backward_out_float_value,
+        0.73,
+        0.74,
+        0.73,
+        0.74,
+    );
+let threshold_forward =
+    activation_pair(
+        threshold_int(input, 2, 3),
+        threshold_float(input, 0.5, 4.0),
+        2.99,
+        3.01,
+        0.99,
+        1.01,
+    );
+let threshold_out_int_value = ones_dtype([0], Float64);
+let threshold_out_float_value = ones_dtype([0], Float64);
+(threshold_out_int(threshold_out_int_value, input, 2, 3); threshold_out_float(threshold_out_float_value, input, 0.5, 4.0); let threshold_out = activation_pair(threshold_out_int_value, threshold_out_float_value, 2.99, 3.01, 0.99, 1.01);
+let threshold_backward =
+    activation_pair(
+        threshold_backward_int(gradient, input, 2),
+        threshold_backward_float(gradient, input, 0.5),
+        -0.01,
+        0.01,
+        0.99,
+        1.01,
+    );
+let threshold_backward_out_int_value = ones_dtype([0], Float64);
+let threshold_backward_out_float_value = ones_dtype([0], Float64);
+(threshold_backward_out_int(threshold_backward_out_int_value, gradient, input, 2); threshold_backward_out_float(threshold_backward_out_float_value, gradient, input, 0.5); let threshold_backward_out =
+    activation_pair(
+        threshold_backward_out_int_value,
+        threshold_backward_out_float_value,
+        -0.01,
+        0.01,
+        0.99,
+        1.01,
+    );
+(dispose(gradient); dispose(input); hard_forward
+    and hard_out
+    and hard_backward
+    and hard_backward_out
+    and soft_forward
+    and soft_out
+    and soft_backward
+    and soft_backward_out
+    and plus_forward
+    and plus_out
+    and plus_backward
+    and plus_backward_out
+    and threshold_forward
+    and threshold_out
+    and threshold_backward
+    and threshold_backward_out)))))))).
+
+@test
+pub generated_cxx_extended_activation_completion_behavior(): Bool ->
+    let input = ones_dtype([1], Float64);
+    let gradient = ones_dtype([1], Float64);
+    let celu_forward = activation_pair(celu_int(input, 1), celu_float(input, 0.5), 0.99, 1.01, 0.99, 1.01);
+    let celu_out_int_value = ones_dtype([0], Float64);
+    let celu_out_float_value = ones_dtype([0], Float64);
+    celu_out_int(celu_out_int_value, input, 1);
+    celu_out_float(celu_out_float_value, input, 0.5);
+    let celu_output = activation_pair(celu_out_int_value, celu_out_float_value, 0.99, 1.01, 0.99, 1.01);
+    let celu_mutated_int = clone(input);
+    let celu_mutated_float = clone(input);
+    (celu_in_place_int(celu_mutated_int, 1); celu_in_place_float(celu_mutated_float, 0.5); let celu_mutated = activation_pair(celu_mutated_int, celu_mutated_float, 0.99, 1.01, 0.99, 1.01);
+let elu_forward =
+    activation_pair(
+        elu_int(input, 1, 1, 1),
+        elu_float(input, 0.5, 2.0, 0.5),
+        0.99,
+        1.01,
+        1.99,
+        2.01,
+    );
+let elu_out_int_value = ones_dtype([0], Float64);
+let elu_out_float_value = ones_dtype([0], Float64);
+(elu_out_int(elu_out_int_value, input, 1, 1, 1); elu_out_float(elu_out_float_value, input, 0.5, 2.0, 0.5); let elu_output = activation_pair(elu_out_int_value, elu_out_float_value, 0.99, 1.01, 1.99, 2.01);
+let elu_mutated_int = clone(input);
+let elu_mutated_float = clone(input);
+(elu_in_place_int(elu_mutated_int, 1, 1, 1); elu_in_place_float(elu_mutated_float, 0.5, 2.0, 0.5); let elu_mutated = activation_pair(elu_mutated_int, elu_mutated_float, 0.99, 1.01, 1.99, 2.01);
+let elu_backward =
+    activation_pair(
+        elu_backward_int(gradient, 1, 1, 1, false, input),
+        elu_backward_float(gradient, 0.5, 2.0, 0.5, false, input),
+        0.99,
+        1.01,
+        1.99,
+        2.01,
+    );
+let elu_backward_out_int_value = ones_dtype([0], Float64);
+let elu_backward_out_float_value = ones_dtype([0], Float64);
+(elu_backward_out_int(elu_backward_out_int_value, gradient, 1, 1, 1, false, input); elu_backward_out_float(elu_backward_out_float_value, gradient, 0.5, 2.0, 0.5, false, input); let elu_backward_output =
+    activation_pair(
+        elu_backward_out_int_value,
+        elu_backward_out_float_value,
+        0.99,
+        1.01,
+        1.99,
+        2.01,
+    );
+let hardtanh_forward =
+    activation_pair(
+        hardtanh_int(input, -2, 2),
+        hardtanh_float(input, -0.5, 0.5),
+        0.99,
+        1.01,
+        0.49,
+        0.51,
+    );
+let hardtanh_out_int_value = ones_dtype([0], Float64);
+let hardtanh_out_float_value = ones_dtype([0], Float64);
+(hardtanh_out_int(hardtanh_out_int_value, input, -2, 2); hardtanh_out_float(hardtanh_out_float_value, input, -0.5, 0.5); let hardtanh_output = activation_pair(hardtanh_out_int_value, hardtanh_out_float_value, 0.99, 1.01, 0.49, 0.51);
+let hardtanh_mutated_int = clone(input);
+let hardtanh_mutated_float = clone(input);
+(hardtanh_in_place_int(hardtanh_mutated_int, -2, 2); hardtanh_in_place_float(hardtanh_mutated_float, -0.5, 0.5); let hardtanh_mutated = activation_pair(hardtanh_mutated_int, hardtanh_mutated_float, 0.99, 1.01, 0.49, 0.51);
+let hardtanh_backward =
+    activation_pair(
+        hardtanh_backward_int(gradient, input, -2, 2),
+        hardtanh_backward_float(gradient, input, -0.5, 0.5),
+        0.99,
+        1.01,
+        -0.01,
+        0.01,
+    );
+let hardtanh_backward_out_int_value = ones_dtype([0], Float64);
+let hardtanh_backward_out_float_value = ones_dtype([0], Float64);
+(hardtanh_backward_out_int(hardtanh_backward_out_int_value, gradient, input, -2, 2); hardtanh_backward_out_float(hardtanh_backward_out_float_value, gradient, input, -0.5, 0.5); let hardtanh_backward_output =
+    activation_pair(
+        hardtanh_backward_out_int_value,
+        hardtanh_backward_out_float_value,
+        0.99,
+        1.01,
+        -0.01,
+        0.01,
+    );
+let leaky_forward = activation_pair(leaky_relu_int(input, 1), leaky_relu_float(input, 0.25), 0.99, 1.01, 0.99, 1.01);
+let leaky_out_int_value = ones_dtype([0], Float64);
+let leaky_out_float_value = ones_dtype([0], Float64);
+(leaky_relu_out_int(leaky_out_int_value, input, 1); leaky_relu_out_float(leaky_out_float_value, input, 0.25); let leaky_output = activation_pair(leaky_out_int_value, leaky_out_float_value, 0.99, 1.01, 0.99, 1.01);
+let leaky_mutated_int = clone(input);
+let leaky_mutated_float = clone(input);
+(leaky_relu_in_place_int(leaky_mutated_int, 1); leaky_relu_in_place_float(leaky_mutated_float, 0.25); let leaky_mutated = activation_pair(leaky_mutated_int, leaky_mutated_float, 0.99, 1.01, 0.99, 1.01);
+let leaky_backward =
+    activation_pair(
+        leaky_relu_backward_int(gradient, input, 1, false),
+        leaky_relu_backward_float(gradient, input, 0.25, false),
+        0.99,
+        1.01,
+        0.99,
+        1.01,
+    );
+let leaky_backward_out_int_value = ones_dtype([0], Float64);
+let leaky_backward_out_float_value = ones_dtype([0], Float64);
+(leaky_relu_backward_out_int(leaky_backward_out_int_value, gradient, input, 1, false); leaky_relu_backward_out_float(leaky_backward_out_float_value, gradient, input, 0.25, false); let leaky_backward_output =
+    activation_pair(
+        leaky_backward_out_int_value,
+        leaky_backward_out_float_value,
+        0.99,
+        1.01,
+        0.99,
+        1.01,
+    );
+(dispose(gradient); dispose(input); celu_forward
+    and celu_output
+    and celu_mutated
+    and elu_forward
+    and elu_output
+    and elu_mutated
+    and elu_backward
+    and elu_backward_output
+    and hardtanh_forward
+    and hardtanh_output
+    and hardtanh_mutated
+    and hardtanh_backward
+    and hardtanh_backward_output
+    and leaky_forward
+    and leaky_output
+    and leaky_mutated
+    and leaky_backward
+    and leaky_backward_output))))))))))).
+
+@test
+pub generated_cxx_loss_behavior(): Bool ->
+    let input = ones_dtype([1, 1], Float64);
+    let target = ones_dtype([1, 1], Float64);
+    let label = ones_dtype([1], Float64);
+    let gradient = ones_dtype([1, 1], Float64);
+    let zero_losses =
+        activation_pair(
+            cosine_embedding_loss(input, target, label, 0.0, 1),
+            huber_loss(input, target, 1, 1.0),
+            -0.01,
+            0.01,
+            -0.01,
+            0.01,
+        );
+    let unit_losses =
+        activation_pair(
+            hinge_embedding_loss(input, label, 1.0, 1),
+            triplet_margin_loss(input, target, target, 1.0, 2.0, 0.000001, false, 1),
+            0.99,
+            1.01,
+            0.99,
+            1.01,
+        );
+    let other_zero_losses =
+        activation_pair(
+            l1_loss(input, target, 1),
+            margin_ranking_loss(input, target, label, 0.0, 1),
+            -0.01,
+            0.01,
+            -0.01,
+            0.01,
+        );
+    let scalar_losses =
+        activation_pair(
+            poisson_nll_loss(input, target, true, false, 1e-8, 1),
+            soft_margin_loss(input, target, 1),
+            1.71,
+            1.72,
+            0.31,
+            0.32,
+        );
+    let backward_losses =
+        activation_pair(
+            huber_loss_backward(gradient, input, target, 1, 1.0),
+            smooth_l1_loss_backward(gradient, input, target, 1, 1.0),
+            -0.01,
+            0.01,
+            -0.01,
+            0.01,
+        );
+    let smooth_loss = smooth_l1_loss(input, target, 1, 1.0);
+    let smooth_valid = tensor_scalar_between(smooth_loss, -0.01, 0.01);
+    dispose(smooth_loss);
+    let huber_output = ones_dtype([0], Float64);
+    let huber_backward_output = ones_dtype([0], Float64);
+    (huber_loss_out(huber_output, input, target, 1, 1.0); huber_loss_backward_out(huber_backward_output, gradient, input, target, 1, 1.0); let huber_outputs = activation_pair(huber_output, huber_backward_output, -0.01, 0.01, -0.01, 0.01);
+let mse_output = ones_dtype([0], Float64);
+let mse_backward_output = ones_dtype([0], Float64);
+(mse_loss_out(mse_output, input, target, 1); mse_loss_backward_out(mse_backward_output, gradient, input, target, 1); let mse_outputs = activation_pair(mse_output, mse_backward_output, -0.01, 0.01, -0.01, 0.01);
+let smooth_output = ones_dtype([0], Float64);
+let smooth_backward_output = ones_dtype([0], Float64);
+(smooth_l1_loss_out(smooth_output, input, target, 1, 1.0); smooth_l1_loss_backward_out(smooth_backward_output, gradient, input, target, 1, 1.0); let smooth_outputs = activation_pair(smooth_output, smooth_backward_output, -0.01, 0.01, -0.01, 0.01);
+let soft_output = ones_dtype([0], Float64);
+let soft_backward_output = ones_dtype([0], Float64);
+(soft_margin_loss_out(soft_output, input, target, 1); soft_margin_loss_backward_out(soft_backward_output, gradient, input, target, 1); let soft_outputs = activation_pair(soft_output, soft_backward_output, 0.31, 0.32, -0.28, -0.26);
+(dispose(gradient); dispose(label); dispose(target); dispose(input); zero_losses
+    and unit_losses
+    and other_zero_losses
+    and scalar_losses
+    and backward_losses
+    and smooth_valid
+    and huber_outputs
+    and mse_outputs
+    and smooth_outputs
+    and soft_outputs))))).
+
+@test
+pub generated_cxx_shape_completion_behavior(): Bool ->
+    let vector = ones_dtype([1], Float64);
+    let matrix = ones_dtype([1, 1], Float64);
+    let image = ones_dtype([1, 1, 1, 1], Float64);
+    let start_base = ones_dtype([], Int64);
+    let start = fill_scalar(start_base, true, 0, 0.0);
+    let trace_gradient = ones_dtype([], Float64);
+    let channel_output = ones_dtype([0], Float64);
+    let transpose_output = ones_dtype([0], Float64);
+    channel_shuffle_out(channel_output, image, 1);
+    transpose_copy_out(transpose_output, matrix, 0, 1);
+    let channel_shape = shape(channel_output) == [1, 1, 1, 1] and shape(transpose_output) == [1, 1];
+    let channel_values = activation_pair(channel_output, transpose_output, 0.99, 1.01, 0.99, 1.01);
+    let select_output = ones_dtype([0], Float64);
+    let scatter_output = ones_dtype([0], Float64);
+    (select_copy_out(select_output, matrix, 0, 0); select_scatter_out(scatter_output, matrix, vector, 0, 0); let select_shape = shape(select_output) == [1] and shape(scatter_output) == [1, 1];
+let select_values = activation_pair(select_output, scatter_output, 0.99, 1.01, 0.99, 1.01);
+let narrow_first = narrow_view(vector, 0, 0, 1);
+let narrow_second = narrow_tensor(vector, 0, start, 1);
+let narrow_shape = shape(narrow_first) == [1] and shape(narrow_second) == [1];
+let narrow_values = activation_pair(narrow_first, narrow_second, 0.99, 1.01, 0.99, 1.01);
+let narrow_output = ones_dtype([0], Float64);
+(narrow_copy_out(narrow_output, vector, 0, 0, 1); let unfolded = unfold(vector, 0, 1, 1);
+let narrow_unfold_shape = shape(narrow_output) == [1] and shape(unfolded) == [1, 1];
+let narrow_unfold_values = activation_pair(narrow_output, unfolded, 0.99, 1.01, 0.99, 1.01);
+let unfold_output = ones_dtype([0], Float64);
+(unfold_copy_out(unfold_output, vector, 0, 1, 1); let trace = trace_backward(trace_gradient, [1, 1]);
+let unfold_trace_shape = shape(unfold_output) == [1, 1] and shape(trace) == [1, 1];
+let unfold_trace_values = activation_pair(unfold_output, trace, 0.99, 1.01, 0.99, 1.01);
+let zero_value = zero(vector);
+let zero_output = ones_dtype([0], Float64);
+(zero_out(zero_output, vector); let zero_shape = shape(zero_value) == [1] and shape(zero_output) == [1];
+let zero_values = activation_pair(zero_value, zero_output, -0.01, 0.01, -0.01, 0.01);
+let columns = im2col(image, [1, 1], [1, 1], [0, 0], [1, 1]);
+let columns_output = ones_dtype([0], Float64);
+(im2col_out(columns_output, image, [1, 1], [1, 1], [0, 0], [1, 1]); let columns_shape = shape(columns) == [1, 1, 1] and shape(columns_output) == [1, 1, 1];
+let column_values = activation_pair(columns, columns_output, 0.99, 1.01, 0.99, 1.01);
+let rebuilt = col2im(matrix, [1, 1], [1, 1], [1, 1], [0, 0], [1, 1]);
+let rebuilt_output = ones_dtype([0], Float64);
+(col2im_out(rebuilt_output, matrix, [1, 1], [1, 1], [1, 1], [0, 0], [1, 1]); let rebuilt_shape = shape(rebuilt) == [1, 1, 1] and shape(rebuilt_output) == [1, 1, 1];
+let rebuilt_values = activation_pair(rebuilt, rebuilt_output, 0.99, 1.01, 0.99, 1.01);
+let contracted = tensordot(vector, vector, [0], [0]);
+let contracted_output = ones_dtype([0], Float64);
+(tensordot_out(contracted_output, vector, vector, [0], [0]); let contracted_shape = shape(contracted) == [] and shape(contracted_output) == [];
+let contracted_values = activation_pair(contracted, contracted_output, 0.99, 1.01, 0.99, 1.01);
+(dispose(start); dispose(start_base); dispose(trace_gradient); dispose(image); dispose(matrix); dispose(vector); channel_shape
+    and channel_values
+    and select_shape
+    and select_values
+    and narrow_shape
+    and narrow_values
+    and narrow_unfold_shape
+    and narrow_unfold_values
+    and unfold_trace_shape
+    and unfold_trace_values
+    and zero_shape
+    and zero_values
+    and columns_shape
+    and column_values
+    and rebuilt_shape
+    and rebuilt_values
+    and contracted_shape
+    and contracted_values)))))))).
+
+activation_pair(
+    first: Tensor,
+    second: Tensor,
+    first_lower: Float,
+    first_upper: Float,
+    second_lower: Float,
+    second_upper: Float,
+): Bool ->
+    let valid =
+        is_cpu(first)
+            and is_cpu(second)
+            and tensor_scalar_between(first, first_lower, first_upper)
+            and tensor_scalar_between(second, second_lower, second_upper);
+    dispose(second);
+    dispose(first);
+    valid.
+
+validate_cpu_where_indices(values: List[Tensor]): Bool ->
+    case values {
+        [indices] -> validate_cpu_where_index(indices);
+        _ -> false
+    }.
+
+validate_cpu_where_index(indices: Tensor): Bool ->
+    let valid = shape(indices) == [1] and dtype(indices) == Int64 and is_cpu(indices);
+    dispose(indices);
+    valid.
+
+validate_cpu_grid_pair(values: List[Tensor], expected_shape: List[Int]): Bool ->
+    case values {
+        [first, second] -> validate_cpu_grid_values(first, second, expected_shape);
+        _ -> false
+    }.
+
+validate_cpu_grid_values(first: Tensor, second: Tensor, expected_shape: List[Int]): Bool ->
+    let valid =
+        shape(first) == expected_shape
+            and shape(second) == expected_shape
+            and is_cpu(first)
+            and is_cpu(second);
+    dispose(second);
+    dispose(first);
+    valid.
+
+owned_partition_pair(parts: List[Tensor], first_size: Int, second_size: Int): Bool ->
+    case parts {
+        [first, second] -> validate_owned_partition_pair(first, second, first_size, second_size);
+        _ -> false
+    }.
+
+validate_owned_partition_pair(
+    first: Tensor,
+    second: Tensor,
+    first_size: Int,
+    second_size: Int,
+): Bool ->
+    let valid =
+        shape(first) == [first_size, 2]
+            and shape(second) == [second_size, 2]
+            and is_cpu(first)
+            and is_cpu(second);
+    dispose(second);
+    dispose(first);
+    valid.
+
+owned_partition_triplet(
+    parts: List[Tensor],
+    first_size: Int,
+    second_size: Int,
+    third_size: Int,
+): Bool ->
+    case parts {
+        [first, second, third] ->
+            validate_owned_partition_triplet(
+                first,
+                second,
+                third,
+                first_size,
+                second_size,
+                third_size,
+            );
+        _ -> false
+    }.
+
+validate_owned_partition_triplet(
+    first: Tensor,
+    second: Tensor,
+    third: Tensor,
+    first_size: Int,
+    second_size: Int,
+    third_size: Int,
+): Bool ->
+    let valid =
+        shape(first) == [first_size, 2]
+            and shape(second) == [second_size, 2]
+            and shape(third) == [third_size, 2]
+            and is_cpu(first)
+            and is_cpu(second)
+            and is_cpu(third);
+    dispose(third);
+    dispose(second);
+    dispose(first);
+    valid.
+
+owned_partition_shape_pair(parts: List[Tensor], expected_shape: List[Int]): Bool ->
+    case parts {
+        [first, second] -> validate_owned_partition_shape_pair(first, second, expected_shape);
+        _ -> false
+    }.
+
+validate_owned_partition_shape_pair(
+    first: Tensor,
+    second: Tensor,
+    expected_shape: List[Int],
+): Bool ->
+    let valid =
+        shape(first) == expected_shape
+            and shape(second) == expected_shape
+            and is_cpu(first)
+            and is_cpu(second);
+    dispose(second);
+    dispose(first);
+    valid.
+
+@test
+pub generated_cxx_indexing_behavior(): Bool ->
+    // Keep this smoke test on the generated CXX scalar path.  The full
+    // indexing overload matrix is covered by the public parity fixtures;
+    // this fixture only needs to prove owned index tensors cross the CXX
+    // boundary without relying on dtype atoms in a generated test module.
+    let input = ones([1]);
+    let index_seed = from_ints([0], [1]);
+    let ordered = argsort_stable(input, true, 0, false);
+    let selected = index_select(input, 0, index_seed);
+    let copied = index_copy(input, 0, index_seed, input);
+    let shapes_valid =
+        shape(ordered) == [1]
+        and shape(selected) == [1]
+        and shape(copied) == [1]
+        and is_cpu(ordered)
+        and is_cpu(selected)
+        and is_cpu(copied);
+(dispose(copied); dispose(selected); dispose(ordered); dispose(index_seed); dispose(input); shapes_valid).
+
+@test
+pub generated_cxx_gradients_behavior(): Bool ->
+    let input = ones_dtype([1], Float64);
+    let gradient = ones_dtype([1], Float64);
+    let matrix_gradient = ones_dtype([1, 1], Float64);
+    let index_seed = ones_dtype([1], Int64);
+    let indices = mul_int(index_seed, 0);
+    let mask = ones_dtype([1], Bool);
+    let cumulative = cumprod_backward(gradient, input, 0, input);
+    let embedding = embedding_backward(matrix_gradient, indices, 1, -1, false, false);
+    let embedding_dispatch_sparse = embedding_backward(matrix_gradient, indices, 1, -1, false, true);
+    let dense_embedding = embedding_dense_backward(matrix_gradient, indices, 1, -1, false);
+    let dense_embedding_output = ones_dtype([0], Float64);
+    embedding_dense_backward_out(dense_embedding_output, matrix_gradient, indices, 1, -1, false);
+    let sparse_embedding = embedding_sparse_backward(matrix_gradient, indices, 1, -1, false);
+    let channel_quantized = fake_quantize_per_channel_affine_cachemask_backward(gradient, mask);
+    let tensor_quantized = fake_quantize_per_tensor_affine_cachemask_backward(gradient, mask);
+    let gathered = gather_backward(gradient, input, 0, indices, false);
+    let gelu = gelu_backward(gradient, input, "none");
+    let gelu_output = ones_dtype([0], Float64);
+    (gelu_backward_out(gelu_output, gradient, input, "none"); let logit_input = mul_float(input, 0.5);
+let logit = logit_backward(gradient, logit_input);
+let logit_epsilon = logit_backward_epsilon(gradient, logit_input, 0.1);
+let logit_output = ones_dtype([0], Float64);
+(logit_backward_out(logit_output, gradient, logit_input); let logit_epsilon_output = ones_dtype([0], Float64);
+(logit_backward_epsilon_out(logit_epsilon_output, gradient, logit_input, 0.1); let glu_input = ones_dtype([1, 2], Float64);
+let glu_gradient = ones_dtype([1, 1], Float64);
+let glu = glu_backward(glu_gradient, glu_input, 1);
+let selected = masked_select_backward(gradient, input, mask);
+let scalar_gradient = ones_dtype([], Float64);
+let scalar_input = ones_dtype([], Float64);
+let scalar_target = ones_dtype([], Float64);
+let margin = soft_margin_loss_backward(scalar_gradient, scalar_input, scalar_target, 1);
+let shapes_valid =
+    shape(cumulative) == [1]
+        and shape(embedding) == [1, 1]
+        and shape(embedding_dispatch_sparse) == [1, 1]
+        and shape(dense_embedding) == [1, 1]
+        and shape(dense_embedding_output) == [1, 1]
+        and shape(sparse_embedding) == [1, 1]
+        and shape(channel_quantized) == [1]
+        and shape(tensor_quantized) == [1]
+        and shape(gathered) == [1]
+        and shape(gelu) == [1]
+        and shape(gelu_output) == [1]
+        and shape(logit) == [1]
+        and shape(logit_epsilon) == [1]
+        and shape(logit_output) == [1]
+        and shape(logit_epsilon_output) == [1]
+        and shape(glu) == [1, 2]
+        and shape(selected) == [1]
+        and shape(margin) == [];
+let types_valid =
+    dtype(cumulative) == Float64
+        and dtype(dense_embedding_output) == Float64
+        and dtype(channel_quantized) == Float64
+        and dtype(logit_epsilon_output) == Float64
+        and dtype(margin) == Float64;
+let placement_valid =
+    is_cpu(cumulative)
+        and is_cpu(embedding)
+        and is_cpu(embedding_dispatch_sparse)
+        and is_cpu(dense_embedding)
+        and is_cpu(dense_embedding_output)
+        and is_cpu(sparse_embedding)
+        and is_cpu(channel_quantized)
+        and is_cpu(tensor_quantized)
+        and is_cpu(gathered)
+        and is_cpu(gelu)
+        and is_cpu(gelu_output)
+        and is_cpu(logit)
+        and is_cpu(logit_epsilon)
+        and is_cpu(logit_output)
+        and is_cpu(logit_epsilon_output)
+        and is_cpu(glu)
+        and is_cpu(selected)
+        and is_cpu(margin);
+(dispose(margin); dispose(scalar_target); dispose(scalar_input); dispose(scalar_gradient); dispose(selected); dispose(glu); dispose(glu_gradient); dispose(glu_input); dispose(logit_epsilon_output); dispose(logit_output); dispose(logit_epsilon); dispose(logit); dispose(logit_input); dispose(gelu_output); dispose(gelu); dispose(gathered); dispose(tensor_quantized); dispose(channel_quantized); dispose(sparse_embedding); dispose(dense_embedding_output); dispose(dense_embedding); dispose(embedding_dispatch_sparse); dispose(embedding); dispose(cumulative); dispose(mask); dispose(indices); dispose(index_seed); dispose(matrix_gradient); dispose(gradient); dispose(input); shapes_valid and types_valid and placement_valid)))).
+
+@test
+pub generated_cxx_dense_behavior(): Bool ->
+    let scalar = ones_dtype([], Float64);
+    let order = mul_float(scalar, 2.0);
+    let vector = ones_dtype([2], Float64);
+    let integer_vector = ones_dtype([2], Int64);
+    let matrix = ones_dtype([2, 2], Float64);
+    let flat = ones_dtype([4], Float64);
+    let batch = ones_dtype([1, 2, 2], Float64);
+    let tau = ones_dtype([2], Float64);
+    let bmm_result = bmm(batch, batch);
+    let complex_result = complex(scalar, scalar);
+    let divided = divide_tensor(vector, vector);
+    let expanded = expand_as(vector, matrix);
+    let filled = fill_tensor(vector, scalar);
+    let ger_result = ger(vector, vector);
+    let hardsigmoid = hardsigmoid_backward(scalar, scalar);
+    let hardswish = hardswish_backward(scalar, scalar);
+    let gelu = infinitely_differentiable_gelu_backward(scalar, scalar);
+    let householder = linalg_householder_product(matrix, tau);
+    let linalg_product = linalg_matmul(matrix, matrix);
+    let exponential = matrix_exp_backward(matrix, matrix);
+    let mish = mish_backward(scalar, scalar);
+    let mm_result = mm(matrix, matrix);
+    let multiplied = multiply_tensor(vector, vector);
+    let mv_result = mv(matrix, vector);
+    let qr = orgqr(matrix, tau);
+    let outer_result = outer(vector, vector);
+    let polar_result = polar(scalar, scalar);
+    let prelu_result = prelu(vector, scalar);
+    let reshaped = reshape_as(flat, matrix);
+    let sigmoid = sigmoid_backward(scalar, scalar);
+    let silu = silu_backward(scalar, scalar);
+    let chebyshev_t = special_chebyshev_polynomial_t(scalar, order);
+    let chebyshev_u = special_chebyshev_polynomial_u(scalar, order);
+    let chebyshev_v = special_chebyshev_polynomial_v(scalar, order);
+    let chebyshev_w = special_chebyshev_polynomial_w(scalar, order);
+    let gamma = special_gammainc(scalar, scalar);
+    let gamma_complement = special_gammaincc(scalar, scalar);
+    let hermite_h = special_hermite_polynomial_h(scalar, order);
+    let hermite_he = special_hermite_polynomial_he(scalar, order);
+    let laguerre = special_laguerre_polynomial_l(scalar, order);
+    let legendre = special_legendre_polynomial_p(scalar, order);
+    let shifted_t = special_shifted_chebyshev_polynomial_t(scalar, order);
+    let shifted_u = special_shifted_chebyshev_polynomial_u(scalar, order);
+    let shifted_v = special_shifted_chebyshev_polynomial_v(scalar, order);
+    let shifted_w = special_shifted_chebyshev_polynomial_w(scalar, order);
+    let tanh = tanh_backward(scalar, scalar);
+    let typed = type_as(vector, integer_vector);
+    let viewed = view_as(flat, matrix);
+    let bmm_output = ones_dtype([0], Float64);
+    bmm_out(bmm_output, batch, batch);
+    let ger_output = ones_dtype([0], Float64);
+    (ger_out(ger_output, vector, vector); let matmul_output = ones_dtype([0], Float64);
+(matmul_out(matmul_output, matrix, matrix); let mm_output = ones_dtype([0], Float64);
+(mm_out(mm_output, matrix, matrix); let mv_output = ones_dtype([0], Float64);
+(mv_out(mv_output, matrix, vector); let qr_output = ones_dtype([0], Float64);
+(orgqr_out(qr_output, matrix, tau); let outer_output = ones_dtype([0], Float64);
+(outer_out(outer_output, vector, vector); let shapes_valid =
+    shape(bmm_result) == [1, 2, 2]
+        and shape(complex_result) == []
+        and shape(divided) == [2]
+        and shape(expanded) == [2, 2]
+        and shape(filled) == [2]
+        and shape(ger_result) == [2, 2]
+        and shape(hardsigmoid) == []
+        and shape(hardswish) == []
+        and shape(gelu) == []
+        and shape(householder) == [2, 2]
+        and shape(linalg_product) == [2, 2]
+        and shape(exponential) == [2, 2]
+        and shape(mish) == []
+        and shape(mm_result) == [2, 2]
+        and shape(multiplied) == [2]
+        and shape(mv_result) == [2]
+        and shape(qr) == [2, 2]
+        and shape(outer_result) == [2, 2]
+        and shape(polar_result) == []
+        and shape(prelu_result) == [2]
+        and shape(reshaped) == [2, 2]
+        and shape(sigmoid) == []
+        and shape(silu) == []
+        and shape(chebyshev_t) == []
+        and shape(chebyshev_u) == []
+        and shape(chebyshev_v) == []
+        and shape(chebyshev_w) == []
+        and shape(gamma) == []
+        and shape(gamma_complement) == []
+        and shape(hermite_h) == []
+        and shape(hermite_he) == []
+        and shape(laguerre) == []
+        and shape(legendre) == []
+        and shape(shifted_t) == []
+        and shape(shifted_u) == []
+        and shape(shifted_v) == []
+        and shape(shifted_w) == []
+        and shape(tanh) == []
+        and shape(typed) == [2]
+        and shape(viewed) == [2, 2]
+        and shape(bmm_output) == [1, 2, 2]
+        and shape(ger_output) == [2, 2]
+        and shape(matmul_output) == [2, 2]
+        and shape(mm_output) == [2, 2]
+        and shape(mv_output) == [2]
+        and shape(qr_output) == [2, 2]
+        and shape(outer_output) == [2, 2];
+let types_valid = dtype(typed) == Int64 and dtype(mm_result) == Float64 and dtype(mm_output) == Float64;
+let placement_valid =
+    is_cpu(bmm_result)
+        and is_cpu(complex_result)
+        and is_cpu(divided)
+        and is_cpu(expanded)
+        and is_cpu(filled)
+        and is_cpu(ger_result)
+        and is_cpu(hardsigmoid)
+        and is_cpu(hardswish)
+        and is_cpu(gelu)
+        and is_cpu(householder)
+        and is_cpu(linalg_product)
+        and is_cpu(exponential)
+        and is_cpu(mish)
+        and is_cpu(mm_result)
+        and is_cpu(multiplied)
+        and is_cpu(mv_result)
+        and is_cpu(qr)
+        and is_cpu(outer_result)
+        and is_cpu(polar_result)
+        and is_cpu(prelu_result)
+        and is_cpu(reshaped)
+        and is_cpu(sigmoid)
+        and is_cpu(silu)
+        and is_cpu(chebyshev_t)
+        and is_cpu(chebyshev_u)
+        and is_cpu(chebyshev_v)
+        and is_cpu(chebyshev_w)
+        and is_cpu(gamma)
+        and is_cpu(gamma_complement)
+        and is_cpu(hermite_h)
+        and is_cpu(hermite_he)
+        and is_cpu(laguerre)
+        and is_cpu(legendre)
+        and is_cpu(shifted_t)
+        and is_cpu(shifted_u)
+        and is_cpu(shifted_v)
+        and is_cpu(shifted_w)
+        and is_cpu(tanh)
+        and is_cpu(typed)
+        and is_cpu(viewed)
+        and is_cpu(bmm_output)
+        and is_cpu(ger_output)
+        and is_cpu(matmul_output)
+        and is_cpu(mm_output)
+        and is_cpu(mv_output)
+        and is_cpu(qr_output)
+        and is_cpu(outer_output);
+(dispose(outer_output); dispose(qr_output); dispose(mv_output); dispose(mm_output); dispose(matmul_output); dispose(ger_output); dispose(bmm_output); dispose(viewed); dispose(typed); dispose(tanh); dispose(shifted_w); dispose(shifted_v); dispose(shifted_u); dispose(shifted_t); dispose(legendre); dispose(laguerre); dispose(hermite_he); dispose(hermite_h); dispose(gamma_complement); dispose(gamma); dispose(chebyshev_w); dispose(chebyshev_v); dispose(chebyshev_u); dispose(chebyshev_t); dispose(silu); dispose(sigmoid); dispose(reshaped); dispose(prelu_result); dispose(polar_result); dispose(outer_result); dispose(qr); dispose(mv_result); dispose(multiplied); dispose(mm_result); dispose(mish); dispose(exponential); dispose(linalg_product); dispose(householder); dispose(gelu); dispose(hardswish); dispose(hardsigmoid); dispose(ger_result); dispose(filled); dispose(expanded); dispose(divided); dispose(complex_result); dispose(bmm_result); dispose(tau); dispose(batch); dispose(flat); dispose(matrix); dispose(integer_vector); dispose(vector); dispose(order); dispose(scalar); shapes_valid and types_valid and placement_valid))))))).
+
+@test
+pub generated_cxx_functional_completion_behavior(): Bool ->
+    let input = ones_dtype([1, 2], Float64);
+    let weight = ones_dtype([1, 2], Float64);
+    let bias = ones_dtype([1], Float64);
+    let linear_plain = linear_no_bias(input, weight);
+    let linear_biased = linear_with_bias(input, weight, bias);
+    let linear_plain_output = ones_dtype([0], Float64);
+    linear_out_no_bias(linear_plain_output, input, weight);
+    let linear_biased_output = ones_dtype([0], Float64);
+    (linear_out_with_bias(linear_biased_output, input, weight, bias); let log_default = log_softmax_default_dtype(input, 1);
+let log_typed = log_softmax_dtype(input, 1, 7);
+let log_default_output = ones_dtype([0], Float64);
+(log_softmax_out_default_dtype(log_default_output, input, 1); let log_typed_output = ones_dtype([0], Float64);
+(log_softmax_out_dtype(log_typed_output, input, 1, 7); let normalization_input = ones_dtype([1, 2, 2], Float64);
+let affine_weight = ones_dtype([2], Float64);
+let affine_bias = ones_dtype([2], Float64);
+let normalized_plain = group_norm_no_affine(normalization_input, 1, 0.00001, true);
+let normalized_weight = group_norm_weight(normalization_input, 1, affine_weight, 0.00001, true);
+let normalized_bias = group_norm_bias(normalization_input, 1, affine_bias, 0.00001, true);
+let normalized_affine = group_norm_affine(normalization_input, 1, affine_weight, affine_bias, 0.00001, true);
+let vector = ones_dtype([2], Float64);
+let edge = ones_dtype([1], Float64);
+let difference = diff_basic(vector, 1, 0);
+let difference_prepend = diff_prepend(vector, 1, 0, edge);
+let difference_append = diff_append(vector, 1, 0, edge);
+let difference_both = diff_both(vector, 1, 0, edge, edge);
+let difference_output = ones_dtype([0], Float64);
+(diff_out_basic(difference_output, vector, 1, 0); let difference_prepend_output = ones_dtype([0], Float64);
+(diff_out_prepend(difference_prepend_output, vector, 1, 0, edge); let difference_append_output = ones_dtype([0], Float64);
+(diff_out_append(difference_append_output, vector, 1, 0, edge); let difference_both_output = ones_dtype([0], Float64);
+(diff_out_both(difference_both_output, vector, 1, 0, edge, edge); let mask = ones_dtype([2], Bool);
+let scattered_gradient = masked_scatter_backward(vector, mask, [2]);
+let linear_plain_scalar = item(linear_plain);
+let linear_biased_scalar = item(linear_biased);
+let values_valid = scalar_to_float(linear_plain_scalar) == 2.0 and scalar_to_float(linear_biased_scalar) == 3.0;
+let shapes_valid =
+    shape(linear_plain) == [1, 1]
+        and shape(linear_biased) == [1, 1]
+        and shape(linear_plain_output) == [1, 1]
+        and shape(linear_biased_output) == [1, 1]
+        and shape(log_default) == [1, 2]
+        and shape(log_typed) == [1, 2]
+        and shape(log_default_output) == [1, 2]
+        and shape(log_typed_output) == [1, 2]
+        and shape(normalized_plain) == [1, 2, 2]
+        and shape(normalized_weight) == [1, 2, 2]
+        and shape(normalized_bias) == [1, 2, 2]
+        and shape(normalized_affine) == [1, 2, 2]
+        and shape(difference) == [1]
+        and shape(difference_prepend) == [2]
+        and shape(difference_append) == [2]
+        and shape(difference_both) == [3]
+        and shape(difference_output) == [1]
+        and shape(difference_prepend_output) == [2]
+        and shape(difference_append_output) == [2]
+        and shape(difference_both_output) == [3]
+        and shape(scattered_gradient) == [2];
+let types_valid =
+    dtype(log_typed) == Float64
+        and dtype(log_typed_output) == Float64
+        and dtype(scattered_gradient) == Float64;
+let placement_valid =
+    is_cpu(linear_plain)
+        and is_cpu(log_default)
+        and is_cpu(normalized_affine)
+        and is_cpu(difference_both_output)
+        and is_cpu(scattered_gradient);
+(dispose_scalar(linear_biased_scalar); dispose_scalar(linear_plain_scalar); dispose(scattered_gradient); dispose(mask); dispose(difference_both_output); dispose(difference_append_output); dispose(difference_prepend_output); dispose(difference_output); dispose(difference_both); dispose(difference_append); dispose(difference_prepend); dispose(difference); dispose(edge); dispose(vector); dispose(normalized_affine); dispose(normalized_bias); dispose(normalized_weight); dispose(normalized_plain); dispose(affine_bias); dispose(affine_weight); dispose(normalization_input); dispose(log_typed_output); dispose(log_default_output); dispose(log_typed); dispose(log_default); dispose(linear_biased_output); dispose(linear_plain_output); dispose(linear_biased); dispose(linear_plain); dispose(bias); dispose(weight); dispose(input); values_valid and shapes_valid and types_valid and placement_valid)))))))).
+
+@test
+pub generated_cxx_padding_native_behavior(): Bool ->
+    let input = ones_dtype([1], Float64);
+    let integer_padded = constant_pad_configured(input, [1, 1], true, 2, 0.0);
+    let floating_padded = constant_pad_configured(input, [1, 1], false, 0, 0.5);
+    let output = ones_dtype([0], Float64);
+    constant_pad_configured_out(output, input, [1, 1], false, 0, 0.25);
+    let default_value = pad_without_value(input, [1, 1], "constant");
+    let explicit_value = pad_with_value(input, [1, 1], "constant", 0.75);
+    let valid =
+        shape(integer_padded) == [3]
+            and shape(floating_padded) == [3]
+            and shape(output) == [3]
+            and shape(default_value) == [3]
+            and shape(explicit_value) == [3]
+            and dtype(integer_padded) == Float64
+            and dtype(output) == Float64
+            and is_cpu(integer_padded)
+            and is_cpu(floating_padded)
+            and is_cpu(output)
+            and is_cpu(default_value)
+            and is_cpu(explicit_value);
+    (dispose(explicit_value); dispose(default_value); dispose(output); dispose(floating_padded); dispose(integer_padded); dispose(input); valid).
+
+@test
+pub generated_cxx_binary_cross_entropy_completion_behavior(): Bool ->
+    let seed = ones_dtype([], Float64);
+    let input = mul_float(seed, 0.5);
+    let target = ones_dtype([], Float64);
+    let weight = mul_float(target, 2.0);
+    let positive_weight = mul_float(target, 3.0);
+    let gradient = ones_dtype([], Float64);
+    let loss = binary_cross_entropy(input, target, 0);
+    let weighted_loss = binary_cross_entropy_weight(input, target, weight, 0);
+    let loss_output = ones_dtype([], Float64);
+    binary_cross_entropy_out(loss_output, input, target, 0);
+    let weighted_loss_output = ones_dtype([], Float64);
+    (binary_cross_entropy_weight_out(weighted_loss_output, input, target, weight, 0); let input_gradient = binary_cross_entropy_backward(gradient, input, target, 0);
+let weighted_input_gradient = binary_cross_entropy_backward_weight(gradient, input, target, weight, 0);
+let input_gradient_output = ones_dtype([], Float64);
+(binary_cross_entropy_backward_out(input_gradient_output, gradient, input, target, 0); let weighted_input_gradient_output = ones_dtype([], Float64);
+(binary_cross_entropy_backward_weight_out(
+    weighted_input_gradient_output,
+    gradient,
+    input,
+    target,
+    weight,
+    0,
+); let logits = mul_float(target, 0.0);
+let plain_logits = binary_cross_entropy_with_logits(logits, target, 0);
+let weighted_logits = binary_cross_entropy_with_logits_weight(logits, target, weight, 0);
+let positive_logits = binary_cross_entropy_with_logits_positive_weight(logits, target, positive_weight, 0);
+let both_logits = binary_cross_entropy_with_logits_both_weights(logits, target, weight, positive_weight, 0);
+let plain_logits_output = ones_dtype([], Float64);
+(binary_cross_entropy_with_logits_out(plain_logits_output, logits, target, 0); let weighted_logits_output = ones_dtype([], Float64);
+(binary_cross_entropy_with_logits_weight_out(weighted_logits_output, logits, target, weight, 0); let positive_logits_output = ones_dtype([], Float64);
+(binary_cross_entropy_with_logits_positive_weight_out(
+    positive_logits_output,
+    logits,
+    target,
+    positive_weight,
+    0,
+); let both_logits_output = ones_dtype([], Float64);
+(binary_cross_entropy_with_logits_both_weights_out(
+    both_logits_output,
+    logits,
+    target,
+    weight,
+    positive_weight,
+    0,
+); let forward_valid =
+    tensor_scalar_between(loss, 0.69, 0.7)
+        and tensor_scalar_between(weighted_loss, 1.38, 1.39)
+        and tensor_scalar_between(loss_output, 0.69, 0.7)
+        and tensor_scalar_between(weighted_loss_output, 1.38, 1.39);
+let backward_valid =
+    tensor_scalar_between(input_gradient, -2.01, -1.99)
+        and tensor_scalar_between(weighted_input_gradient, -4.01, -3.99)
+        and tensor_scalar_between(input_gradient_output, -2.01, -1.99)
+        and tensor_scalar_between(weighted_input_gradient_output, -4.01, -3.99);
+let logits_valid =
+    tensor_scalar_between(plain_logits, 0.69, 0.7)
+        and tensor_scalar_between(weighted_logits, 1.38, 1.39)
+        and tensor_scalar_between(positive_logits, 2.07, 2.09)
+        and tensor_scalar_between(both_logits, 4.15, 4.17)
+        and tensor_scalar_between(plain_logits_output, 0.69, 0.7)
+        and tensor_scalar_between(weighted_logits_output, 1.38, 1.39)
+        and tensor_scalar_between(positive_logits_output, 2.07, 2.09)
+        and tensor_scalar_between(both_logits_output, 4.15, 4.17);
+(dispose(both_logits_output); dispose(positive_logits_output); dispose(weighted_logits_output); dispose(plain_logits_output); dispose(both_logits); dispose(positive_logits); dispose(weighted_logits); dispose(plain_logits); dispose(logits); dispose(weighted_input_gradient_output); dispose(input_gradient_output); dispose(weighted_input_gradient); dispose(input_gradient); dispose(weighted_loss_output); dispose(loss_output); dispose(weighted_loss); dispose(loss); dispose(gradient); dispose(positive_weight); dispose(weight); dispose(target); dispose(input); dispose(seed); forward_valid and backward_valid and logits_valid)))))))).
+
+@test
+pub generated_cxx_division_behavior(): Bool ->
+    let base = ones_dtype([1], Float64);
+    let divisor = mul_float(base, 2.0);
+    let div_int = div_right_int(base, 2);
+    let div_int_mode = div_right_int_mode(base, 2, "floor");
+    let div_float = div_right_float(base, 0.5);
+    let div_float_mode = div_right_float_mode(base, 2.0, "trunc");
+    let div_tensor_mode_value = div_tensor_mode(base, divisor, "floor");
+    let divide_int = divide_right_int(base, 2);
+    let divide_int_mode = divide_right_int_mode(base, 2, "floor");
+    let divide_float = divide_right_float(base, 0.5);
+    let divide_float_mode = divide_right_float_mode(base, 2.0, "trunc");
+    let divide_tensor_mode_value = divide_tensor_mode(base, divisor, "floor");
+    let true_int = true_divide_right_int(base, 2);
+    let true_float = true_divide_right_float(base, 0.5);
+    let div_int_output = clone(base);
+    div_right_int_out(div_int_output, base, 2);
+    let div_int_mode_output = clone(base);
+    (div_right_int_mode_out(div_int_mode_output, base, 2, "floor"); let div_float_output = clone(base);
+(div_right_float_out(div_float_output, base, 0.5); let div_float_mode_output = clone(base);
+(div_right_float_mode_out(div_float_mode_output, base, 2.0, "trunc"); let div_tensor_output = clone(base);
+(div_tensor_out(div_tensor_output, base, divisor); let div_tensor_mode_output = clone(base);
+(div_tensor_mode_out(div_tensor_mode_output, base, divisor, "floor"); let divide_tensor_output = clone(base);
+(divide_tensor_out(divide_tensor_output, base, divisor); let divide_tensor_mode_output = clone(base);
+(divide_tensor_mode_out(divide_tensor_mode_output, base, divisor, "floor"); let true_tensor_output = clone(base);
+(true_divide_tensor_out(true_tensor_output, base, divisor); let div_int_mutated = clone(base);
+(div_right_int_in_place(div_int_mutated, 2); let div_int_mode_mutated = clone(base);
+(div_right_int_mode_in_place(div_int_mode_mutated, 2, "floor"); let div_float_mutated = clone(base);
+(div_right_float_in_place(div_float_mutated, 0.5); let div_float_mode_mutated = clone(base);
+(div_right_float_mode_in_place(div_float_mode_mutated, 2.0, "trunc"); let div_tensor_mutated = clone(base);
+(div_tensor_in_place(div_tensor_mutated, divisor); let div_tensor_mode_mutated = clone(base);
+(div_tensor_mode_in_place(div_tensor_mode_mutated, divisor, "floor"); let divide_int_mutated = clone(base);
+(divide_right_int_in_place(divide_int_mutated, 2); let divide_int_mode_mutated = clone(base);
+(divide_right_int_mode_in_place(divide_int_mode_mutated, 2, "floor"); let divide_float_mutated = clone(base);
+(divide_right_float_in_place(divide_float_mutated, 0.5); let divide_float_mode_mutated = clone(base);
+(divide_right_float_mode_in_place(divide_float_mode_mutated, 2.0, "trunc"); let divide_tensor_mutated = clone(base);
+(divide_tensor_in_place(divide_tensor_mutated, divisor); let divide_tensor_mode_mutated = clone(base);
+(divide_tensor_mode_in_place(divide_tensor_mode_mutated, divisor, "floor"); let true_int_mutated = clone(base);
+(true_divide_right_int_in_place(true_int_mutated, 2); let true_float_mutated = clone(base);
+(true_divide_right_float_in_place(true_float_mutated, 0.5); let true_tensor_mutated = clone(base);
+(true_divide_tensor_in_place(true_tensor_mutated, divisor); let values_valid =
+    tensor_scalar_between(div_int, 0.49, 0.51)
+        and tensor_scalar_between(div_int_mode, -0.01, 0.01)
+        and tensor_scalar_between(div_float, 1.99, 2.01)
+        and tensor_scalar_between(div_float_mode, -0.01, 0.01)
+        and tensor_scalar_between(div_tensor_mode_value, -0.01, 0.01)
+        and tensor_scalar_between(divide_int, 0.49, 0.51)
+        and tensor_scalar_between(divide_int_mode, -0.01, 0.01)
+        and tensor_scalar_between(divide_float, 1.99, 2.01)
+        and tensor_scalar_between(divide_float_mode, -0.01, 0.01)
+        and tensor_scalar_between(divide_tensor_mode_value, -0.01, 0.01)
+        and tensor_scalar_between(true_int, 0.49, 0.51)
+        and tensor_scalar_between(true_float, 1.99, 2.01)
+        and tensor_scalar_between(div_int_output, 0.49, 0.51)
+        and tensor_scalar_between(div_int_mode_output, -0.01, 0.01)
+        and tensor_scalar_between(div_float_output, 1.99, 2.01)
+        and tensor_scalar_between(div_float_mode_output, -0.01, 0.01)
+        and tensor_scalar_between(div_tensor_output, 0.49, 0.51)
+        and tensor_scalar_between(div_tensor_mode_output, -0.01, 0.01)
+        and tensor_scalar_between(divide_tensor_output, 0.49, 0.51)
+        and tensor_scalar_between(divide_tensor_mode_output, -0.01, 0.01)
+        and tensor_scalar_between(true_tensor_output, 0.49, 0.51)
+        and tensor_scalar_between(div_int_mutated, 0.49, 0.51)
+        and tensor_scalar_between(div_int_mode_mutated, -0.01, 0.01)
+        and tensor_scalar_between(div_float_mutated, 1.99, 2.01)
+        and tensor_scalar_between(div_float_mode_mutated, -0.01, 0.01)
+        and tensor_scalar_between(div_tensor_mutated, 0.49, 0.51)
+        and tensor_scalar_between(div_tensor_mode_mutated, -0.01, 0.01)
+        and tensor_scalar_between(divide_int_mutated, 0.49, 0.51)
+        and tensor_scalar_between(divide_int_mode_mutated, -0.01, 0.01)
+        and tensor_scalar_between(divide_float_mutated, 1.99, 2.01)
+        and tensor_scalar_between(divide_float_mode_mutated, -0.01, 0.01)
+        and tensor_scalar_between(divide_tensor_mutated, 0.49, 0.51)
+        and tensor_scalar_between(divide_tensor_mode_mutated, -0.01, 0.01)
+        and tensor_scalar_between(true_int_mutated, 0.49, 0.51)
+        and tensor_scalar_between(true_float_mutated, 1.99, 2.01)
+        and tensor_scalar_between(true_tensor_mutated, 0.49, 0.51);
+(dispose(true_tensor_mutated); dispose(true_float_mutated); dispose(true_int_mutated); dispose(divide_tensor_mode_mutated); dispose(divide_tensor_mutated); dispose(divide_float_mode_mutated); dispose(divide_float_mutated); dispose(divide_int_mode_mutated); dispose(divide_int_mutated); dispose(div_tensor_mode_mutated); dispose(div_tensor_mutated); dispose(div_float_mode_mutated); dispose(div_float_mutated); dispose(div_int_mode_mutated); dispose(div_int_mutated); dispose(true_tensor_output); dispose(divide_tensor_mode_output); dispose(divide_tensor_output); dispose(div_tensor_mode_output); dispose(div_tensor_output); dispose(div_float_mode_output); dispose(div_float_output); dispose(div_int_mode_output); dispose(div_int_output); dispose(true_float); dispose(true_int); dispose(divide_tensor_mode_value); dispose(divide_float_mode); dispose(divide_float); dispose(divide_int_mode); dispose(divide_int); dispose(div_tensor_mode_value); dispose(div_float_mode); dispose(div_float); dispose(div_int_mode); dispose(div_int); dispose(divisor); dispose(base); values_valid)))))))))))))))))))))))).
+
+@test
+pub generated_cxx_slice_native_behavior(): Bool ->
+    let input = ones_dtype([4], Float64);
+    let source = ones_dtype([2], Float64);
+    let zeros = mul_float(input, 0.0);
+    let view_all = slice_all(input, 0, 2);
+    let view_from = slice_from(input, 0, 1, 2);
+    let view_until = slice_until(input, 0, 3, 2);
+    let view_bounds = slice_bounds(input, 0, 1, 3, 1);
+    let copy_all = slice_copy_all(input, 0, 2);
+    let copy_from = slice_copy_from(input, 0, 1, 2);
+    let copy_until = slice_copy_until(input, 0, 3, 2);
+    let copy_bounds = slice_copy_bounds(input, 0, 1, 3, 1);
+    let scatter_all = slice_scatter_all(zeros, source, 0, 2);
+    let scatter_from = slice_scatter_from(zeros, source, 0, 1, 2);
+    let scatter_until = slice_scatter_until(zeros, source, 0, 3, 2);
+    let scatter_bounds = slice_scatter_bounds(zeros, source, 0, 1, 3, 1);
+    let copy_out_all = ones_dtype([0], Float64);
+    slice_copy_out_all(copy_out_all, input, 0, 2);
+    let copy_out_from = ones_dtype([0], Float64);
+    (slice_copy_out_from(copy_out_from, input, 0, 1, 2); let copy_out_until = ones_dtype([0], Float64);
+(slice_copy_out_until(copy_out_until, input, 0, 3, 2); let copy_out_bounds = ones_dtype([0], Float64);
+(slice_copy_out_bounds(copy_out_bounds, input, 0, 1, 3, 1); let scatter_out_all = ones_dtype([0], Float64);
+(slice_scatter_out_all(scatter_out_all, zeros, source, 0, 2); let scatter_out_from = ones_dtype([0], Float64);
+(slice_scatter_out_from(scatter_out_from, zeros, source, 0, 1, 2); let scatter_out_until = ones_dtype([0], Float64);
+(slice_scatter_out_until(scatter_out_until, zeros, source, 0, 3, 2); let scatter_out_bounds = ones_dtype([0], Float64);
+(slice_scatter_out_bounds(scatter_out_bounds, zeros, source, 0, 1, 3, 1); let shapes_valid =
+    shape(view_all) == [2]
+        and shape(view_from) == [2]
+        and shape(view_until) == [2]
+        and shape(view_bounds) == [2]
+        and shape(copy_all) == [2]
+        and shape(copy_from) == [2]
+        and shape(copy_until) == [2]
+        and shape(copy_bounds) == [2]
+        and shape(copy_out_all) == [2]
+        and shape(copy_out_from) == [2]
+        and shape(copy_out_until) == [2]
+        and shape(copy_out_bounds) == [2]
+        and shape(scatter_all) == [4]
+        and shape(scatter_from) == [4]
+        and shape(scatter_until) == [4]
+        and shape(scatter_bounds) == [4]
+        and shape(scatter_out_all) == [4]
+        and shape(scatter_out_from) == [4]
+        and shape(scatter_out_until) == [4]
+        and shape(scatter_out_bounds) == [4];
+let scatter_all_probe = slice_bounds(scatter_all, 0, 0, 1, 1);
+let scatter_from_probe = slice_bounds(scatter_from, 0, 1, 2, 1);
+let scatter_until_probe = slice_bounds(scatter_until, 0, 0, 1, 1);
+let scatter_bounds_probe = slice_bounds(scatter_bounds, 0, 1, 2, 1);
+let scatter_out_all_probe = slice_bounds(scatter_out_all, 0, 0, 1, 1);
+let scatter_out_from_probe = slice_bounds(scatter_out_from, 0, 1, 2, 1);
+let scatter_out_until_probe = slice_bounds(scatter_out_until, 0, 0, 1, 1);
+let scatter_out_bounds_probe = slice_bounds(scatter_out_bounds, 0, 1, 2, 1);
+let values_valid =
+    tensor_scalar_between(scatter_all_probe, 0.99, 1.01)
+        and tensor_scalar_between(scatter_from_probe, 0.99, 1.01)
+        and tensor_scalar_between(scatter_until_probe, 0.99, 1.01)
+        and tensor_scalar_between(scatter_bounds_probe, 0.99, 1.01)
+        and tensor_scalar_between(scatter_out_all_probe, 0.99, 1.01)
+        and tensor_scalar_between(scatter_out_from_probe, 0.99, 1.01)
+        and tensor_scalar_between(scatter_out_until_probe, 0.99, 1.01)
+        and tensor_scalar_between(scatter_out_bounds_probe, 0.99, 1.01);
+let placement_valid =
+    is_cpu(view_all)
+        and is_cpu(copy_bounds)
+        and is_cpu(copy_out_bounds)
+        and is_cpu(scatter_all)
+        and is_cpu(scatter_out_bounds);
+(dispose(scatter_out_bounds_probe); dispose(scatter_out_until_probe); dispose(scatter_out_from_probe); dispose(scatter_out_all_probe); dispose(scatter_bounds_probe); dispose(scatter_until_probe); dispose(scatter_from_probe); dispose(scatter_all_probe); dispose(scatter_out_bounds); dispose(scatter_out_until); dispose(scatter_out_from); dispose(scatter_out_all); dispose(copy_out_bounds); dispose(copy_out_until); dispose(copy_out_from); dispose(copy_out_all); dispose(scatter_bounds); dispose(scatter_until); dispose(scatter_from); dispose(scatter_all); dispose(copy_bounds); dispose(copy_until); dispose(copy_from); dispose(copy_all); dispose(view_bounds); dispose(view_until); dispose(view_from); dispose(view_all); dispose(zeros); dispose(source); dispose(input); shapes_valid and values_valid and placement_valid)))))))).
+
+@test
+pub generated_cxx_fft_behavior(): Bool ->
+    let real = ones_dtype([2, 2], Float64);
+    let zero = mul_float(real, 0.0);
+    let complex_input = complex(real, zero);
+    let fft_value = fft(complex_input, 1, "backward");
+    let ihfft_value = ihfft(real, 1, "backward");
+    let hfft_value = hfft(ihfft_value, 1, "backward");
+    let ifft_value = ifft(complex_input, 1, "backward");
+    let rfft_value = rfft(real, 1, "backward");
+    let irfft_value = irfft(rfft_value, 1, "backward");
+    let fft2_value = fft2(complex_input, [0, 1], "backward");
+    let ihfft2_value = ihfft2(real, [0, 1], "backward");
+    let hfft2_value = hfft2(ihfft2_value, [0, 1], "backward");
+    let ifft2_value = ifft2(complex_input, [0, 1], "backward");
+    let rfft2_value = rfft2(real, [0, 1], "backward");
+    let irfft2_value = irfft2(rfft2_value, [0, 1], "backward");
+    let fftn_value = fftn(complex_input, [0, 1], "backward");
+    let ihfftn_value = ihfftn(real, [0, 1], "backward");
+    let hfftn_value = hfftn(ihfftn_value, [0, 1], "backward");
+    let ifftn_value = ifftn(complex_input, [0, 1], "backward");
+    let rfftn_value = rfftn(real, [0, 1], "backward");
+    let irfftn_value = irfftn(rfftn_value, [0, 1], "backward");
+    let fft_output = clone(complex_input);
+    fft_out(fft_output, complex_input, 1, "backward");
+    let hfft_output = clone(real);
+    (hfft_out(hfft_output, ihfft_value, 1, "backward"); let ifft_output = clone(complex_input);
+(ifft_out(ifft_output, complex_input, 1, "backward"); let ihfft_output = clone(complex_input);
+(ihfft_out(ihfft_output, real, 1, "backward"); let irfft_output = clone(real);
+(irfft_out(irfft_output, rfft_value, 1, "backward"); let rfft_output = clone(complex_input);
+(rfft_out(rfft_output, real, 1, "backward"); let fft2_output = clone(complex_input);
+(fft2_out(fft2_output, complex_input, [0, 1], "backward"); let hfft2_output = clone(real);
+(hfft2_out(hfft2_output, ihfft2_value, [0, 1], "backward"); let ifft2_output = clone(complex_input);
+(ifft2_out(ifft2_output, complex_input, [0, 1], "backward"); let ihfft2_output = clone(complex_input);
+(ihfft2_out(ihfft2_output, real, [0, 1], "backward"); let irfft2_output = clone(real);
+(irfft2_out(irfft2_output, rfft2_value, [0, 1], "backward"); let rfft2_output = clone(complex_input);
+(rfft2_out(rfft2_output, real, [0, 1], "backward"); let fftn_output = clone(complex_input);
+(fftn_out(fftn_output, complex_input, [0, 1], "backward"); let hfftn_output = clone(real);
+(hfftn_out(hfftn_output, ihfftn_value, [0, 1], "backward"); let ifftn_output = clone(complex_input);
+(ifftn_out(ifftn_output, complex_input, [0, 1], "backward"); let ihfftn_output = clone(complex_input);
+(ihfftn_out(ihfftn_output, real, [0, 1], "backward"); let irfftn_output = clone(real);
+(irfftn_out(irfftn_output, rfftn_value, [0, 1], "backward"); let rfftn_output = clone(complex_input);
+(rfftn_out(rfftn_output, real, [0, 1], "backward"); let frequency = fftfreq(4, 1.0);
+let frequency_output = ones_dtype([0], Float64);
+(fftfreq_out(frequency_output, 4, 1.0); let real_frequency = rfftfreq(4, 1.0);
+let real_frequency_output = ones_dtype([0], Float64);
+(rfftfreq_out(real_frequency_output, 4, 1.0); let shifted = fftshift(frequency, [0]);
+let shifted_all = fftshift_all(frequency);
+let unshifted = ifftshift(shifted, [0]);
+let unshifted_all = ifftshift_all(shifted_all);
+let roundtrip_row = slice_bounds(irfft_value, 0, 0, 1, 1);
+let roundtrip_cell = slice_bounds(roundtrip_row, 1, 0, 1, 1);
+let roundtrip_scalar = item(roundtrip_cell);
+let frequency_first = slice_bounds(frequency, 0, 0, 1, 1);
+let frequency_scalar = item(frequency_first);
+let shifted_first = slice_bounds(shifted, 0, 0, 1, 1);
+let shifted_scalar = item(shifted_first);
+let unshifted_first = slice_bounds(unshifted_all, 0, 0, 1, 1);
+let unshifted_scalar = item(unshifted_first);
+let shapes_valid =
+    element_count(fft_value) == 4
+        and element_count(hfft_value) == 4
+        and element_count(ifft_value) == 4
+        and element_count(ihfft_value) == 4
+        and element_count(irfft_value) == 4
+        and element_count(rfft_value) == 4
+        and element_count(fft2_value) == 4
+        and element_count(hfft2_value) == 4
+        and element_count(ifft2_value) == 4
+        and element_count(ihfft2_value) == 4
+        and element_count(irfft2_value) == 4
+        and element_count(rfft2_value) == 4
+        and element_count(fftn_value) == 4
+        and element_count(hfftn_value) == 4
+        and element_count(ifftn_value) == 4
+        and element_count(ihfftn_value) == 4
+        and element_count(irfftn_value) == 4
+        and element_count(rfftn_value) == 4
+        and element_count(fft_output) == 4
+        and element_count(hfft_output) == 4
+        and element_count(ifft_output) == 4
+        and element_count(ihfft_output) == 4
+        and element_count(irfft_output) == 4
+        and element_count(rfft_output) == 4
+        and element_count(fft2_output) == 4
+        and element_count(hfft2_output) == 4
+        and element_count(ifft2_output) == 4
+        and element_count(ihfft2_output) == 4
+        and element_count(irfft2_output) == 4
+        and element_count(rfft2_output) == 4
+        and element_count(fftn_output) == 4
+        and element_count(hfftn_output) == 4
+        and element_count(ifftn_output) == 4
+        and element_count(ihfftn_output) == 4
+        and element_count(irfftn_output) == 4
+        and element_count(rfftn_output) == 4
+        and shape(frequency) == [4]
+        and shape(frequency_output) == [4]
+        and shape(real_frequency) == [3]
+        and shape(real_frequency_output) == [3]
+        and shape(shifted) == [4]
+        and shape(shifted_all) == [4]
+        and shape(unshifted) == [4]
+        and shape(unshifted_all) == [4];
+let values_valid =
+    scalar_to_float(roundtrip_scalar) > 0.99
+        and scalar_to_float(roundtrip_scalar) < 1.01
+        and scalar_to_float(frequency_scalar) == 0.0
+        and scalar_to_float(shifted_scalar) > -0.51
+        and scalar_to_float(shifted_scalar) < -0.49
+        and scalar_to_float(unshifted_scalar) == 0.0;
+let placement_valid =
+    is_cpu(fft_value)
+        and is_cpu(hfft2_value)
+        and is_cpu(irfftn_output)
+        and is_cpu(frequency)
+        and is_cpu(frequency_output)
+        and is_cpu(real_frequency)
+        and is_cpu(real_frequency_output)
+        and is_cpu(shifted)
+        and is_cpu(unshifted_all);
+(dispose_scalar(unshifted_scalar); dispose_scalar(shifted_scalar); dispose_scalar(frequency_scalar); dispose_scalar(roundtrip_scalar); dispose(unshifted_first); dispose(shifted_first); dispose(frequency_first); dispose(roundtrip_cell); dispose(roundtrip_row); dispose(unshifted_all); dispose(unshifted); dispose(shifted_all); dispose(shifted); dispose(real_frequency_output); dispose(real_frequency); dispose(frequency_output); dispose(frequency); dispose(rfftn_output); dispose(irfftn_output); dispose(ihfftn_output); dispose(ifftn_output); dispose(hfftn_output); dispose(fftn_output); dispose(rfft2_output); dispose(irfft2_output); dispose(ihfft2_output); dispose(ifft2_output); dispose(hfft2_output); dispose(fft2_output); dispose(rfft_output); dispose(irfft_output); dispose(ihfft_output); dispose(ifft_output); dispose(hfft_output); dispose(fft_output); dispose(irfftn_value); dispose(rfftn_value); dispose(ifftn_value); dispose(hfftn_value); dispose(ihfftn_value); dispose(fftn_value); dispose(irfft2_value); dispose(rfft2_value); dispose(ifft2_value); dispose(hfft2_value); dispose(ihfft2_value); dispose(fft2_value); dispose(irfft_value); dispose(rfft_value); dispose(ifft_value); dispose(hfft_value); dispose(ihfft_value); dispose(fft_value); dispose(complex_input); dispose(zero); dispose(real); shapes_valid and values_valid and placement_valid)))))))))))))))))))).

@@ -1,0 +1,22 @@
+/**
+ * CPU runtime evidence for functional and retained-output rrelu-with-noise forms.
+ */
+module pytorch.RreluWithNoiseValueParityTest.
+
+import pytorch.RandomCompletion.{generator_create, generator_dispose, rrelu_with_noise, rrelu_with_noise_out}.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+import pytorch.TypeRelations.allclose.
+
+@test
+pub rrelu_with_noise_value_forms_match_libtorch(): Bool ->
+    let input = from_floats([-2.0, -1.0, 0.0, 1.0, 2.0], [5]);
+    let noise = from_floats([1.0, 1.0, 1.0, 1.0, 1.0], [5]);
+    let output = from_floats([0.0, 0.0, 0.0, 0.0, 0.0], [5]);
+    let generator = generator_create(3);
+    let value = rrelu_with_noise(input, noise, false, generator, 0.1, 0.3, false);
+    rrelu_with_noise_out(output, input, noise, false, generator, 0.1, 0.3, false);
+    let valid =
+        shape(value) == [5]
+            and shape(output) == [5]
+            and allclose(value, output, 0.00001, 0.0, false);
+    (dispose(value); dispose(output); generator_dispose(generator); dispose(noise); dispose(input); valid).

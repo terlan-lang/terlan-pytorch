@@ -1,0 +1,106 @@
+/**
+ * Public numerical completion parity on CPU and CUDA.
+ */
+module pytorch.NumericalCompletionParityTest.
+
+import pytorch.NumericalCompletion.{MemoryFormat, argsort_out, cdist, chain_matmul, chain_matmul_out, clone_out, contiguous, cross, cross_out}.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, shape, strides, to_device, to_dtype, transpose}.
+import pytorch.TypeRelations.equal.
+import pytorch.UnaryStorage.zero_in_place.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(
+    tensor: Tensor,
+    values: List[Float],
+    dimensions: List[Int],
+    wanted_dtype: Int,
+    device: Int,
+): Bool ->
+    let floating = placed(values, dimensions, device);
+    let expected = to_dtype(floating, wanted_dtype);
+    let valid =
+        equal(tensor, expected)
+            and shape(tensor) == dimensions
+            and dtype(tensor) == wanted_dtype
+            and device_type(tensor) == device;
+    dispose(expected);
+    dispose(floating);
+    valid.
+
+verify(device: Int): Bool ->
+    let order = placed([3.0, 1.0, 1.0, 2.0], [4], device);
+    let indices_float = placed([], [0], device);
+    let indices = to_dtype(indices_float, 4);
+    dispose(indices_float);
+    argsort_out(indices, order, true, 0, false);
+    let ascending = matches(indices, [1.0, 2.0, 3.0, 0.0], [4], 4, device);
+    let left = placed([0.0, 0.0, 3.0, 4.0], [2, 2], device);
+    let right = placed([0.0, 4.0], [1, 2], device);
+    let distance_default = cdist(left, right, 2.0);
+    let distance_explicit = cdist(left, right, 2.0, 1);
+    let distances =
+        matches(distance_default, [4.0, 3.0], [2, 1], 7, device)
+            and matches(distance_explicit, [4.0, 3.0], [2, 1], 7, device);
+    let first = placed([1.0, 2.0, 3.0, 4.0], [2, 2], device);
+    let identity = placed([1.0, 0.0, 0.0, 1.0], [2, 2], device);
+    let column = placed([1.0, 1.0], [2, 1], device);
+    let matrices = [first, identity, column];
+    let chain = chain_matmul(matrices);
+    let chain_output = placed([], [0], device);
+    (chain_matmul_out(chain_output, matrices); let chains =
+    matches(chain, [3.0, 7.0], [2, 1], 7, device)
+        and matches(chain_output, [3.0, 7.0], [2, 1], 7, device);
+let transposed = transpose(first, 0, 1);
+let cloned = placed([], [0], device);
+(clone_out(cloned, transposed); let cloned_explicit = placed([], [0], device);
+(clone_out(cloned_explicit, transposed, MemoryFormat.CONTIGUOUS); let contiguous_result = contiguous(transposed);
+let contiguous_explicit = contiguous(transposed, MemoryFormat.CONTIGUOUS);
+let copies =
+    matches(cloned, [1.0, 3.0, 2.0, 4.0], [2, 2], 7, device)
+        and matches(cloned_explicit, [1.0, 3.0, 2.0, 4.0], [2, 2], 7, device)
+        and matches(contiguous_result, [1.0, 3.0, 2.0, 4.0], [2, 2], 7, device)
+        and matches(contiguous_explicit, [1.0, 3.0, 2.0, 4.0], [2, 2], 7, device)
+        and strides(contiguous_result) == [2, 1];
+let x = placed([1.0, 0.0, 0.0], [3], device);
+let y = placed([0.0, 1.0, 0.0], [3], device);
+let cross_default = cross(x, y);
+let cross_explicit = cross(x, y, -1);
+let cross_output = placed([], [0], device);
+(cross_out(cross_output, x, y); let cross_output_explicit = placed([], [0], device);
+(cross_out(cross_output_explicit, x, y, -1); let crosses =
+    matches(cross_default, [0.0, 0.0, 1.0], [3], 7, device)
+        and matches(cross_explicit, [0.0, 0.0, 1.0], [3], 7, device)
+        and matches(cross_output, [0.0, 0.0, 1.0], [3], 7, device)
+        and matches(cross_output_explicit, [0.0, 0.0, 1.0], [3], 7, device);
+(zero_in_place(contiguous_result); let ownership =
+    matches(transposed, [1.0, 3.0, 2.0, 4.0], [2, 2], 7, device)
+        and matches(first, [1.0, 2.0, 3.0, 4.0], [2, 2], 7, device)
+        and matches(order, [3.0, 1.0, 1.0, 2.0], [4], 7, device);
+(dispose(cross_output_explicit); dispose(cross_output); dispose(cross_explicit); dispose(cross_default); dispose(y); dispose(x); dispose(contiguous_explicit); dispose(contiguous_result); dispose(cloned_explicit); dispose(cloned); dispose(transposed); dispose(chain_output); dispose(chain); dispose(column); dispose(identity); dispose(first); dispose(distance_explicit); dispose(distance_default); dispose(right); dispose(left); dispose(indices); dispose(order); ascending and distances and chains and copies and crosses and ownership))))))).
+
+/**
+ * Requires every public completion operation to execute on the real CUDA backend.
+ */
+@test
+pub numerical_completion_on_cpu_and_required_cuda(): Bool ->
+    let cpu_valid = verify(0);
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    cpu_valid and cuda_valid.

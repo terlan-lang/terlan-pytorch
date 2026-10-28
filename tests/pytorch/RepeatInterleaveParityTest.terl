@@ -1,0 +1,94 @@
+/**
+ * CPU and required-CUDA evidence for every repeat-interleave optional state.
+ */
+module pytorch.RepeatInterleaveParityTest.
+
+import pytorch.RepeatInterleave.{repeat_indices, repeat_indices_out, repeat_indices_out_output_size, repeat_indices_output_size, repeat_int, repeat_int_dimension, repeat_int_dimension_output_size, repeat_int_output_size, repeat_tensor, repeat_tensor_dimension, repeat_tensor_dimension_output_size, repeat_tensor_output_size}.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, from_ints, to_device}.
+import pytorch.TypeRelations.equal.
+import pytorch.UnaryStorage.zero_in_place.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed_float(values: List[Float], shape: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, shape);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+placed_int(values: List[Int], shape: List[Int], device: Int): Tensor ->
+    let host = from_ints(values, shape);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches_float(tensor: Tensor, values: List[Float], shape: List[Int], device: Int): Bool ->
+    let expected = placed_float(values, shape, device);
+    let valid = equal(tensor, expected) and dtype(tensor) == 7 and device_type(tensor) == device;
+    dispose(expected);
+    valid.
+
+matches_int(tensor: Tensor, values: List[Int], shape: List[Int], device: Int): Bool ->
+    let expected = placed_int(values, shape, device);
+    let valid = equal(tensor, expected) and dtype(tensor) == 4 and device_type(tensor) == device;
+    dispose(expected);
+    valid.
+
+verify(device: Int): Bool ->
+    let repeats = placed_int([1, 2, 0, 3], [4], device);
+    let indices = repeat_indices(repeats);
+    let indices_sized = repeat_indices_output_size(repeats, 6);
+    let output = placed_int([], [0], device);
+    repeat_indices_out(output, repeats);
+    let indices_valid =
+        matches_int(indices, [0, 1, 1, 3, 3, 3], [6], device)
+            and matches_int(indices_sized, [0, 1, 1, 3, 3, 3], [6], device)
+            and matches_int(output, [0, 1, 1, 3, 3, 3], [6], device);
+    (zero_in_place(output); repeat_indices_out_output_size(output, repeats, 6); let indices_out_sized = matches_int(output, [0, 1, 1, 3, 3, 3], [6], device);
+let matrix = placed_float([1.0, 2.0, 3.0, 4.0], [2, 2], device);
+let flat_repeats = placed_int([1, 0, 2, 1], [4], device);
+let column_repeats = placed_int([1, 2], [2], device);
+let tensor_flat = repeat_tensor(matrix, flat_repeats);
+let tensor_flat_sized = repeat_tensor_output_size(matrix, flat_repeats, 4);
+let tensor_dimension = repeat_tensor_dimension(matrix, column_repeats, -1);
+let tensor_dimension_sized = repeat_tensor_dimension_output_size(matrix, column_repeats, 1, 3);
+let tensor_valid =
+    matches_float(tensor_flat, [1.0, 3.0, 3.0, 4.0], [4], device)
+        and matches_float(tensor_flat_sized, [1.0, 3.0, 3.0, 4.0], [4], device)
+        and matches_float(tensor_dimension, [1.0, 2.0, 2.0, 3.0, 4.0, 4.0], [2, 3], device)
+        and matches_float(tensor_dimension_sized, [1.0, 2.0, 2.0, 3.0, 4.0, 4.0], [2, 3], device);
+let scalar_flat = repeat_int(matrix, 2);
+let scalar_flat_sized = repeat_int_output_size(matrix, 2, 8);
+let scalar_dimension = repeat_int_dimension(matrix, 2, 0);
+let scalar_dimension_sized = repeat_int_dimension_output_size(matrix, 2, 0, 4);
+let scalar_valid =
+    matches_float(scalar_flat, [1.0, 1.0, 2.0, 2.0, 3.0, 3.0, 4.0, 4.0], [8], device)
+        and matches_float(scalar_flat_sized, [1.0, 1.0, 2.0, 2.0, 3.0, 3.0, 4.0, 4.0], [8], device)
+        and matches_float(scalar_dimension, [1.0, 2.0, 1.0, 2.0, 3.0, 4.0, 3.0, 4.0], [4, 2], device)
+        and matches_float(scalar_dimension_sized, [1.0, 2.0, 1.0, 2.0, 3.0, 4.0, 3.0, 4.0], [4, 2], device);
+(zero_in_place(tensor_flat); let ownership =
+    matches_float(matrix, [1.0, 2.0, 3.0, 4.0], [2, 2], device)
+        and matches_int(repeats, [1, 2, 0, 3], [4], device);
+(dispose(scalar_dimension_sized); dispose(scalar_dimension); dispose(scalar_flat_sized); dispose(scalar_flat); dispose(tensor_dimension_sized); dispose(tensor_dimension); dispose(tensor_flat_sized); dispose(tensor_flat); dispose(column_repeats); dispose(flat_repeats); dispose(matrix); dispose(output); dispose(indices_sized); dispose(indices); dispose(repeats); indices_valid and indices_out_sized and tensor_valid and scalar_valid and ownership))).
+
+@test
+pub repeat_interleave_on_cpu_and_required_cuda(): Bool ->
+    let cpu_valid = verify(0);
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    cpu_valid and cuda_valid.

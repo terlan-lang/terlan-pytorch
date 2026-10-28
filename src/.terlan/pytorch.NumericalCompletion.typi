@@ -1,0 +1,68 @@
+//! Retained ordering, pairwise distance, matrix-chain, clone, contiguity, and cross-product operators.
+
+module pytorch.NumericalCompletion.
+
+/// A memory format accepted by clone and contiguous.
+
+pub type MemoryFormat: Int =
+    CONTIGUOUS = 0
+  | PRESERVE = 1
+  | CHANNELS_LAST = 2
+  | CHANNELS_LAST_3D = 3.
+
+/// Writes stable or unstable argsort indices into retained storage.
+
+pub argsort_out(output: Tensor, tensor: Tensor, stable: Bool, dimension: Int, descending: Bool): Unit.
+
+/// Computes pairwise p-distance using PyTorch's inferred compute mode.
+
+pub cdist(left: Tensor, right: Tensor, p: Float): Tensor.
+
+/// Computes pairwise p-distance using an explicit PyTorch compute mode.
+
+pub cdist(left: Tensor, right: Tensor, p: Float, compute_mode: Int): Tensor.
+
+/// Multiplies a chain of matrices using PyTorch's selected association.
+
+pub chain_matmul(matrices: List[Tensor]): Tensor.
+
+/// Writes a matrix-chain product into retained storage.
+
+pub chain_matmul_out(output: Tensor, matrices: List[Tensor]): Unit.
+
+/// Writes an independent clone using PyTorch's inferred memory format.
+
+pub clone_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes an independent clone using an explicit memory format.
+
+pub clone_out(output: Tensor, tensor: Tensor, format: MemoryFormat): Unit.
+
+/// Returns a contiguous tensor using the default row-major format.
+
+pub contiguous(tensor: Tensor): Tensor.
+
+/// Returns a tensor contiguous in the requested memory format.
+
+pub contiguous(tensor: Tensor, format: MemoryFormat): Tensor.
+
+/// Computes a vector cross product using PyTorch's inferred dimension.
+
+pub cross(tensor: Tensor, other: Tensor): Tensor.
+
+/// Computes a vector cross product along an explicit dimension.
+
+pub cross(tensor: Tensor, other: Tensor, dimension: Int): Tensor.
+
+/// Writes a vector cross product using PyTorch's inferred dimension.
+
+pub cross_out(output: Tensor, tensor: Tensor, other: Tensor): Unit.
+
+/// Writes a vector cross product along an explicit dimension.
+
+pub cross_out(output: Tensor, tensor: Tensor, other: Tensor, dimension: Int): Unit.
+
+/// Lowers a typed memory format to LibTorch's stable enum value.
+
+@pure
+pub memory_format_code(format: MemoryFormat): Int.

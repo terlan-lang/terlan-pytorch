@@ -1,0 +1,39 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{amax, dispose, dtype, embedding, from_ints, full_float, item, item_float, mse_loss, numel, shape}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let weight = full_float([3, 2], 2.0);
+    let indices = from_ints([0, 2], [2]);
+    let output = embedding(weight, indices, -1, false, false);
+    let expected = full_float([2, 2], 2.0);
+    let exact_loss = mse_loss(output, expected, 1);
+    let output_columns = amax(output, [0], false);
+    let output_maximum = amax(output_columns, [0], false);
+    let weight_columns = amax(weight, [0], false);
+    let weight_maximum = amax(weight_columns, [0], false);
+    let indices_maximum = amax(indices, [0], false);
+    let observed_shape = shape(output);
+    let observed_numel = numel(output);
+    let observed_dtype = dtype(output);
+    let observed_output = item_float(output_maximum);
+    let observed_weight = item_float(weight_maximum);
+    let observed_index = item(indices_maximum);
+    let observed_exact_loss = item_float(exact_loss);
+    dispose(indices_maximum);
+    dispose(weight_maximum);
+    dispose(weight_columns);
+    dispose(output_maximum);
+    dispose(output_columns);
+    dispose(exact_loss);
+    dispose(expected);
+    dispose(output);
+    dispose(indices);
+    dispose(weight);
+    if {
+        observed_shape.length() == 2 and observed_shape[0] == 2 and observed_shape[1] == 2 and
+            observed_numel == 4 and observed_dtype == 7 and observed_output == 2.0 and
+            observed_weight == 2.0 and observed_index == 2 and observed_exact_loss == 0.0 -> println("PYTORCH_EMBEDDING_CONSUMER_OK");
+        true -> println("PYTORCH_EMBEDDING_CONSUMER_FAILED")
+    }.

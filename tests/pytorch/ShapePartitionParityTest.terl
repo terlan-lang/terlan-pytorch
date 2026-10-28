@@ -1,0 +1,405 @@
+/**
+ * CPU and required-CUDA tensor partition, view-alias, and list-ownership evidence.
+ */
+module pytorch.ShapePartitionParityTest.
+
+import pytorch.ShapePartition.{chunk, dsplit_indices, dsplit_sections, hsplit_indices, hsplit_sections, split_copy_tensor_out, split_size, split_sizes, split_with_sizes_copy_out, tensor_split_indices, tensor_split_sections, tensor_split_tensor, unbind, unbind_copy_int_out, vsplit_indices, vsplit_sections}.
+import pytorch.Tensor.{dispose, empty_typed_native, from_floats, to_device, to_dtype, transpose}.
+import pytorch.TypeRelations.equal.
+import pytorch.UnaryStorage.zero_in_place.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], shape: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, shape);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(tensor: Tensor, values: List[Float], shape: List[Int], device: Int): Bool ->
+    let expected = placed(values, shape, device);
+    let valid = equal(tensor, expected);
+    dispose(expected);
+    valid.
+
+device_index(device: Int): Int ->
+    if {
+        device == 0 -> -1;
+        true -> 0
+    }.
+
+execute_split_copy_valid(input: Tensor, device: Int): Bool ->
+    let first = empty_typed_native([2, 4], 6, device, device_index(device));
+    let second = empty_typed_native([2, 2], 6, device, device_index(device));
+    split_copy_tensor_out(input, [first, second], 4, 1);
+    let valid =
+        matches(first, [1.0, 2.0, 3.0, 4.0, 7.0, 8.0, 9.0, 10.0], [2, 4], device)
+            and matches(second, [5.0, 6.0, 11.0, 12.0], [2, 2], device);
+    (dispose(second); dispose(first); valid).
+
+execute_split_sizes_copy_valid(input: Tensor, device: Int): Bool ->
+    let first = empty_typed_native([2, 1], 6, device, device_index(device));
+    let second = empty_typed_native([2, 2], 6, device, device_index(device));
+    let third = empty_typed_native([2, 3], 6, device, device_index(device));
+    split_with_sizes_copy_out(input, [first, second, third], [1, 2, 3], 1);
+    let valid =
+        matches(first, [1.0, 7.0], [2, 1], device)
+            and matches(second, [2.0, 3.0, 8.0, 9.0], [2, 2], device)
+            and matches(third, [4.0, 5.0, 6.0, 10.0, 11.0, 12.0], [2, 3], device);
+    (dispose(third); dispose(second); dispose(first); valid).
+
+execute_unbind_copy_valid(input: Tensor, device: Int): Bool ->
+    let first = empty_typed_native([6], 6, device, device_index(device));
+    let second = empty_typed_native([6], 6, device, device_index(device));
+    unbind_copy_int_out(input, [first, second], 0);
+    let valid =
+        matches(first, [1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [6], device)
+            and matches(second, [7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [6], device);
+    (dispose(second); dispose(first); valid).
+
+validate_two(
+    parts: List[Tensor],
+    values0: List[Float],
+    shape0: List[Int],
+    values1: List[Float],
+    shape1: List[Int],
+    device: Int,
+): Bool ->
+    case parts {
+        [first, second] ->
+            validate_two_values(first, values0, shape0, second, values1, shape1, device);
+        _ -> false
+    }.
+
+validate_two_values(
+    first: Tensor,
+    values0: List[Float],
+    shape0: List[Int],
+    second: Tensor,
+    values1: List[Float],
+    shape1: List[Int],
+    device: Int,
+): Bool ->
+    let valid = matches(first, values0, shape0, device) and matches(second, values1, shape1, device);
+    dispose(second);
+    dispose(first);
+    valid.
+
+validate_three(
+    parts: List[Tensor],
+    values0: List[Float],
+    shape0: List[Int],
+    values1: List[Float],
+    shape1: List[Int],
+    values2: List[Float],
+    shape2: List[Int],
+    device: Int,
+): Bool ->
+    case parts {
+        [first, second, third] ->
+            validate_three_values(
+                first,
+                values0,
+                shape0,
+                second,
+                values1,
+                shape1,
+                third,
+                values2,
+                shape2,
+                device,
+            );
+        _ -> false
+    }.
+
+validate_three_values(
+    first: Tensor,
+    values0: List[Float],
+    shape0: List[Int],
+    second: Tensor,
+    values1: List[Float],
+    shape1: List[Int],
+    third: Tensor,
+    values2: List[Float],
+    shape2: List[Int],
+    device: Int,
+): Bool ->
+    let valid =
+        matches(first, values0, shape0, device)
+            and matches(second, values1, shape1, device)
+            and matches(third, values2, shape2, device);
+    dispose(third);
+    dispose(second);
+    dispose(first);
+    valid.
+
+validate_four(
+    parts: List[Tensor],
+    values0: List[Float],
+    shape0: List[Int],
+    values1: List[Float],
+    shape1: List[Int],
+    values2: List[Float],
+    shape2: List[Int],
+    values3: List[Float],
+    shape3: List[Int],
+    device: Int,
+): Bool ->
+    case parts {
+        [first, second, third, fourth] ->
+            validate_four_values(
+                first,
+                values0,
+                shape0,
+                second,
+                values1,
+                shape1,
+                third,
+                values2,
+                shape2,
+                fourth,
+                values3,
+                shape3,
+                device,
+            );
+        _ -> false
+    }.
+
+validate_four_values(
+    first: Tensor,
+    values0: List[Float],
+    shape0: List[Int],
+    second: Tensor,
+    values1: List[Float],
+    shape1: List[Int],
+    third: Tensor,
+    values2: List[Float],
+    shape2: List[Int],
+    fourth: Tensor,
+    values3: List[Float],
+    shape3: List[Int],
+    device: Int,
+): Bool ->
+    let valid =
+        matches(first, values0, shape0, device)
+            and matches(second, values1, shape1, device)
+            and matches(third, values2, shape2, device)
+            and matches(fourth, values3, shape3, device);
+    dispose(fourth);
+    dispose(third);
+    dispose(second);
+    dispose(first);
+    valid.
+
+all_operations(device: Int): Bool ->
+    let values = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0];
+    let matrix = placed(values, [2, 6], device);
+    let chunks_valid =
+        validate_three(
+            chunk(matrix, 3, -1),
+            [1.0, 2.0, 7.0, 8.0],
+            [2, 2],
+            [3.0, 4.0, 9.0, 10.0],
+            [2, 2],
+            [5.0, 6.0, 11.0, 12.0],
+            [2, 2],
+            device,
+        );
+    let split_size_valid =
+        validate_two(
+            split_size(matrix, 4, 1),
+            [1.0, 2.0, 3.0, 4.0, 7.0, 8.0, 9.0, 10.0],
+            [2, 4],
+            [5.0, 6.0, 11.0, 12.0],
+            [2, 2],
+            device,
+        );
+    let split_sizes_valid =
+        validate_three(
+            split_sizes(matrix, [1, 2, 3], 1),
+            [1.0, 7.0],
+            [2, 1],
+            [2.0, 3.0, 8.0, 9.0],
+            [2, 2],
+            [4.0, 5.0, 6.0, 10.0, 11.0, 12.0],
+            [2, 3],
+            device,
+        );
+    let split_copy_valid = execute_split_copy_valid(matrix, device);
+    let split_sizes_copy_valid = execute_split_sizes_copy_valid(matrix, device);
+    let tensor_sections_valid =
+        validate_four(
+            tensor_split_sections(matrix, 4, 1),
+            [1.0, 2.0, 7.0, 8.0],
+            [2, 2],
+            [3.0, 4.0, 9.0, 10.0],
+            [2, 2],
+            [5.0, 11.0],
+            [2, 1],
+            [6.0, 12.0],
+            [2, 1],
+            device,
+        );
+    let tensor_indices_valid =
+        validate_three(
+            tensor_split_indices(matrix, [1, 5], 1),
+            [1.0, 7.0],
+            [2, 1],
+            [2.0, 3.0, 4.0, 5.0, 8.0, 9.0, 10.0, 11.0],
+            [2, 4],
+            [6.0, 12.0],
+            [2, 1],
+            device,
+        );
+    let sections_float = placed([3.0], [], 0);
+    let sections = to_dtype(sections_float, 4);
+    dispose(sections_float);
+    let tensor_argument_valid =
+        validate_three(
+            tensor_split_tensor(matrix, sections, 1),
+            [1.0, 2.0, 7.0, 8.0],
+            [2, 2],
+            [3.0, 4.0, 9.0, 10.0],
+            [2, 2],
+            [5.0, 6.0, 11.0, 12.0],
+            [2, 2],
+            device,
+        );
+    (dispose(sections); let horizontal_sections_valid =
+    validate_three(
+        hsplit_sections(matrix, 3),
+        [1.0, 2.0, 7.0, 8.0],
+        [2, 2],
+        [3.0, 4.0, 9.0, 10.0],
+        [2, 2],
+        [5.0, 6.0, 11.0, 12.0],
+        [2, 2],
+        device,
+    );
+let horizontal_indices_valid =
+    validate_three(
+        hsplit_indices(matrix, [1, 5]),
+        [1.0, 7.0],
+        [2, 1],
+        [2.0, 3.0, 4.0, 5.0, 8.0, 9.0, 10.0, 11.0],
+        [2, 4],
+        [6.0, 12.0],
+        [2, 1],
+        device,
+    );
+let vertical_sections_valid =
+    validate_two(
+        vsplit_sections(matrix, 2),
+        [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+        [1, 6],
+        [7.0, 8.0, 9.0, 10.0, 11.0, 12.0],
+        [1, 6],
+        device,
+    );
+let vertical_indices_valid =
+    validate_two(
+        vsplit_indices(matrix, [1]),
+        [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+        [1, 6],
+        [7.0, 8.0, 9.0, 10.0, 11.0, 12.0],
+        [1, 6],
+        device,
+    );
+let rows_valid =
+    validate_two(
+        unbind(matrix, 0),
+        [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+        [6],
+        [7.0, 8.0, 9.0, 10.0, 11.0, 12.0],
+        [6],
+        device,
+    );
+let copied_rows_valid = execute_unbind_copy_valid(matrix, device);
+let volume = placed(values, [1, 2, 6], device);
+let depth_sections_valid =
+    validate_three(
+        dsplit_sections(volume, 3),
+        [1.0, 2.0, 7.0, 8.0],
+        [1, 2, 2],
+        [3.0, 4.0, 9.0, 10.0],
+        [1, 2, 2],
+        [5.0, 6.0, 11.0, 12.0],
+        [1, 2, 2],
+        device,
+    );
+let depth_indices_valid =
+    validate_three(
+        dsplit_indices(volume, [1, 5]),
+        [1.0, 7.0],
+        [1, 2, 1],
+        [2.0, 3.0, 4.0, 5.0, 8.0, 9.0, 10.0, 11.0],
+        [1, 2, 4],
+        [6.0, 12.0],
+        [1, 2, 1],
+        device,
+    );
+let transposed = transpose(matrix, 0, 1);
+let non_contiguous_valid =
+    validate_two(
+        split_size(transposed, 1, 1),
+        [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+        [6, 1],
+        [7.0, 8.0, 9.0, 10.0, 11.0, 12.0],
+        [6, 1],
+        device,
+    );
+(dispose(transposed); dispose(volume); dispose(matrix); chunks_valid
+    and split_size_valid
+    and split_sizes_valid
+    and split_copy_valid
+    and split_sizes_copy_valid
+    and tensor_sections_valid
+    and tensor_indices_valid
+    and tensor_argument_valid
+    and horizontal_sections_valid
+    and horizontal_indices_valid
+    and vertical_sections_valid
+    and vertical_indices_valid
+    and rows_valid
+    and copied_rows_valid
+    and depth_sections_valid
+    and depth_indices_valid
+    and non_contiguous_valid)).
+
+alias_and_lifetime(device: Int): Bool ->
+    let source = placed([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [1, 6], device);
+    case split_sizes(source, [2, 4], 1) {
+        [first, second] -> validate_alias(source, first, second, device);
+        _ -> dispose_false(source)
+    }.
+
+validate_alias(source: Tensor, first: Tensor, second: Tensor, device: Int): Bool ->
+    zero_in_place(first);
+    let aliases = matches(source, [0.0, 0.0, 3.0, 4.0, 5.0, 6.0], [1, 6], device); (dispose(source); let survives = matches(second, [3.0, 4.0, 5.0, 6.0], [1, 4], device); (dispose(second); dispose(first); aliases and survives)).
+
+dispose_false(tensor: Tensor): Bool ->
+    dispose(tensor);
+    false.
+
+verify(device: Int): Bool ->
+    all_operations(device) and alias_and_lifetime(device).
+
+/**
+ * Runs every exact partition operation on CPU and, when mandatory, CUDA.
+ */
+@test
+pub shape_partition_on_cpu_and_required_cuda(): Bool ->
+    let cpu_valid = verify(0);
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    cpu_valid and cuda_valid.

@@ -1,0 +1,34 @@
+/**
+ * CPU evidence for quantized tensor metadata projections.
+ */
+module pytorch.QuantizationMetadataParityTest.
+
+import pytorch.QuantizationCompletion.{q_per_channel_axis, q_per_channel_scales, q_per_channel_scales_out, q_per_channel_zero_points, q_per_channel_zero_points_out, q_scale, q_zero_point, qscheme, quantize_per_channel, quantize_per_tensor}.
+import pytorch.Tensor.{dispose, from_floats, from_ints, to_dtype}.
+import pytorch.TypeRelations.allclose.
+
+@test
+pub quantized_metadata_matches_requested_parameters(): Bool ->
+    let source = from_floats([-1.0, 0.0, 1.0, 2.0], [2, 2]);
+    let input = to_dtype(source, 6);
+    let quantized = quantize_per_tensor(input, 0.1, 3, 12);
+    let scales = from_floats([0.1, 0.2], [2]);
+    let zero_source = from_floats([0.0, 0.0], [2]);
+    let zero_points = to_dtype(zero_source, 4);
+    let channel = quantize_per_channel(input, scales, zero_points, 1, 12);
+    let channel_scales = q_per_channel_scales(channel);
+    let channel_zero_points = q_per_channel_zero_points(channel);
+    let scales_output = from_floats([0.0, 0.0], [2]);
+    let zero_points_output = from_ints([0, 0], [2]);
+    q_per_channel_scales_out(scales_output, channel);
+    q_per_channel_zero_points_out(zero_points_output, channel);
+    let valid =
+        qscheme(quantized) == 0
+            and q_scale(quantized) == 0.1
+            and q_zero_point(quantized) == 3
+            and q_per_channel_axis(channel) == 1
+            and allclose(channel_scales, scales, 0.00001, 0.00001, false)
+            and allclose(channel_zero_points, zero_points, 0.0, 0.0, false)
+            and allclose(scales_output, scales, 0.00001, 0.00001, false)
+            and allclose(zero_points_output, zero_points, 0.0, 0.0, false);
+    (dispose(zero_points_output); dispose(scales_output); dispose(channel_zero_points); dispose(channel_scales); dispose(channel); dispose(zero_points); dispose(zero_source); dispose(scales); dispose(quantized); dispose(input); dispose(source); valid).

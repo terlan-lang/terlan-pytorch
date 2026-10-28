@@ -1,0 +1,7 @@
+module pytorch_cxx.TensorListTransformsBehaviorTest.
+
+import pytorch.TensorListTransformsBehaviorSupport.{tensor_list_transform_contracts_on}.
+
+@test
+pub generated_cxx_tensor_list_transform_contracts(): Bool ->
+    tensor_list_transform_contracts_on("cpu", false).

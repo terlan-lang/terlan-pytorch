@@ -1,0 +1,7 @@
+module pytorch_cxx.ConvolutionNativeBehaviorTest.
+
+import pytorch.ConvolutionNativeBehaviorSupport.{convolution_native_contracts_on}.
+
+@test
+pub generated_cxx_convolution_native_contracts(): Bool ->
+    convolution_native_contracts_on("cpu").

@@ -1,0 +1,244 @@
+/**
+ * Dense aliases, detached handles, rank normalization, transpose views/copies, and real/complex storage views.
+ */
+module pytorch.View.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes the exact aten::adjoint dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.adjoint}
+pub adjoint(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::alias dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.alias}
+pub alias(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::alias_copy dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.alias_copy}
+pub alias_copy(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::atleast_1d dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.atleast_1d}
+pub atleast_1d(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::atleast_2d dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.atleast_2d}
+pub atleast_2d(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::atleast_3d dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.atleast_3d}
+pub atleast_3d(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::detach dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.detach}
+pub detach(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::detach_copy dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.detach_copy}
+pub detach_copy(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::imag dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.imag}
+pub imag(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::lift dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.lift}
+pub lift(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::lift_fresh dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.lift_fresh}
+pub lift_fresh(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::lift_fresh_copy dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.lift_fresh_copy}
+pub lift_fresh_copy(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::positive dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.positive}
+pub positive(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::ravel dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.ravel}
+pub ravel(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::real dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.real}
+pub real(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::resolve_conj dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.resolve_conj}
+pub resolve_conj(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::resolve_neg dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.resolve_neg}
+pub resolve_neg(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::squeeze dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.squeeze}
+pub squeeze(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::squeeze_copy dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.squeeze_copy}
+pub squeeze_copy(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::t dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.t}
+pub t(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::t_copy dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.t_copy}
+pub t_copy(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::view_as_complex dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.view_as_complex}
+pub view_as_complex(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::view_as_complex_copy dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.view_as_complex_copy}
+pub view_as_complex_copy(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::view_as_real dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.view_as_real}
+pub view_as_real(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::view_as_real_copy dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.view_as_real_copy}
+pub view_as_real_copy(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::atleast_1d dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.atleast_1d_sequence}
+pub atleast_1d_sequence(first: Tensor, tensors: List[Tensor]): List[Tensor] ->
+    native.
+
+/**
+ * Executes the exact aten::atleast_2d dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.atleast_2d_sequence}
+pub atleast_2d_sequence(first: Tensor, tensors: List[Tensor]): List[Tensor] ->
+    native.
+
+/**
+ * Executes the exact aten::atleast_3d dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.atleast_3d_sequence}
+pub atleast_3d_sequence(first: Tensor, tensors: List[Tensor]): List[Tensor] ->
+    native.
+
+/**
+ * Executes the exact aten::conj dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.conj}
+pub conj(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::data dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.data}
+pub data(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::mH dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.mH}
+pub mH(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::mT dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.mT}
+pub mT(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::matrix_H dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.matrix_H}
+pub matrix_H(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::numpy_T dense view, alias, or explicit copy schema.
+ */
+@compiler.native {pytorch.view.numpy_T}
+pub numpy_T(tensor: Tensor): Tensor ->
+    native.

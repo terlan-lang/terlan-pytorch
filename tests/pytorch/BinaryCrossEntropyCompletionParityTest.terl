@@ -1,0 +1,123 @@
+/**
+ * Exact binary cross-entropy optional, output, backward, and autograd parity.
+ */
+module pytorch.BinaryCrossEntropyCompletionParityTest.
+
+import pytorch.BinaryCrossEntropyCompletion.{binary_cross_entropy, binary_cross_entropy_backward, binary_cross_entropy_backward_out, binary_cross_entropy_backward_weight, binary_cross_entropy_backward_weight_out, binary_cross_entropy_out, binary_cross_entropy_weight, binary_cross_entropy_weight_out, binary_cross_entropy_with_logits, binary_cross_entropy_with_logits_both_weights, binary_cross_entropy_with_logits_both_weights_out, binary_cross_entropy_with_logits_out, binary_cross_entropy_with_logits_positive_weight, binary_cross_entropy_with_logits_positive_weight_out, binary_cross_entropy_with_logits_weight, binary_cross_entropy_with_logits_weight_out}.
+import pytorch.Tensor.{backward, device_type, dispose, dtype, from_floats, gradient, require_grad, shape, to_device}.
+import pytorch.TypeRelations.{allclose, equal}.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+empty(device: Int): Tensor ->
+    placed([0.0, 0.0], [2], device).
+
+matches(actual: Tensor, values: List[Float], dimensions: List[Int], device: Int): Bool ->
+    let expected = placed(values, dimensions, device);
+    let valid =
+        allclose(actual, expected, 1e-12, 1e-12, false)
+            and shape(actual) == dimensions
+            and dtype(actual) == 7
+            and device_type(actual) == device;
+    dispose(expected);
+    valid.
+
+verify(device: Int): Bool ->
+    let input = placed([0.25, 0.75], [2], device);
+    let target = placed([0.0, 1.0], [2], device);
+    let weight = placed([2.0, 3.0], [2], device);
+    let loss = binary_cross_entropy(input, target, 0);
+    let weighted_loss = binary_cross_entropy_weight(input, target, weight, 0);
+    let loss_out = empty(device);
+    let weighted_loss_out = empty(device);
+    binary_cross_entropy_out(loss_out, input, target, 0);
+    binary_cross_entropy_weight_out(weighted_loss_out, input, target, weight, 0);
+    let forward_valid =
+        matches(loss, [0.2876820724517809, 0.2876820724517809], [2], device)
+            and matches(weighted_loss, [0.5753641449035618, 0.8630462173553427], [2], device)
+            and matches(loss_out, [0.2876820724517809, 0.2876820724517809], [2], device)
+            and matches(weighted_loss_out, [0.5753641449035618, 0.8630462173553427], [2], device);
+    let gradient_output = placed([2.0, 4.0], [2], device);
+    let input_gradient = binary_cross_entropy_backward(gradient_output, input, target, 0);
+    let weighted_input_gradient = binary_cross_entropy_backward_weight(gradient_output, input, target, weight, 0);
+    let input_gradient_out = empty(device);
+    let weighted_input_gradient_out = empty(device);
+    (binary_cross_entropy_backward_out(input_gradient_out, gradient_output, input, target, 0); binary_cross_entropy_backward_weight_out(
+    weighted_input_gradient_out,
+    gradient_output,
+    input,
+    target,
+    weight,
+    0,
+); let backward_valid =
+    matches(input_gradient, [2.6666666666666665, -5.333333333333333], [2], device)
+        and matches(weighted_input_gradient, [5.333333333333333, -16.0], [2], device)
+        and matches(input_gradient_out, [2.6666666666666665, -5.333333333333333], [2], device)
+        and matches(weighted_input_gradient_out, [5.333333333333333, -16.0], [2], device);
+let logits = placed([0.0, 0.0], [2], device);
+let element_weight = placed([4.0, 5.0], [2], device);
+let positive_weight = placed([2.0, 3.0], [2], device);
+let plain_logits = binary_cross_entropy_with_logits(logits, target, 0);
+let weighted_logits = binary_cross_entropy_with_logits_weight(logits, target, element_weight, 0);
+let positive_logits = binary_cross_entropy_with_logits_positive_weight(logits, target, positive_weight, 0);
+let both_logits =
+    binary_cross_entropy_with_logits_both_weights(
+        logits,
+        target,
+        element_weight,
+        positive_weight,
+        0,
+    );
+let plain_logits_out = empty(device);
+let weighted_logits_out = empty(device);
+let positive_logits_out = empty(device);
+let both_logits_out = empty(device);
+(binary_cross_entropy_with_logits_out(plain_logits_out, logits, target, 0); binary_cross_entropy_with_logits_weight_out(weighted_logits_out, logits, target, element_weight, 0); binary_cross_entropy_with_logits_positive_weight_out(
+    positive_logits_out,
+    logits,
+    target,
+    positive_weight,
+    0,
+); binary_cross_entropy_with_logits_both_weights_out(
+    both_logits_out,
+    logits,
+    target,
+    element_weight,
+    positive_weight,
+    0,
+); let log_two = 0.6931471805599453;
+let logits_valid =
+    matches(plain_logits, [log_two, log_two], [2], device)
+        and matches(weighted_logits, [4.0 * log_two, 5.0 * log_two], [2], device)
+        and matches(positive_logits, [log_two, 3.0 * log_two], [2], device)
+        and matches(both_logits, [4.0 * log_two, 15.0 * log_two], [2], device)
+        and matches(plain_logits_out, [log_two, log_two], [2], device)
+        and matches(weighted_logits_out, [4.0 * log_two, 5.0 * log_two], [2], device)
+        and matches(positive_logits_out, [log_two, 3.0 * log_two], [2], device)
+        and matches(both_logits_out, [4.0 * log_two, 15.0 * log_two], [2], device);
+let leaf = require_grad(placed([0.0, 0.0], [2], device));
+let connected = binary_cross_entropy_with_logits_positive_weight(leaf, target, positive_weight, 2);
+(backward(connected); let derivative = gradient(leaf); let gradient_valid = matches(derivative, [0.5, -1.5], [2], device); let expected_input = placed([0.25, 0.75], [2], device); let expected_target = placed([0.0, 1.0], [2], device); let source_valid = equal(input, expected_input) and equal(target, expected_target); (dispose(expected_target); dispose(expected_input); dispose(derivative); dispose(connected); dispose(leaf); dispose(both_logits_out); dispose(positive_logits_out); dispose(weighted_logits_out); dispose(plain_logits_out); dispose(both_logits); dispose(positive_logits); dispose(weighted_logits); dispose(plain_logits); dispose(positive_weight); dispose(element_weight); dispose(logits); dispose(weighted_input_gradient_out); dispose(input_gradient_out); dispose(weighted_input_gradient); dispose(input_gradient); dispose(gradient_output); dispose(weighted_loss_out); dispose(loss_out); dispose(weighted_loss); dispose(loss); dispose(weight); dispose(target); dispose(input); forward_valid and backward_valid and logits_valid and gradient_valid and source_valid)))).
+
+@test
+pub binary_cross_entropy_on_cpu_and_required_cuda(): Bool ->
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    let cpu_valid = verify(0);
+    cpu_valid and cuda_valid.

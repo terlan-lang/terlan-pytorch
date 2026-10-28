@@ -1,0 +1,10 @@
+module=pytorch.IndexMutation
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=8898803963040448359
+interface_hash=11316998774728938322
+interface_doc_hash=3840098351577108045
+deps=2
+pytorch.IndexMutationNative=2014229045371292306
+pytorch.Tensor=13489932768568026575

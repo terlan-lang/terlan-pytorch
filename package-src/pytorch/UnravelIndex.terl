@@ -1,0 +1,58 @@
+/**
+ * Ownership-preserving composition of torch.unravel_index over exact tensor
+ * arithmetic leaves.  The public PyTorch result is a tuple; Terlan represents
+ * the same dynamically-sized result as an owned List[Tensor].
+ */
+module pytorch.UnravelIndex.
+
+import pytorch.BinaryScalar.{floor_divide_right_int, remainder_right_int}.
+import pytorch.Tensor.{to_dtype}.
+
+import type pytorch.Tensor.
+
+has_no_values(values: List[Int]): Bool ->
+    case values {
+        [] -> true;
+        [_head | _tail] -> false
+    }.
+
+/**
+ * Converts flattened integer indices into one coordinate tensor per shape
+ * dimension, matching torch.unravel_index for non-empty positive shapes.
+ */
+pub unravel_index(indices: Tensor, shape: List[Int]): List[Tensor] ->
+    unravel_indices(to_dtype(indices, 4), shape).
+
+/**
+ * Scalar-shape overload matching torch.unravel_index's one-dimensional form.
+ */
+pub unravel_index(indices: Tensor, shape: Int): List[Tensor] ->
+    unravel_indices(to_dtype(indices, 4), [shape]).
+
+unravel_indices(indices: Tensor, shape: List[Int]): List[Tensor] ->
+    case shape {
+        [] -> [];
+        [_dimension | rest] ->
+            if {
+                has_no_values(rest) -> [indices];
+                true -> [coordinate_for(indices, trailing_product(rest)) | unravel_indices(remainder_for(indices, trailing_product(rest)), rest)]
+            }
+    }.
+
+coordinate_for(indices: Tensor, divisor: Int): Tensor ->
+    if {
+        divisor == 1 -> indices;
+        true -> floor_divide_right_int(indices, divisor)
+    }.
+
+remainder_for(indices: Tensor, divisor: Int): Tensor ->
+    if {
+        divisor == 1 -> indices;
+        true -> remainder_right_int(indices, divisor)
+    }.
+
+trailing_product(shape: List[Int]): Int ->
+    case shape {
+        [] -> 1;
+        [dimension | rest] -> dimension * trailing_product(rest)
+    }.

@@ -1,0 +1,7 @@
+//! Tensor.new_empty_strided compatibility wrapper with inherited options.
+
+module pytorch.NewEmptyStrided.
+
+/// Creates an empty strided tensor inheriting dtype, layout, and device.
+
+pub new_empty_strided(input: Tensor, size: List[Int], stride: List[Int]): Tensor.

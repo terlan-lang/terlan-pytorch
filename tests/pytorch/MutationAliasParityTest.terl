@@ -1,0 +1,69 @@
+module pytorch.MutationAliasParityTest.
+
+import pytorch.ActivationCompletion.{threshold_float, threshold_int}.
+import pytorch.Linalg.linalg_solve.
+import pytorch.MutationCompletion.{module_load_legacy, renorm_in_place, solve_legacy, threshold_in_place_float, threshold_in_place_int}.
+import pytorch.Statistics.renorm.
+import pytorch.Tensor.{dispose, from_floats}.
+import pytorch.TypeRelations.equal.
+
+/**
+ * Proves integer and floating threshold mutation aliases against functional
+ * CXX references.
+ */
+@test
+pub threshold_mutation_aliases_match_libtorch(): Bool ->
+    let integer_input = from_floats([-1.0, 0.5, 2.0], [3]);
+    let float_input = from_floats([-1.0, 0.5, 2.0], [3]);
+    let integer_expected = threshold_int(integer_input, 0, -2);
+    let float_expected = threshold_float(float_input, 0.25, -0.5);
+    threshold_in_place_int(integer_input, 0, -2);
+    threshold_in_place_float(float_input, 0.25, -0.5);
+    let valid = equal(integer_input, integer_expected) and equal(float_input, float_expected);
+    (dispose(float_expected); dispose(integer_expected); dispose(float_input); dispose(integer_input); valid).
+
+/**
+ * Proves renorm mutation aliases against the generated Statistics leaf.
+ */
+@test
+pub renorm_mutation_alias_matches_libtorch(): Bool ->
+    let input = from_floats([3.0, 4.0, 0.0, 10.0], [2, 2]);
+    let expected = renorm(input, 2.0, 0, 5.0);
+    renorm_in_place(input, 2.0, 0, 5.0);
+    let valid = equal(input, expected);
+    (dispose(expected); dispose(input); valid).
+
+/**
+ * Proves the deprecated Tensor.solve receiver ordering against linalg.solve.
+ */
+@test
+pub legacy_tensor_solve_matches_libtorch(): Bool ->
+    let coefficient = from_floats([3.0, 1.0, 1.0, 2.0], [2, 2]);
+    let right = from_floats([9.0, 8.0], [2]);
+    let reference = linalg_solve(coefficient, right);
+    let expected = from_floats([2.0, 3.0], [2]);
+    let actual = solve_legacy(right, coefficient);
+    let valid = equal(actual, reference) and equal(actual, expected);
+    dispose(actual);
+    dispose(expected);
+    dispose(reference);
+    dispose(right);
+    dispose(coefficient);
+    valid.
+
+/**
+ * Proves Tensor.module_load's copy/detach and assign/detach branches.
+ */
+@test
+pub legacy_tensor_module_load_matches_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0], [2]);
+    let source = from_floats([7.0, 8.0], [2]);
+    let copied = module_load_legacy(input, source, false);
+    let copied_values = equal(copied, source);
+    let assigned = module_load_legacy(input, source, true);
+    let assigned_values = equal(assigned, source);
+    dispose(assigned);
+    dispose(copied);
+    dispose(source);
+    dispose(input);
+    copied_values and assigned_values.

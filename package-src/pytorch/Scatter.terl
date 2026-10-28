@@ -1,0 +1,380 @@
+/**
+ * Typed scalar, tensor, additive, and reduced scatter operations.
+ */
+module pytorch.Scatter.
+
+import pytorch.ScatterNative.{scatter_scalar as native_scatter_scalar, scatter_scalar_in_place as native_scatter_scalar_in_place, scatter_scalar_out as native_scatter_scalar_out, scatter_tensor as native_scatter_tensor, scatter_tensor_in_place as native_scatter_tensor_in_place, scatter_tensor_out as native_scatter_tensor_out}.
+
+import type pytorch.Tensor.
+
+/**
+ * Selects one legacy scatter reduction admitted by LibTorch.
+ */
+pub type LegacyReduction: Int = ADD = 0 | MULTIPLY = 1.
+
+/**
+ * Selects one modern scatter reduction admitted by LibTorch.
+ */
+pub type Reduction: Int = SUM = 0 | PRODUCT = 1 | MEAN = 2 | MAXIMUM = 3 | MINIMUM = 4.
+
+/**
+ * Lowers a typed legacy reduction to the private native identifier.
+ */
+legacy_reduction_code(reduction: LegacyReduction): Int ->
+    if {
+        reduction == LegacyReduction.ADD -> 0;
+        true -> 1
+    }.
+
+/**
+ * Lowers a typed modern reduction to the private native identifier.
+ */
+reduction_code(reduction: Reduction): Int ->
+    if {
+        reduction == Reduction.SUM -> 0;
+        reduction == Reduction.PRODUCT -> 1;
+        reduction == Reduction.MEAN -> 2;
+        reduction == Reduction.MAXIMUM -> 3;
+        true -> 4
+    }.
+
+/**
+ * Writes tensor source values through indices into retained output storage.
+ */
+pub scatter_tensor_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+): Unit ->
+    native_scatter_tensor_out(output, input, 0, dimension, index, source, 0, true).
+
+/**
+ * Writes tensor source values through indices into the input in place.
+ */
+pub scatter_tensor_in_place(input: Tensor, dimension: Int, index: Tensor, source: Tensor): Unit ->
+    native_scatter_tensor_in_place(input, 0, dimension, index, source, 0, true).
+
+/**
+ * Returns a copy with indexed destinations replaced by an integer scalar.
+ */
+pub scatter_value_int(input: Tensor, dimension: Int, index: Tensor, value: Int): Tensor ->
+    native_scatter_scalar(input, 0, dimension, index, true, value, 0.0, 0).
+
+/**
+ * Writes an integer scalar scatter into retained output storage.
+ */
+pub scatter_value_int_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value: Int,
+): Unit ->
+    native_scatter_scalar_out(output, input, 0, dimension, index, true, value, 0.0, 0).
+
+/**
+ * Writes an integer scalar through indices into the input in place.
+ */
+pub scatter_value_int_in_place(input: Tensor, dimension: Int, index: Tensor, value: Int): Unit ->
+    native_scatter_scalar_in_place(input, 0, dimension, index, true, value, 0.0, 0).
+
+/**
+ * Returns a copy with indexed destinations replaced by a floating-point scalar.
+ */
+pub scatter_value_float(input: Tensor, dimension: Int, index: Tensor, value: Float): Tensor ->
+    native_scatter_scalar(input, 0, dimension, index, false, 0, value, 0).
+
+/**
+ * Writes a floating-point scalar scatter into retained output storage.
+ */
+pub scatter_value_float_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value: Float,
+): Unit ->
+    native_scatter_scalar_out(output, input, 0, dimension, index, false, 0, value, 0).
+
+/**
+ * Writes a floating-point scalar through indices into the input in place.
+ */
+pub scatter_value_float_in_place(input: Tensor, dimension: Int, index: Tensor, value: Float): Unit ->
+    native_scatter_scalar_in_place(input, 0, dimension, index, false, 0, value, 0).
+
+/**
+ * Returns a legacy-reduced tensor scatter.
+ */
+pub scatter_tensor_reduce(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: LegacyReduction,
+): Tensor ->
+    native_scatter_tensor(
+        input,
+        1,
+        dimension,
+        index,
+        source,
+        legacy_reduction_code(reduction),
+        true,
+    ).
+
+/**
+ * Writes a legacy-reduced tensor scatter into retained output storage.
+ */
+pub scatter_tensor_reduce_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: LegacyReduction,
+): Unit ->
+    native_scatter_tensor_out(
+        output,
+        input,
+        1,
+        dimension,
+        index,
+        source,
+        legacy_reduction_code(reduction),
+        true,
+    ).
+
+/**
+ * Applies a legacy-reduced tensor scatter to the input in place.
+ */
+pub scatter_tensor_reduce_in_place(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: LegacyReduction,
+): Unit ->
+    native_scatter_tensor_in_place(
+        input,
+        1,
+        dimension,
+        index,
+        source,
+        legacy_reduction_code(reduction),
+        true,
+    ).
+
+/**
+ * Returns a legacy-reduced integer scalar scatter.
+ */
+pub scatter_value_reduce_int(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value: Int,
+    reduction: LegacyReduction,
+): Tensor ->
+    native_scatter_scalar(
+        input,
+        1,
+        dimension,
+        index,
+        true,
+        value,
+        0.0,
+        legacy_reduction_code(reduction),
+    ).
+
+/**
+ * Writes a legacy-reduced integer scalar scatter into retained output storage.
+ */
+pub scatter_value_reduce_int_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value: Int,
+    reduction: LegacyReduction,
+): Unit ->
+    native_scatter_scalar_out(
+        output,
+        input,
+        1,
+        dimension,
+        index,
+        true,
+        value,
+        0.0,
+        legacy_reduction_code(reduction),
+    ).
+
+/**
+ * Applies a legacy-reduced integer scalar scatter to the input in place.
+ */
+pub scatter_value_reduce_int_in_place(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value: Int,
+    reduction: LegacyReduction,
+): Unit ->
+    native_scatter_scalar_in_place(
+        input,
+        1,
+        dimension,
+        index,
+        true,
+        value,
+        0.0,
+        legacy_reduction_code(reduction),
+    ).
+
+/**
+ * Returns a legacy-reduced floating-point scalar scatter.
+ */
+pub scatter_value_reduce_float(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value: Float,
+    reduction: LegacyReduction,
+): Tensor ->
+    native_scatter_scalar(
+        input,
+        1,
+        dimension,
+        index,
+        false,
+        0,
+        value,
+        legacy_reduction_code(reduction),
+    ).
+
+/**
+ * Writes a legacy-reduced floating-point scalar scatter into retained output storage.
+ */
+pub scatter_value_reduce_float_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value: Float,
+    reduction: LegacyReduction,
+): Unit ->
+    native_scatter_scalar_out(
+        output,
+        input,
+        1,
+        dimension,
+        index,
+        false,
+        0,
+        value,
+        legacy_reduction_code(reduction),
+    ).
+
+/**
+ * Applies a legacy-reduced floating-point scalar scatter to the input in place.
+ */
+pub scatter_value_reduce_float_in_place(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value: Float,
+    reduction: LegacyReduction,
+): Unit ->
+    native_scatter_scalar_in_place(
+        input,
+        1,
+        dimension,
+        index,
+        false,
+        0,
+        value,
+        legacy_reduction_code(reduction),
+    ).
+
+/**
+ * Writes additive tensor scatter results into retained output storage.
+ */
+pub scatter_add_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+): Unit ->
+    native_scatter_tensor_out(output, input, 2, dimension, index, source, 0, true).
+
+/**
+ * Accumulates tensor source values through indices into the input in place.
+ */
+pub scatter_add_in_place(input: Tensor, dimension: Int, index: Tensor, source: Tensor): Unit ->
+    native_scatter_tensor_in_place(input, 2, dimension, index, source, 0, true).
+
+/**
+ * Returns a modern reduced scatter with explicit source-inclusion behavior.
+ */
+pub scatter_reduce(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: Reduction,
+    include_self: Bool = true,
+): Tensor ->
+    native_scatter_tensor(
+        input,
+        3,
+        dimension,
+        index,
+        source,
+        reduction_code(reduction),
+        include_self,
+    ).
+
+/**
+ * Writes a modern reduced scatter into retained output storage.
+ */
+pub scatter_reduce_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: Reduction,
+    include_self: Bool = true,
+): Unit ->
+    native_scatter_tensor_out(
+        output,
+        input,
+        3,
+        dimension,
+        index,
+        source,
+        reduction_code(reduction),
+        include_self,
+    ).
+
+/**
+ * Applies a modern reduced scatter to the input in place.
+ */
+pub scatter_reduce_in_place(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: Reduction,
+    include_self: Bool = true,
+): Unit ->
+    native_scatter_tensor_in_place(
+        input,
+        3,
+        dimension,
+        index,
+        source,
+        reduction_code(reduction),
+        include_self,
+    ).

@@ -1,0 +1,28 @@
+/**
+ * CPU parity evidence for resize_as functional, retained-output, and in-place forms.
+ */
+module pytorch.ResizeAsParityTest.
+
+import pytorch.ResizeAsCompletion.{resize_as, resize_as_default, resize_as_in_place, resize_as_out}.
+import pytorch.Tensor.{clone, dispose, from_floats, shape, strides}.
+import pytorch.TypeRelations.equal.
+
+@test
+pub resize_as_forms_match_template(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [4]);
+    let target_template = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let actual = resize_as(input, target_template, false, 0);
+    let default_actual = resize_as_default(clone(input), target_template);
+    let output = from_floats([], [0]);
+    resize_as_out(output, input, target_template, false, 0);
+    resize_as_in_place(input, target_template, false, 0);
+    let expected = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let valid =
+        equal(actual, expected)
+            and equal(output, expected)
+            and shape(actual) == [2, 2]
+            and shape(default_actual) == [2, 2]
+            and shape(output) == [2, 2]
+            and shape(input) == [2, 2]
+            and strides(actual) == strides(target_template);
+    (dispose(default_actual); dispose(expected); dispose(output); dispose(actual); dispose(target_template); dispose(input); valid).

@@ -1,0 +1,301 @@
+module pytorch.CudaTest.
+
+import pytorch.Cuda.{create_stream, device_index as stream_device_index, dispose as dispose_stream, record_stream, set_current, synchronize, synchronize_device}.
+import pytorch.Optimizer.{adam, add_parameter, dispose as dispose_optimizer, step_count}.
+import pytorch.Ppo.{minibatch_update}.
+import pytorch.Tensor.{amax, autograd_grad, autograd_grad_many, backward, backward_many, cuda, device_index, device_type, dim, dispose, dtype, from_floats, from_ints, gradient, gradient_with_graph, is_contiguous, item_float, matmul, multiply, numel, require_grad, shape, storage_offset, subtract, sum, to_device, to_dtype}.
+import pytorch.TypeRelations.{allclose, equal, is_same_size}.
+import pytorch.TypeRelationsNative.{result_type_tensor_native}.
+import pytorch.UnravelIndex.{unravel_index}.
+import pytorch.Window.{bartlett_window, bartlett_window_on, blackman_window, blackman_window_on, hamming_window, hamming_window_on, hann_window, hann_window_on, kaiser_window, kaiser_window_on}.
+
+import type pytorch.Tensor.DType.
+
+@test
+pub cpu_cuda_cpu_matmul_preserves_exact_tensor_semantics(): Bool ->
+    let stream = create_stream(0, false);
+    set_current(stream);
+    let cpu_left = from_floats([2.0, 3.0], [1, 2]);
+    let cpu_right = from_floats([4.0, 5.0], [2, 1]);
+    let cuda_left = cuda(cpu_left);
+    let cuda_right = cuda(cpu_right);
+    let cuda_result = matmul(cuda_left, cuda_right);
+    (record_stream(cuda_result, stream); let cuda_float32 = to_dtype(cuda_result, 6);
+let cuda_restored = to_dtype(cuda_float32, 7);
+(synchronize(stream); let host_result = to_device(cuda_restored, 0, -1);
+let valid =
+    stream_device_index(stream) == 0
+        and device_type(cpu_left) == 0
+        and device_index(cpu_left) == -1
+        and device_type(cuda_left) == 1
+        and device_index(cuda_left) == 0
+        and device_type(cuda_result) == 1
+        and device_index(cuda_result) == 0
+        and dim(cuda_result) == 2
+        and numel(cuda_result) == 1
+        and storage_offset(cuda_result) == 0
+        and is_contiguous(cuda_result)
+        and dtype(cuda_float32) == 6
+        and device_type(cuda_float32) == 1
+        and device_index(cuda_float32) == 0
+        and shape(cuda_float32) == [1, 1]
+        and dtype(cuda_restored) == 7
+        and device_type(cuda_restored) == 1
+        and device_index(cuda_restored) == 0
+        and equal(cuda_result, cuda_result)
+        and allclose(cuda_result, cuda_result)
+        and is_same_size(cuda_float32, cuda_restored)
+        and result_type_tensor_native(cuda_float32, cuda_restored) == 7
+        and device_type(host_result) == 0
+        and device_index(host_result) == -1
+        and shape(host_result) == [1, 1]
+        and item_float(host_result) == 23.0;
+(dispose(host_result); dispose(cuda_restored); dispose(cuda_float32); dispose(cuda_result); dispose(cuda_right); dispose(cuda_left); dispose(cpu_right); dispose(cpu_left); dispose_stream(stream); valid))).
+
+@test
+pub public_device_synchronization_composition_executes(): Bool ->
+    synchronize_device(0);
+    true.
+
+@test
+pub unravel_index_preserves_cuda_device(): Bool ->
+    let host_indices = from_floats([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], [6]);
+    let integer_indices = to_dtype(host_indices, 4);
+    let device_indices = cuda(integer_indices);
+    let [rows, columns] = unravel_index(device_indices, [2, 3]);
+    let host_rows = to_device(rows, 0, -1);
+    let host_columns = to_device(columns, 0, -1);
+    let expected_rows = from_ints([0, 0, 0, 1, 1, 1], [6]);
+    let expected_columns = from_ints([0, 1, 2, 0, 1, 2], [6]);
+    let valid =
+        device_type(rows) == 1
+            and device_index(rows) == 0
+            and device_type(columns) == 1
+            and device_index(columns) == 0
+            and equal(host_rows, expected_rows)
+            and equal(host_columns, expected_columns);
+    dispose(expected_columns);
+    dispose(expected_rows);
+    dispose(host_columns);
+    dispose(host_rows);
+    dispose(columns);
+    dispose(rows);
+    dispose(device_indices);
+    dispose(integer_indices);
+    dispose(host_indices);
+    valid.
+
+@test
+pub explicit_gradient_backward_preserves_cuda_autograd(): Bool ->
+    let host_source = from_floats([2.0, 3.0], [2]);
+    let device_source = cuda(host_source);
+    let input = require_grad(device_source);
+    let output = multiply(input, input);
+    let host_cotangent = from_floats([0.5, 2.0], [2]);
+    let cotangent = cuda(host_cotangent);
+    backward(output, cotangent);
+    let device_gradient = gradient(input);
+    let host_gradient = to_device(device_gradient, 0, -1);
+    let expected = from_floats([2.0, 12.0], [2]);
+    let valid =
+        device_type(device_gradient) == 1
+            and device_index(device_gradient) == 0
+            and equal(host_gradient, expected);
+    (dispose(expected); dispose(host_gradient); dispose(device_gradient); dispose(cotangent); dispose(host_cotangent); dispose(output); dispose(input); dispose(device_source); dispose(host_source); valid).
+
+@test
+pub create_graph_preserves_cuda_second_derivative(): Bool ->
+    let host_source = from_floats([2.0, 3.0], [2]);
+    let device_source = cuda(host_source);
+    let input = require_grad(device_source);
+    let square = multiply(input, input);
+    let output = multiply(square, input);
+    let host_cotangent = from_floats([1.0, 1.0], [2]);
+    let cotangent = cuda(host_cotangent);
+    backward(output, cotangent, false, true);
+    let first_graph = gradient_with_graph(input);
+    let first_snapshot = gradient(input);
+    let second_loss = sum(first_graph);
+    (backward(second_loss); let accumulated = gradient(input); let second = subtract(accumulated, first_snapshot, 1.0); let host_second = to_device(second, 0, -1); let expected = from_floats([12.0, 18.0], [2]); let valid = equal(host_second, expected); (dispose(expected); dispose(host_second); dispose(second); dispose(accumulated); dispose(second_loss); dispose(first_snapshot); dispose(first_graph); dispose(cotangent); dispose(host_cotangent); dispose(output); dispose(square); dispose(input); dispose(device_source); dispose(host_source); valid)).
+
+@test
+pub functional_autograd_grad_preserves_cuda_graph(): Bool ->
+    let host_source = from_floats([2.0, 3.0], [2]);
+    let device_source = cuda(host_source);
+    let input = require_grad(device_source);
+    let square = multiply(input, input);
+    let output = multiply(square, input);
+    let host_cotangent = from_floats([1.0, 1.0], [2]);
+    let cotangent = cuda(host_cotangent);
+    let first = autograd_grad(output, input, cotangent, false, true);
+    let second_loss = sum(first);
+    let host_second_seed = from_floats([1.0], [1]);
+    let second_seed = cuda(host_second_seed);
+    let second = autograd_grad(second_loss, input, second_seed);
+    let host_second = to_device(second, 0, -1);
+    let expected = from_floats([12.0, 18.0], [2]);
+    let valid = equal(host_second, expected);
+    dispose(expected);
+    dispose(host_second);
+    dispose(second);
+    dispose(second_seed);
+    dispose(host_second_seed);
+    dispose(second_loss);
+    dispose(first);
+    dispose(cotangent);
+    dispose(host_cotangent);
+    dispose(output);
+    dispose(square);
+    dispose(input);
+    dispose(device_source);
+    dispose(host_source);
+    valid.
+
+@test
+pub functional_autograd_grad_supports_multiple_cuda_roots(): Bool ->
+    let host_source_x = from_floats([2.0, 3.0], [2]);
+    let host_source_y = from_floats([4.0, 5.0], [2]);
+    let device_source_x = cuda(host_source_x);
+    let device_source_y = cuda(host_source_y);
+    let input_x = require_grad(device_source_x);
+    let input_y = require_grad(device_source_y);
+    let output_x = multiply(input_x, input_x);
+    let output_y = multiply(input_y, input_y);
+    let host_cotangent_x = from_floats([0.5, 2.0], [2]);
+    let host_cotangent_y = from_floats([0.5, 2.0], [2]);
+    let cotangent_x = cuda(host_cotangent_x);
+    let cotangent_y = cuda(host_cotangent_y);
+    let [actual_x, actual_y] = autograd_grad_many([output_x, output_y], [input_x, input_y], [cotangent_x, cotangent_y]);
+    let host_actual_x = to_device(actual_x, 0, -1);
+    let host_actual_y = to_device(actual_y, 0, -1);
+    let expected_x = from_floats([2.0, 12.0], [2]);
+    let expected_y = from_floats([4.0, 20.0], [2]);
+    let valid = equal(host_actual_x, expected_x) and equal(host_actual_y, expected_y);
+    dispose(expected_y);
+    dispose(expected_x);
+    dispose(host_actual_y);
+    dispose(host_actual_x);
+    dispose(actual_y);
+    dispose(actual_x);
+    dispose(cotangent_y);
+    dispose(cotangent_x);
+    dispose(host_cotangent_y);
+    dispose(host_cotangent_x);
+    dispose(output_y);
+    dispose(output_x);
+    dispose(input_y);
+    dispose(input_x);
+    dispose(device_source_y);
+    dispose(device_source_x);
+    dispose(host_source_y);
+    dispose(host_source_x);
+    valid.
+
+@test
+pub backward_many_accumulates_multiple_cuda_roots(): Bool ->
+    let host_source_x = from_floats([2.0, 3.0], [2]);
+    let host_source_y = from_floats([4.0, 5.0], [2]);
+    let device_source_x = cuda(host_source_x);
+    let device_source_y = cuda(host_source_y);
+    let input_x = require_grad(device_source_x);
+    let input_y = require_grad(device_source_y);
+    let output_x = multiply(input_x, input_x);
+    let output_y = multiply(input_y, input_y);
+    let host_cotangent_x = from_floats([0.5, 2.0], [2]);
+    let host_cotangent_y = from_floats([0.5, 2.0], [2]);
+    let cotangent_x = cuda(host_cotangent_x);
+    let cotangent_y = cuda(host_cotangent_y);
+    backward_many([output_x, output_y], [cotangent_x, cotangent_y]);
+    let actual_x = to_device(gradient(input_x), 0, -1);
+    let actual_y = to_device(gradient(input_y), 0, -1);
+    let expected_x = from_floats([2.0, 12.0], [2]);
+    let expected_y = from_floats([4.0, 20.0], [2]);
+    let valid = equal(actual_x, expected_x) and equal(actual_y, expected_y);
+    (dispose(expected_y); dispose(expected_x); dispose(actual_y); dispose(actual_x); dispose(cotangent_y); dispose(cotangent_x); dispose(host_cotangent_y); dispose(host_cotangent_x); dispose(output_y); dispose(output_x); dispose(input_y); dispose(input_x); dispose(device_source_y); dispose(device_source_x); dispose(host_source_y); dispose(host_source_x); valid).
+
+@test
+pub public_window_families_execute_on_cuda(): Bool ->
+    let bartlett = bartlett_window_on(5, false, DType.FLOAT32, cuda(0), false);
+    let blackman = blackman_window_on(5, false, DType.FLOAT32, cuda(0), false);
+    let hamming = hamming_window_on(5, false, 0.54, 0.46, DType.FLOAT32, cuda(0), false);
+    let hann = hann_window_on(5, false, DType.FLOAT32, cuda(0), false);
+    let kaiser = kaiser_window_on(5, false, 0.0, DType.FLOAT32, cuda(0), false);
+    let host_bartlett = to_device(bartlett, 0, -1);
+    let host_blackman = to_device(blackman, 0, -1);
+    let host_hamming = to_device(hamming, 0, -1);
+    let host_hann = to_device(hann, 0, -1);
+    let host_kaiser = to_device(kaiser, 0, -1);
+    let expected_bartlett = bartlett_window(5, false);
+    let expected_blackman = blackman_window(5, false);
+    let expected_hamming = hamming_window(5, false);
+    let expected_hann = hann_window(5, false);
+    let expected_kaiser = kaiser_window(5, false, 0.0);
+    let valid =
+        device_type(bartlett) == 1
+            and device_index(bartlett) == 0
+            and allclose(host_bartlett, expected_bartlett)
+            and allclose(host_blackman, expected_blackman)
+            and allclose(host_hamming, expected_hamming)
+            and allclose(host_hann, expected_hann)
+            and allclose(host_kaiser, expected_kaiser);
+    dispose(expected_kaiser);
+    dispose(expected_hann);
+    dispose(expected_hamming);
+    dispose(expected_blackman);
+    dispose(expected_bartlett);
+    dispose(host_kaiser);
+    dispose(host_hann);
+    dispose(host_hamming);
+    dispose(host_blackman);
+    dispose(host_bartlett);
+    dispose(kaiser);
+    dispose(hann);
+    dispose(hamming);
+    dispose(blackman);
+    dispose(bartlett);
+    valid.
+
+@test
+pub public_ppo_minibatch_source_executes_on_cuda(): Bool ->
+    let stream = create_stream(0, false);
+    set_current(stream);
+    let host_actor = from_floats([0.2, -0.2, -0.1, 0.1], [2, 2]);
+    let device_actor = to_device(host_actor, 1, 0);
+    let actor = require_grad(device_actor);
+    let host_critic = from_floats([0.5, -0.5], [2]);
+    let device_critic = to_device(host_critic, 1, 0);
+    let critic = require_grad(device_critic);
+    let host_old_log_probabilities = from_floats([-0.6931471805599453, -0.6931471805599453], [2, 1]);
+    let old_log_probabilities = to_device(host_old_log_probabilities, 1, 0);
+    let host_advantages = from_floats([1.0, -1.0], [2, 1]);
+    let advantages = to_device(host_advantages, 1, 0);
+    let host_returns = from_floats([1.0, -1.0], [2]);
+    let returns = to_device(host_returns, 1, 0);
+    let optimizer = adam(0.05, 0.9, 0.999, 1e-8, 0.0);
+    (add_parameter(optimizer, actor); add_parameter(optimizer, critic); let loss =
+    minibatch_update(
+        actor,
+        critic,
+        old_log_probabilities,
+        advantages,
+        returns,
+        optimizer,
+        73,
+        0.2,
+        0.5,
+        0.01,
+    );
+let actor_maximum = amax(actor, [0, 1], false);
+let critic_maximum = amax(critic, [0], false);
+(synchronize(stream); let host_loss = to_device(loss, 0, -1);
+let host_actor_maximum = to_device(actor_maximum, 0, -1);
+let host_critic_maximum = to_device(critic_maximum, 0, -1);
+let observed_loss = item_float(host_loss);
+let observed_actor = item_float(host_actor_maximum);
+let observed_critic = item_float(host_critic_maximum);
+let observed_steps = step_count(optimizer);
+(dispose(host_critic_maximum); dispose(host_actor_maximum); dispose(host_loss); dispose(critic_maximum); dispose(actor_maximum); dispose(loss); dispose_optimizer(optimizer); dispose(returns); dispose(host_returns); dispose(advantages); dispose(host_advantages); dispose(old_log_probabilities); dispose(host_old_log_probabilities); dispose(critic); dispose(device_critic); dispose(host_critic); dispose(actor); dispose(device_actor); dispose(host_actor); dispose_stream(stream); observed_loss > -10.0
+    and observed_loss < 10.0
+    and (observed_actor > 0.200001 or observed_actor < 0.199999)
+    and (observed_critic > 0.500001 or observed_critic < 0.499999)
+    and observed_steps == 1))).

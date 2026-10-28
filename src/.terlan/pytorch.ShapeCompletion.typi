@@ -1,0 +1,75 @@
+//! Generated direct-CXX implementation of the public shape-completion surface.
+
+module pytorch.ShapeCompletion.
+
+/// Executes exact aten::channel_shuffle.out. Preserves upstream output values and ownership.
+
+pub channel_shuffle_out(output: Tensor, tensor: Tensor, groups: Int): Unit.
+
+/// Executes exact aten::col2im. Preserves upstream output values and ownership.
+
+pub col2im(tensor: Tensor, output_size: List[Int], kernel_size: List[Int], dilation: List[Int], padding: List[Int], stride: List[Int]): Tensor.
+
+/// Executes exact aten::col2im.out. Preserves upstream output values and ownership.
+
+pub col2im_out(output: Tensor, tensor: Tensor, output_size: List[Int], kernel_size: List[Int], dilation: List[Int], padding: List[Int], stride: List[Int]): Unit.
+
+/// Executes exact aten::im2col. Preserves upstream output values and ownership.
+
+pub im2col(tensor: Tensor, kernel_size: List[Int], dilation: List[Int], padding: List[Int], stride: List[Int]): Tensor.
+
+/// Executes exact aten::im2col.out. Preserves upstream output values and ownership.
+
+pub im2col_out(output: Tensor, tensor: Tensor, kernel_size: List[Int], dilation: List[Int], padding: List[Int], stride: List[Int]): Unit.
+
+/// Executes exact aten::narrow_copy.out. Preserves upstream output values and ownership.
+
+pub narrow_copy_out(output: Tensor, tensor: Tensor, dimension: Int, start: Int, length: Int): Unit.
+
+/// Executes exact aten::narrow.Tensor. Returns a view sharing input storage.
+
+pub narrow_tensor(tensor: Tensor, dimension: Int, start: Tensor, length: Int): Tensor.
+
+/// Executes exact aten::narrow. Returns a view sharing input storage.
+
+pub narrow_view(tensor: Tensor, dimension: Int, start: Int, length: Int): Tensor.
+
+/// Executes exact aten::select_copy.int_out. Preserves upstream output values and ownership.
+
+pub select_copy_out(output: Tensor, tensor: Tensor, dimension: Int, index: Int): Unit.
+
+/// Executes exact aten::select_scatter.out. Preserves upstream output values and ownership.
+
+pub select_scatter_out(output: Tensor, tensor: Tensor, source: Tensor, dimension: Int, index: Int): Unit.
+
+/// Executes exact aten::tensordot. Preserves upstream output values and ownership.
+
+pub tensordot(tensor: Tensor, other: Tensor, dimensions_self: List[Int], dimensions_other: List[Int]): Tensor.
+
+/// Executes exact aten::tensordot.out. Preserves upstream output values and ownership.
+
+pub tensordot_out(output: Tensor, tensor: Tensor, other: Tensor, dimensions_self: List[Int], dimensions_other: List[Int]): Unit.
+
+/// Executes exact aten::trace_backward. Preserves upstream output values and ownership.
+
+pub trace_backward(gradient: Tensor, sizes: List[Int]): Tensor.
+
+/// Executes exact aten::transpose_copy.int_out. Preserves upstream output values and ownership.
+
+pub transpose_copy_out(output: Tensor, tensor: Tensor, dimension0: Int, dimension1: Int): Unit.
+
+/// Executes exact aten::unfold. Returns a view sharing input storage.
+
+pub unfold(tensor: Tensor, dimension: Int, size: Int, step: Int): Tensor.
+
+/// Executes exact aten::unfold_copy.out. Preserves upstream output values and ownership.
+
+pub unfold_copy_out(output: Tensor, tensor: Tensor, dimension: Int, size: Int, step: Int): Unit.
+
+/// Executes exact aten::zero. Preserves upstream output values and ownership.
+
+pub zero(tensor: Tensor): Tensor.
+
+/// Executes exact aten::zero.out. Preserves upstream output values and ownership.
+
+pub zero_out(output: Tensor, tensor: Tensor): Unit.

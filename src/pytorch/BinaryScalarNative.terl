@@ -1,0 +1,1375 @@
+/**
+ * Generated exact CXX tensor/scalar binary dispatchers.
+ */
+module pytorch.BinaryScalarNative.
+
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+import type pytorch.Tensor.Scalar.
+
+/**
+ * Writes a selected two-tensor binary operation into retained output storage.
+ */
+pub binary_tensor_out(output: Tensor, left: Tensor, operation: Int, right: Tensor): Unit ->
+    if {
+        operation == 0 -> binary_tensor_out_bitwise_and(output, left, right);
+        operation == 1 -> binary_tensor_out_bitwise_or(output, left, right);
+        operation == 2 -> binary_tensor_out_bitwise_xor(output, left, right);
+        operation == 3 -> binary_tensor_out_bitwise_left_shift(output, left, right);
+        operation == 4 -> binary_tensor_out_bitwise_right_shift(output, left, right);
+        operation == 5 -> binary_tensor_out_remainder(output, left, right);
+        operation == 6 -> binary_tensor_out_pow(output, left, right);
+        operation == 7 -> binary_tensor_out_float_power(output, left, right);
+        operation == 8 -> binary_tensor_out_mul(output, left, right);
+        operation == 9 -> binary_tensor_out_floor_divide(output, left, right);
+        operation == 10 -> binary_tensor_out_xlogy(output, left, right);
+        operation == 11 -> binary_tensor_out_eq(output, left, right);
+        operation == 12 -> binary_tensor_out_ne(output, left, right);
+        operation == 13 -> binary_tensor_out_lt(output, left, right);
+        operation == 14 -> binary_tensor_out_le(output, left, right);
+        operation == 15 -> binary_tensor_out_gt(output, left, right);
+        operation == 16 -> binary_tensor_out_ge(output, left, right);
+        true -> let _failed = fail(exit_reason(7120));
+        binary_tensor_out_bitwise_and(output, left, right)
+    }.
+
+/**
+ * Applies a selected two-tensor binary operation to the left tensor in place.
+ */
+pub binary_tensor_in_place(left: Tensor, operation: Int, right: Tensor): Unit ->
+    if {
+        operation == 0 -> binary_tensor_in_bitwise_and(left, right);
+        operation == 1 -> binary_tensor_in_bitwise_or(left, right);
+        operation == 2 -> binary_tensor_in_bitwise_xor(left, right);
+        operation == 3 -> binary_tensor_in_bitwise_left_shift(left, right);
+        operation == 4 -> binary_tensor_in_bitwise_right_shift(left, right);
+        operation == 5 -> binary_tensor_in_remainder(left, right);
+        operation == 6 -> binary_tensor_in_pow(left, right);
+        operation == 7 -> binary_tensor_in_float_power(left, right);
+        operation == 8 -> binary_tensor_in_mul(left, right);
+        operation == 9 -> binary_tensor_in_floor_divide(left, right);
+        operation == 10 -> binary_tensor_in_xlogy(left, right);
+        operation == 11 -> binary_tensor_in_eq(left, right);
+        operation == 12 -> binary_tensor_in_ne(left, right);
+        operation == 13 -> binary_tensor_in_lt(left, right);
+        operation == 14 -> binary_tensor_in_le(left, right);
+        operation == 15 -> binary_tensor_in_gt(left, right);
+        operation == 16 -> binary_tensor_in_ge(left, right);
+        true -> let _failed = fail(exit_reason(7120));
+        binary_tensor_in_bitwise_and(left, right)
+    }.
+
+/**
+ * Applies a selected binary operation with an exact integer scalar right operand.
+ */
+pub binary_scalar_right_int(tensor: Tensor, operation: Int, scalar: Int): Tensor ->
+    if {
+        operation == 0 -> binary_scalar_right_bitwise_and_int(tensor, scalar);
+        operation == 1 -> binary_scalar_right_bitwise_or_int(tensor, scalar);
+        operation == 2 -> binary_scalar_right_bitwise_xor_int(tensor, scalar);
+        operation == 3 -> binary_scalar_right_bitwise_left_shift_int(tensor, scalar);
+        operation == 4 -> binary_scalar_right_bitwise_right_shift_int(tensor, scalar);
+        operation == 5 -> binary_scalar_right_remainder_int(tensor, scalar);
+        operation == 6 -> binary_scalar_right_pow_int(tensor, scalar);
+        operation == 7 -> binary_scalar_right_float_power_int(tensor, scalar);
+        operation == 8 -> binary_scalar_right_mul_int(tensor, scalar);
+        operation == 9 -> binary_scalar_right_floor_divide_int(tensor, scalar);
+        operation == 10 -> binary_scalar_right_xlogy_int(tensor, scalar);
+        operation == 11 -> binary_scalar_right_eq_int(tensor, scalar);
+        operation == 12 -> binary_scalar_right_ne_int(tensor, scalar);
+        operation == 13 -> binary_scalar_right_lt_int(tensor, scalar);
+        operation == 14 -> binary_scalar_right_le_int(tensor, scalar);
+        operation == 15 -> binary_scalar_right_gt_int(tensor, scalar);
+        operation == 16 -> binary_scalar_right_ge_int(tensor, scalar);
+        operation == 18 -> binary_scalar_right_copysign_int(tensor, scalar);
+        true -> let _failed = fail(exit_reason(7120));
+        binary_scalar_right_bitwise_and_int(tensor, scalar)
+    }.
+
+/**
+ * Applies a selected binary operation with a floating-point scalar right operand.
+ */
+pub binary_scalar_right_float(tensor: Tensor, operation: Int, scalar: Float): Tensor ->
+    if {
+        operation == 5 -> binary_scalar_right_remainder_float(tensor, scalar);
+        operation == 6 -> binary_scalar_right_pow_float(tensor, scalar);
+        operation == 7 -> binary_scalar_right_float_power_float(tensor, scalar);
+        operation == 8 -> binary_scalar_right_mul_float(tensor, scalar);
+        operation == 9 -> binary_scalar_right_floor_divide_float(tensor, scalar);
+        operation == 10 -> binary_scalar_right_xlogy_float(tensor, scalar);
+        operation == 11 -> binary_scalar_right_eq_float(tensor, scalar);
+        operation == 12 -> binary_scalar_right_ne_float(tensor, scalar);
+        operation == 13 -> binary_scalar_right_lt_float(tensor, scalar);
+        operation == 14 -> binary_scalar_right_le_float(tensor, scalar);
+        operation == 15 -> binary_scalar_right_gt_float(tensor, scalar);
+        operation == 16 -> binary_scalar_right_ge_float(tensor, scalar);
+        operation == 17 -> binary_scalar_right_fmod_float(tensor, scalar);
+        operation == 18 -> binary_scalar_right_copysign_float(tensor, scalar);
+        true -> let _failed = fail(exit_reason(7120));
+        binary_scalar_right_remainder_float(tensor, scalar)
+    }.
+
+/**
+ * Applies a selected binary operation with an exact integer scalar left operand.
+ */
+pub binary_scalar_left_int(operation: Int, scalar: Int, tensor: Tensor): Tensor ->
+    if {
+        operation == 0 -> binary_scalar_left_bitwise_and_int(scalar, tensor);
+        operation == 1 -> binary_scalar_left_bitwise_or_int(scalar, tensor);
+        operation == 2 -> binary_scalar_left_bitwise_xor_int(scalar, tensor);
+        operation == 3 -> binary_scalar_left_bitwise_left_shift_int(scalar, tensor);
+        operation == 4 -> binary_scalar_left_bitwise_right_shift_int(scalar, tensor);
+        operation == 5 -> binary_scalar_left_remainder_int(scalar, tensor);
+        operation == 6 -> binary_scalar_left_pow_int(scalar, tensor);
+        operation == 7 -> binary_scalar_left_float_power_int(scalar, tensor);
+        operation == 10 -> binary_scalar_left_xlogy_int(scalar, tensor);
+        true -> let _failed = fail(exit_reason(7120));
+        binary_scalar_left_bitwise_and_int(scalar, tensor)
+    }.
+
+/**
+ * Applies a selected binary operation with a floating-point scalar left operand.
+ */
+pub binary_scalar_left_float(operation: Int, scalar: Float, tensor: Tensor): Tensor ->
+    if {
+        operation == 5 -> binary_scalar_left_remainder_float(scalar, tensor);
+        operation == 6 -> binary_scalar_left_pow_float(scalar, tensor);
+        operation == 7 -> binary_scalar_left_float_power_float(scalar, tensor);
+        operation == 10 -> binary_scalar_left_xlogy_float(scalar, tensor);
+        true -> let _failed = fail(exit_reason(7120));
+        binary_scalar_left_remainder_float(scalar, tensor)
+    }.
+
+/**
+ * Writes a selected binary operation with an integer scalar right operand.
+ */
+pub binary_scalar_right_int_out(output: Tensor, tensor: Tensor, operation: Int, scalar: Int): Unit ->
+    if {
+        operation == 0 -> binary_scalar_right_bitwise_and_int_out(output, tensor, scalar);
+        operation == 1 -> binary_scalar_right_bitwise_or_int_out(output, tensor, scalar);
+        operation == 2 -> binary_scalar_right_bitwise_xor_int_out(output, tensor, scalar);
+        operation == 3 -> binary_scalar_right_bitwise_left_shift_int_out(output, tensor, scalar);
+        operation == 4 -> binary_scalar_right_bitwise_right_shift_int_out(output, tensor, scalar);
+        operation == 5 -> binary_scalar_right_remainder_int_out(output, tensor, scalar);
+        operation == 6 -> binary_scalar_right_pow_int_out(output, tensor, scalar);
+        operation == 7 -> binary_scalar_right_float_power_int_out(output, tensor, scalar);
+        operation == 8 -> binary_scalar_right_mul_int_out(output, tensor, scalar);
+        operation == 9 -> binary_scalar_right_floor_divide_int_out(output, tensor, scalar);
+        operation == 10 -> binary_scalar_right_xlogy_int_out(output, tensor, scalar);
+        operation == 11 -> binary_scalar_right_eq_int_out(output, tensor, scalar);
+        operation == 12 -> binary_scalar_right_ne_int_out(output, tensor, scalar);
+        operation == 13 -> binary_scalar_right_lt_int_out(output, tensor, scalar);
+        operation == 14 -> binary_scalar_right_le_int_out(output, tensor, scalar);
+        operation == 15 -> binary_scalar_right_gt_int_out(output, tensor, scalar);
+        operation == 16 -> binary_scalar_right_ge_int_out(output, tensor, scalar);
+        operation == 18 -> binary_scalar_right_copysign_int_out(output, tensor, scalar);
+        true -> let _failed = fail(exit_reason(7120));
+        binary_scalar_right_bitwise_and_int_out(output, tensor, scalar)
+    }.
+
+/**
+ * Writes a selected binary operation with a floating-point scalar right operand.
+ */
+pub binary_scalar_right_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    operation: Int,
+    scalar: Float,
+): Unit ->
+    if {
+        operation == 5 -> binary_scalar_right_remainder_float_out(output, tensor, scalar);
+        operation == 6 -> binary_scalar_right_pow_float_out(output, tensor, scalar);
+        operation == 7 -> binary_scalar_right_float_power_float_out(output, tensor, scalar);
+        operation == 8 -> binary_scalar_right_mul_float_out(output, tensor, scalar);
+        operation == 9 -> binary_scalar_right_floor_divide_float_out(output, tensor, scalar);
+        operation == 10 -> binary_scalar_right_xlogy_float_out(output, tensor, scalar);
+        operation == 11 -> binary_scalar_right_eq_float_out(output, tensor, scalar);
+        operation == 12 -> binary_scalar_right_ne_float_out(output, tensor, scalar);
+        operation == 13 -> binary_scalar_right_lt_float_out(output, tensor, scalar);
+        operation == 14 -> binary_scalar_right_le_float_out(output, tensor, scalar);
+        operation == 15 -> binary_scalar_right_gt_float_out(output, tensor, scalar);
+        operation == 16 -> binary_scalar_right_ge_float_out(output, tensor, scalar);
+        operation == 17 -> binary_scalar_right_fmod_float_out(output, tensor, scalar);
+        operation == 18 -> binary_scalar_right_copysign_float_out(output, tensor, scalar);
+        true -> let _failed = fail(exit_reason(7120));
+        binary_scalar_right_remainder_float_out(output, tensor, scalar)
+    }.
+
+/**
+ * Writes a selected binary operation with an integer scalar left operand.
+ */
+pub binary_scalar_left_int_out(output: Tensor, operation: Int, scalar: Int, tensor: Tensor): Unit ->
+    if {
+        operation == 0 -> binary_scalar_left_bitwise_and_int_out(output, scalar, tensor);
+        operation == 1 -> binary_scalar_left_bitwise_or_int_out(output, scalar, tensor);
+        operation == 2 -> binary_scalar_left_bitwise_xor_int_out(output, scalar, tensor);
+        operation == 3 -> binary_scalar_left_bitwise_left_shift_int_out(output, scalar, tensor);
+        operation == 4 -> binary_scalar_left_bitwise_right_shift_int_out(output, scalar, tensor);
+        operation == 5 -> binary_scalar_left_remainder_int_out(output, scalar, tensor);
+        operation == 6 -> binary_scalar_left_pow_int_out(output, scalar, tensor);
+        operation == 7 -> binary_scalar_left_float_power_int_out(output, scalar, tensor);
+        operation == 10 -> binary_scalar_left_xlogy_int_out(output, scalar, tensor);
+        true -> let _failed = fail(exit_reason(7120));
+        binary_scalar_left_bitwise_and_int_out(output, scalar, tensor)
+    }.
+
+/**
+ * Writes a selected binary operation with a floating-point scalar left operand.
+ */
+pub binary_scalar_left_float_out(
+    output: Tensor,
+    operation: Int,
+    scalar: Float,
+    tensor: Tensor,
+): Unit ->
+    if {
+        operation == 5 -> binary_scalar_left_remainder_float_out(output, scalar, tensor);
+        operation == 6 -> binary_scalar_left_pow_float_out(output, scalar, tensor);
+        operation == 7 -> binary_scalar_left_float_power_float_out(output, scalar, tensor);
+        operation == 10 -> binary_scalar_left_xlogy_float_out(output, scalar, tensor);
+        true -> let _failed = fail(exit_reason(7120));
+        binary_scalar_left_remainder_float_out(output, scalar, tensor)
+    }.
+
+/**
+ * Applies a selected integer-scalar binary operation in place.
+ */
+pub binary_scalar_right_int_in_place(tensor: Tensor, operation: Int, scalar: Int): Unit ->
+    if {
+        operation == 0 -> binary_scalar_right_bitwise_and_int_in_place(tensor, scalar);
+        operation == 1 -> binary_scalar_right_bitwise_or_int_in_place(tensor, scalar);
+        operation == 2 -> binary_scalar_right_bitwise_xor_int_in_place(tensor, scalar);
+        operation == 3 -> binary_scalar_right_bitwise_left_shift_int_in_place(tensor, scalar);
+        operation == 4 -> binary_scalar_right_bitwise_right_shift_int_in_place(tensor, scalar);
+        operation == 5 -> binary_scalar_right_remainder_int_in_place(tensor, scalar);
+        operation == 6 -> binary_scalar_right_pow_int_in_place(tensor, scalar);
+        operation == 7 -> binary_scalar_right_float_power_int_in_place(tensor, scalar);
+        operation == 8 -> binary_scalar_right_mul_int_in_place(tensor, scalar);
+        operation == 9 -> binary_scalar_right_floor_divide_int_in_place(tensor, scalar);
+        operation == 10 -> binary_scalar_right_xlogy_int_in_place(tensor, scalar);
+        operation == 11 -> binary_scalar_right_eq_int_in_place(tensor, scalar);
+        operation == 12 -> binary_scalar_right_ne_int_in_place(tensor, scalar);
+        operation == 13 -> binary_scalar_right_lt_int_in_place(tensor, scalar);
+        operation == 14 -> binary_scalar_right_le_int_in_place(tensor, scalar);
+        operation == 15 -> binary_scalar_right_gt_int_in_place(tensor, scalar);
+        operation == 16 -> binary_scalar_right_ge_int_in_place(tensor, scalar);
+        operation == 18 -> binary_scalar_right_copysign_int_in_place(tensor, scalar);
+        true -> let _failed = fail(exit_reason(7120));
+        binary_scalar_right_bitwise_and_int_in_place(tensor, scalar)
+    }.
+
+/**
+ * Applies a selected floating-scalar binary operation in place.
+ */
+pub binary_scalar_right_float_in_place(tensor: Tensor, operation: Int, scalar: Float): Unit ->
+    if {
+        operation == 5 -> binary_scalar_right_remainder_float_in_place(tensor, scalar);
+        operation == 6 -> binary_scalar_right_pow_float_in_place(tensor, scalar);
+        operation == 7 -> binary_scalar_right_float_power_float_in_place(tensor, scalar);
+        operation == 8 -> binary_scalar_right_mul_float_in_place(tensor, scalar);
+        operation == 9 -> binary_scalar_right_floor_divide_float_in_place(tensor, scalar);
+        operation == 10 -> binary_scalar_right_xlogy_float_in_place(tensor, scalar);
+        operation == 11 -> binary_scalar_right_eq_float_in_place(tensor, scalar);
+        operation == 12 -> binary_scalar_right_ne_float_in_place(tensor, scalar);
+        operation == 13 -> binary_scalar_right_lt_float_in_place(tensor, scalar);
+        operation == 14 -> binary_scalar_right_le_float_in_place(tensor, scalar);
+        operation == 15 -> binary_scalar_right_gt_float_in_place(tensor, scalar);
+        operation == 16 -> binary_scalar_right_ge_float_in_place(tensor, scalar);
+        operation == 17 -> binary_scalar_right_fmod_float_in_place(tensor, scalar);
+        operation == 18 -> binary_scalar_right_copysign_float_in_place(tensor, scalar);
+        true -> let _failed = fail(exit_reason(7120));
+        binary_scalar_right_remainder_float_in_place(tensor, scalar)
+    }.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_bitwise_and}
+binary_tensor_out_bitwise_and(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_bitwise_and}
+binary_tensor_in_bitwise_and(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_bitwise_or}
+binary_tensor_out_bitwise_or(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_bitwise_or}
+binary_tensor_in_bitwise_or(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_bitwise_xor}
+binary_tensor_out_bitwise_xor(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_bitwise_xor}
+binary_tensor_in_bitwise_xor(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_bitwise_left_shift}
+binary_tensor_out_bitwise_left_shift(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_bitwise_left_shift}
+binary_tensor_in_bitwise_left_shift(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_bitwise_right_shift}
+binary_tensor_out_bitwise_right_shift(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_bitwise_right_shift}
+binary_tensor_in_bitwise_right_shift(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_remainder}
+binary_tensor_out_remainder(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_remainder}
+binary_tensor_in_remainder(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_pow}
+binary_tensor_out_pow(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_pow}
+binary_tensor_in_pow(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_float_power}
+binary_tensor_out_float_power(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_float_power}
+binary_tensor_in_float_power(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_mul}
+binary_tensor_out_mul(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_mul}
+binary_tensor_in_mul(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_floor_divide}
+binary_tensor_out_floor_divide(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_floor_divide}
+binary_tensor_in_floor_divide(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_xlogy}
+binary_tensor_out_xlogy(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_xlogy}
+binary_tensor_in_xlogy(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_and_int}
+binary_scalar_right_bitwise_and_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_and_int_out}
+binary_scalar_right_bitwise_and_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_and_int_in_place}
+binary_scalar_right_bitwise_and_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_or_int}
+binary_scalar_right_bitwise_or_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_or_int_out}
+binary_scalar_right_bitwise_or_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_or_int_in_place}
+binary_scalar_right_bitwise_or_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_xor_int}
+binary_scalar_right_bitwise_xor_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_xor_int_out}
+binary_scalar_right_bitwise_xor_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_xor_int_in_place}
+binary_scalar_right_bitwise_xor_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_left_shift_int}
+binary_scalar_right_bitwise_left_shift_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_left_shift_int_out}
+binary_scalar_right_bitwise_left_shift_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_left_shift_int_in_place}
+binary_scalar_right_bitwise_left_shift_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_right_shift_int}
+binary_scalar_right_bitwise_right_shift_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_right_shift_int_out}
+binary_scalar_right_bitwise_right_shift_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_bitwise_right_shift_int_in_place}
+binary_scalar_right_bitwise_right_shift_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_remainder_int}
+binary_scalar_right_remainder_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_remainder_int_out}
+binary_scalar_right_remainder_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_remainder_int_in_place}
+binary_scalar_right_remainder_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_pow_int}
+binary_scalar_right_pow_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_pow_int_out}
+binary_scalar_right_pow_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_pow_int_in_place}
+binary_scalar_right_pow_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_float_power_int}
+binary_scalar_right_float_power_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_float_power_int_out}
+binary_scalar_right_float_power_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_float_power_int_in_place}
+binary_scalar_right_float_power_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_mul_int}
+binary_scalar_right_mul_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_mul_int_out}
+binary_scalar_right_mul_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_mul_int_in_place}
+binary_scalar_right_mul_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_floor_divide_int}
+binary_scalar_right_floor_divide_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_floor_divide_int_out}
+binary_scalar_right_floor_divide_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_floor_divide_int_in_place}
+binary_scalar_right_floor_divide_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_xlogy_int}
+binary_scalar_right_xlogy_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_xlogy_int_out}
+binary_scalar_right_xlogy_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_xlogy_int_in_place}
+binary_scalar_right_xlogy_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_copysign_int}
+binary_scalar_right_copysign_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_copysign_int_out}
+binary_scalar_right_copysign_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_copysign_int_in_place}
+binary_scalar_right_copysign_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_remainder_float}
+binary_scalar_right_remainder_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_remainder_float_out}
+binary_scalar_right_remainder_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_remainder_float_in_place}
+binary_scalar_right_remainder_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_pow_float}
+binary_scalar_right_pow_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_pow_float_out}
+binary_scalar_right_pow_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_pow_float_in_place}
+binary_scalar_right_pow_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_float_power_float}
+binary_scalar_right_float_power_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_float_power_float_out}
+binary_scalar_right_float_power_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_float_power_float_in_place}
+binary_scalar_right_float_power_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_mul_float}
+binary_scalar_right_mul_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_mul_float_out}
+binary_scalar_right_mul_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_mul_float_in_place}
+binary_scalar_right_mul_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_floor_divide_float}
+binary_scalar_right_floor_divide_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_floor_divide_float_out}
+binary_scalar_right_floor_divide_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_floor_divide_float_in_place}
+binary_scalar_right_floor_divide_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_xlogy_float}
+binary_scalar_right_xlogy_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_xlogy_float_out}
+binary_scalar_right_xlogy_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_xlogy_float_in_place}
+binary_scalar_right_xlogy_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_fmod_float}
+binary_scalar_right_fmod_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_fmod_float_out}
+binary_scalar_right_fmod_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_fmod_float_in_place}
+binary_scalar_right_fmod_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_copysign_float}
+binary_scalar_right_copysign_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_copysign_float_out}
+binary_scalar_right_copysign_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_copysign_float_in_place}
+binary_scalar_right_copysign_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_bitwise_and_int}
+binary_scalar_left_bitwise_and_int(self: Int, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_bitwise_and_int_out}
+binary_scalar_left_bitwise_and_int_out(out: Tensor, self: Int, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_bitwise_or_int}
+binary_scalar_left_bitwise_or_int(self: Int, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_bitwise_or_int_out}
+binary_scalar_left_bitwise_or_int_out(out: Tensor, self: Int, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_bitwise_xor_int}
+binary_scalar_left_bitwise_xor_int(self: Int, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_bitwise_xor_int_out}
+binary_scalar_left_bitwise_xor_int_out(out: Tensor, self: Int, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_bitwise_left_shift_int}
+binary_scalar_left_bitwise_left_shift_int(self: Int, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_bitwise_left_shift_int_out}
+binary_scalar_left_bitwise_left_shift_int_out(out: Tensor, self: Int, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_bitwise_right_shift_int}
+binary_scalar_left_bitwise_right_shift_int(self: Int, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_bitwise_right_shift_int_out}
+binary_scalar_left_bitwise_right_shift_int_out(out: Tensor, self: Int, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_remainder_int}
+binary_scalar_left_remainder_int(self: Int, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_remainder_int_out}
+binary_scalar_left_remainder_int_out(out: Tensor, self: Int, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_pow_int}
+binary_scalar_left_pow_int(self: Int, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_pow_int_out}
+binary_scalar_left_pow_int_out(out: Tensor, self: Int, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_float_power_int}
+binary_scalar_left_float_power_int(self: Int, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_float_power_int_out}
+binary_scalar_left_float_power_int_out(out: Tensor, self: Int, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_xlogy_int}
+binary_scalar_left_xlogy_int(self: Int, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_xlogy_int_out}
+binary_scalar_left_xlogy_int_out(out: Tensor, self: Int, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_remainder_float}
+binary_scalar_left_remainder_float(self: Float, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_remainder_float_out}
+binary_scalar_left_remainder_float_out(out: Tensor, self: Float, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_pow_float}
+binary_scalar_left_pow_float(self: Float, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_pow_float_out}
+binary_scalar_left_pow_float_out(out: Tensor, self: Float, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_float_power_float}
+binary_scalar_left_float_power_float(self: Float, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_float_power_float_out}
+binary_scalar_left_float_power_float_out(out: Tensor, self: Float, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_xlogy_float}
+binary_scalar_left_xlogy_float(self: Float, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX binary-scalar leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_left_xlogy_float_out}
+binary_scalar_left_xlogy_float_out(out: Tensor, self: Float, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar equality leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_eq_float}
+binary_scalar_right_eq_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX scalar equality retained-output leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_eq_float_out}
+binary_scalar_right_eq_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar equality mutation leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_eq_float_in_place}
+binary_scalar_right_eq_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar ne functional leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_ne_float}
+binary_scalar_right_ne_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX scalar ne out leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_ne_float_out}
+binary_scalar_right_ne_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar ne in_place leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_ne_float_in_place}
+binary_scalar_right_ne_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar lt functional leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_lt_float}
+binary_scalar_right_lt_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX scalar lt out leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_lt_float_out}
+binary_scalar_right_lt_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar lt in_place leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_lt_float_in_place}
+binary_scalar_right_lt_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar le functional leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_le_float}
+binary_scalar_right_le_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX scalar le out leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_le_float_out}
+binary_scalar_right_le_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar le in_place leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_le_float_in_place}
+binary_scalar_right_le_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar gt functional leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_gt_float}
+binary_scalar_right_gt_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX scalar gt out leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_gt_float_out}
+binary_scalar_right_gt_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar gt in_place leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_gt_float_in_place}
+binary_scalar_right_gt_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar ge functional leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_ge_float}
+binary_scalar_right_ge_float(self: Tensor, other: Float): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX scalar ge out leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_ge_float_out}
+binary_scalar_right_ge_float_out(out: Tensor, self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar ge in_place leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_ge_float_in_place}
+binary_scalar_right_ge_float_in_place(self: Tensor, other: Float): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar eq functional int leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_eq_int}
+binary_scalar_right_eq_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX scalar eq out int_out leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_eq_int_out}
+binary_scalar_right_eq_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar eq in_place int_in_place leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_eq_int_in_place}
+binary_scalar_right_eq_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar ne functional int leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_ne_int}
+binary_scalar_right_ne_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX scalar ne out int_out leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_ne_int_out}
+binary_scalar_right_ne_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar ne in_place int_in_place leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_ne_int_in_place}
+binary_scalar_right_ne_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar lt functional int leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_lt_int}
+binary_scalar_right_lt_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX scalar lt out int_out leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_lt_int_out}
+binary_scalar_right_lt_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar lt in_place int_in_place leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_lt_int_in_place}
+binary_scalar_right_lt_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar le functional int leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_le_int}
+binary_scalar_right_le_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX scalar le out int_out leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_le_int_out}
+binary_scalar_right_le_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar le in_place int_in_place leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_le_int_in_place}
+binary_scalar_right_le_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar gt functional int leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_gt_int}
+binary_scalar_right_gt_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX scalar gt out int_out leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_gt_int_out}
+binary_scalar_right_gt_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar gt in_place int_in_place leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_gt_int_in_place}
+binary_scalar_right_gt_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar ge functional int leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_ge_int}
+binary_scalar_right_ge_int(self: Tensor, other: Int): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX scalar ge out int_out leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_ge_int_out}
+binary_scalar_right_ge_int_out(out: Tensor, self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX scalar ge in_place int_in_place leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_scalar_right_ge_int_in_place}
+binary_scalar_right_ge_int_in_place(self: Tensor, other: Int): Unit ->
+    native.
+
+/**
+ * Generated exact CXX tensor eq out comparison leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_eq}
+binary_tensor_out_eq(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX tensor eq in comparison leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_eq}
+binary_tensor_in_eq(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX tensor ne out comparison leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_ne}
+binary_tensor_out_ne(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX tensor ne in comparison leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_ne}
+binary_tensor_in_ne(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX tensor lt out comparison leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_lt}
+binary_tensor_out_lt(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX tensor lt in comparison leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_lt}
+binary_tensor_in_lt(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX tensor le out comparison leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_le}
+binary_tensor_out_le(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX tensor le in comparison leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_le}
+binary_tensor_in_le(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX tensor gt out comparison leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_gt}
+binary_tensor_out_gt(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX tensor gt in comparison leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_gt}
+binary_tensor_in_gt(self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX tensor ge out comparison leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_out_ge}
+binary_tensor_out_ge(out: Tensor, self: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Generated exact CXX tensor ge in comparison leaf.
+ */
+@compiler.native {pytorch.binary_scalar_native.cxx.binary_tensor_in_ge}
+binary_tensor_in_ge(self: Tensor, other: Tensor): Unit ->
+    native.

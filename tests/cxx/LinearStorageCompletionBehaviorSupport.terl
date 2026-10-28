@@ -1,0 +1,63 @@
+module pytorch.LinearStorageCompletionBehaviorSupport.
+
+import pytorch.LinearStorageCompletion.{bilinear_no_bias, bilinear_with_bias, conv_tbc, conv_tbc_backward, conv_tbc_out, cummaxmin_backward, set_empty, set_empty_in_place, set_empty_out, set_source_tensor, set_source_tensor_out}.
+import pytorch.Tensor.{Float64, Int64, Strided, dispose, is_cuda, ones_device, shape}.
+
+/**
+ * Executes every LinearStorageCompletion contract on one device.
+ */
+pub linear_storage_completion_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let input1 = ones_device([1, 2], Float64, Strided, device_name);
+    let input2 = ones_device([1, 2], Float64, Strided, device_name);
+    let weight = ones_device([2, 2, 2], Float64, Strided, device_name);
+    let bias = ones_device([2], Float64, Strided, device_name);
+    let bilinear_plain = bilinear_no_bias(input1, input2, weight);
+    let bilinear_biased = bilinear_with_bias(input1, input2, weight, bias);
+    let temporal_input = ones_device([3, 1, 1], Float64, Strided, device_name);
+    let temporal_weight = ones_device([2, 1, 1], Float64, Strided, device_name);
+    let temporal_bias = ones_device([1], Float64, Strided, device_name);
+    let temporal = conv_tbc(temporal_input, temporal_weight, temporal_bias, 0);
+    let temporal_output = ones_device([0], Float64, Strided, device_name);
+    conv_tbc_out(temporal_output, temporal_input, temporal_weight, temporal_bias, 0);
+    let temporal_gradient = ones_device([2, 1, 1], Float64, Strided, device_name);
+    let {input_gradient, weight_gradient, bias_gradient} = conv_tbc_backward(temporal_gradient, temporal_input, temporal_weight, temporal_bias, 0);
+    let cumulative_gradient = ones_device([3], Float64, Strided, device_name);
+    let cumulative_input = ones_device([3], Float64, Strided, device_name);
+    let cumulative_indices = ones_device([3], Int64, Strided, device_name);
+    let cumulative = cummaxmin_backward(cumulative_gradient, cumulative_input, cumulative_indices, 0);
+    let reset_source = ones_device([2], Float64, Strided, device_name);
+    let reset = set_empty(reset_source);
+    let reset_output = ones_device([0], Float64, Strided, device_name);
+    (set_empty_out(reset_output, reset_source); let reset_mutation = ones_device([2], Float64, Strided, device_name);
+(set_empty_in_place(reset_mutation); let rebinding_input = ones_device([2], Float64, Strided, device_name);
+let rebinding_source = ones_device([3], Float64, Strided, device_name);
+let rebound = set_source_tensor(rebinding_input, rebinding_source);
+let rebound_output = ones_device([0], Float64, Strided, device_name);
+(set_source_tensor_out(rebound_output, rebinding_input, rebinding_source); let valid =
+    shape(bilinear_plain) == [1, 2]
+        and shape(bilinear_biased) == [1, 2]
+        and shape(temporal) == [2, 1, 1]
+        and shape(temporal_output) == [2, 1, 1]
+        and shape(input_gradient) == [3, 1, 1]
+        and shape(weight_gradient) == [2, 1, 1]
+        and shape(bias_gradient) == [1]
+        and shape(cumulative) == [3]
+        and shape(reset) == [0]
+        and shape(reset_output) == [0]
+        and shape(reset_mutation) == [0]
+        and shape(reset_source) == [2]
+        and shape(rebound) == [3]
+        and shape(rebound_output) == [3]
+        and shape(rebinding_input) == [2]
+        and is_cuda(bilinear_plain) == expected_cuda
+        and is_cuda(bilinear_biased) == expected_cuda
+        and is_cuda(temporal) == expected_cuda
+        and is_cuda(temporal_output) == expected_cuda
+        and is_cuda(input_gradient) == expected_cuda
+        and is_cuda(weight_gradient) == expected_cuda
+        and is_cuda(bias_gradient) == expected_cuda
+        and is_cuda(cumulative) == expected_cuda
+        and is_cuda(reset_source) == expected_cuda
+        and is_cuda(rebound) == expected_cuda
+        and is_cuda(rebound_output) == expected_cuda;
+(dispose(rebound_output); dispose(rebound); dispose(rebinding_source); dispose(rebinding_input); dispose(reset_mutation); dispose(reset_output); dispose(reset); dispose(reset_source); dispose(cumulative); dispose(cumulative_indices); dispose(cumulative_input); dispose(cumulative_gradient); dispose(bias_gradient); dispose(weight_gradient); dispose(input_gradient); dispose(temporal_gradient); dispose(temporal_output); dispose(temporal); dispose(temporal_bias); dispose(temporal_weight); dispose(temporal_input); dispose(bilinear_biased); dispose(bilinear_plain); dispose(bias); dispose(weight); dispose(input2); dispose(input1); valid)))).

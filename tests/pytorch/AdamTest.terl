@@ -1,0 +1,52 @@
+module pytorch.AdamTest.
+
+import pytorch.Optimizer.{adam, add_parameter, checkpoint, dispose as dispose_optimizer, parameter_count, restore, step, step_count, zero_grad}.
+import pytorch.Tensor.{add, backward, dispose, from_floats, gradient, item_float, mse_loss, require_grad, sum}.
+
+@test
+pub adam_updates_multiple_parameters_and_restores_owned_state(): Bool ->
+    let initial_actor = from_floats([2.0, -2.0], [2]);
+    let actor = require_grad(initial_actor);
+    let initial_critic = from_floats([3.0], [1]);
+    let critic = require_grad(initial_critic);
+    let actor_target = from_floats([0.0, 0.0], [2]);
+    let critic_target = from_floats([0.0], [1]);
+    let optimizer = adam(0.1, 0.9, 0.999, 1e-8, 0.0);
+    add_parameter(optimizer, actor);
+    add_parameter(optimizer, critic);
+    let actor_loss = mse_loss(actor, actor_target, 1);
+    let critic_loss = mse_loss(critic, critic_target, 1);
+    let loss = add(actor_loss, critic_loss, 1.0);
+    (backward(loss); step(optimizer); let actor_after_first = sum(actor);
+let critic_after_first = sum(critic);
+let first_actor_value = item_float(actor_after_first);
+let first_critic_value = item_float(critic_after_first);
+let saved = checkpoint(optimizer);
+(zero_grad(optimizer); let actor_zero_gradient = gradient(actor);
+let critic_zero_gradient = gradient(critic);
+let actor_zero_total = sum(actor_zero_gradient);
+let critic_zero_total = sum(critic_zero_gradient);
+let observed_actor_zero = item_float(actor_zero_total);
+let observed_critic_zero = item_float(critic_zero_total);
+let second_actor_loss = mse_loss(actor, actor_target, 1);
+let second_critic_loss = mse_loss(critic, critic_target, 1);
+let second_loss = add(second_actor_loss, second_critic_loss, 1.0);
+(backward(second_loss); step(optimizer); let critic_after_second = sum(critic);
+let second_critic_value = item_float(critic_after_second);
+(restore(optimizer, saved); let restored_actor = sum(actor);
+let restored_critic = sum(critic);
+let restored_actor_value = item_float(restored_actor);
+let restored_critic_value = item_float(restored_critic);
+let observed_parameters = parameter_count(optimizer);
+let observed_steps = step_count(optimizer);
+(dispose(restored_critic); dispose(restored_actor); dispose(critic_after_second); dispose(second_loss); dispose(second_critic_loss); dispose(second_actor_loss); dispose(critic_zero_total); dispose(actor_zero_total); dispose(critic_zero_gradient); dispose(actor_zero_gradient); dispose(critic_after_first); dispose(actor_after_first); dispose(loss); dispose(critic_loss); dispose(actor_loss); dispose_optimizer(optimizer); dispose(critic_target); dispose(actor_target); dispose(critic); dispose(initial_critic); dispose(actor); dispose(initial_actor); observed_parameters == 2
+    and observed_steps == 1
+    and first_actor_value > -0.000001
+    and first_actor_value < 0.000001
+    and first_critic_value > 2.89
+    and first_critic_value < 2.91
+    and second_critic_value < first_critic_value
+    and restored_actor_value == first_actor_value
+    and restored_critic_value == first_critic_value
+    and observed_actor_zero == 0.0
+    and observed_critic_zero == 0.0))))).

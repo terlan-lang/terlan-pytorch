@@ -1,0 +1,19 @@
+//! Generated CXX RMS normalization completion surface.
+
+module pytorch.RmsNormCompletion.
+
+/// Normalizes by root mean square with default weight and epsilon.
+
+pub rms_norm_default(input: Tensor, normalized_shape: List[Int]): Tensor.
+
+/// Normalizes by root mean square with an explicit epsilon.
+
+pub rms_norm_eps(input: Tensor, normalized_shape: List[Int], eps: Float): Tensor.
+
+/// Normalizes by root mean square with a learned weight.
+
+pub rms_norm_weight(input: Tensor, normalized_shape: List[Int], weight: Tensor): Tensor.
+
+/// Normalizes by root mean square with weight and epsilon.
+
+pub rms_norm_weight_eps(input: Tensor, normalized_shape: List[Int], weight: Tensor, eps: Float): Tensor.

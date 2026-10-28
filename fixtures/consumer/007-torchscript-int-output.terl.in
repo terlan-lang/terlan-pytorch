@@ -1,0 +1,17 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{dispose, dispose_model, from_int, item, load_torchscript, torchscript_forward_int}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let model = load_torchscript("$scalar_int_model");
+    let input = from_int(4);
+    let output = torchscript_forward_int(model, input);
+    let observed_input = item(input);
+    dispose(input);
+    dispose_model(model);
+    if {
+        observed_input == 4 and output == 7 ->
+            println("PYTORCH_INT_OUTPUT_CONSUMER_OK");
+        true -> println("PYTORCH_INT_OUTPUT_CONSUMER_FAILED")
+    }.

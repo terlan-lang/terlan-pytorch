@@ -1,0 +1,30 @@
+/**
+ * CPU runtime evidence for the functional rrelu-with-noise sequence leaf.
+ */
+module pytorch.RreluWithNoiseFunctionalParityTest.
+
+import pytorch.RandomCompletion.{generator_create, generator_dispose, rrelu_with_noise_functional}.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+import pytorch.TypeRelations.allclose.
+
+@test
+pub rrelu_with_noise_functional_forms_match_libtorch(): Bool ->
+    let input = from_floats([-2.0, -1.0, 0.0, 1.0, 2.0], [5]);
+    let noise = from_floats([1.0, 1.0, 1.0, 1.0, 1.0], [5]);
+    let generator = generator_create(3);
+    let {output, noise_output} = rrelu_with_noise_functional(input, noise, false, generator, 0.1, 0.3, false);
+    let expected = from_floats([-0.4, -0.2, 0.0, 1.0, 2.0], [5]);
+    let expected_noise = from_floats([1.0, 1.0, 1.0, 1.0, 1.0], [5]);
+    let valid =
+        shape(output) == [5]
+            and shape(noise_output) == [5]
+            and allclose(output, expected, 0.00001, 0.0, false)
+            and allclose(noise_output, expected_noise, 0.00001, 0.0, false);
+    dispose(expected_noise);
+    dispose(expected);
+    dispose(noise_output);
+    dispose(output);
+    generator_dispose(generator);
+    dispose(noise);
+    dispose(input);
+    valid.

@@ -1,0 +1,10 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{cross_entropy_loss, from_ints, full_float}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let logits = full_float([2, 2], 0.0);
+    let wrong_batch_target = from_ints([0], [1]);
+    let loss = cross_entropy_loss(logits, wrong_batch_target, 1, -100, 0.0);
+    println("PYTORCH_BATCHED_VISION_TARGET_NOT_REJECTED").

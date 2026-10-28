@@ -1,0 +1,11 @@
+//! Generated CXX scalar-quantile completion surface.
+
+module pytorch.QuantileCompletion.
+
+pub quantile_scalar(input: Tensor, q: Float, dimension: Int, keep_dimension: Bool, interpolation: String): Tensor.
+
+pub quantile_scalar_out(output: Tensor, input: Tensor, q: Float, dimension: Int, keep_dimension: Bool, interpolation: String): Unit.
+
+pub quantile_tensor(input: Tensor, q: Tensor, dimension: Int, keep_dimension: Bool, interpolation: String): Tensor.
+
+pub quantile_tensor_out(output: Tensor, input: Tensor, q: Tensor, dimension: Int, keep_dimension: Bool, interpolation: String): Unit.

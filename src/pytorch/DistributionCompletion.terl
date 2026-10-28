@@ -1,0 +1,250 @@
+/**
+ * Generated CXX random-distribution completion surface.
+ */
+module pytorch.DistributionCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Samples an exponential distribution into a tensor-shaped result.
+ */
+@compiler.native {pytorch.distribution.exponential}
+pub exponential(input: Tensor, lambd: Float = 1.0): Tensor ->
+    native.
+
+/**
+ * Writes exponential samples into retained output storage.
+ */
+@compiler.native {pytorch.distribution.exponential_out}
+pub exponential_out(output: Tensor, input: Tensor, lambd: Float = 1.0): Unit ->
+    native.
+
+/**
+ * Samples a Poisson distribution with rates supplied by the input tensor.
+ */
+@compiler.native {pytorch.distribution.poisson}
+pub poisson(input: Tensor): Tensor ->
+    native.
+
+/**
+ * Writes Poisson samples into retained output storage.
+ */
+@compiler.native {pytorch.distribution.poisson_out}
+pub poisson_out(output: Tensor, input: Tensor): Unit ->
+    native.
+
+/**
+ * Samples a binomial distribution from count and probability tensors.
+ */
+@compiler.native {pytorch.distribution.binomial}
+pub binomial(count: Tensor, probability: Tensor): Tensor ->
+    native.
+
+/**
+ * Writes binomial samples into retained output storage.
+ */
+@compiler.native {pytorch.distribution.binomial_out}
+pub binomial_out(output: Tensor, count: Tensor, probability: Tensor): Unit ->
+    native.
+
+/**
+ * Samples a Cauchy distribution into a tensor-shaped result.
+ */
+@compiler.native {pytorch.distribution.cauchy}
+pub cauchy(input: Tensor, median: Float = 0.0, sigma: Float = 1.0): Tensor ->
+    native.
+
+/**
+ * Writes Cauchy samples into retained output storage.
+ */
+@compiler.native {pytorch.distribution.cauchy_out}
+pub cauchy_out(output: Tensor, input: Tensor, median: Float = 0.0, sigma: Float = 1.0): Unit ->
+    native.
+
+/**
+ * Samples a geometric distribution into a tensor-shaped result.
+ */
+@compiler.native {pytorch.distribution.geometric}
+pub geometric(input: Tensor, probability: Float): Tensor ->
+    native.
+
+/**
+ * Writes geometric samples into retained output storage.
+ */
+@compiler.native {pytorch.distribution.geometric_out}
+pub geometric_out(output: Tensor, input: Tensor, probability: Float): Unit ->
+    native.
+
+/**
+ * Samples a log-normal distribution into a tensor-shaped result.
+ */
+@compiler.native {pytorch.distribution.log_normal}
+pub log_normal(input: Tensor, mean: Float = 1.0, standard_deviation: Float = 2.0): Tensor ->
+    native.
+
+/**
+ * Writes log-normal samples into retained output storage.
+ */
+@compiler.native {pytorch.distribution.log_normal_out}
+pub log_normal_out(
+    output: Tensor,
+    input: Tensor,
+    mean: Float = 1.0,
+    standard_deviation: Float = 2.0,
+): Unit ->
+    native.
+
+/**
+ * Samples a uniform distribution into a tensor-shaped result.
+ */
+@compiler.native {pytorch.distribution.uniform}
+pub uniform(input: Tensor, minimum: Float = 0.0, maximum: Float = 1.0): Tensor ->
+    native.
+
+/**
+ * Writes uniform samples into retained output storage.
+ */
+@compiler.native {pytorch.distribution.uniform_out}
+pub uniform_out(output: Tensor, input: Tensor, minimum: Float = 0.0, maximum: Float = 1.0): Unit ->
+    native.
+
+/**
+ * Fills a tensor in place with uniform samples.
+ */
+@compiler.native {pytorch.distribution.uniform_inplace}
+pub uniform_inplace(input: Tensor, minimum: Float = 0.0, maximum: Float = 1.0): Unit ->
+    native.
+
+@compiler.native {pytorch.distribution.exponential_inplace}
+pub exponential_inplace(input: Tensor, lambd: Float = 1.0): Unit ->
+    native.
+
+@compiler.native {pytorch.distribution.cauchy_inplace}
+pub cauchy_inplace(input: Tensor, median: Float = 0.0, sigma: Float = 1.0): Unit ->
+    native.
+
+@compiler.native {pytorch.distribution.geometric_inplace}
+pub geometric_inplace(input: Tensor, probability: Float): Unit ->
+    native.
+
+@compiler.native {pytorch.distribution.log_normal_inplace}
+pub log_normal_inplace(input: Tensor, mean: Float = 1.0, standard_deviation: Float = 2.0): Unit ->
+    native.
+
+@compiler.native {pytorch.distribution.normal_inplace}
+pub normal_inplace(input: Tensor, mean: Float = 0.0, standard_deviation: Float = 1.0): Unit ->
+    native.
+
+@compiler.native {pytorch.distribution.normal_functional}
+pub normal_functional(input: Tensor, mean: Float = 0.0, standard_deviation: Float = 1.0): Tensor ->
+    native.
+
+@compiler.native {pytorch.distribution.normal_out}
+pub normal_out(
+    output: Tensor,
+    input: Tensor,
+    mean: Float = 0.0,
+    standard_deviation: Float = 1.0,
+): Unit ->
+    native.
+
+@compiler.native {pytorch.distribution.bernoulli}
+pub bernoulli(input: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.distribution.bernoulli_probability}
+pub bernoulli_probability(input: Tensor, probability: Float): Tensor ->
+    native.
+
+@compiler.native {pytorch.distribution.bernoulli_tensor}
+pub bernoulli_tensor(input: Tensor, probability: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.distribution.bernoulli_out}
+pub bernoulli_out(output: Tensor, input: Tensor): Unit ->
+    native.
+
+@compiler.native {pytorch.distribution.bernoulli_probability_out}
+pub bernoulli_probability_out(output: Tensor, input: Tensor, probability: Float = 0.5): Unit ->
+    native.
+
+@compiler.native {pytorch.distribution.bernoulli_tensor_out}
+pub bernoulli_tensor_out(output: Tensor, input: Tensor, probability: Tensor): Unit ->
+    native.
+
+@compiler.native {pytorch.distribution.bernoulli_inplace}
+pub bernoulli_inplace(input: Tensor, probability: Float = 0.5): Unit ->
+    native.
+
+@compiler.native {pytorch.distribution.bernoulli_tensor_inplace}
+pub bernoulli_tensor_inplace(input: Tensor, probability: Tensor): Unit ->
+    native.
+
+@compiler.native {pytorch.distribution.multinomial}
+pub multinomial(input: Tensor, samples: Int, replacement: Bool = false): Tensor ->
+    native.
+
+@compiler.native {pytorch.distribution.multinomial_out}
+pub multinomial_out(output: Tensor, input: Tensor, samples: Int, replacement: Bool = false): Unit ->
+    native.
+
+/**
+ * Samples a normal distribution from tensor mean and standard deviation.
+ */
+@compiler.native {pytorch.distribution.normal_tensor_tensor}
+pub normal_tensor_tensor(mean: Tensor, standard_deviation: Tensor): Tensor ->
+    native.
+
+/**
+ * Writes tensor/tensor normal samples into retained output storage.
+ */
+@compiler.native {pytorch.distribution.normal_tensor_tensor_out}
+pub normal_tensor_tensor_out(output: Tensor, mean: Tensor, standard_deviation: Tensor): Unit ->
+    native.
+
+/**
+ * Samples a normal distribution from tensor mean and scalar standard deviation.
+ */
+@compiler.native {pytorch.distribution.normal_tensor_float}
+pub normal_tensor_float(mean: Tensor, standard_deviation: Float = 1.0): Tensor ->
+    native.
+
+/**
+ * Writes tensor/scalar normal samples into retained output storage.
+ */
+@compiler.native {pytorch.distribution.normal_tensor_float_out}
+pub normal_tensor_float_out(output: Tensor, mean: Tensor, standard_deviation: Float = 1.0): Unit ->
+    native.
+
+/**
+ * Samples a normal distribution from scalar mean and tensor standard deviation.
+ */
+@compiler.native {pytorch.distribution.normal_float_tensor}
+pub normal_float_tensor(mean: Float, standard_deviation: Tensor): Tensor ->
+    native.
+
+/**
+ * Writes scalar/tensor normal samples into retained output storage.
+ */
+@compiler.native {pytorch.distribution.normal_float_tensor_out}
+pub normal_float_tensor_out(output: Tensor, mean: Float, standard_deviation: Tensor): Unit ->
+    native.
+
+/**
+ * Samples a normal distribution with scalar parameters and explicit size.
+ */
+@compiler.native {pytorch.distribution.normal_float_float}
+pub normal_float_float(mean: Float, standard_deviation: Float, size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Writes scalar-parameter normal samples into retained output storage.
+ */
+@compiler.native {pytorch.distribution.normal_float_float_out}
+pub normal_float_float_out(
+    output: Tensor,
+    mean: Float,
+    standard_deviation: Float,
+    size: List[Int],
+): Unit ->
+    native.

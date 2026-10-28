@@ -1,28 +1,61 @@
-use std::path::PathBuf;
-
 fn main() {
+    let root = std::path::PathBuf::from(std::env::var_os("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR"));
+    let mut build = cxx_build::bridge(root.join("src/lib.rs"));
+    build.include(&root);
+    build.file(root.join("cpp/libtorch_metadata.cc"));
+    build.file(root.join("cpp/terlan_tensor_packet.cc"));
+    build.file(root.join("cpp/cuda_stream.cc"));
+    build.file(root.join("cpp/optimizer.cc"));
+    build.file(root.join("cpp/tensor_compat.cc"));
+    build.file(root.join("cpp/tensor_ops.cc"));
+    build.file(root.join("cpp/tensor_advanced.cc"));
+    build.file(root.join("cpp/torchscript_compat.cc"));
+    build.file(root.join("cpp/terlan_enum_adapters.cc"));
+    build.file(root.join("cpp/terlan_string_adapters.cc"));
+    build.file(root.join("cpp/terlan_collection_adapters.cc"));
+    build.file(root.join("cpp/terlan_exception_adapters.cc"));
+    build.file(root.join("cpp/terlan_owned_value_adapters.cc"));
+    build.file(root.join("cpp/terlan_mutation_adapters.cc"));
+    build.include(root.join("include"));
     println!("cargo:rerun-if-env-changed=LIBTORCH");
-    let root = PathBuf::from(std::env::var_os("LIBTORCH").expect("LIBTORCH must point at the external C distribution"));
-    let mut c_build = cc::Build::new();
-    c_build.file("c/terlan_pytorch_tensor_from_f64.c");
-    c_build.file("c/terlan_pytorch_tensor_from_i64.c");
-    c_build.file("c/terlan_pytorch_conv2d.c");
-    c_build.include(root.join("include"));
-    c_build.include(root.join("include/torch/csrc/api/include"));
-    c_build.include(".").warnings_into_errors(true).flag_if_supported("-std=c11").compile("terlan_native_boundary_c_abi");
-    let mut cpp_build = cc::Build::new();
-    cpp_build.cpp(true);
-    cpp_build.file("c/terlan_pytorch_torchscript.cpp");
-    cpp_build.include(root.join("include"));
-    cpp_build.include(root.join("include/torch/csrc/api/include"));
-    cpp_build.include(".").warnings_into_errors(true).flag_if_supported("-std=c++20").compile("terlan_native_boundary_cpp_abi");
-    println!("cargo:rerun-if-changed=include");
-    println!("cargo:rerun-if-changed=c");
-    println!("cargo:rustc-link-search=native={}", root.join("lib").display());
+    let external_root_0 = std::path::PathBuf::from(std::env::var_os("LIBTORCH").expect("LIBTORCH must point at the external C++ SDK root"));
+    build.include(external_root_0.join("include"));
+    build.include(external_root_0.join("include/torch/csrc/api/include"));
+    println!("cargo:rustc-link-search=native={}", external_root_0.join("lib").display());
     println!("cargo:rustc-link-lib=dylib=torch");
     println!("cargo:rustc-link-lib=dylib=torch_cpu");
     println!("cargo:rustc-link-lib=dylib=c10");
-    if std::env::var_os("CARGO_CFG_TARGET_OS").as_deref() == Some(std::ffi::OsStr::new("linux")) {
-        println!("cargo:rustc-link-arg=-Wl,-rpath,{}", root.join("lib").display());
+    println!("cargo:rustc-link-lib=dylib=shm");
+    let cuda_library = external_root_0.join("lib/libtorch_cuda.so").exists();
+    let cuda_include_candidates = [
+        external_root_0.join("include"),
+        std::path::PathBuf::from("/usr/local/cuda/include"),
+        std::path::PathBuf::from("/usr/local/cuda/targets/x86_64-linux/include"),
+    ];
+    let cuda_include = cuda_include_candidates.into_iter().find(|path| {
+        path.join("cuda_runtime_api.h").exists() && path.join("cuda.h").exists()
+    });
+    if cuda_library {
+        println!("cargo:rustc-link-lib=dylib=torch_cuda");
+        if let Some(include) = cuda_include {
+            build.define("TERLAN_LIBTORCH_CUDA", None);
+            build.include(include);
+        } else {
+            println!(
+                "cargo:warning=CUDA LibTorch is present but CUDA developer headers are unavailable; compiling the explicit CPU-safe stream fallback"
+            );
+        }
     }
+    // Keep the installed helper relocatable.  Development invocations should
+    // provide LIBTORCH/lib through the bounded runner environment; embedding
+    // the caller's absolute SDK path would make artifacts machine-specific.
+    println!("cargo:rustc-link-arg=-Wl,-rpath,$ORIGIN/../lib");
+    println!("cargo:rustc-link-arg=-Wl,-rpath,$ORIGIN/../cuda-runtime/usr/lib/x86_64-linux-gnu/libcusparseLt/12");
+    println!("cargo:rustc-link-arg=-Wl,-rpath,$ORIGIN/../cuda-runtime/usr/lib/x86_64-linux-gnu/nvshmem/12");
+    println!("cargo:rerun-if-changed={}", external_root_0.join("build-version").display());
+    println!("cargo:rerun-if-changed={}", external_root_0.join("build-hash").display());
+    build.std("c++17").compile("terlan_native_boundary_cxx");
+    println!("cargo:rerun-if-changed=src/lib.rs");
+    println!("cargo:rerun-if-changed=include");
+    println!("cargo:rerun-if-changed=cpp");
 }

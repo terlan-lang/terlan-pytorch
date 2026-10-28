@@ -1,0 +1,137 @@
+/**
+ * Exact value counting and indexed reduction operations.
+ */
+module pytorch.Aggregation.
+
+import pytorch.AggregationNative.{bincount_configured, bincount_configured_out, histc_configured, histc_configured_out, index_reduce_configured, index_reduce_configured_in_place, index_reduce_configured_out}.
+
+import type pytorch.Tensor.
+
+/**
+ * A reduction supported by PyTorch index_reduce.
+ */
+pub type IndexReduction: Int = PRODUCT = 0 | MEAN = 1 | MAXIMUM = 2 | MINIMUM = 3.
+
+reduction_code(reduction: IndexReduction): Int ->
+    if {
+        reduction == IndexReduction.PRODUCT -> 0;
+        reduction == IndexReduction.MEAN -> 1;
+        reduction == IndexReduction.MAXIMUM -> 2;
+        true -> 3
+    }.
+
+/**
+ * Counts occurrences of nonnegative integer values.
+ */
+pub bincount(input: Tensor, minlength: Int = 0): Tensor ->
+    bincount_configured(input, input, false, minlength).
+
+/**
+ * Counts occurrences using one floating-point weight per input value.
+ */
+pub bincount_weighted(input: Tensor, weights: Tensor, minlength: Int = 0): Tensor ->
+    bincount_configured(input, weights, true, minlength).
+
+/**
+ * Writes unweighted counts into retained output storage.
+ */
+pub bincount_out(output: Tensor, input: Tensor, minlength: Int = 0): Unit ->
+    bincount_configured_out(output, input, input, false, minlength).
+
+/**
+ * Writes weighted counts into retained output storage.
+ */
+pub bincount_weighted_out(output: Tensor, input: Tensor, weights: Tensor, minlength: Int = 0): Unit ->
+    bincount_configured_out(output, input, weights, true, minlength).
+
+/**
+ * Counts values into equal-width bins with floating-point bounds.
+ */
+pub histc(input: Tensor, bins: Int = 100, minimum: Float = 0.0, maximum: Float = 0.0): Tensor ->
+    histc_configured(input, bins, false, 0, 0, minimum, maximum).
+
+/**
+ * Counts values into equal-width bins with integer bounds.
+ */
+pub histc_int_bounds(input: Tensor, bins: Int, minimum: Int, maximum: Int): Tensor ->
+    histc_configured(input, bins, true, minimum, maximum, 0.0, 0.0).
+
+/**
+ * Writes floating-bound histogram counts into retained output storage.
+ */
+pub histc_out(
+    output: Tensor,
+    input: Tensor,
+    bins: Int = 100,
+    minimum: Float = 0.0,
+    maximum: Float = 0.0,
+): Unit ->
+    histc_configured_out(output, input, bins, false, 0, 0, minimum, maximum).
+
+/**
+ * Writes integer-bound histogram counts into retained output storage.
+ */
+pub histc_int_bounds_out(output: Tensor, input: Tensor, bins: Int, minimum: Int, maximum: Int): Unit ->
+    histc_configured_out(output, input, bins, true, minimum, maximum, 0.0, 0.0).
+
+/**
+ * Reduces source slices into indexed destinations.
+ */
+pub index_reduce(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: IndexReduction,
+    include_self: Bool = true,
+): Tensor ->
+    index_reduce_configured(
+        input,
+        dimension,
+        index,
+        source,
+        reduction_code(reduction),
+        include_self,
+    ).
+
+/**
+ * Writes an indexed reduction into retained output storage.
+ */
+pub index_reduce_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: IndexReduction,
+    include_self: Bool = true,
+): Unit ->
+    index_reduce_configured_out(
+        output,
+        input,
+        dimension,
+        index,
+        source,
+        reduction_code(reduction),
+        include_self,
+    ).
+
+/**
+ * Reduces source slices into input storage in place.
+ */
+pub index_reduce_in_place(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: IndexReduction,
+    include_self: Bool = true,
+): Unit ->
+    index_reduce_configured_in_place(
+        input,
+        dimension,
+        index,
+        source,
+        reduction_code(reduction),
+        include_self,
+    ).

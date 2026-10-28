@@ -1,0 +1,13 @@
+/**
+ * Generated CXX tensor data replacement surface.
+ */
+module pytorch.SetDataCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Replaces the tensor data handle with another tensor.
+ */
+@compiler.native {pytorch.set_data.set_data}
+pub set_data(self: Tensor, new_data: Tensor): Unit ->
+    native.

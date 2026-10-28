@@ -1,0 +1,240 @@
+module pytorch.UnaryResidualParityTest.
+
+import pytorch.Dense.{hardsigmoid_backward, hardswish_backward, sigmoid_backward, silu_backward, tanh_backward}.
+import pytorch.Special.{absolute, angle, arccos, arccosh, arcsin, arcsinh, arctan, arctanh, conj_physical, fix, i0, lgamma}.
+import pytorch.Tensor.{clone, dispose, divide, exp, from_bool, from_float, from_floats, item, item_bool, item_float, log, negate, sum}.
+import pytorch.Unary.{all, any, frexp, isinf, isnan, isneginf, isposinf, max, median, min, nonzero, sigmoid, signbit, tanh, trace}.
+import pytorch.UnaryStorage.{absolute_in_place, absolute_out, alias_copy_out, all_all_out, angle_out, any_all_out, arccos_in_place, arccos_out, arccosh_in_place, arccosh_out, arcsin_in_place, arcsin_out, arcsinh_in_place, arcsinh_out, arctan_in_place, arctan_out, arctanh_in_place, arctanh_out, conj_physical_in_place, conj_physical_out, detach_copy_out, exp_in_place, exp_out, fix_in_place, fix_out, frexp_out, hardsigmoid_backward_out, hardswish_backward_out, i0_in_place, i0_out, isinf_out, isnan_out, isneginf_out, isposinf_out, lgamma_in_place, lgamma_out, lift_fresh_copy_out, lift_out, log_in_place, log_out, max_unary_out, median_out, min_unary_out, nonzero_out, round_decimals, round_decimals_in_place, round_decimals_out, sigmoid_backward_out, signbit_out, silu_backward_out, tanh_backward_out, trace_out}.
+import pytorch.View.{alias_copy, detach_copy, lift, lift_fresh_copy}.
+
+/**
+ * Proves exact alias output and in-place contracts.
+ */
+@test
+pub alias_storage_forms_match_libtorch(): Bool ->
+    let zero = from_float(0.0);
+    let one = from_float(1.0);
+    let negative = from_float(-1.0);
+    let absolute_expected = absolute(negative);
+    let absolute_output = clone(absolute_expected);
+    let absolute_mutation = from_float(-1.0);
+    absolute_out(absolute_output, negative);
+    absolute_in_place(absolute_mutation);
+    let arccos_expected = arccos(one);
+    let arccos_output = clone(arccos_expected);
+    let arccos_mutation = from_float(1.0);
+    (arccos_out(arccos_output, one); arccos_in_place(arccos_mutation); let arccosh_expected = arccosh(one);
+let arccosh_output = clone(arccosh_expected);
+let arccosh_mutation = from_float(1.0);
+(arccosh_out(arccosh_output, one); arccosh_in_place(arccosh_mutation); let arcsin_expected = arcsin(zero);
+let arcsin_output = clone(arcsin_expected);
+let arcsin_mutation = from_float(0.0);
+(arcsin_out(arcsin_output, zero); arcsin_in_place(arcsin_mutation); let arcsinh_expected = arcsinh(zero);
+let arcsinh_output = clone(arcsinh_expected);
+let arcsinh_mutation = from_float(0.0);
+(arcsinh_out(arcsinh_output, zero); arcsinh_in_place(arcsinh_mutation); let arctan_expected = arctan(zero);
+let arctan_output = clone(arctan_expected);
+let arctan_mutation = from_float(0.0);
+(arctan_out(arctan_output, zero); arctan_in_place(arctan_mutation); let arctanh_expected = arctanh(zero);
+let arctanh_output = clone(arctanh_expected);
+let arctanh_mutation = from_float(0.0);
+(arctanh_out(arctanh_output, zero); arctanh_in_place(arctanh_mutation); let valid =
+    item_float(absolute_output) == item_float(absolute_expected)
+        and item_float(absolute_mutation) == item_float(absolute_expected)
+        and item_float(arccos_output) == item_float(arccos_expected)
+        and item_float(arccos_mutation) == item_float(arccos_expected)
+        and item_float(arccosh_output) == item_float(arccosh_expected)
+        and item_float(arccosh_mutation) == item_float(arccosh_expected)
+        and item_float(arcsin_output) == item_float(arcsin_expected)
+        and item_float(arcsin_mutation) == item_float(arcsin_expected)
+        and item_float(arcsinh_output) == item_float(arcsinh_expected)
+        and item_float(arcsinh_mutation) == item_float(arcsinh_expected)
+        and item_float(arctan_output) == item_float(arctan_expected)
+        and item_float(arctan_mutation) == item_float(arctan_expected)
+        and item_float(arctanh_output) == item_float(arctanh_expected)
+        and item_float(arctanh_mutation) == item_float(arctanh_expected)
+        and item_float(zero) == 0.0
+        and item_float(one) == 1.0
+        and item_float(negative) == -1.0;
+(dispose(arctanh_mutation); dispose(arctanh_output); dispose(arctanh_expected); dispose(arctan_mutation); dispose(arctan_output); dispose(arctan_expected); dispose(arcsinh_mutation); dispose(arcsinh_output); dispose(arcsinh_expected); dispose(arcsin_mutation); dispose(arcsin_output); dispose(arcsin_expected); dispose(arccosh_mutation); dispose(arccosh_output); dispose(arccosh_expected); dispose(arccos_mutation); dispose(arccos_output); dispose(arccos_expected); dispose(absolute_mutation); dispose(absolute_output); dispose(absolute_expected); dispose(negative); dispose(one); dispose(zero); valid))))))).
+
+/**
+ * Proves output-only predicates, reductions, coordinates, trace, and rounding.
+ */
+@test
+pub residual_output_forms_match_libtorch(): Bool ->
+    let truth = from_bool(true);
+    let all_expected = all(truth);
+    let all_output = clone(all_expected);
+    let any_expected = any(truth);
+    let any_output = clone(any_expected);
+    all_all_out(all_output, truth);
+    any_all_out(any_output, truth);
+    let one = from_float(1.0);
+    let zero = from_float(0.0);
+    let infinity = divide(one, zero);
+    let negative_infinity = negate(infinity);
+    let nan = divide(zero, zero);
+    let negative = from_float(-1.0);
+    let isinf_expected = isinf(infinity);
+    let isinf_output = clone(isinf_expected);
+    let isnan_expected = isnan(nan);
+    let isnan_output = clone(isnan_expected);
+    let isneginf_expected = isneginf(negative_infinity);
+    let isneginf_output = clone(isneginf_expected);
+    let isposinf_expected = isposinf(infinity);
+    let isposinf_output = clone(isposinf_expected);
+    let signbit_expected = signbit(negative);
+    let signbit_output = clone(signbit_expected);
+    (isinf_out(isinf_output, infinity); isnan_out(isnan_output, nan); isneginf_out(isneginf_output, negative_infinity); isposinf_out(isposinf_output, infinity); signbit_out(signbit_output, negative); let values = from_floats([3.0, 1.0, 2.0], [3]);
+let max_expected = max(values);
+let max_output = clone(max_expected);
+let median_expected = median(values);
+let median_output = clone(median_expected);
+let min_expected = min(values);
+let min_output = clone(min_expected);
+let nonzero_expected = nonzero(values);
+let nonzero_output = clone(nonzero_expected);
+(max_unary_out(max_output, values); median_out(median_output, values); min_unary_out(min_output, values); nonzero_out(nonzero_output, values); let matrix = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+let trace_expected = trace(matrix);
+let trace_output = clone(trace_expected);
+(trace_out(trace_output, matrix); let decimal = from_float(1.234);
+let decimal_expected = round_decimals(decimal, 2);
+let decimal_output = clone(decimal_expected);
+let decimal_mutation = clone(decimal);
+(round_decimals_out(decimal_output, decimal, 2); round_decimals_in_place(decimal_mutation, 2); let nonzero_total = sum(nonzero_output);
+let valid =
+    item_bool(all_output)
+        and item_bool(any_output)
+        and item_bool(isinf_output)
+        and item_bool(isnan_output)
+        and item_bool(isneginf_output)
+        and item_bool(isposinf_output)
+        and item_bool(signbit_output)
+        and item_float(max_output) == item_float(max_expected)
+        and item_float(median_output) == item_float(median_expected)
+        and item_float(min_output) == item_float(min_expected)
+        and item(nonzero_total) == 3
+        and item_float(trace_output) == item_float(trace_expected)
+        and item_float(decimal_output) == item_float(decimal_expected)
+        and item_float(decimal_mutation) == item_float(decimal_expected);
+(dispose(nonzero_total); dispose(decimal_mutation); dispose(decimal_output); dispose(decimal_expected); dispose(decimal); dispose(trace_output); dispose(trace_expected); dispose(matrix); dispose(nonzero_output); dispose(nonzero_expected); dispose(min_output); dispose(min_expected); dispose(median_output); dispose(median_expected); dispose(max_output); dispose(max_expected); dispose(values); dispose(signbit_output); dispose(signbit_expected); dispose(isposinf_output); dispose(isposinf_expected); dispose(isneginf_output); dispose(isneginf_expected); dispose(isnan_output); dispose(isnan_expected); dispose(isinf_output); dispose(isinf_expected); dispose(negative); dispose(nan); dispose(negative_infinity); dispose(infinity); dispose(zero); dispose(one); dispose(any_output); dispose(any_expected); dispose(all_output); dispose(all_expected); dispose(truth); valid))))).
+
+/**
+ * Proves activation backward outputs and dual-output decomposition.
+ */
+@test
+pub backward_and_decomposition_outputs_match_libtorch(): Bool ->
+    let zero = from_float(0.0);
+    let gradient = from_float(1.0);
+    let hard_sigmoid_expected = hardsigmoid_backward(gradient, zero);
+    let hard_sigmoid_output = clone(hard_sigmoid_expected);
+    let hard_swish_expected = hardswish_backward(gradient, zero);
+    let hard_swish_output = clone(hard_swish_expected);
+    let sigmoid_value = sigmoid(zero);
+    let sigmoid_expected = sigmoid_backward(gradient, sigmoid_value);
+    let sigmoid_output = clone(sigmoid_expected);
+    let silu_expected = silu_backward(gradient, zero);
+    let silu_output = clone(silu_expected);
+    let tanh_value = tanh(zero);
+    let tanh_expected = tanh_backward(gradient, tanh_value);
+    let tanh_output = clone(tanh_expected);
+    hardsigmoid_backward_out(hard_sigmoid_output, gradient, zero);
+    hardswish_backward_out(hard_swish_output, gradient, zero);
+    sigmoid_backward_out(sigmoid_output, gradient, sigmoid_value);
+    silu_backward_out(silu_output, gradient, zero);
+    tanh_backward_out(tanh_output, gradient, tanh_value);
+    let eight = from_float(8.0);
+    let {expected_mantissa, expected_exponent} = frexp(eight);
+    let mantissa = clone(expected_mantissa);
+    let exponent = clone(expected_exponent);
+    (frexp_out(mantissa, exponent, eight); let valid =
+    item_float(hard_sigmoid_output) == item_float(hard_sigmoid_expected)
+        and item_float(hard_swish_output) == item_float(hard_swish_expected)
+        and item_float(sigmoid_output) == item_float(sigmoid_expected)
+        and item_float(silu_output) == item_float(silu_expected)
+        and item_float(tanh_output) == item_float(tanh_expected)
+        and item_float(mantissa) == item_float(expected_mantissa)
+        and item(exponent) == item(expected_exponent)
+        and item_float(eight) == 8.0;
+(dispose(exponent); dispose(mantissa); dispose(expected_exponent); dispose(expected_mantissa); dispose(eight); dispose(tanh_output); dispose(tanh_expected); dispose(tanh_value); dispose(silu_output); dispose(silu_expected); dispose(sigmoid_output); dispose(sigmoid_expected); dispose(sigmoid_value); dispose(hard_swish_output); dispose(hard_swish_expected); dispose(hard_sigmoid_output); dispose(hard_sigmoid_expected); dispose(gradient); dispose(zero); valid)).
+
+/**
+ * Proves residual exponential, truncation, and logarithm storage contracts.
+ */
+@test
+pub residual_numeric_storage_forms_match_libtorch(): Bool ->
+    let one = from_float(1.0);
+    let exp_expected = exp(one);
+    let exp_output = clone(exp_expected);
+    let exp_mutation = clone(one);
+    exp_out(exp_output, one);
+    exp_in_place(exp_mutation);
+    let fraction = from_float(1.75);
+    let fix_expected = fix(fraction);
+    let fix_output = clone(fix_expected);
+    let fix_mutation = clone(fraction);
+    (fix_out(fix_output, fraction); fix_in_place(fix_mutation); let two = from_float(2.0);
+let log_expected = log(two);
+let log_output = clone(log_expected);
+let log_mutation = clone(two);
+(log_out(log_output, two); log_in_place(log_mutation); let valid =
+    item_float(exp_output) == item_float(exp_expected)
+        and item_float(exp_mutation) == item_float(exp_expected)
+        and item_float(fix_output) == item_float(fix_expected)
+        and item_float(fix_mutation) == item_float(fix_expected)
+        and item_float(log_output) == item_float(log_expected)
+        and item_float(log_mutation) == item_float(log_expected);
+(dispose(log_mutation); dispose(log_output); dispose(log_expected); dispose(two); dispose(fix_mutation); dispose(fix_output); dispose(fix_expected); dispose(fraction); dispose(exp_mutation); dispose(exp_output); dispose(exp_expected); dispose(one); valid))).
+
+/**
+ * Proves residual special-function output and in-place contracts.
+ */
+@test
+pub residual_special_storage_forms_match_libtorch(): Bool ->
+    let one = from_float(1.0);
+    let angle_expected = angle(one);
+    let angle_output = clone(angle_expected);
+    angle_out(angle_output, one);
+    let conjugate_expected = conj_physical(one);
+    let conjugate_output = clone(conjugate_expected);
+    let conjugate_mutation = clone(one);
+    (conj_physical_out(conjugate_output, one); conj_physical_in_place(conjugate_mutation); let i0_expected = i0(one);
+let i0_output = clone(i0_expected);
+let i0_mutation = clone(one);
+(i0_out(i0_output, one); i0_in_place(i0_mutation); let two = from_float(2.0);
+let lgamma_expected = lgamma(two);
+let lgamma_output = clone(lgamma_expected);
+let lgamma_mutation = clone(two);
+(lgamma_out(lgamma_output, two); lgamma_in_place(lgamma_mutation); let valid =
+    item_float(angle_output) == item_float(angle_expected)
+        and item_float(conjugate_output) == item_float(conjugate_expected)
+        and item_float(conjugate_mutation) == item_float(conjugate_expected)
+        and item_float(i0_output) == item_float(i0_expected)
+        and item_float(i0_mutation) == item_float(i0_expected)
+        and item_float(lgamma_output) == item_float(lgamma_expected)
+        and item_float(lgamma_mutation) == item_float(lgamma_expected);
+(dispose(lgamma_mutation); dispose(lgamma_output); dispose(lgamma_expected); dispose(two); dispose(i0_mutation); dispose(i0_output); dispose(i0_expected); dispose(conjugate_mutation); dispose(conjugate_output); dispose(conjugate_expected); dispose(angle_output); dispose(angle_expected); dispose(one); valid)))).
+
+/**
+ * Proves residual copy and lift retained-output contracts.
+ */
+@test
+pub residual_copy_storage_forms_match_libtorch(): Bool ->
+    let source = from_float(3.0);
+    let alias_expected = alias_copy(source);
+    let alias_output = clone(alias_expected);
+    alias_copy_out(alias_output, source);
+    let detached_expected = detach_copy(source);
+    let detached_output = clone(detached_expected);
+    (detach_copy_out(detached_output, source); let lift_expected = lift(source);
+let lift_output_value = clone(lift_expected);
+(lift_out(lift_output_value, source); let fresh_expected = lift_fresh_copy(source);
+let fresh_output = clone(fresh_expected);
+(lift_fresh_copy_out(fresh_output, source); let valid =
+    item_float(alias_output) == item_float(alias_expected)
+        and item_float(detached_output) == item_float(detached_expected)
+        and item_float(lift_output_value) == item_float(lift_expected)
+        and item_float(fresh_output) == item_float(fresh_expected)
+        and item_float(source) == 3.0;
+(dispose(fresh_output); dispose(fresh_expected); dispose(lift_output_value); dispose(lift_expected); dispose(detached_output); dispose(detached_expected); dispose(alias_output); dispose(alias_expected); dispose(source); valid)))).

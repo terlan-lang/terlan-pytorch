@@ -1,0 +1,405 @@
+/**
+ * Generated exact CXX immutable unary, predicate, reduction, and coordinate operations.
+ */
+module pytorch.Unary.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX unary leaf for abs.
+ */
+@compiler.native {pytorch.tensor.abs}
+pub abs(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for ceil.
+ */
+@compiler.native {pytorch.tensor.ceil}
+pub ceil(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for floor.
+ */
+@compiler.native {pytorch.tensor.floor}
+pub floor(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for frac.
+ */
+@compiler.native {pytorch.tensor.frac}
+pub frac(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for reciprocal.
+ */
+@compiler.native {pytorch.tensor.reciprocal}
+pub reciprocal(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for round.
+ */
+@compiler.native {pytorch.tensor.round}
+pub round(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for sign.
+ */
+@compiler.native {pytorch.tensor.sign}
+pub sign(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for square.
+ */
+@compiler.native {pytorch.tensor.square}
+pub square(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for trunc.
+ */
+@compiler.native {pytorch.tensor.trunc}
+pub trunc(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for acos.
+ */
+@compiler.native {pytorch.tensor.acos}
+pub acos(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for acosh.
+ */
+@compiler.native {pytorch.tensor.acosh}
+pub acosh(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for all.
+ */
+@compiler.native {pytorch.tensor.all}
+pub all(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for any.
+ */
+@compiler.native {pytorch.tensor.any}
+pub any(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for argwhere.
+ */
+@compiler.native {pytorch.tensor.argwhere}
+pub argwhere(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for asin.
+ */
+@compiler.native {pytorch.tensor.asin}
+pub asin(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for asinh.
+ */
+@compiler.native {pytorch.tensor.asinh}
+pub asinh(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for atan.
+ */
+@compiler.native {pytorch.tensor.atan}
+pub atan(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for atanh.
+ */
+@compiler.native {pytorch.tensor.atanh}
+pub atanh(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for bitwise_not.
+ */
+@compiler.native {pytorch.tensor.bitwise_not}
+pub bitwise_not(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for cos.
+ */
+@compiler.native {pytorch.tensor.cos}
+pub cos(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for cosh.
+ */
+@compiler.native {pytorch.tensor.cosh}
+pub cosh(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for deg2rad.
+ */
+@compiler.native {pytorch.tensor.deg2rad}
+pub deg2rad(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for erf.
+ */
+@compiler.native {pytorch.tensor.erf}
+pub erf(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for erfc.
+ */
+@compiler.native {pytorch.tensor.erfc}
+pub erfc(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for erfinv.
+ */
+@compiler.native {pytorch.tensor.erfinv}
+pub erfinv(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for exp2.
+ */
+@compiler.native {pytorch.tensor.exp2}
+pub exp2(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for expm1.
+ */
+@compiler.native {pytorch.tensor.expm1}
+pub expm1(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for hardsigmoid.
+ */
+@compiler.native {pytorch.tensor.hardsigmoid}
+pub hardsigmoid(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for hardswish.
+ */
+@compiler.native {pytorch.tensor.hardswish}
+pub hardswish(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for isfinite.
+ */
+@compiler.native {pytorch.tensor.isfinite}
+pub isfinite(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for isinf.
+ */
+@compiler.native {pytorch.tensor.isinf}
+pub isinf(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for isnan.
+ */
+@compiler.native {pytorch.tensor.isnan}
+pub isnan(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for isneginf.
+ */
+@compiler.native {pytorch.tensor.isneginf}
+pub isneginf(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for isposinf.
+ */
+@compiler.native {pytorch.tensor.isposinf}
+pub isposinf(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for log10.
+ */
+@compiler.native {pytorch.tensor.log10}
+pub log10(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for log1p.
+ */
+@compiler.native {pytorch.tensor.log1p}
+pub log1p(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for log2.
+ */
+@compiler.native {pytorch.tensor.log2}
+pub log2(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for logical_not.
+ */
+@compiler.native {pytorch.tensor.logical_not}
+pub logical_not(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for max.
+ */
+@compiler.native {pytorch.tensor.max}
+pub max(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for median.
+ */
+@compiler.native {pytorch.tensor.median}
+pub median(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for min.
+ */
+@compiler.native {pytorch.tensor.min}
+pub min(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for mish.
+ */
+@compiler.native {pytorch.tensor.mish}
+pub mish(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for nonzero.
+ */
+@compiler.native {pytorch.tensor.nonzero}
+pub nonzero(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for rad2deg.
+ */
+@compiler.native {pytorch.tensor.rad2deg}
+pub rad2deg(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for relu6.
+ */
+@compiler.native {pytorch.tensor.relu6}
+pub relu6(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for rsqrt.
+ */
+@compiler.native {pytorch.tensor.rsqrt}
+pub rsqrt(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for selu.
+ */
+@compiler.native {pytorch.tensor.selu}
+pub selu(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for sigmoid.
+ */
+@compiler.native {pytorch.tensor.sigmoid}
+pub sigmoid(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for signbit.
+ */
+@compiler.native {pytorch.tensor.signbit}
+pub signbit(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for silu.
+ */
+@compiler.native {pytorch.tensor.silu}
+pub silu(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for sin.
+ */
+@compiler.native {pytorch.tensor.sin}
+pub sin(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for sinc.
+ */
+@compiler.native {pytorch.tensor.sinc}
+pub sinc(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for sinh.
+ */
+@compiler.native {pytorch.tensor.sinh}
+pub sinh(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for tan.
+ */
+@compiler.native {pytorch.tensor.tan}
+pub tan(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for tanh.
+ */
+@compiler.native {pytorch.tensor.tanh}
+pub tanh(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for trace.
+ */
+@compiler.native {pytorch.tensor.trace}
+pub trace(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX unary leaf for frexp.
+ */
+@compiler.native {pytorch.unary.frexp}
+pub frexp(tensor: Tensor): {Tensor, Tensor} ->
+    native.

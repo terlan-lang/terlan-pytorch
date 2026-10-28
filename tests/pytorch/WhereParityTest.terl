@@ -1,0 +1,81 @@
+module pytorch.WhereParityTest.
+
+import pytorch.ComparisonScalar.{eq_right_int}.
+import pytorch.Tensor.{dispose, from_bool, from_float, from_ints, item_float, numel, sum}.
+import pytorch.Where.{where_float_float, where_float_int, where_float_tensor, where_indices, where_int_float, where_int_int, where_int_tensor, where_tensor_float, where_tensor_int, where_tensor_out}.
+
+import type pytorch.Tensor.
+
+/**
+ * Proves true-index extraction returns one independently owned tensor per dimension.
+ */
+@test
+pub indices_match_libtorch(): Bool ->
+    let values = from_ints([0, 1, 0, 1], [4]);
+    let condition = eq_right_int(values, 1);
+    let indices = where_indices(condition);
+    dispose(condition);
+    dispose(values);
+    validate_indices(indices).
+
+validate_indices(indices: List[Tensor]): Bool ->
+    case indices {
+        [index] -> validate_index(index);
+        _ -> false
+    }.
+
+validate_index(index: Tensor): Bool ->
+    let total = sum(index);
+    let valid = numel(index) == 2 and item_float(total) == 4.0;
+    dispose(total);
+    dispose(index);
+    valid.
+
+/**
+ * Proves every scalar type pairing selects the requested branch.
+ */
+@test
+pub scalar_pairs_match_libtorch(): Bool ->
+    let yes = from_bool(true);
+    let no = from_bool(false);
+    let int_int = where_int_int(yes, 3, 7);
+    let float_float = where_float_float(no, 3.5, 7.5);
+    let int_float = where_int_float(yes, 3, 7.5);
+    let float_int = where_float_int(no, 3.5, 7);
+    let valid =
+        item_float(int_int) == 3.0
+            and item_float(float_float) == 7.5
+            and item_float(int_float) == 3.0
+            and item_float(float_int) == 7.0;
+    dispose(float_int);
+    dispose(int_float);
+    dispose(float_float);
+    dispose(int_int);
+    dispose(no);
+    dispose(yes);
+    valid.
+
+/**
+ * Proves mixed tensor/scalar and retained-output forms preserve every source.
+ */
+@test
+pub tensor_scalar_and_output_forms_match_libtorch(): Bool ->
+    let yes = from_bool(true);
+    let no = from_bool(false);
+    let when_true = from_float(3.0);
+    let when_false = from_float(7.0);
+    let tensor_int = where_tensor_int(yes, when_true, 9);
+    let tensor_float = where_tensor_float(no, when_true, 9.5);
+    let int_tensor = where_int_tensor(no, 2, when_false);
+    let float_tensor = where_float_tensor(yes, 2.5, when_false);
+    let output = from_float(-1.0);
+    where_tensor_out(output, no, when_true, when_false);
+    let valid =
+        item_float(tensor_int) == 3.0
+            and item_float(tensor_float) == 9.5
+            and item_float(int_tensor) == 7.0
+            and item_float(float_tensor) == 2.5
+            and item_float(output) == 7.0
+            and item_float(when_true) == 3.0
+            and item_float(when_false) == 7.0;
+    (dispose(output); dispose(float_tensor); dispose(int_tensor); dispose(tensor_float); dispose(tensor_int); dispose(when_false); dispose(when_true); dispose(no); dispose(yes); valid).

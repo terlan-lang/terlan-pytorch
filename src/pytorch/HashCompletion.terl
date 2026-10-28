@@ -1,0 +1,31 @@
+/**
+ * Generated CXX tensor hashing completion surface.
+ */
+module pytorch.HashCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Computes LibTorch tensor hash values over selected dimensions.
+ */
+@compiler.native {pytorch.hash.hash_tensor}
+pub hash_tensor(
+    input: Tensor,
+    dimensions: List[Int] = [],
+    keepdim: Bool = false,
+    mode: Int = 0,
+): Tensor ->
+    native.
+
+/**
+ * Writes LibTorch tensor hash values into retained output storage.
+ */
+@compiler.native {pytorch.hash.hash_tensor_out}
+pub hash_tensor_out(
+    output: Tensor,
+    input: Tensor,
+    dimensions: List[Int] = [],
+    keepdim: Bool = false,
+    mode: Int = 0,
+): Unit ->
+    native.

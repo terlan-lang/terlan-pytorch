@@ -1,0 +1,130 @@
+/**
+ * Generated direct-CXX implementation of diagonal, selection, slice, and unfold gradient kernels.
+ */
+module pytorch.ShapeGradient.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes exact aten::diagonal, preserving dimensions, offsets, strides, and storage ownership.
+ */
+@compiler.native {pytorch.shape_gradient.diagonal}
+pub diagonal(tensor: Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::diagonal_scatter.out, preserving dimensions, offsets, strides, and storage ownership.
+ */
+@compiler.native {pytorch.shape_gradient.diagonal_scatter_out}
+pub diagonal_scatter_out(
+    output: Tensor,
+    tensor: Tensor,
+    source: Tensor,
+    offset: Int = 0,
+    dimension1: Int = 0,
+    dimension2: Int = 1,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::diagonal_backward, preserving dimensions, offsets, strides, and storage ownership.
+ */
+@compiler.native {pytorch.shape_gradient.diagonal_backward}
+pub diagonal_backward(
+    gradient: Tensor,
+    input_sizes: List[Int],
+    offset: Int,
+    dimension1: Int,
+    dimension2: Int,
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::diagonal_backward.out, preserving dimensions, offsets, strides, and storage ownership.
+ */
+@compiler.native {pytorch.shape_gradient.diagonal_backward_out}
+pub diagonal_backward_out(
+    output: Tensor,
+    gradient: Tensor,
+    input_sizes: List[Int],
+    offset: Int,
+    dimension1: Int,
+    dimension2: Int,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::select_backward, preserving dimensions, offsets, strides, and storage ownership.
+ */
+@compiler.native {pytorch.shape_gradient.select_backward}
+pub select_backward(gradient: Tensor, input_sizes: List[Int], dimension: Int, index: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::select_backward.out, preserving dimensions, offsets, strides, and storage ownership.
+ */
+@compiler.native {pytorch.shape_gradient.select_backward_out}
+pub select_backward_out(
+    output: Tensor,
+    gradient: Tensor,
+    input_sizes: List[Int],
+    dimension: Int,
+    index: Int,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::slice_backward, preserving dimensions, offsets, strides, and storage ownership.
+ */
+@compiler.native {pytorch.shape_gradient.slice_backward}
+pub slice_backward(
+    gradient: Tensor,
+    input_sizes: List[Int],
+    dimension: Int,
+    start: Int,
+    end: Int,
+    step: Int,
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::slice_backward.out, preserving dimensions, offsets, strides, and storage ownership.
+ */
+@compiler.native {pytorch.shape_gradient.slice_backward_out}
+pub slice_backward_out(
+    output: Tensor,
+    gradient: Tensor,
+    input_sizes: List[Int],
+    dimension: Int,
+    start: Int,
+    end: Int,
+    step: Int,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::unfold_backward, preserving dimensions, offsets, strides, and storage ownership.
+ */
+@compiler.native {pytorch.shape_gradient.unfold_backward}
+pub unfold_backward(
+    gradient: Tensor,
+    input_sizes: List[Int],
+    dimension: Int,
+    size: Int,
+    step: Int,
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::unfold_backward.out, preserving dimensions, offsets, strides, and storage ownership.
+ */
+@compiler.native {pytorch.shape_gradient.unfold_backward_out}
+pub unfold_backward_out(
+    output: Tensor,
+    gradient: Tensor,
+    input_sizes: List[Int],
+    dimension: Int,
+    size: Int,
+    step: Int,
+): Unit ->
+    native.

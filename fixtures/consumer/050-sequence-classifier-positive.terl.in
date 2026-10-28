@@ -1,0 +1,61 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{add, amax, argmax, dispose, dtype, embedding, from_ints, full_float, item, item_float, matmul, mse_loss, shape, softmax}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let embedding_weight = full_float([3, 2], 2.0);
+    let token_indices = from_ints([0, 2], [1, 2]);
+    let embedded = embedding(embedding_weight, token_indices, -1, false, false);
+    let pooled = amax(embedded, [1], false);
+    let classifier_weight = full_float([2, 2], 1.0);
+    let classifier_bias = full_float([2], 0.0);
+    let projected = matmul(pooled, classifier_weight);
+    let logits = add(projected, classifier_bias, 1.0);
+    let probabilities = softmax(logits, 1);
+    let prediction = argmax(probabilities, 1, false);
+    let expected_probabilities = full_float([1, 2], 0.5);
+    let exact_loss = mse_loss(probabilities, expected_probabilities, 1);
+    let probability_columns = amax(probabilities, [0], false);
+    let probability_maximum = amax(probability_columns, [0], false);
+    let embedded0 = amax(embedded, [0], false);
+    let embedded1 = amax(embedded0, [0], false);
+    let embedded2 = amax(embedded1, [0], false);
+    let observed_embedded_shape = shape(embedded);
+    let observed_pooled_shape = shape(pooled);
+    let observed_probability_shape = shape(probabilities);
+    let observed_prediction_shape = shape(prediction);
+    let observed_prediction_dtype = dtype(prediction);
+    let observed_embedding = item_float(embedded2);
+    let observed_probability = item_float(probability_maximum);
+    let observed_prediction = item(prediction);
+    let observed_exact_loss = item_float(exact_loss);
+    dispose(embedded2);
+    dispose(embedded1);
+    dispose(embedded0);
+    dispose(probability_maximum);
+    dispose(probability_columns);
+    dispose(exact_loss);
+    dispose(expected_probabilities);
+    dispose(prediction);
+    dispose(probabilities);
+    dispose(logits);
+    dispose(projected);
+    dispose(classifier_bias);
+    dispose(classifier_weight);
+    dispose(pooled);
+    dispose(embedded);
+    dispose(token_indices);
+    dispose(embedding_weight);
+    if {
+        observed_embedded_shape.length() == 3 and observed_embedded_shape[0] == 1 and
+            observed_embedded_shape[1] == 2 and observed_embedded_shape[2] == 2 and
+            observed_pooled_shape.length() == 2 and observed_pooled_shape[0] == 1 and
+            observed_pooled_shape[1] == 2 and observed_probability_shape.length() == 2 and
+            observed_probability_shape[0] == 1 and observed_probability_shape[1] == 2 and
+            observed_embedding == 2.0 and observed_probability == 0.5 and
+            observed_exact_loss == 0.0 and observed_prediction_shape.length() == 1 and
+            observed_prediction_shape[0] == 1 and observed_prediction_dtype == 4 and
+            observed_prediction == 0 -> println("PYTORCH_SEQUENCE_CLASSIFIER_CONSUMER_OK");
+        true -> println("PYTORCH_SEQUENCE_CLASSIFIER_CONSUMER_FAILED")
+    }.

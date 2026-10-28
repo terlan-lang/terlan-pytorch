@@ -1,0 +1,42 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{amax, dispose, from_float, full_float, item_float, mse_loss, mse_loss_gradient, multiply, subtract}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let parameter = full_float([2, 2], 2.0);
+    let target = full_float([2, 2], 1.0);
+    let grad_output = from_float(1.0);
+    let before_loss = mse_loss(parameter, target, 1);
+    let gradient = mse_loss_gradient(grad_output, parameter, target, 1);
+    let learning_rate = from_float(0.1);
+    let scaled_gradient = multiply(gradient, learning_rate);
+    let updated = subtract(parameter, scaled_gradient, 1.0);
+    let after_loss = mse_loss(updated, target, 1);
+    let gradient_columns = amax(gradient, [0], false);
+    let gradient_maximum = amax(gradient_columns, [0], false);
+    let updated_columns = amax(updated, [0], false);
+    let updated_maximum = amax(updated_columns, [0], false);
+    let observed_gradient = item_float(gradient_maximum);
+    let observed_updated = item_float(updated_maximum);
+    let observed_before_loss = item_float(before_loss);
+    let observed_after_loss = item_float(after_loss);
+    dispose(updated_maximum);
+    dispose(updated_columns);
+    dispose(gradient_maximum);
+    dispose(gradient_columns);
+    dispose(after_loss);
+    dispose(updated);
+    dispose(scaled_gradient);
+    dispose(learning_rate);
+    dispose(gradient);
+    dispose(before_loss);
+    dispose(grad_output);
+    dispose(target);
+    dispose(parameter);
+    if {
+        observed_gradient == 0.5 and observed_updated > 1.94 and observed_updated < 1.96 and
+            observed_before_loss == 1.0 and observed_after_loss > 0.90 and
+            observed_after_loss < 0.91 and observed_after_loss < observed_before_loss -> println("PYTORCH_GRADIENT_STEP_CONSUMER_OK");
+        true -> println("PYTORCH_GRADIENT_STEP_CONSUMER_FAILED")
+    }.

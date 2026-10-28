@@ -1,0 +1,20 @@
+/**
+ * CPU runtime evidence for short-time Fourier transform overloads.
+ */
+module pytorch.SpectralParityTest.
+
+import pytorch.SpectralCompletion.{istft_default, stft_center_default, stft_default}.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+
+@test
+pub spectral_defaults_preserve_expected_shapes(): Bool ->
+    let input = from_floats([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0], [8]);
+    let spectrum = stft_default(input, 4);
+    let centered = stft_center_default(input, 4, true, "reflect");
+    let reconstructed = istft_default(spectrum, 4);
+    let valid = shape(spectrum) == [3, 5] and shape(centered) == [3, 9] and shape(reconstructed) == [4];
+    dispose(reconstructed);
+    dispose(centered);
+    dispose(spectrum);
+    dispose(input);
+    valid.

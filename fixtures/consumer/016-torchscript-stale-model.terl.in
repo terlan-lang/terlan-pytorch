@@ -1,0 +1,12 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{dispose_model, from_float, load_torchscript, torchscript_forward}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let model = load_torchscript("$model");
+    let stale_model = model;
+    dispose_model(model);
+    let input = from_float(3.0);
+    let output = torchscript_forward(stale_model, input);
+    println("PYTORCH_STALE_TORCHSCRIPT_MODEL_UNEXPECTED_SUCCESS").

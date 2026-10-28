@@ -1,0 +1,376 @@
+module pytorch.SparseParityTest.
+
+import pytorch.Sparse.{ccol_indices, ccol_indices_copy, ccol_indices_copy_out, coalesce, col_indices, col_indices_copy, col_indices_copy_out, compressed_from_components_configured, coo_empty_configured, coo_empty_out, coo_from_components_configured, copy_sparse_to_sparse, copy_sparse_to_sparse_in_place, copy_sparse_to_sparse_out, crow_indices, crow_indices_copy, crow_indices_copy_out, dense_dim, indices, indices_copy, indices_copy_out, is_coalesced, resize_as_sparse, resize_as_sparse_in_place, resize_as_sparse_out, row_indices, row_indices_copy, row_indices_copy_out, sampled_addmm_numeric, sampled_addmm_numeric_out, sparse_dim, sparse_mask, sparse_mask_out, sparse_resize, sparse_resize_and_clear, sparse_resize_and_clear_in_place, sparse_resize_and_clear_out, sparse_resize_in_place, sparse_resize_out, to_dense, to_dense_backward_configured, to_dense_configured, to_sparse_bsc, to_sparse_bsc_configured, to_sparse_bsr, to_sparse_bsr_configured, to_sparse_configured, to_sparse_csc, to_sparse_csc_configured, to_sparse_csr, to_sparse_csr_configured, to_sparse_dimensions, values, values_copy, values_copy_out}.
+import pytorch.Tensor.{dispose, dtype, from_floats, from_ints, item_float, shape, sum, to_dtype}.
+
+import type pytorch.Tensor.
+
+/**
+ * Sums all tensor values and releases the temporary scalar.
+ */
+sum_value(tensor: Tensor): Float ->
+    let total = sum(tensor);
+    let value = item_float(total);
+    dispose(total);
+    value.
+
+/**
+ * Converts sparse storage to dense storage, sums it, and releases the temporary.
+ */
+sparse_sum(tensor: Tensor): Float ->
+    let dense = to_dense(tensor);
+    let value = sum_value(dense);
+    dispose(dense);
+    value.
+
+/**
+ * Builds one compressed sparse layout and proves its dense representation.
+ */
+compressed_constructor_matches(
+    kind: Int,
+    compressed: Tensor,
+    plain: Tensor,
+    tensor_values: Tensor,
+    size: List[Int],
+    has_size: Bool,
+): Bool ->
+    let generic = kind == 0;
+    let sparse =
+        compressed_from_components_configured(
+            kind,
+            compressed,
+            plain,
+            tensor_values,
+            size,
+            has_size,
+            6,
+            generic,
+            2,
+            generic,
+            0,
+            -1,
+            generic,
+            false,
+            generic,
+        );
+    let dense = to_dense(sparse);
+    let valid = shape(sparse) == [2, 2] and sum_value(dense) == 3.0;
+    dispose(dense);
+    dispose(sparse);
+    valid.
+
+/**
+ * Proves dense/COO conversion, metadata, aliases, copies, output writes, and round trips.
+ */
+@test
+pub coo_conversion_and_accessors_match_libtorch(): Bool ->
+    let dense = from_floats([1.0, 0.0, 0.0, 2.0], [2, 2]);
+    let sparse = to_sparse_dimensions(dense, 2);
+    let canonical = coalesce(sparse);
+    let coordinate_alias = indices(canonical);
+    let coordinate_copy = indices_copy(canonical);
+    let value_alias = values(canonical);
+    let value_copy = values_copy(canonical);
+    let round_trip = to_dense(canonical);
+    let coordinate_output = from_ints([], [0]);
+    let value_output = from_floats([], [0]);
+    indices_copy_out(coordinate_output, canonical);
+    values_copy_out(value_output, canonical);
+    let valid =
+        sparse_dim(canonical) == 2
+            and dense_dim(canonical) == 0
+            and is_coalesced(canonical)
+            and shape(coordinate_alias) == [2, 2]
+            and shape(coordinate_copy) == [2, 2]
+            and shape(coordinate_output) == [2, 2]
+            and shape(value_alias) == [2]
+            and shape(value_copy) == [2]
+            and shape(value_output) == [2]
+            and sum_value(value_alias) == 3.0
+            and sum_value(value_copy) == 3.0
+            and sum_value(value_output) == 3.0
+            and sum_value(round_trip) == 3.0
+            and shape(dense) == [2, 2];
+    (dispose(value_output); dispose(coordinate_output); dispose(round_trip); dispose(value_copy); dispose(value_alias); dispose(coordinate_copy); dispose(coordinate_alias); dispose(canonical); dispose(sparse); dispose(dense); valid).
+
+/**
+ * Proves CSR, CSC, BSR, and BSC conversions expose their layout-specific indices and values.
+ */
+@test
+pub compressed_layouts_match_libtorch(): Bool ->
+    let dense = from_floats([1.0, 0.0, 0.0, 2.0], [2, 2]);
+    let csr = to_sparse_csr(dense);
+    let csc = to_sparse_csc(dense);
+    let bsr = to_sparse_bsr(dense, [1, 1]);
+    let bsc = to_sparse_bsc(dense, [1, 1]);
+    let configured_csr = to_sparse_csr_configured(dense, 0);
+    let configured_csc = to_sparse_csc_configured(dense, 0);
+    let configured_bsr = to_sparse_bsr_configured(dense, [1, 1], 0);
+    let configured_bsc = to_sparse_bsc_configured(dense, [1, 1], 0);
+    let csr_rows_alias = crow_indices(csr);
+    let csr_columns_alias = col_indices(csr);
+    let csc_columns_alias = ccol_indices(csc);
+    let csc_rows_alias = row_indices(csc);
+    let csr_rows = crow_indices_copy(csr);
+    let csr_columns = col_indices_copy(csr);
+    let csc_columns = ccol_indices_copy(csc);
+    let csc_rows = row_indices_copy(csc);
+    let bsr_values = values_copy(bsr);
+    let bsc_values = values_copy(bsc);
+    let csr_rows_output = from_ints([], [0]);
+    let csr_columns_output = from_ints([], [0]);
+    let csc_columns_output = from_ints([], [0]);
+    let csc_rows_output = from_ints([], [0]);
+    crow_indices_copy_out(csr_rows_output, csr);
+    col_indices_copy_out(csr_columns_output, csr);
+    ccol_indices_copy_out(csc_columns_output, csc);
+    row_indices_copy_out(csc_rows_output, csc);
+    let csr_dense = to_dense(csr);
+    let csc_dense = to_dense(csc);
+    let bsr_dense = to_dense(bsr);
+    let bsc_dense = to_dense(bsc);
+    let configured_csr_dense = to_dense(configured_csr);
+    let configured_csc_dense = to_dense(configured_csc);
+    let configured_bsr_dense = to_dense(configured_bsr);
+    let configured_bsc_dense = to_dense(configured_bsc);
+    let valid =
+        shape(csr_rows_alias) == [3]
+            and shape(csr_columns_alias) == [2]
+            and shape(csc_columns_alias) == [3]
+            and shape(csc_rows_alias) == [2]
+            and shape(csr_rows) == [3]
+            and shape(csr_columns) == [2]
+            and shape(csc_columns) == [3]
+            and shape(csc_rows) == [2]
+            and shape(csr_rows_output) == [3]
+            and shape(csr_columns_output) == [2]
+            and shape(csc_columns_output) == [3]
+            and shape(csc_rows_output) == [2]
+            and shape(bsr_values) == [2, 1, 1]
+            and shape(bsc_values) == [2, 1, 1]
+            and sum_value(csr_dense) == 3.0
+            and sum_value(csc_dense) == 3.0
+            and sum_value(bsr_dense) == 3.0
+            and sum_value(bsc_dense) == 3.0
+            and sum_value(configured_csr_dense) == 3.0
+            and sum_value(configured_csc_dense) == 3.0
+            and sum_value(configured_bsr_dense) == 3.0
+            and sum_value(configured_bsc_dense) == 3.0;
+    (dispose(configured_bsc_dense); dispose(configured_bsr_dense); dispose(configured_csc_dense); dispose(configured_csr_dense); dispose(bsc_dense); dispose(bsr_dense); dispose(csc_dense); dispose(csr_dense); dispose(csc_rows_output); dispose(csc_columns_output); dispose(csr_columns_output); dispose(csr_rows_output); dispose(bsc_values); dispose(bsr_values); dispose(csc_rows); dispose(csc_columns); dispose(csr_columns); dispose(csr_rows); dispose(csc_rows_alias); dispose(csc_columns_alias); dispose(csr_columns_alias); dispose(csr_rows_alias); dispose(configured_bsc); dispose(configured_bsr); dispose(configured_csc); dispose(configured_csr); dispose(bsc); dispose(bsr); dispose(csc); dispose(csr); dispose(dense); valid).
+
+/**
+ * Proves immutable and output sparse-mask paths preserve both source tensors.
+ */
+@test
+pub sparse_mask_paths_match_libtorch(): Bool ->
+    let dense = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let mask_source = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
+    let mask = to_sparse_dimensions(mask_source, 2);
+    let selected = sparse_mask(dense, mask);
+    let zero = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let output = to_sparse_dimensions(zero, 2);
+    sparse_mask_out(output, dense, mask);
+    let selected_dense = to_dense(selected);
+    let output_dense = to_dense(output);
+    let valid =
+        sum_value(selected_dense) == 5.0
+            and sum_value(output_dense) == 5.0
+            and sum_value(dense) == 10.0
+            and sum_value(mask_source) == 2.0;
+    (dispose(output_dense); dispose(selected_dense); dispose(output); dispose(zero); dispose(selected); dispose(mask); dispose(mask_source); dispose(dense); valid).
+
+/**
+ * Proves functional, output, and in-place sparse copy and resize contracts.
+ */
+@test
+pub sparse_copy_and_resize_paths_match_libtorch(): Bool ->
+    let source_dense = from_floats([1.0, 0.0, 0.0, 2.0], [2, 2]);
+    let zero_dense = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let template_dense = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [3, 4]);
+    let source = to_sparse_dimensions(source_dense, 2);
+    let destination = to_sparse_dimensions(zero_dense, 2);
+    let sparse_template = to_sparse_dimensions(template_dense, 2);
+    let copied = copy_sparse_to_sparse(destination, source, false);
+    let copied_output = to_sparse_dimensions(zero_dense, 2);
+    let copied_in_place = to_sparse_dimensions(zero_dense, 2);
+    copy_sparse_to_sparse_out(copied_output, destination, source, false);
+    copy_sparse_to_sparse_in_place(copied_in_place, source, false);
+    let resized = resize_as_sparse(destination, sparse_template);
+    let resized_output = to_sparse_dimensions(zero_dense, 2);
+    let resized_in_place = to_sparse_dimensions(zero_dense, 2);
+    (resize_as_sparse_out(resized_output, destination, sparse_template); resize_as_sparse_in_place(resized_in_place, sparse_template); let explicit = sparse_resize(destination, [3, 4], 2, 0);
+let explicit_output = to_sparse_dimensions(zero_dense, 2);
+let explicit_in_place = to_sparse_dimensions(zero_dense, 2);
+(sparse_resize_out(explicit_output, destination, [3, 4], 2, 0); sparse_resize_in_place(explicit_in_place, [3, 4], 2, 0); let cleared = sparse_resize_and_clear(source, [3, 4], 2, 0);
+let cleared_output = to_sparse_dimensions(source_dense, 2);
+let cleared_in_place = to_sparse_dimensions(source_dense, 2);
+(sparse_resize_and_clear_out(cleared_output, source, [3, 4], 2, 0); sparse_resize_and_clear_in_place(cleared_in_place, [3, 4], 2, 0); let copied_dense = to_dense(copied);
+let copied_output_dense = to_dense(copied_output);
+let copied_in_place_dense = to_dense(copied_in_place);
+let cleared_values = values(cleared);
+let cleared_output_values = values(cleared_output);
+let cleared_in_place_values = values(cleared_in_place);
+let valid =
+    sum_value(copied_dense) == 3.0
+        and sum_value(copied_output_dense) == 3.0
+        and sum_value(copied_in_place_dense) == 3.0
+        and shape(resized) == [3, 4]
+        and shape(resized_output) == [3, 4]
+        and shape(resized_in_place) == [3, 4]
+        and shape(explicit) == [3, 4]
+        and shape(explicit_output) == [3, 4]
+        and shape(explicit_in_place) == [3, 4]
+        and shape(cleared) == [3, 4]
+        and shape(cleared_output) == [3, 4]
+        and shape(cleared_in_place) == [3, 4]
+        and shape(cleared_values) == [0]
+        and shape(cleared_output_values) == [0]
+        and shape(cleared_in_place_values) == [0]
+        and shape(source) == [2, 2]
+        and shape(destination) == [2, 2];
+(dispose(cleared_in_place_values); dispose(cleared_output_values); dispose(cleared_values); dispose(copied_in_place_dense); dispose(copied_output_dense); dispose(copied_dense); dispose(cleared_in_place); dispose(cleared_output); dispose(cleared); dispose(explicit_in_place); dispose(explicit_output); dispose(explicit); dispose(resized_in_place); dispose(resized_output); dispose(resized); dispose(copied_in_place); dispose(copied_output); dispose(copied); dispose(sparse_template); dispose(destination); dispose(source); dispose(template_dense); dispose(zero_dense); dispose(source_dense); valid)))).
+
+/**
+ * Proves generic sparse layout selection and optional dense conversion arguments.
+ */
+@test
+pub configurable_sparse_conversions_match_libtorch(): Bool ->
+    let dense = from_floats([1.0, 0.0, 0.0, 2.0], [2, 2]);
+    let default_sparse = to_sparse_configured(dense, 0, false, [], false, 0, false);
+    let coo = to_sparse_configured(dense, 1, true, [], false, 0, false);
+    let csr = to_sparse_configured(dense, 2, true, [], false, 0, false);
+    let bsr = to_sparse_configured(dense, 5, true, [1, 1], true, 0, false);
+    let default_dense = to_dense_configured(default_sparse, 0, false, false, false);
+    let coo_dense = to_dense_configured(coo, 0, false, false, false);
+    let masked_dense = to_dense_configured(coo, 0, false, true, true);
+    let csr_dense = to_dense(csr);
+    let bsr_dense = to_dense(bsr);
+    let valid =
+        shape(default_dense) == [2, 2]
+            and shape(coo_dense) == [2, 2]
+            and shape(masked_dense) == [2, 2]
+            and shape(csr_dense) == [2, 2]
+            and shape(bsr_dense) == [2, 2]
+            and dtype(masked_dense) == dtype(dense)
+            and sum_value(default_dense) == 3.0
+            and sum_value(coo_dense) == 3.0
+            and sum_value(masked_dense) == 3.0
+            and sum_value(csr_dense) == 3.0
+            and sum_value(bsr_dense) == 3.0;
+    dispose(bsr_dense);
+    dispose(csr_dense);
+    dispose(masked_dense);
+    dispose(coo_dense);
+    dispose(default_dense);
+    dispose(bsr);
+    dispose(csr);
+    dispose(coo);
+    dispose(default_sparse);
+    dispose(dense);
+    valid.
+
+/**
+ * Proves every COO and compressed constructor shape through generated Terlan bindings.
+ */
+@test
+pub sparse_constructor_families_match_libtorch(): Bool ->
+    let empty = coo_empty_configured([2, 3], 7, true, 1, true, 0, -1, true, false, true);
+    let empty_output = from_floats([1.0], [1]);
+    coo_empty_out(empty_output, [3, 2]);
+    let coordinates = from_ints([0, 1, 0, 1], [2, 2]);
+    let coo_values = from_floats([1.0, 2.0], [2]);
+    let inferred_coo =
+        coo_from_components_configured(
+            coordinates,
+            coo_values,
+            [],
+            false,
+            0,
+            false,
+            0,
+            false,
+            0,
+            -1,
+            false,
+            false,
+            false,
+            true,
+            true,
+        );
+    let sized_coo =
+        coo_from_components_configured(
+            coordinates,
+            coo_values,
+            [2, 2],
+            true,
+            7,
+            true,
+            1,
+            true,
+            0,
+            -1,
+            true,
+            false,
+            true,
+            true,
+            true,
+        );
+    let inferred_coo_dense = to_dense(inferred_coo);
+    let sized_coo_dense = to_dense(sized_coo);
+    let compressed = from_ints([0, 1, 2], [3]);
+    let plain = from_ints([0, 1], [2]);
+    let scalar_values =
+        from_floats([1.0, 2.0], [2])
+        |> to_dtype(6);
+    let block_values =
+        from_floats([1.0, 2.0], [2, 1, 1])
+        |> to_dtype(6);
+    let valid =
+        shape(empty) == [2, 3]
+            and dtype(empty) == 7
+            and shape(empty_output) == [3, 2]
+            and shape(inferred_coo) == [2, 2]
+            and shape(sized_coo) == [2, 2]
+            and sum_value(inferred_coo_dense) == 3.0
+            and sum_value(sized_coo_dense) == 3.0
+            and compressed_constructor_matches(2, compressed, plain, scalar_values, [], false)
+            and compressed_constructor_matches(2, compressed, plain, scalar_values, [2, 2], true)
+            and compressed_constructor_matches(4, compressed, plain, scalar_values, [], false)
+            and compressed_constructor_matches(4, compressed, plain, scalar_values, [2, 2], true)
+            and compressed_constructor_matches(5, compressed, plain, block_values, [], false)
+            and compressed_constructor_matches(5, compressed, plain, block_values, [2, 2], true)
+            and compressed_constructor_matches(6, compressed, plain, block_values, [], false)
+            and compressed_constructor_matches(6, compressed, plain, block_values, [2, 2], true)
+            and compressed_constructor_matches(0, compressed, plain, scalar_values, [], false)
+            and compressed_constructor_matches(0, compressed, plain, scalar_values, [2, 2], true);
+    (dispose(block_values); dispose(scalar_values); dispose(plain); dispose(compressed); dispose(sized_coo_dense); dispose(inferred_coo_dense); dispose(sized_coo); dispose(inferred_coo); dispose(coo_values); dispose(coordinates); dispose(empty_output); dispose(empty); valid).
+
+/**
+ * Proves sparse sampled matrix multiplication and sparse-to-dense backward behavior.
+ */
+@test
+pub sparse_math_and_backward_match_libtorch(): Bool ->
+    let mask_dense = from_floats([1.0, 0.0, 0.0, 2.0], [2, 2]);
+    let mask = to_sparse_csr(mask_dense);
+    let left = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let right = from_floats([1.0, 0.0, 0.0, 1.0, 1.0, 1.0], [3, 2]);
+    let default_result = sampled_addmm_numeric(mask, left, right, 1.0, true, 1.0, true);
+    let scaled_result = sampled_addmm_numeric(mask, left, right, 0.5, false, 2.0, false);
+    let output = to_sparse_csr(mask_dense);
+    sampled_addmm_numeric_out(output, mask, left, right, 0.5, false, 2.0, false);
+    let gradient = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let coo_input = to_sparse_dimensions(mask_dense, 2);
+    let inherited_backward = to_dense_backward_configured(gradient, coo_input, false, false);
+    let masked_backward = to_dense_backward_configured(gradient, coo_input, true, true);
+    let unmasked_backward = to_dense_backward_configured(gradient, coo_input, false, true);
+    let valid =
+        sparse_sum(default_result) == 18.0
+            and sparse_sum(scaled_result) == 31.5
+            and sparse_sum(output) == 31.5
+            and sparse_sum(inherited_backward) == 5.0
+            and sparse_sum(masked_backward) == 5.0
+            and sparse_sum(unmasked_backward) == 10.0
+            and sum_value(mask_dense) == 3.0
+            and sum_value(left) == 21.0
+            and sum_value(right) == 4.0;
+    (dispose(unmasked_backward); dispose(masked_backward); dispose(inherited_backward); dispose(coo_input); dispose(gradient); dispose(output); dispose(scaled_result); dispose(default_result); dispose(right); dispose(left); dispose(mask); dispose(mask_dense); valid).

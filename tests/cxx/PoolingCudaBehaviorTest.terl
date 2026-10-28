@@ -1,0 +1,11 @@
+module pytorch_cxx.PoolingCudaBehaviorTest.
+
+import pytorch.PoolingBehaviorSupport.{pooling_retained_output_contracts_on, pooling_value_contracts_on}.
+
+@test
+pub generated_cxx_cuda_pooling_value_contracts(): Bool ->
+    pooling_value_contracts_on("cuda:0", true).
+
+@test
+pub generated_cxx_cuda_pooling_retained_output_contracts(): Bool ->
+    pooling_retained_output_contracts_on("cuda:0", true).

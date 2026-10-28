@@ -1,0 +1,144 @@
+/**
+ * CPU runtime evidence for executable quantized pooling and normalization
+ * kernels exposed through the generated CXX boundary.
+ */
+module pytorch.QuantizedInternalsParityTest.
+
+import pytorch.QuantizationCompletion.{quantize_per_tensor}.
+import pytorch.QuantizedNormalization.{quantized_batch_norm, quantized_batch_norm_out}.
+import pytorch.QuantizedPooling.{quantized_max_pool1d, quantized_max_pool1d_out, quantized_max_pool2d, quantized_max_pool2d_out, quantized_max_pool3d, quantized_max_pool3d_out}.
+import pytorch.Tensor.{dispose, from_floats, is_defined, shape, to_dtype}.
+
+@test
+pub executable_quantized_internals_match_libtorch(): Bool ->
+    let source1d = to_dtype(from_floats([0.0, 1.0, 2.0, 3.0], [1, 1, 4]), 6);
+    let source2d =
+        to_dtype(
+            from_floats(
+                [
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    5.0,
+                    6.0,
+                    7.0,
+                    8.0,
+                    9.0,
+                    10.0,
+                    11.0,
+                    12.0,
+                    13.0,
+                    14.0,
+                    15.0,
+                ],
+                [1, 1, 4, 4],
+            ),
+            6,
+        );
+    let source3d =
+        to_dtype(
+            from_floats(
+                [
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    5.0,
+                    6.0,
+                    7.0,
+                    8.0,
+                    9.0,
+                    10.0,
+                    11.0,
+                    12.0,
+                    13.0,
+                    14.0,
+                    15.0,
+                    16.0,
+                    17.0,
+                    18.0,
+                    19.0,
+                    20.0,
+                    21.0,
+                    22.0,
+                    23.0,
+                    24.0,
+                    25.0,
+                    26.0,
+                    27.0,
+                    28.0,
+                    29.0,
+                    30.0,
+                    31.0,
+                    32.0,
+                    33.0,
+                    34.0,
+                    35.0,
+                    36.0,
+                    37.0,
+                    38.0,
+                    39.0,
+                    40.0,
+                    41.0,
+                    42.0,
+                    43.0,
+                    44.0,
+                    45.0,
+                    46.0,
+                    47.0,
+                    48.0,
+                    49.0,
+                    50.0,
+                    51.0,
+                    52.0,
+                    53.0,
+                    54.0,
+                    55.0,
+                    56.0,
+                    57.0,
+                    58.0,
+                    59.0,
+                    60.0,
+                    61.0,
+                    62.0,
+                    63.0,
+                ],
+                [1, 1, 4, 4, 4],
+            ),
+            6,
+        );
+    let q1d = quantize_per_tensor(source1d, 0.1, 0, 12);
+    let q2d = quantize_per_tensor(source2d, 0.1, 0, 12);
+    let q3d = quantize_per_tensor(source3d, 0.1, 0, 12);
+    let pool1d = quantized_max_pool1d(q1d, [2], [2], [0], [1], false);
+    let pool2d = quantized_max_pool2d(q2d, [2, 2], [2, 2], [0, 0], [1, 1], false);
+    let pool3d = quantized_max_pool3d(q3d, [2, 2, 2], [2, 2, 2], [0, 0, 0], [1, 1, 1], false);
+    let pool1d_out = quantized_max_pool1d(q1d, [2], [2], [0], [1], false);
+    let pool2d_out = quantized_max_pool2d(q2d, [2, 2], [2, 2], [0, 0], [1, 1], false);
+    let pool3d_out = quantized_max_pool3d(q3d, [2, 2, 2], [2, 2, 2], [0, 0, 0], [1, 1, 1], false);
+    quantized_max_pool1d_out(pool1d_out, q1d, [2], [2], [0], [1], false);
+    quantized_max_pool2d_out(pool2d_out, q2d, [2, 2], [2, 2], [0, 0], [1, 1], false);
+    quantized_max_pool3d_out(pool3d_out, q3d, [2, 2, 2], [2, 2, 2], [0, 0, 0], [1, 1, 1], false);
+    let qbn_source = to_dtype(from_floats([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0], [2, 2, 2]), 6);
+    let qbn_input = quantize_per_tensor(qbn_source, 0.1, 0, 12);
+    let weight = to_dtype(from_floats([1.0, 1.0], [2]), 6);
+    let bias = to_dtype(from_floats([0.0, 0.0], [2]), 6);
+    let mean = to_dtype(from_floats([0.0, 0.0], [2]), 6);
+    let var = to_dtype(from_floats([1.0, 1.0], [2]), 6);
+    let qbn = quantized_batch_norm(qbn_input, true, weight, true, bias, mean, var, 0.00001, 0.1, 0);
+    let qbn_out = quantized_batch_norm(qbn_input, true, weight, true, bias, mean, var, 0.00001, 0.1, 0);
+    (quantized_batch_norm_out(qbn_out, qbn_input, true, weight, true, bias, mean, var, 0.00001, 0.1, 0); let valid =
+    shape(pool1d) == [1, 1, 2]
+        and shape(pool2d) == [1, 1, 2, 2]
+        and shape(pool3d) == [1, 1, 2, 2, 2]
+        and shape(pool1d_out) == [1, 1, 2]
+        and shape(pool2d_out) == [1, 1, 2, 2]
+        and shape(pool3d_out) == [1, 1, 2, 2, 2]
+        and shape(qbn) == [2, 2, 2]
+        and shape(qbn_out) == [2, 2, 2]
+        and is_defined(qbn)
+        and is_defined(qbn_out);
+(dispose(qbn_out); dispose(qbn); dispose(var); dispose(mean); dispose(bias); dispose(weight); dispose(qbn_input); dispose(qbn_source); dispose(pool3d_out); dispose(pool2d_out); dispose(pool1d_out); dispose(pool3d); dispose(pool2d); dispose(pool1d); dispose(q3d); dispose(q2d); dispose(q1d); dispose(source3d); dispose(source2d); dispose(source1d); valid)).

@@ -1,0 +1,74 @@
+/**
+ * Public evidence for optional offsets, storage aliasing, copies, and scatter.
+ */
+module pytorch.StridedParityTest.
+
+import pytorch.Strided.{as_strided, as_strided_copy, as_strided_copy_offset, as_strided_copy_out, as_strided_copy_out_offset, as_strided_in_place, as_strided_in_place_offset, as_strided_offset, as_strided_scatter, as_strided_scatter_offset, as_strided_scatter_out, as_strided_scatter_out_offset}.
+import pytorch.Tensor.{dispose, from_floats, narrow, shape, storage_offset, strides}.
+import pytorch.TypeRelations.equal.
+import pytorch.UnaryStorage.zero_in_place.
+
+/**
+ * Proves offset inheritance and that view storage survives source disposal.
+ */
+@test
+pub views_share_storage_and_preserve_offsets(): Bool ->
+    let base = from_floats([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0], [8]);
+    let source = narrow(base, 0, 1, 6);
+    let view = as_strided(source, [2, 2], [3, 1]);
+    let shifted = as_strided_offset(source, [2, 2], [3, 1], 2);
+    let wanted = from_floats([1.0, 2.0, 4.0, 5.0], [2, 2]);
+    let wanted_shifted = from_floats([2.0, 3.0, 5.0, 6.0], [2, 2]);
+    let initial =
+        equal(view, wanted)
+            and equal(shifted, wanted_shifted)
+            and strides(view) == [3, 1]
+            and storage_offset(view) == 1;
+    zero_in_place(view);
+    let changed = from_floats([0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 6.0, 7.0], [8]);
+    let shared = equal(base, changed);
+    (dispose(source); dispose(base); let alive = shape(view) == [2, 2] and storage_offset(shifted) == 2; (dispose(changed); dispose(wanted_shifted); dispose(wanted); dispose(shifted); dispose(view); initial and shared and alive)).
+
+/**
+ * Proves both copy/output forms and both retained metadata mutation forms.
+ */
+@test
+pub copies_own_storage_and_mutations_change_retained_metadata(): Bool ->
+    let base = from_floats([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0], [8]);
+    let source = narrow(base, 0, 1, 6);
+    let copy = as_strided_copy(source, [2, 2], [3, 1]);
+    let shifted = as_strided_copy_offset(source, [2, 2], [3, 1], 2);
+    let output = from_floats([], [0]);
+    let shifted_output = from_floats([], [0]);
+    as_strided_copy_out(output, source, [2, 2], [3, 1]);
+    as_strided_copy_out_offset(shifted_output, source, [2, 2], [3, 1], 2);
+    let wanted = from_floats([1.0, 2.0, 4.0, 5.0], [2, 2]);
+    let wanted_shifted = from_floats([2.0, 3.0, 5.0, 6.0], [2, 2]);
+    let copied =
+        equal(copy, wanted)
+            and equal(output, wanted)
+            and equal(shifted, wanted_shifted)
+            and equal(shifted_output, wanted_shifted);
+    (zero_in_place(copy); zero_in_place(output); as_strided_in_place(source, [2, 2], [3, 1]); let inherited = equal(source, wanted) and storage_offset(source) == 1; (as_strided_in_place_offset(source, [2, 2], [3, 1], 2); let explicit = equal(source, wanted_shifted) and storage_offset(source) == 2; (dispose(wanted_shifted); dispose(wanted); dispose(shifted_output); dispose(output); dispose(shifted); dispose(copy); dispose(source); dispose(base); copied and inherited and explicit))).
+
+/**
+ * Proves each scatter overload embeds values without changing either input.
+ */
+@test
+pub scatter_allocations_and_outputs_preserve_sources(): Bool ->
+    let base = from_floats([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0], [8]);
+    let patch = from_floats([10.0, 11.0, 12.0, 13.0], [2, 2]);
+    let result = as_strided_scatter(base, patch, [2, 2], [3, 1]);
+    let shifted = as_strided_scatter_offset(base, patch, [2, 2], [3, 1], 2);
+    let output = from_floats([], [0]);
+    let shifted_output = from_floats([], [0]);
+    as_strided_scatter_out(output, base, patch, [2, 2], [3, 1]);
+    as_strided_scatter_out_offset(shifted_output, base, patch, [2, 2], [3, 1], 2);
+    let wanted = from_floats([10.0, 11.0, 2.0, 12.0, 13.0, 5.0, 6.0, 7.0], [8]);
+    let wanted_shifted = from_floats([0.0, 1.0, 10.0, 11.0, 4.0, 12.0, 13.0, 7.0], [8]);
+    let valid =
+        equal(result, wanted)
+            and equal(output, wanted)
+            and equal(shifted, wanted_shifted)
+            and equal(shifted_output, wanted_shifted);
+    (zero_in_place(result); zero_in_place(output); let original = from_floats([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0], [8]); let independent = equal(base, original); (dispose(original); dispose(wanted_shifted); dispose(wanted); dispose(shifted_output); dispose(output); dispose(shifted); dispose(result); dispose(patch); dispose(base); valid and independent)).

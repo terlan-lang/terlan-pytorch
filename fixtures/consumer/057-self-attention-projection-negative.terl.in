@@ -1,0 +1,13 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{from_floats, full_float, layer_norm, matmul}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
+    let weight = full_float([2], 1.0);
+    let bias = full_float([2], 0.0);
+    let normalized = layer_norm(input, [2], weight, bias, 0.0, false);
+    let invalid_query_weight = full_float([3, 2], 0.0);
+    let queries = matmul(normalized, invalid_query_weight);
+    println("PYTORCH_SELF_ATTENTION_PROJECTION_NOT_REJECTED").

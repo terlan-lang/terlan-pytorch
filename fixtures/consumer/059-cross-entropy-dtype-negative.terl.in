@@ -1,0 +1,10 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{cross_entropy_loss, full_float}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let logits = full_float([2, 2], 0.0);
+    let float_targets = full_float([2], 0.0);
+    let loss = cross_entropy_loss(logits, float_targets, 1, -100, 0.1);
+    println("PYTORCH_CROSS_ENTROPY_TARGET_DTYPE_NOT_REJECTED").

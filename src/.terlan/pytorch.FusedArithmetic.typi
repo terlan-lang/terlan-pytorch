@@ -1,0 +1,208 @@
+//! Fused pointwise, matrix, vector, and batched matrix arithmetic.
+
+module pytorch.FusedArithmetic.
+
+/// Computes a scaled sum of batch matrix products.
+
+pub addbmm(accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor): pytorch.Tensor.Tensor.
+
+/// Computes a scaled sum of batch matrix products with exact scalars.
+
+pub addbmm(accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): pytorch.Tensor.Tensor.
+
+/// Mutates an accumulator with a scaled sum of batch matrix products.
+
+pub addbmm_in_place(accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor): Unit.
+
+/// Mutates an accumulator with a scaled sum of batch matrix products and exact scalars.
+
+pub addbmm_in_place(accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): Unit.
+
+/// Writes a scaled sum of batch matrix products.
+
+pub addbmm_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor): Unit.
+
+/// Writes a scaled sum of batch matrix products with exact scalars.
+
+pub addbmm_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): Unit.
+
+/// Computes accumulator plus the quotient of two tensors.
+
+pub addcdiv(accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor): pytorch.Tensor.Tensor.
+
+/// Computes accumulator plus a scaled quotient of two tensors.
+
+pub addcdiv(accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor, value: Scalar): pytorch.Tensor.Tensor.
+
+/// Mutates accumulator by adding the quotient of two tensors.
+
+pub addcdiv_in_place(accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor): Unit.
+
+/// Mutates accumulator by adding a scaled quotient of two tensors.
+
+pub addcdiv_in_place(accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor, value: Scalar): Unit.
+
+/// Writes accumulator plus the quotient of two tensors.
+
+pub addcdiv_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor): Unit.
+
+/// Writes accumulator plus a scaled quotient of two tensors.
+
+pub addcdiv_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor, value: Scalar): Unit.
+
+/// Computes accumulator plus the product of two tensors.
+
+pub addcmul(accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor): pytorch.Tensor.Tensor.
+
+/// Computes accumulator plus a scaled product of two tensors.
+
+pub addcmul(accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor, value: Scalar): pytorch.Tensor.Tensor.
+
+/// Mutates accumulator by adding the product of two tensors.
+
+pub addcmul_in_place(accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor): Unit.
+
+/// Mutates accumulator by adding a scaled product of two tensors.
+
+pub addcmul_in_place(accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor, value: Scalar): Unit.
+
+/// Writes accumulator plus the product of two tensors.
+
+pub addcmul_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor): Unit.
+
+/// Writes accumulator plus a scaled product of two tensors.
+
+pub addcmul_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor, value: Scalar): Unit.
+
+/// Computes a scaled matrix product plus an accumulator.
+
+pub addmm(accumulator: pytorch.Tensor.Tensor, mat1: pytorch.Tensor.Tensor, mat2: pytorch.Tensor.Tensor): pytorch.Tensor.Tensor.
+
+/// Computes a dtype-selecting scaled matrix product plus an accumulator.
+
+pub addmm(accumulator: pytorch.Tensor.Tensor, mat1: pytorch.Tensor.Tensor, mat2: pytorch.Tensor.Tensor, dtype: pytorch.Tensor.DType): pytorch.Tensor.Tensor.
+
+/// Computes a scaled matrix product plus an accumulator with exact scalars.
+
+pub addmm(accumulator: pytorch.Tensor.Tensor, mat1: pytorch.Tensor.Tensor, mat2: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): pytorch.Tensor.Tensor.
+
+/// Computes a dtype-selecting scaled matrix product with exact scalars.
+
+pub addmm(accumulator: pytorch.Tensor.Tensor, mat1: pytorch.Tensor.Tensor, mat2: pytorch.Tensor.Tensor, dtype: pytorch.Tensor.DType, beta: Scalar, alpha: Scalar): pytorch.Tensor.Tensor.
+
+/// Mutates an accumulator with a scaled matrix product.
+
+pub addmm_in_place(accumulator: pytorch.Tensor.Tensor, mat1: pytorch.Tensor.Tensor, mat2: pytorch.Tensor.Tensor): Unit.
+
+/// Mutates an accumulator with a scaled matrix product and exact scalars.
+
+pub addmm_in_place(accumulator: pytorch.Tensor.Tensor, mat1: pytorch.Tensor.Tensor, mat2: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): Unit.
+
+/// Writes a scaled matrix product plus an accumulator.
+
+pub addmm_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, mat1: pytorch.Tensor.Tensor, mat2: pytorch.Tensor.Tensor): Unit.
+
+/// Writes a dtype-selecting scaled matrix product plus an accumulator.
+
+pub addmm_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, mat1: pytorch.Tensor.Tensor, mat2: pytorch.Tensor.Tensor, dtype: pytorch.Tensor.DType): Unit.
+
+/// Writes a scaled matrix product plus an accumulator with exact scalars.
+
+pub addmm_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, mat1: pytorch.Tensor.Tensor, mat2: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): Unit.
+
+/// Writes a dtype-selecting scaled matrix product with exact scalars.
+
+pub addmm_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, mat1: pytorch.Tensor.Tensor, mat2: pytorch.Tensor.Tensor, dtype: pytorch.Tensor.DType, beta: Scalar, alpha: Scalar): Unit.
+
+/// Computes a scaled matrix-vector product plus an accumulator.
+
+pub addmv(accumulator: pytorch.Tensor.Tensor, matrix: pytorch.Tensor.Tensor, vector: pytorch.Tensor.Tensor): pytorch.Tensor.Tensor.
+
+/// Computes a scaled matrix-vector product with exact scalars.
+
+pub addmv(accumulator: pytorch.Tensor.Tensor, matrix: pytorch.Tensor.Tensor, vector: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): pytorch.Tensor.Tensor.
+
+/// Mutates an accumulator with a scaled matrix-vector product.
+
+pub addmv_in_place(accumulator: pytorch.Tensor.Tensor, matrix: pytorch.Tensor.Tensor, vector: pytorch.Tensor.Tensor): Unit.
+
+/// Mutates an accumulator with a scaled matrix-vector product and exact scalars.
+
+pub addmv_in_place(accumulator: pytorch.Tensor.Tensor, matrix: pytorch.Tensor.Tensor, vector: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): Unit.
+
+/// Writes a scaled matrix-vector product plus an accumulator.
+
+pub addmv_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, matrix: pytorch.Tensor.Tensor, vector: pytorch.Tensor.Tensor): Unit.
+
+/// Writes a scaled matrix-vector product with exact scalars.
+
+pub addmv_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, matrix: pytorch.Tensor.Tensor, vector: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): Unit.
+
+/// Computes a scaled vector outer product plus an accumulator.
+
+pub addr(accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor): pytorch.Tensor.Tensor.
+
+/// Computes a scaled vector outer product with exact scalars.
+
+pub addr(accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): pytorch.Tensor.Tensor.
+
+/// Mutates an accumulator with a scaled vector outer product.
+
+pub addr_in_place(accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor): Unit.
+
+/// Mutates an accumulator with a scaled vector outer product and exact scalars.
+
+pub addr_in_place(accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): Unit.
+
+/// Writes a scaled vector outer product plus an accumulator.
+
+pub addr_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor): Unit.
+
+/// Writes a scaled vector outer product with exact scalars.
+
+pub addr_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, first: pytorch.Tensor.Tensor, second: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): Unit.
+
+/// Computes a scaled batch matrix product plus an accumulator.
+
+pub baddbmm(accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor): pytorch.Tensor.Tensor.
+
+/// Computes a dtype-selecting scaled batch matrix product.
+
+pub baddbmm(accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor, dtype: pytorch.Tensor.DType): pytorch.Tensor.Tensor.
+
+/// Computes a scaled batch matrix product with exact scalars.
+
+pub baddbmm(accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): pytorch.Tensor.Tensor.
+
+/// Computes a dtype-selecting scaled batch matrix product with exact scalars.
+
+pub baddbmm(accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor, dtype: pytorch.Tensor.DType, beta: Scalar, alpha: Scalar): pytorch.Tensor.Tensor.
+
+/// Mutates an accumulator with a scaled batch matrix product.
+
+pub baddbmm_in_place(accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor): Unit.
+
+/// Mutates an accumulator with a scaled batch matrix product and exact scalars.
+
+pub baddbmm_in_place(accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): Unit.
+
+/// Writes a scaled batch matrix product plus an accumulator.
+
+pub baddbmm_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor): Unit.
+
+/// Writes a dtype-selecting scaled batch matrix product.
+
+pub baddbmm_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor, dtype: pytorch.Tensor.DType): Unit.
+
+/// Writes a scaled batch matrix product with exact scalars.
+
+pub baddbmm_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor, beta: Scalar, alpha: Scalar): Unit.
+
+/// Writes a dtype-selecting scaled batch matrix product with exact scalars.
+
+pub baddbmm_out(retained: pytorch.Tensor.Tensor, accumulator: pytorch.Tensor.Tensor, batch1: pytorch.Tensor.Tensor, batch2: pytorch.Tensor.Tensor, dtype: pytorch.Tensor.DType, beta: Scalar, alpha: Scalar): Unit.
+
+/// Computes sparse-matrix addmm using the same ownership-preserving CXX
+/// kernel as `torch.saddmm`.
+
+pub saddmm(accumulator: pytorch.Tensor.Tensor, sparse_mat1: pytorch.Tensor.Tensor, mat2: pytorch.Tensor.Tensor): pytorch.Tensor.Tensor.

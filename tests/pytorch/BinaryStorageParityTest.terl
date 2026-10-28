@@ -1,0 +1,96 @@
+module pytorch.BinaryStorageParityTest.
+
+import pytorch.Binary.{fmax, fmax_out, fmin, fmin_out, fmod_tensor, fmod_tensor_in_place, fmod_tensor_out, logical_and, logical_and_in_place, logical_and_out, logical_or, logical_or_in_place, logical_or_out, logical_xor, logical_xor_in_place, logical_xor_out, maximum, maximum_out, minimum_out}.
+import pytorch.BinaryScalar.{copysign_right_float, copysign_right_float_in_place, copysign_right_float_out, copysign_right_int, copysign_right_int_in_place, copysign_right_int_out, fmod_right_float, fmod_right_float_in_place, fmod_right_float_out}.
+import pytorch.Tensor.{clone, dispose, from_bool, from_float, item_bool, item_float, minimum}.
+
+/**
+ * Proves floating extrema and remainder storage contracts.
+ */
+@test
+pub numeric_storage_forms_match_libtorch(): Bool ->
+    let left = from_float(7.0);
+    let right = from_float(4.0);
+    let fmax_expected = fmax(left, right);
+    let fmax_output = clone(left);
+    let fmin_expected = fmin(left, right);
+    let fmin_output = clone(left);
+    let maximum_expected = maximum(left, right);
+    let maximum_output = clone(left);
+    let minimum_expected = minimum(left, right);
+    let minimum_output = clone(left);
+    fmax_out(fmax_output, left, right);
+    fmin_out(fmin_output, left, right);
+    maximum_out(maximum_output, left, right);
+    minimum_out(minimum_output, left, right);
+    let scalar_expected = fmod_right_float(left, 4.0);
+    let scalar_output = clone(left);
+    let scalar_mutation = clone(left);
+    (fmod_right_float_out(scalar_output, left, 4.0); fmod_right_float_in_place(scalar_mutation, 4.0); let tensor_expected = fmod_tensor(left, right);
+let tensor_output = clone(left);
+let tensor_mutation = clone(left);
+(fmod_tensor_out(tensor_output, left, right); fmod_tensor_in_place(tensor_mutation, right); let valid =
+    item_float(fmax_output) == item_float(fmax_expected)
+        and item_float(fmin_output) == item_float(fmin_expected)
+        and item_float(maximum_output) == item_float(maximum_expected)
+        and item_float(minimum_output) == item_float(minimum_expected)
+        and item_float(scalar_output) == item_float(scalar_expected)
+        and item_float(scalar_mutation) == item_float(scalar_expected)
+        and item_float(tensor_output) == item_float(tensor_expected)
+        and item_float(tensor_mutation) == item_float(tensor_expected)
+        and item_float(left) == 7.0
+        and item_float(right) == 4.0;
+(dispose(tensor_mutation); dispose(tensor_output); dispose(tensor_expected); dispose(scalar_mutation); dispose(scalar_output); dispose(scalar_expected); dispose(minimum_output); dispose(minimum_expected); dispose(maximum_output); dispose(maximum_expected); dispose(fmin_output); dispose(fmin_expected); dispose(fmax_output); dispose(fmax_expected); dispose(right); dispose(left); valid))).
+
+/**
+ * Proves logical output and in-place storage contracts.
+ */
+@test
+pub logical_storage_forms_match_libtorch(): Bool ->
+    let truth = from_bool(true);
+    let falsehood = from_bool(false);
+    let and_expected = logical_and(truth, falsehood);
+    let and_output = clone(truth);
+    let and_mutation = clone(truth);
+    logical_and_out(and_output, truth, falsehood);
+    logical_and_in_place(and_mutation, falsehood);
+    let or_expected = logical_or(truth, falsehood);
+    let or_output = clone(truth);
+    let or_mutation = clone(truth);
+    (logical_or_out(or_output, truth, falsehood); logical_or_in_place(or_mutation, falsehood); let xor_expected = logical_xor(truth, falsehood);
+let xor_output = clone(truth);
+let xor_mutation = clone(truth);
+(logical_xor_out(xor_output, truth, falsehood); logical_xor_in_place(xor_mutation, falsehood); let valid =
+    item_bool(and_output) == item_bool(and_expected)
+        and item_bool(and_mutation) == item_bool(and_expected)
+        and item_bool(or_output) == item_bool(or_expected)
+        and item_bool(or_mutation) == item_bool(or_expected)
+        and item_bool(xor_output) == item_bool(xor_expected)
+        and item_bool(xor_mutation) == item_bool(xor_expected)
+        and item_bool(truth)
+        and not item_bool(falsehood);
+(dispose(xor_mutation); dispose(xor_output); dispose(xor_expected); dispose(or_mutation); dispose(or_output); dispose(or_expected); dispose(and_mutation); dispose(and_output); dispose(and_expected); dispose(falsehood); dispose(truth); valid))).
+
+/**
+ * Proves scalar copysign functional, output, and in-place contracts.
+ */
+@test
+pub scalar_copysign_storage_forms_match_libtorch(): Bool ->
+    let input = from_float(-7.0);
+    let expected = copysign_right_float(input, 1.0);
+    let output = clone(input);
+    let mutation = clone(input);
+    copysign_right_float_out(output, input, 1.0);
+    copysign_right_float_in_place(mutation, 1.0);
+    let integer_expected = copysign_right_int(input, -1);
+    let integer_output = clone(input);
+    let integer_mutation = clone(input);
+    (copysign_right_int_out(integer_output, input, -1); copysign_right_int_in_place(integer_mutation, -1); let valid =
+    item_float(expected) == 7.0
+        and item_float(output) == 7.0
+        and item_float(mutation) == 7.0
+        and item_float(integer_expected) == -7.0
+        and item_float(integer_output) == -7.0
+        and item_float(integer_mutation) == -7.0
+        and item_float(input) == -7.0;
+(dispose(integer_mutation); dispose(integer_output); dispose(integer_expected); dispose(mutation); dispose(output); dispose(expected); dispose(input); valid)).

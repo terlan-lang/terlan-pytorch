@@ -1,0 +1,194 @@
+/**
+ * Generated direct-CXX implementation of optional-bound slice views, copied slices, retained outputs, and slice scatter operations.
+ */
+module pytorch.SliceNative.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes exact aten::slice.Tensor with all optional bounds. Returns a shared-storage view.
+ */
+@compiler.native {pytorch.slice.slice_all}
+pub slice_all(tensor: Tensor, dimension: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::slice.Tensor with from optional bounds. Returns a shared-storage view.
+ */
+@compiler.native {pytorch.slice.slice_from}
+pub slice_from(tensor: Tensor, dimension: Int, start: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::slice.Tensor with until optional bounds. Returns a shared-storage view.
+ */
+@compiler.native {pytorch.slice.slice_until}
+pub slice_until(tensor: Tensor, dimension: Int, end: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::slice.Tensor with bounds optional bounds. Returns a shared-storage view.
+ */
+@compiler.native {pytorch.slice.slice_bounds}
+pub slice_bounds(tensor: Tensor, dimension: Int, start: Int, end: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::slice_copy.Tensor with all optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_copy_all}
+pub slice_copy_all(tensor: Tensor, dimension: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::slice_copy.Tensor with from optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_copy_from}
+pub slice_copy_from(tensor: Tensor, dimension: Int, start: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::slice_copy.Tensor with until optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_copy_until}
+pub slice_copy_until(tensor: Tensor, dimension: Int, end: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::slice_copy.Tensor with bounds optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_copy_bounds}
+pub slice_copy_bounds(tensor: Tensor, dimension: Int, start: Int, end: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::slice_copy.Tensor_out with all optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_copy_out_all}
+pub slice_copy_out_all(output: Tensor, tensor: Tensor, dimension: Int, step: Int): Unit ->
+    native.
+
+/**
+ * Executes exact aten::slice_copy.Tensor_out with from optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_copy_out_from}
+pub slice_copy_out_from(output: Tensor, tensor: Tensor, dimension: Int, start: Int, step: Int): Unit ->
+    native.
+
+/**
+ * Executes exact aten::slice_copy.Tensor_out with until optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_copy_out_until}
+pub slice_copy_out_until(output: Tensor, tensor: Tensor, dimension: Int, end: Int, step: Int): Unit ->
+    native.
+
+/**
+ * Executes exact aten::slice_copy.Tensor_out with bounds optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_copy_out_bounds}
+pub slice_copy_out_bounds(
+    output: Tensor,
+    tensor: Tensor,
+    dimension: Int,
+    start: Int,
+    end: Int,
+    step: Int,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::slice_scatter with all optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_scatter_all}
+pub slice_scatter_all(tensor: Tensor, source: Tensor, dimension: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::slice_scatter with from optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_scatter_from}
+pub slice_scatter_from(
+    tensor: Tensor,
+    source: Tensor,
+    dimension: Int,
+    start: Int,
+    step: Int,
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::slice_scatter with until optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_scatter_until}
+pub slice_scatter_until(tensor: Tensor, source: Tensor, dimension: Int, end: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::slice_scatter with bounds optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_scatter_bounds}
+pub slice_scatter_bounds(
+    tensor: Tensor,
+    source: Tensor,
+    dimension: Int,
+    start: Int,
+    end: Int,
+    step: Int,
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::slice_scatter.out with all optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_scatter_out_all}
+pub slice_scatter_out_all(
+    output: Tensor,
+    tensor: Tensor,
+    source: Tensor,
+    dimension: Int,
+    step: Int,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::slice_scatter.out with from optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_scatter_out_from}
+pub slice_scatter_out_from(
+    output: Tensor,
+    tensor: Tensor,
+    source: Tensor,
+    dimension: Int,
+    start: Int,
+    step: Int,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::slice_scatter.out with until optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_scatter_out_until}
+pub slice_scatter_out_until(
+    output: Tensor,
+    tensor: Tensor,
+    source: Tensor,
+    dimension: Int,
+    end: Int,
+    step: Int,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::slice_scatter.out with bounds optional bounds. Preserves independent output storage.
+ */
+@compiler.native {pytorch.slice.slice_scatter_out_bounds}
+pub slice_scatter_out_bounds(
+    output: Tensor,
+    tensor: Tensor,
+    source: Tensor,
+    dimension: Int,
+    start: Int,
+    end: Int,
+    step: Int,
+): Unit ->
+    native.

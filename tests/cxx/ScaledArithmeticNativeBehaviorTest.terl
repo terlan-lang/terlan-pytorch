@@ -1,0 +1,7 @@
+module pytorch_cxx.ScaledArithmeticNativeBehaviorTest.
+
+import pytorch.ScaledArithmeticNativeBehaviorSupport.{scaled_arithmetic_contracts_on}.
+
+@test
+pub generated_cxx_scaled_arithmetic_contracts(): Bool ->
+    scaled_arithmetic_contracts_on("cpu").

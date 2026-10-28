@@ -1,0 +1,108 @@
+/**
+ * Retained ordering, pairwise distance, matrix-chain, clone, contiguity, and cross-product operators.
+ */
+module pytorch.NumericalCompletion.
+
+import pytorch.NumericalCompletionNative.{argsort_stable_out, cdist_compute, cdist_default_compute, chain_matmul_native, chain_matmul_out_native, clone_out_default_memory, clone_out_memory, contiguous_native, cross_default_dimension, cross_dimension, cross_out_default_dimension, cross_out_dimension}.
+
+import type pytorch.Tensor.
+
+/**
+ * A memory format accepted by clone and contiguous.
+ */
+pub type MemoryFormat: Int = CONTIGUOUS = 0 | PRESERVE = 1 | CHANNELS_LAST = 2 | CHANNELS_LAST_3D = 3.
+
+/**
+ * Lowers a typed memory format to LibTorch's stable enum value.
+ */
+pub memory_format_code(format: MemoryFormat): Int ->
+    case format {
+        MemoryFormat.CONTIGUOUS -> 0;
+        MemoryFormat.PRESERVE -> 1;
+        MemoryFormat.CHANNELS_LAST -> 2;
+        MemoryFormat.CHANNELS_LAST_3D -> 3
+    }.
+
+/**
+ * Writes stable or unstable argsort indices into retained storage.
+ */
+pub argsort_out(
+    output: Tensor,
+    tensor: Tensor,
+    stable: Bool,
+    dimension: Int,
+    descending: Bool,
+): Unit ->
+    argsort_stable_out(output, tensor, stable, dimension, descending).
+
+/**
+ * Computes pairwise p-distance using PyTorch's inferred compute mode.
+ */
+pub cdist(left: Tensor, right: Tensor, p: Float): Tensor ->
+    cdist_default_compute(left, right, p).
+
+/**
+ * Computes pairwise p-distance using an explicit PyTorch compute mode.
+ */
+pub cdist(left: Tensor, right: Tensor, p: Float, compute_mode: Int): Tensor ->
+    cdist_compute(left, right, p, compute_mode).
+
+/**
+ * Multiplies a chain of matrices using PyTorch's selected association.
+ */
+pub chain_matmul(matrices: List[Tensor]): Tensor ->
+    chain_matmul_native(matrices).
+
+/**
+ * Writes a matrix-chain product into retained storage.
+ */
+pub chain_matmul_out(output: Tensor, matrices: List[Tensor]): Unit ->
+    chain_matmul_out_native(output, matrices).
+
+/**
+ * Writes an independent clone using PyTorch's inferred memory format.
+ */
+pub clone_out(output: Tensor, tensor: Tensor): Unit ->
+    clone_out_default_memory(output, tensor).
+
+/**
+ * Writes an independent clone using an explicit memory format.
+ */
+pub clone_out(output: Tensor, tensor: Tensor, format: MemoryFormat): Unit ->
+    clone_out_memory(output, tensor, memory_format_code(format)).
+
+/**
+ * Returns a contiguous tensor using the default row-major format.
+ */
+pub contiguous(tensor: Tensor): Tensor ->
+    contiguous_native(tensor, memory_format_code(MemoryFormat.CONTIGUOUS)).
+
+/**
+ * Returns a tensor contiguous in the requested memory format.
+ */
+pub contiguous(tensor: Tensor, format: MemoryFormat): Tensor ->
+    contiguous_native(tensor, memory_format_code(format)).
+
+/**
+ * Computes a vector cross product using PyTorch's inferred dimension.
+ */
+pub cross(tensor: Tensor, other: Tensor): Tensor ->
+    cross_default_dimension(tensor, other).
+
+/**
+ * Computes a vector cross product along an explicit dimension.
+ */
+pub cross(tensor: Tensor, other: Tensor, dimension: Int): Tensor ->
+    cross_dimension(tensor, other, dimension).
+
+/**
+ * Writes a vector cross product using PyTorch's inferred dimension.
+ */
+pub cross_out(output: Tensor, tensor: Tensor, other: Tensor): Unit ->
+    cross_out_default_dimension(output, tensor, other).
+
+/**
+ * Writes a vector cross product along an explicit dimension.
+ */
+pub cross_out(output: Tensor, tensor: Tensor, other: Tensor, dimension: Int): Unit ->
+    cross_out_dimension(output, tensor, other, dimension).

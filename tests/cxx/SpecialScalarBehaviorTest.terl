@@ -1,0 +1,7 @@
+module pytorch_cxx.SpecialScalarBehaviorTest.
+
+import pytorch.SpecialScalarBehaviorSupport.{special_scalar_contracts_on}.
+
+@test
+pub cpu_special_scalar_contracts(): Bool ->
+    special_scalar_contracts_on("cpu", false).

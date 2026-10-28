@@ -1,0 +1,11 @@
+//! Generated CXX nearest upsampling completion surface.
+
+module pytorch.UpsampleNearest3dCompletion.
+
+/// Upsamples a 4-D tensor to an explicit output size.
+
+pub upsample_nearest3d(input: Tensor, output_size: List[Int]): Tensor.
+
+/// Writes an upsampled tensor into retained output storage.
+
+pub upsample_nearest3d_out(output: Tensor, input: Tensor, output_size: List[Int]): Unit.

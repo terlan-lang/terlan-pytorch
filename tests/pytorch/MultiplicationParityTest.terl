@@ -1,0 +1,70 @@
+module pytorch.MultiplicationParityTest.
+
+import pytorch.BinaryScalar.{mul_right_float, mul_right_float_in_place, mul_right_float_out, mul_right_int, mul_right_int_in_place, mul_right_int_out, mul_tensor_in_place, mul_tensor_out, multiply_right_float, multiply_right_float_in_place, multiply_right_int, multiply_right_int_in_place, multiply_tensor_in_place, multiply_tensor_out}.
+import pytorch.Tensor.{dispose, from_float, item_float, multiply}.
+
+/**
+ * Proves every frozen mul schema and both typed scalar representations.
+ */
+@test
+pub mul_overloads_match_libtorch(): Bool ->
+    let source = from_float(2.5);
+    let right = from_float(4.0);
+    let tensor_value = multiply(source, right);
+    let int_value = mul_right_int(source, 3);
+    let float_value = mul_right_float(source, 0.5);
+    let tensor_output = from_float(0.0);
+    let int_output = from_float(0.0);
+    let float_output = from_float(0.0);
+    let tensor_mutation = from_float(2.5);
+    let int_mutation = from_float(2.5);
+    let float_mutation = from_float(2.5);
+    mul_tensor_out(tensor_output, source, right);
+    mul_right_int_out(int_output, source, 3);
+    mul_right_float_out(float_output, source, 0.5);
+    mul_tensor_in_place(tensor_mutation, right);
+    mul_right_int_in_place(int_mutation, 3);
+    mul_right_float_in_place(float_mutation, 0.5);
+    let valid =
+        item_float(tensor_value) == 10.0
+            and item_float(int_value) == 7.5
+            and item_float(float_value) == 1.25
+            and item_float(tensor_output) == 10.0
+            and item_float(int_output) == 7.5
+            and item_float(float_output) == 1.25
+            and item_float(tensor_mutation) == 10.0
+            and item_float(int_mutation) == 7.5
+            and item_float(float_mutation) == 1.25
+            and item_float(source) == 2.5
+            and item_float(right) == 4.0;
+    (dispose(float_mutation); dispose(int_mutation); dispose(tensor_mutation); dispose(float_output); dispose(int_output); dispose(tensor_output); dispose(float_value); dispose(int_value); dispose(tensor_value); dispose(right); dispose(source); valid).
+
+/**
+ * Proves every frozen multiply alias schema and typed scalar behavior.
+ */
+@test
+pub multiply_aliases_match_libtorch(): Bool ->
+    let source = from_float(2.5);
+    let right = from_float(4.0);
+    let tensor_value = multiply(source, right);
+    let int_value = multiply_right_int(source, 3);
+    let float_value = multiply_right_float(source, 0.5);
+    let tensor_output = from_float(0.0);
+    let tensor_mutation = from_float(2.5);
+    let int_mutation = from_float(2.5);
+    let float_mutation = from_float(2.5);
+    multiply_tensor_out(tensor_output, source, right);
+    multiply_tensor_in_place(tensor_mutation, right);
+    multiply_right_int_in_place(int_mutation, 3);
+    multiply_right_float_in_place(float_mutation, 0.5);
+    let valid =
+        item_float(tensor_value) == 10.0
+            and item_float(int_value) == 7.5
+            and item_float(float_value) == 1.25
+            and item_float(tensor_output) == 10.0
+            and item_float(tensor_mutation) == 10.0
+            and item_float(int_mutation) == 7.5
+            and item_float(float_mutation) == 1.25
+            and item_float(source) == 2.5
+            and item_float(right) == 4.0;
+    (dispose(float_mutation); dispose(int_mutation); dispose(tensor_mutation); dispose(tensor_output); dispose(float_value); dispose(int_value); dispose(tensor_value); dispose(right); dispose(source); valid).

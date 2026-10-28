@@ -1,6 +1,16 @@
 module pytorch.DispatcherTest.
 
-import pytorch.Tensor.{Tensor, TorchScriptModel, TensorPair, from_int, from_float, from_bool, from_floats, from_ints, full_float, item, item_float, item_bool, dim, numel, shape, dtype, device_type, device_index, clone, unsqueeze, matmul, transpose, multiply, add, subtract, relu, gelu, softmax, argmax, embedding, batch_norm, layer_norm, mse_loss, mse_loss_gradient, cross_entropy_loss, narrow, flatten, amax, conv2d, adaptive_avg_pool2d, load_torchscript, torchscript_forward, torchscript_forward2, torchscript_forward_pair, torchscript_forward_float, torchscript_forward_int, torchscript_forward_bool, torchscript_forward_string, torchscript_forward_int_list, torchscript_forward_float_list, torchscript_forward_bool_list, torchscript_forward_string_list, tensor_pair_first, tensor_pair_second, run_torchscript, dispose_model, dispose_tensor_pair, dispose}.
+import pytorch.Tensor.{Tensor, TorchScriptModel, adaptive_avg_pool2d, add, amax, argmax, batch_norm, clone, conv2d, cross_entropy_loss, device_index, device_type, dim, dispose, dispose_model, dispose_tensor_pair, dtype, embedding, flatten, from_bool, from_float, from_floats, from_int, from_ints, full_float, gelu, item as item_scalar, item_bool, item_float, layer_norm, load_torchscript, matmul, mse_loss, mse_loss_gradient, multiply, narrow, numel, relu, run_torchscript, scalar_to_int, shape, softmax, subtract, tensor_pair_first, tensor_pair_second, torchscript_forward, torchscript_forward2, torchscript_forward_bool, torchscript_forward_bool_list, torchscript_forward_float, torchscript_forward_float_list, torchscript_forward_int, torchscript_forward_int_list, torchscript_forward_pair, torchscript_forward_string, torchscript_forward_string_list, transpose, unsqueeze}.
+import std.collections.List.
+import std.core.Result.{Err, Ok}.
+
+import type pytorch.CorrectionStatisticsPairNative.TensorPair.
+
+item(tensor: Tensor): Int ->
+    case scalar_to_int(item_scalar(tensor)) {
+        Ok(value) -> value;
+        Err(_reason) -> -1
+    }.
 
 @test
 pub signed_integer_dispatch_changes_tensor_shape(): Bool ->
@@ -14,9 +24,7 @@ pub signed_integer_dispatch_changes_tensor_shape(): Bool ->
     dispose(copied);
     dispose(expanded);
     dispose(source);
-    expanded_dim == source_dim + 1 and
-        expanded_shape.length() == expanded_dim and
-        copied_item == 40.
+    expanded_dim == source_dim + 1 and expanded_shape.length() == expanded_dim and copied_item == 40.
 
 @test
 pub multiple_tensor_dispatch_executes_matmul(): Bool ->
@@ -40,8 +48,12 @@ pub multiple_tensor_dispatch_executes_matmul(): Bool ->
     dispose(left_matrix);
     dispose(left_vector);
     dispose(left_scalar);
-    product_item == 20 and product_dim == 2 and product_shape.length() == 2 and
-        product_dtype == 4 and product_device_type == 0 and product_device_index == -1.
+    product_item == 20
+        and product_dim == 2
+        and product_shape.length() == 2
+        and product_dtype == 4
+        and product_device_type == 0
+        and product_device_index == -1.
 
 @test
 pub mixed_dispatcher_stack_executes_named_transpose_overload(): Bool ->
@@ -123,8 +135,7 @@ pub serialized_torchscript_model_loads_and_executes_owned_tensor(): Bool ->
     let observed_rank = dim(output);
     dispose(output);
     dispose(input);
-    observed_input == 3.0 and observed_output == 6.0 and
-        observed_dtype == 7 and observed_rank == 0.
+    observed_input == 3.0 and observed_output == 6.0 and observed_dtype == 7 and observed_rank == 0.
 
 @test
 pub loaded_torchscript_model_executes_multiple_independent_forwards(): Bool ->
@@ -137,10 +148,7 @@ pub loaded_torchscript_model_executes_multiple_independent_forwards(): Bool ->
     let second_input = from_float(4.0);
     let second_output = torchscript_forward(model, second_input);
     let second = item_float(second_output);
-    dispose(second_output);
-    dispose(second_input);
-    dispose_model(model);
-    first == 6.0 and second == 8.0.
+    (dispose(second_output); dispose(second_input); dispose_model(model); first == 6.0 and second == 8.0).
 
 @test
 pub loaded_torchscript_model_accepts_two_ordered_tensor_inputs(): Bool ->
@@ -155,8 +163,7 @@ pub loaded_torchscript_model_accepts_two_ordered_tensor_inputs(): Bool ->
     dispose(second_input);
     dispose(first_input);
     dispose_model(model);
-    observed_first == 3.0 and observed_second == 4.0 and
-        observed_output == -5.0.
+    observed_first == 3.0 and observed_second == 4.0 and observed_output == -5.0.
 
 @test
 pub torchscript_tensor_pair_outputs_extract_as_independent_tensors(): Bool ->
@@ -169,12 +176,7 @@ pub torchscript_tensor_pair_outputs_extract_as_independent_tensors(): Bool ->
     let observed_input = item_float(input);
     let observed_first = item_float(first_output);
     let observed_second = item_float(second_output);
-    dispose(second_output);
-    dispose(first_output);
-    dispose(input);
-    dispose_model(model);
-    observed_input == 2.0 and observed_first == 4.0 and
-        observed_second == 6.0.
+    (dispose(second_output); dispose(first_output); dispose(input); dispose_model(model); observed_input == 2.0 and observed_first == 4.0 and observed_second == 6.0).
 
 @test
 pub torchscript_float_output_copies_into_an_ordinary_terlan_value(): Bool ->
@@ -224,8 +226,11 @@ pub torchscript_int_list_output_copies_into_an_ordinary_terlan_list(): Bool ->
     let observed_input = item(input);
     dispose(input);
     dispose_model(model);
-    observed_input == 4 and output.length() == 3 and
-        output[0] == 4 and output[1] == 5 and output[2] == 6.
+    observed_input == 4
+        and output.length() == 3
+        and output[0] == 4
+        and output[1] == 5
+        and output[2] == 6.
 
 @test
 pub torchscript_float_list_output_copies_into_an_ordinary_terlan_list(): Bool ->
@@ -235,8 +240,11 @@ pub torchscript_float_list_output_copies_into_an_ordinary_terlan_list(): Bool ->
     let observed_input = item_float(input);
     dispose(input);
     dispose_model(model);
-    observed_input == 1.5 and output.length() == 3 and
-        output[0] == 1.5 and output[1] == 2.0 and output[2] == 2.5.
+    observed_input == 1.5
+        and output.length() == 3
+        and output[0] == 1.5
+        and output[1] == 2.0
+        and output[2] == 2.5.
 
 @test
 pub torchscript_bool_list_output_validates_and_copies_into_a_terlan_list(): Bool ->
@@ -246,8 +254,7 @@ pub torchscript_bool_list_output_validates_and_copies_into_a_terlan_list(): Bool
     let observed_input = item(input);
     dispose(input);
     dispose_model(model);
-    observed_input == 2 and output.length() == 3 and
-        output[0] and not output[1] and not output[2].
+    observed_input == 2 and output.length() == 3 and output[0] and not output[1] and not output[2].
 
 @test
 pub torchscript_string_list_output_copies_length_delimited_utf8_values(): Bool ->
@@ -257,8 +264,11 @@ pub torchscript_string_list_output_copies_length_delimited_utf8_values(): Bool -
     let observed_input = item(input);
     dispose(input);
     dispose_model(model);
-    observed_input == 1 and output.length() == 3 and
-        output[0] == "positive" and output[1] == "" and output[2] == "ready".
+    observed_input == 1
+        and output.length() == 3
+        and output[0] == "positive"
+        and output[1] == ""
+        and output[2] == "ready".
 
 @test
 pub narrow_returns_an_independently_owned_bounded_view(): Bool ->
@@ -271,8 +281,10 @@ pub narrow_returns_an_independently_owned_bounded_view(): Bool ->
     dispose(result);
     dispose(vector);
     dispose(scalar);
-    observed_source == 17 and observed_result == 17 and
-        observed_shape.length() == 1 and observed_shape[0] == 1.
+    observed_source == 17
+        and observed_result == 17
+        and observed_shape.length() == 1
+        and observed_shape[0] == 1.
 
 @test
 pub flatten_normalizes_a_dimension_range_without_consuming_the_source(): Bool ->
@@ -288,8 +300,11 @@ pub flatten_normalizes_a_dimension_range_without_consuming_the_source(): Bool ->
     dispose(matrix);
     dispose(vector);
     dispose(scalar);
-    source_rank == 2 and result_rank == 1 and result_shape.length() == 1 and
-        result_shape[0] == 1 and observed == 3.5.
+    source_rank == 2
+        and result_rank == 1
+        and result_shape.length() == 1
+        and result_shape[0] == 1
+        and observed == 3.5.
 
 @test
 pub amax_reduces_a_copied_dimension_list_without_consuming_the_source(): Bool ->
@@ -305,8 +320,11 @@ pub amax_reduces_a_copied_dimension_list_without_consuming_the_source(): Bool ->
     dispose(matrix);
     dispose(vector);
     dispose(scalar);
-    source_rank == 2 and result_rank == 1 and result_shape.length() == 1 and
-        result_shape[0] == 1 and observed == 6.5.
+    source_rank == 2
+        and result_rank == 1
+        and result_shape.length() == 1
+        and result_shape[0] == 1
+        and observed == 6.5.
 
 @test
 pub full_float_constructs_owned_shaped_tensor_data(): Bool ->
@@ -321,9 +339,13 @@ pub full_float_constructs_owned_shaped_tensor_data(): Bool ->
     dispose(scalar_maximum);
     dispose(row_maximum);
     dispose(tensor);
-    observed_rank == 2 and observed_numel == 6 and observed_shape.length() == 2 and
-        observed_shape[0] == 2 and observed_shape[1] == 3 and
-        observed_dtype == 7 and observed == 1.25.
+    observed_rank == 2
+        and observed_numel == 6
+        and observed_shape.length() == 2
+        and observed_shape[0] == 2
+        and observed_shape[1] == 3
+        and observed_dtype == 7
+        and observed == 1.25.
 
 @test
 pub from_floats_copies_nonconstant_row_major_data_into_owned_tensor(): Bool ->
@@ -338,9 +360,13 @@ pub from_floats_copies_nonconstant_row_major_data_into_owned_tensor(): Bool ->
     dispose(scalar_maximum);
     dispose(column_maxima);
     dispose(tensor);
-    observed_rank == 2 and observed_numel == 6 and observed_shape.length() == 2 and
-        observed_shape[0] == 2 and observed_shape[1] == 3 and
-        observed_dtype == 7 and observed == 6.0.
+    observed_rank == 2
+        and observed_numel == 6
+        and observed_shape.length() == 2
+        and observed_shape[0] == 2
+        and observed_shape[1] == 3
+        and observed_dtype == 7
+        and observed == 6.0.
 
 @test
 pub from_floats_resolves_empty_list_to_declared_float_element_type(): Bool ->
@@ -350,8 +376,12 @@ pub from_floats_resolves_empty_list_to_declared_float_element_type(): Bool ->
     let observed_shape = shape(tensor);
     let observed_dtype = dtype(tensor);
     dispose(tensor);
-    observed_rank == 2 and observed_numel == 0 and observed_shape.length() == 2 and
-        observed_shape[0] == 0 and observed_shape[1] == 3 and observed_dtype == 7.
+    observed_rank == 2
+        and observed_numel == 0
+        and observed_shape.length() == 2
+        and observed_shape[0] == 0
+        and observed_shape[1] == 3
+        and observed_dtype == 7.
 
 @test
 pub affine_forward_composes_owned_data_matmul_and_broadcast_bias(): Bool ->
@@ -379,9 +409,14 @@ pub affine_forward_composes_owned_data_matmul_and_broadcast_bias(): Bool ->
     dispose(bias);
     dispose(weights);
     dispose(input);
-    observed_shape.length() == 2 and observed_shape[0] == 2 and observed_shape[1] == 1 and
-        observed_numel == 2 and observed_dtype == 7 and observed == 7.0 and
-        observed_input == 6.0 and observed_bias == 1.0.
+    observed_shape.length() == 2
+        and observed_shape[0] == 2
+        and observed_shape[1] == 1
+        and observed_numel == 2
+        and observed_dtype == 7
+        and observed == 7.0
+        and observed_input == 6.0
+        and observed_bias == 1.0.
 
 @test
 pub classifier_forward_normalizes_affine_logits_with_exact_softmax_overload(): Bool ->
@@ -430,13 +465,21 @@ pub classifier_forward_normalizes_affine_logits_with_exact_softmax_overload(): B
     dispose(bias);
     dispose(weights);
     dispose(input);
-    observed_shape.length() == 2 and observed_shape[0] == 2 and observed_shape[1] == 2 and
-        observed_numel == 4 and observed_dtype == 7 and
-        observed_probability == 0.5 and observed_loss == 0.25 and
-        observed_classification_loss > 0.69 and observed_classification_loss < 0.70 and
-        observed_class_target == 1 and observed_logit == 0.0 and
-        observed_prediction_shape.length() == 1 and observed_prediction_shape[0] == 2 and
-        observed_prediction_dtype == 4 and observed_prediction == 0.
+    observed_shape.length() == 2
+        and observed_shape[0] == 2
+        and observed_shape[1] == 2
+        and observed_numel == 4
+        and observed_dtype == 7
+        and observed_probability == 0.5
+        and observed_loss == 0.25
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7
+        and observed_class_target == 1
+        and observed_logit == 0.0
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 2
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0.
 
 @test
 pub argmax_preserves_reduced_dimension_when_requested(): Bool ->
@@ -451,8 +494,11 @@ pub argmax_preserves_reduced_dimension_when_requested(): Bool ->
     dispose(batch_maximum);
     dispose(predictions);
     dispose(input);
-    observed_shape.length() == 2 and observed_shape[0] == 2 and observed_shape[1] == 1 and
-        observed_dtype == 4 and observed_prediction == 0.
+    observed_shape.length() == 2
+        and observed_shape[0] == 2
+        and observed_shape[1] == 1
+        and observed_dtype == 4
+        and observed_prediction == 0.
 
 @test
 pub from_ints_copies_batched_class_labels_into_owned_int64_tensor(): Bool ->
@@ -464,8 +510,11 @@ pub from_ints_copies_batched_class_labels_into_owned_int64_tensor(): Bool ->
     let observed_maximum = item(maximum);
     dispose(maximum);
     dispose(labels);
-    observed_shape.length() == 1 and observed_shape[0] == 2 and observed_numel == 2 and
-        observed_dtype == 4 and observed_maximum == 1.
+    observed_shape.length() == 1
+        and observed_shape[0] == 2
+        and observed_numel == 2
+        and observed_dtype == 4
+        and observed_maximum == 1.
 
 @test
 pub mse_loss_reduces_equal_shape_float_tensors_without_consuming_sources(): Bool ->
@@ -488,8 +537,11 @@ pub mse_loss_reduces_equal_shape_float_tensors_without_consuming_sources(): Bool
     dispose(loss);
     dispose(target);
     dispose(predicted);
-    observed_shape.length() == 0 and observed_dtype == 7 and observed_loss == 1.0 and
-        observed_predicted == 2.0 and observed_target == 1.0.
+    observed_shape.length() == 0
+        and observed_dtype == 7
+        and observed_loss == 1.0
+        and observed_predicted == 2.0
+        and observed_target == 1.0.
 
 @test
 pub mse_gradient_step_lowers_loss_without_consuming_parameter_or_target(): Bool ->
@@ -525,11 +577,17 @@ pub mse_gradient_step_lowers_loss_without_consuming_parameter_or_target(): Bool 
     dispose(grad_output);
     dispose(target);
     dispose(parameter);
-    observed_gradient_shape.length() == 2 and observed_gradient_shape[0] == 2 and
-        observed_gradient_shape[1] == 2 and observed_gradient_dtype == 7 and
-        observed_gradient == 0.5 and observed_updated > 1.94 and observed_updated < 1.96 and
-        observed_before_loss == 1.0 and observed_after_loss > 0.90 and observed_after_loss < 0.91 and
-        observed_after_loss < observed_before_loss.
+    observed_gradient_shape.length() == 2
+        and observed_gradient_shape[0] == 2
+        and observed_gradient_shape[1] == 2
+        and observed_gradient_dtype == 7
+        and observed_gradient == 0.5
+        and observed_updated > 1.94
+        and observed_updated < 1.96
+        and observed_before_loss == 1.0
+        and observed_after_loss > 0.9
+        and observed_after_loss < 0.91
+        and observed_after_loss < observed_before_loss.
 
 @test
 pub conv2d_executes_nchw_vision_kernel_without_consuming_sources(): Bool ->
@@ -561,22 +619,30 @@ pub conv2d_executes_nchw_vision_kernel_without_consuming_sources(): Bool ->
     dispose(bias);
     dispose(weight);
     dispose(input);
-    observed_shape.length() == 4 and observed_shape[0] == 1 and
-        observed_shape[1] == 1 and observed_shape[2] == 2 and observed_shape[3] == 2 and
-        observed_numel == 4 and observed_dtype == 7 and observed == 4.0 and
-        observed_exact_loss == 0.0 and
-        input_shape.length() == 4 and input_shape[2] == 3 and input_shape[3] == 3 and
-        weight_shape.length() == 4 and weight_shape[2] == 2 and weight_shape[3] == 2 and
-        bias_value == 0.0.
+    observed_shape.length() == 4
+        and observed_shape[0] == 1
+        and observed_shape[1] == 1
+        and observed_shape[2] == 2
+        and observed_shape[3] == 2
+        and observed_numel == 4
+        and observed_dtype == 7
+        and observed == 4.0
+        and observed_exact_loss == 0.0
+        and input_shape.length() == 4
+        and input_shape[2] == 3
+        and input_shape[3] == 3
+        and weight_shape.length() == 4
+        and weight_shape[2] == 2
+        and weight_shape[3] == 2
+        and bias_value == 0.0.
 
 @test
 pub adaptive_average_pool_reduces_spatial_dimensions_and_preserves_contents(): Bool ->
-    let input = from_floats([
-        1.0, 1.0, 2.0, 2.0,
-        1.0, 1.0, 2.0, 2.0,
-        3.0, 3.0, 4.0, 4.0,
-        3.0, 3.0, 4.0, 4.0
-    ], [1, 1, 4, 4]);
+    let input =
+        from_floats(
+            [1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 2.0, 2.0, 3.0, 3.0, 4.0, 4.0, 3.0, 3.0, 4.0, 4.0],
+            [1, 1, 4, 4],
+        );
     let output = adaptive_avg_pool2d(input, [2, 2]);
     let expected = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2]);
     let exact_loss = mse_loss(output, expected, 1);
@@ -606,10 +672,16 @@ pub adaptive_average_pool_reduces_spatial_dimensions_and_preserves_contents(): B
     dispose(expected);
     dispose(output);
     dispose(input);
-    observed_shape.length() == 4 and observed_shape[0] == 1 and
-        observed_shape[1] == 1 and observed_shape[2] == 2 and observed_shape[3] == 2 and
-        observed_numel == 4 and observed_dtype == 7 and observed_maximum == 4.0 and
-        observed_input_maximum == 4.0 and observed_exact_loss == 0.0.
+    observed_shape.length() == 4
+        and observed_shape[0] == 1
+        and observed_shape[1] == 1
+        and observed_shape[2] == 2
+        and observed_shape[3] == 2
+        and observed_numel == 4
+        and observed_dtype == 7
+        and observed_maximum == 4.0
+        and observed_input_maximum == 4.0
+        and observed_exact_loss == 0.0.
 
 @test
 pub tiny_vision_classifier_composes_complete_inference_graph(): Bool ->
@@ -654,28 +726,49 @@ pub tiny_vision_classifier_composes_complete_inference_graph(): Bool ->
     dispose(convolution_bias);
     dispose(kernel);
     dispose(input);
-    observed_feature_shape.length() == 2 and observed_feature_shape[0] == 1 and
-        observed_feature_shape[1] == 1 and observed_probability_shape.length() == 2 and
-        observed_probability_shape[0] == 1 and observed_probability_shape[1] == 2 and
-        observed_probability == 0.5 and observed_exact_loss == 0.0 and
-        observed_prediction_shape.length() == 1 and observed_prediction_shape[0] == 1 and
-        observed_prediction_dtype == 4 and observed_prediction == 0.
+    observed_feature_shape.length() == 2
+        and observed_feature_shape[0] == 1
+        and observed_feature_shape[1] == 1
+        and observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 1
+        and observed_probability_shape[1] == 2
+        and observed_probability == 0.5
+        and observed_exact_loss == 0.0
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 1
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0.
 
 @test
 pub batched_vision_classifier_preserves_images_through_prediction_and_loss(): Bool ->
-    let input = from_floats(
-        [
-            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-            2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0
-        ],
-        [2, 1, 3, 3]
-    );
+    let input =
+        from_floats(
+            [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+            ],
+            [2, 1, 3, 3],
+        );
     let kernel = full_float([1, 1, 2, 2], 1.0);
     let convolution_bias = full_float([1], 0.0);
     let convolved = conv2d(input, kernel, convolution_bias, [1, 1], [0, 0], [1, 1], 1);
-    let expected_convolution = from_floats(
-        [4.0, 4.0, 4.0, 4.0, 8.0, 8.0, 8.0, 8.0], [2, 1, 2, 2]
-    );
+    let expected_convolution = from_floats([4.0, 4.0, 4.0, 4.0, 8.0, 8.0, 8.0, 8.0], [2, 1, 2, 2]);
     let convolution_loss = mse_loss(convolved, expected_convolution, 1);
     let activated = relu(convolved);
     let pooled = adaptive_avg_pool2d(activated, [1, 1]);
@@ -726,58 +819,94 @@ pub batched_vision_classifier_preserves_images_through_prediction_and_loss(): Bo
     dispose(convolution_bias);
     dispose(kernel);
     dispose(input);
-    observed_convolution_shape.length() == 4 and observed_convolution_shape[0] == 2 and
-        observed_convolution_shape[1] == 1 and observed_convolution_shape[2] == 2 and
-        observed_convolution_shape[3] == 2 and observed_pool_shape.length() == 4 and
-        observed_pool_shape[0] == 2 and observed_pool_shape[1] == 1 and
-        observed_pool_shape[2] == 1 and observed_pool_shape[3] == 1 and
-        observed_feature_shape.length() == 2 and observed_feature_shape[0] == 2 and
-        observed_feature_shape[1] == 1 and observed_probability_shape.length() == 2 and
-        observed_probability_shape[0] == 2 and observed_probability_shape[1] == 2 and
-        observed_prediction_shape.length() == 1 and observed_prediction_shape[0] == 2 and
-        observed_prediction_dtype == 4 and observed_prediction == 0 and
-        observed_convolution_loss == 0.0 and observed_pool_loss == 0.0 and
-        observed_probability_loss == 0.0 and observed_classification_loss > 0.69 and
-        observed_classification_loss < 0.70.
+    observed_convolution_shape.length() == 4
+        and observed_convolution_shape[0] == 2
+        and observed_convolution_shape[1] == 1
+        and observed_convolution_shape[2] == 2
+        and observed_convolution_shape[3] == 2
+        and observed_pool_shape.length() == 4
+        and observed_pool_shape[0] == 2
+        and observed_pool_shape[1] == 1
+        and observed_pool_shape[2] == 1
+        and observed_pool_shape[3] == 1
+        and observed_feature_shape.length() == 2
+        and observed_feature_shape[0] == 2
+        and observed_feature_shape[1] == 1
+        and observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 2
+        and observed_probability_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 2
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_convolution_loss == 0.0
+        and observed_pool_loss == 0.0
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7.
 
 @test
 pub depthwise_pointwise_cnn_composes_grouped_channels_and_classification(): Bool ->
-    let input = from_floats(
-        [
-            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-            2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
-            2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0
-        ],
-        [2, 2, 3, 3]
-    );
+    let input =
+        from_floats(
+            [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+            ],
+            [2, 2, 3, 3],
+        );
     let depthwise_kernel = full_float([2, 1, 2, 2], 1.0);
     let depthwise_bias = full_float([2], 0.0);
-    let depthwise = conv2d(
-        input, depthwise_kernel, depthwise_bias, [1, 1], [0, 0], [1, 1], 2
-    );
-    let expected_depthwise = from_floats(
-        [
-            4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0,
-            8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0
-        ],
-        [2, 2, 2, 2]
-    );
+    let depthwise = conv2d(input, depthwise_kernel, depthwise_bias, [1, 1], [0, 0], [1, 1], 2);
+    let expected_depthwise =
+        from_floats(
+            [4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0],
+            [2, 2, 2, 2],
+        );
     let depthwise_loss = mse_loss(depthwise, expected_depthwise, 1);
     let depthwise_activated = relu(depthwise);
     let pointwise_kernel = full_float([2, 2, 1, 1], 1.0);
     let pointwise_bias = full_float([2], 0.0);
-    let pointwise = conv2d(
-        depthwise_activated, pointwise_kernel, pointwise_bias,
-        [1, 1], [0, 0], [1, 1], 1
-    );
-    let expected_pointwise = from_floats(
-        [
-            8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0,
-            16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0
-        ],
-        [2, 2, 2, 2]
-    );
+    let pointwise = conv2d(depthwise_activated, pointwise_kernel, pointwise_bias, [1, 1], [0, 0], [1, 1], 1);
+    let expected_pointwise =
+        from_floats(
+            [8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0],
+            [2, 2, 2, 2],
+        );
     let pointwise_loss = mse_loss(pointwise, expected_pointwise, 1);
     let pointwise_activated = relu(pointwise);
     let pooled = adaptive_avg_pool2d(pointwise_activated, [1, 1]);
@@ -836,79 +965,97 @@ pub depthwise_pointwise_cnn_composes_grouped_channels_and_classification(): Bool
     dispose(depthwise_bias);
     dispose(depthwise_kernel);
     dispose(input);
-    observed_depthwise_shape.length() == 4 and observed_depthwise_shape[0] == 2 and
-        observed_depthwise_shape[1] == 2 and observed_depthwise_shape[2] == 2 and
-        observed_depthwise_shape[3] == 2 and observed_pointwise_shape.length() == 4 and
-        observed_pointwise_shape[0] == 2 and observed_pointwise_shape[1] == 2 and
-        observed_pointwise_shape[2] == 2 and observed_pointwise_shape[3] == 2 and
-        observed_pool_shape.length() == 4 and observed_pool_shape[0] == 2 and
-        observed_pool_shape[1] == 2 and observed_pool_shape[2] == 1 and
-        observed_pool_shape[3] == 1 and observed_feature_shape.length() == 2 and
-        observed_feature_shape[0] == 2 and observed_feature_shape[1] == 2 and
-        observed_probability_shape.length() == 2 and observed_probability_shape[0] == 2 and
-        observed_probability_shape[1] == 2 and observed_prediction_shape.length() == 1 and
-        observed_prediction_shape[0] == 2 and observed_prediction_dtype == 4 and
-        observed_prediction == 0 and observed_depthwise_loss == 0.0 and
-        observed_pointwise_loss == 0.0 and observed_pool_loss == 0.0 and
-        observed_probability_loss == 0.0 and observed_classification_loss > 0.69 and
-        observed_classification_loss < 0.70.
+    observed_depthwise_shape.length() == 4
+        and observed_depthwise_shape[0] == 2
+        and observed_depthwise_shape[1] == 2
+        and observed_depthwise_shape[2] == 2
+        and observed_depthwise_shape[3] == 2
+        and observed_pointwise_shape.length() == 4
+        and observed_pointwise_shape[0] == 2
+        and observed_pointwise_shape[1] == 2
+        and observed_pointwise_shape[2] == 2
+        and observed_pointwise_shape[3] == 2
+        and observed_pool_shape.length() == 4
+        and observed_pool_shape[0] == 2
+        and observed_pool_shape[1] == 2
+        and observed_pool_shape[2] == 1
+        and observed_pool_shape[3] == 1
+        and observed_feature_shape.length() == 2
+        and observed_feature_shape[0] == 2
+        and observed_feature_shape[1] == 2
+        and observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 2
+        and observed_probability_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 2
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_depthwise_loss == 0.0
+        and observed_pointwise_loss == 0.0
+        and observed_pool_loss == 0.0
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7.
 
 @test
 pub normalized_residual_cnn_composes_grouped_branch_and_classification(): Bool ->
-    let input = from_floats(
-        [
-            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-            2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0
-        ],
-        [2, 2, 2, 2]
-    );
+    let input =
+        from_floats(
+            [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0],
+            [2, 2, 2, 2],
+        );
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
     let running_mean = full_float([2], 0.0);
     let running_variance = full_float([2], 1.0);
     let depthwise_kernel = full_float([2, 1, 1, 1], 1.0);
     let depthwise_bias = full_float([2], 0.0);
-    let depthwise = conv2d(
-        input, depthwise_kernel, depthwise_bias, [1, 1], [0, 0], [1, 1], 2
-    );
-    let depthwise_normalized = batch_norm(
-        depthwise, normalization_weight, normalization_bias, running_mean,
-        running_variance, false, 0.1, 0.0, false
-    );
+    let depthwise = conv2d(input, depthwise_kernel, depthwise_bias, [1, 1], [0, 0], [1, 1], 2);
+    let depthwise_normalized =
+        batch_norm(
+            depthwise,
+            normalization_weight,
+            normalization_bias,
+            running_mean,
+            running_variance,
+            false,
+            0.1,
+            0.0,
+            false,
+        );
     let depthwise_activated = relu(depthwise_normalized);
     let pointwise_kernel = full_float([2, 2, 1, 1], 1.0);
     let pointwise_bias = full_float([2], 0.0);
-    let pointwise = conv2d(
-        depthwise_activated, pointwise_kernel, pointwise_bias,
-        [1, 1], [0, 0], [1, 1], 1
-    );
-    let pointwise_normalized = batch_norm(
-        pointwise, normalization_weight, normalization_bias, running_mean,
-        running_variance, false, 0.1, 0.0, false
-    );
+    let pointwise = conv2d(depthwise_activated, pointwise_kernel, pointwise_bias, [1, 1], [0, 0], [1, 1], 1);
+    let pointwise_normalized =
+        batch_norm(
+            pointwise,
+            normalization_weight,
+            normalization_bias,
+            running_mean,
+            running_variance,
+            false,
+            0.1,
+            0.0,
+            false,
+        );
     let residual = add(input, pointwise_normalized, 1.0);
     let residual_activated = relu(residual);
-    let expected_depthwise = from_floats(
-        [
-            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-            2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0
-        ],
-        [2, 2, 2, 2]
-    );
-    let expected_pointwise = from_floats(
-        [
-            2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
-            4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0
-        ],
-        [2, 2, 2, 2]
-    );
-    let expected_residual = from_floats(
-        [
-            3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0,
-            6.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0
-        ],
-        [2, 2, 2, 2]
-    );
+    let expected_depthwise =
+        from_floats(
+            [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0],
+            [2, 2, 2, 2],
+        );
+    let expected_pointwise =
+        from_floats(
+            [2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0],
+            [2, 2, 2, 2],
+        );
+    let expected_residual =
+        from_floats(
+            [3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0],
+            [2, 2, 2, 2],
+        );
     let depthwise_loss = mse_loss(depthwise, expected_depthwise, 1);
     let depthwise_normalized_loss = mse_loss(depthwise_normalized, expected_depthwise, 1);
     let pointwise_loss = mse_loss(pointwise_normalized, expected_pointwise, 1);
@@ -982,25 +1129,44 @@ pub normalized_residual_cnn_composes_grouped_branch_and_classification(): Bool -
     dispose(normalization_bias);
     dispose(normalization_weight);
     dispose(input);
-    observed_depthwise_shape.length() == 4 and observed_depthwise_shape[0] == 2 and
-        observed_depthwise_shape[1] == 2 and observed_depthwise_shape[2] == 2 and
-        observed_depthwise_shape[3] == 2 and observed_pointwise_shape.length() == 4 and
-        observed_pointwise_shape[0] == 2 and observed_pointwise_shape[1] == 2 and
-        observed_pointwise_shape[2] == 2 and observed_pointwise_shape[3] == 2 and
-        observed_residual_shape.length() == 4 and observed_residual_shape[0] == 2 and
-        observed_residual_shape[1] == 2 and observed_residual_shape[2] == 2 and
-        observed_residual_shape[3] == 2 and observed_pool_shape.length() == 4 and
-        observed_pool_shape[0] == 2 and observed_pool_shape[1] == 2 and
-        observed_pool_shape[2] == 1 and observed_pool_shape[3] == 1 and
-        observed_feature_shape.length() == 2 and observed_feature_shape[0] == 2 and
-        observed_feature_shape[1] == 2 and observed_probability_shape.length() == 2 and
-        observed_probability_shape[0] == 2 and observed_probability_shape[1] == 2 and
-        observed_prediction_shape.length() == 1 and observed_prediction_shape[0] == 2 and
-        observed_prediction_dtype == 4 and observed_prediction == 0 and
-        observed_depthwise_loss == 0.0 and observed_depthwise_normalized_loss == 0.0 and
-        observed_pointwise_loss == 0.0 and observed_residual_loss == 0.0 and
-        observed_pool_loss == 0.0 and observed_probability_loss == 0.0 and
-        observed_classification_loss > 0.69 and observed_classification_loss < 0.70.
+    observed_depthwise_shape.length() == 4
+        and observed_depthwise_shape[0] == 2
+        and observed_depthwise_shape[1] == 2
+        and observed_depthwise_shape[2] == 2
+        and observed_depthwise_shape[3] == 2
+        and observed_pointwise_shape.length() == 4
+        and observed_pointwise_shape[0] == 2
+        and observed_pointwise_shape[1] == 2
+        and observed_pointwise_shape[2] == 2
+        and observed_pointwise_shape[3] == 2
+        and observed_residual_shape.length() == 4
+        and observed_residual_shape[0] == 2
+        and observed_residual_shape[1] == 2
+        and observed_residual_shape[2] == 2
+        and observed_residual_shape[3] == 2
+        and observed_pool_shape.length() == 4
+        and observed_pool_shape[0] == 2
+        and observed_pool_shape[1] == 2
+        and observed_pool_shape[2] == 1
+        and observed_pool_shape[3] == 1
+        and observed_feature_shape.length() == 2
+        and observed_feature_shape[0] == 2
+        and observed_feature_shape[1] == 2
+        and observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 2
+        and observed_probability_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 2
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_depthwise_loss == 0.0
+        and observed_depthwise_normalized_loss == 0.0
+        and observed_pointwise_loss == 0.0
+        and observed_residual_loss == 0.0
+        and observed_pool_loss == 0.0
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7.
 
 @test
 pub embedding_lookup_maps_batched_int64_indices_to_owned_vectors(): Bool ->
@@ -1031,9 +1197,15 @@ pub embedding_lookup_maps_batched_int64_indices_to_owned_vectors(): Bool ->
     dispose(output);
     dispose(indices);
     dispose(weight);
-    observed_shape.length() == 2 and observed_shape[0] == 2 and observed_shape[1] == 2 and
-        observed_numel == 4 and observed_dtype == 7 and observed_output == 2.0 and
-        observed_weight == 2.0 and observed_index == 2 and observed_exact_loss == 0.0.
+    observed_shape.length() == 2
+        and observed_shape[0] == 2
+        and observed_shape[1] == 2
+        and observed_numel == 4
+        and observed_dtype == 7
+        and observed_output == 2.0
+        and observed_weight == 2.0
+        and observed_index == 2
+        and observed_exact_loss == 0.0.
 
 @test
 pub sequence_classifier_composes_embedding_pooling_and_prediction(): Bool ->
@@ -1080,15 +1252,23 @@ pub sequence_classifier_composes_embedding_pooling_and_prediction(): Bool ->
     dispose(embedded);
     dispose(token_indices);
     dispose(embedding_weight);
-    observed_embedded_shape.length() == 3 and observed_embedded_shape[0] == 1 and
-        observed_embedded_shape[1] == 2 and observed_embedded_shape[2] == 2 and
-        observed_pooled_shape.length() == 2 and observed_pooled_shape[0] == 1 and
-        observed_pooled_shape[1] == 2 and observed_probability_shape.length() == 2 and
-        observed_probability_shape[0] == 1 and observed_probability_shape[1] == 2 and
-        observed_embedding == 2.0 and observed_probability == 0.5 and
-        observed_exact_loss == 0.0 and observed_prediction_shape.length() == 1 and
-        observed_prediction_shape[0] == 1 and observed_prediction_dtype == 4 and
-        observed_prediction == 0.
+    observed_embedded_shape.length() == 3
+        and observed_embedded_shape[0] == 1
+        and observed_embedded_shape[1] == 2
+        and observed_embedded_shape[2] == 2
+        and observed_pooled_shape.length() == 2
+        and observed_pooled_shape[0] == 1
+        and observed_pooled_shape[1] == 2
+        and observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 1
+        and observed_probability_shape[1] == 2
+        and observed_embedding == 2.0
+        and observed_probability == 0.5
+        and observed_exact_loss == 0.0
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 1
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0.
 
 @test
 pub batch_norm_inference_uses_affine_parameters_and_running_statistics(): Bool ->
@@ -1097,10 +1277,7 @@ pub batch_norm_inference_uses_affine_parameters_and_running_statistics(): Bool -
     let bias = full_float([2], 1.0);
     let running_mean = full_float([2], 1.0);
     let running_variance = full_float([2], 4.0);
-    let output = batch_norm(
-        input, weight, bias, running_mean, running_variance,
-        false, 0.1, 0.0, false
-    );
+    let output = batch_norm(input, weight, bias, running_mean, running_variance, false, 0.1, 0.0, false);
     let expected = full_float([1, 2, 2, 2], 3.0);
     let exact_loss = mse_loss(output, expected, 1);
     let output0 = amax(output, [0], false);
@@ -1141,11 +1318,18 @@ pub batch_norm_inference_uses_affine_parameters_and_running_statistics(): Bool -
     dispose(bias);
     dispose(weight);
     dispose(input);
-    observed_shape.length() == 4 and observed_shape[0] == 1 and
-        observed_shape[1] == 2 and observed_shape[2] == 2 and observed_shape[3] == 2 and
-        observed_dtype == 7 and observed_output == 3.0 and observed_input == 3.0 and
-        observed_weight == 2.0 and observed_mean == 1.0 and observed_variance == 4.0 and
-        observed_exact_loss == 0.0.
+    observed_shape.length() == 4
+        and observed_shape[0] == 1
+        and observed_shape[1] == 2
+        and observed_shape[2] == 2
+        and observed_shape[3] == 2
+        and observed_dtype == 7
+        and observed_output == 3.0
+        and observed_input == 3.0
+        and observed_weight == 2.0
+        and observed_mean == 1.0
+        and observed_variance == 4.0
+        and observed_exact_loss == 0.0.
 
 @test
 pub layer_norm_normalizes_trailing_features_with_affine_parameters(): Bool ->
@@ -1180,18 +1364,22 @@ pub layer_norm_normalizes_trailing_features_with_affine_parameters(): Bool ->
     dispose(bias);
     dispose(weight);
     dispose(input);
-    observed_shape.length() == 2 and observed_shape[0] == 2 and observed_shape[1] == 2 and
-        observed_dtype == 7 and observed_output == 1.0 and observed_input == 4.0 and
-        observed_weight == 1.0 and observed_bias == 0.0 and observed_exact_loss == 0.0.
+    observed_shape.length() == 2
+        and observed_shape[0] == 2
+        and observed_shape[1] == 2
+        and observed_dtype == 7
+        and observed_output == 1.0
+        and observed_input == 4.0
+        and observed_weight == 1.0
+        and observed_bias == 0.0
+        and observed_exact_loss == 0.0.
 
 @test
 pub transformer_residual_block_composes_layer_norm_projection_and_addition(): Bool ->
     let input = from_floats([1.0, 3.0, 2.0, 4.0], [2, 2]);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let normalized = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let normalized = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
     let projection_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
     let projected = matmul(normalized, projection_weight);
     let residual = add(input, projected, 1.0);
@@ -1224,20 +1412,23 @@ pub transformer_residual_block_composes_layer_norm_projection_and_addition(): Bo
     dispose(normalization_bias);
     dispose(normalization_weight);
     dispose(input);
-    observed_normalized_shape.length() == 2 and observed_normalized_shape[0] == 2 and
-        observed_normalized_shape[1] == 2 and observed_residual_shape.length() == 2 and
-        observed_residual_shape[0] == 2 and observed_residual_shape[1] == 2 and
-        observed_normalized == 1.0 and observed_residual == 5.0 and
-        observed_input == 4.0 and observed_exact_loss == 0.0.
+    observed_normalized_shape.length() == 2
+        and observed_normalized_shape[0] == 2
+        and observed_normalized_shape[1] == 2
+        and observed_residual_shape.length() == 2
+        and observed_residual_shape[0] == 2
+        and observed_residual_shape[1] == 2
+        and observed_normalized == 1.0
+        and observed_residual == 5.0
+        and observed_input == 4.0
+        and observed_exact_loss == 0.0.
 
 @test
 pub normalized_self_attention_composes_qkv_softmax_context_and_residual(): Bool ->
     let input = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let normalized = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let normalized = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
     let query_weight = full_float([2, 2], 0.0);
     let key_weight = full_float([2, 2], 0.0);
     let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
@@ -1310,14 +1501,22 @@ pub normalized_self_attention_composes_qkv_softmax_context_and_residual(): Bool 
     dispose(normalization_bias);
     dispose(normalization_weight);
     dispose(input);
-    observed_attention_shape.length() == 2 and observed_attention_shape[0] == 2 and
-        observed_attention_shape[1] == 2 and observed_context_shape.length() == 2 and
-        observed_context_shape[0] == 2 and observed_context_shape[1] == 2 and
-        observed_residual_shape.length() == 2 and observed_residual_shape[0] == 2 and
-        observed_residual_shape[1] == 2 and observed_attention == 0.5 and
-        observed_context == 1.0 and observed_residual == 5.0 and observed_input == 4.0 and
-        observed_attention_loss == 0.0 and observed_context_loss == 0.0 and
-        observed_residual_loss == 0.0.
+    observed_attention_shape.length() == 2
+        and observed_attention_shape[0] == 2
+        and observed_attention_shape[1] == 2
+        and observed_context_shape.length() == 2
+        and observed_context_shape[0] == 2
+        and observed_context_shape[1] == 2
+        and observed_residual_shape.length() == 2
+        and observed_residual_shape[0] == 2
+        and observed_residual_shape[1] == 2
+        and observed_attention == 0.5
+        and observed_context == 1.0
+        and observed_residual == 5.0
+        and observed_input == 4.0
+        and observed_attention_loss == 0.0
+        and observed_context_loss == 0.0
+        and observed_residual_loss == 0.0.
 
 @test
 pub gelu_uses_exact_default_and_preserves_its_input(): Bool ->
@@ -1333,35 +1532,30 @@ pub gelu_uses_exact_default_and_preserves_its_input(): Bool ->
     dispose(activated_maximum);
     dispose(activated);
     dispose(input);
-    observed_shape.length() == 1 and observed_shape[0] == 3 and
-        observed_dtype == 7 and observed_input == 2.0 and
-        observed_activated > 1.95 and observed_activated < 1.96.
+    observed_shape.length() == 1
+        and observed_shape[0] == 3
+        and observed_dtype == 7
+        and observed_input == 2.0
+        and observed_activated > 1.95
+        and observed_activated < 1.96.
 
 @test
 pub normalized_transformer_feed_forward_composes_gelu_projection_and_residual(): Bool ->
     let input = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let normalized = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
-    let expansion_weight = from_floats(
-        [1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]
-    );
+    let normalized = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
+    let expansion_weight = from_floats([1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]);
     let expansion_bias = full_float([4], 0.0);
     let expanded = matmul(normalized, expansion_weight);
     let biased_expansion = add(expanded, expansion_bias, 1.0);
     let activated = gelu(biased_expansion);
-    let projection_weight = from_floats(
-        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]
-    );
+    let projection_weight = from_floats([1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]);
     let projection_bias = full_float([2], 0.0);
     let projected = matmul(activated, projection_weight);
     let biased_projection = add(projected, projection_bias, 1.0);
     let residual = add(input, biased_projection, 1.0);
-    let expected = from_floats(
-        [0.8413447461, 3.8413447461, 4.8413447461, 1.8413447461], [2, 2]
-    );
+    let expected = from_floats([0.8413447461, 3.8413447461, 4.8413447461, 1.8413447461], [2, 2]);
     let loss = mse_loss(residual, expected, 1);
     let residual_columns = amax(residual, [0], false);
     let residual_maximum = amax(residual_columns, [0], false);
@@ -1387,18 +1581,20 @@ pub normalized_transformer_feed_forward_composes_gelu_projection_and_residual():
     dispose(normalization_bias);
     dispose(normalization_weight);
     dispose(input);
-    observed_shape.length() == 2 and observed_shape[0] == 2 and observed_shape[1] == 2 and
-        observed_dtype == 7 and observed_loss < 0.0000001 and
-        observed_residual > 4.84 and observed_residual < 4.85.
+    observed_shape.length() == 2
+        and observed_shape[0] == 2
+        and observed_shape[1] == 2
+        and observed_dtype == 7
+        and observed_loss < 1e-7
+        and observed_residual > 4.84
+        and observed_residual < 4.85.
 
 @test
 pub transformer_encoder_composes_attention_and_feed_forward_residuals(): Bool ->
     let input = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let attention_normalized = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let attention_normalized = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
     let query_weight = full_float([2, 2], 0.0);
     let key_weight = full_float([2, 2], 0.0);
     let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
@@ -1414,26 +1610,18 @@ pub transformer_encoder_composes_attention_and_feed_forward_residuals(): Bool ->
     let attention = softmax(scaled_scores, 1);
     let context = matmul(attention, values);
     let attention_residual = add(input, context, 1.0);
-    let feed_forward_normalized = layer_norm(
-        attention_residual, [2], normalization_weight, normalization_bias, 0.0, false
-    );
-    let expansion_weight = from_floats(
-        [1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]
-    );
+    let feed_forward_normalized = layer_norm(attention_residual, [2], normalization_weight, normalization_bias, 0.0, false);
+    let expansion_weight = from_floats([1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]);
     let expansion_bias = full_float([4], 0.0);
     let expanded = matmul(feed_forward_normalized, expansion_weight);
     let biased_expansion = add(expanded, expansion_bias, 1.0);
     let activated = gelu(biased_expansion);
-    let projection_weight = from_floats(
-        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]
-    );
+    let projection_weight = from_floats([1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]);
     let projection_bias = full_float([2], 0.0);
     let projected = matmul(activated, projection_weight);
     let biased_projection = add(projected, projection_bias, 1.0);
     let encoder_output = add(attention_residual, biased_projection, 1.0);
-    let expected = from_floats(
-        [1.8413447461, 4.8413447461, 5.8413447461, 2.8413447461], [2, 2]
-    );
+    let expected = from_floats([1.8413447461, 4.8413447461, 5.8413447461, 2.8413447461], [2, 2]);
     let loss = mse_loss(encoder_output, expected, 1);
     let output_columns = amax(encoder_output, [0], false);
     let output_maximum = amax(output_columns, [0], false);
@@ -1480,18 +1668,21 @@ pub transformer_encoder_composes_attention_and_feed_forward_residuals(): Bool ->
     dispose(normalization_bias);
     dispose(normalization_weight);
     dispose(input);
-    observed_shape.length() == 2 and observed_shape[0] == 2 and observed_shape[1] == 2 and
-        observed_dtype == 7 and observed_input == 4.0 and observed_loss < 0.0000001 and
-        observed_output > 5.84 and observed_output < 5.85.
+    observed_shape.length() == 2
+        and observed_shape[0] == 2
+        and observed_shape[1] == 2
+        and observed_dtype == 7
+        and observed_input == 4.0
+        and observed_loss < 1e-7
+        and observed_output > 5.84
+        and observed_output < 5.85.
 
 @test
 pub transformer_encoder_classifier_composes_pooling_prediction_and_loss(): Bool ->
     let input = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let attention_normalized = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let attention_normalized = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
     let query_weight = full_float([2, 2], 0.0);
     let key_weight = full_float([2, 2], 0.0);
     let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
@@ -1507,19 +1698,13 @@ pub transformer_encoder_classifier_composes_pooling_prediction_and_loss(): Bool 
     let attention = softmax(scaled_scores, 1);
     let context = matmul(attention, values);
     let attention_residual = add(input, context, 1.0);
-    let feed_forward_normalized = layer_norm(
-        attention_residual, [2], normalization_weight, normalization_bias, 0.0, false
-    );
-    let expansion_weight = from_floats(
-        [1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]
-    );
+    let feed_forward_normalized = layer_norm(attention_residual, [2], normalization_weight, normalization_bias, 0.0, false);
+    let expansion_weight = from_floats([1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]);
     let expansion_bias = full_float([4], 0.0);
     let expanded = matmul(feed_forward_normalized, expansion_weight);
     let biased_expansion = add(expanded, expansion_bias, 1.0);
     let activated = gelu(biased_expansion);
-    let projection_weight = from_floats(
-        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]
-    );
+    let projection_weight = from_floats([1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]);
     let projection_bias = full_float([2], 0.0);
     let projected = matmul(activated, projection_weight);
     let biased_projection = add(projected, projection_bias, 1.0);
@@ -1599,15 +1784,25 @@ pub transformer_encoder_classifier_composes_pooling_prediction_and_loss(): Bool 
     dispose(normalization_bias);
     dispose(normalization_weight);
     dispose(input);
-    observed_encoder_shape.length() == 2 and observed_encoder_shape[0] == 2 and
-        observed_encoder_shape[1] == 2 and observed_pooled_shape.length() == 1 and
-        observed_pooled_shape[0] == 2 and observed_probability_shape.length() == 2 and
-        observed_probability_shape[0] == 1 and observed_probability_shape[1] == 2 and
-        observed_prediction_shape.length() == 1 and observed_prediction_shape[0] == 1 and
-        observed_prediction_dtype == 4 and observed_prediction == 0 and
-        observed_probability == 0.5 and observed_probability_loss == 0.0 and
-        observed_classification_loss > 0.69 and observed_classification_loss < 0.70 and
-        observed_pooled > 5.84 and observed_pooled < 5.85 and observed_input == 4.0.
+    observed_encoder_shape.length() == 2
+        and observed_encoder_shape[0] == 2
+        and observed_encoder_shape[1] == 2
+        and observed_pooled_shape.length() == 1
+        and observed_pooled_shape[0] == 2
+        and observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 1
+        and observed_probability_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 1
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_probability == 0.5
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7
+        and observed_pooled > 5.84
+        and observed_pooled < 5.85
+        and observed_input == 4.0.
 
 pub token_encoder_attention(
     input: Tensor,
@@ -1615,11 +1810,9 @@ pub token_encoder_attention(
     normalization_bias: Tensor,
     key_dimension0: Int,
     key_dimension1: Int,
-    probability_dimension: Int
+    probability_dimension: Int,
 ): Tensor ->
-    let normalized = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let normalized = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
     let query_weight = full_float([2, 2], 0.0);
     let key_weight = full_float([2, 2], 0.0);
     let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
@@ -1656,11 +1849,9 @@ pub causal_token_encoder_attention(
     input: Tensor,
     normalization_weight: Tensor,
     normalization_bias: Tensor,
-    attention_mask: Tensor
+    attention_mask: Tensor,
 ): Tensor ->
-    let normalized = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let normalized = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
     let query_weight = full_float([2, 2], 0.0);
     let key_weight = full_float([2, 2], 0.0);
     let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
@@ -1699,14 +1890,10 @@ pub token_decoder_cross_attention(
     input: Tensor,
     memory: Tensor,
     normalization_weight: Tensor,
-    normalization_bias: Tensor
+    normalization_bias: Tensor,
 ): Tensor ->
-    let normalized_input = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
-    let normalized_memory = layer_norm(
-        memory, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let normalized_input = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
+    let normalized_memory = layer_norm(memory, [2], normalization_weight, normalization_bias, 0.0, false);
     let query_weight = full_float([2, 2], 0.0);
     let key_weight = full_float([2, 2], 0.0);
     let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
@@ -1736,20 +1923,18 @@ pub token_decoder_cross_attention(
     dispose(normalized_input);
     output.
 
-pub token_encoder_feed_forward(input: Tensor, normalization_weight: Tensor, normalization_bias: Tensor): Tensor ->
-    let normalized = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
-    let expansion_weight = from_floats(
-        [1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]
-    );
+pub token_encoder_feed_forward(
+    input: Tensor,
+    normalization_weight: Tensor,
+    normalization_bias: Tensor,
+): Tensor ->
+    let normalized = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
+    let expansion_weight = from_floats([1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]);
     let expansion_bias = full_float([4], 0.0);
     let expanded = matmul(normalized, expansion_weight);
     let biased_expansion = add(expanded, expansion_bias, 1.0);
     let activated = gelu(biased_expansion);
-    let projection_weight = from_floats(
-        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]
-    );
+    let projection_weight = from_floats([1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]);
     let projection_bias = full_float([2], 0.0);
     let projected = matmul(activated, projection_weight);
     let biased_projection = add(projected, projection_bias, 1.0);
@@ -1775,12 +1960,8 @@ pub token_ids_flow_through_embedding_encoder_classifier_and_loss(): Bool ->
     let embedding_loss = mse_loss(embedded, expected_embedding, 1);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let attention_residual = token_encoder_attention(
-        embedded, normalization_weight, normalization_bias, 0, 1, 1
-    );
-    let encoder_output = token_encoder_feed_forward(
-        attention_residual, normalization_weight, normalization_bias
-    );
+    let attention_residual = token_encoder_attention(embedded, normalization_weight, normalization_bias, 0, 1, 1);
+    let encoder_output = token_encoder_feed_forward(attention_residual, normalization_weight, normalization_bias);
     let pooled = amax(encoder_output, [0], false);
     let batched = unsqueeze(pooled, 0);
     let classifier_weight = full_float([2, 2], 1.0);
@@ -1831,41 +2012,52 @@ pub token_ids_flow_through_embedding_encoder_classifier_and_loss(): Bool ->
     dispose(embedded);
     dispose(token_ids);
     dispose(embedding_weight);
-    observed_embedding_shape.length() == 2 and observed_embedding_shape[0] == 2 and
-        observed_embedding_shape[1] == 2 and observed_encoder_shape.length() == 2 and
-        observed_encoder_shape[0] == 2 and observed_encoder_shape[1] == 2 and
-        observed_probability_shape.length() == 2 and observed_probability_shape[0] == 1 and
-        observed_probability_shape[1] == 2 and observed_prediction_shape.length() == 1 and
-        observed_prediction_shape[0] == 1 and observed_prediction_dtype == 4 and
-        observed_prediction == 0 and observed_embedding_loss == 0.0 and
-        observed_probability == 0.5 and observed_probability_loss == 0.0 and
-        observed_classification_loss > 0.69 and observed_classification_loss < 0.70 and
-        observed_pooled > 5.84 and observed_pooled < 5.85.
+    observed_embedding_shape.length() == 2
+        and observed_embedding_shape[0] == 2
+        and observed_embedding_shape[1] == 2
+        and observed_encoder_shape.length() == 2
+        and observed_encoder_shape[0] == 2
+        and observed_encoder_shape[1] == 2
+        and observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 1
+        and observed_probability_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 1
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_embedding_loss == 0.0
+        and observed_probability == 0.5
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7
+        and observed_pooled > 5.84
+        and observed_pooled < 5.85.
 
 @test
 pub batched_token_ids_flow_through_transformer_classifier_and_loss(): Bool ->
     let embedding_weight = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
     let token_ids = from_ints([0, 1, 1, 0], [2, 2]);
     let embedded = embedding(embedding_weight, token_ids, -1, false, false);
-    let expected_embedding = from_floats(
-        [1.0, 3.0, 4.0, 2.0, 4.0, 2.0, 1.0, 3.0], [2, 2, 2]
-    );
+    let expected_embedding = from_floats([1.0, 3.0, 4.0, 2.0, 4.0, 2.0, 1.0, 3.0], [2, 2, 2]);
     let embedding_loss = mse_loss(embedded, expected_embedding, 1);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let attention_residual = token_encoder_attention(
-        embedded, normalization_weight, normalization_bias, 1, 2, 2
-    );
-    let encoder_output = token_encoder_feed_forward(
-        attention_residual, normalization_weight, normalization_bias
-    );
-    let expected_encoder = from_floats(
-        [
-            1.8413447461, 4.8413447461, 5.8413447461, 2.8413447461,
-            5.8413447461, 2.8413447461, 1.8413447461, 4.8413447461
-        ],
-        [2, 2, 2]
-    );
+    let attention_residual = token_encoder_attention(embedded, normalization_weight, normalization_bias, 1, 2, 2);
+    let encoder_output = token_encoder_feed_forward(attention_residual, normalization_weight, normalization_bias);
+    let expected_encoder =
+        from_floats(
+            [
+                1.8413447461,
+                4.8413447461,
+                5.8413447461,
+                2.8413447461,
+                5.8413447461,
+                2.8413447461,
+                1.8413447461,
+                4.8413447461,
+            ],
+            [2, 2, 2],
+        );
     let encoder_loss = mse_loss(encoder_output, expected_encoder, 1);
     let pooled = amax(encoder_output, [1], false);
     let classifier_weight = full_float([2, 2], 1.0);
@@ -1913,18 +2105,29 @@ pub batched_token_ids_flow_through_transformer_classifier_and_loss(): Bool ->
     dispose(embedded);
     dispose(token_ids);
     dispose(embedding_weight);
-    observed_embedding_shape.length() == 3 and observed_embedding_shape[0] == 2 and
-        observed_embedding_shape[1] == 2 and observed_embedding_shape[2] == 2 and
-        observed_encoder_shape.length() == 3 and observed_encoder_shape[0] == 2 and
-        observed_encoder_shape[1] == 2 and observed_encoder_shape[2] == 2 and
-        observed_pooled_shape.length() == 2 and observed_pooled_shape[0] == 2 and
-        observed_pooled_shape[1] == 2 and observed_probability_shape.length() == 2 and
-        observed_probability_shape[0] == 2 and observed_probability_shape[1] == 2 and
-        observed_prediction_shape.length() == 1 and observed_prediction_shape[0] == 2 and
-        observed_prediction_dtype == 4 and observed_prediction == 0 and
-        observed_embedding_loss == 0.0 and observed_encoder_loss < 0.0000001 and
-        observed_probability_loss == 0.0 and observed_classification_loss > 0.69 and
-        observed_classification_loss < 0.70.
+    observed_embedding_shape.length() == 3
+        and observed_embedding_shape[0] == 2
+        and observed_embedding_shape[1] == 2
+        and observed_embedding_shape[2] == 2
+        and observed_encoder_shape.length() == 3
+        and observed_encoder_shape[0] == 2
+        and observed_encoder_shape[1] == 2
+        and observed_encoder_shape[2] == 2
+        and observed_pooled_shape.length() == 2
+        and observed_pooled_shape[0] == 2
+        and observed_pooled_shape[1] == 2
+        and observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 2
+        and observed_probability_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 2
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_embedding_loss == 0.0
+        and observed_encoder_loss < 1e-7
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7.
 
 @test
 pub stacked_batched_transformer_reuses_encoder_layers_before_classification(): Bool ->
@@ -1933,30 +2136,27 @@ pub stacked_batched_transformer_reuses_encoder_layers_before_classification(): B
     let embedded = embedding(embedding_weight, token_ids, -1, false, false);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let first_attention = token_encoder_attention(
-        embedded, normalization_weight, normalization_bias, 1, 2, 2
-    );
-    let first_encoder = token_encoder_feed_forward(
-        first_attention, normalization_weight, normalization_bias
-    );
-    let second_attention = token_encoder_attention(
-        first_encoder, normalization_weight, normalization_bias, 1, 2, 2
-    );
-    let second_encoder = token_encoder_feed_forward(
-        second_attention, normalization_weight, normalization_bias
-    );
-    let expected_second_encoder = from_floats(
-        [
-            2.6826894921, 6.6826894921, 7.6826894921, 3.6826894921,
-            7.6826894921, 3.6826894921, 2.6826894921, 6.6826894921
-        ],
-        [2, 2, 2]
-    );
+    let first_attention = token_encoder_attention(embedded, normalization_weight, normalization_bias, 1, 2, 2);
+    let first_encoder = token_encoder_feed_forward(first_attention, normalization_weight, normalization_bias);
+    let second_attention = token_encoder_attention(first_encoder, normalization_weight, normalization_bias, 1, 2, 2);
+    let second_encoder = token_encoder_feed_forward(second_attention, normalization_weight, normalization_bias);
+    let expected_second_encoder =
+        from_floats(
+            [
+                2.6826894921,
+                6.6826894921,
+                7.6826894921,
+                3.6826894921,
+                7.6826894921,
+                3.6826894921,
+                2.6826894921,
+                6.6826894921,
+            ],
+            [2, 2, 2],
+        );
     let encoder_loss = mse_loss(second_encoder, expected_second_encoder, 1);
     let pooled = amax(second_encoder, [1], false);
-    let expected_pool = from_floats(
-        [7.6826894921, 6.6826894921, 7.6826894921, 6.6826894921], [2, 2]
-    );
+    let expected_pool = from_floats([7.6826894921, 6.6826894921, 7.6826894921, 6.6826894921], [2, 2]);
     let pool_loss = mse_loss(pooled, expected_pool, 1);
     let classifier_weight = full_float([2, 2], 1.0);
     let classifier_bias = full_float([2], 0.0);
@@ -2005,18 +2205,29 @@ pub stacked_batched_transformer_reuses_encoder_layers_before_classification(): B
     dispose(embedded);
     dispose(token_ids);
     dispose(embedding_weight);
-    observed_first_shape.length() == 3 and observed_first_shape[0] == 2 and
-        observed_first_shape[1] == 2 and observed_first_shape[2] == 2 and
-        observed_second_shape.length() == 3 and observed_second_shape[0] == 2 and
-        observed_second_shape[1] == 2 and observed_second_shape[2] == 2 and
-        observed_pool_shape.length() == 2 and observed_pool_shape[0] == 2 and
-        observed_pool_shape[1] == 2 and observed_probability_shape.length() == 2 and
-        observed_probability_shape[0] == 2 and observed_probability_shape[1] == 2 and
-        observed_prediction_shape.length() == 1 and observed_prediction_shape[0] == 2 and
-        observed_prediction_dtype == 4 and observed_prediction == 0 and
-        observed_encoder_loss < 0.0000001 and observed_pool_loss < 0.0000001 and
-        observed_probability_loss == 0.0 and observed_classification_loss > 0.69 and
-        observed_classification_loss < 0.70.
+    observed_first_shape.length() == 3
+        and observed_first_shape[0] == 2
+        and observed_first_shape[1] == 2
+        and observed_first_shape[2] == 2
+        and observed_second_shape.length() == 3
+        and observed_second_shape[0] == 2
+        and observed_second_shape[1] == 2
+        and observed_second_shape[2] == 2
+        and observed_pool_shape.length() == 2
+        and observed_pool_shape[0] == 2
+        and observed_pool_shape[1] == 2
+        and observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 2
+        and observed_probability_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 2
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_encoder_loss < 1e-7
+        and observed_pool_loss < 1e-7
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7.
 
 @test
 pub causal_mask_changes_batched_attention_before_transformer_classification(): Bool ->
@@ -2026,9 +2237,7 @@ pub causal_mask_changes_batched_attention_before_transformer_classification(): B
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
     let attention_mask = from_floats([0.0, -1000.0, 0.0, 0.0], [2, 2]);
-    let normalized = layer_norm(
-        embedded, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let normalized = layer_norm(embedded, [2], normalization_weight, normalization_bias, 0.0, false);
     let query_weight = full_float([2, 2], 0.0);
     let key_weight = full_float([2, 2], 0.0);
     let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
@@ -2045,35 +2254,30 @@ pub causal_mask_changes_batched_attention_before_transformer_classification(): B
     let attention = softmax(masked_scores, 2);
     let context = matmul(attention, values);
     let attention_residual = add(embedded, context, 1.0);
-    let expected_attention = from_floats(
-        [1.0, 0.0, 0.5, 0.5, 1.0, 0.0, 0.5, 0.5], [2, 2, 2]
-    );
-    let expected_context = from_floats(
-        [0.0, 2.0, 1.0, 1.0, 2.0, 0.0, 1.0, 1.0], [2, 2, 2]
-    );
-    let expected_attention_residual = from_floats(
-        [1.0, 5.0, 5.0, 3.0, 6.0, 2.0, 2.0, 4.0], [2, 2, 2]
-    );
+    let expected_attention = from_floats([1.0, 0.0, 0.5, 0.5, 1.0, 0.0, 0.5, 0.5], [2, 2, 2]);
+    let expected_context = from_floats([0.0, 2.0, 1.0, 1.0, 2.0, 0.0, 1.0, 1.0], [2, 2, 2]);
+    let expected_attention_residual = from_floats([1.0, 5.0, 5.0, 3.0, 6.0, 2.0, 2.0, 4.0], [2, 2, 2]);
     let attention_loss = mse_loss(attention, expected_attention, 1);
     let context_loss = mse_loss(context, expected_context, 1);
-    let attention_residual_loss = mse_loss(
-        attention_residual, expected_attention_residual, 1
-    );
-    let encoder_output = token_encoder_feed_forward(
-        attention_residual, normalization_weight, normalization_bias
-    );
-    let expected_encoder = from_floats(
-        [
-            0.8413447461, 5.8413447461, 5.8413447461, 2.8413447461,
-            6.8413447461, 1.8413447461, 1.8413447461, 4.8413447461
-        ],
-        [2, 2, 2]
-    );
+    let attention_residual_loss = mse_loss(attention_residual, expected_attention_residual, 1);
+    let encoder_output = token_encoder_feed_forward(attention_residual, normalization_weight, normalization_bias);
+    let expected_encoder =
+        from_floats(
+            [
+                0.8413447461,
+                5.8413447461,
+                5.8413447461,
+                2.8413447461,
+                6.8413447461,
+                1.8413447461,
+                1.8413447461,
+                4.8413447461,
+            ],
+            [2, 2, 2],
+        );
     let encoder_loss = mse_loss(encoder_output, expected_encoder, 1);
     let pooled = amax(encoder_output, [1], false);
-    let expected_pool = from_floats(
-        [5.8413447461, 5.8413447461, 6.8413447461, 4.8413447461], [2, 2]
-    );
+    let expected_pool = from_floats([5.8413447461, 5.8413447461, 6.8413447461, 4.8413447461], [2, 2]);
     let pool_loss = mse_loss(pooled, expected_pool, 1);
     let classifier_weight = full_float([2, 2], 1.0);
     let classifier_bias = full_float([2], 0.0);
@@ -2147,40 +2351,46 @@ pub causal_mask_changes_batched_attention_before_transformer_classification(): B
     dispose(embedded);
     dispose(token_ids);
     dispose(embedding_weight);
-    observed_attention_shape.length() == 3 and observed_attention_shape[0] == 2 and
-        observed_attention_shape[1] == 2 and observed_attention_shape[2] == 2 and
-        observed_context_shape.length() == 3 and observed_context_shape[0] == 2 and
-        observed_context_shape[1] == 2 and observed_context_shape[2] == 2 and
-        observed_residual_shape.length() == 3 and observed_residual_shape[0] == 2 and
-        observed_residual_shape[1] == 2 and observed_residual_shape[2] == 2 and
-        observed_encoder_shape.length() == 3 and observed_encoder_shape[0] == 2 and
-        observed_encoder_shape[1] == 2 and observed_encoder_shape[2] == 2 and
-        observed_pool_shape.length() == 2 and observed_pool_shape[0] == 2 and
-        observed_pool_shape[1] == 2 and observed_prediction_shape.length() == 1 and
-        observed_prediction_shape[0] == 2 and observed_prediction_dtype == 4 and
-        observed_prediction == 0 and observed_attention_loss == 0.0 and
-        observed_context_loss == 0.0 and observed_residual_loss == 0.0 and
-        observed_encoder_loss < 0.0000001 and observed_pool_loss < 0.0000001 and
-        observed_probability_loss == 0.0 and observed_classification_loss > 0.69 and
-        observed_classification_loss < 0.70.
+    observed_attention_shape.length() == 3
+        and observed_attention_shape[0] == 2
+        and observed_attention_shape[1] == 2
+        and observed_attention_shape[2] == 2
+        and observed_context_shape.length() == 3
+        and observed_context_shape[0] == 2
+        and observed_context_shape[1] == 2
+        and observed_context_shape[2] == 2
+        and observed_residual_shape.length() == 3
+        and observed_residual_shape[0] == 2
+        and observed_residual_shape[1] == 2
+        and observed_residual_shape[2] == 2
+        and observed_encoder_shape.length() == 3
+        and observed_encoder_shape[0] == 2
+        and observed_encoder_shape[1] == 2
+        and observed_encoder_shape[2] == 2
+        and observed_pool_shape.length() == 2
+        and observed_pool_shape[0] == 2
+        and observed_pool_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 2
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_attention_loss == 0.0
+        and observed_context_loss == 0.0
+        and observed_residual_loss == 0.0
+        and observed_encoder_loss < 1e-7
+        and observed_pool_loss < 1e-7
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7.
 
 @test
 pub decoder_cross_attention_consumes_distinct_batched_memory_before_classification(): Bool ->
-    let decoder_input = from_floats(
-        [1.0, 3.0, 2.0, 5.0, 3.0, 1.0, 5.0, 2.0], [2, 2, 2]
-    );
-    let memory = from_floats(
-        [0.0, 2.0, 0.0, 2.0, 2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 2.0],
-        [2, 3, 2]
-    );
+    let decoder_input = from_floats([1.0, 3.0, 2.0, 5.0, 3.0, 1.0, 5.0, 2.0], [2, 2, 2]);
+    let memory = from_floats([0.0, 2.0, 0.0, 2.0, 2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 2.0], [2, 3, 2]);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let normalized_input = layer_norm(
-        decoder_input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
-    let normalized_memory = layer_norm(
-        memory, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let normalized_input = layer_norm(decoder_input, [2], normalization_weight, normalization_bias, 0.0, false);
+    let normalized_memory = layer_norm(memory, [2], normalization_weight, normalization_bias, 0.0, false);
     let query_weight = full_float([2, 2], 0.0);
     let key_weight = full_float([2, 2], 0.0);
     let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
@@ -2195,42 +2405,55 @@ pub decoder_cross_attention_consumes_distinct_batched_memory_before_classificati
     let context = matmul(attention, values);
     let attention_residual = add(decoder_input, context, 1.0);
     let expected_attention = full_float([2, 2, 3], 0.3333333333333333);
-    let expected_context = from_floats(
-        [
-            -0.3333333333333333, 0.3333333333333333,
-            -0.3333333333333333, 0.3333333333333333,
-            0.3333333333333333, -0.3333333333333333,
-            0.3333333333333333, -0.3333333333333333
-        ],
-        [2, 2, 2]
-    );
-    let expected_attention_residual = from_floats(
-        [
-            0.6666666666666667, 3.3333333333333335,
-            1.6666666666666667, 5.333333333333333,
-            3.3333333333333335, 0.6666666666666667,
-            5.333333333333333, 1.6666666666666667
-        ],
-        [2, 2, 2]
-    );
+    let expected_context =
+        from_floats(
+            [
+                -0.3333333333333333,
+                0.3333333333333333,
+                -0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333,
+                -0.3333333333333333,
+                0.3333333333333333,
+                -0.3333333333333333,
+            ],
+            [2, 2, 2],
+        );
+    let expected_attention_residual =
+        from_floats(
+            [
+                0.6666666666666667,
+                3.3333333333333335,
+                1.6666666666666667,
+                5.333333333333333,
+                3.3333333333333335,
+                0.6666666666666667,
+                5.333333333333333,
+                1.6666666666666667,
+            ],
+            [2, 2, 2],
+        );
     let attention_loss = mse_loss(attention, expected_attention, 1);
     let context_loss = mse_loss(context, expected_context, 1);
     let residual_loss = mse_loss(attention_residual, expected_attention_residual, 1);
-    let encoder_output = token_encoder_feed_forward(
-        attention_residual, normalization_weight, normalization_bias
-    );
-    let expected_encoder = from_floats(
-        [
-            0.5080114128, 4.1746780794, 1.5080114128, 6.1746780794,
-            4.1746780794, 0.5080114128, 6.1746780794, 1.5080114128
-        ],
-        [2, 2, 2]
-    );
+    let encoder_output = token_encoder_feed_forward(attention_residual, normalization_weight, normalization_bias);
+    let expected_encoder =
+        from_floats(
+            [
+                0.5080114128,
+                4.1746780794,
+                1.5080114128,
+                6.1746780794,
+                4.1746780794,
+                0.5080114128,
+                6.1746780794,
+                1.5080114128,
+            ],
+            [2, 2, 2],
+        );
     let encoder_loss = mse_loss(encoder_output, expected_encoder, 1);
     let pooled = amax(encoder_output, [1], false);
-    let expected_pool = from_floats(
-        [1.5080114128, 6.1746780794, 6.1746780794, 1.5080114128], [2, 2]
-    );
+    let expected_pool = from_floats([1.5080114128, 6.1746780794, 6.1746780794, 1.5080114128], [2, 2]);
     let pool_loss = mse_loss(pooled, expected_pool, 1);
     let classifier_weight = full_float([2, 2], 1.0);
     let classifier_bias = full_float([2], 0.0);
@@ -2300,76 +2523,101 @@ pub decoder_cross_attention_consumes_distinct_batched_memory_before_classificati
     dispose(normalization_weight);
     dispose(memory);
     dispose(decoder_input);
-    observed_attention_shape.length() == 3 and observed_attention_shape[0] == 2 and
-        observed_attention_shape[1] == 2 and observed_attention_shape[2] == 3 and
-        observed_context_shape.length() == 3 and observed_context_shape[0] == 2 and
-        observed_context_shape[1] == 2 and observed_context_shape[2] == 2 and
-        observed_residual_shape.length() == 3 and observed_residual_shape[0] == 2 and
-        observed_residual_shape[1] == 2 and observed_residual_shape[2] == 2 and
-        observed_encoder_shape.length() == 3 and observed_encoder_shape[0] == 2 and
-        observed_encoder_shape[1] == 2 and observed_encoder_shape[2] == 2 and
-        observed_pool_shape.length() == 2 and observed_pool_shape[0] == 2 and
-        observed_pool_shape[1] == 2 and observed_prediction_shape.length() == 1 and
-        observed_prediction_shape[0] == 2 and observed_prediction_dtype == 4 and
-        observed_prediction == 0 and observed_attention_loss == 0.0 and
-        observed_context_loss < 0.0000001 and observed_residual_loss < 0.0000001 and
-        observed_encoder_loss < 0.0000001 and observed_pool_loss < 0.0000001 and
-        observed_probability_loss == 0.0 and observed_classification_loss > 0.69 and
-        observed_classification_loss < 0.70.
+    observed_attention_shape.length() == 3
+        and observed_attention_shape[0] == 2
+        and observed_attention_shape[1] == 2
+        and observed_attention_shape[2] == 3
+        and observed_context_shape.length() == 3
+        and observed_context_shape[0] == 2
+        and observed_context_shape[1] == 2
+        and observed_context_shape[2] == 2
+        and observed_residual_shape.length() == 3
+        and observed_residual_shape[0] == 2
+        and observed_residual_shape[1] == 2
+        and observed_residual_shape[2] == 2
+        and observed_encoder_shape.length() == 3
+        and observed_encoder_shape[0] == 2
+        and observed_encoder_shape[1] == 2
+        and observed_encoder_shape[2] == 2
+        and observed_pool_shape.length() == 2
+        and observed_pool_shape[0] == 2
+        and observed_pool_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 2
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_attention_loss == 0.0
+        and observed_context_loss < 1e-7
+        and observed_residual_loss < 1e-7
+        and observed_encoder_loss < 1e-7
+        and observed_pool_loss < 1e-7
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7.
 
 @test
 pub causal_cross_attention_decoder_layer_completes_batched_classification(): Bool ->
     let embedding_weight = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
     let decoder_token_ids = from_ints([0, 1, 1, 0], [2, 2]);
-    let decoder_input = embedding(
-        embedding_weight, decoder_token_ids, -1, false, false
-    );
-    let memory = from_floats(
-        [0.0, 2.0, 0.0, 2.0, 2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 2.0],
-        [2, 3, 2]
-    );
+    let decoder_input = embedding(embedding_weight, decoder_token_ids, -1, false, false);
+    let memory = from_floats([0.0, 2.0, 0.0, 2.0, 2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 2.0], [2, 3, 2]);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
     let causal_mask = from_floats([0.0, -1000.0, 0.0, 0.0], [2, 2]);
-    let self_attention_residual = causal_token_encoder_attention(
-        decoder_input, normalization_weight, normalization_bias, causal_mask
-    );
-    let expected_self_attention_residual = from_floats(
-        [1.0, 5.0, 5.0, 3.0, 6.0, 2.0, 2.0, 4.0], [2, 2, 2]
-    );
-    let self_attention_loss = mse_loss(
-        self_attention_residual, expected_self_attention_residual, 1
-    );
-    let cross_attention_residual = token_decoder_cross_attention(
-        self_attention_residual, memory, normalization_weight, normalization_bias
-    );
-    let expected_cross_attention_residual = from_floats(
-        [
-            0.6666666666666667, 5.333333333333333,
-            4.666666666666667, 3.3333333333333335,
-            6.333333333333333, 1.6666666666666667,
-            2.3333333333333335, 3.6666666666666665
-        ],
-        [2, 2, 2]
-    );
-    let cross_attention_loss = mse_loss(
-        cross_attention_residual, expected_cross_attention_residual, 1
-    );
-    let decoder_output = token_encoder_feed_forward(
-        cross_attention_residual, normalization_weight, normalization_bias
-    );
-    let expected_decoder_output = from_floats(
-        [
-            0.5080114128, 6.1746780794, 5.5080114128, 3.1746780794,
-            7.1746780794, 1.5080114128, 2.1746780794, 4.5080114128
-        ],
-        [2, 2, 2]
-    );
+    let self_attention_residual =
+        causal_token_encoder_attention(
+            decoder_input,
+            normalization_weight,
+            normalization_bias,
+            causal_mask,
+        );
+    let expected_self_attention_residual = from_floats([1.0, 5.0, 5.0, 3.0, 6.0, 2.0, 2.0, 4.0], [2, 2, 2]);
+    let self_attention_loss = mse_loss(self_attention_residual, expected_self_attention_residual, 1);
+    let cross_attention_residual =
+        token_decoder_cross_attention(
+            self_attention_residual,
+            memory,
+            normalization_weight,
+            normalization_bias,
+        );
+    let expected_cross_attention_residual =
+        from_floats(
+            [
+                0.6666666666666667,
+                5.333333333333333,
+                4.666666666666667,
+                3.3333333333333335,
+                6.333333333333333,
+                1.6666666666666667,
+                2.3333333333333335,
+                3.6666666666666665,
+            ],
+            [2, 2, 2],
+        );
+    let cross_attention_loss = mse_loss(cross_attention_residual, expected_cross_attention_residual, 1);
+    let decoder_output =
+        token_encoder_feed_forward(
+            cross_attention_residual,
+            normalization_weight,
+            normalization_bias,
+        );
+    let expected_decoder_output =
+        from_floats(
+            [
+                0.5080114128,
+                6.1746780794,
+                5.5080114128,
+                3.1746780794,
+                7.1746780794,
+                1.5080114128,
+                2.1746780794,
+                4.5080114128,
+            ],
+            [2, 2, 2],
+        );
     let decoder_loss = mse_loss(decoder_output, expected_decoder_output, 1);
     let pooled = amax(decoder_output, [1], false);
-    let expected_pool = from_floats(
-        [5.5080114128, 6.1746780794, 7.1746780794, 4.5080114128], [2, 2]
-    );
+    let expected_pool = from_floats([5.5080114128, 6.1746780794, 7.1746780794, 4.5080114128], [2, 2]);
     let pool_loss = mse_loss(pooled, expected_pool, 1);
     let classifier_weight = full_float([2, 2], 1.0);
     let classifier_bias = full_float([2], 0.0);
@@ -2426,67 +2674,88 @@ pub causal_cross_attention_decoder_layer_completes_batched_classification(): Boo
     dispose(decoder_input);
     dispose(decoder_token_ids);
     dispose(embedding_weight);
-    observed_self_shape.length() == 3 and observed_self_shape[0] == 2 and
-        observed_self_shape[1] == 2 and observed_self_shape[2] == 2 and
-        observed_cross_shape.length() == 3 and observed_cross_shape[0] == 2 and
-        observed_cross_shape[1] == 2 and observed_cross_shape[2] == 2 and
-        observed_decoder_shape.length() == 3 and observed_decoder_shape[0] == 2 and
-        observed_decoder_shape[1] == 2 and observed_decoder_shape[2] == 2 and
-        observed_pool_shape.length() == 2 and observed_pool_shape[0] == 2 and
-        observed_pool_shape[1] == 2 and observed_probability_shape.length() == 2 and
-        observed_probability_shape[0] == 2 and observed_probability_shape[1] == 2 and
-        observed_prediction_shape.length() == 1 and observed_prediction_shape[0] == 2 and
-        observed_prediction_dtype == 4 and observed_prediction == 0 and
-        observed_self_loss == 0.0 and observed_cross_loss < 0.0000001 and
-        observed_decoder_loss < 0.0000001 and observed_pool_loss < 0.0000001 and
-        observed_probability_loss == 0.0 and observed_classification_loss > 0.69 and
-        observed_classification_loss < 0.70.
+    observed_self_shape.length() == 3
+        and observed_self_shape[0] == 2
+        and observed_self_shape[1] == 2
+        and observed_self_shape[2] == 2
+        and observed_cross_shape.length() == 3
+        and observed_cross_shape[0] == 2
+        and observed_cross_shape[1] == 2
+        and observed_cross_shape[2] == 2
+        and observed_decoder_shape.length() == 3
+        and observed_decoder_shape[0] == 2
+        and observed_decoder_shape[1] == 2
+        and observed_decoder_shape[2] == 2
+        and observed_pool_shape.length() == 2
+        and observed_pool_shape[0] == 2
+        and observed_pool_shape[1] == 2
+        and observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 2
+        and observed_probability_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 2
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_self_loss == 0.0
+        and observed_cross_loss < 1e-7
+        and observed_decoder_loss < 1e-7
+        and observed_pool_loss < 1e-7
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7.
 
 @test
 pub independent_source_and_target_tokens_complete_seq2seq_classification(): Bool ->
     let source_embedding_weight = from_floats([0.0, 2.0, 2.0, 0.0], [2, 2]);
     let source_token_ids = from_ints([0, 0, 1, 1, 1, 0], [2, 3]);
-    let memory = embedding(
-        source_embedding_weight, source_token_ids, -1, false, false
-    );
-    let expected_memory = from_floats(
-        [0.0, 2.0, 0.0, 2.0, 2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 2.0],
-        [2, 3, 2]
-    );
+    let memory = embedding(source_embedding_weight, source_token_ids, -1, false, false);
+    let expected_memory = from_floats([0.0, 2.0, 0.0, 2.0, 2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 2.0], [2, 3, 2]);
     let memory_loss = mse_loss(memory, expected_memory, 1);
     let target_embedding_weight = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
     let target_token_ids = from_ints([0, 1, 1, 0], [2, 2]);
-    let decoder_input = embedding(
-        target_embedding_weight, target_token_ids, -1, false, false
-    );
-    let expected_decoder_input = from_floats(
-        [1.0, 3.0, 4.0, 2.0, 4.0, 2.0, 1.0, 3.0], [2, 2, 2]
-    );
+    let decoder_input = embedding(target_embedding_weight, target_token_ids, -1, false, false);
+    let expected_decoder_input = from_floats([1.0, 3.0, 4.0, 2.0, 4.0, 2.0, 1.0, 3.0], [2, 2, 2]);
     let decoder_input_loss = mse_loss(decoder_input, expected_decoder_input, 1);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
     let causal_mask = from_floats([0.0, -1000.0, 0.0, 0.0], [2, 2]);
-    let self_attention_residual = causal_token_encoder_attention(
-        decoder_input, normalization_weight, normalization_bias, causal_mask
-    );
-    let cross_attention_residual = token_decoder_cross_attention(
-        self_attention_residual, memory, normalization_weight, normalization_bias
-    );
-    let decoder_output = token_encoder_feed_forward(
-        cross_attention_residual, normalization_weight, normalization_bias
-    );
-    let expected_decoder_output = from_floats(
-        [
-            0.5080114128, 6.1746780794, 5.5080114128, 3.1746780794,
-            7.1746780794, 1.5080114128, 2.1746780794, 4.5080114128
-        ],
-        [2, 2, 2]
-    );
+    let self_attention_residual =
+        causal_token_encoder_attention(
+            decoder_input,
+            normalization_weight,
+            normalization_bias,
+            causal_mask,
+        );
+    let cross_attention_residual =
+        token_decoder_cross_attention(
+            self_attention_residual,
+            memory,
+            normalization_weight,
+            normalization_bias,
+        );
+    let decoder_output =
+        token_encoder_feed_forward(
+            cross_attention_residual,
+            normalization_weight,
+            normalization_bias,
+        );
+    let expected_decoder_output =
+        from_floats(
+            [
+                0.5080114128,
+                6.1746780794,
+                5.5080114128,
+                3.1746780794,
+                7.1746780794,
+                1.5080114128,
+                2.1746780794,
+                4.5080114128,
+            ],
+            [2, 2, 2],
+        );
     let decoder_loss = mse_loss(decoder_output, expected_decoder_output, 1);
     let pooled = amax(decoder_output, [1], false);
-    let expected_pool = from_floats(
-        [5.5080114128, 6.1746780794, 7.1746780794, 4.5080114128], [2, 2]
-    );
+    let expected_pool = from_floats([5.5080114128, 6.1746780794, 7.1746780794, 4.5080114128], [2, 2]);
     let pool_loss = mse_loss(pooled, expected_pool, 1);
     let classifier_weight = full_float([2, 2], 1.0);
     let classifier_bias = full_float([2], 0.0);
@@ -2545,18 +2814,32 @@ pub independent_source_and_target_tokens_complete_seq2seq_classification(): Bool
     dispose(memory);
     dispose(source_token_ids);
     dispose(source_embedding_weight);
-    observed_memory_shape.length() == 3 and observed_memory_shape[0] == 2 and
-        observed_memory_shape[1] == 3 and observed_memory_shape[2] == 2 and
-        observed_decoder_input_shape.length() == 3 and observed_decoder_input_shape[0] == 2 and
-        observed_decoder_input_shape[1] == 2 and observed_decoder_input_shape[2] == 2 and
-        observed_decoder_shape.length() == 3 and observed_decoder_shape[0] == 2 and
-        observed_decoder_shape[1] == 2 and observed_decoder_shape[2] == 2 and
-        observed_pool_shape.length() == 2 and observed_pool_shape[0] == 2 and
-        observed_pool_shape[1] == 2 and observed_probability_shape.length() == 2 and
-        observed_probability_shape[0] == 2 and observed_probability_shape[1] == 2 and
-        observed_prediction_shape.length() == 1 and observed_prediction_shape[0] == 2 and
-        observed_prediction_dtype == 4 and observed_prediction == 0 and
-        observed_memory_loss == 0.0 and observed_decoder_input_loss == 0.0 and
-        observed_decoder_loss < 0.0000001 and observed_pool_loss < 0.0000001 and
-        observed_probability_loss == 0.0 and observed_classification_loss > 0.69 and
-        observed_classification_loss < 0.70.
+    observed_memory_shape.length() == 3
+        and observed_memory_shape[0] == 2
+        and observed_memory_shape[1] == 3
+        and observed_memory_shape[2] == 2
+        and observed_decoder_input_shape.length() == 3
+        and observed_decoder_input_shape[0] == 2
+        and observed_decoder_input_shape[1] == 2
+        and observed_decoder_input_shape[2] == 2
+        and observed_decoder_shape.length() == 3
+        and observed_decoder_shape[0] == 2
+        and observed_decoder_shape[1] == 2
+        and observed_decoder_shape[2] == 2
+        and observed_pool_shape.length() == 2
+        and observed_pool_shape[0] == 2
+        and observed_pool_shape[1] == 2
+        and observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 2
+        and observed_probability_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 2
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_memory_loss == 0.0
+        and observed_decoder_input_loss == 0.0
+        and observed_decoder_loss < 1e-7
+        and observed_pool_loss < 1e-7
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7.

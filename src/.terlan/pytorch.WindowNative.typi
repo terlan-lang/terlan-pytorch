@@ -1,0 +1,11 @@
+//! Exact Bartlett, Blackman, Hamming, Hann, and Kaiser window constructors and retained-output operations composed from generated CXX leaves.
+
+module pytorch.WindowNative.
+
+/// Constructs one exact signal-processing window with explicit dtype, device, and pin-memory controls.
+
+pub window_native(operation: Int, window_length: Int, periodic: Bool, alpha: Float, beta: Float, dtype: Int, device_type: Int, device_index: Int, pin_memory: Bool): Tensor.
+
+/// Writes one exact signal-processing window into retained output storage.
+
+pub window_out_native(output: Tensor, operation: Int, window_length: Int, periodic: Bool, alpha: Float, beta: Float): Unit.

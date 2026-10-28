@@ -1,0 +1,20 @@
+/**
+ * Generated CXX dtype-converting view-copy completion surface.
+ */
+module pytorch.ViewCopyDtypeCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Copies a tensor while converting to the requested scalar type.
+ */
+@compiler.native {pytorch.view_copy_dtype.view_copy_dtype}
+pub view_copy_dtype(input: Tensor, dtype: Int): Tensor ->
+    native.
+
+/**
+ * Writes a dtype-converted copy into retained output storage.
+ */
+@compiler.native {pytorch.view_copy_dtype.view_copy_dtype_out}
+pub view_copy_dtype_out(output: Tensor, input: Tensor, dtype: Int): Unit ->
+    native.

@@ -1,0 +1,90 @@
+/**
+ * Behavioral evidence for retained-output and mutation completion operations.
+ */
+module pytorch.MutationCompletionParityTest.
+
+import pytorch.Binary.{copysign_tensor, copysign_tensor_in_place}.
+import pytorch.Indexing.{masked_scatter, masked_scatter_in_place, masked_scatter_out, put, put_in_place, put_out}.
+import pytorch.Lerp.{lerp_tensor, lerp_tensor_in_place}.
+import pytorch.Shape.{mvlgamma, mvlgamma_in_place, mvlgamma_out}.
+import pytorch.Tensor.{Tensor, backward, clone, copy as tensor_copy, copy_in_place, copy_out, dispose, from_float, from_floats, from_ints, gradient, item_float, mse_loss, requires_grad_in_place, to_dtype}.
+import pytorch.Unary.square.
+
+/**
+ * Returns whether two tensors have equal values after numeric normalization.
+ */
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let actual_float = to_dtype(actual, 7);
+    let expected_float = to_dtype(expected, 7);
+    let loss = mse_loss(actual_float, expected_float, 1);
+    let valid = item_float(loss) == 0.0;
+    dispose(loss);
+    dispose(expected_float);
+    dispose(actual_float);
+    valid.
+
+/**
+ * Proves dense copy, masked-scatter, and indexed-put storage forms.
+ */
+@test
+pub copy_and_index_mutations_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0], [3]);
+    let source = from_floats([7.0, 8.0, 9.0], [3]);
+    let copy_expected = tensor_copy(input, source, false);
+    let copy_output = clone(input);
+    copy_out(copy_output, input, source, false);
+    let copy_mutation = clone(input);
+    (copy_in_place(copy_mutation, source, false); let mask_values = from_ints([0, 1, 0], [3]);
+let mask = to_dtype(mask_values, 11);
+let replacement = from_floats([11.0], [1]);
+let masked_expected = masked_scatter(input, mask, replacement);
+let masked_output = clone(input);
+(masked_scatter_out(masked_output, input, mask, replacement); let masked_mutation = clone(input);
+(masked_scatter_in_place(masked_mutation, mask, replacement); let indices = from_ints([1], [1]);
+let put_source = from_floats([13.0], [1]);
+let put_expected = put(input, indices, put_source, false);
+let put_output = clone(input);
+(put_out(put_output, input, indices, put_source, false); let put_mutation = clone(input);
+(put_in_place(put_mutation, indices, put_source, false); let valid =
+    matches(copy_output, copy_expected)
+        and matches(copy_mutation, copy_expected)
+        and matches(masked_output, masked_expected)
+        and matches(masked_mutation, masked_expected)
+        and matches(put_output, put_expected)
+        and matches(put_mutation, put_expected);
+(dispose(put_mutation); dispose(put_output); dispose(put_expected); dispose(put_source); dispose(indices); dispose(masked_mutation); dispose(masked_output); dispose(masked_expected); dispose(replacement); dispose(mask); dispose(mask_values); dispose(copy_mutation); dispose(copy_output); dispose(copy_expected); dispose(source); dispose(input); valid)))))).
+
+/**
+ * Proves tensor copysign, multivariate log-gamma, and tensor lerp mutations.
+ */
+@test
+pub numerical_mutations_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0], [3]);
+    let signs = from_floats([-1.0, 1.0, -1.0], [3]);
+    let copysign_expected = copysign_tensor(input, signs);
+    let copysign_actual = clone(input);
+    copysign_tensor_in_place(copysign_actual, signs);
+    let gamma_input = from_floats([2.0, 3.0], [2]);
+    let gamma_expected = mvlgamma(gamma_input, 2);
+    let gamma_output = clone(gamma_input);
+    (mvlgamma_out(gamma_output, gamma_input, 2); let gamma_mutation = clone(gamma_input);
+(mvlgamma_in_place(gamma_mutation, 2); let end = from_floats([5.0, 6.0, 7.0], [3]);
+let weight = from_floats([0.25, 0.5, 0.75], [3]);
+let lerp_expected = lerp_tensor(input, end, weight);
+let lerp_actual = clone(input);
+(lerp_tensor_in_place(lerp_actual, end, weight); let valid =
+    matches(copysign_actual, copysign_expected)
+        and matches(gamma_output, gamma_expected)
+        and matches(gamma_mutation, gamma_expected)
+        and matches(lerp_actual, lerp_expected);
+(dispose(lerp_actual); dispose(lerp_expected); dispose(weight); dispose(end); dispose(gamma_mutation); dispose(gamma_output); dispose(gamma_expected); dispose(gamma_input); dispose(copysign_actual); dispose(copysign_expected); dispose(signs); dispose(input); valid)))).
+
+/**
+ * Proves retained leaf storage can participate in autograd.
+ */
+@test
+pub requires_grad_mutation_records_gradient(): Bool ->
+    let parameter = from_float(2.0);
+    requires_grad_in_place(parameter, true);
+    let loss = square(parameter);
+    (backward(loss); let value = gradient(parameter); let valid = item_float(value) == 4.0; (dispose(value); dispose(loss); dispose(parameter); valid)).

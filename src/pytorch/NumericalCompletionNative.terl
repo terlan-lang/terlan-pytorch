@@ -1,0 +1,96 @@
+/**
+ * Exact stable sorting output, distance, matrix-chain, clone, contiguity, and cross-product primitives.
+ */
+module pytorch.NumericalCompletionNative.
+
+import type pytorch.Tensor.
+
+/**
+ * Writes exact aten::argsort.stable_out indices into retained storage.
+ */
+@compiler.native {pytorch.numerical_completion.argsort_stable_out}
+pub argsort_stable_out(
+    output: Tensor,
+    tensor: Tensor,
+    stable: Bool,
+    dimension: Int,
+    descending: Bool,
+): Unit ->
+    native.
+
+/**
+ * Computes exact aten::cdist with inferred compute mode.
+ */
+@compiler.native {pytorch.numerical_completion.cdist_default_compute}
+pub cdist_default_compute(left: Tensor, right: Tensor, p: Float): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::cdist with an explicit compute mode.
+ */
+@compiler.native {pytorch.numerical_completion.cdist_compute}
+pub cdist_compute(left: Tensor, right: Tensor, p: Float, compute_mode: Int): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::chain_matmul over an owned tensor-handle list.
+ */
+@compiler.native {pytorch.numerical_completion.chain_matmul}
+pub chain_matmul_native(matrices: List[Tensor]): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::chain_matmul.out into retained storage.
+ */
+@compiler.native {pytorch.numerical_completion.chain_matmul_out}
+pub chain_matmul_out_native(output: Tensor, matrices: List[Tensor]): Unit ->
+    native.
+
+/**
+ * Writes exact aten::clone.out with inferred memory format.
+ */
+@compiler.native {pytorch.numerical_completion.clone_out_default_memory}
+pub clone_out_default_memory(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Writes exact aten::clone.out with an explicit memory format.
+ */
+@compiler.native {pytorch.numerical_completion.clone_out_memory}
+pub clone_out_memory(output: Tensor, tensor: Tensor, memory_format: Int): Unit ->
+    native.
+
+/**
+ * Executes exact aten::contiguous with explicit memory format and alias-preserving semantics.
+ */
+@compiler.native {pytorch.numerical_completion.contiguous}
+pub contiguous_native(tensor: Tensor, memory_format: Int): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::cross with inferred dimension.
+ */
+@compiler.native {pytorch.numerical_completion.cross_default_dimension}
+pub cross_default_dimension(tensor: Tensor, other: Tensor): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::cross with explicit dimension.
+ */
+@compiler.native {pytorch.numerical_completion.cross_dimension}
+pub cross_dimension(tensor: Tensor, other: Tensor, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::cross.out with inferred dimension.
+ */
+@compiler.native {pytorch.numerical_completion.cross_out_default_dimension}
+pub cross_out_default_dimension(output: Tensor, tensor: Tensor, other: Tensor): Unit ->
+    native.
+
+/**
+ * Writes exact aten::cross.out with explicit dimension.
+ */
+@compiler.native {pytorch.numerical_completion.cross_out_dimension}
+pub cross_out_dimension(output: Tensor, tensor: Tensor, other: Tensor, dimension: Int): Unit ->
+    native.

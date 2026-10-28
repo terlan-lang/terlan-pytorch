@@ -1,0 +1,81 @@
+/**
+ * CPU shape/dtype evidence for default rand and randn overloads.
+ */
+module pytorch.RandomParityTest.
+
+import pytorch.RandomCompletion.{rand_default, rand_like_default, rand_like_out, rand_out, randint_default, randint_like_default, randint_like_low_dtype_default, randint_like_out_default, randint_like_tensor_default, randint_low_default, randint_low_out, randint_out, randn_default, randn_like_default, randn_like_out, randn_out, random_default, random_from, random_from_in_place, random_from_out, random_in_place, random_out, random_to, random_to_in_place, random_to_out, rrelu_default, rrelu_in_place, rrelu_with_noise_in_place}.
+import pytorch.Tensor.{dispose, dtype, from_floats, shape, to_dtype}.
+
+@test
+pub random_defaults_preserve_shape_and_dtype(): Bool ->
+    let random = rand_default([2, 3]);
+    let normal = randn_default([2, 3]);
+    let random_out = to_dtype(from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]), 6);
+    let normal_out = to_dtype(from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]), 6);
+    let integers = randint_default(10, [2, 3]);
+    let bounded = randint_low_default(3, 10, [2, 3]);
+    let integers_out = to_dtype(from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]), 4);
+    let bounded_out = to_dtype(from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]), 4);
+    let like = rand_like_default(random_out);
+    let nlike = randn_like_default(normal_out);
+    let integer_like = randint_like_default(random_out, 10);
+    let bounded_integer_like = randint_like_low_dtype_default(random_out, 3, 10);
+    let tensor_high = to_dtype(from_floats([10.0], []), 4);
+    let tensor_integer_like = randint_like_tensor_default(random_out, tensor_high);
+    let integer_like_out = to_dtype(from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]), 4);
+    let tensor_integer_like_out = to_dtype(from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]), 4);
+    let bounded_integer_like_out = to_dtype(from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]), 4);
+    randint_like_out_default(integer_like_out, random_out, 10);
+    randint_like_tensor_out_default(tensor_integer_like_out, random_out, tensor_high);
+    randint_like_low_dtype_out_default(bounded_integer_like_out, random_out, 3, 10);
+    let like_out = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]);
+    let nlike_out = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]);
+    let random_input = to_dtype(from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]), 4);
+    let random_default_value = random_default(random_input);
+    let random_from_value = random_from(random_input, 2, 8);
+    let random_to_value = random_to(random_input, 8);
+    let random_out_value = to_dtype(from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]), 4);
+    let random_from_out_value = to_dtype(from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]), 4);
+    let random_to_out_value = to_dtype(from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]), 4);
+    let random_mutable_input = to_dtype(from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]), 4);
+    let relu_input = from_floats([-1.0, 0.0, 1.0, -2.0, 2.0, 3.0], [2, 3]);
+    let relu_noise = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]);
+    let relu_value = rrelu_default(relu_input, 0.125, 0.3333333333333333, false);
+    (rrelu_in_place(relu_input, 0.125, 0.3333333333333333, false); rrelu_with_noise_in_place(relu_input, relu_noise, 0.125, 0.3333333333333333, false); rand_out(random_out, [2, 3]); randn_out(normal_out, [2, 3]); randint_out(integers_out, 10, [2, 3]); randint_low_out(bounded_out, 3, 10, [2, 3]); rand_like_out(like_out, random_out); randn_like_out(nlike_out, normal_out); random_out(random_out_value, random_input); random_from_out(random_from_out_value, random_input, 2, 8); random_to_out(random_to_out_value, random_input, 8); random_in_place(random_mutable_input); random_from_in_place(random_mutable_input, 2, 8); random_to_in_place(random_mutable_input, 8); let valid =
+    shape(random) == [2, 3]
+        and shape(normal) == [2, 3]
+        and shape(random_out) == [2, 3]
+        and shape(normal_out) == [2, 3]
+        and shape(integers) == [2, 3]
+        and shape(bounded) == [2, 3]
+        and shape(integers_out) == [2, 3]
+        and shape(bounded_out) == [2, 3]
+        and shape(like) == [2, 3]
+        and shape(nlike) == [2, 3]
+        and shape(integer_like) == [2, 3]
+        and shape(bounded_integer_like) == [2, 3]
+        and shape(tensor_integer_like) == [2, 3]
+        and shape(integer_like_out) == [2, 3]
+        and shape(tensor_integer_like_out) == [2, 3]
+        and shape(bounded_integer_like_out) == [2, 3]
+        and shape(like_out) == [2, 3]
+        and shape(nlike_out) == [2, 3]
+        and shape(random_default_value) == [2, 3]
+        and shape(random_from_value) == [2, 3]
+        and shape(random_to_value) == [2, 3]
+        and shape(random_out_value) == [2, 3]
+        and shape(random_from_out_value) == [2, 3]
+        and shape(random_to_out_value) == [2, 3]
+        and shape(random_mutable_input) == [2, 3]
+        and shape(relu_value) == [2, 3]
+        and shape(relu_input) == [2, 3]
+        and shape(relu_noise) == [2, 3]
+        and dtype(random) == 6
+        and dtype(normal) == 6
+        and dtype(random_out) == 6
+        and dtype(normal_out) == 6
+        and dtype(integers) == 4
+        and dtype(bounded) == 4
+        and dtype(integers_out) == 4
+        and dtype(bounded_out) == 4;
+(dispose(relu_noise); dispose(relu_value); dispose(relu_input); dispose(random_mutable_input); dispose(random_to_out_value); dispose(random_from_out_value); dispose(random_out_value); dispose(random_to_value); dispose(random_from_value); dispose(random_default_value); dispose(random_input); dispose(bounded_integer_like_out); dispose(tensor_integer_like_out); dispose(integer_like_out); dispose(tensor_integer_like); dispose(tensor_high); dispose(bounded_integer_like); dispose(integer_like); dispose(nlike_out); dispose(like_out); dispose(nlike); dispose(like); dispose(bounded_out); dispose(integers_out); dispose(bounded); dispose(integers); dispose(normal_out); dispose(random_out); dispose(normal); dispose(random); valid)).

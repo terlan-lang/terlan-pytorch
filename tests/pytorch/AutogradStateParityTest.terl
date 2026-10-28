@@ -1,0 +1,40 @@
+/**
+ * CPU runtime evidence for LibTorch gradient and anomaly global state.
+ */
+module pytorch.AutogradStateParityTest.
+
+import pytorch.BackendAvailability.{dispose_anomaly_mode, enter_anomaly_mode, is_anomaly_check_nan_enabled, is_anomaly_enabled, is_grad_enabled, set_anomaly_enabled, set_grad_enabled}.
+
+@test
+pub autograd_state_matches_libtorch(): Bool ->
+    let original_grad = is_grad_enabled();
+    let original_anomaly = is_anomaly_enabled();
+    let original_check_nan = is_anomaly_check_nan_enabled();
+    set_grad_enabled(false);
+    let grad_disabled = not is_grad_enabled();
+    (set_grad_enabled(true); let grad_enabled = is_grad_enabled(); (set_anomaly_enabled(true, false); let anomaly_without_nan = is_anomaly_enabled() and not is_anomaly_check_nan_enabled(); (set_anomaly_enabled(true, true); let anomaly_with_nan = is_anomaly_enabled() and is_anomaly_check_nan_enabled(); (set_anomaly_enabled(false, original_check_nan); let anomaly_disabled = not is_anomaly_enabled(); (set_grad_enabled(original_grad); set_anomaly_enabled(original_anomaly, original_check_nan); grad_disabled and grad_enabled and anomaly_without_nan and anomaly_with_nan and anomaly_disabled))))).
+
+@test
+pub anomaly_guard_restores_both_flags(): Bool ->
+    let original_enabled = is_anomaly_enabled();
+    let original_check_nan = is_anomaly_check_nan_enabled();
+    let guard = enter_anomaly_mode(true, true);
+    let entered = is_anomaly_enabled() and is_anomaly_check_nan_enabled();
+    dispose_anomaly_mode(guard);
+    entered
+        and is_anomaly_enabled() == original_enabled
+        and is_anomaly_check_nan_enabled() == original_check_nan.
+
+@test
+pub anomaly_guards_nest_and_restore(): Bool ->
+    let original_enabled = is_anomaly_enabled();
+    let original_check_nan = is_anomaly_check_nan_enabled();
+    let outer = enter_anomaly_mode(true, false);
+    let inner = enter_anomaly_mode(false, true);
+    let inner_state = not is_anomaly_enabled() and is_anomaly_check_nan_enabled();
+    dispose_anomaly_mode(inner);
+    let outer_state = is_anomaly_enabled() and not is_anomaly_check_nan_enabled();
+    (dispose_anomaly_mode(outer); inner_state
+    and outer_state
+    and is_anomaly_enabled() == original_enabled
+    and is_anomaly_check_nan_enabled() == original_check_nan).

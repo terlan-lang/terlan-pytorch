@@ -1,0 +1,86 @@
+module pytorch.CreationCompletionBehaviorSupport.
+
+import pytorch.CreationCompletionNative.{create_configured, create_out, like_configured, like_out}.
+import pytorch.Tensor.{Float64, Strided, Tensor, dispose, dtype, is_cuda, ones_device, shape}.
+
+/**
+ * Exercises generated dense creation and like dispatchers.
+ */
+pub creation_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let device_kind =
+        if {
+            device_name == "cpu" -> 0;
+            true -> 1
+        };
+    let created =
+        create_configured(
+            2,
+            [2, 3],
+            true,
+            0,
+            0.0,
+            7,
+            true,
+            0,
+            true,
+            device_kind,
+            0,
+            true,
+            false,
+            true,
+            0,
+            true,
+        );
+    let filled =
+        create_configured(
+            1,
+            [2, 3],
+            true,
+            4,
+            0.0,
+            7,
+            true,
+            0,
+            true,
+            device_kind,
+            0,
+            true,
+            false,
+            true,
+            0,
+            true,
+        );
+    let output = ones_device([0], Float64, Strided, device_name);
+    create_out(output, 1, [2, 3], true, 5, 0.0, 0, false);
+    let like_input = ones_device([2, 3], Float64, Strided, device_name);
+    let like =
+        like_configured(
+            like_input,
+            3,
+            true,
+            0,
+            0.0,
+            7,
+            true,
+            0,
+            true,
+            device_kind,
+            0,
+            true,
+            false,
+            true,
+            0,
+            true,
+        );
+    let like_output = ones_device([0], Float64, Strided, device_name);
+    (like_out(like_output, like_input, 1, true, 6, 0.0, 0, false); let valid =
+    shape(created) == [2, 3]
+        and shape(filled) == [2, 3]
+        and shape(output) == [2, 3]
+        and shape(like) == [2, 3]
+        and shape(like_output) == [2, 3]
+        and dtype(created) == Float64
+        and dtype(like) == Float64
+        and is_cuda(created) == expected_cuda
+        and is_cuda(like_output) == expected_cuda;
+(dispose(like_output); dispose(like); dispose(like_input); dispose(output); dispose(filled); dispose(created); valid)).

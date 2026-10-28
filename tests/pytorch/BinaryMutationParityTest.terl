@@ -1,0 +1,74 @@
+/**
+ * Behavioral evidence for two-tensor in-place operations.
+ */
+module pytorch.BinaryMutationParityTest.
+
+import pytorch.Binary.{arctan2, arctan2_in_place, atan2, atan2_in_place, gcd, gcd_in_place, heaviside, heaviside_in_place, hypot, hypot_in_place, igamma, igamma_in_place, igammac, igammac_in_place, lcm, lcm_in_place, ldexp_tensor, ldexp_tensor_in_place, nextafter, nextafter_in_place}.
+import pytorch.Tensor.{Tensor, clone, dispose, from_floats, from_ints, item_float, mse_loss, to_dtype}.
+
+/**
+ * Returns whether two tensors have identical numeric values.
+ */
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let actual_float = to_dtype(actual, 7);
+    let expected_float = to_dtype(expected, 7);
+    let loss = mse_loss(actual_float, expected_float, 1);
+    let valid = item_float(loss) == 0.0;
+    dispose(loss);
+    dispose(expected_float);
+    dispose(actual_float);
+    valid.
+
+/**
+ * Proves floating-point binary mutations through public Terlan APIs.
+ */
+@test
+pub floating_mutations_match_libtorch(): Bool ->
+    let left = from_floats([0.5, 1.5], [2]);
+    let right = from_floats([1.0, 2.0], [2]);
+    let arctan2_expected = arctan2(left, right);
+    let arctan2_actual = clone(left);
+    arctan2_in_place(arctan2_actual, right);
+    let atan2_expected = atan2(left, right);
+    let atan2_actual = clone(left);
+    (atan2_in_place(atan2_actual, right); let heaviside_expected = heaviside(left, right);
+let heaviside_actual = clone(left);
+(heaviside_in_place(heaviside_actual, right); let hypot_expected = hypot(left, right);
+let hypot_actual = clone(left);
+(hypot_in_place(hypot_actual, right); let igamma_expected = igamma(left, right);
+let igamma_actual = clone(left);
+(igamma_in_place(igamma_actual, right); let igammac_expected = igammac(left, right);
+let igammac_actual = clone(left);
+(igammac_in_place(igammac_actual, right); let nextafter_expected = nextafter(left, right);
+let nextafter_actual = clone(left);
+(nextafter_in_place(nextafter_actual, right); let valid =
+    matches(arctan2_actual, arctan2_expected)
+        and matches(atan2_actual, atan2_expected)
+        and matches(heaviside_actual, heaviside_expected)
+        and matches(hypot_actual, hypot_expected)
+        and matches(igamma_actual, igamma_expected)
+        and matches(igammac_actual, igammac_expected)
+        and matches(nextafter_actual, nextafter_expected);
+(dispose(nextafter_actual); dispose(nextafter_expected); dispose(igammac_actual); dispose(igammac_expected); dispose(igamma_actual); dispose(igamma_expected); dispose(hypot_actual); dispose(hypot_expected); dispose(heaviside_actual); dispose(heaviside_expected); dispose(atan2_actual); dispose(atan2_expected); dispose(arctan2_actual); dispose(arctan2_expected); dispose(right); dispose(left); valid))))))).
+
+/**
+ * Proves integer and exponent binary mutations through public Terlan APIs.
+ */
+@test
+pub integer_mutations_match_libtorch(): Bool ->
+    let integers = from_ints([6, 15], [2]);
+    let divisors = from_ints([4, 10], [2]);
+    let gcd_expected = gcd(integers, divisors);
+    let gcd_actual = clone(integers);
+    gcd_in_place(gcd_actual, divisors);
+    let lcm_expected = lcm(integers, divisors);
+    let lcm_actual = clone(integers);
+    (lcm_in_place(lcm_actual, divisors); let mantissas = from_floats([1.5, 2.0], [2]);
+let exponents = from_ints([2, -1], [2]);
+let ldexp_expected = ldexp_tensor(mantissas, exponents);
+let ldexp_actual = clone(mantissas);
+(ldexp_tensor_in_place(ldexp_actual, exponents); let valid =
+    matches(gcd_actual, gcd_expected)
+        and matches(lcm_actual, lcm_expected)
+        and matches(ldexp_actual, ldexp_expected);
+(dispose(ldexp_actual); dispose(ldexp_expected); dispose(exponents); dispose(mantissas); dispose(lcm_actual); dispose(lcm_expected); dispose(gcd_actual); dispose(gcd_expected); dispose(divisors); dispose(integers); valid))).

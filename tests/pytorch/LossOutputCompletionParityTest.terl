@@ -1,0 +1,84 @@
+/**
+ * Exact retained-output loss and backward parity on CPU and CUDA.
+ */
+module pytorch.LossOutputCompletionParityTest.
+
+import pytorch.Gradients.soft_margin_loss_backward.
+import pytorch.Loss.{huber_loss, huber_loss_backward, huber_loss_backward_out, huber_loss_out, mse_loss_backward_out, mse_loss_out, smooth_l1_loss, smooth_l1_loss_backward, smooth_l1_loss_backward_out, smooth_l1_loss_out, soft_margin_loss, soft_margin_loss_backward_out, soft_margin_loss_out}.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, mse_loss, mse_loss_gradient, shape, to_device}.
+import pytorch.TypeRelations.equal.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(tensor: Tensor, expected: Tensor, dimensions: List[Int], device: Int): Bool ->
+    equal(tensor, expected)
+        and shape(tensor) == dimensions
+        and dtype(tensor) == 7
+        and device_type(tensor) == device.
+
+verify(device: Int): Bool ->
+    let input = placed([-0.5, 2.0], [2], device);
+    let target = placed([0.0, 0.0], [2], device);
+    let gradient = placed([2.0, 3.0], [2], device);
+    let output = placed([], [0], device);
+    let huber = huber_loss(input, target, 0, 1.0);
+    huber_loss_out(output, input, target, 0, 1.0);
+    let huber_valid = matches(output, huber, [2], device);
+    let huber_gradient = huber_loss_backward(gradient, input, target, 0, 1.0);
+    (huber_loss_backward_out(output, gradient, input, target, 0, 1.0); let huber_gradient_valid = matches(output, huber_gradient, [2], device);
+let mse = mse_loss(input, target, 0);
+(mse_loss_out(output, input, target, 0); let mse_valid = matches(output, mse, [2], device);
+let mse_gradient = mse_loss_gradient(gradient, input, target, 0);
+(mse_loss_backward_out(output, gradient, input, target, 0); let mse_gradient_valid = matches(output, mse_gradient, [2], device);
+let smooth = smooth_l1_loss(input, target, 0, 1.0);
+(smooth_l1_loss_out(output, input, target, 0, 1.0); let smooth_valid = matches(output, smooth, [2], device);
+let smooth_gradient = smooth_l1_loss_backward(gradient, input, target, 0, 1.0);
+(smooth_l1_loss_backward_out(output, gradient, input, target, 0, 1.0); let smooth_gradient_valid = matches(output, smooth_gradient, [2], device);
+let margin_input = placed([0.0, 0.0], [2], device);
+let margin_target = placed([1.0, -1.0], [2], device);
+let soft = soft_margin_loss(margin_input, margin_target, 0);
+(soft_margin_loss_out(output, margin_input, margin_target, 0); let soft_valid = matches(output, soft, [2], device);
+let soft_gradient = soft_margin_loss_backward(gradient, margin_input, margin_target, 0);
+(soft_margin_loss_backward_out(output, gradient, margin_input, margin_target, 0); let soft_gradient_valid = matches(output, soft_gradient, [2], device);
+let wanted_input = placed([-0.5, 2.0], [2], device);
+let wanted_target = placed([0.0, 0.0], [2], device);
+let wanted_gradient = placed([2.0, 3.0], [2], device);
+let sources_valid =
+    matches(input, wanted_input, [2], device)
+        and matches(target, wanted_target, [2], device)
+        and matches(gradient, wanted_gradient, [2], device);
+(dispose(wanted_gradient); dispose(wanted_target); dispose(wanted_input); dispose(soft_gradient); dispose(soft); dispose(margin_target); dispose(margin_input); dispose(smooth_gradient); dispose(smooth); dispose(mse_gradient); dispose(mse); dispose(huber_gradient); dispose(huber); dispose(output); dispose(gradient); dispose(target); dispose(input); huber_valid
+    and huber_gradient_valid
+    and mse_valid
+    and mse_gradient_valid
+    and smooth_valid
+    and smooth_gradient_valid
+    and soft_valid
+    and soft_gradient_valid
+    and sources_valid)))))))).
+
+/**
+ * Requires all eight exact output schemas on real CUDA when requested.
+ */
+@test
+pub loss_outputs_on_cpu_and_required_cuda(): Bool ->
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    let cpu_valid = verify(0);
+    cpu_valid and cuda_valid.

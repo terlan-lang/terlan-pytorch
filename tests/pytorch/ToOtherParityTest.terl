@@ -1,0 +1,35 @@
+/**
+ * CPU evidence for tensor-to-other dtype/device conversion.
+ */
+module pytorch.ToOtherParityTest.
+
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, shape, to_device_dtype, to_dtype, to_dtype_layout, to_other}.
+
+@test
+pub to_other_inherits_target_properties(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let other = to_dtype(from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]), 4);
+    let result = to_other(source, other, false);
+    let valid = shape(result) == [2, 2] and dtype(result) == 4;
+    dispose(result);
+    dispose(other);
+    dispose(source);
+    valid.
+
+@test
+pub to_device_dtype_selects_cpu_float32(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let result = to_device_dtype(source, 0, -1, 6, false, true);
+    let valid = shape(result) == [2, 2] and dtype(result) == 6 and device_type(result) == 0;
+    dispose(result);
+    dispose(source);
+    valid.
+
+@test
+pub to_dtype_layout_selects_optional_properties(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let result = to_dtype_layout(source, true, 6, true, 0, true, 0, -1, true, false, false, true, true, 0);
+    let valid = shape(result) == [2, 2] and dtype(result) == 6 and device_type(result) == 0;
+    dispose(result);
+    dispose(source);
+    valid.

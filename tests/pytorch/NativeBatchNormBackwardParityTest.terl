@@ -1,0 +1,129 @@
+/**
+ * CPU runtime evidence for native_batch_norm_backward and its out form.
+ */
+module pytorch.NativeBatchNormBackwardParityTest.
+
+import pytorch.Regularization.{native_batch_norm, native_batch_norm_backward, native_batch_norm_backward_out}.
+import pytorch.Tensor.{backward, batch_norm, clone, dispose, from_floats, full_float, gradient, item_float, mse_loss, require_grad, shape, sum, to_dtype}.
+
+import type pytorch.Tensor.
+
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let error = mse_loss(actual, expected, 1);
+    let distance = item_float(error);
+    dispose(error);
+    distance == 0.0.
+
+@test
+pub native_batch_norm_backward_forms_match_autograd(): Bool ->
+    let expected_source = from_floats([1.0, 3.0, 2.0, 4.0, 2.0, 5.0, 1.0, 6.0], [1, 2, 2, 2]);
+    let expected_input = require_grad(expected_source);
+    let expected_weight_base = full_float([2], 1.0);
+    let expected_bias_base = full_float([2], 0.0);
+    let expected_weight = require_grad(to_dtype(expected_weight_base, 7));
+    let expected_bias = require_grad(to_dtype(expected_bias_base, 7));
+    let expected_running_mean_base = full_float([2], 0.0);
+    let expected_running_var_base = full_float([2], 1.0);
+    let expected_running_mean = to_dtype(expected_running_mean_base, 7);
+    let expected_running_var = to_dtype(expected_running_var_base, 7);
+    let expected_output =
+        batch_norm(
+            expected_input,
+            expected_weight,
+            expected_bias,
+            expected_running_mean,
+            expected_running_var,
+            true,
+            0.1,
+            0.0,
+            false,
+        );
+    let loss = sum(expected_output);
+    backward(loss);
+    let expected_input_grad = gradient(expected_input);
+    let expected_weight_grad = gradient(expected_weight);
+    let expected_bias_grad = gradient(expected_bias);
+    let native_source = from_floats([1.0, 3.0, 2.0, 4.0, 2.0, 5.0, 1.0, 6.0], [1, 2, 2, 2]);
+    let native_weight_base = full_float([2], 1.0);
+    let native_bias_base = full_float([2], 0.0);
+    let native_running_mean_base = full_float([2], 0.0);
+    let native_running_var_base = full_float([2], 1.0);
+    let native_weight = to_dtype(native_weight_base, 7);
+    let native_bias = to_dtype(native_bias_base, 7);
+    let native_running_mean = to_dtype(native_running_mean_base, 7);
+    let native_running_var = to_dtype(native_running_var_base, 7);
+    let {ignored_output, save_mean, save_invstd} =
+        native_batch_norm(
+            native_source,
+            true,
+            native_weight,
+            true,
+            native_bias,
+            true,
+            native_running_mean,
+            true,
+            native_running_var,
+            true,
+            0.1,
+            0.0,
+        );
+    let grad_base = full_float([1, 2, 2, 2], 1.0);
+    let grad_out = to_dtype(grad_base, 7);
+    let {grad_input, grad_weight, grad_bias} =
+        native_batch_norm_backward(
+            grad_out,
+            native_source,
+            true,
+            native_weight,
+            true,
+            native_running_mean,
+            true,
+            native_running_var,
+            true,
+            save_mean,
+            true,
+            save_invstd,
+            true,
+            0.0,
+            true,
+            true,
+            true,
+        );
+    let out_input = clone(grad_out);
+    let out_weight = clone(grad_out);
+    let out_bias = clone(grad_out);
+    (native_batch_norm_backward_out(
+    out_input,
+    out_weight,
+    out_bias,
+    grad_out,
+    native_source,
+    true,
+    native_weight,
+    true,
+    native_running_mean,
+    true,
+    native_running_var,
+    true,
+    save_mean,
+    true,
+    save_invstd,
+    true,
+    0.0,
+    true,
+    true,
+    true,
+); let valid =
+    shape(grad_input) == [1, 2, 2, 2]
+        and shape(grad_weight) == [2]
+        and shape(grad_bias) == [2]
+        and shape(out_input) == [1, 2, 2, 2]
+        and shape(out_weight) == [2]
+        and shape(out_bias) == [2]
+        and matches(grad_input, expected_input_grad)
+        and matches(grad_weight, expected_weight_grad)
+        and matches(grad_bias, expected_bias_grad)
+        and matches(out_input, expected_input_grad)
+        and matches(out_weight, expected_weight_grad)
+        and matches(out_bias, expected_bias_grad);
+(dispose(out_bias); dispose(out_weight); dispose(out_input); dispose(grad_bias); dispose(grad_weight); dispose(grad_input); dispose(grad_out); dispose(grad_base); dispose(save_invstd); dispose(save_mean); dispose(ignored_output); dispose(native_running_var); dispose(native_running_mean); dispose(native_bias); dispose(native_weight); dispose(native_running_var_base); dispose(native_running_mean_base); dispose(native_bias_base); dispose(native_weight_base); dispose(native_source); dispose(expected_bias_grad); dispose(expected_weight_grad); dispose(expected_input_grad); dispose(loss); dispose(expected_output); dispose(expected_running_var); dispose(expected_running_mean); dispose(expected_running_var_base); dispose(expected_running_mean_base); dispose(expected_bias); dispose(expected_weight); dispose(expected_bias_base); dispose(expected_weight_base); dispose(expected_input); dispose(expected_source); valid)).

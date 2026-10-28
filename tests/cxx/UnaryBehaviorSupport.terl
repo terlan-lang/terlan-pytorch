@@ -1,0 +1,45 @@
+module pytorch.UnaryBehaviorSupport.
+
+import pytorch.Tensor.{Float64, Strided, dispose, dtype, is_cuda, ones_device, shape}.
+import pytorch.Unary.{abs, acos, all, any, argwhere, isfinite, max, median, min, round}.
+
+/**
+ * Exercises representative immutable unary, predicate, reduction, and coordinate leaves.
+ */
+pub unary_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let values = ones_device([2, 2], Float64, Strided, device_name);
+    let absolute = abs(values);
+    let cosine = acos(values);
+    let rounded = round(values);
+    let finite = isfinite(values);
+    let coordinates = argwhere(values);
+    let all_value = all(values);
+    let any_value = any(values);
+    let maximum = max(values);
+    let median_value = median(values);
+    let minimum = min(values);
+    let valid =
+        shape(absolute) == [2, 2]
+            and shape(cosine) == [2, 2]
+            and shape(rounded) == [2, 2]
+            and shape(finite) == [2, 2]
+            and shape(coordinates) == [4, 2]
+            and shape(all_value) == []
+            and shape(any_value) == []
+            and shape(maximum) == []
+            and shape(median_value) == []
+            and shape(minimum) == []
+            and dtype(rounded) == Float64
+            and is_cuda(absolute) == expected_cuda;
+    dispose(minimum);
+    dispose(median_value);
+    dispose(maximum);
+    dispose(any_value);
+    dispose(all_value);
+    dispose(coordinates);
+    dispose(finite);
+    dispose(rounded);
+    dispose(cosine);
+    dispose(absolute);
+    dispose(values);
+    valid.

@@ -1,0 +1,9 @@
+module=pytorch.Pooling
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=3940281949232431917
+interface_hash=15350276690790591972
+interface_doc_hash=9437600452784953257
+deps=1
+pytorch.Tensor=13489932768568026575

@@ -1,0 +1,7 @@
+//! Generated exact CXX covariance completion surface.
+
+module pytorch.CovCompletion.
+
+/// Exact generated CXX covariance leaf.
+
+pub cov(input: Tensor, correction: Int = 1): Tensor.

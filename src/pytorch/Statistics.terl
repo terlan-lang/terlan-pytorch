@@ -1,0 +1,1023 @@
+/**
+ * Generated exact CXX statistical and norm-operation surface.
+ */
+module pytorch.Statistics.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX statistics leaf for cholesky.
+ */
+@compiler.native {pytorch.statistics.cholesky}
+pub cholesky(tensor: Tensor, flag: Bool): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cholesky_inverse.
+ */
+@compiler.native {pytorch.statistics.cholesky_inverse}
+pub cholesky_inverse(tensor: Tensor, flag: Bool): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for linalg_matrix_rank.
+ */
+@compiler.native {pytorch.statistics.linalg_matrix_rank}
+pub linalg_matrix_rank(tensor: Tensor, tolerance: Float, flag: Bool): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for linalg_pinv.
+ */
+@compiler.native {pytorch.statistics.linalg_pinv}
+pub linalg_pinv(tensor: Tensor, tolerance: Float, flag: Bool): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for nuclear_norm.
+ */
+@compiler.native {pytorch.statistics.nuclear_norm}
+pub nuclear_norm(tensor: Tensor, flag: Bool): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for pdist.
+ */
+@compiler.native {pytorch.statistics.pdist}
+pub pdist(tensor: Tensor, value: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for pinverse.
+ */
+@compiler.native {pytorch.statistics.pinverse}
+pub pinverse(tensor: Tensor, value: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for dist.
+ */
+@compiler.native {pytorch.statistics.dist}
+pub dist(left: Tensor, right: Tensor, order: Float = 2.0): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for norm.
+ */
+@compiler.native {pytorch.statistics.norm}
+pub norm(tensor: Tensor, order: Float = 2.0): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for norm_dimensions.
+ */
+@compiler.native {pytorch.statistics.norm_dimensions}
+pub norm_dimensions(
+    tensor: Tensor,
+    order: Float,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for norm_except_dimension.
+ */
+@compiler.native {pytorch.statistics.norm_except_dimension}
+pub norm_except_dimension(tensor: Tensor, power: Int = 2, dimension: Int = 0): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for renorm.
+ */
+@compiler.native {pytorch.statistics.renorm}
+pub renorm(tensor: Tensor, order: Float, dimension: Int, maximum_norm: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for std.
+ */
+@compiler.native {pytorch.statistics.std}
+pub std(tensor: Tensor, flag: Bool): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for var.
+ */
+@compiler.native {pytorch.statistics.var}
+pub var(tensor: Tensor, flag: Bool): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for all_dim.
+ */
+@compiler.native {pytorch.statistics.all_dim}
+pub all_dim(tensor: Tensor, dimension: Int, flag: Bool): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for any_dim.
+ */
+@compiler.native {pytorch.statistics.any_dim}
+pub any_dim(tensor: Tensor, dimension: Int, flag: Bool): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for argsort.
+ */
+@compiler.native {pytorch.statistics.argsort}
+pub argsort(tensor: Tensor, dimension: Int, flag: Bool): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for combinations.
+ */
+@compiler.native {pytorch.statistics.combinations}
+pub combinations(tensor: Tensor, dimension: Int, flag: Bool): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for amin.
+ */
+@compiler.native {pytorch.statistics.amin}
+pub amin(tensor: Tensor, dimensions: List[Int] = [], keep_dimension: Bool = false): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for aminmax.
+ */
+@compiler.native {pytorch.statistics.aminmax}
+pub aminmax(tensor: Tensor, keep_dimension: Bool = false): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for aminmax_dim.
+ */
+@compiler.native {pytorch.statistics.aminmax_dim}
+pub aminmax_dim(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for argmax_all.
+ */
+@compiler.native {pytorch.statistics.argmax_all}
+pub argmax_all(tensor: Tensor, keep_dimension: Bool = false): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for argmin.
+ */
+@compiler.native {pytorch.statistics.argmin}
+pub argmin(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for argmin_all.
+ */
+@compiler.native {pytorch.statistics.argmin_all}
+pub argmin_all(tensor: Tensor, keep_dimension: Bool = false): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for count_nonzero.
+ */
+@compiler.native {pytorch.statistics.count_nonzero}
+pub count_nonzero(tensor: Tensor, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for count_nonzero_all.
+ */
+@compiler.native {pytorch.statistics.count_nonzero_all}
+pub count_nonzero_all(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for all_dimensions.
+ */
+@compiler.native {pytorch.statistics.all_dimensions}
+pub all_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for any_dimensions.
+ */
+@compiler.native {pytorch.statistics.any_dimensions}
+pub any_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for logsumexp.
+ */
+@compiler.native {pytorch.statistics.logsumexp}
+pub logsumexp(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for prod.
+ */
+@compiler.native {pytorch.statistics.prod}
+pub prod(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for prod_dim.
+ */
+@compiler.native {pytorch.statistics.prod_dim}
+pub prod_dim(tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for std_mean.
+ */
+@compiler.native {pytorch.statistics.std_mean}
+pub std_mean(tensor: Tensor, unbiased: Bool = true): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for var_mean.
+ */
+@compiler.native {pytorch.statistics.var_mean}
+pub var_mean(tensor: Tensor, unbiased: Bool = true): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cumsum.
+ */
+@compiler.native {pytorch.statistics.cumsum}
+pub cumsum(tensor: Tensor, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cumprod.
+ */
+@compiler.native {pytorch.statistics.cumprod}
+pub cumprod(tensor: Tensor, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cumsum_dtype.
+ */
+@compiler.native {pytorch.statistics.cumsum_dtype}
+pub cumsum_dtype(tensor: Tensor, dimension: Int, dtype: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cumprod_dtype.
+ */
+@compiler.native {pytorch.statistics.cumprod_dtype}
+pub cumprod_dtype(tensor: Tensor, dimension: Int, dtype: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cumsum_out_dtype.
+ */
+@compiler.native {pytorch.statistics.cumsum_out_dtype}
+pub cumsum_out_dtype(output: Tensor, tensor: Tensor, dimension: Int, dtype: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cumprod_out_dtype.
+ */
+@compiler.native {pytorch.statistics.cumprod_out_dtype}
+pub cumprod_out_dtype(output: Tensor, tensor: Tensor, dimension: Int, dtype: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cumsum_in_place.
+ */
+@compiler.native {pytorch.statistics.cumsum_in_place}
+pub cumsum_in_place(tensor: Tensor, dimension: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cumsum_in_place_dtype.
+ */
+@compiler.native {pytorch.statistics.cumsum_in_place_dtype}
+pub cumsum_in_place_dtype(tensor: Tensor, dimension: Int, dtype: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cumprod_in_place.
+ */
+@compiler.native {pytorch.statistics.cumprod_in_place}
+pub cumprod_in_place(tensor: Tensor, dimension: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cumprod_in_place_dtype.
+ */
+@compiler.native {pytorch.statistics.cumprod_in_place_dtype}
+pub cumprod_in_place_dtype(tensor: Tensor, dimension: Int, dtype: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for std_dimensions.
+ */
+@compiler.native {pytorch.statistics.std_dimensions}
+pub std_dimensions(
+    tensor: Tensor,
+    dimensions: List[Int],
+    unbiased: Bool = true,
+    keep_dimension: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for var_dimensions.
+ */
+@compiler.native {pytorch.statistics.var_dimensions}
+pub var_dimensions(
+    tensor: Tensor,
+    dimensions: List[Int],
+    unbiased: Bool = true,
+    keep_dimension: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for std_mean_dimensions.
+ */
+@compiler.native {pytorch.statistics.std_mean_dimensions}
+pub std_mean_dimensions(
+    tensor: Tensor,
+    dimensions: List[Int],
+    unbiased: Bool = true,
+    keep_dimension: Bool = false,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for var_mean_dimensions.
+ */
+@compiler.native {pytorch.statistics.var_mean_dimensions}
+pub var_mean_dimensions(
+    tensor: Tensor,
+    dimensions: List[Int],
+    unbiased: Bool = true,
+    keep_dimension: Bool = false,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Private generated CXX dtype conversion leaf for dimensioned norm adapters.
+ */
+@compiler.native {pytorch.statistics.norm_dimensions_to_dtype}
+norm_dimensions_to_dtype(tensor: Tensor, dtype: Int): Tensor ->
+    native.
+
+/**
+ * Private generated CXX retained-output copy leaf for dimensioned norm adapters.
+ */
+@compiler.native {pytorch.statistics.norm_dimensions_copy_in_place}
+norm_dimensions_copy_in_place(output: Tensor, source: Tensor, non_blocking: Bool = false): Unit ->
+    native.
+
+/**
+ * Generated composition for aten::norm dimension and dtype semantics.
+ */
+pub norm_dimensions_dtype(
+    tensor: Tensor,
+    order: Float,
+    dimensions: List[Int],
+    dtype: Int,
+    keep_dimension: Bool = false,
+): Tensor ->
+    let value = norm_dimensions(tensor, order, dimensions, keep_dimension);
+    norm_dimensions_to_dtype(value, dtype).
+
+/**
+ * Generated retained-output composition for aten::norm dimension semantics.
+ */
+pub norm_dimensions_out(
+    output: Tensor,
+    tensor: Tensor,
+    order: Float,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Unit ->
+    let value = norm_dimensions(tensor, order, dimensions, keep_dimension);
+    norm_dimensions_copy_in_place(output, value, false).
+
+/**
+ * Generated retained-output composition for aten::norm dimension and dtype semantics.
+ */
+pub norm_dimensions_dtype_out(
+    output: Tensor,
+    tensor: Tensor,
+    order: Float,
+    dimensions: List[Int],
+    dtype: Int,
+    keep_dimension: Bool = false,
+): Unit ->
+    let value = norm_dimensions_dtype(tensor, order, dimensions, dtype, keep_dimension);
+    norm_dimensions_copy_in_place(output, value, false).
+
+/**
+ * Private generated CXX leaf for nanmean.
+ */
+@compiler.native {pytorch.statistics.nanmean_native}
+nanmean_native(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Public Terlan composition over the generated CXX nanmean leaf.
+ */
+pub nanmean(tensor: Tensor): Tensor ->
+    nanmean_native(tensor).
+
+/**
+ * Private generated CXX leaf for nanmean_dimensions.
+ */
+@compiler.native {pytorch.statistics.nanmean_dimensions_native}
+nanmean_dimensions_native(
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Public Terlan composition over the generated CXX nanmean_dimensions leaf.
+ */
+pub nanmean_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Tensor ->
+    nanmean_dimensions_native(tensor, dimensions, keep_dimension).
+
+/**
+ * Private generated CXX leaf for nanmean_dimensions_dtype.
+ */
+@compiler.native {pytorch.statistics.nanmean_dimensions_dtype_native}
+nanmean_dimensions_dtype_native(
+    tensor: Tensor,
+    dimensions: List[Int],
+    dtype: Int,
+    keep_dimension: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Public Terlan composition over the generated CXX nanmean_dimensions_dtype leaf.
+ */
+pub nanmean_dimensions_dtype(
+    tensor: Tensor,
+    dimensions: List[Int],
+    dtype: Int,
+    keep_dimension: Bool = false,
+): Tensor ->
+    nanmean_dimensions_dtype_native(tensor, dimensions, dtype, keep_dimension).
+
+/**
+ * Private generated CXX leaf for nanmean_out.
+ */
+@compiler.native {pytorch.statistics.nanmean_out_native}
+nanmean_out_native(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Public Terlan composition over the generated CXX nanmean_out leaf.
+ */
+pub nanmean_out(output: Tensor, tensor: Tensor): Unit ->
+    nanmean_out_native(output, tensor).
+
+/**
+ * Private generated CXX leaf for nanmean_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.nanmean_dimensions_out_native}
+nanmean_dimensions_out_native(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Public Terlan composition over the generated CXX nanmean_dimensions_out leaf.
+ */
+pub nanmean_dimensions_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Unit ->
+    nanmean_dimensions_out_native(output, tensor, dimensions, keep_dimension).
+
+/**
+ * Private generated CXX leaf for nanmean_dimensions_dtype_out.
+ */
+@compiler.native {pytorch.statistics.nanmean_dimensions_dtype_out_native}
+nanmean_dimensions_dtype_out_native(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    dtype: Int,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Public Terlan composition over the generated CXX nanmean_dimensions_dtype_out leaf.
+ */
+pub nanmean_dimensions_dtype_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    dtype: Int,
+    keep_dimension: Bool = false,
+): Unit ->
+    nanmean_dimensions_dtype_out_native(output, tensor, dimensions, dtype, keep_dimension).
+
+/**
+ * Private generated CXX leaf for nansum.
+ */
+@compiler.native {pytorch.statistics.nansum_native}
+nansum_native(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Public Terlan composition over the generated CXX nansum leaf.
+ */
+pub nansum(tensor: Tensor): Tensor ->
+    nansum_native(tensor).
+
+/**
+ * Private generated CXX leaf for nansum_dimensions.
+ */
+@compiler.native {pytorch.statistics.nansum_dimensions_native}
+nansum_dimensions_native(
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Public Terlan composition over the generated CXX nansum_dimensions leaf.
+ */
+pub nansum_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Tensor ->
+    nansum_dimensions_native(tensor, dimensions, keep_dimension).
+
+/**
+ * Private generated CXX leaf for nansum_dimensions_dtype.
+ */
+@compiler.native {pytorch.statistics.nansum_dimensions_dtype_native}
+nansum_dimensions_dtype_native(
+    tensor: Tensor,
+    dimensions: List[Int],
+    dtype: Int,
+    keep_dimension: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Public Terlan composition over the generated CXX nansum_dimensions_dtype leaf.
+ */
+pub nansum_dimensions_dtype(
+    tensor: Tensor,
+    dimensions: List[Int],
+    dtype: Int,
+    keep_dimension: Bool = false,
+): Tensor ->
+    nansum_dimensions_dtype_native(tensor, dimensions, dtype, keep_dimension).
+
+/**
+ * Private generated CXX leaf for nansum_out.
+ */
+@compiler.native {pytorch.statistics.nansum_out_native}
+nansum_out_native(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Public Terlan composition over the generated CXX nansum_out leaf.
+ */
+pub nansum_out(output: Tensor, tensor: Tensor): Unit ->
+    nansum_out_native(output, tensor).
+
+/**
+ * Private generated CXX leaf for nansum_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.nansum_dimensions_out_native}
+nansum_dimensions_out_native(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Public Terlan composition over the generated CXX nansum_dimensions_out leaf.
+ */
+pub nansum_dimensions_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Unit ->
+    nansum_dimensions_out_native(output, tensor, dimensions, keep_dimension).
+
+/**
+ * Private generated CXX leaf for nansum_dimensions_dtype_out.
+ */
+@compiler.native {pytorch.statistics.nansum_dimensions_dtype_out_native}
+nansum_dimensions_dtype_out_native(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    dtype: Int,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Public Terlan composition over the generated CXX nansum_dimensions_dtype_out leaf.
+ */
+pub nansum_dimensions_dtype_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    dtype: Int,
+    keep_dimension: Bool = false,
+): Unit ->
+    nansum_dimensions_dtype_out_native(output, tensor, dimensions, dtype, keep_dimension).
+
+/**
+ * Exact generated CXX statistics leaf for amax_out.
+ */
+@compiler.native {pytorch.statistics.amax_out}
+pub amax_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int] = [],
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for amin_out.
+ */
+@compiler.native {pytorch.statistics.amin_out}
+pub amin_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int] = [],
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for all_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.all_dimensions_out}
+pub all_dimensions_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for any_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.any_dimensions_out}
+pub any_dimensions_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for all_dimension_out.
+ */
+@compiler.native {pytorch.statistics.all_dimension_out}
+pub all_dimension_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimension: Int,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for any_dimension_out.
+ */
+@compiler.native {pytorch.statistics.any_dimension_out}
+pub any_dimension_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimension: Int,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for argmax_out.
+ */
+@compiler.native {pytorch.statistics.argmax_out}
+pub argmax_out(output: Tensor, tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for argmin_out.
+ */
+@compiler.native {pytorch.statistics.argmin_out}
+pub argmin_out(output: Tensor, tensor: Tensor, dimension: Int, keep_dimension: Bool = false): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for argmax_all_out.
+ */
+@compiler.native {pytorch.statistics.argmax_all_out}
+pub argmax_all_out(output: Tensor, tensor: Tensor, keep_dimension: Bool = false): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for argmin_all_out.
+ */
+@compiler.native {pytorch.statistics.argmin_all_out}
+pub argmin_all_out(output: Tensor, tensor: Tensor, keep_dimension: Bool = false): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for count_nonzero_out.
+ */
+@compiler.native {pytorch.statistics.count_nonzero_out}
+pub count_nonzero_out(output: Tensor, tensor: Tensor, dimension: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for count_nonzero_all_out.
+ */
+@compiler.native {pytorch.statistics.count_nonzero_all_out}
+pub count_nonzero_all_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for count_nonzero_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.count_nonzero_dimensions_out}
+pub count_nonzero_dimensions_out(output: Tensor, tensor: Tensor, dimensions: List[Int]): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for aminmax_dim_out.
+ */
+@compiler.native {pytorch.statistics.aminmax_dim_out}
+pub aminmax_dim_out(
+    minimum: Tensor,
+    maximum: Tensor,
+    tensor: Tensor,
+    dimension: Int,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for aminmax_all_out.
+ */
+@compiler.native {pytorch.statistics.aminmax_all_out}
+pub aminmax_all_out(
+    minimum: Tensor,
+    maximum: Tensor,
+    tensor: Tensor,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for nanmedian_out.
+ */
+@compiler.native {pytorch.statistics.nanmedian_out}
+pub nanmedian_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for logsumexp_out.
+ */
+@compiler.native {pytorch.statistics.logsumexp_out}
+pub logsumexp_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for mean_out.
+ */
+@compiler.native {pytorch.statistics.mean_out}
+pub mean_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for prod_out.
+ */
+@compiler.native {pytorch.statistics.prod_out}
+pub prod_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for sum_out.
+ */
+@compiler.native {pytorch.statistics.sum_out}
+pub sum_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for mean_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.mean_dimensions_out}
+pub mean_dimensions_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for sum_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.sum_dimensions_out}
+pub sum_dimensions_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for mean_all_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.mean_all_dimensions_out}
+pub mean_all_dimensions_out(output: Tensor, tensor: Tensor, keep_dimension: Bool = false): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for sum_all_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.sum_all_dimensions_out}
+pub sum_all_dimensions_out(output: Tensor, tensor: Tensor, keep_dimension: Bool = false): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for prod_dimension_out.
+ */
+@compiler.native {pytorch.statistics.prod_dimension_out}
+pub prod_dimension_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimension: Int,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for std_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.std_dimensions_out}
+pub std_dimensions_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    unbiased: Bool = true,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for var_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.var_dimensions_out}
+pub var_dimensions_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    unbiased: Bool = true,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for std_all_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.std_all_dimensions_out}
+pub std_all_dimensions_out(
+    output: Tensor,
+    tensor: Tensor,
+    unbiased: Bool = true,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for var_all_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.var_all_dimensions_out}
+pub var_all_dimensions_out(
+    output: Tensor,
+    tensor: Tensor,
+    unbiased: Bool = true,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cumprod_out.
+ */
+@compiler.native {pytorch.statistics.cumprod_out}
+pub cumprod_out(output: Tensor, tensor: Tensor, dimension: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cumsum_out.
+ */
+@compiler.native {pytorch.statistics.cumsum_out}
+pub cumsum_out(output: Tensor, tensor: Tensor, dimension: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for logcumsumexp_out.
+ */
+@compiler.native {pytorch.statistics.logcumsumexp_out}
+pub logcumsumexp_out(output: Tensor, tensor: Tensor, dimension: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cholesky_out.
+ */
+@compiler.native {pytorch.statistics.cholesky_out}
+pub cholesky_out(output: Tensor, tensor: Tensor, flag: Bool = false): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cholesky_inverse_out.
+ */
+@compiler.native {pytorch.statistics.cholesky_inverse_out}
+pub cholesky_inverse_out(output: Tensor, tensor: Tensor, flag: Bool = false): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for nuclear_norm_out.
+ */
+@compiler.native {pytorch.statistics.nuclear_norm_out}
+pub nuclear_norm_out(output: Tensor, tensor: Tensor, flag: Bool = false): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for cholesky_solve_out.
+ */
+@compiler.native {pytorch.statistics.cholesky_solve_out}
+pub cholesky_solve_out(output: Tensor, tensor: Tensor, factor: Tensor, upper: Bool = false): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for frobenius_norm_dimensions.
+ */
+@compiler.native {pytorch.statistics.frobenius_norm_dimensions}
+pub frobenius_norm_dimensions(
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for nuclear_norm_dimensions.
+ */
+@compiler.native {pytorch.statistics.nuclear_norm_dimensions}
+pub nuclear_norm_dimensions(
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for frobenius_norm_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.frobenius_norm_dimensions_out}
+pub frobenius_norm_dimensions_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX statistics leaf for nuclear_norm_dimensions_out.
+ */
+@compiler.native {pytorch.statistics.nuclear_norm_dimensions_out}
+pub nuclear_norm_dimensions_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Unit ->
+    native.

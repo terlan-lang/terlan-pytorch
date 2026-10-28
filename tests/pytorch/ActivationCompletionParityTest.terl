@@ -1,0 +1,154 @@
+/**
+ * Exact shrinkage, softplus, threshold, output, and backward parity.
+ */
+module pytorch.ActivationCompletionParityTest.
+
+import pytorch.ActivationCompletion.{hardshrink_backward_float, hardshrink_backward_int, hardshrink_backward_out_float, hardshrink_backward_out_int, hardshrink_float, hardshrink_int, hardshrink_out_float, hardshrink_out_int, softplus_backward_float, softplus_backward_int, softplus_backward_out_float, softplus_backward_out_int, softplus_float, softplus_int, softplus_out_float, softplus_out_int, softshrink_backward_float, softshrink_backward_int, softshrink_backward_out_float, softshrink_backward_out_int, softshrink_float, softshrink_int, softshrink_out_float, softshrink_out_int, threshold_backward_float, threshold_backward_int, threshold_backward_out_float, threshold_backward_out_int, threshold_float, threshold_int, threshold_out_float, threshold_out_int}.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, shape, to_device}.
+import pytorch.TypeRelations.{allclose, equal}.
+import std.collections.List.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(actual: Tensor, values: List[Float], device: Int): Bool ->
+    let expected = placed(values, [values.length()], device);
+    let valid =
+        allclose(actual, expected, 1e-12, 1e-12, false)
+            and shape(actual) == [values.length()]
+            and dtype(actual) == 7
+            and device_type(actual) == device;
+    dispose(expected);
+    valid.
+
+output2(device: Int): Tensor ->
+    placed([0.0, 0.0], [2], device).
+
+output7(device: Int): Tensor ->
+    placed([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [7], device).
+
+verify(device: Int): Bool ->
+    let input = placed([-2.0, -0.5, -0.25, 0.0, 0.25, 0.5, 2.0], [7], device);
+    let gradient = placed([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0], [7], device);
+    let hard_int = hardshrink_int(input, 1);
+    let hard_float = hardshrink_float(input, 0.5);
+    let hard_int_out = output7(device);
+    let hard_float_out = output7(device);
+    let hard_backward_int = hardshrink_backward_int(gradient, input, 1);
+    let hard_backward_float = hardshrink_backward_float(gradient, input, 0.5);
+    let hard_backward_int_out = output7(device);
+    let hard_backward_float_out = output7(device);
+    let soft_int = softshrink_int(input, 1);
+    let soft_float = softshrink_float(input, 0.5);
+    let soft_int_out = output7(device);
+    let soft_float_out = output7(device);
+    let soft_backward_int = softshrink_backward_int(gradient, input, 1);
+    let soft_backward_float = softshrink_backward_float(gradient, input, 0.5);
+    let soft_backward_int_out = output7(device);
+    let soft_backward_float_out = output7(device);
+    let softplus_input = placed([0.0, 2.0], [2], device);
+    let softplus_gradient = placed([2.0, 3.0], [2], device);
+    let softplus_int_value = softplus_int(softplus_input, 1, 1);
+    let softplus_float_value = softplus_float(softplus_input, 0.5, 2.0);
+    let softplus_int_out_value = output2(device);
+    let softplus_float_out_value = output2(device);
+    let softplus_backward_int_value = softplus_backward_int(softplus_gradient, softplus_input, 1, 1);
+    let softplus_backward_float_value = softplus_backward_float(softplus_gradient, softplus_input, 0.5, 2.0);
+    let softplus_backward_int_out_value = output2(device);
+    let softplus_backward_float_out_value = output2(device);
+    let threshold_int_value = threshold_int(input, 0, -1);
+    let threshold_float_value = threshold_float(input, 0.25, -0.5);
+    let threshold_int_out_value = output7(device);
+    let threshold_float_out_value = output7(device);
+    let threshold_backward_int_value = threshold_backward_int(gradient, input, 0);
+    let threshold_backward_float_value = threshold_backward_float(gradient, input, 0.25);
+    let threshold_backward_int_out_value = output7(device);
+    let threshold_backward_float_out_value = output7(device);
+    hardshrink_out_int(hard_int_out, input, 1);
+    hardshrink_out_float(hard_float_out, input, 0.5);
+    hardshrink_backward_out_int(hard_backward_int_out, gradient, input, 1);
+    hardshrink_backward_out_float(hard_backward_float_out, gradient, input, 0.5);
+    softshrink_out_int(soft_int_out, input, 1);
+    softshrink_out_float(soft_float_out, input, 0.5);
+    softshrink_backward_out_int(soft_backward_int_out, gradient, input, 1);
+    softshrink_backward_out_float(soft_backward_float_out, gradient, input, 0.5);
+    softplus_out_int(softplus_int_out_value, softplus_input, 1, 1);
+    softplus_out_float(softplus_float_out_value, softplus_input, 0.5, 2.0);
+    softplus_backward_out_int(
+        softplus_backward_int_out_value,
+        softplus_gradient,
+        softplus_input,
+        1,
+        1,
+    );
+    softplus_backward_out_float(
+        softplus_backward_float_out_value,
+        softplus_gradient,
+        softplus_input,
+        0.5,
+        2.0,
+    );
+    threshold_out_int(threshold_int_out_value, input, 0, -1);
+    threshold_out_float(threshold_float_out_value, input, 0.25, -0.5);
+    threshold_backward_out_int(threshold_backward_int_out_value, gradient, input, 0);
+    threshold_backward_out_float(threshold_backward_float_out_value, gradient, input, 0.25);
+    let shrink_valid =
+        matches(hard_int, [-2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0], device)
+            and matches(hard_float, [-2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0], device)
+            and equal(hard_int_out, hard_int)
+            and equal(hard_float_out, hard_float)
+            and matches(hard_backward_int, [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7.0], device)
+            and matches(hard_backward_float, [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7.0], device)
+            and equal(hard_backward_int_out, hard_backward_int)
+            and equal(hard_backward_float_out, hard_backward_float)
+            and matches(soft_int, [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], device)
+            and matches(soft_float, [-1.5, 0.0, 0.0, 0.0, 0.0, 0.0, 1.5], device)
+            and equal(soft_int_out, soft_int)
+            and equal(soft_float_out, soft_float)
+            and matches(soft_backward_int, [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7.0], device)
+            and matches(soft_backward_float, [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 7.0], device)
+            and equal(soft_backward_int_out, soft_backward_int)
+            and equal(soft_backward_float_out, soft_backward_float);
+    let softplus_valid =
+        matches(softplus_int_value, [0.6931471805599453, 2.0], device)
+            and matches(softplus_float_value, [1.3862943611198906, 2.6265233750364456], device)
+            and equal(softplus_int_out_value, softplus_int_value)
+            and equal(softplus_float_out_value, softplus_float_value)
+            and matches(softplus_backward_int_value, [1.0, 3.0], device)
+            and matches(softplus_backward_float_value, [1.0, 2.193175735890015], device)
+            and equal(softplus_backward_int_out_value, softplus_backward_int_value)
+            and equal(softplus_backward_float_out_value, softplus_backward_float_value);
+    let threshold_valid =
+        matches(threshold_int_value, [-1.0, -1.0, -1.0, -1.0, 0.25, 0.5, 2.0], device)
+            and matches(threshold_float_value, [-0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 2.0], device)
+            and equal(threshold_int_out_value, threshold_int_value)
+            and equal(threshold_float_out_value, threshold_float_value)
+            and matches(threshold_backward_int_value, [0.0, 0.0, 0.0, 0.0, 5.0, 6.0, 7.0], device)
+            and matches(threshold_backward_float_value, [0.0, 0.0, 0.0, 0.0, 0.0, 6.0, 7.0], device)
+            and equal(threshold_backward_int_out_value, threshold_backward_int_value)
+            and equal(threshold_backward_float_out_value, threshold_backward_float_value);
+    let expected_input = placed([-2.0, -0.5, -0.25, 0.0, 0.25, 0.5, 2.0], [7], device);
+    let source_valid = equal(input, expected_input);
+    (dispose(expected_input); dispose(threshold_backward_float_out_value); dispose(threshold_backward_int_out_value); dispose(threshold_backward_float_value); dispose(threshold_backward_int_value); dispose(threshold_float_out_value); dispose(threshold_int_out_value); dispose(threshold_float_value); dispose(threshold_int_value); dispose(softplus_backward_float_out_value); dispose(softplus_backward_int_out_value); dispose(softplus_backward_float_value); dispose(softplus_backward_int_value); dispose(softplus_float_out_value); dispose(softplus_int_out_value); dispose(softplus_float_value); dispose(softplus_int_value); dispose(softplus_gradient); dispose(softplus_input); dispose(soft_backward_float_out); dispose(soft_backward_int_out); dispose(soft_backward_float); dispose(soft_backward_int); dispose(soft_float_out); dispose(soft_int_out); dispose(soft_float); dispose(soft_int); dispose(hard_backward_float_out); dispose(hard_backward_int_out); dispose(hard_backward_float); dispose(hard_backward_int); dispose(hard_float_out); dispose(hard_int_out); dispose(hard_float); dispose(hard_int); dispose(gradient); dispose(input); shrink_valid and softplus_valid and threshold_valid and source_valid).
+
+@test
+pub activation_completion_on_cpu_and_required_cuda(): Bool ->
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    let cpu_valid = verify(0);
+    cpu_valid and cuda_valid.

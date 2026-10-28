@@ -1,0 +1,25 @@
+/**
+ * Generated CXX bilinear upsampling completion surface.
+ */
+module pytorch.UpsampleBilinear2dCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Upsamples a 4-D tensor to an explicit output size.
+ */
+@compiler.native {pytorch.upsample_bilinear2d.upsample_bilinear2d}
+pub upsample_bilinear2d(input: Tensor, output_size: List[Int], align_corners: Bool): Tensor ->
+    native.
+
+/**
+ * Writes an upsampled tensor into retained output storage.
+ */
+@compiler.native {pytorch.upsample_bilinear2d.upsample_bilinear2d_out}
+pub upsample_bilinear2d_out(
+    output: Tensor,
+    input: Tensor,
+    output_size: List[Int],
+    align_corners: Bool,
+): Unit ->
+    native.

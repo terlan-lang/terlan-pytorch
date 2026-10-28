@@ -1,0 +1,739 @@
+/**
+ * Fused pointwise, matrix, vector, and batched-matrix arithmetic composed in Terlan from exact generated CXX leaves.
+ */
+module pytorch.FusedArithmeticNative.
+
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes one exact fused arithmetic schema through private generated CXX leaves selected in Terlan.
+ */
+pub fused_arithmetic(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    operation: Int,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+    has_dtype: Bool,
+    dtype: Int,
+): Tensor ->
+    if {
+        operation == 0 and not has_dtype -> fused_addbmm(
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 1 and not has_dtype -> fused_addcdiv(accumulator, first, second, alpha_is_int, alpha_int, alpha_float);
+        operation == 2 and not has_dtype -> fused_addcmul(accumulator, first, second, alpha_is_int, alpha_int, alpha_float);
+        operation == 3 and has_dtype -> fused_addmm_dtype(
+            accumulator,
+            first,
+            second,
+            dtype,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 3 -> fused_addmm(
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 4 and not has_dtype -> fused_addmv(
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 5 and not has_dtype -> fused_addr(
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 6 and has_dtype -> fused_baddbmm_dtype(
+            accumulator,
+            first,
+            second,
+            dtype,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 6 -> fused_baddbmm(
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        true -> let _failed = fail(exit_reason(7230));
+        fused_addbmm(
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        )
+    }.
+
+/**
+ * Executes one exact fused arithmetic schema into retained output storage through private generated CXX leaves.
+ */
+pub fused_arithmetic_out(
+    output: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    operation: Int,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+    has_dtype: Bool,
+    dtype: Int,
+): Unit ->
+    if {
+        operation == 0 and not has_dtype -> fused_addbmm_out(
+            output,
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 1 and not has_dtype -> fused_addcdiv_out(output, accumulator, first, second, alpha_is_int, alpha_int, alpha_float);
+        operation == 2 and not has_dtype -> fused_addcmul_out(output, accumulator, first, second, alpha_is_int, alpha_int, alpha_float);
+        operation == 3 and has_dtype -> fused_addmm_out_dtype(
+            output,
+            accumulator,
+            first,
+            second,
+            dtype,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 3 -> fused_addmm_out(
+            output,
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 4 and not has_dtype -> fused_addmv_out(
+            output,
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 5 and not has_dtype -> fused_addr_out(
+            output,
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 6 and has_dtype -> fused_baddbmm_out_dtype(
+            output,
+            accumulator,
+            first,
+            second,
+            dtype,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 6 -> fused_baddbmm_out(
+            output,
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        true -> let _failed = fail(exit_reason(7230));
+        fused_addbmm_out(
+            output,
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        )
+    }.
+
+/**
+ * Executes one exact fused arithmetic mutation through a private generated CXX leaf selected in Terlan.
+ */
+pub fused_arithmetic_in_place(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    operation: Int,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    if {
+        operation == 0 -> fused_addbmm_in_place(
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 1 -> fused_addcdiv_in_place(accumulator, first, second, alpha_is_int, alpha_int, alpha_float);
+        operation == 2 -> fused_addcmul_in_place(accumulator, first, second, alpha_is_int, alpha_int, alpha_float);
+        operation == 3 -> fused_addmm_in_place(
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 4 -> fused_addmv_in_place(
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 5 -> fused_addr_in_place(
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 6 -> fused_baddbmm_in_place(
+            accumulator,
+            first,
+            second,
+            beta_is_int,
+            beta_int,
+            beta_float,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        true -> fail(exit_reason(7230))
+    }.
+
+/**
+ * Private exact generated CXX leaf for fused addbmm.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addbmm}
+fused_addbmm(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addcdiv.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addcdiv}
+fused_addcdiv(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addcmul.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addcmul}
+fused_addcmul(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addmm.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addmm}
+fused_addmm(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addmm dtype.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addmm_dtype}
+fused_addmm_dtype(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    dtype: Int,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addmv.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addmv}
+fused_addmv(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addr.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addr}
+fused_addr(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused baddbmm.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_baddbmm}
+fused_baddbmm(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused baddbmm dtype.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_baddbmm_dtype}
+fused_baddbmm_dtype(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    dtype: Int,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addbmm out.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addbmm_out}
+fused_addbmm_out(
+    output: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addcdiv out.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addcdiv_out}
+fused_addcdiv_out(
+    output: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addcmul out.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addcmul_out}
+fused_addcmul_out(
+    output: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addmm out.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addmm_out}
+fused_addmm_out(
+    output: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addmm out dtype.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addmm_out_dtype}
+fused_addmm_out_dtype(
+    output: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    dtype: Int,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addmv out.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addmv_out}
+fused_addmv_out(
+    output: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addr out.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addr_out}
+fused_addr_out(
+    output: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused baddbmm out.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_baddbmm_out}
+fused_baddbmm_out(
+    output: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused baddbmm out dtype.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_baddbmm_out_dtype}
+fused_baddbmm_out_dtype(
+    output: Tensor,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    dtype: Int,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addbmm in place.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addbmm_in_place}
+fused_addbmm_in_place(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addcdiv in place.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addcdiv_in_place}
+fused_addcdiv_in_place(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addcmul in place.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addcmul_in_place}
+fused_addcmul_in_place(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addmm in place.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addmm_in_place}
+fused_addmm_in_place(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addmv in place.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addmv_in_place}
+fused_addmv_in_place(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused addr in place.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_addr_in_place}
+fused_addr_in_place(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for fused baddbmm in place.
+ */
+@compiler.native {pytorch.fused_arithmetic.cxx.fused_baddbmm_in_place}
+fused_baddbmm_in_place(
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    beta_is_int: Bool,
+    beta_int: Int,
+    beta_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.

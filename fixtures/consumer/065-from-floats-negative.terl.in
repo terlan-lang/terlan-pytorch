@@ -1,0 +1,8 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{from_floats}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let tensor = from_floats([1.0, 2.0, 3.0], [2, 2]);
+    println("PYTORCH_FROM_FLOATS_COUNT_NOT_REJECTED").

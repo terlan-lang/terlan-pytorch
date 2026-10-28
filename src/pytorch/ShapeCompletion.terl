@@ -1,0 +1,177 @@
+/**
+ * Generated direct-CXX implementation of the public shape-completion surface.
+ */
+module pytorch.ShapeCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes exact aten::channel_shuffle.out. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.channel_shuffle_out}
+pub channel_shuffle_out(output: Tensor, tensor: Tensor, groups: Int): Unit ->
+    native.
+
+/**
+ * Executes exact aten::transpose_copy.int_out. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.transpose_copy_out}
+pub transpose_copy_out(output: Tensor, tensor: Tensor, dimension0: Int, dimension1: Int): Unit ->
+    native.
+
+/**
+ * Executes exact aten::select_copy.int_out. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.select_copy_out}
+pub select_copy_out(output: Tensor, tensor: Tensor, dimension: Int, index: Int): Unit ->
+    native.
+
+/**
+ * Executes exact aten::select_scatter.out. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.select_scatter_out}
+pub select_scatter_out(
+    output: Tensor,
+    tensor: Tensor,
+    source: Tensor,
+    dimension: Int,
+    index: Int,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::narrow. Returns a view sharing input storage.
+ */
+@compiler.native {pytorch.shape_completion.narrow_view}
+pub narrow_view(tensor: Tensor, dimension: Int, start: Int, length: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::narrow.Tensor. Returns a view sharing input storage.
+ */
+@compiler.native {pytorch.shape_completion.narrow_tensor}
+pub narrow_tensor(tensor: Tensor, dimension: Int, start: Tensor, length: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::narrow_copy.out. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.narrow_copy_out}
+pub narrow_copy_out(output: Tensor, tensor: Tensor, dimension: Int, start: Int, length: Int): Unit ->
+    native.
+
+/**
+ * Executes exact aten::unfold. Returns a view sharing input storage.
+ */
+@compiler.native {pytorch.shape_completion.unfold}
+pub unfold(tensor: Tensor, dimension: Int, size: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::unfold_copy.out. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.unfold_copy_out}
+pub unfold_copy_out(output: Tensor, tensor: Tensor, dimension: Int, size: Int, step: Int): Unit ->
+    native.
+
+/**
+ * Executes exact aten::trace_backward. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.trace_backward}
+pub trace_backward(gradient: Tensor, sizes: List[Int]): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::zero. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.zero}
+pub zero(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::zero.out. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.zero_out}
+pub zero_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Executes exact aten::im2col. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.im2col}
+pub im2col(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    dilation: List[Int],
+    padding: List[Int],
+    stride: List[Int],
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::im2col.out. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.im2col_out}
+pub im2col_out(
+    output: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    dilation: List[Int],
+    padding: List[Int],
+    stride: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::col2im. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.col2im}
+pub col2im(
+    tensor: Tensor,
+    output_size: List[Int],
+    kernel_size: List[Int],
+    dilation: List[Int],
+    padding: List[Int],
+    stride: List[Int],
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::col2im.out. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.col2im_out}
+pub col2im_out(
+    output: Tensor,
+    tensor: Tensor,
+    output_size: List[Int],
+    kernel_size: List[Int],
+    dilation: List[Int],
+    padding: List[Int],
+    stride: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::tensordot. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.tensordot}
+pub tensordot(
+    tensor: Tensor,
+    other: Tensor,
+    dimensions_self: List[Int],
+    dimensions_other: List[Int],
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::tensordot.out. Preserves upstream output values and ownership.
+ */
+@compiler.native {pytorch.shape_completion.tensordot_out}
+pub tensordot_out(
+    output: Tensor,
+    tensor: Tensor,
+    other: Tensor,
+    dimensions_self: List[Int],
+    dimensions_other: List[Int],
+): Unit ->
+    native.

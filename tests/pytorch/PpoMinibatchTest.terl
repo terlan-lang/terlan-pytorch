@@ -1,0 +1,62 @@
+module pytorch.PpoMinibatchTest.
+
+import pytorch.Optimizer.{adam, add_parameter, dispose as dispose_optimizer, parameter_count, step, step_count, zero_grad}.
+import pytorch.Ppo.{categorical_entropy, clipped_policy_loss, combined_loss, normalize_advantages, value_loss}.
+import pytorch.Tensor.{amax, backward, categorical_sample, dispose, from_floats, gather, gradient, item, item_float, log, require_grad, softmax, sum}.
+
+@test
+pub deterministic_ppo_minibatch_updates_actor_and_critic(): Bool ->
+    let initial_actor = from_floats([0.2, -0.2, -0.1, 0.1], [2, 2]);
+    let actor = require_grad(initial_actor);
+    let initial_critic = from_floats([0.5, -0.5], [2]);
+    let critic = require_grad(initial_critic);
+    let old_log_probabilities = from_floats([-0.6931471805599453, -0.6931471805599453], [2, 1]);
+    let raw_advantages = from_floats([1.0, -1.0], [2, 1]);
+    let returns = from_floats([1.0, -1.0], [2]);
+    let probabilities = softmax(actor, 1);
+    let actions = categorical_sample(probabilities, 73);
+    let selected_probabilities = gather(probabilities, 1, actions, false);
+    let new_log_probabilities = log(selected_probabilities);
+    let advantages = normalize_advantages(raw_advantages, 0.000001);
+    let policy = clipped_policy_loss(new_log_probabilities, old_log_probabilities, advantages, 0.2);
+    let value = value_loss(critic, returns);
+    let entropy = categorical_entropy(probabilities, 0.000001);
+    let loss = combined_loss(policy, value, entropy, 0.5, 0.01);
+    let actor_before = amax(actor, [0, 1], false);
+    let critic_before = amax(critic, [0], false);
+    let observed_loss = item_float(loss);
+    let observed_actor_before = item_float(actor_before);
+    let observed_critic_before = item_float(critic_before);
+    let optimizer = adam(0.05, 0.9, 0.999, 1e-8, 0.0);
+    add_parameter(optimizer, actor);
+    add_parameter(optimizer, critic);
+    backward(loss);
+    step(optimizer);
+    let actor_after = amax(actor, [0, 1], false);
+    let critic_after = amax(critic, [0], false);
+    let observed_actor_after = item_float(actor_after);
+    let observed_critic_after = item_float(critic_after);
+    (zero_grad(optimizer); let actor_gradient = gradient(actor);
+let critic_gradient = gradient(critic);
+let actor_gradient_total = sum(actor_gradient);
+let critic_gradient_total = sum(critic_gradient);
+let observed_actor_gradient = item_float(actor_gradient_total);
+let observed_critic_gradient = item_float(critic_gradient_total);
+let replay_probabilities = from_floats([0.2, 0.3, 0.5], [1, 3]);
+let first_replay = categorical_sample(replay_probabilities, 73);
+let second_replay = categorical_sample(replay_probabilities, 73);
+let observed_first_replay = item(first_replay);
+let observed_second_replay = item(second_replay);
+let observed_parameters = parameter_count(optimizer);
+let observed_steps = step_count(optimizer);
+(dispose(second_replay); dispose(first_replay); dispose(replay_probabilities); dispose(critic_gradient_total); dispose(actor_gradient_total); dispose(critic_gradient); dispose(actor_gradient); dispose(critic_after); dispose(actor_after); dispose_optimizer(optimizer); dispose(critic_before); dispose(actor_before); dispose(loss); dispose(entropy); dispose(value); dispose(policy); dispose(advantages); dispose(new_log_probabilities); dispose(selected_probabilities); dispose(actions); dispose(probabilities); dispose(returns); dispose(raw_advantages); dispose(old_log_probabilities); dispose(critic); dispose(initial_critic); dispose(actor); dispose(initial_actor); observed_loss > -10.0
+    and observed_loss < 10.0
+    and (observed_actor_after > observed_actor_before + 0.000001
+    or observed_actor_after < observed_actor_before - 0.000001)
+    and (observed_critic_after > observed_critic_before + 0.000001
+    or observed_critic_after < observed_critic_before - 0.000001)
+    and observed_actor_gradient == 0.0
+    and observed_critic_gradient == 0.0
+    and observed_first_replay == observed_second_replay
+    and observed_parameters == 2
+    and observed_steps == 1)).

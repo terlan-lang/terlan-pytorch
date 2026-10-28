@@ -1,0 +1,7 @@
+module pytorch_cxx.LookupBehaviorTest.
+
+import pytorch.LookupBehaviorSupport.{lookup_contracts_on}.
+
+@test
+pub cpu_lookup_contracts(): Bool ->
+    lookup_contracts_on("cpu", false).

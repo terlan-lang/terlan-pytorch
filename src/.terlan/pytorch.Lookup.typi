@@ -1,0 +1,114 @@
+//! Typed membership, sorted insertion lookup, and bucketization operations.
+
+module pytorch.Lookup.
+
+/// Selects default, left, or right insertion semantics.
+
+pub type Side: Int =
+    DEFAULT = 0
+  | LEFT = 1
+  | RIGHT = 2.
+
+/// Returns the bucket index for a floating-point scalar.
+
+pub bucketize_float(value: Float, boundaries: Tensor, out_int32: Bool = false, right: Bool = false): Tensor.
+
+/// Writes the bucket index for a floating-point scalar into retained output storage.
+
+pub bucketize_float_out(output: Tensor, value: Float, boundaries: Tensor, out_int32: Bool = false, right: Bool = false): Unit.
+
+/// Returns the bucket index for an integer scalar.
+
+pub bucketize_int(value: Int, boundaries: Tensor, out_int32: Bool = false, right: Bool = false): Tensor.
+
+/// Writes the bucket index for an integer scalar into retained output storage.
+
+pub bucketize_int_out(output: Tensor, value: Int, boundaries: Tensor, out_int32: Bool = false, right: Bool = false): Unit.
+
+/// Writes tensor bucket indices into retained output storage.
+
+pub bucketize_tensor_out(output: Tensor, values: Tensor, boundaries: Tensor, out_int32: Bool = false, right: Bool = false): Unit.
+
+/// Tests a floating-point scalar for membership in a tensor.
+
+pub isin_element_float(element: Float, test_elements: Tensor, assume_unique: Bool = false, invert: Bool = false): Tensor.
+
+/// Writes floating-point-scalar membership in a tensor into retained output storage.
+
+pub isin_element_float_out(output: Tensor, element: Float, test_elements: Tensor, assume_unique: Bool = false, invert: Bool = false): Unit.
+
+/// Tests an integer scalar for membership in a tensor.
+
+pub isin_element_int(element: Int, test_elements: Tensor, assume_unique: Bool = false, invert: Bool = false): Tensor.
+
+/// Writes integer-scalar membership in a tensor into retained output storage.
+
+pub isin_element_int_out(output: Tensor, element: Int, test_elements: Tensor, assume_unique: Bool = false, invert: Bool = false): Unit.
+
+/// Tests every tensor element against a floating-point scalar.
+
+pub isin_tensor_float(elements: Tensor, test_element: Float, assume_unique: Bool = false, invert: Bool = false): Tensor.
+
+/// Writes tensor membership against a floating-point scalar into retained output storage.
+
+pub isin_tensor_float_out(output: Tensor, elements: Tensor, test_element: Float, assume_unique: Bool = false, invert: Bool = false): Unit.
+
+/// Tests every tensor element against an integer scalar.
+
+pub isin_tensor_int(elements: Tensor, test_element: Int, assume_unique: Bool = false, invert: Bool = false): Tensor.
+
+/// Writes tensor membership against an integer scalar into retained output storage.
+
+pub isin_tensor_int_out(output: Tensor, elements: Tensor, test_element: Int, assume_unique: Bool = false, invert: Bool = false): Unit.
+
+/// Writes tensor-to-tensor membership into retained output storage.
+
+pub isin_tensor_out(output: Tensor, elements: Tensor, test_elements: Tensor, assume_unique: Bool = false, invert: Bool = false): Unit.
+
+/// Finds the insertion index for a floating-point scalar without a sorter.
+
+pub searchsorted_float(sorted_sequence: Tensor, value: Float, out_int32: Bool = false, right: Bool = false, side: Side = Side.DEFAULT): Tensor.
+
+/// Writes one floating-point insertion index without a sorter into retained output storage.
+
+pub searchsorted_float_out(output: Tensor, sorted_sequence: Tensor, value: Float, out_int32: Bool = false, right: Bool = false, side: Side = Side.DEFAULT): Unit.
+
+/// Finds the insertion index for a floating-point scalar through an explicit sorter.
+
+pub searchsorted_float_with_sorter(sorted_sequence: Tensor, value: Float, sorter: Tensor, out_int32: Bool = false, right: Bool = false, side: Side = Side.DEFAULT): Tensor.
+
+/// Writes one floating-point insertion index through an explicit sorter.
+
+pub searchsorted_float_with_sorter_out(output: Tensor, sorted_sequence: Tensor, value: Float, sorter: Tensor, out_int32: Bool = false, right: Bool = false, side: Side = Side.DEFAULT): Unit.
+
+/// Finds the insertion index for an integer scalar without a sorter.
+
+pub searchsorted_int(sorted_sequence: Tensor, value: Int, out_int32: Bool = false, right: Bool = false, side: Side = Side.DEFAULT): Tensor.
+
+/// Writes one integer insertion index without a sorter into retained output storage.
+
+pub searchsorted_int_out(output: Tensor, sorted_sequence: Tensor, value: Int, out_int32: Bool = false, right: Bool = false, side: Side = Side.DEFAULT): Unit.
+
+/// Finds the insertion index for an integer scalar through an explicit sorter.
+
+pub searchsorted_int_with_sorter(sorted_sequence: Tensor, value: Int, sorter: Tensor, out_int32: Bool = false, right: Bool = false, side: Side = Side.DEFAULT): Tensor.
+
+/// Writes one integer insertion index through an explicit sorter.
+
+pub searchsorted_int_with_sorter_out(output: Tensor, sorted_sequence: Tensor, value: Int, sorter: Tensor, out_int32: Bool = false, right: Bool = false, side: Side = Side.DEFAULT): Unit.
+
+/// Finds insertion indices for tensor values without a sorter.
+
+pub searchsorted_tensor(sorted_sequence: Tensor, values: Tensor, out_int32: Bool = false, right: Bool = false, side: Side = Side.DEFAULT): Tensor.
+
+/// Writes tensor insertion indices without a sorter into retained output storage.
+
+pub searchsorted_tensor_out(output: Tensor, sorted_sequence: Tensor, values: Tensor, out_int32: Bool = false, right: Bool = false, side: Side = Side.DEFAULT): Unit.
+
+/// Finds insertion indices for tensor values through an explicit sorter.
+
+pub searchsorted_tensor_with_sorter(sorted_sequence: Tensor, values: Tensor, sorter: Tensor, out_int32: Bool = false, right: Bool = false, side: Side = Side.DEFAULT): Tensor.
+
+/// Writes tensor insertion indices through an explicit sorter into retained output storage.
+
+pub searchsorted_tensor_with_sorter_out(output: Tensor, sorted_sequence: Tensor, values: Tensor, sorter: Tensor, out_int32: Bool = false, right: Bool = false, side: Side = Side.DEFAULT): Unit.

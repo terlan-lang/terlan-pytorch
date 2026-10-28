@@ -1,0 +1,174 @@
+/**
+ * Exact functional optional-argument and retained-output parity.
+ */
+module pytorch.FunctionalCompletionParityTest.
+
+import pytorch.FunctionalCompletion.{diff_append, diff_basic, diff_both, diff_out_append, diff_out_basic, diff_out_both, diff_out_prepend, diff_prepend, group_norm_affine, group_norm_bias, group_norm_no_affine, group_norm_weight, linear_no_bias, linear_out_no_bias, linear_out_with_bias, linear_with_bias, local_response_norm, log_softmax_default_dtype, log_softmax_dtype, log_softmax_out_default_dtype, log_softmax_out_dtype, masked_scatter_backward, normalize}.
+import pytorch.Tensor.{backward, device_type, dispose, dtype, from_floats, gradient, is_contiguous_memory_format, require_grad, shape, softmin, softsign, sum, tanhshrink, to_device, to_dtype}.
+import pytorch.TypeRelations.{allclose, equal}.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+empty(device: Int): Tensor ->
+    placed([], [0], device).
+
+matches(
+    actual: Tensor,
+    values: List[Float],
+    dimensions: List[Int],
+    wanted_dtype: Int,
+    device: Int,
+): Bool ->
+    let expected_double = placed(values, dimensions, device);
+    let expected = to_dtype(expected_double, wanted_dtype);
+    let valid =
+        allclose(actual, expected, 0.000001, 0.000001, false)
+            and shape(actual) == dimensions
+            and dtype(actual) == wanted_dtype
+            and device_type(actual) == device;
+    dispose(expected);
+    dispose(expected_double);
+    valid.
+
+verify(device: Int): Bool ->
+    let input = placed([1.0, 2.0], [1, 2], device);
+    let weight = placed([1.0, 2.0, 3.0, 4.0], [2, 2], device);
+    let bias = placed([0.5, -0.5], [2], device);
+    let linear_plain = linear_no_bias(input, weight);
+    let linear_biased = linear_with_bias(input, weight, bias);
+    let linear_plain_out = empty(device);
+    let linear_biased_out = empty(device);
+    linear_out_no_bias(linear_plain_out, input, weight);
+    linear_out_with_bias(linear_biased_out, input, weight, bias);
+    let linear_valid =
+        matches(linear_plain, [5.0, 11.0], [1, 2], 7, device)
+            and matches(linear_biased, [5.5, 10.5], [1, 2], 7, device)
+            and matches(linear_plain_out, [5.0, 11.0], [1, 2], 7, device)
+            and matches(linear_biased_out, [5.5, 10.5], [1, 2], 7, device);
+    let logits = placed([1.0, 2.0, 3.0, 4.0], [2, 2], device);
+    let log_default = log_softmax_default_dtype(logits, 1);
+    let log_float = log_softmax_dtype(logits, 1, 6);
+    let log_default_out = empty(device);
+    let log_float_empty = empty(device);
+    let log_float_out = to_dtype(log_float_empty, 6);
+    (log_softmax_out_default_dtype(log_default_out, logits, 1); log_softmax_out_dtype(log_float_out, logits, 1, 6); let log_values = [-1.3132616875182228, -0.31326168751822286, -1.3132616875182228, -0.31326168751822286];
+let log_valid =
+    matches(log_default, log_values, [2, 2], 7, device)
+        and matches(log_float, log_values, [2, 2], 6, device)
+        and matches(log_default_out, log_values, [2, 2], 7, device)
+        and matches(log_float_out, log_values, [2, 2], 6, device);
+let nonlinear_input = placed([1.0, -2.0], [2], device);
+let softmin_values = softmin(nonlinear_input, 0);
+let softsign_values = softsign(nonlinear_input);
+let tanhshrink_values = tanhshrink(nonlinear_input);
+let nonlinear_valid =
+    matches(softmin_values, [0.04742587317756678, 0.9525741268224334], [2], 7, device)
+        and matches(softsign_values, [0.5, -0.6666666666666666], [2], 7, device)
+        and matches(tanhshrink_values, [0.23840584404423515, -1.035972419924183], [2], 7, device);
+let normalize_input = placed([3.0, 4.0], [1, 2], device);
+let normalized = normalize(normalize_input, 2.0, 1, 1e-12);
+let normalize_valid =
+    matches(normalized, [0.6, 0.8], [1, 2], 7, device)
+        and is_contiguous_memory_format(normalized, 0);
+let response_input = placed([1.0, 2.0, 3.0], [1, 3, 1, 1], device);
+let response = local_response_norm(response_input, 3, 1.0, 1.0, 1.0);
+let response_valid = matches(response, [0.375, 6.0 / 17.0, 0.5625], [1, 3, 1, 1], 7, device);
+let response_default = local_response_norm(response_input, 3);
+let response_default_valid =
+    matches(
+        response_default,
+        [0.999875018226382, 1.999300285711114, 2.999025369540712],
+        [1, 3, 1, 1],
+        7,
+        device,
+    );
+let response_rank3_input = placed([1.0, 2.0, 3.0], [1, 3, 1], device);
+let response_rank3 = local_response_norm(response_rank3_input, 3, 1.0, 1.0, 1.0);
+let response_rank3_valid = matches(response_rank3, [0.375, 6.0 / 17.0, 0.5625], [1, 3, 1], 7, device);
+let response_empty_input = placed([], [1, 3, 1, 0], device);
+let response_empty = local_response_norm(response_empty_input, 3);
+let response_empty_valid =
+    shape(response_empty) == [1, 3, 1, 0]
+        and dtype(response_empty) == 7
+        and device_type(response_empty) == device;
+let normalized_input = placed([1.0, 3.0, 2.0, 4.0], [1, 2, 2], device);
+let affine_weight = placed([2.0, 3.0], [2], device);
+let affine_bias = placed([1.0, -1.0], [2], device);
+let norm_plain = group_norm_no_affine(normalized_input, 2, 0.0, true);
+let norm_weight = group_norm_weight(normalized_input, 2, affine_weight, 0.0, true);
+let norm_bias = group_norm_bias(normalized_input, 2, affine_bias, 0.0, true);
+let norm_affine = group_norm_affine(normalized_input, 2, affine_weight, affine_bias, 0.0, true);
+let norm_valid =
+    matches(norm_plain, [-1.0, 1.0, -1.0, 1.0], [1, 2, 2], 7, device)
+        and matches(norm_weight, [-2.0, 2.0, -3.0, 3.0], [1, 2, 2], 7, device)
+        and matches(norm_bias, [0.0, 2.0, -2.0, 0.0], [1, 2, 2], 7, device)
+        and matches(norm_affine, [-1.0, 3.0, -4.0, 2.0], [1, 2, 2], 7, device);
+let sequence = placed([1.0, 3.0, 6.0, 10.0], [4], device);
+let prepend = placed([0.0], [1], device);
+let append = placed([15.0], [1], device);
+let basic = diff_basic(sequence, 1, 0);
+let prepended = diff_prepend(sequence, 1, 0, prepend);
+let appended = diff_append(sequence, 1, 0, append);
+let bounded = diff_both(sequence, 1, 0, prepend, append);
+let basic_out = empty(device);
+let prepended_out = empty(device);
+let appended_out = empty(device);
+let bounded_out = empty(device);
+(diff_out_basic(basic_out, sequence, 1, 0); diff_out_prepend(prepended_out, sequence, 1, 0, prepend); diff_out_append(appended_out, sequence, 1, 0, append); diff_out_both(bounded_out, sequence, 1, 0, prepend, append); let diff_valid =
+    matches(basic, [2.0, 3.0, 4.0], [3], 7, device)
+        and matches(prepended, [1.0, 2.0, 3.0, 4.0], [4], 7, device)
+        and matches(appended, [2.0, 3.0, 4.0, 5.0], [4], 7, device)
+        and matches(bounded, [1.0, 2.0, 3.0, 4.0, 5.0], [5], 7, device)
+        and matches(basic_out, [2.0, 3.0, 4.0], [3], 7, device)
+        and matches(prepended_out, [1.0, 2.0, 3.0, 4.0], [4], 7, device)
+        and matches(appended_out, [2.0, 3.0, 4.0, 5.0], [4], 7, device)
+        and matches(bounded_out, [1.0, 2.0, 3.0, 4.0, 5.0], [5], 7, device);
+let mask_values = placed([1.0, 0.0, 1.0], [3], device);
+let mask = to_dtype(mask_values, 11);
+let scatter_gradient = placed([10.0, 30.0, 20.0], [3], device);
+let scattered = masked_scatter_backward(scatter_gradient, mask, [2]);
+let scatter_valid = matches(scattered, [10.0, 20.0], [2], 7, device);
+let leaf = require_grad(placed([1.0, 2.0], [1, 2], device));
+let connected = linear_no_bias(leaf, weight);
+let loss = sum(connected);
+(backward(loss); let derivative = gradient(leaf);
+let gradient_valid = matches(derivative, [4.0, 6.0], [1, 2], 7, device);
+let expected_input = placed([1.0, 2.0], [1, 2], device);
+let valid =
+    linear_valid
+        and log_valid
+        and nonlinear_valid
+        and normalize_valid
+        and response_valid
+        and response_default_valid
+        and response_rank3_valid
+        and response_empty_valid
+        and norm_valid
+        and diff_valid
+        and scatter_valid
+        and gradient_valid
+        and equal(input, expected_input);
+(dispose(expected_input); dispose(derivative); dispose(loss); dispose(connected); dispose(leaf); dispose(response_empty); dispose(response_empty_input); dispose(response_rank3); dispose(response_rank3_input); dispose(response_default); dispose(response); dispose(response_input); dispose(normalized); dispose(normalize_input); dispose(tanhshrink_values); dispose(softsign_values); dispose(softmin_values); dispose(nonlinear_input); dispose(scattered); dispose(scatter_gradient); dispose(mask); dispose(mask_values); dispose(bounded_out); dispose(appended_out); dispose(prepended_out); dispose(basic_out); dispose(bounded); dispose(appended); dispose(prepended); dispose(basic); dispose(append); dispose(prepend); dispose(sequence); dispose(norm_affine); dispose(norm_bias); dispose(norm_weight); dispose(norm_plain); dispose(affine_bias); dispose(affine_weight); dispose(normalized_input); dispose(log_float_out); dispose(log_float_empty); dispose(log_default_out); dispose(log_float); dispose(log_default); dispose(logits); dispose(linear_biased_out); dispose(linear_plain_out); dispose(linear_biased); dispose(linear_plain); dispose(bias); dispose(weight); dispose(input); valid)))).
+
+@test
+pub functional_completion_on_cpu_and_required_cuda(): Bool ->
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    let cpu_valid = verify(0);
+    cpu_valid and cuda_valid.

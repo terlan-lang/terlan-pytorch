@@ -1,0 +1,24 @@
+/**
+ * CPU shape evidence for legacy SVD and retained-output SVD forms.
+ */
+module pytorch.SvdParityTest.
+
+import pytorch.SvdCompletion.{svd_default, svd_out}.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+
+@test
+pub svd_forms_preserve_matrix_dimensions(): Bool ->
+    let input = from_floats([3.0, 0.0, 0.0, 4.0], [2, 2]);
+    let {u, s, v} = svd_default(input, true, true);
+    let out_u = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let out_s = from_floats([0.0, 0.0], [2]);
+    let out_v = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    svd_out(out_u, out_s, out_v, input, true, true);
+    let valid =
+        shape(u) == [2, 2]
+            and shape(s) == [2]
+            and shape(v) == [2, 2]
+            and shape(out_u) == [2, 2]
+            and shape(out_s) == [2]
+            and shape(out_v) == [2, 2];
+    (dispose(out_v); dispose(out_s); dispose(out_u); dispose(v); dispose(s); dispose(u); dispose(input); valid).

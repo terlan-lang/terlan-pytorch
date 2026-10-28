@@ -1,0 +1,11 @@
+//! Generated CXX bicubic upsampling completion surface.
+
+module pytorch.UpsampleBicubic2dCompletion.
+
+/// Upsamples a 4-D tensor to an explicit output size using bicubic interpolation.
+
+pub upsample_bicubic2d(input: Tensor, output_size: List[Int], align_corners: Bool): Tensor.
+
+/// Writes a bicubic-upsampled tensor into retained output storage.
+
+pub upsample_bicubic2d_out(output: Tensor, input: Tensor, output_size: List[Int], align_corners: Bool): Unit.

@@ -1,0 +1,220 @@
+module pytorch.FusedArithmeticNativeBehaviorSupport.
+
+import pytorch.FusedArithmeticNative.{fused_arithmetic, fused_arithmetic_in_place, fused_arithmetic_out}.
+import pytorch.Tensor.{Float16, Float32, Float64, Strided, clone, dispose, dtype, is_cuda, mul_float, ones_device, shape}.
+import pytorch.TypeRelationsNative.{allclose_native}.
+
+import type pytorch.Tensor.
+
+tensor_matches(
+    tensor: Tensor,
+    expected: Tensor,
+    expected_shape: List[Int],
+    expected_cuda: Bool,
+): Bool ->
+    shape(tensor) == expected_shape
+        and dtype(tensor) == dtype(expected)
+        and is_cuda(tensor) == expected_cuda
+        and allclose_native(tensor, expected, 0.0, 0.0, false).
+
+/**
+ * Executes the functional, retained-output, and in-place forms of one fused
+ * arithmetic schema with integer beta and floating-point alpha.
+ */
+fused_forms_match(
+    operation: Int,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    expected_shape: List[Int],
+    expected_value: Float,
+    device_name: String,
+): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let functional =
+        fused_arithmetic(
+            accumulator,
+            first,
+            second,
+            operation,
+            true,
+            2,
+            0.0,
+            false,
+            0,
+            0.5,
+            false,
+            0,
+        );
+    let output = ones_device([0], Float64, Strided, device_name);
+    fused_arithmetic_out(
+        output,
+        accumulator,
+        first,
+        second,
+        operation,
+        true,
+        2,
+        0.0,
+        false,
+        0,
+        0.5,
+        false,
+        0,
+    );
+    let mutation = clone(accumulator);
+    (fused_arithmetic_in_place(mutation, first, second, operation, true, 2, 0.0, false, 0, 0.5); let expected_ones = ones_device(expected_shape, Float64, Strided, device_name);
+let expected = mul_float(expected_ones, expected_value);
+let valid =
+    tensor_matches(functional, expected, expected_shape, expected_cuda)
+        and tensor_matches(output, expected, expected_shape, expected_cuda)
+        and tensor_matches(mutation, expected, expected_shape, expected_cuda);
+(dispose(expected); dispose(expected_ones); dispose(mutation); dispose(output); dispose(functional); valid)).
+
+/**
+ * Executes all seven fused arithmetic schemas and every mutation form on one
+ * backend. Source tensors remain independently owned and unchanged in shape.
+ */
+pub fused_arithmetic_contracts_on(device_name: String): Bool ->
+    let addbmm_accumulator = ones_device([2, 2], Float64, Strided, device_name);
+    let addbmm_first = ones_device([2, 2, 2], Float64, Strided, device_name);
+    let addbmm_second = ones_device([2, 2, 2], Float64, Strided, device_name);
+    let addbmm_valid =
+        fused_forms_match(
+            0,
+            addbmm_accumulator,
+            addbmm_first,
+            addbmm_second,
+            [2, 2],
+            4.0,
+            device_name,
+        );
+    let point_accumulator = ones_device([2], Float64, Strided, device_name);
+    let point_first = ones_device([2], Float64, Strided, device_name);
+    let point_second = ones_device([2], Float64, Strided, device_name);
+    let addcdiv_valid = fused_forms_match(1, point_accumulator, point_first, point_second, [2], 1.5, device_name);
+    let addcmul_valid = fused_forms_match(2, point_accumulator, point_first, point_second, [2], 1.5, device_name);
+    let addmm_accumulator = ones_device([2, 2], Float64, Strided, device_name);
+    let addmm_first = ones_device([2, 2], Float64, Strided, device_name);
+    let addmm_second = ones_device([2, 2], Float64, Strided, device_name);
+    let addmm_valid = fused_forms_match(3, addmm_accumulator, addmm_first, addmm_second, [2, 2], 3.0, device_name);
+    let addmv_accumulator = ones_device([2], Float64, Strided, device_name);
+    let addmv_matrix = ones_device([2, 2], Float64, Strided, device_name);
+    let addmv_vector = ones_device([2], Float64, Strided, device_name);
+    let addmv_valid = fused_forms_match(4, addmv_accumulator, addmv_matrix, addmv_vector, [2], 3.0, device_name);
+    let addr_accumulator = ones_device([2, 2], Float64, Strided, device_name);
+    let addr_first = ones_device([2], Float64, Strided, device_name);
+    let addr_second = ones_device([2], Float64, Strided, device_name);
+    let addr_valid = fused_forms_match(5, addr_accumulator, addr_first, addr_second, [2, 2], 2.5, device_name);
+    let baddbmm_accumulator = ones_device([2, 2, 2], Float64, Strided, device_name);
+    let baddbmm_first = ones_device([2, 2, 2], Float64, Strided, device_name);
+    let baddbmm_second = ones_device([2, 2, 2], Float64, Strided, device_name);
+    let baddbmm_valid =
+        fused_forms_match(
+            6,
+            baddbmm_accumulator,
+            baddbmm_first,
+            baddbmm_second,
+            [2, 2, 2],
+            3.0,
+            device_name,
+        );
+    let sources_preserved =
+        shape(addbmm_accumulator) == [2, 2]
+            and shape(addbmm_first) == [2, 2, 2]
+            and shape(addbmm_second) == [2, 2, 2]
+            and shape(point_accumulator) == [2]
+            and shape(point_first) == [2]
+            and shape(point_second) == [2]
+            and shape(addmm_accumulator) == [2, 2]
+            and shape(addmm_first) == [2, 2]
+            and shape(addmm_second) == [2, 2]
+            and shape(addmv_accumulator) == [2]
+            and shape(addmv_matrix) == [2, 2]
+            and shape(addmv_vector) == [2]
+            and shape(addr_accumulator) == [2, 2]
+            and shape(addr_first) == [2]
+            and shape(addr_second) == [2]
+            and shape(baddbmm_accumulator) == [2, 2, 2]
+            and shape(baddbmm_first) == [2, 2, 2]
+            and shape(baddbmm_second) == [2, 2, 2];
+    dispose(baddbmm_second);
+    dispose(baddbmm_first);
+    dispose(baddbmm_accumulator);
+    dispose(addr_second);
+    dispose(addr_first);
+    dispose(addr_accumulator);
+    dispose(addmv_vector);
+    dispose(addmv_matrix);
+    dispose(addmv_accumulator);
+    dispose(addmm_second);
+    dispose(addmm_first);
+    dispose(addmm_accumulator);
+    dispose(point_second);
+    dispose(point_first);
+    dispose(point_accumulator);
+    dispose(addbmm_second);
+    dispose(addbmm_first);
+    dispose(addbmm_accumulator);
+    addbmm_valid
+        and addcdiv_valid
+        and addcmul_valid
+        and addmm_valid
+        and addmv_valid
+        and addr_valid
+        and baddbmm_valid
+        and sources_preserved.
+
+dtype_form_matches(
+    operation: Int,
+    accumulator: Tensor,
+    first: Tensor,
+    second: Tensor,
+    expected_shape: List[Int],
+    device_name: String,
+): Bool ->
+    let functional = fused_arithmetic(accumulator, first, second, operation, true, 1, 0.0, true, 1, 0.0, true, 6);
+    let output = ones_device(expected_shape, Float32, Strided, device_name);
+    fused_arithmetic_out(
+        output,
+        accumulator,
+        first,
+        second,
+        operation,
+        true,
+        1,
+        0.0,
+        true,
+        1,
+        0.0,
+        true,
+        6,
+    );
+    let expected_ones = ones_device(expected_shape, Float32, Strided, device_name);
+    let expected = mul_float(expected_ones, 3.0);
+    let valid =
+        tensor_matches(functional, expected, expected_shape, true)
+            and tensor_matches(output, expected, expected_shape, true)
+            and dtype(functional) == Float32
+            and dtype(output) == Float32;
+    (dispose(expected); dispose(expected_ones); dispose(output); dispose(functional); valid).
+
+/**
+ * Executes the CUDA-only addmm and baddbmm output-dtype overloads.
+ */
+pub fused_arithmetic_dtype_contracts_on(device_name: String): Bool ->
+    let matrix_accumulator = ones_device([1, 1], Float32, Strided, device_name);
+    let matrix_first = ones_device([1, 2], Float16, Strided, device_name);
+    let matrix_second = ones_device([2, 1], Float16, Strided, device_name);
+    let matrix_valid = dtype_form_matches(3, matrix_accumulator, matrix_first, matrix_second, [1, 1], device_name);
+    let batch_accumulator = ones_device([1, 1, 1], Float32, Strided, device_name);
+    let batch_first = ones_device([1, 1, 2], Float16, Strided, device_name);
+    let batch_second = ones_device([1, 2, 1], Float16, Strided, device_name);
+    let batch_valid = dtype_form_matches(6, batch_accumulator, batch_first, batch_second, [1, 1, 1], device_name);
+    dispose(batch_second);
+    dispose(batch_first);
+    dispose(batch_accumulator);
+    dispose(matrix_second);
+    dispose(matrix_first);
+    dispose(matrix_accumulator);
+    matrix_valid and batch_valid.

@@ -1,0 +1,71 @@
+//! Generated correction pair operations.
+
+module pytorch.CorrectionStatisticsPairNative.
+
+/// Owned pair of LibTorch tensors.
+
+pub opaque type TensorPair.
+
+/// Generated exact correction pair operation.
+
+pub std_mean_correction_dimensions_float_pair(input: Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): TensorPair.
+
+/// Generated exact correction pair operation.
+
+pub std_mean_correction_dimensions_int_pair(input: Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): TensorPair.
+
+/// Generated exact correction pair operation.
+
+pub std_mean_correction_float_pair(input: Tensor, correction: Float, keep_dimension: Bool): TensorPair.
+
+/// Generated exact correction pair operation.
+
+pub std_mean_correction_int_pair(input: Tensor, correction: Int, keep_dimension: Bool): TensorPair.
+
+/// Generated exact correction pair operation.
+
+pub std_mean_correction_out_dimensions_float(output: Tensor, mean_output: Tensor, input: Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): Unit.
+
+/// Generated exact correction pair operation.
+
+pub std_mean_correction_out_dimensions_int(output: Tensor, mean_output: Tensor, input: Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): Unit.
+
+/// Generated exact correction pair operation.
+
+pub std_mean_correction_out_float(output: Tensor, mean_output: Tensor, input: Tensor, correction: Float, keep_dimension: Bool): Unit.
+
+/// Generated exact correction pair operation.
+
+pub std_mean_correction_out_int(output: Tensor, mean_output: Tensor, input: Tensor, correction: Int, keep_dimension: Bool): Unit.
+
+/// Generated exact correction pair operation.
+
+pub var_mean_correction_dimensions_float_pair(input: Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): TensorPair.
+
+/// Generated exact correction pair operation.
+
+pub var_mean_correction_dimensions_int_pair(input: Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): TensorPair.
+
+/// Generated exact correction pair operation.
+
+pub var_mean_correction_float_pair(input: Tensor, correction: Float, keep_dimension: Bool): TensorPair.
+
+/// Generated exact correction pair operation.
+
+pub var_mean_correction_int_pair(input: Tensor, correction: Int, keep_dimension: Bool): TensorPair.
+
+/// Generated exact correction pair operation.
+
+pub var_mean_correction_out_dimensions_float(output: Tensor, mean_output: Tensor, input: Tensor, dimensions: List[Int], correction: Float, keep_dimension: Bool): Unit.
+
+/// Generated exact correction pair operation.
+
+pub var_mean_correction_out_dimensions_int(output: Tensor, mean_output: Tensor, input: Tensor, dimensions: List[Int], correction: Int, keep_dimension: Bool): Unit.
+
+/// Generated exact correction pair operation.
+
+pub var_mean_correction_out_float(output: Tensor, mean_output: Tensor, input: Tensor, correction: Float, keep_dimension: Bool): Unit.
+
+/// Generated exact correction pair operation.
+
+pub var_mean_correction_out_int(output: Tensor, mean_output: Tensor, input: Tensor, correction: Int, keep_dimension: Bool): Unit.

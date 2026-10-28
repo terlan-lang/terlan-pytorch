@@ -1,0 +1,64 @@
+module pytorch.AutogradTest.
+
+import pytorch.Tensor.{add, amax, backward, dispose, from_floats, full_float, gradient, item_float, matmul, mse_loss, require_grad, sgd_step, shape}.
+
+@test
+pub graph_autograd_updates_a_trainable_leaf_and_lowers_loss(): Bool ->
+    let initial = full_float([2, 2], 2.0);
+    let parameter = require_grad(initial);
+    let target = full_float([2, 2], 1.0);
+    let before_loss = mse_loss(parameter, target, 1);
+    backward(before_loss);
+    let accumulated = gradient(parameter);
+    let gradient_columns = amax(accumulated, [0], false);
+    let gradient_maximum = amax(gradient_columns, [0], false);
+    let updated = sgd_step(parameter, 0.1);
+    let after_loss = mse_loss(updated, target, 1);
+    let observed_gradient_shape = shape(accumulated);
+    let observed_gradient = item_float(gradient_maximum);
+    let observed_before_loss = item_float(before_loss);
+    let observed_after_loss = item_float(after_loss);
+    (backward(after_loss); let updated_gradient = gradient(updated);
+let updated_gradient_columns = amax(updated_gradient, [0], false);
+let updated_gradient_maximum = amax(updated_gradient_columns, [0], false);
+let observed_updated_gradient = item_float(updated_gradient_maximum);
+(dispose(updated_gradient_maximum); dispose(updated_gradient_columns); dispose(updated_gradient); dispose(after_loss); dispose(updated); dispose(gradient_maximum); dispose(gradient_columns); dispose(accumulated); dispose(before_loss); dispose(target); dispose(parameter); dispose(initial); observed_gradient_shape == [2, 2]
+    and observed_gradient == 0.5
+    and observed_before_loss == 1.0
+    and observed_after_loss > 0.9
+    and observed_after_loss < 0.91
+    and observed_after_loss < observed_before_loss
+    and observed_updated_gradient > 0.47
+    and observed_updated_gradient < 0.48)).
+
+@test
+pub autograd_updates_multiple_affine_parameters_through_one_graph(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let initial_weight = from_floats([1.0, 1.0], [2, 1]);
+    let weight = require_grad(initial_weight);
+    let initial_bias = full_float([1], 0.0);
+    let bias = require_grad(initial_bias);
+    let target = full_float([2, 1], 0.0);
+    let linear = matmul(input, weight);
+    let predicted = add(linear, bias, 1.0);
+    let before_loss = mse_loss(predicted, target, 1);
+    backward(before_loss);
+    let weight_gradient = gradient(weight);
+    let bias_gradient = gradient(bias);
+    let weight_gradient_columns = amax(weight_gradient, [0], false);
+    let weight_gradient_maximum = amax(weight_gradient_columns, [0], false);
+    let updated_weight = sgd_step(weight, 0.01);
+    let updated_bias = sgd_step(bias, 0.01);
+    let updated_linear = matmul(input, updated_weight);
+    let updated_predicted = add(updated_linear, updated_bias, 1.0);
+    let after_loss = mse_loss(updated_predicted, target, 1);
+    let observed_weight_gradient = item_float(weight_gradient_maximum);
+    let observed_bias_gradient = item_float(bias_gradient);
+    let observed_before_loss = item_float(before_loss);
+    let observed_after_loss = item_float(after_loss);
+    (dispose(after_loss); dispose(updated_predicted); dispose(updated_linear); dispose(updated_bias); dispose(updated_weight); dispose(weight_gradient_maximum); dispose(weight_gradient_columns); dispose(bias_gradient); dispose(weight_gradient); dispose(before_loss); dispose(predicted); dispose(linear); dispose(target); dispose(bias); dispose(initial_bias); dispose(weight); dispose(initial_weight); dispose(input); observed_weight_gradient == 34.0
+    and observed_bias_gradient == 10.0
+    and observed_before_loss == 29.0
+    and observed_after_loss > 13.57
+    and observed_after_loss < 13.58
+    and observed_after_loss < observed_before_loss).

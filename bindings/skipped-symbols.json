@@ -1,10 +1,1130 @@
 {
-  "schema": "terlan.c-abi.binding.skipped-symbols.v1",
+  "schema": "terlan.cpp.binding.skipped-symbols.v1",
   "metadata_producer": {
-    "name": "terlan-curated-metadata",
-    "version": "pytorch-2.13.0+cpu-cf30153c4c131c8164ee7798e5022d810682e2cb-mi11",
-    "format": "reviewed-declaration-json"
+    "name": "clang-libtooling",
+    "version": "Ubuntu clang version 14.0.0-1ubuntu1.1",
+    "format": "normalized-ast-json"
   },
-  "abi_version": 1,
-  "skipped": []
+  "skipped": [
+    {
+      "id": "function:at::abs_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "abs_outf",
+      "source": "abs.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::absolute_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "absolute_outf",
+      "source": "absolute.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::acos_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "acos_outf",
+      "source": "acos.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::acosh_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "acosh_outf",
+      "source": "acosh.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::alias_copy_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "alias_copy_outf",
+      "source": "alias_copy.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::all_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "all_outf",
+      "source": "all.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::all_outf(const at::Tensor &,c10::OptionalArrayRef<long>,bool,at::Tensor &)",
+      "symbol": "all_outf",
+      "source": "all.h:51:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::all_outf(const at::Tensor &,long,bool,at::Tensor &)",
+      "symbol": "all_outf",
+      "source": "all.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::angle_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "angle_outf",
+      "source": "angle.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::any_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "any_outf",
+      "source": "any.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::any_outf(const at::Tensor &,c10::OptionalArrayRef<long>,bool,at::Tensor &)",
+      "symbol": "any_outf",
+      "source": "any.h:51:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::any_outf(const at::Tensor &,long,bool,at::Tensor &)",
+      "symbol": "any_outf",
+      "source": "any.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::arccos_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "arccos_outf",
+      "source": "arccos.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::arccosh_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "arccosh_outf",
+      "source": "arccosh.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::arcsin_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "arcsin_outf",
+      "source": "arcsin.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::arcsinh_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "arcsinh_outf",
+      "source": "arcsinh.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::arctan_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "arctan_outf",
+      "source": "arctan.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::arctanh_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "arctanh_outf",
+      "source": "arctanh.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::asin_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "asin_outf",
+      "source": "asin.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::asinh_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "asinh_outf",
+      "source": "asinh.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::atan_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "atan_outf",
+      "source": "atan.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::atanh_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "atanh_outf",
+      "source": "atanh.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::bitwise_not_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "bitwise_not_outf",
+      "source": "bitwise_not.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::ceil_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "ceil_outf",
+      "source": "ceil.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::conj_physical_(at::Tensor &)",
+      "symbol": "conj_physical_",
+      "source": "conj_physical.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::conj_physical_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "conj_physical_outf",
+      "source": "conj_physical.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::cos_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "cos_outf",
+      "source": "cos.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::cosh_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "cosh_outf",
+      "source": "cosh.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::deg2rad_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "deg2rad_outf",
+      "source": "deg2rad.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::detach_(at::Tensor &)",
+      "symbol": "detach_",
+      "source": "detach.h:33:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::detach_copy_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "detach_copy_outf",
+      "source": "detach_copy.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::digamma_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "digamma_outf",
+      "source": "digamma.h:32:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::erf_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "erf_outf",
+      "source": "erf.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::erfc_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "erfc_outf",
+      "source": "erfc.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::erfinv_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "erfinv_outf",
+      "source": "erfinv.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::exp2_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "exp2_outf",
+      "source": "exp2.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::exp_(at::Tensor &)",
+      "symbol": "exp_",
+      "source": "exp.h:33:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::exp_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "exp_outf",
+      "source": "exp.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::expm1_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "expm1_outf",
+      "source": "expm1.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::fix_(at::Tensor &)",
+      "symbol": "fix_",
+      "source": "fix.h:33:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::fix_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "fix_outf",
+      "source": "fix.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::floor_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "floor_outf",
+      "source": "floor.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::frac_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "frac_outf",
+      "source": "frac.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::frexp_outf(const at::Tensor &,at::Tensor &,at::Tensor &)",
+      "symbol": "frexp_outf",
+      "source": "frexp.h:37:48",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::hardsigmoid_backward_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "hardsigmoid_backward_outf",
+      "source": "hardsigmoid_backward.h:32:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::hardsigmoid_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "hardsigmoid_outf",
+      "source": "hardsigmoid.h:32:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::hardswish_backward_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "hardswish_backward_outf",
+      "source": "hardswish_backward.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::hardswish_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "hardswish_outf",
+      "source": "hardswish.h:32:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::i0_(at::Tensor &)",
+      "symbol": "i0_",
+      "source": "i0.h:33:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::i0_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "i0_outf",
+      "source": "i0.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::inverse_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "inverse_outf",
+      "source": "inverse.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::isinf_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "isinf_outf",
+      "source": "isinf.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::isnan_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "isnan_outf",
+      "source": "isnan.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::isneginf_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "isneginf_outf",
+      "source": "isneginf.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::isposinf_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "isposinf_outf",
+      "source": "isposinf.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::lgamma_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "lgamma_outf",
+      "source": "lgamma.h:32:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::lift_fresh_copy_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "lift_fresh_copy_outf",
+      "source": "lift_fresh_copy.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::lift_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "lift_outf",
+      "source": "lift.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::log10_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "log10_outf",
+      "source": "log10.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::log1p_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "log1p_outf",
+      "source": "log1p.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::log2_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "log2_outf",
+      "source": "log2.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::log_(at::Tensor &)",
+      "symbol": "log_",
+      "source": "log.h:33:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::log_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "log_outf",
+      "source": "log.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::log_sigmoid_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "log_sigmoid_outf",
+      "source": "log_sigmoid.h:32:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::logical_not_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "logical_not_outf",
+      "source": "logical_not.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::max_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "max_outf",
+      "source": "max.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::max_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "max_outf",
+      "source": "max.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::max_outf(const at::Tensor &,long,bool,at::Tensor &,at::Tensor &)",
+      "symbol": "max_outf",
+      "source": "max.h:37:48",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::median_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "median_outf",
+      "source": "median.h:51:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::median_outf(const at::Tensor &,long,bool,at::Tensor &,at::Tensor &)",
+      "symbol": "median_outf",
+      "source": "median.h:42:48",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::min_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "min_outf",
+      "source": "min.h:51:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::min_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "min_outf",
+      "source": "min.h:60:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::min_outf(const at::Tensor &,long,bool,at::Tensor &,at::Tensor &)",
+      "symbol": "min_outf",
+      "source": "min.h:37:48",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::mish_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "mish_outf",
+      "source": "mish.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::msort_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "msort_outf",
+      "source": "msort.h:32:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::native::tensor_index(const at::Tensor &,c10::ArrayRef<at::Tensor>,c10::ArrayRef<bool>)",
+      "symbol": "tensor_index",
+      "source": "bindings/cxx/tensor_compat.hpp:81:12",
+      "reason": "cpp.type.unmapped",
+      "message": "The canonical C++ type has no reviewed Terlan mapping."
+    },
+    {
+      "id": "function:at::native::tensor_index_out(at::Tensor &,const at::Tensor &,c10::ArrayRef<at::Tensor>,c10::ArrayRef<bool>)",
+      "symbol": "tensor_index_out",
+      "source": "bindings/cxx/tensor_compat.hpp:84:13",
+      "reason": "cpp.type.unmapped",
+      "message": "The canonical C++ type has no reviewed Terlan mapping."
+    },
+    {
+      "id": "function:at::native::tensor_index_put(const at::Tensor &,c10::ArrayRef<at::Tensor>,c10::ArrayRef<bool>,const at::Tensor &,bool)",
+      "symbol": "tensor_index_put",
+      "source": "bindings/cxx/tensor_compat.hpp:87:12",
+      "reason": "cpp.type.unmapped",
+      "message": "The canonical C++ type has no reviewed Terlan mapping."
+    },
+    {
+      "id": "function:at::native::tensor_index_put_in_place(at::Tensor &,c10::ArrayRef<at::Tensor>,c10::ArrayRef<bool>,const at::Tensor &,bool)",
+      "symbol": "tensor_index_put_in_place",
+      "source": "bindings/cxx/tensor_compat.hpp:95:13",
+      "reason": "cpp.type.unmapped",
+      "message": "The canonical C++ type has no reviewed Terlan mapping."
+    },
+    {
+      "id": "function:at::native::tensor_index_put_out(at::Tensor &,const at::Tensor &,c10::ArrayRef<at::Tensor>,c10::ArrayRef<bool>,const at::Tensor &,bool)",
+      "symbol": "tensor_index_put_out",
+      "source": "bindings/cxx/tensor_compat.hpp:91:13",
+      "reason": "cpp.type.unmapped",
+      "message": "The canonical C++ type has no reviewed Terlan mapping."
+    },
+    {
+      "id": "function:at::neg(const at::Tensor &)",
+      "symbol": "neg",
+      "source": "neg.h:28:19",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::neg_(at::Tensor &)",
+      "symbol": "neg_",
+      "source": "neg.h:33:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::neg_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "neg_outf",
+      "source": "neg.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::negative_(at::Tensor &)",
+      "symbol": "negative_",
+      "source": "negative.h:33:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::negative_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "negative_outf",
+      "source": "negative.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::nonzero_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "nonzero_outf",
+      "source": "nonzero.h:32:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::rad2deg_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "rad2deg_outf",
+      "source": "rad2deg.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::reciprocal_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "reciprocal_outf",
+      "source": "reciprocal.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::relu(const at::Tensor &)",
+      "symbol": "relu",
+      "source": "relu.h:28:19",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::relu_(at::Tensor &)",
+      "symbol": "relu_",
+      "source": "relu.h:33:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::relu_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "relu_outf",
+      "source": "relu.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::round_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "round_outf",
+      "source": "round.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::round_outf(const at::Tensor &,long,at::Tensor &)",
+      "symbol": "round_outf",
+      "source": "round.h:61:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::rsqrt_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "rsqrt_outf",
+      "source": "rsqrt.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::sgn_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "sgn_outf",
+      "source": "sgn.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::sigmoid_backward_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "sigmoid_backward_outf",
+      "source": "sigmoid_backward.h:32:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::sigmoid_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "sigmoid_outf",
+      "source": "sigmoid.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::sign_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "sign_outf",
+      "source": "sign.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::signbit_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "signbit_outf",
+      "source": "signbit.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::silu_backward_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "silu_backward_outf",
+      "source": "silu_backward.h:32:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::silu_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "silu_outf",
+      "source": "silu.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::sin_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "sin_outf",
+      "source": "sin.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::sinc_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "sinc_outf",
+      "source": "sinc.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::sinh_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "sinh_outf",
+      "source": "sinh.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_chebyshev_polynomial_u_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_chebyshev_polynomial_u_outf",
+      "source": "special_chebyshev_polynomial_u.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_chebyshev_polynomial_u_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_chebyshev_polynomial_u_outf",
+      "source": "special_chebyshev_polynomial_u.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_chebyshev_polynomial_u_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_chebyshev_polynomial_u_outf",
+      "source": "special_chebyshev_polynomial_u.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_chebyshev_polynomial_v_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_chebyshev_polynomial_v_outf",
+      "source": "special_chebyshev_polynomial_v.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_chebyshev_polynomial_v_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_chebyshev_polynomial_v_outf",
+      "source": "special_chebyshev_polynomial_v.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_chebyshev_polynomial_v_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_chebyshev_polynomial_v_outf",
+      "source": "special_chebyshev_polynomial_v.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_chebyshev_polynomial_w_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_chebyshev_polynomial_w_outf",
+      "source": "special_chebyshev_polynomial_w.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_chebyshev_polynomial_w_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_chebyshev_polynomial_w_outf",
+      "source": "special_chebyshev_polynomial_w.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_chebyshev_polynomial_w_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_chebyshev_polynomial_w_outf",
+      "source": "special_chebyshev_polynomial_w.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_hermite_polynomial_h_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_hermite_polynomial_h_outf",
+      "source": "special_hermite_polynomial_h.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_hermite_polynomial_h_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_hermite_polynomial_h_outf",
+      "source": "special_hermite_polynomial_h.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_hermite_polynomial_h_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_hermite_polynomial_h_outf",
+      "source": "special_hermite_polynomial_h.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_hermite_polynomial_he_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_hermite_polynomial_he_outf",
+      "source": "special_hermite_polynomial_he.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_hermite_polynomial_he_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_hermite_polynomial_he_outf",
+      "source": "special_hermite_polynomial_he.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_hermite_polynomial_he_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_hermite_polynomial_he_outf",
+      "source": "special_hermite_polynomial_he.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_laguerre_polynomial_l_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_laguerre_polynomial_l_outf",
+      "source": "special_laguerre_polynomial_l.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_laguerre_polynomial_l_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_laguerre_polynomial_l_outf",
+      "source": "special_laguerre_polynomial_l.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_laguerre_polynomial_l_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_laguerre_polynomial_l_outf",
+      "source": "special_laguerre_polynomial_l.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_legendre_polynomial_p_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_legendre_polynomial_p_outf",
+      "source": "special_legendre_polynomial_p.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_legendre_polynomial_p_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_legendre_polynomial_p_outf",
+      "source": "special_legendre_polynomial_p.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_legendre_polynomial_p_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_legendre_polynomial_p_outf",
+      "source": "special_legendre_polynomial_p.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_shifted_chebyshev_polynomial_t_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_shifted_chebyshev_polynomial_t_outf",
+      "source": "special_shifted_chebyshev_polynomial_t.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_shifted_chebyshev_polynomial_t_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_shifted_chebyshev_polynomial_t_outf",
+      "source": "special_shifted_chebyshev_polynomial_t.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_shifted_chebyshev_polynomial_t_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_shifted_chebyshev_polynomial_t_outf",
+      "source": "special_shifted_chebyshev_polynomial_t.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_shifted_chebyshev_polynomial_u_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_shifted_chebyshev_polynomial_u_outf",
+      "source": "special_shifted_chebyshev_polynomial_u.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_shifted_chebyshev_polynomial_u_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_shifted_chebyshev_polynomial_u_outf",
+      "source": "special_shifted_chebyshev_polynomial_u.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_shifted_chebyshev_polynomial_u_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_shifted_chebyshev_polynomial_u_outf",
+      "source": "special_shifted_chebyshev_polynomial_u.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_shifted_chebyshev_polynomial_v_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_shifted_chebyshev_polynomial_v_outf",
+      "source": "special_shifted_chebyshev_polynomial_v.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_shifted_chebyshev_polynomial_v_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_shifted_chebyshev_polynomial_v_outf",
+      "source": "special_shifted_chebyshev_polynomial_v.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_shifted_chebyshev_polynomial_v_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_shifted_chebyshev_polynomial_v_outf",
+      "source": "special_shifted_chebyshev_polynomial_v.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_shifted_chebyshev_polynomial_w_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_shifted_chebyshev_polynomial_w_outf",
+      "source": "special_shifted_chebyshev_polynomial_w.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_shifted_chebyshev_polynomial_w_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_shifted_chebyshev_polynomial_w_outf",
+      "source": "special_shifted_chebyshev_polynomial_w.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_shifted_chebyshev_polynomial_w_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_shifted_chebyshev_polynomial_w_outf",
+      "source": "special_shifted_chebyshev_polynomial_w.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_xlog1py_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_xlog1py_outf",
+      "source": "special_xlog1py.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_xlog1py_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_xlog1py_outf",
+      "source": "special_xlog1py.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_xlog1py_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_xlog1py_outf",
+      "source": "special_xlog1py.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_xlogy_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_xlogy_outf",
+      "source": "special_xlogy.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_xlogy_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_xlogy_outf",
+      "source": "special_xlogy.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_xlogy_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_xlogy_outf",
+      "source": "special_xlogy.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_zeta_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_zeta_outf",
+      "source": "special_zeta.h:47:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_zeta_outf(const at::Tensor &,const c10::Scalar &,at::Tensor &)",
+      "symbol": "special_zeta_outf",
+      "source": "special_zeta.h:65:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::special_zeta_outf(const c10::Scalar &,const at::Tensor &,at::Tensor &)",
+      "symbol": "special_zeta_outf",
+      "source": "special_zeta.h:56:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::sqrt_(at::Tensor &)",
+      "symbol": "sqrt_",
+      "source": "sqrt.h:33:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::sqrt_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "sqrt_outf",
+      "source": "sqrt.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::square_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "square_outf",
+      "source": "square.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::t_copy_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "t_copy_outf",
+      "source": "t_copy.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::tan_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "tan_outf",
+      "source": "tan.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::tanh_backward_outf(const at::Tensor &,const at::Tensor &,at::Tensor &)",
+      "symbol": "tanh_backward_outf",
+      "source": "tanh_backward.h:32:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::tanh_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "tanh_outf",
+      "source": "tanh.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::trace_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "trace_outf",
+      "source": "trace.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::trunc_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "trunc_outf",
+      "source": "trunc.h:42:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::view_as_complex_copy_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "view_as_complex_copy_outf",
+      "source": "view_as_complex_copy.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::view_as_real_copy_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "view_as_real_copy_outf",
+      "source": "view_as_real_copy.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::zero_(at::Tensor &)",
+      "symbol": "zero_",
+      "source": "zero.h:28:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "function:at::zero_outf(const at::Tensor &,at::Tensor &)",
+      "symbol": "zero_outf",
+      "source": "zero.h:37:21",
+      "reason": "cpp.overload.ambiguous",
+      "message": "Ambiguous overloads do not have a unique generated name."
+    },
+    {
+      "id": "method:at::Tensor::item<type>()",
+      "symbol": "item",
+      "source": "ATen/core/TensorBody.h:257:5",
+      "reason": "cpp.template.unspecialized",
+      "message": "Unspecialized templates do not have a concrete generated ABI."
+    }
+  ]
 }

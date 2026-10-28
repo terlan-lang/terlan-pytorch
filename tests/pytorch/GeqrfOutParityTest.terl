@@ -1,0 +1,28 @@
+module pytorch.GeqrfOutParityTest.
+
+import pytorch.LinalgCompletion.{geqrf_out, qr_out}.
+import pytorch.Tensor.{dispose, empty_typed_native, from_floats, numel, shape}.
+
+/**
+ * Proves the generated-CXX geqrf completion resizes retained outputs.
+ */
+@test
+pub geqrf_out_populates_retained_outputs(): Bool ->
+    let matrix = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
+    let a = empty_typed_native([0], 7, 0, -1);
+    let tau = empty_typed_native([0], 7, 0, -1);
+    geqrf_out(a, tau, matrix);
+    let valid = shape(a) == [2, 2] and shape(tau) == [2] and numel(a) == 4 and numel(tau) == 2;
+    (dispose(tau); dispose(a); dispose(matrix); valid).
+
+/**
+ * Proves legacy qr.Q output mode selection and retained-output ownership.
+ */
+@test
+pub qr_out_populates_reduced_outputs(): Bool ->
+    let matrix = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
+    let q = empty_typed_native([0], 7, 0, -1);
+    let r = empty_typed_native([0], 7, 0, -1);
+    qr_out(q, r, matrix, true);
+    let valid = shape(q) == [2, 2] and shape(r) == [2, 2] and numel(q) == 4 and numel(r) == 4;
+    (dispose(r); dispose(q); dispose(matrix); valid).

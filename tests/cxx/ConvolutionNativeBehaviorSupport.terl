@@ -1,0 +1,223 @@
+module pytorch.ConvolutionNativeBehaviorSupport.
+
+import pytorch.ConvolutionNative.{conv1d_no_bias, conv1d_padding_no_bias, conv1d_padding_with_bias, conv1d_with_bias, conv2d_no_bias, conv2d_padding_no_bias, conv2d_padding_with_bias, conv2d_with_bias, conv3d_no_bias, conv3d_padding_no_bias, conv3d_padding_with_bias, conv3d_with_bias, conv_transpose1d_no_bias, conv_transpose1d_with_bias, conv_transpose2d_no_bias, conv_transpose2d_with_bias, conv_transpose3d_no_bias, conv_transpose3d_with_bias}.
+import pytorch.Tensor.{Float64, Strided, dispose, dispose_scalar, dtype, is_cuda, item, ones_device, scalar_to_float, shape}.
+
+import type pytorch.Tensor.
+
+owned_has_shape(tensor: Tensor, expected_shape: List[Int], expected_cuda: Bool): Bool ->
+    let valid =
+        shape(tensor) == expected_shape
+            and dtype(tensor) == Float64
+            and is_cuda(tensor) == expected_cuda;
+    dispose(tensor);
+    valid.
+
+owned_scalar_is(tensor: Tensor, expected: Float, expected_cuda: Bool): Bool ->
+    let scalar = item(tensor);
+    let valid =
+        shape(tensor) == [1, 1, 1, 1, 1]
+            and scalar_to_float(scalar) == expected
+            and dtype(tensor) == Float64
+            and is_cuda(tensor) == expected_cuda;
+    dispose_scalar(scalar);
+    dispose(tensor);
+    valid.
+
+/**
+ * Executes every generated ConvolutionNative contract on one device.
+ */
+pub convolution_native_contracts_on(device_name: String): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let bias = ones_device([1], Float64, Strided, device_name);
+    let input1 = ones_device([1, 1, 3], Float64, Strided, device_name);
+    let weight1 = ones_device([1, 1, 2], Float64, Strided, device_name);
+    let numeric1 = owned_has_shape(conv1d_no_bias(input1, weight1, [1], [0], [1], 1), [1, 1, 2], expected_cuda);
+    let biased1 =
+        owned_has_shape(
+            conv1d_with_bias(input1, weight1, bias, [1], [0], [1], 1),
+            [1, 1, 2],
+            expected_cuda,
+        );
+    let valid1 =
+        owned_has_shape(
+            conv1d_padding_no_bias(input1, weight1, [1], "valid", [1], 1),
+            [1, 1, 2],
+            expected_cuda,
+        );
+    let biased_valid1 =
+        owned_has_shape(
+            conv1d_padding_with_bias(input1, weight1, bias, [1], "valid", [1], 1),
+            [1, 1, 2],
+            expected_cuda,
+        );
+    let transpose_input1 = ones_device([1, 1, 2], Float64, Strided, device_name);
+    let transpose1 =
+        owned_has_shape(
+            conv_transpose1d_no_bias(transpose_input1, weight1, [1], [0], [0], 1, [1]),
+            [1, 1, 3],
+            expected_cuda,
+        );
+    let biased_transpose1 =
+        owned_has_shape(
+            conv_transpose1d_with_bias(transpose_input1, weight1, bias, [1], [0], [0], 1, [1]),
+            [1, 1, 3],
+            expected_cuda,
+        );
+    let input2 = ones_device([1, 1, 3, 3], Float64, Strided, device_name);
+    let weight2 = ones_device([1, 1, 2, 2], Float64, Strided, device_name);
+    let numeric2 =
+        owned_has_shape(
+            conv2d_no_bias(input2, weight2, [1, 1], [0, 0], [1, 1], 1),
+            [1, 1, 2, 2],
+            expected_cuda,
+        );
+    let biased2 =
+        owned_has_shape(
+            conv2d_with_bias(input2, weight2, bias, [1, 1], [0, 0], [1, 1], 1),
+            [1, 1, 2, 2],
+            expected_cuda,
+        );
+    let valid2 =
+        owned_has_shape(
+            conv2d_padding_no_bias(input2, weight2, [1, 1], "valid", [1, 1], 1),
+            [1, 1, 2, 2],
+            expected_cuda,
+        );
+    let biased_valid2 =
+        owned_has_shape(
+            conv2d_padding_with_bias(input2, weight2, bias, [1, 1], "valid", [1, 1], 1),
+            [1, 1, 2, 2],
+            expected_cuda,
+        );
+    let transpose_input2 = ones_device([1, 1, 2, 2], Float64, Strided, device_name);
+    let transpose2 =
+        owned_has_shape(
+            conv_transpose2d_no_bias(transpose_input2, weight2, [1, 1], [0, 0], [0, 0], 1, [1, 1]),
+            [1, 1, 3, 3],
+            expected_cuda,
+        );
+    let biased_transpose2 =
+        owned_has_shape(
+            conv_transpose2d_with_bias(
+                transpose_input2,
+                weight2,
+                bias,
+                [1, 1],
+                [0, 0],
+                [0, 0],
+                1,
+                [1, 1],
+            ),
+            [1, 1, 3, 3],
+            expected_cuda,
+        );
+    let input3 = ones_device([1, 1, 2, 2, 2], Float64, Strided, device_name);
+    let weight3 = ones_device([1, 1, 2, 2, 2], Float64, Strided, device_name);
+    let numeric3 =
+        owned_scalar_is(
+            conv3d_no_bias(input3, weight3, [1, 1, 1], [0, 0, 0], [1, 1, 1], 1),
+            8.0,
+            expected_cuda,
+        );
+    let biased3 =
+        owned_scalar_is(
+            conv3d_with_bias(input3, weight3, bias, [1, 1, 1], [0, 0, 0], [1, 1, 1], 1),
+            9.0,
+            expected_cuda,
+        );
+    let valid3 =
+        owned_scalar_is(
+            conv3d_padding_no_bias(input3, weight3, [1, 1, 1], "valid", [1, 1, 1], 1),
+            8.0,
+            expected_cuda,
+        );
+    let biased_valid3 =
+        owned_scalar_is(
+            conv3d_padding_with_bias(input3, weight3, bias, [1, 1, 1], "valid", [1, 1, 1], 1),
+            9.0,
+            expected_cuda,
+        );
+    let depthwise_input3 = ones_device([1, 2, 2, 2, 2], Float64, Strided, device_name);
+    let depthwise_weight3 = ones_device([2, 1, 2, 2, 2], Float64, Strided, device_name);
+    let depthwise3 =
+        owned_has_shape(
+            conv3d_no_bias(depthwise_input3, depthwise_weight3, [1, 1, 1], [0, 0, 0], [1, 1, 1], 2),
+            [1, 2, 1, 1, 1],
+            expected_cuda,
+        );
+    let transpose_input3 = ones_device([1, 1, 1, 1, 1], Float64, Strided, device_name);
+    let transpose3 =
+        owned_has_shape(
+            conv_transpose3d_no_bias(
+                transpose_input3,
+                weight3,
+                [1, 1, 1],
+                [0, 0, 0],
+                [0, 0, 0],
+                1,
+                [1, 1, 1],
+            ),
+            [1, 1, 2, 2, 2],
+            expected_cuda,
+        );
+    let biased_transpose3 =
+        owned_has_shape(
+            conv_transpose3d_with_bias(
+                transpose_input3,
+                weight3,
+                bias,
+                [1, 1, 1],
+                [0, 0, 0],
+                [0, 0, 0],
+                1,
+                [1, 1, 1],
+            ),
+            [1, 1, 2, 2, 2],
+            expected_cuda,
+        );
+    let sources_preserved =
+        shape(input1) == [1, 1, 3]
+            and shape(weight1) == [1, 1, 2]
+            and shape(transpose_input1) == [1, 1, 2]
+            and shape(input2) == [1, 1, 3, 3]
+            and shape(weight2) == [1, 1, 2, 2]
+            and shape(transpose_input2) == [1, 1, 2, 2]
+            and shape(input3) == [1, 1, 2, 2, 2]
+            and shape(weight3) == [1, 1, 2, 2, 2]
+            and shape(transpose_input3) == [1, 1, 1, 1, 1]
+            and shape(depthwise_input3) == [1, 2, 2, 2, 2]
+            and shape(depthwise_weight3) == [2, 1, 2, 2, 2]
+            and shape(bias) == [1];
+    dispose(depthwise_weight3);
+    dispose(depthwise_input3);
+    dispose(transpose_input3);
+    dispose(weight3);
+    dispose(input3);
+    dispose(transpose_input2);
+    dispose(weight2);
+    dispose(input2);
+    dispose(transpose_input1);
+    dispose(weight1);
+    dispose(input1);
+    dispose(bias);
+    numeric1
+        and biased1
+        and valid1
+        and biased_valid1
+        and transpose1
+        and biased_transpose1
+        and numeric2
+        and biased2
+        and valid2
+        and biased_valid2
+        and transpose2
+        and biased_transpose2
+        and numeric3
+        and biased3
+        and valid3
+        and biased_valid3
+        and depthwise3
+        and transpose3
+        and biased_transpose3
+        and sources_preserved.

@@ -1,0 +1,64 @@
+/**
+ * Typed linear interpolation with scalar or tensor weights and retained output storage.
+ */
+module pytorch.Lerp.
+
+import pytorch.LerpNative.{lerp_scalar, lerp_scalar_out, lerp_tensor as native_lerp_tensor, lerp_tensor_in_place as native_lerp_tensor_in_place, lerp_tensor_out as native_lerp_tensor_out}.
+import pytorch.Tensor.{copy_in_place, dispose}.
+
+import type pytorch.{Scalar, Tensor}.
+
+/**
+ * Interpolates between tensors using an integer scalar weight.
+ */
+pub lerp_int(input: Tensor, end: Tensor, weight: Int): Tensor ->
+    lerp_scalar(input, end, true, weight, 0.0).
+
+/**
+ * Writes integer-weight interpolation into retained output storage.
+ */
+pub lerp_int_out(output: Tensor, input: Tensor, end: Tensor, weight: Int): Unit ->
+    lerp_scalar_out(output, input, end, true, weight, 0.0).
+
+/**
+ * Interpolates between tensors using a floating-point scalar weight.
+ */
+pub lerp_float(input: Tensor, end: Tensor, weight: Float): Tensor ->
+    lerp_scalar(input, end, false, 0, weight).
+
+/**
+ * Writes floating-weight interpolation into retained output storage.
+ */
+pub lerp_float_out(output: Tensor, input: Tensor, end: Tensor, weight: Float): Unit ->
+    lerp_scalar_out(output, input, end, false, 0, weight).
+
+/**
+ * Interpolates in place using the exact tagged Scalar accepted by aten::lerp_.
+ * The generated CXX scalar leaf computes the result; copy_in_place preserves
+ * the caller's Tensor handle and mutation semantics without a second ABI.
+ */
+pub lerp_scalar_in_place(input: Tensor, end: Tensor, weight: Scalar): Unit ->
+    let weight_is_integer = weight.is_integer;
+    let weight_integer = weight.integer_value;
+    let weight_floating = weight.floating_value;
+    let result = lerp_scalar(input, end, weight_is_integer, weight_integer, weight_floating);
+    let _copied = copy_in_place(input, result, false);
+    dispose(result).
+
+/**
+ * Interpolates between tensors using an elementwise tensor weight.
+ */
+pub lerp_tensor(input: Tensor, end: Tensor, weight: Tensor): Tensor ->
+    native_lerp_tensor(input, end, weight).
+
+/**
+ * Writes tensor-weight interpolation into retained output storage.
+ */
+pub lerp_tensor_out(output: Tensor, input: Tensor, end: Tensor, weight: Tensor): Unit ->
+    native_lerp_tensor_out(output, input, end, weight).
+
+/**
+ * Interpolates retained tensor storage using elementwise tensor weights.
+ */
+pub lerp_tensor_in_place(input: Tensor, end: Tensor, weight: Tensor): Unit ->
+    native_lerp_tensor_in_place(input, end, weight).

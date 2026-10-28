@@ -1,0 +1,7 @@
+module pytorch_cxx.ClampNativeCudaBehaviorTest.
+
+import pytorch.ClampNativeBehaviorSupport.{clamp_contracts_on}.
+
+@test
+pub generated_cxx_clamp_cuda_contracts(): Bool ->
+    clamp_contracts_on("cuda:0").

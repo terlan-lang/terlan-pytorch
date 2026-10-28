@@ -1,0 +1,13 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{conv2d, full_float}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = full_float([1, 2, 3, 3], 1.0);
+    let invalid_group_kernel = full_float([3, 1, 2, 2], 1.0);
+    let bias = full_float([3], 0.0);
+    let output = conv2d(
+        input, invalid_group_kernel, bias, [1, 1], [0, 0], [1, 1], 2
+    );
+    println("PYTORCH_CONV2D_GROUP_TOPOLOGY_NOT_REJECTED").

@@ -1,0 +1,74 @@
+module pytorch.RangeBehaviorTest.
+
+import pytorch.Tensor.{arange, dispose, eye, item_float, linspace, logspace, narrow, shape}.
+
+import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Reads one vector element through an independently owned one-element view.
+ */
+vector_item(tensor: Tensor, index: Int): Float ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    value.
+
+/**
+ * Reads one matrix element through independently owned row and cell views.
+ */
+matrix_item(tensor: Tensor, row: Int, column: Int): Float ->
+    let selected_row = narrow(tensor, 0, row, 1);
+    let cell = narrow(selected_row, 1, column, 1);
+    let value = item_float(cell);
+    dispose(cell);
+    dispose(selected_row);
+    value.
+
+@test
+pub arange_matches_exclusive_bounds_in_both_directions(): Bool ->
+    let ascending = arange(1.0, 6.0, 2.0, DType.FLOAT64);
+    let descending = arange(5.0, 0.0, -2.0, DType.FLOAT64);
+    let valid =
+        shape(ascending) == [3]
+            and vector_item(ascending, 0) == 1.0
+            and vector_item(ascending, 1) == 3.0
+            and vector_item(ascending, 2) == 5.0
+            and shape(descending) == [3]
+            and vector_item(descending, 0) == 5.0
+            and vector_item(descending, 1) == 3.0
+            and vector_item(descending, 2) == 1.0;
+    dispose(descending);
+    dispose(ascending);
+    valid.
+
+@test
+pub linear_and_logarithmic_spacing_match_libtorch(): Bool ->
+    let linear = linspace(0.0, 1.0, 5, DType.FLOAT64);
+    let logarithmic = logspace(0.0, 3.0, 4, 2.0, DType.FLOAT64);
+    let valid =
+        vector_item(linear, 0) == 0.0
+            and vector_item(linear, 1) == 0.25
+            and vector_item(linear, 2) == 0.5
+            and vector_item(linear, 3) == 0.75
+            and vector_item(linear, 4) == 1.0
+            and vector_item(logarithmic, 0) == 1.0
+            and vector_item(logarithmic, 1) == 2.0
+            and vector_item(logarithmic, 2) == 4.0
+            and vector_item(logarithmic, 3) == 8.0;
+    dispose(logarithmic);
+    dispose(linear);
+    valid.
+
+@test
+pub rectangular_identity_contains_exact_diagonal_values(): Bool ->
+    let identity = eye(2, 3, DType.FLOAT64);
+    let valid =
+        shape(identity) == [2, 3]
+            and matrix_item(identity, 0, 0) == 1.0
+            and matrix_item(identity, 0, 1) == 0.0
+            and matrix_item(identity, 0, 2) == 0.0
+            and matrix_item(identity, 1, 0) == 0.0
+            and matrix_item(identity, 1, 1) == 1.0
+            and matrix_item(identity, 1, 2) == 0.0;
+    dispose(identity);
+    valid.

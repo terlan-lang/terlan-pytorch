@@ -1,0 +1,144 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Typed audit for the generated CXX exception boundary.
+ *
+ * The CXX generator emits one-line extern declarations and one-line helper
+ * calls.  Keeping this check in Terlan means the active validation pipeline
+ * does not depend on a Python source mutator or parser.
+ */
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.Console.{eprintln, println}.
+import std.io.File.
+import std.system.Arguments.
+
+first_segment(parts: List[String], fallback: String): String ->
+    case parts {
+        [first | _] -> first;
+        [] -> fallback
+    }.
+
+drop_first(parts: List[String]): List[String] ->
+    case parts {
+        [] -> [];
+        [_ | rest] -> rest
+    }.
+
+skip_name(name: String): Bool ->
+    name == "terlan_resource_list_pytorch_tensor_tensor_new"
+        or name == "terlan_resource_list_pytorch_tensor_tensor_push"
+        or name == "terlan_resource_pytorch_cuda_stream_copy"
+        or name == "terlan_resource_pytorch_randomcompletion_generator_copy"
+        or name == "terlan_resource_pytorch_storagenative_storagehandle_copy"
+        or name == "terlan_resource_pytorch_tensor_tensor_copy"
+        or name == "q_per_channel_axis"
+        or name == "q_scale"
+        or name == "q_zero_point".
+
+declaration_name(line: String): String ->
+    let after_fn = first_segment(drop_first(String.split(line, "fn ")), "");
+    String.trim(first_segment(String.split(after_fn, "("), after_fn)).
+
+collect_direct_names(
+    lines: List[String],
+    before_marker: Bool,
+    output: List[String],
+): List[String] ->
+    case lines {
+        [] -> output;
+        [line | rest] ->
+            if {
+                not before_marker -> output;
+                String.contains(line, "fn terlan_owned_value_pytorch_tensor_ones") -> collect_direct_names(rest, false, output);
+                String.contains(line, "fn ") and String.contains(line, "(") -> let name = declaration_name(line);
+                if {
+                    skip_name(name) -> collect_direct_names(rest, true, output);
+                    true -> collect_direct_names(rest, true, [name | output])
+                };
+                true -> collect_direct_names(rest, true, output)
+            }
+    }.
+
+declarations_are_result_wrapped(lines: List[String], before_marker: Bool): Bool ->
+    case lines {
+        [] -> true;
+        [line | rest] ->
+            if {
+                not before_marker -> true;
+                String.contains(line, "fn terlan_owned_value_pytorch_tensor_ones") -> declarations_are_result_wrapped(rest, false);
+                String.contains(line, "fn ") and String.contains(line, "(") -> let name = declaration_name(line);
+                if {
+                    skip_name(name) -> declarations_are_result_wrapped(rest, true);
+                    String.contains(line, "Result<") -> declarations_are_result_wrapped(rest, true);
+                    true -> false
+                };
+                true -> declarations_are_result_wrapped(rest, true)
+            }
+    }.
+
+helper_calls_are_wrapped(lines: List[String], names: List[String]): Bool ->
+    case lines {
+        [] -> true;
+        [line | rest] ->
+            if {
+                String.contains(line, "ffi::") and String.contains(line, "(") -> if {
+                    String.contains(line, "ffi_result!(ffi::") -> helper_calls_are_wrapped(rest, names);
+                    helper_line_matches_name(line, names) -> false;
+                    true -> helper_calls_are_wrapped(rest, names)
+                };
+                true -> helper_calls_are_wrapped(rest, names)
+            }
+    }.
+
+helper_line_matches_name(line: String, names: List[String]): Bool ->
+    case names {
+        [] -> false;
+        [name | rest] ->
+            String.contains(line, String.concat(["ffi::", name, "("]))
+                or helper_line_matches_name(line, rest)
+    }.
+
+check_file(root: String): Bool ->
+    let lib = String.concat([root, "/native/rust/src/lib.rs"]);
+    let helper = String.concat([root, "/native/rust/src/bin/native_boundary_helper.rs"]);
+    case {File.read_text(lib), File.read_text(helper)} {
+        {Ok(source), Ok(helper_source)} ->
+            let lines = String.split(source, "\n");
+            let names = collect_direct_names(lines, true, []);
+            if {
+                not declarations_are_result_wrapped(lines, true) -> false;
+                true -> helper_calls_are_wrapped(String.split(helper_source, "\n"), names)
+            };
+        _ -> false
+    }.
+
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[cxx_exception_surface]: ", message));
+    false.
+
+check_all(roots: List[String]): Bool ->
+    case roots {
+        [] -> true;
+        [root | rest] -> check_file(root) and check_all(rest)
+    }.
+
+entry(): Bool ->
+    case {Arguments.get(0), Arguments.get(1)} {
+        {Some(repository), None} ->
+            if {
+                check_all([repository]) -> let _printed = println("CXX exception surface is fully Result-wrapped");
+                true;
+                true -> failure("direct CXX declarations or helper calls bypass Result translation")
+            };
+        {Some(repository), Some(generated)} ->
+            if {
+                check_all([repository, generated]) -> let _printed = println("CXX exception surface is fully Result-wrapped");
+                true;
+                true -> failure("direct CXX declarations or helper calls bypass Result translation")
+            };
+        _ -> failure("usage: CheckCxxExceptionSurface.terls <repository> [generated]")
+    }.
+
+assert(entry());
+Unit.

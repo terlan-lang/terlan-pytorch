@@ -1,0 +1,193 @@
+/**
+ * Generated direct-CXX implementation of binary cross-entropy forward, backward, optional weighting, and retained-output operations.
+ */
+module pytorch.BinaryCrossEntropyCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Computes exact aten::binary_cross_entropy without weight.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy}
+pub binary_cross_entropy(input: Tensor, target: Tensor, reduction: Int): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::binary_cross_entropy with weight.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_weight}
+pub binary_cross_entropy_weight(
+    input: Tensor,
+    target: Tensor,
+    weight: Tensor,
+    reduction: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::binary_cross_entropy.out without weight.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_out}
+pub binary_cross_entropy_out(output: Tensor, input: Tensor, target: Tensor, reduction: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::binary_cross_entropy.out with weight through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_weight_out}
+pub binary_cross_entropy_weight_out(
+    output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    weight: Tensor,
+    reduction: Int,
+): Unit ->
+    native.
+
+/**
+ * Computes exact aten::binary_cross_entropy_backward without weight.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_backward}
+pub binary_cross_entropy_backward(
+    gradient: Tensor,
+    input: Tensor,
+    target: Tensor,
+    reduction: Int,
+): Tensor ->
+    native.
+
+/**
+ * Computes exact aten::binary_cross_entropy_backward with weight.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_backward_weight}
+pub binary_cross_entropy_backward_weight(
+    gradient: Tensor,
+    input: Tensor,
+    target: Tensor,
+    weight: Tensor,
+    reduction: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::binary_cross_entropy_backward.grad_input without weight.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_backward_out}
+pub binary_cross_entropy_backward_out(
+    output: Tensor,
+    gradient: Tensor,
+    input: Tensor,
+    target: Tensor,
+    reduction: Int,
+): Unit ->
+    native.
+
+/**
+ * Writes exact aten::binary_cross_entropy_backward.grad_input with weight through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_backward_weight_out}
+pub binary_cross_entropy_backward_weight_out(
+    output: Tensor,
+    gradient: Tensor,
+    input: Tensor,
+    target: Tensor,
+    weight: Tensor,
+    reduction: Int,
+): Unit ->
+    native.
+
+/**
+ * Computes exact aten::binary_cross_entropy_with_logits without weights.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_with_logits}
+pub binary_cross_entropy_with_logits(input: Tensor, target: Tensor, reduction: Int): Tensor ->
+    native.
+
+/**
+ * Computes exact logits BCE with element weight.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_with_logits_weight}
+pub binary_cross_entropy_with_logits_weight(
+    input: Tensor,
+    target: Tensor,
+    weight: Tensor,
+    reduction: Int,
+): Tensor ->
+    native.
+
+/**
+ * Computes exact logits BCE with positive-class weight.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_with_logits_positive_weight}
+pub binary_cross_entropy_with_logits_positive_weight(
+    input: Tensor,
+    target: Tensor,
+    positive_weight: Tensor,
+    reduction: Int,
+): Tensor ->
+    native.
+
+/**
+ * Computes exact logits BCE with both weight forms.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_with_logits_both_weights}
+pub binary_cross_entropy_with_logits_both_weights(
+    input: Tensor,
+    target: Tensor,
+    weight: Tensor,
+    positive_weight: Tensor,
+    reduction: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes exact logits BCE out without weights.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_with_logits_out}
+pub binary_cross_entropy_with_logits_out(
+    output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    reduction: Int,
+): Unit ->
+    native.
+
+/**
+ * Writes exact logits BCE out with element weight through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_with_logits_weight_out}
+pub binary_cross_entropy_with_logits_weight_out(
+    output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    weight: Tensor,
+    reduction: Int,
+): Unit ->
+    native.
+
+/**
+ * Writes exact logits BCE out with positive-class weight through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_with_logits_positive_weight_out}
+pub binary_cross_entropy_with_logits_positive_weight_out(
+    output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    positive_weight: Tensor,
+    reduction: Int,
+): Unit ->
+    native.
+
+/**
+ * Writes exact logits BCE out with both weight forms through the typed direct-ATen path.
+ */
+@compiler.native {pytorch.binary_cross_entropy.binary_cross_entropy_with_logits_both_weights_out}
+pub binary_cross_entropy_with_logits_both_weights_out(
+    output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    weight: Tensor,
+    positive_weight: Tensor,
+    reduction: Int,
+): Unit ->
+    native.

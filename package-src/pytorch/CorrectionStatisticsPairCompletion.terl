@@ -1,0 +1,228 @@
+/**
+ * Exact paired correction-based standard-deviation, variance, and mean operations.
+ */
+module pytorch.CorrectionStatisticsPairCompletion.
+
+import pytorch.CorrectionStatisticsPairNative.{std_mean_correction_dimensions_float_pair, std_mean_correction_dimensions_int_pair, std_mean_correction_float_pair, std_mean_correction_int_pair, std_mean_correction_out_dimensions_float as native_std_mean_correction_out_dimensions_float, std_mean_correction_out_dimensions_int as native_std_mean_correction_out_dimensions_int, std_mean_correction_out_float as native_std_mean_correction_out_float, std_mean_correction_out_int as native_std_mean_correction_out_int, var_mean_correction_dimensions_float_pair, var_mean_correction_dimensions_int_pair, var_mean_correction_float_pair, var_mean_correction_int_pair, var_mean_correction_out_dimensions_float as native_var_mean_correction_out_dimensions_float, var_mean_correction_out_dimensions_int as native_var_mean_correction_out_dimensions_int, var_mean_correction_out_float as native_var_mean_correction_out_float, var_mean_correction_out_int as native_var_mean_correction_out_int}.
+import pytorch.Tensor.{dispose_tensor_pair, tensor_pair_first, tensor_pair_second}.
+
+import type pytorch.CorrectionStatisticsPairNative.TensorPair.
+import type pytorch.Tensor.
+
+pair_values(pair: TensorPair): {Tensor, Tensor} ->
+    let first = tensor_pair_first(pair);
+    let second = tensor_pair_second(pair);
+    dispose_tensor_pair(pair);
+    {first, second}.
+
+/**
+ * Computes paired standard deviation and mean with integer correction.
+ */
+pub std_mean_correction_int(input: Tensor, correction: Int, keep_dimension: Bool): {Tensor, Tensor} ->
+    pair_values(std_mean_correction_int_pair(input, correction, keep_dimension)).
+
+/**
+ * Computes paired standard deviation and mean with floating correction.
+ */
+pub std_mean_correction_float(
+    input: Tensor,
+    correction: Float,
+    keep_dimension: Bool,
+): {Tensor, Tensor} ->
+    pair_values(std_mean_correction_float_pair(input, correction, keep_dimension)).
+
+/**
+ * Computes dimension-wise paired standard deviation and mean with integer correction.
+ */
+pub std_mean_correction_dimensions_int(
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Int,
+    keep_dimension: Bool,
+): {Tensor, Tensor} ->
+    pair_values(
+        std_mean_correction_dimensions_int_pair(input, dimensions, correction, keep_dimension),
+    ).
+
+/**
+ * Computes dimension-wise paired standard deviation and mean with floating correction.
+ */
+pub std_mean_correction_dimensions_float(
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Float,
+    keep_dimension: Bool,
+): {Tensor, Tensor} ->
+    pair_values(
+        std_mean_correction_dimensions_float_pair(input, dimensions, correction, keep_dimension),
+    ).
+
+/**
+ * Writes paired standard deviation and mean with integer correction into retained outputs.
+ */
+pub std_mean_correction_out_int(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    correction: Int,
+    keep_dimension: Bool,
+): Unit ->
+    native_std_mean_correction_out_int(output, mean_output, input, correction, keep_dimension).
+
+/**
+ * Writes paired standard deviation and mean with floating correction into retained outputs.
+ */
+pub std_mean_correction_out_float(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    correction: Float,
+    keep_dimension: Bool,
+): Unit ->
+    native_std_mean_correction_out_float(output, mean_output, input, correction, keep_dimension).
+
+/**
+ * Writes dimension-wise paired standard deviation and mean with integer correction into retained outputs.
+ */
+pub std_mean_correction_out_dimensions_int(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Int,
+    keep_dimension: Bool,
+): Unit ->
+    native_std_mean_correction_out_dimensions_int(
+        output,
+        mean_output,
+        input,
+        dimensions,
+        correction,
+        keep_dimension,
+    ).
+
+/**
+ * Writes dimension-wise paired standard deviation and mean with floating correction into retained outputs.
+ */
+pub std_mean_correction_out_dimensions_float(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Float,
+    keep_dimension: Bool,
+): Unit ->
+    native_std_mean_correction_out_dimensions_float(
+        output,
+        mean_output,
+        input,
+        dimensions,
+        correction,
+        keep_dimension,
+    ).
+
+/**
+ * Computes paired variance and mean with integer correction.
+ */
+pub var_mean_correction_int(input: Tensor, correction: Int, keep_dimension: Bool): {Tensor, Tensor} ->
+    pair_values(var_mean_correction_int_pair(input, correction, keep_dimension)).
+
+/**
+ * Computes paired variance and mean with floating correction.
+ */
+pub var_mean_correction_float(
+    input: Tensor,
+    correction: Float,
+    keep_dimension: Bool,
+): {Tensor, Tensor} ->
+    pair_values(var_mean_correction_float_pair(input, correction, keep_dimension)).
+
+/**
+ * Computes dimension-wise paired variance and mean with integer correction.
+ */
+pub var_mean_correction_dimensions_int(
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Int,
+    keep_dimension: Bool,
+): {Tensor, Tensor} ->
+    pair_values(
+        var_mean_correction_dimensions_int_pair(input, dimensions, correction, keep_dimension),
+    ).
+
+/**
+ * Computes dimension-wise paired variance and mean with floating correction.
+ */
+pub var_mean_correction_dimensions_float(
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Float,
+    keep_dimension: Bool,
+): {Tensor, Tensor} ->
+    pair_values(
+        var_mean_correction_dimensions_float_pair(input, dimensions, correction, keep_dimension),
+    ).
+
+/**
+ * Writes paired variance and mean with integer correction into retained outputs.
+ */
+pub var_mean_correction_out_int(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    correction: Int,
+    keep_dimension: Bool,
+): Unit ->
+    native_var_mean_correction_out_int(output, mean_output, input, correction, keep_dimension).
+
+/**
+ * Writes paired variance and mean with floating correction into retained outputs.
+ */
+pub var_mean_correction_out_float(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    correction: Float,
+    keep_dimension: Bool,
+): Unit ->
+    native_var_mean_correction_out_float(output, mean_output, input, correction, keep_dimension).
+
+/**
+ * Writes dimension-wise paired variance and mean with integer correction into retained outputs.
+ */
+pub var_mean_correction_out_dimensions_int(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Int,
+    keep_dimension: Bool,
+): Unit ->
+    native_var_mean_correction_out_dimensions_int(
+        output,
+        mean_output,
+        input,
+        dimensions,
+        correction,
+        keep_dimension,
+    ).
+
+/**
+ * Writes dimension-wise paired variance and mean with floating correction into retained outputs.
+ */
+pub var_mean_correction_out_dimensions_float(
+    output: Tensor,
+    mean_output: Tensor,
+    input: Tensor,
+    dimensions: List[Int],
+    correction: Float,
+    keep_dimension: Bool,
+): Unit ->
+    native_var_mean_correction_out_dimensions_float(
+        output,
+        mean_output,
+        input,
+        dimensions,
+        correction,
+        keep_dimension,
+    ).

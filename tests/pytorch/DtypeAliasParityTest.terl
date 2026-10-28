@@ -1,0 +1,46 @@
+module pytorch.DtypeAliasParityTest.
+
+import pytorch.Tensor.{bfloat16, bool, byte, cdouble, cfloat, char, dispose, double, dtype, float, from_floats, half, int, long, short}.
+
+@test
+pub dtype_aliases_match_pytorch_conversion_ids(): Bool ->
+    let source = from_floats([1.0, 2.0], [2]);
+    let float_value = float(source);
+    let double_value = double(source);
+    let half_value = half(source);
+    let int_value = int(source);
+    let long_value = long(source);
+    let bool_value = bool(source);
+    let bfloat = bfloat16(source);
+    let byte_value = byte(source);
+    let complex_double = cdouble(source);
+    let complex_float = cfloat(source);
+    let character = char(source);
+    let short_value = short(source);
+    let valid =
+        dtype(float_value) == 6
+            and dtype(double_value) == 7
+            and dtype(half_value) == 5
+            and dtype(int_value) == 3
+            and dtype(long_value) == 4
+            and dtype(bool_value) == 11
+            and dtype(bfloat) == 15
+            and dtype(byte_value) == 0
+            and dtype(complex_double) == 10
+            and dtype(complex_float) == 9
+            and dtype(character) == 1
+            and dtype(short_value) == 2;
+    dispose(short_value);
+    dispose(character);
+    dispose(complex_float);
+    dispose(complex_double);
+    dispose(byte_value);
+    dispose(bfloat);
+    dispose(bool_value);
+    dispose(long_value);
+    dispose(int_value);
+    dispose(half_value);
+    dispose(double_value);
+    dispose(float_value);
+    dispose(source);
+    valid.

@@ -1,0 +1,14 @@
+/**
+ * CPU runtime evidence for backend-availability predicates.
+ */
+module pytorch.BackendAvailabilityParityTest.
+
+import pytorch.BackendAvailability.{cudnn_is_acceptable, is_vulkan_available, sym_is_contiguous}.
+import pytorch.Tensor.{dispose, from_floats}.
+
+@test
+pub backend_availability_cpu_forms_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let valid = not is_vulkan_available() and not cudnn_is_acceptable(input) and sym_is_contiguous(input, 0);
+    dispose(input);
+    valid.

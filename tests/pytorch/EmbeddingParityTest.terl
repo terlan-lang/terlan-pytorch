@@ -1,0 +1,184 @@
+module pytorch.EmbeddingParityTest.
+
+import pytorch.Gradients.{embedding_dense_backward_out, embedding_sparse_backward}.
+import pytorch.Sparse.to_dense.
+import pytorch.Tensor.{dispose, embedding_bag, embedding_bag_padding, embedding_bag_padding_weighted, embedding_bag_public, embedding_bag_weighted, embedding_out, embedding_renorm, embedding_renorm_in_place, embedding_renorm_out, flatten, from_floats, from_ints, gather_out, item_float, narrow, shape, sum}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads one floating-point value from a flattened tensor.
+ */
+flat_item(tensor: Tensor, index: Int): Float ->
+    let flattened = flatten(tensor, 0, -1);
+    let element = narrow(flattened, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    dispose(flattened);
+    value.
+
+/**
+ * Sums a tensor without consuming its storage.
+ */
+sum_value(tensor: Tensor): Float ->
+    let total = sum(tensor);
+    let value = item_float(total);
+    dispose(total);
+    value.
+
+/**
+ * Proves the public embedding_bag compatibility adapter returns the same
+ * output tensor as the underlying LibTorch embedding-bag leaf.
+ */
+@test
+pub public_embedding_bag_returns_output_only(): Bool ->
+    let weight = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let indices = from_ints([0, 1], [2]);
+    let offsets = from_ints([0], [1]);
+    let output = embedding_bag_public(weight, indices, offsets, false, 0, false, false);
+    let valid = shape(output) == [1, 2] and flat_item(output, 0) == 4.0 and flat_item(output, 1) == 6.0;
+    dispose(output);
+    dispose(offsets);
+    dispose(indices);
+    dispose(weight);
+    valid.
+
+/**
+ * Releases every tensor returned by one embedding-bag invocation.
+ */
+dispose_bag(
+    output: Tensor,
+    offset_to_bag: Tensor,
+    bag_size: Tensor,
+    maximum_indices: Tensor,
+): Unit ->
+    dispose(maximum_indices);
+    dispose(bag_size);
+    dispose(offset_to_bag);
+    dispose(output).
+
+/**
+ * Proves retained embedding and gather outputs preserve source tensors.
+ */
+@test
+pub embedding_and_gather_outputs_match_libtorch(): Bool ->
+    let weight = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [3, 2]);
+    let embedding_indices = from_ints([2, 0], [2]);
+    let embedded = from_floats([], [0]);
+    embedding_out(embedded, weight, embedding_indices, -1, false, false);
+    let gathered_source = from_floats([10.0, 20.0, 30.0], [3]);
+    let gather_indices = from_ints([2, 0], [2]);
+    let gathered = from_floats([], [0]);
+    (gather_out(gathered, gathered_source, 0, gather_indices, false); let valid =
+    shape(embedded) == [2, 2]
+        and flat_item(embedded, 0) == 5.0
+        and flat_item(embedded, 1) == 6.0
+        and flat_item(embedded, 2) == 1.0
+        and flat_item(embedded, 3) == 2.0
+        and shape(gathered) == [2]
+        and flat_item(gathered, 0) == 30.0
+        and flat_item(gathered, 1) == 10.0
+        and sum_value(weight) == 21.0
+        and sum_value(gathered_source) == 60.0;
+(dispose(gathered); dispose(gather_indices); dispose(gathered_source); dispose(embedded); dispose(embedding_indices); dispose(weight); valid)).
+
+/**
+ * Proves embedding bags cover absent/present sample weights and padding indices.
+ */
+@test
+pub embedding_bag_optionals_match_libtorch(): Bool ->
+    let weight = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [4, 2]);
+    let indices = from_ints([0, 1, 2, 3], [4]);
+    let offsets = from_ints([0, 2], [2]);
+    let sample_weights = from_floats([1.0, 0.5, 2.0, 0.25], [4]);
+    let {plain, plain_mapping, plain_sizes, plain_maximum} = embedding_bag(weight, indices, offsets, false, 0, false, false);
+    let {weighted, weighted_mapping, weighted_sizes, weighted_maximum} = embedding_bag_weighted(weight, indices, offsets, false, 0, false, sample_weights, false);
+    let {padded, padded_mapping, padded_sizes, padded_maximum} = embedding_bag_padding(weight, indices, offsets, false, 0, false, false, 0);
+    let {weighted_padded, weighted_padded_mapping, weighted_padded_sizes, weighted_padded_maximum} =
+        embedding_bag_padding_weighted(
+            weight,
+            indices,
+            offsets,
+            false,
+            0,
+            false,
+            sample_weights,
+            false,
+            0,
+        );
+    let valid =
+        shape(plain) == [2, 2]
+            and shape(weighted) == [2, 2]
+            and shape(padded) == [2, 2]
+            and shape(weighted_padded) == [2, 2]
+            and sum_value(plain) == 36.0
+            and sum_value(weighted) == 32.25
+            and sum_value(padded) == 33.0
+            and sum_value(weighted_padded) == 29.25
+            and shape(indices) == [4]
+            and shape(offsets) == [2]
+            and sum_value(weight) == 36.0
+            and sum_value(sample_weights) == 3.75;
+    dispose_bag(
+        weighted_padded,
+        weighted_padded_mapping,
+        weighted_padded_sizes,
+        weighted_padded_maximum,
+    );
+    dispose_bag(padded, padded_mapping, padded_sizes, padded_maximum);
+    dispose_bag(weighted, weighted_mapping, weighted_sizes, weighted_maximum);
+    dispose_bag(plain, plain_mapping, plain_sizes, plain_maximum);
+    dispose(sample_weights);
+    dispose(offsets);
+    dispose(indices);
+    dispose(weight);
+    valid.
+
+/**
+ * Proves functional, output, and in-place embedding renormalization contracts.
+ */
+@test
+pub embedding_renorm_variants_match_libtorch(): Bool ->
+    let weight = from_floats([3.0, 4.0, 0.0, 2.0], [2, 2]);
+    let output_weight = from_floats([3.0, 4.0, 0.0, 2.0], [2, 2]);
+    let mutable_weight = from_floats([3.0, 4.0, 0.0, 2.0], [2, 2]);
+    let indices = from_ints([0], [1]);
+    let bounded = embedding_renorm(weight, indices, 1.0, 2.0);
+    let output = from_floats([], [0]);
+    embedding_renorm_out(output, output_weight, indices, 1.0, 2.0);
+    embedding_renorm_in_place(mutable_weight, indices, 1.0, 2.0);
+    let valid =
+        shape(bounded) == [2, 2]
+            and flat_item(bounded, 0) > 0.59
+            and flat_item(bounded, 0) < 0.61
+            and flat_item(bounded, 1) > 0.79
+            and flat_item(bounded, 1) < 0.81
+            and flat_item(output, 0) > 0.59
+            and flat_item(output, 1) > 0.79
+            and flat_item(mutable_weight, 0) > 0.59
+            and flat_item(mutable_weight, 1) > 0.79
+            and sum_value(weight) == 9.0
+            and sum_value(output_weight) == 9.0;
+    (dispose(output); dispose(bounded); dispose(indices); dispose(mutable_weight); dispose(output_weight); dispose(weight); valid).
+
+/**
+ * Proves dense retained-output and sparse embedding gradient kernels.
+ */
+@test
+pub embedding_gradient_variants_match_libtorch(): Bool ->
+    let gradient = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let indices = from_ints([0, 2], [2]);
+    let dense_output = from_floats([], [0]);
+    embedding_dense_backward_out(dense_output, gradient, indices, 3, -1, false);
+    let sparse_gradient = embedding_sparse_backward(gradient, indices, 3, -1, false);
+    let sparse_dense = to_dense(sparse_gradient);
+    let valid =
+        shape(dense_output) == [3, 2]
+            and shape(sparse_gradient) == [3, 2]
+            and sum_value(dense_output) == 10.0
+            and sum_value(sparse_dense) == 10.0
+            and flat_item(dense_output, 0) == 1.0
+            and flat_item(dense_output, 4) == 3.0
+            and shape(gradient) == [2, 2]
+            and shape(indices) == [2];
+    (dispose(sparse_dense); dispose(sparse_gradient); dispose(dense_output); dispose(indices); dispose(gradient); valid).

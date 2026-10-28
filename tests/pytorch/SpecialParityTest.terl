@@ -1,0 +1,424 @@
+module pytorch.SpecialParityTest.
+
+import pytorch.Special.{absolute, angle, arccos, arccosh, arcsin, arcsinh, arctan, arctanh, conj_physical, corrcoef, det, digamma, fix, fliplr, flipud, i0, inverse, isreal, lgamma, linalg_eigvals, linalg_matrix_exp, log_sigmoid, logdet, matrix_exp, msort, nanmedian, negative, sgn, special_airy_ai, special_bessel_j0, special_bessel_j1, special_bessel_y0, special_bessel_y1, special_digamma, special_entr, special_erf, special_erfc, special_erfcx, special_erfinv, special_exp2, special_expit, special_expm1, special_gammaln, special_i0, special_i0e, special_i1, special_i1e, special_log1p, special_log_ndtr, special_log_softmax, special_log_softmax_dtype, special_logit, special_logit_epsilon, special_logsumexp, special_modified_bessel_i0, special_modified_bessel_i1, special_modified_bessel_k0, special_modified_bessel_k1, special_ndtr, special_ndtri, special_polygamma, special_psi, special_round, special_scaled_modified_bessel_k0, special_scaled_modified_bessel_k1, special_sinc, special_softmax, special_softmax_dtype, special_spherical_bessel_j0}.
+import pytorch.Tensor.{dispose, dtype, from_float, from_floats, item_bool, item_float, narrow, shape, sum}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads one vector element through an independently owned view.
+ */
+vector_item(tensor: Tensor, index: Int): Float ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    value.
+
+/**
+ * Reads one matrix element through independently owned row and cell views.
+ */
+matrix_item(tensor: Tensor, row: Int, column: Int): Float ->
+    let selected_row = narrow(tensor, 0, row, 1);
+    let cell = narrow(selected_row, 1, column, 1);
+    let value = item_float(cell);
+    dispose(cell);
+    dispose(selected_row);
+    value.
+
+/**
+ * Proves aliases, inverse functions, classification, and scalar helpers.
+ */
+@test
+pub scalar_special_operations_match_libtorch(): Bool ->
+    let zero = from_float(0.0);
+    let one = from_float(1.0);
+    let two = from_float(2.0);
+    let negative_source = from_float(-2.75);
+    let absolute_value = absolute(negative_source);
+    let angle_value = angle(two);
+    let inverse_cosine = arccos(one);
+    let inverse_hyperbolic_cosine = arccosh(one);
+    let inverse_sine = arcsin(zero);
+    let inverse_hyperbolic_sine = arcsinh(zero);
+    let inverse_tangent = arctan(zero);
+    let inverse_hyperbolic_tangent = arctanh(zero);
+    let conjugate = conj_physical(two);
+    let digamma_value = digamma(one);
+    let fixed = fix(negative_source);
+    let bessel_i0 = i0(zero);
+    let real_classification = isreal(two);
+    let log_gamma = lgamma(one);
+    let log_sigmoid_value = log_sigmoid(zero);
+    let negated = negative(two);
+    let sign = sgn(negative_source);
+    let digamma_observed = item_float(digamma_value);
+    let log_sigmoid_observed = item_float(log_sigmoid_value);
+    let valid =
+        item_float(absolute_value) == 2.75
+            and item_float(angle_value) == 0.0
+            and item_float(inverse_cosine) == 0.0
+            and item_float(inverse_hyperbolic_cosine) == 0.0
+            and item_float(inverse_sine) == 0.0
+            and item_float(inverse_hyperbolic_sine) == 0.0
+            and item_float(inverse_tangent) == 0.0
+            and item_float(inverse_hyperbolic_tangent) == 0.0
+            and item_float(conjugate) == 2.0
+            and digamma_observed > -0.58
+            and digamma_observed < -0.57
+            and item_float(fixed) == -2.0
+            and item_float(bessel_i0) == 1.0
+            and item_bool(real_classification)
+            and item_float(log_gamma) == 0.0
+            and log_sigmoid_observed > -0.7
+            and log_sigmoid_observed < -0.69
+            and item_float(negated) == -2.0
+            and item_float(sign) == -1.0
+            and item_float(two) == 2.0;
+    dispose(sign);
+    dispose(negated);
+    dispose(log_sigmoid_value);
+    dispose(log_gamma);
+    dispose(real_classification);
+    dispose(bessel_i0);
+    dispose(fixed);
+    dispose(digamma_value);
+    dispose(conjugate);
+    dispose(inverse_hyperbolic_tangent);
+    dispose(inverse_tangent);
+    dispose(inverse_hyperbolic_sine);
+    dispose(inverse_sine);
+    dispose(inverse_hyperbolic_cosine);
+    dispose(inverse_cosine);
+    dispose(angle_value);
+    dispose(absolute_value);
+    dispose(negative_source);
+    dispose(two);
+    dispose(one);
+    dispose(zero);
+    valid.
+
+/**
+ * Proves correlation across perfectly aligned feature rows.
+ */
+@test
+pub correlation_matches_libtorch(): Bool ->
+    let correlated = from_floats([1.0, 2.0, 3.0, 2.0, 4.0, 6.0], [2, 3]);
+    let correlation = corrcoef(correlated);
+    let correlation_sum = sum(correlation);
+    let observed = item_float(correlation_sum);
+    let valid = shape(correlation) == [2, 2] and observed > 3.99 and observed < 4.01;
+    dispose(correlation_sum);
+    dispose(correlation);
+    dispose(correlated);
+    valid.
+
+/**
+ * Proves determinant and inverse values for a nonsingular matrix.
+ */
+@test
+pub determinant_and_inverse_match_libtorch(): Bool ->
+    let matrix = from_floats([4.0, 7.0, 2.0, 6.0], [2, 2]);
+    let determinant = det(matrix);
+    let matrix_inverse = inverse(matrix);
+    let inverse_sum = sum(matrix_inverse);
+    let determinant_value = item_float(determinant);
+    let observed = item_float(inverse_sum);
+    let valid =
+        determinant_value > 9.99
+            and determinant_value < 10.01
+            and shape(matrix_inverse) == [2, 2]
+            and observed > 0.09
+            and observed < 0.11;
+    dispose(inverse_sum);
+    dispose(matrix_inverse);
+    dispose(determinant);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves real-to-complex eigenvalue promotion for a square matrix.
+ */
+@test
+pub eigenvalue_dtype_matches_libtorch(): Bool ->
+    let zero_matrix = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let eigenvalues = linalg_eigvals(zero_matrix);
+    let valid = shape(eigenvalues) == [2] and dtype(eigenvalues) == dtype(zero_matrix) + 3;
+    dispose(eigenvalues);
+    dispose(zero_matrix);
+    valid.
+
+/**
+ * Proves both matrix exponential names and logarithmic determinant behavior.
+ */
+@test
+pub matrix_exponentials_and_logdet_match_libtorch(): Bool ->
+    let matrix = from_floats([4.0, 7.0, 2.0, 6.0], [2, 2]);
+    let zero_matrix = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let linalg_exponential = linalg_matrix_exp(zero_matrix);
+    let linalg_exponential_sum = sum(linalg_exponential);
+    let logarithmic_determinant = logdet(matrix);
+    let exponential = matrix_exp(zero_matrix);
+    let exponential_sum = sum(exponential);
+    let logarithmic_determinant_value = item_float(logarithmic_determinant);
+    let valid =
+        item_float(linalg_exponential_sum) == 2.0
+            and logarithmic_determinant_value > 2.3
+            and logarithmic_determinant_value < 2.31
+            and item_float(exponential_sum) == 2.0
+            and shape(matrix) == [2, 2];
+    dispose(exponential_sum);
+    dispose(exponential);
+    dispose(logarithmic_determinant);
+    dispose(linalg_exponential_sum);
+    dispose(linalg_exponential);
+    dispose(zero_matrix);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves row/column reversal, row sorting, and NaN-aware median dispatch.
+ */
+@test
+pub ordering_and_reversal_operations_match_libtorch(): Bool ->
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let values = from_floats([3.0, 1.0, 2.0], [3]);
+    let columns_reversed = fliplr(matrix);
+    let rows_reversed = flipud(matrix);
+    let ordered = msort(values);
+    let middle = nanmedian(values);
+    let valid =
+        matrix_item(columns_reversed, 0, 0) == 2.0
+            and matrix_item(columns_reversed, 1, 1) == 3.0
+            and matrix_item(rows_reversed, 0, 0) == 3.0
+            and matrix_item(rows_reversed, 1, 1) == 2.0
+            and vector_item(ordered, 0) == 1.0
+            and vector_item(ordered, 1) == 2.0
+            and vector_item(ordered, 2) == 3.0
+            and item_float(middle) == 2.0
+            and shape(matrix) == [2, 2];
+    dispose(middle);
+    dispose(ordered);
+    dispose(rows_reversed);
+    dispose(columns_reversed);
+    dispose(values);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves every selected torch.special one-input schema at stable reference points.
+ */
+@test
+pub torch_special_family_matches_libtorch(): Bool ->
+    let zero = from_float(0.0);
+    let half = from_float(0.5);
+    let one = from_float(1.0);
+    let three = from_float(3.0);
+    let bessel_j0 = special_bessel_j0(zero);
+    let bessel_j1 = special_bessel_j1(zero);
+    let bessel_y0 = special_bessel_y0(one);
+    let bessel_y1 = special_bessel_y1(one);
+    let digamma_value = special_digamma(one);
+    let entropy = special_entr(one);
+    let error = special_erf(zero);
+    let complementary_error = special_erfc(zero);
+    let scaled_complementary_error = special_erfcx(zero);
+    let inverse_error = special_erfinv(zero);
+    let power_two = special_exp2(three);
+    let logistic = special_expit(zero);
+    let exponential_minus_one = special_expm1(zero);
+    let gamma_logarithm = special_gammaln(one);
+    let i0_value = special_i0(zero);
+    let scaled_i0 = special_i0e(zero);
+    let i1_value = special_i1(zero);
+    let scaled_i1 = special_i1e(zero);
+    let logarithm_one_plus = special_log1p(zero);
+    let logarithmic_normal = special_log_ndtr(zero);
+    let modified_i0 = special_modified_bessel_i0(zero);
+    let modified_i1 = special_modified_bessel_i1(zero);
+    let modified_k0 = special_modified_bessel_k0(one);
+    let modified_k1 = special_modified_bessel_k1(one);
+    let normal = special_ndtr(zero);
+    let inverse_normal = special_ndtri(half);
+    let psi = special_psi(one);
+    let sinc_value = special_sinc(zero);
+    let bessel_y0_value = item_float(bessel_y0);
+    let bessel_y1_value = item_float(bessel_y1);
+    let digamma_observed = item_float(digamma_value);
+    let logarithmic_normal_value = item_float(logarithmic_normal);
+    let modified_k0_value = item_float(modified_k0);
+    let modified_k1_value = item_float(modified_k1);
+    let psi_value = item_float(psi);
+    let valid =
+        item_float(bessel_j0) == 1.0
+            and item_float(bessel_j1) == 0.0
+            and bessel_y0_value > 0.08
+            and bessel_y0_value < 0.09
+            and bessel_y1_value > -0.79
+            and bessel_y1_value < -0.78
+            and digamma_observed > -0.58
+            and digamma_observed < -0.57
+            and item_float(entropy) == 0.0
+            and item_float(error) == 0.0
+            and item_float(complementary_error) == 1.0
+            and item_float(scaled_complementary_error) == 1.0
+            and item_float(inverse_error) == 0.0
+            and item_float(power_two) == 8.0
+            and item_float(logistic) == 0.5
+            and item_float(exponential_minus_one) == 0.0
+            and item_float(gamma_logarithm) == 0.0
+            and item_float(i0_value) == 1.0
+            and item_float(scaled_i0) == 1.0
+            and item_float(i1_value) == 0.0
+            and item_float(scaled_i1) == 0.0
+            and item_float(logarithm_one_plus) == 0.0
+            and logarithmic_normal_value > -0.7
+            and logarithmic_normal_value < -0.69
+            and item_float(modified_i0) == 1.0
+            and item_float(modified_i1) == 0.0
+            and modified_k0_value > 0.42
+            and modified_k0_value < 0.43
+            and modified_k1_value > 0.6
+            and modified_k1_value < 0.61
+            and item_float(normal) == 0.5
+            and item_float(inverse_normal) == 0.0
+            and psi_value > -0.58
+            and psi_value < -0.57
+            and item_float(sinc_value) == 1.0;
+    dispose(sinc_value);
+    dispose(psi);
+    dispose(inverse_normal);
+    dispose(normal);
+    dispose(modified_k1);
+    dispose(modified_k0);
+    dispose(modified_i1);
+    dispose(modified_i0);
+    dispose(logarithmic_normal);
+    dispose(logarithm_one_plus);
+    dispose(scaled_i1);
+    dispose(i1_value);
+    dispose(scaled_i0);
+    dispose(i0_value);
+    dispose(gamma_logarithm);
+    dispose(exponential_minus_one);
+    dispose(logistic);
+    dispose(power_two);
+    dispose(inverse_error);
+    dispose(scaled_complementary_error);
+    dispose(complementary_error);
+    dispose(error);
+    dispose(entropy);
+    dispose(digamma_value);
+    dispose(bessel_y1);
+    dispose(bessel_y0);
+    dispose(bessel_j1);
+    dispose(bessel_j0);
+    dispose(three);
+    dispose(one);
+    dispose(half);
+    dispose(zero);
+    valid.
+
+/**
+ * Proves the remaining scalar kernels and parameterized special reductions.
+ */
+@test
+pub parameterized_special_operations_match_libtorch(): Bool ->
+    let zero = from_float(0.0);
+    let one = from_float(1.0);
+    let decimal = from_float(1.2345);
+    let pair = from_floats([0.0, 0.0], [2]);
+    let airy = special_airy_ai(zero);
+    let scaled_k0 = special_scaled_modified_bessel_k0(one);
+    let scaled_k1 = special_scaled_modified_bessel_k1(one);
+    let spherical_j0 = special_spherical_bessel_j0(one);
+    let trigamma = special_polygamma(one, 1);
+    let rounded = special_round(decimal, 2);
+    let reduced = special_logsumexp(pair, [0], true);
+    let airy_value = item_float(airy);
+    let scaled_k0_value = item_float(scaled_k0);
+    let scaled_k1_value = item_float(scaled_k1);
+    let spherical_j0_value = item_float(spherical_j0);
+    let trigamma_value = item_float(trigamma);
+    let rounded_value = item_float(rounded);
+    let reduced_value = item_float(reduced);
+    let valid =
+        airy_value > 0.35
+            and airy_value < 0.36
+            and scaled_k0_value > 1.14
+            and scaled_k0_value < 1.15
+            and scaled_k1_value > 1.63
+            and scaled_k1_value < 1.64
+            and spherical_j0_value > 0.84
+            and spherical_j0_value < 0.85
+            and trigamma_value > 1.64
+            and trigamma_value < 1.65
+            and rounded_value > 1.229
+            and rounded_value < 1.231
+            and shape(reduced) == [1]
+            and reduced_value > 0.69
+            and reduced_value < 0.7
+            and item_float(zero) == 0.0
+            and item_float(one) == 1.0
+            and shape(pair) == [2];
+    dispose(reduced);
+    dispose(rounded);
+    dispose(trigamma);
+    dispose(spherical_j0);
+    dispose(scaled_k1);
+    dispose(scaled_k0);
+    dispose(airy);
+    dispose(pair);
+    dispose(decimal);
+    dispose(one);
+    dispose(zero);
+    valid.
+
+/**
+ * Proves default and explicit optional float and scalar-type arguments.
+ */
+@test
+pub optional_special_parameters_match_libtorch(): Bool ->
+    let logits = from_floats([0.0, 0.0], [2]);
+    let quarter = from_float(0.25);
+    let zero = from_float(0.0);
+    let scalar_type = dtype(logits);
+    let probabilities = special_softmax(logits, 0);
+    let typed_probabilities = special_softmax_dtype(logits, 0, scalar_type);
+    let log_probabilities = special_log_softmax(logits, 0);
+    let typed_log_probabilities = special_log_softmax_dtype(logits, 0, scalar_type);
+    let unconstrained_logit = special_logit(quarter);
+    let clamped_logit = special_logit_epsilon(zero, 0.1);
+    let probability = vector_item(probabilities, 0);
+    let typed_probability = vector_item(typed_probabilities, 1);
+    let log_probability = vector_item(log_probabilities, 0);
+    let typed_log_probability = vector_item(typed_log_probabilities, 1);
+    let unconstrained_value = item_float(unconstrained_logit);
+    let clamped_value = item_float(clamped_logit);
+    let valid =
+        probability == 0.5
+            and typed_probability == 0.5
+            and log_probability > -0.7
+            and log_probability < -0.69
+            and typed_log_probability > -0.7
+            and typed_log_probability < -0.69
+            and unconstrained_value > -1.1
+            and unconstrained_value < -1.09
+            and clamped_value > -2.2
+            and clamped_value < -2.19
+            and dtype(probabilities) == scalar_type
+            and dtype(typed_probabilities) == scalar_type
+            and dtype(log_probabilities) == scalar_type
+            and dtype(typed_log_probabilities) == scalar_type
+            and shape(logits) == [2]
+            and item_float(quarter) == 0.25
+            and item_float(zero) == 0.0;
+    dispose(clamped_logit);
+    dispose(unconstrained_logit);
+    dispose(typed_log_probabilities);
+    dispose(log_probabilities);
+    dispose(typed_probabilities);
+    dispose(probabilities);
+    dispose(zero);
+    dispose(quarter);
+    dispose(logits);
+    valid.

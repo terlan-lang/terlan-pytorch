@@ -1,0 +1,163 @@
+/**
+ * Exact reflection and replication padding backward parity.
+ */
+module pytorch.PaddingBackwardCompletionParityTest.
+
+import pytorch.PaddingBackwardCompletion.{reflection_pad1d_backward, reflection_pad1d_backward_out, reflection_pad2d_backward, reflection_pad2d_backward_out, reflection_pad3d_backward, reflection_pad3d_backward_out, replication_pad1d_backward, replication_pad1d_backward_out, replication_pad2d_backward, replication_pad2d_backward_out, replication_pad3d_backward, replication_pad3d_backward_out}.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, shape, to_device}.
+import pytorch.TypeRelations.{equal}.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(actual: Tensor, values: List[Float], dimensions: List[Int], device: Int): Bool ->
+    let expected = placed(values, dimensions, device);
+    let valid =
+        equal(actual, expected)
+            and shape(actual) == dimensions
+            and dtype(actual) == 7
+            and device_type(actual) == device;
+    dispose(expected);
+    valid.
+
+verify(device: Int): Bool ->
+    let input1 = placed([1.0, 2.0], [1, 1, 2], device);
+    let gradient1 = placed([1.0, 2.0, 3.0, 4.0], [1, 1, 4], device);
+    let reflection1 = reflection_pad1d_backward(gradient1, input1, [1, 1]);
+    let replication1 = replication_pad1d_backward(gradient1, input1, [1, 1]);
+    let reflection1_out = placed([0.0, 0.0], [1, 1, 2], device);
+    let replication1_out = placed([0.0, 0.0], [1, 1, 2], device);
+    let input2 = placed([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2], device);
+    let gradient2 =
+        placed(
+            [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            [1, 1, 4, 4],
+            device,
+        );
+    let reflection2 = reflection_pad2d_backward(gradient2, input2, [1, 1, 1, 1]);
+    let replication2 = replication_pad2d_backward(gradient2, input2, [1, 1, 1, 1]);
+    let reflection2_out = placed([0.0, 0.0, 0.0, 0.0], [1, 1, 2, 2], device);
+    let replication2_out = placed([0.0, 0.0, 0.0, 0.0], [1, 1, 2, 2], device);
+    let input3 = placed([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [1, 1, 2, 2, 2], device);
+    let gradient3 =
+        placed(
+            [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+            ],
+            [1, 1, 4, 4, 4],
+            device,
+        );
+    let padding3 = [1, 1, 1, 1, 1, 1];
+    let reflection3 = reflection_pad3d_backward(gradient3, input3, padding3);
+    let replication3 = replication_pad3d_backward(gradient3, input3, padding3);
+    let reflection3_out = placed([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [1, 1, 2, 2, 2], device);
+    let replication3_out = placed([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [1, 1, 2, 2, 2], device);
+    reflection_pad1d_backward_out(reflection1_out, gradient1, input1, [1, 1]);
+    replication_pad1d_backward_out(replication1_out, gradient1, input1, [1, 1]);
+    reflection_pad2d_backward_out(reflection2_out, gradient2, input2, [1, 1, 1, 1]);
+    replication_pad2d_backward_out(replication2_out, gradient2, input2, [1, 1, 1, 1]);
+    reflection_pad3d_backward_out(reflection3_out, gradient3, input3, padding3);
+    replication_pad3d_backward_out(replication3_out, gradient3, input3, padding3);
+    let valid =
+        matches(reflection1, [6.0, 4.0], [1, 1, 2], device)
+            and matches(replication1, [3.0, 7.0], [1, 1, 2], device)
+            and equal(reflection1_out, reflection1)
+            and equal(replication1_out, replication1)
+            and matches(reflection2, [4.0, 4.0, 4.0, 4.0], [1, 1, 2, 2], device)
+            and matches(replication2, [4.0, 4.0, 4.0, 4.0], [1, 1, 2, 2], device)
+            and equal(reflection2_out, reflection2)
+            and equal(replication2_out, replication2)
+            and matches(reflection3, [8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0], [1, 1, 2, 2, 2], device)
+            and matches(replication3, [8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0], [1, 1, 2, 2, 2], device)
+            and equal(reflection3_out, reflection3)
+            and equal(replication3_out, replication3);
+    let expected1 = placed([1.0, 2.0], [1, 1, 2], device);
+    let expected2 = placed([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2], device);
+    let expected3 = placed([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [1, 1, 2, 2, 2], device);
+    let source_valid = equal(input1, expected1) and equal(input2, expected2) and equal(input3, expected3);
+    (dispose(expected3); dispose(expected2); dispose(expected1); dispose(replication3_out); dispose(reflection3_out); dispose(replication3); dispose(reflection3); dispose(gradient3); dispose(input3); dispose(replication2_out); dispose(reflection2_out); dispose(replication2); dispose(reflection2); dispose(gradient2); dispose(input2); dispose(replication1_out); dispose(reflection1_out); dispose(replication1); dispose(reflection1); dispose(gradient1); dispose(input1); valid and source_valid).
+
+@test
+pub padding_backward_on_cpu_and_required_cuda(): Bool ->
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    let cpu_valid = verify(0);
+    cpu_valid and cuda_valid.

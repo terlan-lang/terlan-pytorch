@@ -1,0 +1,9 @@
+//! Exact fixed-arity compatibility wrappers for deprecated Tensor APIs.
+
+module pytorch.LegacyCompletion.
+
+/// Preserves Tensor.symeig's upper-triangle default and always-pair return.
+/// When eigenvectors are disabled, PyTorch returns an empty tensor as the
+/// second tuple element.
+
+pub symeig_legacy(input: Tensor, eigenvectors: Bool = false): {Tensor, Tensor}.

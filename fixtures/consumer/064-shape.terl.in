@@ -1,0 +1,10 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{from_int, matmul}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let left = from_int(4);
+    let right = from_int(5);
+    let product = matmul(left, right);
+    println("PYTORCH_SHAPE_MISMATCH_NOT_REJECTED").

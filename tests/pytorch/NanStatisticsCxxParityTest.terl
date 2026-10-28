@@ -1,0 +1,66 @@
+/**
+ * Executable CXX evidence for NaN-aware reductions and retained outputs.
+ */
+module pytorch.NanStatisticsCxxParityTest.
+
+import pytorch.Statistics.{nanmean, nanmean_dimensions, nanmean_dimensions_dtype, nanmean_dimensions_dtype_out, nanmean_dimensions_out, nanmean_out, nansum, nansum_dimensions, nansum_dimensions_dtype, nansum_dimensions_dtype_out, nansum_dimensions_out, nansum_out}.
+import pytorch.Tensor.{dispose, from_float, from_floats, item_float, shape, sqrt, sum, zeros}.
+import pytorch.TensorJoining.stack.
+
+import type pytorch.Tensor.
+
+@test
+pub nan_statistics_compositions_match_libtorch(): Bool ->
+    let negative = from_float(-1.0);
+    let nan = sqrt(negative);
+    let one = from_float(1.0);
+    let three = from_float(3.0);
+    let values = stack([nan, one, three], 0);
+    let all_mean = nanmean(values);
+    let all_sum = nansum(values);
+    let matrix = from_floats([1.0, 2.0, 3.0, 5.0], [2, 2]);
+    let dimensions = nanmean_dimensions(matrix, [1], false);
+    let dimensions_dtype = nanmean_dimensions_dtype(matrix, [1], 6, false);
+    let dimensions_sum = nansum_dimensions(matrix, [1], false);
+    let dimensions_sum_dtype = nansum_dimensions_dtype(matrix, [1], 6, false);
+    let mean_output = zeros([2], 7);
+    let sum_output = zeros([2], 7);
+    let mean_dtype_output = zeros([2], 6);
+    let sum_dtype_output = zeros([2], 6);
+    nanmean_dimensions_out(mean_output, matrix, [1], false);
+    nansum_dimensions_out(sum_output, matrix, [1], false);
+    nanmean_dimensions_dtype_out(mean_dtype_output, matrix, [1], 6, false);
+    nansum_dimensions_dtype_out(sum_dtype_output, matrix, [1], 6, false);
+    let mean_total = sum(dimensions);
+    let mean_dtype_total = sum(dimensions_dtype);
+    let sum_total = sum(dimensions_sum);
+    let sum_dtype_total = sum(dimensions_sum_dtype);
+    let mean_output_total = sum(mean_output);
+    let sum_output_total = sum(sum_output);
+    let mean_dtype_output_total = sum(mean_dtype_output);
+    let sum_dtype_output_total = sum(sum_dtype_output);
+    let all_mean_value = item_float(all_mean);
+    let all_sum_value = item_float(all_sum);
+    let valid =
+        all_mean_value > 1.99
+            and all_mean_value < 2.01
+            and all_sum_value > 3.99
+            and all_sum_value < 4.01
+            and shape(dimensions) == [2]
+            and item_float(mean_total) > 5.49
+            and item_float(mean_total) < 5.51
+            and item_float(mean_dtype_total) > 5.49
+            and item_float(mean_dtype_total) < 5.51
+            and item_float(sum_total) > 10.99
+            and item_float(sum_total) < 11.01
+            and item_float(sum_dtype_total) > 10.99
+            and item_float(sum_dtype_total) < 11.01
+            and item_float(mean_output_total) > 5.49
+            and item_float(mean_output_total) < 5.51
+            and item_float(sum_output_total) > 10.99
+            and item_float(sum_output_total) < 11.01
+            and item_float(mean_dtype_output_total) > 5.49
+            and item_float(mean_dtype_output_total) < 5.51
+            and item_float(sum_dtype_output_total) > 10.99
+            and item_float(sum_dtype_output_total) < 11.01;
+    (nanmean_out(mean_output, matrix); nansum_out(sum_output, matrix); dispose(sum_dtype_output_total); dispose(mean_dtype_output_total); dispose(sum_output_total); dispose(mean_output_total); dispose(sum_dtype_total); dispose(sum_total); dispose(mean_dtype_total); dispose(mean_total); dispose(sum_dtype_output); dispose(mean_dtype_output); dispose(sum_output); dispose(mean_output); dispose(dimensions_sum_dtype); dispose(dimensions_sum); dispose(dimensions_dtype); dispose(dimensions); dispose(matrix); dispose(all_sum); dispose(all_mean); dispose(values); dispose(three); dispose(one); dispose(nan); dispose(negative); valid).

@@ -1,0 +1,53 @@
+/**
+ * Generated CXX NLL-loss completion surface.
+ */
+module pytorch.NllLossCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Computes mean NLL loss without class weights.
+ */
+@compiler.native {pytorch.nll_loss.nll_loss_default}
+pub nll_loss_default(input: Tensor, target: Tensor, reduction: Int, ignore_index: Int): Tensor ->
+    native.
+
+/**
+ * Computes mean NLL loss with class weights.
+ */
+@compiler.native {pytorch.nll_loss.nll_loss_weight}
+pub nll_loss_weight(
+    input: Tensor,
+    target: Tensor,
+    weight: Tensor,
+    reduction: Int,
+    ignore_index: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes mean NLL loss into retained output storage without class weights.
+ */
+@compiler.native {pytorch.nll_loss.nll_loss_out_default}
+pub nll_loss_out_default(
+    output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    reduction: Int,
+    ignore_index: Int,
+): Unit ->
+    native.
+
+/**
+ * Writes mean NLL loss into retained output storage with class weights.
+ */
+@compiler.native {pytorch.nll_loss.nll_loss_out_weight}
+pub nll_loss_out_weight(
+    output: Tensor,
+    input: Tensor,
+    target: Tensor,
+    weight: Tensor,
+    reduction: Int,
+    ignore_index: Int,
+): Unit ->
+    native.

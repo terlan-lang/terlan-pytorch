@@ -1,0 +1,738 @@
+/**
+ * Exact direct CXX binary arithmetic, comparison, logical, bitwise, selection, contraction, and special-function operations.
+ */
+module pytorch.Binary.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes the exact aten::arctan2 two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.arctan2}
+pub arctan2(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::atan2 two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.atan2}
+pub atan2(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::bitwise_and.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.bitwise_and_tensor}
+pub bitwise_and_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::bitwise_left_shift.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.bitwise_left_shift_tensor}
+pub bitwise_left_shift_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::bitwise_or.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.bitwise_or_tensor}
+pub bitwise_or_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::bitwise_right_shift.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.bitwise_right_shift_tensor}
+pub bitwise_right_shift_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::bitwise_xor.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.bitwise_xor_tensor}
+pub bitwise_xor_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::clamp_max.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.clamp_max_tensor}
+pub clamp_max_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::clamp_min.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.clamp_min_tensor}
+pub clamp_min_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::copysign.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.copysign_tensor}
+pub copysign_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::dot two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.dot}
+pub dot(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::eq.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.eq_tensor}
+pub eq_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::float_power.Tensor_Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.float_power_tensor}
+pub float_power_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::floor_divide two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.floor_divide}
+pub floor_divide(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::fmax two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.fmax}
+pub fmax(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::fmin two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.fmin}
+pub fmin(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::fmod.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.fmod_tensor}
+pub fmod_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::gcd two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.gcd}
+pub gcd(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::ge.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.ge_tensor}
+pub ge_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::greater.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.greater_tensor}
+pub greater_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::greater_equal.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.greater_equal_tensor}
+pub greater_equal_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::gt.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.gt_tensor}
+pub gt_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::heaviside two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.heaviside}
+pub heaviside(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::hypot two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.hypot}
+pub hypot(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::igamma two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.igamma}
+pub igamma(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::igammac two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.igammac}
+pub igammac(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::inner two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.inner}
+pub inner(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Compares tensors elementwise using explicit relative, absolute, and NaN equality policy.
+ */
+@compiler.native {pytorch.binary.isclose}
+pub isclose(
+    left: Tensor,
+    right: Tensor,
+    relative_tolerance: Float = 0.00001,
+    absolute_tolerance: Float = 1e-8,
+    equal_nan: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::kron two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.kron}
+pub kron(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::lcm two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.lcm}
+pub lcm(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::ldexp.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.ldexp_tensor}
+pub ldexp_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::le.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.le_tensor}
+pub le_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::less.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.less_tensor}
+pub less_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::less_equal.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.less_equal_tensor}
+pub less_equal_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::logaddexp two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.logaddexp}
+pub logaddexp(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::logaddexp2 two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.logaddexp2}
+pub logaddexp2(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::logical_and two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.logical_and}
+pub logical_and(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::logical_or two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.logical_or}
+pub logical_or(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::logical_xor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.logical_xor}
+pub logical_xor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::lt.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.lt_tensor}
+pub lt_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::masked_select two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.masked_select}
+pub masked_select(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::max.other two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.max_other}
+pub max_other(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::maximum two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.maximum}
+pub maximum(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::min.other two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.min_other}
+pub min_other(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::ne.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.ne_tensor}
+pub ne_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::nextafter two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.nextafter}
+pub nextafter(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::not_equal.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.not_equal_tensor}
+pub not_equal_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::pow.Tensor_Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.pow_tensor}
+pub pow_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::remainder.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.remainder_tensor}
+pub remainder_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_xlog1py two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.special_xlog1py}
+pub special_xlog1py(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_xlogy two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.special_xlogy}
+pub special_xlogy(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::special_zeta two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.special_zeta}
+pub special_zeta(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::take two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.take}
+pub take(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::true_divide.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.true_divide_tensor}
+pub true_divide_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::vdot two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.vdot}
+pub vdot(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::xlogy.Tensor two-tensor schema with independently owned dispatcher inputs.
+ */
+@compiler.native {pytorch.binary.xlogy_tensor}
+pub xlogy_tensor(left: Tensor, right: Tensor): Tensor ->
+    native.
+
+/**
+ * Writes the exact aten::fmax.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.fmax_out}
+pub fmax_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::fmin.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.fmin_out}
+pub fmin_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::maximum.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.maximum_out}
+pub maximum_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::minimum.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.minimum_out}
+pub minimum_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::fmod.Tensor_out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.fmod_tensor_out}
+pub fmod_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through the exact aten::fmod_.Tensor schema.
+ */
+@compiler.native {pytorch.binary.fmod_tensor_in_place}
+pub fmod_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::logical_and.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.logical_and_out}
+pub logical_and_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through the exact aten::logical_and_ schema.
+ */
+@compiler.native {pytorch.binary.logical_and_in_place}
+pub logical_and_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::logical_or.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.logical_or_out}
+pub logical_or_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through the exact aten::logical_or_ schema.
+ */
+@compiler.native {pytorch.binary.logical_or_in_place}
+pub logical_or_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::logical_xor.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.logical_xor_out}
+pub logical_xor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through the exact aten::logical_xor_ schema.
+ */
+@compiler.native {pytorch.binary.logical_xor_in_place}
+pub logical_xor_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::arctan2.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.arctan2_out}
+pub arctan2_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::atan2.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.atan2_out}
+pub atan2_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::copysign.out tensor result into retained output storage.
+ */
+@compiler.native {pytorch.binary.copysign_tensor_out}
+pub copysign_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::dot.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.dot_out}
+pub dot_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::gcd.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.gcd_out}
+pub gcd_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::heaviside.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.heaviside_out}
+pub heaviside_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::hypot.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.hypot_out}
+pub hypot_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::igamma.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.igamma_out}
+pub igamma_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::igammac.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.igammac_out}
+pub igammac_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::inner.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.inner_out}
+pub inner_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::kron.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.kron_out}
+pub kron_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::lcm.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.lcm_out}
+pub lcm_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::ldexp.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.ldexp_out}
+pub ldexp_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::logaddexp.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.logaddexp_out}
+pub logaddexp_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::logaddexp2.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.logaddexp2_out}
+pub logaddexp2_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::masked_select.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.masked_select_out}
+pub masked_select_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::max.out two-tensor result into retained output storage.
+ */
+@compiler.native {pytorch.binary.max_out}
+pub max_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::min.out two-tensor result into retained output storage.
+ */
+@compiler.native {pytorch.binary.min_out}
+pub min_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::nextafter.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.nextafter_out}
+pub nextafter_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::take.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.take_out}
+pub take_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::vdot.out result into retained output storage.
+ */
+@compiler.native {pytorch.binary.vdot_out}
+pub vdot_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through exact aten::arctan2_.
+ */
+@compiler.native {pytorch.binary.arctan2_in_place}
+pub arctan2_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through exact aten::atan2_.
+ */
+@compiler.native {pytorch.binary.atan2_in_place}
+pub atan2_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through exact aten::copysign_.Tensor.
+ */
+@compiler.native {pytorch.binary.copysign_tensor_in_place}
+pub copysign_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through exact aten::gcd_.
+ */
+@compiler.native {pytorch.binary.gcd_in_place}
+pub gcd_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through exact aten::heaviside_.
+ */
+@compiler.native {pytorch.binary.heaviside_in_place}
+pub heaviside_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through exact aten::hypot_.
+ */
+@compiler.native {pytorch.binary.hypot_in_place}
+pub hypot_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through exact aten::igamma_.
+ */
+@compiler.native {pytorch.binary.igamma_in_place}
+pub igamma_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through exact aten::igammac_.
+ */
+@compiler.native {pytorch.binary.igammac_in_place}
+pub igammac_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through exact aten::lcm_.
+ */
+@compiler.native {pytorch.binary.lcm_in_place}
+pub lcm_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through exact aten::ldexp_.
+ */
+@compiler.native {pytorch.binary.ldexp_tensor_in_place}
+pub ldexp_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Mutates retained tensor storage through exact aten::nextafter_.
+ */
+@compiler.native {pytorch.binary.nextafter_in_place}
+pub nextafter_in_place(left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::max.dim_max values and indices into retained output storage.
+ */
+@compiler.native {pytorch.binary.max_dim_out}
+pub max_dim_out(
+    values: Tensor,
+    indices: Tensor,
+    tensor: Tensor,
+    dimension: Int,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Writes the exact aten::min.dim_min values and indices into retained output storage.
+ */
+@compiler.native {pytorch.binary.min_dim_out}
+pub min_dim_out(
+    values: Tensor,
+    indices: Tensor,
+    tensor: Tensor,
+    dimension: Int,
+    keep_dimension: Bool = false,
+): Unit ->
+    native.

@@ -1,0 +1,113 @@
+/**
+ * Exact linear, temporal, cumulative-gradient, and storage-reset parity on CPU and CUDA.
+ */
+module pytorch.LinearStorageCompletionParityTest.
+
+import pytorch.LinearStorageCompletion.{bilinear_no_bias, bilinear_with_bias, conv_tbc, conv_tbc_backward, conv_tbc_out, cummaxmin_backward, set_empty, set_empty_in_place, set_empty_out, set_source_tensor, set_source_tensor_out}.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, shape, to_device, to_dtype}.
+import pytorch.TypeRelations.equal.
+import pytorch.UnaryStorage.zero_in_place.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(tensor: Tensor, values: List[Float], dimensions: List[Int], device: Int): Bool ->
+    let expected = placed(values, dimensions, device);
+    let valid =
+        equal(tensor, expected)
+            and shape(tensor) == dimensions
+            and dtype(tensor) == 7
+            and device_type(tensor) == device;
+    dispose(expected);
+    valid.
+
+verify(device: Int): Bool ->
+    let input1 = placed([1.0, 2.0], [1, 2], device);
+    let input2 = placed([3.0, 4.0], [1, 2], device);
+    let weight = placed([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [2, 2, 2], device);
+    let bias = placed([1.0, 2.0], [2], device);
+    let bilinear_plain = bilinear_no_bias(input1, input2, weight);
+    let bilinear_biased = bilinear_with_bias(input1, input2, weight, bias);
+    let bilinear_valid =
+        matches(bilinear_plain, [61.0, 145.0], [1, 2], device)
+            and matches(bilinear_biased, [62.0, 147.0], [1, 2], device)
+            and matches(input1, [1.0, 2.0], [1, 2], device)
+            and matches(input2, [3.0, 4.0], [1, 2], device)
+            and matches(weight, [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [2, 2, 2], device)
+            and matches(bias, [1.0, 2.0], [2], device);
+    let temporal_input = placed([1.0, 2.0, 3.0], [3, 1, 1], device);
+    let temporal_weight = placed([2.0, 1.0], [2, 1, 1], device);
+    let temporal_bias = placed([1.0], [1], device);
+    let temporal = conv_tbc(temporal_input, temporal_weight, temporal_bias, 0);
+    let temporal_output = placed([], [0], device);
+    conv_tbc_out(temporal_output, temporal_input, temporal_weight, temporal_bias, 0);
+    let temporal_gradient = placed([1.0, 1.0], [2, 1, 1], device);
+    let {input_gradient, weight_gradient, bias_gradient} = conv_tbc_backward(temporal_gradient, temporal_input, temporal_weight, temporal_bias, 0);
+    let temporal_valid =
+        matches(temporal, [5.0, 8.0], [2, 1, 1], device)
+            and matches(temporal_output, [5.0, 8.0], [2, 1, 1], device)
+            and matches(input_gradient, [2.0, 3.0, 1.0], [3, 1, 1], device)
+            and matches(weight_gradient, [3.0, 5.0], [2, 1, 1], device)
+            and matches(bias_gradient, [2.0], [1], device);
+    let cumulative_gradient = placed([1.0, 2.0, 3.0], [3], device);
+    let cumulative_input = placed([3.0, 1.0, 2.0], [3], device);
+    let cumulative_indices_float = placed([0.0, 0.0, 0.0], [3], device);
+    let cumulative_indices = to_dtype(cumulative_indices_float, 4);
+    (dispose(cumulative_indices_float); let cumulative = cummaxmin_backward(cumulative_gradient, cumulative_input, cumulative_indices, 0);
+let cumulative_valid = matches(cumulative, [6.0, 0.0, 0.0], [3], device);
+let reset_source = placed([1.0, 2.0], [2], device);
+let reset = set_empty(reset_source);
+let reset_output = placed([], [0], device);
+(set_empty_out(reset_output, reset_source); let reset_mutation = placed([1.0, 2.0], [2], device);
+(set_empty_in_place(reset_mutation); let reset_valid =
+    matches(reset, [], [0], device)
+        and matches(reset_output, [], [0], device)
+        and matches(reset_mutation, [], [0], device)
+        and matches(reset_source, [1.0, 2.0], [2], device);
+let rebinding_input = placed([1.0, 2.0], [2], device);
+let rebinding_source = placed([3.0, 4.0, 5.0], [3], device);
+let rebound = set_source_tensor(rebinding_input, rebinding_source);
+let rebound_before =
+    matches(rebound, [3.0, 4.0, 5.0], [3], device)
+        and matches(rebinding_input, [1.0, 2.0], [2], device);
+(zero_in_place(rebound); let rebound_alias = matches(rebinding_source, [0.0, 0.0, 0.0], [3], device);
+let output_input = placed([1.0, 2.0], [2], device);
+let output_source = placed([6.0, 7.0, 8.0], [3], device);
+let rebound_output = placed([], [0], device);
+(set_source_tensor_out(rebound_output, output_input, output_source); let output_before =
+    matches(rebound_output, [6.0, 7.0, 8.0], [3], device)
+        and matches(output_input, [1.0, 2.0], [2], device);
+(zero_in_place(rebound_output); let output_ownership = matches(output_source, [6.0, 7.0, 8.0], [3], device);
+(dispose(rebound_output); dispose(output_source); dispose(output_input); dispose(rebound); dispose(rebinding_source); dispose(rebinding_input); dispose(reset_mutation); dispose(reset_output); dispose(reset); dispose(reset_source); dispose(cumulative); dispose(cumulative_indices); dispose(cumulative_input); dispose(cumulative_gradient); dispose(bias_gradient); dispose(weight_gradient); dispose(input_gradient); dispose(temporal_gradient); dispose(temporal_output); dispose(temporal); dispose(temporal_bias); dispose(temporal_weight); dispose(temporal_input); dispose(bilinear_biased); dispose(bilinear_plain); bilinear_valid
+    and temporal_valid
+    and cumulative_valid
+    and reset_valid
+    and rebound_before
+    and rebound_alias
+    and output_before
+    and output_ownership))))))).
+
+/**
+ * Requires every exact operator above to execute on the real CUDA backend.
+ */
+@test
+pub linear_storage_completion_on_cpu_and_required_cuda(): Bool ->
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    let cpu_valid = verify(0);
+    cpu_valid and cuda_valid.

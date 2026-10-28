@@ -1,0 +1,400 @@
+module pytorch.PoolingBehaviorSupport.
+
+import pytorch.Pooling.{adaptive_avg_pool1d, adaptive_avg_pool1d_out, adaptive_avg_pool2d_out, adaptive_avg_pool3d_backward_out, adaptive_avg_pool3d_out, adaptive_max_pool1d, adaptive_max_pool2d, adaptive_max_pool2d_backward, adaptive_max_pool2d_backward_out, adaptive_max_pool2d_out, adaptive_max_pool3d, adaptive_max_pool3d_backward, adaptive_max_pool3d_backward_out, adaptive_max_pool3d_out, avg_pool1d, avg_pool1d_out, avg_pool2d, avg_pool2d_backward, avg_pool2d_backward_divisor, avg_pool2d_backward_out, avg_pool2d_backward_out_divisor, avg_pool2d_divisor, avg_pool2d_out, avg_pool2d_out_divisor, avg_pool3d, avg_pool3d_backward, avg_pool3d_backward_divisor, avg_pool3d_backward_out, avg_pool3d_backward_out_divisor, avg_pool3d_divisor, avg_pool3d_out, avg_pool3d_out_divisor, fractional_max_pool2d, fractional_max_pool2d_backward, fractional_max_pool2d_backward_out, fractional_max_pool2d_out, fractional_max_pool3d, fractional_max_pool3d_backward, fractional_max_pool3d_backward_out, fractional_max_pool3d_out, max_pool1d, max_pool1d_with_indices, max_pool2d, max_pool2d_with_indices, max_pool2d_with_indices_backward, max_pool2d_with_indices_backward_out, max_pool2d_with_indices_out, max_pool3d, max_pool3d_with_indices, max_pool3d_with_indices_backward, max_pool3d_with_indices_backward_out, max_pool3d_with_indices_out, max_unpool2d, max_unpool2d_out, max_unpool3d, max_unpool3d_out}.
+import pytorch.Tensor.{Float64, Int64, Strided, dispose, is_cuda, ones_device, shape}.
+
+/**
+ * Executes every value-returning Pooling contract through generated CXX bindings.
+ */
+pub pooling_value_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let line = ones_device([1, 1, 4], Float64, Strided, device_name);
+    let plane = ones_device([1, 1, 4, 4], Float64, Strided, device_name);
+    let volume = ones_device([1, 1, 4, 4, 4], Float64, Strided, device_name);
+    let plane_gradient = ones_device([1, 1, 2, 2], Float64, Strided, device_name);
+    let volume_gradient = ones_device([1, 1, 2, 2, 2], Float64, Strided, device_name);
+    let plane_samples = ones_device([1, 1, 2], Float64, Strided, device_name);
+    let volume_samples = ones_device([1, 1, 3], Float64, Strided, device_name);
+    let adaptive_average_line = adaptive_avg_pool1d(line, [2]);
+    let average_line = avg_pool1d(line, [2]);
+    let maximum_line = max_pool1d(line, [2]);
+    let average_plane = avg_pool2d(plane, [2, 2]);
+    let average_volume = avg_pool3d(volume, [2, 2, 2]);
+    let average_plane_gradient = avg_pool2d_backward(plane_gradient, plane, [2, 2], [2, 2], [0, 0], false, true);
+    let average_volume_gradient = avg_pool3d_backward(volume_gradient, volume, [2, 2, 2], [2, 2, 2], [0, 0, 0], false, true);
+    let maximum_plane = max_pool2d(plane, [2, 2]);
+    let maximum_volume = max_pool3d(volume, [2, 2, 2]);
+    let average_plane_divisor = avg_pool2d_divisor(plane, [2, 2], [2, 2], [0, 0], false, true, 4);
+    let average_volume_divisor = avg_pool3d_divisor(volume, [2, 2, 2], [2, 2, 2], [0, 0, 0], false, true, 8);
+    let average_plane_gradient_divisor = avg_pool2d_backward_divisor(plane_gradient, plane, [2, 2], [2, 2], [0, 0], false, true, 4);
+    let average_volume_gradient_divisor =
+        avg_pool3d_backward_divisor(
+            volume_gradient,
+            volume,
+            [2, 2, 2],
+            [2, 2, 2],
+            [0, 0, 0],
+            false,
+            true,
+            8,
+        );
+    let {adaptive_line_values, adaptive_line_indices} = adaptive_max_pool1d(line, [2]);
+    let {adaptive_plane_values, adaptive_plane_indices} = adaptive_max_pool2d(plane, [2, 2]);
+    let {adaptive_volume_values, adaptive_volume_indices} = adaptive_max_pool3d(volume, [2, 2, 2]);
+    let {indexed_line_values, indexed_line_indices} = max_pool1d_with_indices(line, [2]);
+    let {indexed_plane_values, indexed_plane_indices} = max_pool2d_with_indices(plane, [2, 2]);
+    let {indexed_volume_values, indexed_volume_indices} = max_pool3d_with_indices(volume, [2, 2, 2]);
+    let {fractional_plane_values, fractional_plane_indices} = fractional_max_pool2d(plane, [2, 2], [2, 2], plane_samples);
+    let {fractional_volume_values, fractional_volume_indices} = fractional_max_pool3d(volume, [2, 2, 2], [2, 2, 2], volume_samples);
+    let adaptive_plane_gradient = adaptive_max_pool2d_backward(plane_gradient, plane, adaptive_plane_indices);
+    let adaptive_volume_gradient = adaptive_max_pool3d_backward(volume_gradient, volume, adaptive_volume_indices);
+    let fractional_plane_gradient =
+        fractional_max_pool2d_backward(
+            plane_gradient,
+            plane,
+            [2, 2],
+            [2, 2],
+            fractional_plane_indices,
+        );
+    let fractional_volume_gradient =
+        fractional_max_pool3d_backward(
+            volume_gradient,
+            volume,
+            [2, 2, 2],
+            [2, 2, 2],
+            fractional_volume_indices,
+        );
+    let indexed_plane_gradient =
+        max_pool2d_with_indices_backward(
+            plane_gradient,
+            plane,
+            [2, 2],
+            [2, 2],
+            [0, 0],
+            [1, 1],
+            false,
+            indexed_plane_indices,
+        );
+    let indexed_volume_gradient =
+        max_pool3d_with_indices_backward(
+            volume_gradient,
+            volume,
+            [2, 2, 2],
+            [2, 2, 2],
+            [0, 0, 0],
+            [1, 1, 1],
+            false,
+            indexed_volume_indices,
+        );
+    let unpooled_plane = max_unpool2d(indexed_plane_values, indexed_plane_indices, [4, 4]);
+    let unpooled_volume = max_unpool3d(indexed_volume_values, indexed_volume_indices, [4, 4, 4], [2, 2, 2], [0, 0, 0]);
+    let valid =
+        shape(adaptive_average_line) == [1, 1, 2]
+            and shape(average_line) == [1, 1, 2]
+            and shape(maximum_line) == [1, 1, 2]
+            and shape(average_plane) == [1, 1, 2, 2]
+            and shape(average_volume) == [1, 1, 2, 2, 2]
+            and shape(average_plane_gradient) == [1, 1, 4, 4]
+            and shape(average_volume_gradient) == [1, 1, 4, 4, 4]
+            and shape(maximum_plane) == [1, 1, 2, 2]
+            and shape(maximum_volume) == [1, 1, 2, 2, 2]
+            and shape(average_plane_divisor) == [1, 1, 2, 2]
+            and shape(average_volume_divisor) == [1, 1, 2, 2, 2]
+            and shape(average_plane_gradient_divisor) == [1, 1, 4, 4]
+            and shape(average_volume_gradient_divisor) == [1, 1, 4, 4, 4]
+            and shape(adaptive_line_values) == [1, 1, 2]
+            and shape(adaptive_line_indices) == [1, 1, 2]
+            and shape(adaptive_plane_values) == [1, 1, 2, 2]
+            and shape(adaptive_plane_indices) == [1, 1, 2, 2]
+            and shape(adaptive_volume_values) == [1, 1, 2, 2, 2]
+            and shape(adaptive_volume_indices) == [1, 1, 2, 2, 2]
+            and shape(indexed_line_values) == [1, 1, 2]
+            and shape(indexed_line_indices) == [1, 1, 2]
+            and shape(indexed_plane_values) == [1, 1, 2, 2]
+            and shape(indexed_plane_indices) == [1, 1, 2, 2]
+            and shape(indexed_volume_values) == [1, 1, 2, 2, 2]
+            and shape(indexed_volume_indices) == [1, 1, 2, 2, 2]
+            and shape(fractional_plane_values) == [1, 1, 2, 2]
+            and shape(fractional_plane_indices) == [1, 1, 2, 2]
+            and shape(fractional_volume_values) == [1, 1, 2, 2, 2]
+            and shape(fractional_volume_indices) == [1, 1, 2, 2, 2]
+            and shape(adaptive_plane_gradient) == [1, 1, 4, 4]
+            and shape(adaptive_volume_gradient) == [1, 1, 4, 4, 4]
+            and shape(fractional_plane_gradient) == [1, 1, 4, 4]
+            and shape(fractional_volume_gradient) == [1, 1, 4, 4, 4]
+            and shape(indexed_plane_gradient) == [1, 1, 4, 4]
+            and shape(indexed_volume_gradient) == [1, 1, 4, 4, 4]
+            and shape(unpooled_plane) == [1, 1, 4, 4]
+            and shape(unpooled_volume) == [1, 1, 4, 4, 4]
+            and is_cuda(unpooled_plane) == expected_cuda
+            and is_cuda(unpooled_volume) == expected_cuda;
+    dispose(unpooled_volume);
+    dispose(unpooled_plane);
+    dispose(indexed_volume_gradient);
+    dispose(indexed_plane_gradient);
+    dispose(fractional_volume_gradient);
+    dispose(fractional_plane_gradient);
+    dispose(adaptive_volume_gradient);
+    dispose(adaptive_plane_gradient);
+    dispose(fractional_volume_indices);
+    dispose(fractional_volume_values);
+    dispose(fractional_plane_indices);
+    dispose(fractional_plane_values);
+    dispose(indexed_volume_indices);
+    dispose(indexed_volume_values);
+    dispose(indexed_plane_indices);
+    dispose(indexed_plane_values);
+    dispose(indexed_line_indices);
+    dispose(indexed_line_values);
+    dispose(adaptive_volume_indices);
+    dispose(adaptive_volume_values);
+    dispose(adaptive_plane_indices);
+    dispose(adaptive_plane_values);
+    dispose(adaptive_line_indices);
+    dispose(adaptive_line_values);
+    dispose(average_volume_gradient_divisor);
+    dispose(average_plane_gradient_divisor);
+    dispose(average_volume_divisor);
+    dispose(average_plane_divisor);
+    dispose(maximum_volume);
+    dispose(maximum_plane);
+    dispose(average_volume_gradient);
+    dispose(average_plane_gradient);
+    dispose(average_volume);
+    dispose(average_plane);
+    dispose(maximum_line);
+    dispose(average_line);
+    dispose(adaptive_average_line);
+    dispose(volume_samples);
+    dispose(plane_samples);
+    dispose(volume_gradient);
+    dispose(plane_gradient);
+    dispose(volume);
+    dispose(plane);
+    dispose(line);
+    valid.
+
+/**
+ * Executes every retained-output Pooling contract, including all dual-output forms.
+ */
+pub pooling_retained_output_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let line = ones_device([1, 1, 4], Float64, Strided, device_name);
+    let plane = ones_device([1, 1, 4, 4], Float64, Strided, device_name);
+    let volume = ones_device([1, 1, 4, 4, 4], Float64, Strided, device_name);
+    let plane_gradient = ones_device([1, 1, 2, 2], Float64, Strided, device_name);
+    let volume_gradient = ones_device([1, 1, 2, 2, 2], Float64, Strided, device_name);
+    let plane_samples = ones_device([1, 1, 2], Float64, Strided, device_name);
+    let volume_samples = ones_device([1, 1, 3], Float64, Strided, device_name);
+    let {adaptive_plane_values, adaptive_plane_indices} = adaptive_max_pool2d(plane, [2, 2]);
+    let {adaptive_volume_values, adaptive_volume_indices} = adaptive_max_pool3d(volume, [2, 2, 2]);
+    let {fractional_plane_values, fractional_plane_indices} = fractional_max_pool2d(plane, [2, 2], [2, 2], plane_samples);
+    let {fractional_volume_values, fractional_volume_indices} = fractional_max_pool3d(volume, [2, 2, 2], [2, 2, 2], volume_samples);
+    let {indexed_plane_values, indexed_plane_indices} = max_pool2d_with_indices(plane, [2, 2]);
+    let {indexed_volume_values, indexed_volume_indices} = max_pool3d_with_indices(volume, [2, 2, 2]);
+    let adaptive_average_line_output = ones_device([0], Float64, Strided, device_name);
+    let adaptive_average_plane_output = ones_device([0], Float64, Strided, device_name);
+    let adaptive_average_volume_output = ones_device([0], Float64, Strided, device_name);
+    let adaptive_average_volume_gradient_output = ones_device([0], Float64, Strided, device_name);
+    adaptive_avg_pool1d_out(adaptive_average_line_output, line, [2]);
+    adaptive_avg_pool2d_out(adaptive_average_plane_output, plane, [2, 2]);
+    adaptive_avg_pool3d_out(adaptive_average_volume_output, volume, [2, 2, 2]);
+    adaptive_avg_pool3d_backward_out(
+        adaptive_average_volume_gradient_output,
+        volume_gradient,
+        volume,
+    );
+    let adaptive_plane_output = ones_device([0], Float64, Strided, device_name);
+    let adaptive_plane_indices_output = ones_device([0], Int64, Strided, device_name);
+    let adaptive_volume_output = ones_device([0], Float64, Strided, device_name);
+    let adaptive_volume_indices_output = ones_device([0], Int64, Strided, device_name);
+    let adaptive_plane_gradient_output = ones_device([0], Float64, Strided, device_name);
+    let adaptive_volume_gradient_output = ones_device([0], Float64, Strided, device_name);
+    (adaptive_max_pool2d_out(adaptive_plane_output, adaptive_plane_indices_output, plane, [2, 2]); adaptive_max_pool3d_out(adaptive_volume_output, adaptive_volume_indices_output, volume, [2, 2, 2]); adaptive_max_pool2d_backward_out(
+    adaptive_plane_gradient_output,
+    plane_gradient,
+    plane,
+    adaptive_plane_indices,
+); adaptive_max_pool3d_backward_out(
+    adaptive_volume_gradient_output,
+    volume_gradient,
+    volume,
+    adaptive_volume_indices,
+); let average_line_output = ones_device([0], Float64, Strided, device_name);
+let average_plane_output = ones_device([0], Float64, Strided, device_name);
+let average_volume_output = ones_device([0], Float64, Strided, device_name);
+let average_plane_divisor_output = ones_device([0], Float64, Strided, device_name);
+let average_volume_divisor_output = ones_device([0], Float64, Strided, device_name);
+let average_plane_gradient_output = ones_device([0], Float64, Strided, device_name);
+let average_volume_gradient_output = ones_device([0], Float64, Strided, device_name);
+let average_plane_gradient_divisor_output = ones_device([0], Float64, Strided, device_name);
+let average_volume_gradient_divisor_output = ones_device([0], Float64, Strided, device_name);
+(avg_pool1d_out(average_line_output, line, [2], [], [0], false, true); avg_pool2d_out(average_plane_output, plane, [2, 2], [2, 2], [0, 0], false, true); avg_pool3d_out(average_volume_output, volume, [2, 2, 2], [2, 2, 2], [0, 0, 0], false, true); avg_pool2d_out_divisor(average_plane_divisor_output, plane, [2, 2], [2, 2], [0, 0], false, true, 4); avg_pool3d_out_divisor(
+    average_volume_divisor_output,
+    volume,
+    [2, 2, 2],
+    [2, 2, 2],
+    [0, 0, 0],
+    false,
+    true,
+    8,
+); avg_pool2d_backward_out(
+    average_plane_gradient_output,
+    plane_gradient,
+    plane,
+    [2, 2],
+    [2, 2],
+    [0, 0],
+    false,
+    true,
+); avg_pool3d_backward_out(
+    average_volume_gradient_output,
+    volume_gradient,
+    volume,
+    [2, 2, 2],
+    [2, 2, 2],
+    [0, 0, 0],
+    false,
+    true,
+); avg_pool2d_backward_out_divisor(
+    average_plane_gradient_divisor_output,
+    plane_gradient,
+    plane,
+    [2, 2],
+    [2, 2],
+    [0, 0],
+    false,
+    true,
+    4,
+); avg_pool3d_backward_out_divisor(
+    average_volume_gradient_divisor_output,
+    volume_gradient,
+    volume,
+    [2, 2, 2],
+    [2, 2, 2],
+    [0, 0, 0],
+    false,
+    true,
+    8,
+); let fractional_plane_output = ones_device([0], Float64, Strided, device_name);
+let fractional_plane_indices_output = ones_device([0], Int64, Strided, device_name);
+let fractional_volume_output = ones_device([0], Float64, Strided, device_name);
+let fractional_volume_indices_output = ones_device([0], Int64, Strided, device_name);
+let fractional_plane_gradient_output = ones_device([0], Float64, Strided, device_name);
+let fractional_volume_gradient_output = ones_device([0], Float64, Strided, device_name);
+(fractional_max_pool2d_out(
+    fractional_plane_output,
+    fractional_plane_indices_output,
+    plane,
+    [2, 2],
+    [2, 2],
+    plane_samples,
+); fractional_max_pool3d_out(
+    fractional_volume_output,
+    fractional_volume_indices_output,
+    volume,
+    [2, 2, 2],
+    [2, 2, 2],
+    volume_samples,
+); fractional_max_pool2d_backward_out(
+    fractional_plane_gradient_output,
+    plane_gradient,
+    plane,
+    [2, 2],
+    [2, 2],
+    fractional_plane_indices,
+); fractional_max_pool3d_backward_out(
+    fractional_volume_gradient_output,
+    volume_gradient,
+    volume,
+    [2, 2, 2],
+    [2, 2, 2],
+    fractional_volume_indices,
+); let indexed_plane_output = ones_device([0], Float64, Strided, device_name);
+let indexed_plane_indices_output = ones_device([0], Int64, Strided, device_name);
+let indexed_volume_output = ones_device([0], Float64, Strided, device_name);
+let indexed_volume_indices_output = ones_device([0], Int64, Strided, device_name);
+let indexed_plane_gradient_output = ones_device([0], Float64, Strided, device_name);
+let indexed_volume_gradient_output = ones_device([0], Float64, Strided, device_name);
+let unpooled_plane_output = ones_device([0], Float64, Strided, device_name);
+let unpooled_volume_output = ones_device([0], Float64, Strided, device_name);
+(max_pool2d_with_indices_out(
+    indexed_plane_output,
+    indexed_plane_indices_output,
+    plane,
+    [2, 2],
+    [2, 2],
+    [0, 0],
+    [1, 1],
+    false,
+); max_pool3d_with_indices_out(
+    indexed_volume_output,
+    indexed_volume_indices_output,
+    volume,
+    [2, 2, 2],
+    [2, 2, 2],
+    [0, 0, 0],
+    [1, 1, 1],
+    false,
+); max_pool2d_with_indices_backward_out(
+    indexed_plane_gradient_output,
+    plane_gradient,
+    plane,
+    [2, 2],
+    [2, 2],
+    [0, 0],
+    [1, 1],
+    false,
+    indexed_plane_indices,
+); max_pool3d_with_indices_backward_out(
+    indexed_volume_gradient_output,
+    volume_gradient,
+    volume,
+    [2, 2, 2],
+    [2, 2, 2],
+    [0, 0, 0],
+    [1, 1, 1],
+    false,
+    indexed_volume_indices,
+); max_unpool2d_out(unpooled_plane_output, indexed_plane_values, indexed_plane_indices, [4, 4]); max_unpool3d_out(
+    unpooled_volume_output,
+    indexed_volume_values,
+    indexed_volume_indices,
+    [4, 4, 4],
+    [2, 2, 2],
+    [0, 0, 0],
+); let valid =
+    shape(adaptive_average_line_output) == [1, 1, 2]
+        and shape(adaptive_average_plane_output) == [1, 1, 2, 2]
+        and shape(adaptive_average_volume_output) == [1, 1, 2, 2, 2]
+        and shape(adaptive_average_volume_gradient_output) == [1, 1, 4, 4, 4]
+        and shape(adaptive_plane_output) == [1, 1, 2, 2]
+        and shape(adaptive_plane_indices_output) == [1, 1, 2, 2]
+        and shape(adaptive_volume_output) == [1, 1, 2, 2, 2]
+        and shape(adaptive_volume_indices_output) == [1, 1, 2, 2, 2]
+        and shape(adaptive_plane_gradient_output) == [1, 1, 4, 4]
+        and shape(adaptive_volume_gradient_output) == [1, 1, 4, 4, 4]
+        and shape(average_line_output) == [1, 1, 2]
+        and shape(average_plane_output) == [1, 1, 2, 2]
+        and shape(average_volume_output) == [1, 1, 2, 2, 2]
+        and shape(average_plane_divisor_output) == [1, 1, 2, 2]
+        and shape(average_volume_divisor_output) == [1, 1, 2, 2, 2]
+        and shape(average_plane_gradient_output) == [1, 1, 4, 4]
+        and shape(average_volume_gradient_output) == [1, 1, 4, 4, 4]
+        and shape(average_plane_gradient_divisor_output) == [1, 1, 4, 4]
+        and shape(average_volume_gradient_divisor_output) == [1, 1, 4, 4, 4]
+        and shape(fractional_plane_output) == [1, 1, 2, 2]
+        and shape(fractional_plane_indices_output) == [1, 1, 2, 2]
+        and shape(fractional_volume_output) == [1, 1, 2, 2, 2]
+        and shape(fractional_volume_indices_output) == [1, 1, 2, 2, 2]
+        and shape(fractional_plane_gradient_output) == [1, 1, 4, 4]
+        and shape(fractional_volume_gradient_output) == [1, 1, 4, 4, 4]
+        and shape(indexed_plane_output) == [1, 1, 2, 2]
+        and shape(indexed_plane_indices_output) == [1, 1, 2, 2]
+        and shape(indexed_volume_output) == [1, 1, 2, 2, 2]
+        and shape(indexed_volume_indices_output) == [1, 1, 2, 2, 2]
+        and shape(indexed_plane_gradient_output) == [1, 1, 4, 4]
+        and shape(indexed_volume_gradient_output) == [1, 1, 4, 4, 4]
+        and shape(unpooled_plane_output) == [1, 1, 4, 4]
+        and shape(unpooled_volume_output) == [1, 1, 4, 4, 4]
+        and is_cuda(unpooled_plane_output) == expected_cuda
+        and is_cuda(unpooled_volume_output) == expected_cuda;
+(dispose(unpooled_volume_output); dispose(unpooled_plane_output); dispose(indexed_volume_gradient_output); dispose(indexed_plane_gradient_output); dispose(indexed_volume_indices_output); dispose(indexed_volume_output); dispose(indexed_plane_indices_output); dispose(indexed_plane_output); dispose(fractional_volume_gradient_output); dispose(fractional_plane_gradient_output); dispose(fractional_volume_indices_output); dispose(fractional_volume_output); dispose(fractional_plane_indices_output); dispose(fractional_plane_output); dispose(average_volume_gradient_divisor_output); dispose(average_plane_gradient_divisor_output); dispose(average_volume_gradient_output); dispose(average_plane_gradient_output); dispose(average_volume_divisor_output); dispose(average_plane_divisor_output); dispose(average_volume_output); dispose(average_plane_output); dispose(average_line_output); dispose(adaptive_volume_gradient_output); dispose(adaptive_plane_gradient_output); dispose(adaptive_volume_indices_output); dispose(adaptive_volume_output); dispose(adaptive_plane_indices_output); dispose(adaptive_plane_output); dispose(adaptive_average_volume_gradient_output); dispose(adaptive_average_volume_output); dispose(adaptive_average_plane_output); dispose(adaptive_average_line_output); dispose(indexed_volume_indices); dispose(indexed_volume_values); dispose(indexed_plane_indices); dispose(indexed_plane_values); dispose(fractional_volume_indices); dispose(fractional_volume_values); dispose(fractional_plane_indices); dispose(fractional_plane_values); dispose(adaptive_volume_indices); dispose(adaptive_volume_values); dispose(adaptive_plane_indices); dispose(adaptive_plane_values); dispose(volume_samples); dispose(plane_samples); dispose(volume_gradient); dispose(plane_gradient); dispose(volume); dispose(plane); dispose(line); valid))))).

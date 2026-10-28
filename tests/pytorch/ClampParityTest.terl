@@ -1,0 +1,123 @@
+module pytorch.ClampParityTest.
+
+import pytorch.Clamp.{clamp_float, clamp_float_int, clamp_in_place, clamp_int, clamp_int_float, clamp_int_out, clamp_max_float, clamp_max_float_in_place, clamp_max_int, clamp_min_float, clamp_min_int, clamp_min_int_in_place, clamp_tensor, clamp_tensor_in_place, clamp_tensor_max, clamp_tensor_min, clamp_tensor_out, clip, clip_float, clip_float_out, clip_in_place, clip_int_in_place, clip_tensor, clip_tensor_in_place, clip_tensor_out}.
+import pytorch.Tensor.{dispose, from_float, item_float}.
+
+/**
+ * Proves scalar clamp bounds preserve integer, floating-point, mixed, and optional-bound behavior.
+ */
+@test
+pub scalar_bounds_match_libtorch(): Bool ->
+    let high = from_float(10.5);
+    let low = from_float(-10.5);
+    let integer = clamp_int(high, -2, 3);
+    let floating = clamp_float(low, -2.5, 3.5);
+    let mixed_upper = clamp_int_float(high, -2, 3.5);
+    let mixed_lower = clamp_float_int(low, -3.5, 4);
+    let minimum_int = clamp_min_int(low, -4);
+    let minimum_float = clamp_min_float(low, -4.5);
+    let maximum_int = clamp_max_int(high, 4);
+    let maximum_float = clamp_max_float(high, 4.5);
+    let valid =
+        item_float(integer) == 3.0
+            and item_float(floating) == -2.5
+            and item_float(mixed_upper) == 3.5
+            and item_float(mixed_lower) == -3.5
+            and item_float(minimum_int) == -4.0
+            and item_float(minimum_float) == -4.5
+            and item_float(maximum_int) == 4.0
+            and item_float(maximum_float) == 4.5
+            and item_float(high) == 10.5
+            and item_float(low) == -10.5;
+    dispose(maximum_float);
+    dispose(maximum_int);
+    dispose(minimum_float);
+    dispose(minimum_int);
+    dispose(mixed_lower);
+    dispose(mixed_upper);
+    dispose(floating);
+    dispose(integer);
+    dispose(low);
+    dispose(high);
+    valid.
+
+/**
+ * Proves scalar output and in-place clamp variants retain their documented ownership behavior.
+ */
+@test
+pub scalar_storage_forms_match_libtorch(): Bool ->
+    let source = from_float(10.0);
+    let output = from_float(-99.0);
+    let minimum = from_float(-10.0);
+    let maximum = from_float(10.0);
+    clamp_int_out(output, source, -2, 3);
+    clamp_min_int_in_place(minimum, -4);
+    clamp_max_float_in_place(maximum, 4.5);
+    let valid =
+        item_float(output) == 3.0
+            and item_float(minimum) == -4.0
+            and item_float(maximum) == 4.5
+            and item_float(source) == 10.0;
+    (dispose(maximum); dispose(minimum); dispose(output); dispose(source); valid).
+
+/**
+ * Proves tensor bounds execute minimum-only, maximum-only, paired, output, and mutation forms.
+ */
+@test
+pub tensor_bounds_match_libtorch(): Bool ->
+    let high = from_float(10.0);
+    let low = from_float(-10.0);
+    let minimum = from_float(-3.0);
+    let maximum = from_float(4.0);
+    let minimum_only = clamp_tensor_min(low, minimum);
+    let maximum_only = clamp_tensor_max(high, maximum);
+    let paired = clamp_tensor(high, minimum, maximum);
+    let output = from_float(0.0);
+    let mutation = from_float(10.0);
+    clamp_tensor_out(output, low, minimum, maximum);
+    clamp_tensor_in_place(mutation, minimum, maximum);
+    let valid =
+        item_float(minimum_only) == -3.0
+            and item_float(maximum_only) == 4.0
+            and item_float(paired) == 4.0
+            and item_float(output) == -3.0
+            and item_float(mutation) == 4.0
+            and item_float(high) == 10.0
+            and item_float(low) == -10.0;
+    (dispose(mutation); dispose(output); dispose(paired); dispose(maximum_only); dispose(minimum_only); dispose(maximum); dispose(minimum); dispose(low); dispose(high); valid).
+
+/**
+ * Proves clip aliases preserve scalar and tensor functional, output, and in-place behavior.
+ */
+@test
+pub clip_aliases_match_clamp(): Bool ->
+    let high = from_float(10.0);
+    let minimum = from_float(-2.0);
+    let maximum = from_float(3.0);
+    let scalar = clip_float(high, -2.0, 4.0);
+    let top_level = clip(high, -2.0, 4.0);
+    let scalar_output = from_float(0.0);
+    let scalar_mutation = from_float(10.0);
+    let top_level_mutation = from_float(10.0);
+    let clamp_mutation = from_float(10.0);
+    let tensor = clip_tensor(high, minimum, maximum);
+    let tensor_output = from_float(0.0);
+    let tensor_mutation = from_float(10.0);
+    clip_float_out(scalar_output, high, -2.0, 4.0);
+    clip_int_in_place(scalar_mutation, -2, 4);
+    clip_in_place(top_level_mutation, -2.0, 4.0);
+    clamp_in_place(clamp_mutation, -2.0, 4.0);
+    clip_tensor_out(tensor_output, high, minimum, maximum);
+    clip_tensor_in_place(tensor_mutation, minimum, maximum);
+    let valid =
+        item_float(scalar) == 4.0
+            and item_float(top_level) == 4.0
+            and item_float(scalar_output) == 4.0
+            and item_float(scalar_mutation) == 4.0
+            and item_float(top_level_mutation) == 4.0
+            and item_float(clamp_mutation) == 4.0
+            and item_float(tensor) == 3.0
+            and item_float(tensor_output) == 3.0
+            and item_float(tensor_mutation) == 3.0
+            and item_float(high) == 10.0;
+    (dispose(clamp_mutation); dispose(top_level_mutation); dispose(top_level); dispose(tensor_mutation); dispose(tensor_output); dispose(tensor); dispose(scalar_mutation); dispose(scalar_output); dispose(scalar); dispose(maximum); dispose(minimum); dispose(high); valid).

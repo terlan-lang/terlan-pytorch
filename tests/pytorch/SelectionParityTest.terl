@@ -1,0 +1,204 @@
+module pytorch.SelectionParityTest.
+
+import pytorch.Binary.{eq_tensor}.
+import pytorch.Selection.{cummax, cummax_out, cummin, cummin_out, kthvalue, kthvalue_out, max_dim, median_dim, median_dim_out, min_dim, mode, mode_out, nanmedian_dim, nanmedian_dim_out, sort, sort_out, topk, topk_out}.
+import pytorch.Shape.{reshape}.
+import pytorch.Tensor.{clone, dispose, from_floats, item, item_bool, item_float, narrow, shape}.
+import pytorch.Unary.{all}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads one floating-point vector element through an owned view.
+ */
+vector_float(tensor: Tensor, index: Int): Float ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    value.
+
+/**
+ * Reads one integer vector element through an owned view.
+ */
+vector_int(tensor: Tensor, index: Int): Int ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item(element);
+    dispose(element);
+    value.
+
+/**
+ * Compares complete tensor values and releases both compared tensors.
+ */
+same_and_dispose(actual: Tensor, expected: Tensor): Bool ->
+    let comparisons = eq_tensor(actual, expected);
+    let reduced = all(comparisons);
+    let value = item_bool(reduced);
+    dispose(reduced);
+    dispose(comparisons);
+    dispose(expected);
+    dispose(actual);
+    value.
+
+/**
+ * Proves cumulative extrema, kth selection, and top-k ordering with source indices.
+ */
+@test
+pub cumulative_and_ranked_selection_match_libtorch(): Bool ->
+    let input = from_floats([3.0, 1.0, 4.0, 2.0, 6.0, 8.0, 7.0, 5.0], [2, 4]);
+    let {maximum_values, maximum_indices} = cummax(input, 1);
+    let {minimum_values, minimum_indices} = cummin(input, 1);
+    let {kth_values, kth_indices} = kthvalue(input, 2, 1);
+    let {top_values, top_indices} = topk(input, 2, 1);
+    let flat_maximum_values = reshape(maximum_values, [8]);
+    let flat_maximum_indices = reshape(maximum_indices, [8]);
+    let flat_minimum_values = reshape(minimum_values, [8]);
+    let flat_minimum_indices = reshape(minimum_indices, [8]);
+    let flat_top_values = reshape(top_values, [4]);
+    let flat_top_indices = reshape(top_indices, [4]);
+    let valid =
+        shape(maximum_values) == [2, 4]
+            and vector_float(flat_maximum_values, 3) == 4.0
+            and vector_float(flat_maximum_values, 7) == 8.0
+            and vector_int(flat_maximum_indices, 2) == 2
+            and vector_int(flat_maximum_indices, 7) == 1
+            and shape(minimum_values) == [2, 4]
+            and vector_float(flat_minimum_values, 3) == 1.0
+            and vector_float(flat_minimum_values, 7) == 5.0
+            and vector_int(flat_minimum_indices, 3) == 1
+            and vector_int(flat_minimum_indices, 7) == 3
+            and shape(kth_values) == [2]
+            and vector_float(kth_values, 0) == 2.0
+            and vector_float(kth_values, 1) == 6.0
+            and vector_int(kth_indices, 0) == 3
+            and vector_int(kth_indices, 1) == 0
+            and shape(top_values) == [2, 2]
+            and vector_float(flat_top_values, 0) == 4.0
+            and vector_float(flat_top_values, 3) == 7.0
+            and vector_int(flat_top_indices, 0) == 2
+            and vector_int(flat_top_indices, 3) == 2;
+    dispose(flat_top_indices);
+    dispose(flat_top_values);
+    dispose(flat_minimum_indices);
+    dispose(flat_minimum_values);
+    dispose(flat_maximum_indices);
+    dispose(flat_maximum_values);
+    dispose(top_indices);
+    dispose(top_values);
+    dispose(kth_indices);
+    dispose(kth_values);
+    dispose(minimum_indices);
+    dispose(minimum_values);
+    dispose(maximum_indices);
+    dispose(maximum_values);
+    dispose(input);
+    valid.
+
+/**
+ * Proves indexed extrema, medians, modes, and complete ordering.
+ */
+@test
+pub dimension_selection_and_sort_match_libtorch(): Bool ->
+    let input = from_floats([3.0, 1.0, 4.0, 2.0, 6.0, 8.0, 7.0, 5.0], [2, 4]);
+    let modal_input = from_floats([2.0, 1.0, 2.0, 3.0, 4.0, 4.0, 5.0, 4.0], [2, 4]);
+    let {maximum_values, maximum_indices} = max_dim(input, 1);
+    let {minimum_values, minimum_indices} = min_dim(input, 1);
+    let {median_values, median_indices} = median_dim(input, 1);
+    let {nanmedian_values, nanmedian_indices} = nanmedian_dim(input, 1);
+    let {mode_values, mode_indices} = mode(modal_input, 1);
+    let {sorted_values, sorted_indices} = sort(input, 1);
+    let flat_sorted_values = reshape(sorted_values, [8]);
+    let flat_sorted_indices = reshape(sorted_indices, [8]);
+    let valid =
+        shape(maximum_values) == [2]
+            and vector_float(maximum_values, 0) == 4.0
+            and vector_float(maximum_values, 1) == 8.0
+            and vector_int(maximum_indices, 0) == 2
+            and vector_int(maximum_indices, 1) == 1
+            and vector_float(minimum_values, 0) == 1.0
+            and vector_float(minimum_values, 1) == 5.0
+            and vector_int(minimum_indices, 0) == 1
+            and vector_int(minimum_indices, 1) == 3
+            and vector_float(median_values, 0) == 2.0
+            and vector_float(median_values, 1) == 6.0
+            and vector_int(median_indices, 0) == 3
+            and vector_int(median_indices, 1) == 0
+            and vector_float(nanmedian_values, 0) == 2.0
+            and vector_float(nanmedian_values, 1) == 6.0
+            and vector_int(nanmedian_indices, 0) == 3
+            and vector_int(nanmedian_indices, 1) == 0
+            and vector_float(mode_values, 0) == 2.0
+            and vector_float(mode_values, 1) == 4.0
+            and shape(mode_indices) == [2]
+            and shape(sorted_values) == [2, 4]
+            and vector_float(flat_sorted_values, 0) == 1.0
+            and vector_float(flat_sorted_values, 7) == 8.0
+            and vector_int(flat_sorted_indices, 0) == 1
+            and vector_int(flat_sorted_indices, 7) == 1;
+    dispose(flat_sorted_indices);
+    dispose(flat_sorted_values);
+    dispose(sorted_indices);
+    dispose(sorted_values);
+    dispose(mode_indices);
+    dispose(mode_values);
+    dispose(nanmedian_indices);
+    dispose(nanmedian_values);
+    dispose(median_indices);
+    dispose(median_values);
+    dispose(minimum_indices);
+    dispose(minimum_values);
+    dispose(maximum_indices);
+    dispose(maximum_values);
+    dispose(modal_input);
+    dispose(input);
+    valid.
+
+/**
+ * Proves retained tuple outputs for ordering and ranked selection.
+ */
+@test
+pub selection_retained_outputs_match_functional_results(): Bool ->
+    let input = from_floats([3.0, 1.0, 4.0, 2.0, 6.0, 8.0, 7.0, 5.0], [2, 4]);
+    let modal_input = from_floats([2.0, 1.0, 2.0, 3.0, 4.0, 4.0, 5.0, 4.0], [2, 4]);
+    let {cummax_values, cummax_indices} = cummax(input, 1);
+    let cummax_output = clone(cummax_values);
+    let cummax_index_output = clone(cummax_indices);
+    cummax_out(cummax_output, cummax_index_output, input, 1);
+    let cummax_ok =
+        same_and_dispose(cummax_output, cummax_values)
+            and same_and_dispose(cummax_index_output, cummax_indices);
+    let {cummin_values, cummin_indices} = cummin(input, 1);
+    let cummin_output = clone(cummin_values);
+    let cummin_index_output = clone(cummin_indices);
+    (cummin_out(cummin_output, cummin_index_output, input, 1); let cummin_ok =
+    same_and_dispose(cummin_output, cummin_values)
+        and same_and_dispose(cummin_index_output, cummin_indices);
+let {kth_values, kth_indices} = kthvalue(input, 2, 1);
+let kth_output = clone(kth_values);
+let kth_index_output = clone(kth_indices);
+(kthvalue_out(kth_output, kth_index_output, input, 2, 1); let kth_ok = same_and_dispose(kth_output, kth_values) and same_and_dispose(kth_index_output, kth_indices);
+let {median_values, median_indices} = median_dim(input, 1);
+let median_output = clone(median_values);
+let median_index_output = clone(median_indices);
+(median_dim_out(median_output, median_index_output, input, 1); let median_ok =
+    same_and_dispose(median_output, median_values)
+        and same_and_dispose(median_index_output, median_indices);
+let {mode_values, mode_indices} = mode(modal_input, 1);
+let mode_output = clone(mode_values);
+let mode_index_output = clone(mode_indices);
+(mode_out(mode_output, mode_index_output, modal_input, 1); let mode_ok = same_and_dispose(mode_output, mode_values) and same_and_dispose(mode_index_output, mode_indices);
+let {nanmedian_values, nanmedian_indices} = nanmedian_dim(input, 1);
+let nanmedian_output = clone(nanmedian_values);
+let nanmedian_index_output = clone(nanmedian_indices);
+(nanmedian_dim_out(nanmedian_output, nanmedian_index_output, input, 1); let nanmedian_ok =
+    same_and_dispose(nanmedian_output, nanmedian_values)
+        and same_and_dispose(nanmedian_index_output, nanmedian_indices);
+let {sorted_values, sorted_indices} = sort(input, 1);
+let sorted_output = clone(sorted_values);
+let sorted_index_output = clone(sorted_indices);
+(sort_out(sorted_output, sorted_index_output, input, 1); let sort_ok =
+    same_and_dispose(sorted_output, sorted_values)
+        and same_and_dispose(sorted_index_output, sorted_indices);
+let {top_values, top_indices} = topk(input, 2, 1);
+let top_output = clone(top_values);
+let top_index_output = clone(top_indices);
+(topk_out(top_output, top_index_output, input, 2, 1); let top_ok = same_and_dispose(top_output, top_values) and same_and_dispose(top_index_output, top_indices); (dispose(modal_input); dispose(input); cummax_ok and cummin_ok and kth_ok and median_ok and mode_ok and nanmedian_ok and sort_ok and top_ok)))))))).

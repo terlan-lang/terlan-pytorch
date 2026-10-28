@@ -1,0 +1,47 @@
+//! CXX-owned LibTorch storage handles and set adapters.
+
+module pytorch.StorageNative.
+
+/// Owned LibTorch storage handle.
+
+pub opaque type StorageHandle.
+
+/// Drops an owned storage handle.
+
+pub storage_dispose(source: StorageHandle): Unit.
+
+/// Creates an owned storage handle from a tensor.
+
+pub storage_from_tensor(tensor: Tensor): StorageHandle.
+
+/// Reports the LibTorch storage shared-memory flag.
+
+pub storage_is_shared(tensor: Tensor): Bool.
+
+/// Sets tensor metadata from storage.
+
+pub storage_set(tensor: Tensor, source: StorageHandle): Tensor.
+
+/// Sets tensor storage in place.
+
+pub storage_set_in_place(tensor: Tensor, source: StorageHandle): Unit.
+
+/// Sets tensor storage metadata in place with offset and strides.
+
+pub storage_set_in_place_offset(tensor: Tensor, source: StorageHandle, storage_offset: Int, size: List[Int], stride: List[Int]): Unit.
+
+/// Sets tensor storage metadata with offset and strides.
+
+pub storage_set_offset(tensor: Tensor, source: StorageHandle, storage_offset: Int, size: List[Int], stride: List[Int]): Tensor.
+
+/// Writes tensor storage metadata with offset and strides.
+
+pub storage_set_offset_out(output: Tensor, tensor: Tensor, source: StorageHandle, storage_offset: Int, size: List[Int], stride: List[Int]): Unit.
+
+/// Writes storage metadata to retained output.
+
+pub storage_set_out(output: Tensor, tensor: Tensor, source: StorageHandle): Unit.
+
+/// Moves tensor storage into LibTorch shared memory.
+
+pub storage_share_memory(tensor: Tensor): Unit.

@@ -1,0 +1,427 @@
+module pytorch.BinaryScalarParityTest.
+
+import pytorch.BinaryScalar.{bitwise_and_left_int, bitwise_and_left_int_out, bitwise_and_right_int, bitwise_and_right_int_in_place, bitwise_and_right_int_out, bitwise_and_tensor_in_place, bitwise_and_tensor_out, bitwise_left_shift_left_int, bitwise_left_shift_left_int_out, bitwise_left_shift_right_int, bitwise_left_shift_right_int_in_place, bitwise_left_shift_right_int_out, bitwise_left_shift_tensor_in_place, bitwise_left_shift_tensor_out, bitwise_or_left_int, bitwise_or_left_int_out, bitwise_or_right_int, bitwise_or_right_int_in_place, bitwise_or_right_int_out, bitwise_or_tensor_in_place, bitwise_or_tensor_out, bitwise_right_shift_left_int, bitwise_right_shift_left_int_out, bitwise_right_shift_right_int, bitwise_right_shift_right_int_in_place, bitwise_right_shift_right_int_out, bitwise_right_shift_tensor_in_place, bitwise_right_shift_tensor_out, bitwise_xor_left_int, bitwise_xor_left_int_out, bitwise_xor_right_int, bitwise_xor_right_int_in_place, bitwise_xor_right_int_out, bitwise_xor_tensor_in_place, bitwise_xor_tensor_out, float_power_left_float, float_power_left_float_out, float_power_left_int, float_power_left_int_out, float_power_right_float, float_power_right_float_in_place, float_power_right_float_out, float_power_right_int, float_power_right_int_in_place, float_power_right_int_out, float_power_tensor_in_place, float_power_tensor_out, pow_left_float, pow_left_float_out, pow_left_int, pow_left_int_out, pow_right_float, pow_right_float_in_place, pow_right_float_out, pow_right_int, pow_right_int_in_place, pow_right_int_out, pow_tensor_in_place, pow_tensor_out, remainder_left_float, remainder_left_float_out, remainder_left_int, remainder_left_int_out, remainder_right_float, remainder_right_float_in_place, remainder_right_float_out, remainder_right_int, remainder_right_int_in_place, remainder_right_int_out, remainder_tensor_in_place, remainder_tensor_out}.
+import pytorch.Tensor.{dispose, from_float, from_int, item_float}.
+
+import type pytorch.Tensor.
+
+/**
+ * Disposes every tensor created by one integer-scalar parity case.
+ */
+dispose_integer_case(
+    left: Tensor,
+    right: Tensor,
+    functional_right: Tensor,
+    functional_left: Tensor,
+    tensor_output: Tensor,
+    right_output: Tensor,
+    left_output: Tensor,
+    tensor_mutation: Tensor,
+    scalar_mutation: Tensor,
+): Unit ->
+    dispose(scalar_mutation);
+    dispose(tensor_mutation);
+    dispose(left_output);
+    dispose(right_output);
+    dispose(tensor_output);
+    dispose(functional_left);
+    dispose(functional_right);
+    dispose(right);
+    dispose(left).
+
+/**
+ * Proves every bitwise and tensor and integer-scalar overload.
+ */
+@test
+pub bitwise_and_integer_overloads_match_libtorch(): Bool ->
+    let left = from_int(6);
+    let right = from_int(3);
+    let functional_right = bitwise_and_right_int(left, 3);
+    let functional_left = bitwise_and_left_int(3, left);
+    let tensor_output = from_int(0);
+    let right_output = from_int(0);
+    let left_output = from_int(0);
+    let tensor_mutation = from_int(6);
+    let scalar_mutation = from_int(6);
+    bitwise_and_tensor_out(tensor_output, left, right);
+    bitwise_and_right_int_out(right_output, left, 3);
+    bitwise_and_left_int_out(left_output, 3, left);
+    bitwise_and_tensor_in_place(tensor_mutation, right);
+    bitwise_and_right_int_in_place(scalar_mutation, 3);
+    let valid =
+        item_float(functional_right) == 2.0
+            and item_float(functional_left) == 2.0
+            and item_float(tensor_output) == 2.0
+            and item_float(right_output) == 2.0
+            and item_float(left_output) == 2.0
+            and item_float(tensor_mutation) == 2.0
+            and item_float(scalar_mutation) == 2.0
+            and item_float(left) == 6.0
+            and item_float(right) == 3.0;
+    (dispose_integer_case(
+    left,
+    right,
+    functional_right,
+    functional_left,
+    tensor_output,
+    right_output,
+    left_output,
+    tensor_mutation,
+    scalar_mutation,
+); valid).
+
+/**
+ * Proves every bitwise or tensor and integer-scalar overload.
+ */
+@test
+pub bitwise_or_integer_overloads_match_libtorch(): Bool ->
+    let left = from_int(6);
+    let right = from_int(3);
+    let functional_right = bitwise_or_right_int(left, 3);
+    let functional_left = bitwise_or_left_int(3, left);
+    let tensor_output = from_int(0);
+    let right_output = from_int(0);
+    let left_output = from_int(0);
+    let tensor_mutation = from_int(6);
+    let scalar_mutation = from_int(6);
+    bitwise_or_tensor_out(tensor_output, left, right);
+    bitwise_or_right_int_out(right_output, left, 3);
+    bitwise_or_left_int_out(left_output, 3, left);
+    bitwise_or_tensor_in_place(tensor_mutation, right);
+    bitwise_or_right_int_in_place(scalar_mutation, 3);
+    let valid =
+        item_float(functional_right) == 7.0
+            and item_float(functional_left) == 7.0
+            and item_float(tensor_output) == 7.0
+            and item_float(right_output) == 7.0
+            and item_float(left_output) == 7.0
+            and item_float(tensor_mutation) == 7.0
+            and item_float(scalar_mutation) == 7.0
+            and item_float(left) == 6.0
+            and item_float(right) == 3.0;
+    (dispose_integer_case(
+    left,
+    right,
+    functional_right,
+    functional_left,
+    tensor_output,
+    right_output,
+    left_output,
+    tensor_mutation,
+    scalar_mutation,
+); valid).
+
+/**
+ * Proves every bitwise xor tensor and integer-scalar overload.
+ */
+@test
+pub bitwise_xor_integer_overloads_match_libtorch(): Bool ->
+    let left = from_int(6);
+    let right = from_int(3);
+    let functional_right = bitwise_xor_right_int(left, 3);
+    let functional_left = bitwise_xor_left_int(3, left);
+    let tensor_output = from_int(0);
+    let right_output = from_int(0);
+    let left_output = from_int(0);
+    let tensor_mutation = from_int(6);
+    let scalar_mutation = from_int(6);
+    bitwise_xor_tensor_out(tensor_output, left, right);
+    bitwise_xor_right_int_out(right_output, left, 3);
+    bitwise_xor_left_int_out(left_output, 3, left);
+    bitwise_xor_tensor_in_place(tensor_mutation, right);
+    bitwise_xor_right_int_in_place(scalar_mutation, 3);
+    let valid =
+        item_float(functional_right) == 5.0
+            and item_float(functional_left) == 5.0
+            and item_float(tensor_output) == 5.0
+            and item_float(right_output) == 5.0
+            and item_float(left_output) == 5.0
+            and item_float(tensor_mutation) == 5.0
+            and item_float(scalar_mutation) == 5.0
+            and item_float(left) == 6.0
+            and item_float(right) == 3.0;
+    (dispose_integer_case(
+    left,
+    right,
+    functional_right,
+    functional_left,
+    tensor_output,
+    right_output,
+    left_output,
+    tensor_mutation,
+    scalar_mutation,
+); valid).
+
+/**
+ * Proves every bitwise left shift tensor and integer-scalar overload.
+ */
+@test
+pub bitwise_left_shift_integer_overloads_match_libtorch(): Bool ->
+    let left = from_int(3);
+    let right = from_int(2);
+    let functional_right = bitwise_left_shift_right_int(left, 2);
+    let functional_left = bitwise_left_shift_left_int(2, left);
+    let tensor_output = from_int(0);
+    let right_output = from_int(0);
+    let left_output = from_int(0);
+    let tensor_mutation = from_int(3);
+    let scalar_mutation = from_int(3);
+    bitwise_left_shift_tensor_out(tensor_output, left, right);
+    bitwise_left_shift_right_int_out(right_output, left, 2);
+    bitwise_left_shift_left_int_out(left_output, 2, left);
+    bitwise_left_shift_tensor_in_place(tensor_mutation, right);
+    bitwise_left_shift_right_int_in_place(scalar_mutation, 2);
+    let valid =
+        item_float(functional_right) == 12.0
+            and item_float(functional_left) == 16.0
+            and item_float(tensor_output) == 12.0
+            and item_float(right_output) == 12.0
+            and item_float(left_output) == 16.0
+            and item_float(tensor_mutation) == 12.0
+            and item_float(scalar_mutation) == 12.0
+            and item_float(left) == 3.0
+            and item_float(right) == 2.0;
+    (dispose_integer_case(
+    left,
+    right,
+    functional_right,
+    functional_left,
+    tensor_output,
+    right_output,
+    left_output,
+    tensor_mutation,
+    scalar_mutation,
+); valid).
+
+/**
+ * Proves every bitwise right shift tensor and integer-scalar overload.
+ */
+@test
+pub bitwise_right_shift_integer_overloads_match_libtorch(): Bool ->
+    let left = from_int(8);
+    let right = from_int(2);
+    let functional_right = bitwise_right_shift_right_int(left, 2);
+    let functional_left = bitwise_right_shift_left_int(2, left);
+    let tensor_output = from_int(0);
+    let right_output = from_int(0);
+    let left_output = from_int(0);
+    let tensor_mutation = from_int(8);
+    let scalar_mutation = from_int(8);
+    bitwise_right_shift_tensor_out(tensor_output, left, right);
+    bitwise_right_shift_right_int_out(right_output, left, 2);
+    bitwise_right_shift_left_int_out(left_output, 2, left);
+    bitwise_right_shift_tensor_in_place(tensor_mutation, right);
+    bitwise_right_shift_right_int_in_place(scalar_mutation, 2);
+    let valid =
+        item_float(functional_right) == 2.0
+            and item_float(functional_left) == 0.0
+            and item_float(tensor_output) == 2.0
+            and item_float(right_output) == 2.0
+            and item_float(left_output) == 0.0
+            and item_float(tensor_mutation) == 2.0
+            and item_float(scalar_mutation) == 2.0
+            and item_float(left) == 8.0
+            and item_float(right) == 2.0;
+    (dispose_integer_case(
+    left,
+    right,
+    functional_right,
+    functional_left,
+    tensor_output,
+    right_output,
+    left_output,
+    tensor_mutation,
+    scalar_mutation,
+); valid).
+
+/**
+ * Proves every remainder tensor and integer-scalar overload.
+ */
+@test
+pub remainder_integer_overloads_match_libtorch(): Bool ->
+    let left = from_int(7);
+    let right = from_int(4);
+    let functional_right = remainder_right_int(left, 4);
+    let functional_left = remainder_left_int(4, left);
+    let tensor_output = from_int(0);
+    let right_output = from_int(0);
+    let left_output = from_int(0);
+    let tensor_mutation = from_int(7);
+    let scalar_mutation = from_int(7);
+    remainder_tensor_out(tensor_output, left, right);
+    remainder_right_int_out(right_output, left, 4);
+    remainder_left_int_out(left_output, 4, left);
+    remainder_tensor_in_place(tensor_mutation, right);
+    remainder_right_int_in_place(scalar_mutation, 4);
+    let valid =
+        item_float(functional_right) == 3.0
+            and item_float(functional_left) == 4.0
+            and item_float(tensor_output) == 3.0
+            and item_float(right_output) == 3.0
+            and item_float(left_output) == 4.0
+            and item_float(tensor_mutation) == 3.0
+            and item_float(scalar_mutation) == 3.0
+            and item_float(left) == 7.0
+            and item_float(right) == 4.0;
+    (dispose_integer_case(
+    left,
+    right,
+    functional_right,
+    functional_left,
+    tensor_output,
+    right_output,
+    left_output,
+    tensor_mutation,
+    scalar_mutation,
+); valid).
+
+/**
+ * Proves every power tensor and integer-scalar overload.
+ */
+@test
+pub pow_integer_overloads_match_libtorch(): Bool ->
+    let left = from_int(2);
+    let right = from_int(3);
+    let functional_right = pow_right_int(left, 3);
+    let functional_left = pow_left_int(3, left);
+    let tensor_output = from_int(0);
+    let right_output = from_int(0);
+    let left_output = from_int(0);
+    let tensor_mutation = from_int(2);
+    let scalar_mutation = from_int(2);
+    pow_tensor_out(tensor_output, left, right);
+    pow_right_int_out(right_output, left, 3);
+    pow_left_int_out(left_output, 3, left);
+    pow_tensor_in_place(tensor_mutation, right);
+    pow_right_int_in_place(scalar_mutation, 3);
+    let valid =
+        item_float(functional_right) == 8.0
+            and item_float(functional_left) == 9.0
+            and item_float(tensor_output) == 8.0
+            and item_float(right_output) == 8.0
+            and item_float(left_output) == 9.0
+            and item_float(tensor_mutation) == 8.0
+            and item_float(scalar_mutation) == 8.0
+            and item_float(left) == 2.0
+            and item_float(right) == 3.0;
+    (dispose_integer_case(
+    left,
+    right,
+    functional_right,
+    functional_left,
+    tensor_output,
+    right_output,
+    left_output,
+    tensor_mutation,
+    scalar_mutation,
+); valid).
+
+/**
+ * Proves every floating power tensor and integer-scalar overload.
+ */
+@test
+pub float_power_integer_overloads_match_libtorch(): Bool ->
+    let left = from_float(2.0);
+    let right = from_float(3.0);
+    let functional_right = float_power_right_int(left, 3);
+    let functional_left = float_power_left_int(3, left);
+    let tensor_output = from_float(0.0);
+    let right_output = from_float(0.0);
+    let left_output = from_float(0.0);
+    let tensor_mutation = from_float(2.0);
+    let scalar_mutation = from_float(2.0);
+    float_power_tensor_out(tensor_output, left, right);
+    float_power_right_int_out(right_output, left, 3);
+    float_power_left_int_out(left_output, 3, left);
+    float_power_tensor_in_place(tensor_mutation, right);
+    float_power_right_int_in_place(scalar_mutation, 3);
+    let valid =
+        item_float(functional_right) == 8.0
+            and item_float(functional_left) == 9.0
+            and item_float(tensor_output) == 8.0
+            and item_float(right_output) == 8.0
+            and item_float(left_output) == 9.0
+            and item_float(tensor_mutation) == 8.0
+            and item_float(scalar_mutation) == 8.0
+            and item_float(left) == 2.0
+            and item_float(right) == 3.0;
+    (dispose_integer_case(
+    left,
+    right,
+    functional_right,
+    functional_left,
+    tensor_output,
+    right_output,
+    left_output,
+    tensor_mutation,
+    scalar_mutation,
+); valid).
+
+/**
+ * Proves every remainder floating-scalar overload.
+ */
+@test
+pub remainder_floating_overloads_match_libtorch(): Bool ->
+    let left = from_float(7.0);
+    let functional_right = remainder_right_float(left, 4.0);
+    let functional_left = remainder_left_float(4.0, left);
+    let right_output = from_float(0.0);
+    let left_output = from_float(0.0);
+    let mutation = from_float(7.0);
+    remainder_right_float_out(right_output, left, 4.0);
+    remainder_left_float_out(left_output, 4.0, left);
+    remainder_right_float_in_place(mutation, 4.0);
+    let valid =
+        item_float(functional_right) == 3.0
+            and item_float(functional_left) == 4.0
+            and item_float(right_output) == 3.0
+            and item_float(left_output) == 4.0
+            and item_float(mutation) == 3.0
+            and item_float(left) == 7.0;
+    (dispose(mutation); dispose(left_output); dispose(right_output); dispose(functional_left); dispose(functional_right); dispose(left); valid).
+
+/**
+ * Proves every power floating-scalar overload.
+ */
+@test
+pub pow_floating_overloads_match_libtorch(): Bool ->
+    let left = from_float(2.0);
+    let functional_right = pow_right_float(left, 3.0);
+    let functional_left = pow_left_float(3.0, left);
+    let right_output = from_float(0.0);
+    let left_output = from_float(0.0);
+    let mutation = from_float(2.0);
+    pow_right_float_out(right_output, left, 3.0);
+    pow_left_float_out(left_output, 3.0, left);
+    pow_right_float_in_place(mutation, 3.0);
+    let valid =
+        item_float(functional_right) == 8.0
+            and item_float(functional_left) == 9.0
+            and item_float(right_output) == 8.0
+            and item_float(left_output) == 9.0
+            and item_float(mutation) == 8.0
+            and item_float(left) == 2.0;
+    (dispose(mutation); dispose(left_output); dispose(right_output); dispose(functional_left); dispose(functional_right); dispose(left); valid).
+
+/**
+ * Proves every floating power floating-scalar overload.
+ */
+@test
+pub float_power_floating_overloads_match_libtorch(): Bool ->
+    let left = from_float(2.0);
+    let functional_right = float_power_right_float(left, 3.0);
+    let functional_left = float_power_left_float(3.0, left);
+    let right_output = from_float(0.0);
+    let left_output = from_float(0.0);
+    let mutation = from_float(2.0);
+    float_power_right_float_out(right_output, left, 3.0);
+    float_power_left_float_out(left_output, 3.0, left);
+    float_power_right_float_in_place(mutation, 3.0);
+    let valid =
+        item_float(functional_right) == 8.0
+            and item_float(functional_left) == 9.0
+            and item_float(right_output) == 8.0
+            and item_float(left_output) == 9.0
+            and item_float(mutation) == 8.0
+            and item_float(left) == 2.0;
+    (dispose(mutation); dispose(left_output); dispose(right_output); dispose(functional_left); dispose(functional_right); dispose(left); valid).

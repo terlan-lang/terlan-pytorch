@@ -1,0 +1,235 @@
+//! Exact PyTorch range, identity, and endpoint-spacing constructors.
+
+module pytorch.Range.
+
+/// A tensor layout admitted by PyTorch range constructors.
+
+pub type Layout: Int =
+    STRIDED = 0.
+
+/// Preserves presence independently for every optional tensor argument.
+
+pub struct RangeOptions {
+    dtype: pytorch.Tensor.DType,
+    has_dtype: Bool,
+    layout_code: Int,
+    has_layout: Bool,
+    device: pytorch.Tensor.Device,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool
+}.
+
+/// Creates an exclusive progression from zero using inferred tensor options.
+
+pub arange(end: Scalar): pytorch.Tensor.Tensor.
+
+/// Creates an exclusive unit-step progression using inferred tensor options.
+
+pub arange(start: Scalar, end: Scalar): pytorch.Tensor.Tensor.
+
+/// Creates an exclusive progression using inferred tensor options.
+
+pub arange(start: Scalar, end: Scalar, step: Scalar): pytorch.Tensor.Tensor.
+
+/// Writes an exclusive progression from zero into retained storage.
+
+pub arange_out(output: pytorch.Tensor.Tensor, end: Scalar): Unit.
+
+/// Writes an exclusive progression into retained storage.
+
+pub arange_out(output: pytorch.Tensor.Tensor, start: Scalar, end: Scalar, step: Scalar): Unit.
+
+/// Creates an exclusive progression with explicit option presence.
+
+pub arange_with(start: Scalar, end: Scalar, step: Scalar, configured: RangeOptions): pytorch.Tensor.Tensor.
+
+/// Returns options in which PyTorch infers every optional value.
+
+pub default_options(): RangeOptions.
+
+/// Creates a square identity with inferred tensor options.
+
+pub eye(size: Int): pytorch.Tensor.Tensor.
+
+/// Creates a rectangular identity with inferred tensor options.
+
+pub eye(rows: Int, columns: Int): pytorch.Tensor.Tensor.
+
+/// Writes a square identity into retained storage.
+
+pub eye_out(output: pytorch.Tensor.Tensor, size: Int): Unit.
+
+/// Writes a rectangular identity into retained storage.
+
+pub eye_out(output: pytorch.Tensor.Tensor, rows: Int, columns: Int): Unit.
+
+/// Creates a rectangular identity with explicit option presence.
+
+pub eye_with(rows: Int, columns: Int, configured: RangeOptions): pytorch.Tensor.Tensor.
+
+/// Lowers a typed range layout to LibTorch's stable layout identifier.
+
+@pure
+pub layout_code(layout: Layout): Int.
+
+/// Creates scalar-endpoint linear spacing with inferred tensor options.
+
+pub linspace(start: Scalar, end: Scalar, steps: Int): pytorch.Tensor.Tensor.
+
+/// Creates tensor-endpoint linear spacing with inferred tensor options.
+
+pub linspace(start: pytorch.Tensor.Tensor, end: pytorch.Tensor.Tensor, steps: Int): pytorch.Tensor.Tensor.
+
+/// Creates tensor-to-scalar linear spacing with inferred tensor options.
+
+pub linspace(start: pytorch.Tensor.Tensor, end: Scalar, steps: Int): pytorch.Tensor.Tensor.
+
+/// Creates scalar-to-tensor linear spacing with inferred tensor options.
+
+pub linspace(start: Scalar, end: pytorch.Tensor.Tensor, steps: Int): pytorch.Tensor.Tensor.
+
+/// Writes scalar-endpoint linear spacing into retained storage.
+
+pub linspace_out(output: pytorch.Tensor.Tensor, start: Scalar, end: Scalar, steps: Int): Unit.
+
+/// Writes tensor-endpoint linear spacing into retained storage.
+
+pub linspace_out(output: pytorch.Tensor.Tensor, start: pytorch.Tensor.Tensor, end: pytorch.Tensor.Tensor, steps: Int): Unit.
+
+/// Writes tensor-to-scalar linear spacing into retained storage.
+
+pub linspace_out(output: pytorch.Tensor.Tensor, start: pytorch.Tensor.Tensor, end: Scalar, steps: Int): Unit.
+
+/// Writes scalar-to-tensor linear spacing into retained storage.
+
+pub linspace_out(output: pytorch.Tensor.Tensor, start: Scalar, end: pytorch.Tensor.Tensor, steps: Int): Unit.
+
+/// Creates scalar-endpoint linear spacing with explicit option presence.
+
+pub linspace_with(start: Scalar, end: Scalar, steps: Int, configured: RangeOptions): pytorch.Tensor.Tensor.
+
+/// Creates tensor-endpoint linear spacing with explicit option presence.
+
+pub linspace_with(start: pytorch.Tensor.Tensor, end: pytorch.Tensor.Tensor, steps: Int, configured: RangeOptions): pytorch.Tensor.Tensor.
+
+/// Creates tensor-to-scalar linear spacing with explicit option presence.
+
+pub linspace_with(start: pytorch.Tensor.Tensor, end: Scalar, steps: Int, configured: RangeOptions): pytorch.Tensor.Tensor.
+
+/// Creates scalar-to-tensor linear spacing with explicit option presence.
+
+pub linspace_with(start: Scalar, end: pytorch.Tensor.Tensor, steps: Int, configured: RangeOptions): pytorch.Tensor.Tensor.
+
+/// Creates scalar-endpoint base-ten logarithmic spacing.
+
+pub logspace(start: Scalar, end: Scalar, steps: Int): pytorch.Tensor.Tensor.
+
+/// Creates tensor-endpoint base-ten logarithmic spacing.
+
+pub logspace(start: pytorch.Tensor.Tensor, end: pytorch.Tensor.Tensor, steps: Int): pytorch.Tensor.Tensor.
+
+/// Creates tensor-to-scalar base-ten logarithmic spacing.
+
+pub logspace(start: pytorch.Tensor.Tensor, end: Scalar, steps: Int): pytorch.Tensor.Tensor.
+
+/// Creates scalar-to-tensor base-ten logarithmic spacing.
+
+pub logspace(start: Scalar, end: pytorch.Tensor.Tensor, steps: Int): pytorch.Tensor.Tensor.
+
+/// Creates scalar-endpoint logarithmic spacing with an explicit base.
+
+pub logspace(start: Scalar, end: Scalar, steps: Int, base: Float): pytorch.Tensor.Tensor.
+
+/// Creates tensor-endpoint logarithmic spacing with an explicit base.
+
+pub logspace(start: pytorch.Tensor.Tensor, end: pytorch.Tensor.Tensor, steps: Int, base: Float): pytorch.Tensor.Tensor.
+
+/// Creates tensor-to-scalar logarithmic spacing with an explicit base.
+
+pub logspace(start: pytorch.Tensor.Tensor, end: Scalar, steps: Int, base: Float): pytorch.Tensor.Tensor.
+
+/// Creates scalar-to-tensor logarithmic spacing with an explicit base.
+
+pub logspace(start: Scalar, end: pytorch.Tensor.Tensor, steps: Int, base: Float): pytorch.Tensor.Tensor.
+
+/// Writes scalar-endpoint logarithmic spacing into retained storage.
+
+pub logspace_out(output: pytorch.Tensor.Tensor, start: Scalar, end: Scalar, steps: Int, base: Float): Unit.
+
+/// Writes tensor-endpoint logarithmic spacing into retained storage.
+
+pub logspace_out(output: pytorch.Tensor.Tensor, start: pytorch.Tensor.Tensor, end: pytorch.Tensor.Tensor, steps: Int, base: Float): Unit.
+
+/// Writes tensor-to-scalar logarithmic spacing into retained storage.
+
+pub logspace_out(output: pytorch.Tensor.Tensor, start: pytorch.Tensor.Tensor, end: Scalar, steps: Int, base: Float): Unit.
+
+/// Writes scalar-to-tensor logarithmic spacing into retained storage.
+
+pub logspace_out(output: pytorch.Tensor.Tensor, start: Scalar, end: pytorch.Tensor.Tensor, steps: Int, base: Float): Unit.
+
+/// Creates scalar-endpoint logarithmic spacing with explicit options.
+
+pub logspace_with(start: Scalar, end: Scalar, steps: Int, base: Float, configured: RangeOptions): pytorch.Tensor.Tensor.
+
+/// Creates tensor-endpoint logarithmic spacing with explicit options.
+
+pub logspace_with(start: pytorch.Tensor.Tensor, end: pytorch.Tensor.Tensor, steps: Int, base: Float, configured: RangeOptions): pytorch.Tensor.Tensor.
+
+/// Creates tensor-to-scalar logarithmic spacing with explicit options.
+
+pub logspace_with(start: pytorch.Tensor.Tensor, end: Scalar, steps: Int, base: Float, configured: RangeOptions): pytorch.Tensor.Tensor.
+
+/// Creates scalar-to-tensor logarithmic spacing with explicit options.
+
+pub logspace_with(start: Scalar, end: pytorch.Tensor.Tensor, steps: Int, base: Float, configured: RangeOptions): pytorch.Tensor.Tensor.
+
+/// Returns explicit strided dtype, device, and pinned-memory options.
+
+@pure
+pub options(dtype: pytorch.Tensor.DType, device: pytorch.Tensor.Device, pin_memory: Bool): RangeOptions.
+
+/// Creates an inclusive unit-step legacy range with inferred options.
+
+pub range(start: Scalar, end: Scalar): pytorch.Tensor.Tensor.
+
+/// Creates an inclusive legacy range with inferred options.
+
+pub range(start: Scalar, end: Scalar, step: Scalar): pytorch.Tensor.Tensor.
+
+/// Writes an inclusive unit-step legacy range into retained storage.
+
+pub range_out(output: pytorch.Tensor.Tensor, start: Scalar, end: Scalar): Unit.
+
+/// Writes an inclusive legacy range into retained storage.
+
+pub range_out(output: pytorch.Tensor.Tensor, start: Scalar, end: Scalar, step: Scalar): Unit.
+
+/// Creates an inclusive legacy range with explicit option presence.
+
+pub range_with(start: Scalar, end: Scalar, step: Scalar, configured: RangeOptions): pytorch.Tensor.Tensor.
+
+/// Creates lower-triangular row/column indices with inferred int64 options.
+
+pub tril_indices(rows: Int, columns: Int, offset: Int): pytorch.Tensor.Tensor.
+
+/// Writes lower-triangular indices into retained output storage.
+
+pub tril_indices_out(output: pytorch.Tensor.Tensor, rows: Int, columns: Int, offset: Int): Unit.
+
+/// Creates lower-triangular indices with explicit tensor options.
+
+pub tril_indices_with(rows: Int, columns: Int, offset: Int, configured: RangeOptions): pytorch.Tensor.Tensor.
+
+/// Creates upper-triangular row/column indices with inferred int64 options.
+
+pub triu_indices(rows: Int, columns: Int, offset: Int): pytorch.Tensor.Tensor.
+
+/// Writes upper-triangular indices into retained output storage.
+
+pub triu_indices_out(output: pytorch.Tensor.Tensor, rows: Int, columns: Int, offset: Int): Unit.
+
+/// Creates upper-triangular indices with explicit tensor options.
+
+pub triu_indices_with(rows: Int, columns: Int, offset: Int, configured: RangeOptions): pytorch.Tensor.Tensor.

@@ -1,0 +1,7 @@
+module pytorch_cxx.TensorPacketCudaBehaviorTest.
+
+import pytorch.TensorPacketBehaviorSupport.{tensor_packet_contracts_on}.
+
+@test
+pub generated_cxx_tensor_packet_cuda_contracts(): Bool ->
+    tensor_packet_contracts_on("cuda:0", true).

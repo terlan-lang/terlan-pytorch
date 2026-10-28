@@ -1,0 +1,27 @@
+//! Generated CXX multilabel loss completion surface.
+
+module pytorch.LossCompletion.
+
+/// Computes the multilabel margin loss.
+
+pub multilabel_margin_loss(input: Tensor, target: Tensor, reduction: Int = 1): Tensor.
+
+/// Exact generated CXX leaf for aten::multilabel_margin_loss_backward.
+
+pub multilabel_margin_loss_backward(gradient: Tensor, input: Tensor, target: Tensor, reduction: Int, is_target: Tensor): Tensor.
+
+/// Exact generated CXX retained-output leaf for aten::multilabel_margin_loss_backward.grad_input.
+
+pub multilabel_margin_loss_backward_out(grad_input: Tensor, gradient: Tensor, input: Tensor, target: Tensor, reduction: Int, is_target: Tensor): Unit.
+
+/// Exact generated CXX leaf for aten::multilabel_margin_loss_forward.
+
+pub multilabel_margin_loss_forward(input: Tensor, target: Tensor, reduction: Int): {Tensor, Tensor}.
+
+/// Exact generated CXX retained-output leaf for aten::multilabel_margin_loss_forward.output.
+
+pub multilabel_margin_loss_forward_out(output: Tensor, is_target: Tensor, input: Tensor, target: Tensor, reduction: Int): Unit.
+
+/// Writes the multilabel margin loss into retained output.
+
+pub multilabel_margin_loss_out(output: Tensor, input: Tensor, target: Tensor, reduction: Int = 1): Unit.

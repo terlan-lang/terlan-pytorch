@@ -1,0 +1,7 @@
+module pytorch_cxx.ClampNativeBehaviorTest.
+
+import pytorch.ClampNativeBehaviorSupport.{clamp_contracts_on}.
+
+@test
+pub generated_cxx_clamp_contracts(): Bool ->
+    clamp_contracts_on("cpu").

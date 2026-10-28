@@ -1,0 +1,34 @@
+/**
+ * CPU evidence for deterministic Bernoulli functional and in-place forms.
+ */
+module pytorch.BernoulliParityTest.
+
+import pytorch.DistributionCompletion.{bernoulli, bernoulli_inplace, bernoulli_out, bernoulli_probability, bernoulli_probability_out, bernoulli_tensor, bernoulli_tensor_inplace, bernoulli_tensor_out}.
+import pytorch.Tensor.{dispose, from_floats}.
+import pytorch.TypeRelations.allclose.
+
+@test
+pub bernoulli_forms_match(): Bool ->
+    let source = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let probabilities = from_floats([1.0, 1.0, 1.0, 1.0], [2, 2]);
+    let expected = from_floats([1.0, 1.0, 1.0, 1.0], [2, 2]);
+    let default_result = bernoulli(probabilities);
+    let scalar_result = bernoulli_probability(source, 1.0);
+    let tensor_result = bernoulli_tensor(source, probabilities);
+    let default_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let scalar_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let tensor_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    bernoulli_out(default_output, probabilities);
+    bernoulli_probability_out(scalar_output, source, 1.0);
+    bernoulli_tensor_out(tensor_output, source, probabilities);
+    bernoulli_inplace(source, 1.0);
+    bernoulli_tensor_inplace(source, probabilities);
+    let valid =
+        allclose(default_result, expected, 0.0, 0.0, false)
+            and allclose(scalar_result, expected, 0.0, 0.0, false)
+            and allclose(tensor_result, expected, 0.0, 0.0, false)
+            and allclose(default_output, expected, 0.0, 0.0, false)
+            and allclose(scalar_output, expected, 0.0, 0.0, false)
+            and allclose(tensor_output, expected, 0.0, 0.0, false)
+            and allclose(source, expected, 0.0, 0.0, false);
+    (dispose(tensor_output); dispose(scalar_output); dispose(default_output); dispose(tensor_result); dispose(scalar_result); dispose(default_result); dispose(expected); dispose(probabilities); dispose(source); valid).

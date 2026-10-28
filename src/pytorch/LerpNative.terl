@@ -1,0 +1,54 @@
+/**
+ * Exact scalar- and tensor-weight linear interpolation with functional, retained-output, and in-place variants.
+ */
+module pytorch.LerpNative.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes exact aten::lerp with a tagged integer or floating-point Scalar weight.
+ */
+@compiler.native {pytorch.lerp.scalar}
+pub lerp_scalar(
+    input: Tensor,
+    end: Tensor,
+    weight_is_int: Bool,
+    weight_int: Int,
+    weight_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::lerp.out Scalar-weight results into retained output storage.
+ */
+@compiler.native {pytorch.lerp.scalar_out}
+pub lerp_scalar_out(
+    output: Tensor,
+    input: Tensor,
+    end: Tensor,
+    weight_is_int: Bool,
+    weight_int: Int,
+    weight_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::lerp with an elementwise Tensor weight.
+ */
+@compiler.native {pytorch.lerp.tensor}
+pub lerp_tensor(input: Tensor, end: Tensor, weight: Tensor): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::lerp.out Tensor-weight results into retained output storage.
+ */
+@compiler.native {pytorch.lerp.tensor_out}
+pub lerp_tensor_out(output: Tensor, input: Tensor, end: Tensor, weight: Tensor): Unit ->
+    native.
+
+/**
+ * Executes the exact dispatcher-backed Tensor::lerp_ Tensor-weight overload in place.
+ */
+@compiler.native {pytorch.lerp.tensor_in_place}
+pub lerp_tensor_in_place(input: Tensor, end: Tensor, weight: Tensor): Unit ->
+    native.

@@ -1,0 +1,30 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{dispose, dispose_model, from_float, item_float, load_torchscript, torchscript_forward_tensor_list}.
+import type pytorch.Tensor.{Tensor}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let model = load_torchscript("$tensor_list_model");
+    let input = from_float(3.0);
+    let outputs_valid = validate_outputs(torchscript_forward_tensor_list(model, input));
+    let input_unchanged = item_float(input) == 3.0;
+    dispose(input);
+    dispose_model(model);
+    if {
+        outputs_valid and input_unchanged ->
+            println("PYTORCH_TENSOR_LIST_OUTPUT_CONSUMER_OK");
+        true -> println("PYTORCH_TENSOR_LIST_OUTPUT_CONSUMER_FAILED")
+    }.
+
+validate_outputs(outputs: List[Tensor]): Bool ->
+    case outputs {
+        [doubled, original] -> validate_tensors(doubled, original);
+        _ -> false
+    }.
+
+validate_tensors(doubled: Tensor, original: Tensor): Bool ->
+    let valid = item_float(doubled) == 6.0 and item_float(original) == 3.0;
+    dispose(original);
+    dispose(doubled);
+    valid.

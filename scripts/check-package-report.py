@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import hashlib
 import json
 import re
 import sys
@@ -35,7 +36,34 @@ for name in ("source_sha256", "normalized_sha256"):
         raise SystemExit(
             f"error[terlan_pytorch_report_manifest_hash]: invalid {name}"
         )
+
+# Reports committed under the repository must attest to the files that the
+# active package actually builds.  Keep this optional for externally supplied
+# reports used by downstream consumers.
+repository = path.parent.parent if path.parent.name == "reports" else None
+if repository is not None:
+    manifest_paths = {
+        "source_sha256": repository / "libtorch-cxx.json",
+        "normalized_sha256": repository / "generated/bindings/native-binding-manifest.json",
+    }
+    for name, manifest_path in manifest_paths.items():
+        if manifest_path.is_file():
+            actual = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+            if actual != report["binding_manifest"][name]:
+                raise SystemExit(
+                    f"error[terlan_pytorch_report_manifest_stale]: {name} does not match {manifest_path}"
+                )
 for gate in (
+    "dlpack_packet_import",
+    "dlpack_truncated_payload_rejection",
+    "cpu_device_placement",
+    "dtype_conversion",
+    "dtype_invalid_rejection",
+    "training_batch_norm_execution",
+    "graph_autograd_execution",
+    "adam_optimizer_execution",
+    "sgd_optimizer_execution",
+    "ppo_training_execution",
     "torchscript_reusable_model_execution",
     "torchscript_model_stale_handle_rejection",
     "torchscript_two_input_execution",
@@ -58,11 +86,89 @@ for gate in (
     "torchscript_bool_list_output_type_rejection",
     "torchscript_string_list_output_execution",
     "torchscript_string_list_output_type_rejection",
+    "torchscript_optional_tensor_output_execution",
+    "torchscript_optional_tensor_output_type_rejection",
+    "torchscript_tensor_list_output_execution",
+    "torchscript_tensor_list_output_type_rejection",
 ):
     if report.get("gates", {}).get(gate) != "pass":
         raise SystemExit(
             f"error[terlan_pytorch_report_required_gate]: missing passing gate {gate}"
         )
+dlpack = report.get("semantics", {}).get("dlpack_import", {})
+if (
+    dlpack.get("shape") != [2, 2]
+    or dlpack.get("exact_mse") != 0.0
+    or dlpack.get("owned_copy") is not True
+    or dlpack.get("truncated_payload_rejected_before_data_access") is not True
+):
+    raise SystemExit(
+        "error[terlan_pytorch_report_dlpack]: DLPack import evidence is incomplete"
+    )
+placement = report.get("semantics", {}).get("cpu_device_placement", {})
+if (
+    placement.get("placed_device_type") != 0
+    or placement.get("placed_device_index") != -1
+    or placement.get("exact_mse") != 0.0
+    or placement.get("synchronous") is not True
+):
+    raise SystemExit(
+        "error[terlan_pytorch_report_device_placement]: CPU placement evidence is incomplete"
+    )
+conversion = report.get("semantics", {}).get("dtype_conversion", {})
+if (
+    conversion.get("source_dtype") != 7
+    or conversion.get("target_dtypes") != [4, 7, 11, 6]
+    or conversion.get("float_to_int") != [3.75, 3]
+    or conversion.get("int_to_float") != [3, 3.0]
+    or conversion.get("float_to_bool") != [3.75, True]
+    or conversion.get("shape") != [2, 2]
+    or conversion.get("device_type") != 0
+    or conversion.get("device_index") != -1
+    or conversion.get("source_unchanged") is not True
+    or conversion.get("output_owned") is not True
+    or conversion.get("invalid_dtype_status") != 7064
+):
+    raise SystemExit(
+        "error[terlan_pytorch_report_dtype_conversion]: dtype conversion evidence is incomplete"
+    )
+training_batch_norm = report.get("semantics", {}).get("training_batch_norm", {})
+if (
+    training_batch_norm.get("mode") != "training"
+    or training_batch_norm.get("ownership") != "functional"
+    or training_batch_norm.get("output_shape") != [2, 1, 1, 2]
+    or training_batch_norm.get("updated_running_mean") != 2.0
+    or training_batch_norm.get("sources_unchanged") is not True
+    or training_batch_norm.get("result_tensors_independently_owned") is not True
+):
+    raise SystemExit(
+        "error[terlan_pytorch_report_training_batch_norm]: training batch normalization evidence is incomplete"
+    )
+graph_autograd = report.get("semantics", {}).get("graph_autograd", {})
+if (
+    graph_autograd.get("status") != "passed"
+    or graph_autograd.get("trainable_leaf") is not True
+    or graph_autograd.get("backward") is not True
+    or graph_autograd.get("multiple_root_backward") is not True
+    or graph_autograd.get("functional_grad") is not True
+    or graph_autograd.get("multiple_root_grad") is not True
+    or graph_autograd.get("inference_mode_guard") is not True
+    or graph_autograd.get("autocast_guard") is not True
+    or graph_autograd.get("anomaly_guard") is not True
+    or graph_autograd.get("warning_guard") is not True
+    or graph_autograd.get("deterministic_guard") is not True
+    or graph_autograd.get("float32_matmul_precision_guard") is not True
+    or graph_autograd.get("default_dtype_guard") is not True
+    or graph_autograd.get("copied_gradient") is not True
+    or graph_autograd.get("owned_adam_state") is not True
+    or graph_autograd.get("owned_sgd_state") is not True
+    or graph_autograd.get("sgd_momentum") is not True
+    or graph_autograd.get("sgd_checkpoint_restore") is not True
+    or graph_autograd.get("ppo_minibatch_update") is not True
+):
+    raise SystemExit(
+        "error[terlan_pytorch_report_graph_autograd]: graph-autograd evidence is incomplete"
+    )
 for gate, status in report.get("gates", {}).items():
     if status != "pass":
         raise SystemExit(
@@ -71,6 +177,11 @@ for gate, status in report.get("gates", {}).items():
 operations = report.get("semantics", {}).get("operations", [])
 if "aten::argmax" not in operations:
     raise SystemExit("error[terlan_pytorch_report_argmax_operation]: argmax is not recorded")
+for operation in ("torch::autograd::grad", "torch::autograd::backward", "c10::InferenceMode", "at::autocast::AutocastCPU", "torch::autograd::AnomalyMode", "c10::WarningUtils", "at::Context::setDeterministicAlgorithms", "at::Context::setFloat32MatmulPrecision", "c10::set_default_dtype"):
+    if operation not in operations:
+        raise SystemExit(
+            f"error[terlan_pytorch_report_autograd_operation]: {operation} is not recorded"
+        )
 if "aten::mse_loss" not in operations:
     raise SystemExit("error[terlan_pytorch_report_mse_operation]: mse_loss is not recorded")
 if "aten::cross_entropy_loss" not in operations:
@@ -81,11 +192,11 @@ if "aten::mse_loss_backward" not in operations:
     raise SystemExit(
         "error[terlan_pytorch_report_mse_backward_operation]: mse_loss_backward is not recorded"
     )
-if "aoti_torch_cpu_convolution" not in operations:
+if "at::convolution" not in operations:
     raise SystemExit(
         "error[terlan_pytorch_report_conv2d_operation]: convolution is not recorded"
     )
-if "aoti_torch_cpu__adaptive_avg_pool2d" not in operations:
+if "at::adaptive_avg_pool2d" not in operations:
     raise SystemExit(
         "error[terlan_pytorch_report_adaptive_avg_pool2d_operation]: adaptive pooling is not recorded"
     )
@@ -257,6 +368,36 @@ if (
 ):
     raise SystemExit(
         "error[terlan_pytorch_report_string_list_output_torchscript_semantics]: invalid string-list-output model semantics"
+    )
+optional_tensor_torchscript = report.get("semantics", {}).get(
+    "torchscript_optional_tensor_output_model", {}
+)
+if (
+    optional_tensor_torchscript.get("present_input") != 3.0
+    or optional_tensor_torchscript.get("present_output") != 6.0
+    or optional_tensor_torchscript.get("absent_input") != 0.0
+    or optional_tensor_torchscript.get("absent_output") != "None"
+    or optional_tensor_torchscript.get("inputs_unchanged") is not True
+    or optional_tensor_torchscript.get("present_tensor_owned") is not True
+    or optional_tensor_torchscript.get("non_optional_status") != 7057
+):
+    raise SystemExit(
+        "error[terlan_pytorch_report_optional_tensor_output_torchscript_semantics]: invalid optional-tensor-output model semantics"
+    )
+tensor_list_torchscript = report.get("semantics", {}).get(
+    "torchscript_tensor_list_output_model", {}
+)
+if (
+    tensor_list_torchscript.get("model") != "[input * 2.0, input]"
+    or tensor_list_torchscript.get("input") != 3.0
+    or tensor_list_torchscript.get("output") != [6.0, 3.0]
+    or tensor_list_torchscript.get("input_unchanged") is not True
+    or tensor_list_torchscript.get("elements_independently_owned") is not True
+    or tensor_list_torchscript.get("temporary_handle_array_destroyed") is not True
+    or tensor_list_torchscript.get("non_tensor_list_status") != 7058
+):
+    raise SystemExit(
+        "error[terlan_pytorch_report_tensor_list_output_torchscript_semantics]: invalid tensor-list-output model semantics"
     )
 classifier = report.get("semantics", {}).get("classifier_forward", {})
 if (

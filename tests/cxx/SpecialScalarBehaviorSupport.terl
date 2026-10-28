@@ -1,0 +1,33 @@
+module pytorch.SpecialScalarBehaviorSupport.
+
+import pytorch.SpecialScalarNative.{scalar_left_float, scalar_left_float_out, scalar_left_int, scalar_left_int_out, scalar_right_float, scalar_right_float_out, scalar_right_int, scalar_right_int_out}.
+import pytorch.Tensor.{Float64, Strided, Tensor, dispose, dtype, is_cuda, ones_device, shape}.
+
+/**
+ * Exercises scalar-left/right and retained-output special-function leaves.
+ */
+pub special_scalar_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let input = ones_device([2, 2], Float64, Strided, device_name);
+    let right_int = scalar_right_int(input, 1, 2);
+    let left_int = scalar_left_int(1, 2, input);
+    let right_float = scalar_right_float(input, 12, 1.5);
+    let left_float = scalar_left_float(12, 1.5, input);
+    let right_int_out = ones_device([2, 2], Float64, Strided, device_name);
+    scalar_right_int_out(right_int_out, input, 1, 2);
+    let left_int_out = ones_device([2, 2], Float64, Strided, device_name);
+    (scalar_left_int_out(left_int_out, 1, 2, input); let right_float_out = ones_device([2, 2], Float64, Strided, device_name);
+(scalar_right_float_out(right_float_out, input, 12, 1.5); let left_float_out = ones_device([2, 2], Float64, Strided, device_name);
+(scalar_left_float_out(left_float_out, 12, 1.5, input); let valid =
+    shape(right_int) == [2, 2]
+        and shape(left_int) == [2, 2]
+        and shape(right_float) == [2, 2]
+        and shape(left_float) == [2, 2]
+        and shape(right_int_out) == [2, 2]
+        and shape(left_int_out) == [2, 2]
+        and shape(right_float_out) == [2, 2]
+        and shape(left_float_out) == [2, 2]
+        and dtype(right_int) == Float64
+        and dtype(left_float) == Float64
+        and is_cuda(right_int) == expected_cuda
+        and is_cuda(left_float_out) == expected_cuda;
+(dispose(left_float_out); dispose(right_float_out); dispose(left_int_out); dispose(right_int_out); dispose(left_float); dispose(right_float); dispose(left_int); dispose(right_int); dispose(input); valid)))).

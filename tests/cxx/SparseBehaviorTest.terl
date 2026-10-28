@@ -1,0 +1,7 @@
+module pytorch_cxx.SparseBehaviorTest.
+
+import pytorch.SparseBehaviorSupport.{sparse_contracts_on}.
+
+@test
+pub cpu_sparse_contracts(): Bool ->
+    sparse_contracts_on("cpu", false).

@@ -1,0 +1,10 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{flatten, from_int, unsqueeze}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let scalar = from_int(4);
+    let vector = unsqueeze(scalar, -1);
+    let result = flatten(vector, 2, 2);
+    println("PYTORCH_FLATTEN_DIMENSION_NOT_REJECTED").

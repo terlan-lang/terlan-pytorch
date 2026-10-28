@@ -1,0 +1,37 @@
+//! Typed linear interpolation with scalar or tensor weights and retained output storage.
+
+module pytorch.Lerp.
+
+/// Interpolates between tensors using a floating-point scalar weight.
+
+pub lerp_float(input: Tensor, end: Tensor, weight: Float): Tensor.
+
+/// Writes floating-weight interpolation into retained output storage.
+
+pub lerp_float_out(output: Tensor, input: Tensor, end: Tensor, weight: Float): Unit.
+
+/// Interpolates between tensors using an integer scalar weight.
+
+pub lerp_int(input: Tensor, end: Tensor, weight: Int): Tensor.
+
+/// Writes integer-weight interpolation into retained output storage.
+
+pub lerp_int_out(output: Tensor, input: Tensor, end: Tensor, weight: Int): Unit.
+
+/// Interpolates in place using the exact tagged Scalar accepted by aten::lerp_.
+/// The generated CXX scalar leaf computes the result; copy_in_place preserves
+/// the caller's Tensor handle and mutation semantics without a second ABI.
+
+pub lerp_scalar_in_place(input: Tensor, end: Tensor, weight: Scalar): Unit.
+
+/// Interpolates between tensors using an elementwise tensor weight.
+
+pub lerp_tensor(input: Tensor, end: Tensor, weight: Tensor): Tensor.
+
+/// Interpolates retained tensor storage using elementwise tensor weights.
+
+pub lerp_tensor_in_place(input: Tensor, end: Tensor, weight: Tensor): Unit.
+
+/// Writes tensor-weight interpolation into retained output storage.
+
+pub lerp_tensor_out(output: Tensor, input: Tensor, end: Tensor, weight: Tensor): Unit.

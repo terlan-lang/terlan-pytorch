@@ -1,0 +1,103 @@
+//! Generated direct-CXX implementation of public indexing, masking, scatter, membership, and window extraction operations.
+
+module pytorch.Indexing.
+
+/// Returns stable or unstable sort indices along one dimension with explicit direction.
+
+pub argsort_stable(input: Tensor, stable: Bool, dimension: Int = - 1, descending: Bool = false): Tensor.
+
+/// Places each input value into sorted boundaries with explicit side and index-width policy.
+
+pub bucketize(input: Tensor, boundaries: Tensor, int32_output: Bool = false, right: Bool = false): Tensor.
+
+/// Embeds the input along a selected diagonal in two result dimensions.
+
+pub diag_embed(input: Tensor, offset: Int = 0, dimension1: Int = - 2, dimension2: Int = - 1): Tensor.
+
+/// Copies one selected diagonal into independently owned storage.
+
+pub diagonal_copy(input: Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): Tensor.
+
+/// Returns a copy with one selected diagonal replaced from a source tensor.
+
+pub diagonal_scatter(input: Tensor, source: Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): Tensor.
+
+/// Returns a copy with source slices copied into explicit indices along one dimension.
+
+pub index_copy(input: Tensor, dimension: Int, indices: Tensor, source: Tensor): Tensor.
+
+/// Updates Tensor?/None indexed positions with an explicit presence mask.
+
+pub index_put(input: Tensor, indices: List[Tensor], present: List[Int], values: Tensor, accumulate: Bool = false): Tensor.
+
+/// Mutates Tensor?/None indexed positions with an explicit presence mask.
+
+pub index_put_in_place(input: Tensor, indices: List[Tensor], present: List[Int], values: Tensor, accumulate: Bool = false): Unit.
+
+/// Writes Tensor?/None indexed updates into retained output storage.
+
+pub index_put_out(output: Tensor, input: Tensor, indices: List[Tensor], present: List[Int], values: Tensor, accumulate: Bool = false): Unit.
+
+/// Copies slices selected by integer indices along one dimension.
+
+pub index_select(input: Tensor, dimension: Int, indices: Tensor): Tensor.
+
+/// Indexes with an explicit Tensor?/None presence mask.
+
+pub index_tensor(input: Tensor, indices: List[Tensor], present: List[Int]): Tensor.
+
+/// Writes Tensor?/None indexed values into retained output storage.
+
+pub index_tensor_out(output: Tensor, input: Tensor, indices: List[Tensor], present: List[Int]): Unit.
+
+/// Tests tensor membership with explicit uniqueness and inversion policy.
+
+pub isin(elements: Tensor, test_elements: Tensor, assume_unique: Bool = false, invert: Bool = false): Tensor.
+
+/// Returns a copy with selected elements replaced by a tensor value.
+
+pub masked_fill_tensor(input: Tensor, mask: Tensor, value: Tensor): Tensor.
+
+/// Returns a copy with selected elements replaced sequentially from a source tensor.
+
+pub masked_scatter(input: Tensor, mask: Tensor, source: Tensor): Tensor.
+
+/// Replaces selected retained values through exact aten::masked_scatter_.
+
+pub masked_scatter_in_place(input: Tensor, mask: Tensor, source: Tensor): Unit.
+
+/// Writes exact aten::masked_scatter.out values into retained storage.
+
+pub masked_scatter_out(output: Tensor, input: Tensor, mask: Tensor, source: Tensor): Unit.
+
+/// Returns a copy with flat indexed values replaced or accumulated from a source tensor.
+
+pub put(input: Tensor, indices: Tensor, source: Tensor, accumulate: Bool = false): Tensor.
+
+/// Writes flat indexed values into retained storage through exact aten::put_.
+
+pub put_in_place(input: Tensor, indices: Tensor, source: Tensor, accumulate: Bool = false): Unit.
+
+/// Writes exact aten::put.out values into retained storage.
+
+pub put_out(output: Tensor, input: Tensor, indices: Tensor, source: Tensor, accumulate: Bool = false): Unit.
+
+/// Returns a copy with source values scattered through indices along one dimension.
+
+pub scatter(input: Tensor, dimension: Int, indices: Tensor, source: Tensor): Tensor.
+
+/// Returns a copy with source values accumulated through indices along one dimension.
+
+pub scatter_add(input: Tensor, dimension: Int, indices: Tensor, source: Tensor): Tensor.
+
+/// Returns a copy with one selected slice replaced by a source tensor.
+
+pub select_scatter(input: Tensor, source: Tensor, dimension: Int, index: Int): Tensor.
+
+/// Copies sliding windows of one dimension into independently owned result storage.
+
+pub unfold_copy(input: Tensor, dimension: Int, size: Int, step: Int): Tensor.
+
+/// Selects elementwise between two tensors using a boolean condition tensor.
+
+pub where_tensor(condition: Tensor, when_true: Tensor, when_false: Tensor): Tensor.

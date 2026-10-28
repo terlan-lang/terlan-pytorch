@@ -1,0 +1,36 @@
+/**
+ * Generated exact CXX CTC-loss completion surface.
+ */
+module pytorch.CtcLossCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX CTC loss IntList leaf.
+ */
+@compiler.native {pytorch.ctc_loss.ctc_loss_intlist}
+pub ctc_loss_intlist(
+    log_probs: Tensor,
+    targets: Tensor,
+    input_lengths: List[Int],
+    target_lengths: List[Int],
+    blank: Int = 0,
+    reduction: Int = 1,
+    zero_infinity: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX CTC loss Tensor leaf.
+ */
+@compiler.native {pytorch.ctc_loss.ctc_loss_tensor}
+pub ctc_loss_tensor(
+    log_probs: Tensor,
+    targets: Tensor,
+    input_lengths: Tensor,
+    target_lengths: Tensor,
+    blank: Int = 0,
+    reduction: Int = 1,
+    zero_infinity: Bool = false,
+): Tensor ->
+    native.

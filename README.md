@@ -1,328 +1,241 @@
 # terlan-pytorch
 
-Terlan bindings for PyTorch's stable LibTorch C ABI.
+PyTorch tensors and model inference for Terlan.
 
-This repository contains PyTorch-specific metadata and package checks. Generic
-C ABI generation remains in the Terlan compiler repository.
+This package brings the core tensor and inference capabilities of
+[PyTorch](https://github.com/pytorch/pytorch) to Terlan applications through
+the released LibTorch distribution. The API uses owned Terlan values and
+explicit tensor disposal.
 
-The repository root is also the consumable Terlan package. `make generate`
-rebuilds the package-owned `terlan.toml`, `src/`, `native/`, generated binding
-manifests, API documentation, and NativeBoundary test from
-`bindings/libtorch-c.json`. A consumer can therefore pin this repository as an
-ordinary immutable Git dependency without copying `generated/` or changing the
-compiler.
+## Available now
 
-See [docs/ROADMAP.md](docs/ROADMAP.md) for the CPU-to-CUDA implementation order
-and [docs/TARGET_SURFACE.md](docs/TARGET_SURFACE.md) for the accepted ABI surface.
+The current CPU implementation supports:
 
-## First compatibility slice
+- scalar, shaped float64, and shaped int64 tensor construction;
+- pointer-free DLPack packet import into owned CPU tensors;
+- shape, rank, element count, dtype, and device inspection;
+- cloning, indexing, reshaping, transposition, and reductions;
+- matrix multiplication, arithmetic, ReLU, GELU, softmax, and argmax;
+- convolution, adaptive average pooling, embedding, batch normalization, and
+  layer normalization;
+- functional training-mode batch normalization with independently owned
+  updated running statistics;
+- MSE, explicit MSE gradients, and cross-entropy loss;
+- real graph autograd with trainable leaves, backward propagation, copied
+  gradients, functional SGD, and owned Adam and momentum-SGD optimizer state;
+- PPO loss, sampling, minibatch, and device-parity building blocks;
+- composed CNN, classifier, attention, and transformer execution;
+- stateless and reusable TorchScript model inference;
+- Tensor, optional tensor, tensor-list, fixed tensor-pair, scalar, string, and
+  homogeneous scalar-list TorchScript results;
+- synchronous tensor placement through `Tensor.to_device`;
+- owned conversion between admitted boolean, integer, Float16/32/64, and
+  BFloat16 tensor dtypes through `Tensor.to_dtype`.
 
-The initial CPU-only slice binds an owned `AtenTensorHandle` through:
+The complete generated API is documented in
+[`docs/pytorch.Tensor.md`](docs/pytorch.Tensor.md).
 
-- `aoti_torch_scalar_to_tensor_int64`
-- `aoti_torch_scalar_to_tensor_float64`
-- `aoti_torch_scalar_to_tensor_bool`
-- `aoti_torch_item_int64`
-- `aoti_torch_item_float64`
-- `aoti_torch_item_bool`
-- `aoti_torch_get_dim`
-- `aoti_torch_get_numel`
-- `aoti_torch_get_sizes`
-- `aoti_torch_get_dtype`
-- `aoti_torch_get_device_type`
-- `aoti_torch_get_device_index`
-- `aoti_torch_abi_version`
-- `aoti_torch_new_tensor_handle`
-- `torch_call_dispatcher` for reviewed `aten::clone` and `aten::unsqueeze` stacks
-- `torch_call_dispatcher` for two-input CPU `aten::matmul`
-- `torch_call_dispatcher` for named-overload `aten::transpose.int`
-- `torch_call_dispatcher` for named-overload `aten::mul.Tensor`
-- `torch_call_dispatcher` for nonlinear `aten::relu`
-- `torch_new_string_handle` / `torch_delete_string` plus
-  `torch_call_dispatcher` for exact-default `aten::gelu`
-- `torch_call_dispatcher` for exact `aten::softmax.int` probability normalization
-- `torch_new_stable_ivalue` / `torch_delete_stable_ivalue` for owned optional
-  dispatcher arguments
-- `torch_call_dispatcher` for exact `aten::argmax` class-index selection
-- `torch_call_dispatcher` for exact `aten::mse_loss` model evaluation
-- `torch_call_dispatcher` for exact `aten::mse_loss_backward` explicit gradients
-- `torch_call_dispatcher` for exact `aten::cross_entropy_loss` classification
-  evaluation with float label smoothing
-- `torch_call_dispatcher` for rank-normalizing `aten::flatten.using_ints`
-- `aoti_torch_aten_subtract_Tensor` for float64 scalar arithmetic
-- `aoti_torch_aten_narrow` for bounded indexing and owned views
-- `aoti_torch_aten_amax` for dimension-list reductions
-- `aoti_torch_aten_full` for owned shaped float64 tensors
-- `aoti_torch_cpu_add_Tensor` for scaled tensor addition and broadcast bias
-- `aoti_torch_cpu_convolution` behind a package-owned `conv2d` adapter that
-  contains LibTorch's optional-bias pointer encoding and fixes ordinary 2D
-  convolution rather than the transposed form
-- `aoti_torch_cpu__adaptive_avg_pool2d` for exact NCHW spatial output sizing
-- `aoti_torch_create_tensor_from_blob_v2` plus `aoti_torch_clone` behind the
-  package-owned `from_floats(values, shape)` and `from_ints(values, shape)`
-  stable-C adapters
-- `torch::jit::load` behind package-owned C++ adapters for stateless
-  `run_torchscript(input, path)`, reusable `TorchScriptModel` inference, and
-  fixed positional-input and two-tensor-output forwarding
-- `aoti_torch_delete_tensor_object`
+## Example
 
-Run the pinned released-distribution gate:
+```terlan
+module example.Pytorch.
+
+import pytorch.Tensor.{amax, dispose, from_floats, item_float, relu, shape}.
+
+pub run(): Bool ->
+    let input = from_floats([-2.0, 3.0], [2]);
+    let output = relu(input);
+    let maximum = amax(output, [0], false);
+    let valid = shape(output) == [2] and item_float(maximum) == 3.0;
+    dispose(maximum);
+    dispose(output);
+    dispose(input);
+    valid.
+```
+
+Every operation that returns a `Tensor`, `TensorPair`, or `TorchScriptModel`
+returns a separately owned resource. Dispose each resource when it is no longer
+needed.
+
+## Setup
+
+The verified release host is Linux x86_64. macOS, Windows, Linux AArch64, and
+embedded targets are not release-gated yet.
+
+The package currently targets LibTorch `2.13.0+cpu`. From this repository, run:
 
 ```sh
 make release-check
 ```
 
-This downloads and verifies the official `2.13.0+cpu` archive under ignored
-`vendor/`, checks its headers and exported symbols, and runs the generated Rust
-and Terlan consumers. The gate also fetches the generated output as an
-immutable Git dependency into a fresh consumer, removes the source package,
-executes from the verified cache, checks stable distribution/shape/stale-handle
-rejections, and writes `generated/package-execution-report.json`. Alternatively,
-set `LIBTORCH` explicitly and run
-`make package-check LIBTORCH=/path/to/libtorch`.
+This downloads the pinned LibTorch archive, verifies its checksum and required
+symbols, generates the package, and runs the native, Terlan, and immutable Git
+consumer checks. The persistent CPU evidence is written to
+`reports/package-execution-report.json`.
 
-`TERLC` may override the compiler executable. No package gate builds the
-PyTorch source checkout under `upstream/`.
+To use an existing compatible LibTorch installation:
 
-## Serialized model inference
+```sh
+make package-check LIBTORCH=/path/to/libtorch
+```
 
-The first post-composition capability is
-`run_torchscript(input: Tensor, path: String): Tensor`. It loads a serialized
-TorchScript archive, runs its single-tensor `forward`, and returns a separately
-owned tensor while leaving the input borrowed and unchanged. The pinned fixture
-is a real C++-generated module implementing `input * 2.0`; package and fresh Git
-consumers require exact float64 `3.0 -> 6.0` execution. Missing files and corrupt
-archives are rejected as stable statuses `7041` and `7042`, and no C++ exception
-crosses the C boundary.
+`TERLC` can override the compiler executable:
 
-MI1 also exposes a thread-confined, independently owned `TorchScriptModel`:
-`load_torchscript(path)` loads once, `torchscript_forward(model, input)` may
-borrow it repeatedly, and `dispose_model(model)` destroys it exactly once. The
-package and fresh Git consumer require independent `3.0 -> 6.0` and
-`4.0 -> 8.0` results from one model and reject use after disposal as
-`stale_handle`. The generic C ABI binder owns the multi-resource tagged-handle
-machinery; no PyTorch rule lives in the compiler. Variable-arity inputs and
-non-tensor output values remain deferred.
+```sh
+make package-check \
+  TERLC=/path/to/terlc \
+  LIBTORCH=/path/to/libtorch
+```
 
-MI2 adds `torchscript_forward2(model, first, second)` for models with two
-positional tensor arguments. The pinned order-sensitive fixture computes
-`left - right * 2.0`, requires exact `3.0, 4.0 -> -5.0` execution with both
-inputs unchanged, and rejects model-schema arity mismatch as stable status
-`7043`. Variable-arity tensor lists and arbitrary structured outputs remain
-deferred to the generic native value model.
+The package does not build PyTorch from source.
 
-MI3 accepts a TorchScript tuple of exactly two tensors through
-`torchscript_forward_pair`. It returns an owned `TensorPair`; extracting its
-first and second elements produces independently owned tensors that remain
-valid after disposing the pair. The pinned fixture requires
-`2.0 -> (4.0, 6.0)` and rejects a plain tensor output as stable status `7046`.
-Wrong tuple arity and non-tensor elements have reserved statuses `7047` and
-`7048`. This fixed container is an ownership bridge, not general Terlan tuple
-support. At MI3 the generated public surface contained 48 functions.
+## CUDA
 
-MI4 adds `torchscript_forward_float(model, input): Float`. The C++ adapter
-accepts only an IValue double and copies it into Terlan, so the result has no
-native handle or disposal obligation. The pinned fixture requires unchanged
-input `3.0`, exact output `6.0`, and stable status `7049` when a tensor-returning
-model is invoked through the float surface. The current generated public
-surface contained 49 functions.
+The package includes synchronous device placement and an opt-in CUDA execution
+gate. CUDA execution requires a CUDA-enabled LibTorch distribution and a
+driver-visible NVIDIA device. The matching CUDA toolkit runtime libraries must
+also be discoverable through `LD_LIBRARY_PATH`:
 
-MI5 adds `torchscript_forward_int(model, input): Int` through the already
-generic fallible `int64_t` output lowering. The adapter copies only an exact
-TorchScript integer result, with pinned unchanged input `4`, exact output `7`,
-and stable status `7050` for tensor or other non-integer results. It adds no
-native result resource or compiler special case. The current generated public
-surface contained 50 functions.
+```sh
+make cuda-check LIBTORCH=/path/to/cuda/libtorch
+```
 
-MI6 adds `torchscript_forward_bool(model, input): Bool`, copying only an exact
-TorchScript boolean through the generic fallible `bool` output lowering. The
-pinned model requires unchanged integer input `1`, exact result `true`, and
-stable status `7051` for tensor or other non-boolean results. The current
-generated public surface contains 51 functions.
+The admitted CUDA distribution must include the developer headers
+`include/cuda.h` and `include/cuda_runtime_api.h`; runtime-only CUDA bundles are
+rejected before compilation. Generated executables use relocatable package
+RPATHs for the bundled `cuda-runtime` layout, while development invocations may
+provide equivalent toolkit directories through `LD_LIBRARY_PATH`.
 
-MI7 adds `torchscript_forward_string(model, input): String` through Terlan's
-generic owned UTF-8 C-ABI output contract. Structured metadata names the byte
-length and destructor; generated Rust copies the bytes, destroys native
-storage exactly once, and returns no pointer or lifetime. The pinned model
-requires unchanged input `1`, exact result `"positive"`, and stable status
-`7052` for tensor or other non-string results. The generated public surface
-contains 52 functions.
+LibTorch `2.13.0+cu129` CPU-to-CUDA-to-CPU execution with explicit stream
+selection, synchronization, matrix multiplication, and on-device dtype
+conversion is validated by the checked-in report at
+`reports/cuda-execution-report.json`. Tensor transfers and dtype conversion
+remain blocking. CUDA remains an opt-in lane and raw device pointers are not
+exposed through the Terlan API.
 
-MI8 adds `torchscript_forward_int_list(model, input): List[Int]` through a
-generic owned `int64_t` array contract. Generated Rust copies the declared
-element count, calls the named destructor once, and transports the Rust-owned
-vector through the existing `ok_ints` protocol. The pinned model requires
-unchanged input `4`, exact result `[4,5,6]`, and stable status `7053` for tensor
-or other non-list outputs. The generated public surface contains 53 functions.
+The self-hosted CI lane reads the distribution from `LIBTORCH_CUDA_ROOT` and
+its colon-separated runtime library directories from `CUDA_LIBRARY_PATH`.
+The CUDA gate rejects missing devices, incompatible distributions, missing
+stream exports, and unresolved runtime libraries before executing Terlan code.
 
-MI9 generalizes that owned-array contract with an explicit element kind and
-adds `torchscript_forward_float_list(model, input): List[Float]`. Its `double`
-elements are copied before the named destructor runs, then returned through the
-existing `ok_floats` protocol. Package and immutable consumers require unchanged
-input `1.5`, exact result `[1.5,2.0,2.5]`, and stable status `7054` for tensor or
-other non-floating-point-list outputs. The generated public surface contains 54
-functions.
+## Development
 
-MI10 adds `torchscript_forward_bool_list(model, input): List[Bool]`. Its generic
-owned-array contract uses portable `uint8_t` storage, validates every copied
-element as exactly `0` or `1`, destroys native storage, and returns through the
-new generic `ok_bools` protocol. Package and immutable consumers require
-unchanged input `2`, exact result `[true,false,false]`, and stable status `7055`
-for tensor or other non-boolean-list outputs. The generated public surface
-contains 55 functions.
+Regenerate the package after changing binding metadata or package-owned native
+adapters:
 
-MI11 adds `torchscript_forward_string_list(model, input): List[String]`. The
-generic owned string-array contract carries `char ***` values, per-element byte
-lengths, and a count into generated Rust, which copies and destroys all native
-storage before UTF-8 validation. The pinned model preserves an empty element in
-exact output `["positive","","ready"]`; wrong output shapes reject with stable
-status `7056`. The generated public surface contains 56 functions.
+```sh
+make generate
+```
 
-`from_floats` accepts non-constant row-major `List[Float]` data. Its adapter
-validates shape and value count, creates a call-scoped LibTorch view, clones
-it, and destroys the temporary view before returning the owned tensor. No
-caller buffer or callback outlives the native call.
+Run the lightweight fixture-backed checks:
 
-The current broad CPU slice composes `from_floats`, `matmul`, and `add` into an
-affine forward pass with non-constant input, weights, and broadcast bias. The
-package and fresh consumer require exact `[2, 1]` output shape and maximum
-`7.0`, preserve the inputs, and reject incompatible broadcast shapes.
+```sh
+make fixture-check
+```
 
-The classifier slice extends that composition to `[2, 2]` logits,
-dimension-1 softmax, dimension-1 argmax, and mean squared error against an
-equal-shape target. Batched int64 labels also feed smoothed cross-entropy. Zero
-logits must produce uniform probability maximum `0.5`, deterministic int64
-class indices `[0, 0]`, MSE `0.25`, and cross-entropy between `0.69` and `0.70`;
-invalid dimensions, shapes, reductions, target dtypes, and smoothing values are
-rejected stably.
+The primary package now uses generated CXX bindings. `make cxx-check` and
+`make cxx-cuda-check` generate
+Rust/C++ bindings through `cxx`, compare migrated public contracts against the
+legacy package, and execute real LibTorch behavior. All 1,760 legacy
+operations are migrated across `pytorch.ActivationCompletion` and
+`pytorch.ExtendedActivationCompletion`,
+`pytorch.TensorJoining`, `pytorch.Distance`,
+`pytorch.ShapePartition`, `pytorch.Regularization`, and
+`pytorch.DropoutCompletion`, plus `pytorch.GluCompletion` and
+`pytorch.Spatial`, `pytorch.ShapeGradient`, and
+`pytorch.PaddingBackwardCompletion`, `pytorch.IntegrationCompletion`, and
+`pytorch.NanToNumNative`, `pytorch.Strided`, `pytorch.FillNative`,
+`pytorch.IndexFillNative`,
+`pytorch.IndexMutationNative`, `pytorch.LerpNative`, `pytorch.Loss`,
+`pytorch.ShapeCompletion`, `pytorch.Indexing`, `pytorch.Gradients`,
+`pytorch.Dense`, `pytorch.FunctionalCompletion`, `pytorch.PaddingNative`,
+`pytorch.BinaryCrossEntropyCompletion`, `pytorch.Division`,
+`pytorch.SliceNative`, `pytorch.Fft`, `pytorch.Pooling`, `pytorch.Selection`,
+`pytorch.TensorListTransforms`, `pytorch.NumericalCompletionNative`,
+`pytorch.LinearStorageCompletion`, `pytorch.OutputCompletion`, `pytorch.View`,
+`pytorch.ConvolutionNative`, `pytorch.TypeRelationsNative`,
+`pytorch.CorrectionStatisticsCompletion`, `pytorch.RepeatInterleaveNative`,
+`pytorch.FusedArithmeticNative`, `pytorch.ScaledArithmeticNative`,
+`pytorch.ClampNative`, `pytorch.AggregationNative`, `pytorch.WhereNative`,
+`pytorch.Statistics`, `pytorch.CorrectionStatisticsPairNative`, and
+`pytorch.Sparse`, `pytorch.Linalg`, `pytorch.Cuda`, and `pytorch.Optimizer`; the
+hand-maintained C wrapper sources have been removed, with only a frozen
+migration manifest retained for contract auditing; all Tensor
+TorchScript collection/optional contracts now use the generated-CXX handle world.
+The orchestration behind both CXX targets is typed in
+`scripts/RunCxxChecks.terls`; Make targets only validate inputs and dispatch to
+that script. Its generated behavior fixtures are aggregated into one native
+test module and compiled incrementally, while preserving every fixture body
+and the full public-test set.
+The grouped-binding, function-reference, format, and cleanup targets likewise
+dispatch to `scripts/CheckTerlanLint.terls` and `scripts/Clean.terls`, keeping
+filesystem and compiler orchestration in typed Terlan code.
 
-The first training-oriented slice computes the exact MSE gradient, scales it by
-a learning-rate tensor, applies a functional parameter update, and verifies the
-new loss is lower. Graph autograd remains deferred: the released stable C ABI
-can set `requires_grad`, but currently has no stable gradient getter, while
-`aten::_backward` also requires Tensor-list and unit-output dispatcher support.
+Tensor interchange has also crossed that boundary: `Tensor.from_packet`, its
+`from_array` compatibility alias, and `Tensor.to_packet` now use exact
+compiler-generated CXX bindings to a package-neutral, pointer-free TNXP codec.
+The codec contains malformed-input failures before the generated bridge and
+owns both imported tensor storage and exported bytes. The real distribution
+gates execute 79 Terlan tests on CPU and 77 on CUDA, plus five direct CXX
+boundary tests on each build. These three partial `pytorch.Tensor` contracts do
+remain outside the completed-module migration count. The generated CXX contract
+snapshot is the sole migration baseline; the historical C ABI manifest has
+been retired from the package and build path.
 
-The first vision-oriented slice executes real CPU NCHW `conv2d` over rank-4
-input and weight tensors. A `[1, 1, 3, 3]` tensor of ones convolved with a
-`[1, 1, 2, 2]` kernel of ones and zero bias produces independently owned
-`[1, 1, 2, 2]` output containing `4.0`. The package adapter targets the current
-generated `aoti_torch_cpu_convolution` shim; it does not use the deprecated
-device-generic `aoti_torch_convolution` export. Incompatible input/weight
-channels are rejected through a stable C ABI status.
+Report exact progress against both frozen PyTorch 2.13 inventories:
 
-The next vision slice applies adaptive average pooling directly through the
-generated CPU shim. A non-constant `[1, 1, 4, 4]` quadrant image reduces to
-exact `[1.0, 2.0, 3.0, 4.0]` values at shape `[1, 1, 2, 2]`; exact MSE `0.0`
-proves the complete result, and malformed one-element output sizes are rejected
-stably.
+```sh
+make pytorch-parity-report
+```
 
-The composed vision-classifier slice then runs `conv2d`, ReLU, global adaptive
-average pooling, flattening, affine projection, softmax, and argmax as one
-Terlan program. Its `[1, 2]` probabilities are exactly `[0.5, 0.5]`, the int64
-prediction is `[0]`, and every intermediate native handle is disposed.
+`pytorch-api-inventory-report` covers the 2,261 exact ATen overload schemas;
+`pytorch-public-api-inventory-report` covers the broader 3,425-callable Python
+surface. The corresponding `pytorch-parity-check` target is intentionally
+strict and succeeds only after both policies have zero missing entries. To
+re-freeze the public oracle, provide the Python executable from the pinned
+reference environment explicitly:
 
-The first sequence/recommendation slice binds exact dispatcher
-`aten::embedding`. Batched int64 indices `[0,2]` select vectors from a `[3,2]`
-table and return owned `[2,2]` float features while both sources remain
-readable; an index equal to the vocabulary size is rejected stably.
+```sh
+make pytorch-public-api-inventory-freeze \
+  PYTORCH_REFERENCE_PYTHON=/path/to/pytorch-2.13/bin/python
+```
 
-The composed sequence-classifier slice accepts batched token indices at
-`[1,2]`, embeds them to `[1,2,2]`, max-pools tokens to `[1,2]`, and performs
-affine softmax classification with int64 prediction `[0]`. An incompatible
-projection matrix is rejected before classification.
+Validate pointer-free ndarray-to-PyTorch tensor exchange with both packages
+checked out next to each other:
 
-The first normalization slice binds inference-mode `aten::batch_norm` with
-explicit affine parameters and running statistics. Five public tensors remain
-readable after normalization; its four present optional tensors use generic
-allocator-backed StableIValue ownership, and mismatched channel statistics are
-rejected through the dispatcher status boundary.
+```sh
+make ndarray-interop-check \
+  LIBTORCH=/path/to/libtorch \
+  NDARRAY=/path/to/terlan-ndarray
+```
 
-The transformer-normalization slice binds exact `aten::layer_norm` through a
-generic owned integer-list StableIValue plus allocator-backed optional affine
-tensors. It also composes normalization, matrix projection, and residual
-addition in ordinary Terlan; incompatible normalized shapes are rejected
-before a result handle is returned.
+The package manifest declares `terlan-ndarray` as an ordinary Terlan
+dependency, and the immutable-consumer gate resolves and locks that dependency
+without either source checkout remaining available. The release gate also
+builds the current ndarray helper and proves that an ndarray matrix
+multiplication result can be imported and consumed as an independently owned
+PyTorch tensor. PyTorch does not depend on Polars; its runtime ndarray boundary
+remains the versioned, pointer-free TNXP value contract.
 
-The next broad composition builds normalized scaled dot-product self-attention
-from existing tensor functions: Q/K/V projections, transposed score
-multiplication, scaling, softmax, context multiplication, and residual
-addition. Exact attention, context, and residual tensors are checked without a
-fused native attention wrapper.
+Run the released CPU distribution and immutable consumer checks:
 
-The transformer feed-forward slice adds generic owned fixed-string dispatcher
-lowering and binds `aten::gelu` with `approximate="none"`. Ordinary Terlan then
-composes layer normalization, `[2,2] -> [2,4]` expansion, GELU, `[2,4] ->
-[2,2]` projection, bias, and residual addition. Package and immutable consumers
-require the expected `[2,2]` result within `1e-7` MSE and reject an incompatible
-expansion projection.
+```sh
+make release-check
+```
 
-The next composition joins normalized self-attention and normalized GELU
-feed-forward into a complete pre-normalized transformer encoder block. It keeps
-the public surface at 39 generated functions, produces a `[2,2]` encoder result
-within `1e-7` MSE, preserves the source, and rejects a width-changing final
-projection before residual addition.
+The compiler-owned full package gate is:
 
-The encoder-classifier slice then max-pools tokens, inserts a batch dimension,
-and runs affine logits, softmax, argmax, and cross-entropy as one Terlan model
-graph. It produces exact two-class uniform probabilities, prediction `[0]`, and
-the expected `0.69–0.70` loss range while rejecting an out-of-range class
-target. No new generated function is introduced.
+```sh
+make -C ../terlan terlan-pytorch-package-check \
+  TERLAN_PYTORCH_DIR="$(pwd)"
+```
 
-The token-transformer slice closes the complete text path: int64 token IDs
-select exact embeddings, which flow through the reusable Terlan encoder and
-classifier into probabilities, prediction, and cross-entropy. Both fixture and
-pinned LibTorch consumers verify the embedded values and final results, reject
-an out-of-vocabulary ID through the stable C ABI status, and keep the public
-surface at 39 generated functions.
+## Remaining expansion
 
-The batched token-transformer slice promotes that path to `[B,T,D]` execution.
-Rank-3 attention uses batched matrix multiplication and a real key-dimension
-transpose, token pooling returns one feature row per sample, and the classifier
-produces predictions `[0,0]` for a two-sample batch. Incompatible leading batch
-dimensions are rejected stably; no new generated operation is required.
+- additional optimizer families;
+- dictionary and nested mixed TorchScript result values;
+- typed CUDA device discovery, additional model formats, and release targets.
 
-The batched vision slice likewise preserves two distinct images through
-convolution, activation, global pooling, feature flattening, classification,
-prediction, and cross-entropy. Complete convolution and pooled tensors are
-checked exactly, and a mismatched target batch is rejected before evaluation.
-
-The grouped-CNN slice adds a depthwise `groups=2` spatial convolution followed
-by a pointwise `1×1` channel-mixing convolution. It validates exact intermediate
-feature maps, global features, and two-sample classification while rejecting
-invalid group/output-channel topology.
-
-The normalized residual-CNN slice adds inference batch normalization around
-the depthwise and pointwise stages, joins the branch back to an unchanged-width
-input, and validates exact residual features before pooled classification. A
-channel-changing branch is rejected at the residual boundary.
-
-The stacked-transformer slice runs two reusable pre-normalized encoder layers
-over a batched token tensor, verifies the complete second-layer state, and
-classifies pooled sequences. Layer parameters are safely reused while all
-intermediate NativeBoundary handles remain independently disposed.
-
-The causal-transformer slice broadcasts an additive triangular mask over
-batched attention scores. It verifies the complete masked attention, context,
-residual, encoder, pooled, and classifier tensors and rejects incompatible mask
-shapes without introducing a mask-specific native operation.
-
-The cross-attention slice separates a two-token decoder state from a
-three-token memory sequence. Q is derived from the decoder while K/V are
-derived from independently normalized memory, producing exact `[2,2,3]`
-attention before residual, feed-forward, pooled classification, prediction,
-and loss. Incompatible decoder/memory batches are rejected without adding a
-fused attention operation or compiler special case.
-
-The decoder-layer slice composes both attention modes: embedded target tokens
-first pass through causal self-attention, then attend to a separately owned
-three-token memory sequence, and finally pass through normalized GELU
-feed-forward and batched classification. Exact residuals are validated at both
-attention boundaries, and a context projection with the wrong decoder width is
-rejected before residual construction.
-
-The final broad CPU composition makes that decoder fully token-to-token:
-source IDs are embedded through a source-owned table into encoder memory, while
-independent target IDs use a distinct target table before causal decoding.
-Exact source memory and target state flow through the complete decoder and
-classifier, and incompatible source/target batches are rejected before
-cross-attention.
+Implementation sequencing and remaining gates are tracked in
+[`docs/ROADMAP.md`](docs/ROADMAP.md). The reviewed native target is documented
+in [`docs/TARGET_SURFACE.md`](docs/TARGET_SURFACE.md).

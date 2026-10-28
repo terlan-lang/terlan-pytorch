@@ -1,0 +1,27 @@
+/**
+ * CPU runtime evidence for sparse matrix multiplication families.
+ */
+module pytorch.SparseMatmulParityTest.
+
+import pytorch.Sparse.{to_sparse_dimensions}.
+import pytorch.SparseMatmulCompletion.{hspmm_default, hspmm_out_default, smm_default, sspaddmm_default, sspaddmm_out_default}.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+
+@test
+pub sparse_matrix_multiplication_preserves_shapes(): Bool ->
+    let dense = from_floats([1.0, 0.0, 0.0, 2.0], [2, 2]);
+    let sparse = to_sparse_dimensions(dense, 2);
+    let rhs = from_floats([2.0, 3.0, 4.0, 5.0], [2, 2]);
+    let hsp = hspmm_default(sparse, rhs);
+    let smm = smm_default(sparse, rhs);
+    let hsp_out = to_sparse_dimensions(from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]), 2);
+    hspmm_out_default(hsp_out, sparse, rhs);
+    let ssp = sspaddmm_default(sparse, sparse, rhs, 1.0, 1.0);
+    let ssp_out = to_sparse_dimensions(from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]), 2);
+    (sspaddmm_out_default(ssp_out, sparse, sparse, rhs, 1.0, 1.0); let valid =
+    shape(hsp) == [2, 2]
+        and shape(smm) == [2, 2]
+        and shape(hsp_out) == [2, 2]
+        and shape(ssp) == [2, 2]
+        and shape(ssp_out) == [2, 2];
+(dispose(ssp_out); dispose(ssp); dispose(hsp_out); dispose(smm); dispose(hsp); dispose(rhs); dispose(sparse); dispose(dense); valid)).

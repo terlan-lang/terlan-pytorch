@@ -1,0 +1,21 @@
+/**
+ * Public evidence for explicit physical-dimension permutation allocation.
+ */
+module pytorch.EmptyPermutedParityTest.
+
+import pytorch.Tensor.{cpu, dispose, empty_permuted, empty_permuted_out, from_floats, shape, strides}.
+
+/**
+ * Validates allocating and retained-output empty_permuted forms against LibTorch.
+ */
+@test
+pub empty_permuted_preserves_physical_order(): Bool ->
+    let allocated = empty_permuted([2, 3], [1, 0], true, 6, true, 0, true, cpu(), false, false);
+    let output = from_floats([], [0]);
+    empty_permuted_out(output, [2, 3], [0, 1]);
+    let valid =
+        shape(allocated) == [2, 3]
+            and strides(allocated) == [1, 2]
+            and shape(output) == [2, 3]
+            and strides(output) == [3, 1];
+    (dispose(output); dispose(allocated); valid).

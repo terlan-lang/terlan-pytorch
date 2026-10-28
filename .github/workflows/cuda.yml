@@ -1,0 +1,36 @@
+name: CUDA LibTorch
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  cuda:
+    runs-on: [self-hosted, linux, x64]
+    env:
+      LIBTORCH: ${{ vars.LIBTORCH_CUDA_ROOT }}
+      CUDA_LIBRARY_PATH: ${{ vars.CUDA_LIBRARY_PATH }}
+    steps:
+      - name: Check out PyTorch package
+        uses: actions/checkout@v4
+        with:
+          path: terlan-pytorch
+      - name: Check out compiler
+        uses: actions/checkout@v4
+        with:
+          repository: terlan-lang/terlan
+          path: terlan
+      - name: Require configured CUDA LibTorch
+        run: test -n "$LIBTORCH" && test -f "$LIBTORCH/lib/libtorch_cuda.so"
+      - name: Require a CUDA device
+        run: nvidia-smi --query-gpu=index,name --format=csv
+      - name: Configure CUDA runtime libraries
+        run: echo "LD_LIBRARY_PATH=${CUDA_LIBRARY_PATH}:${LIBTORCH}/lib" >> "$GITHUB_ENV"
+      - name: Build compiler
+        run: cargo build --manifest-path terlan/Cargo.toml --bin terlc
+      - name: Execute CUDA LibTorch gate
+        run: make -C terlan-pytorch cuda-check TERLC=../terlan/target/debug/terlc LIBTORCH="$LIBTORCH"

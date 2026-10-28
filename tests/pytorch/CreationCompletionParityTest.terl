@@ -1,0 +1,106 @@
+/**
+ * CPU and required-CUDA evidence for dense creation families.
+ */
+module pytorch.CreationCompletionParityTest.
+
+import pytorch.CreationCompletion.{configured_float, empty, empty_like, full, full_float, full_like, full_like_float, ones, ones_like, zeros, zeros_like}.
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, shape, to_device}.
+import pytorch.TypeRelations.equal.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let result =
+        to_device(
+            host,
+            device,
+            if {
+                device == 0 -> -1;
+                true -> 0
+            },
+        );
+    dispose(host);
+    result.
+
+matches(tensor: Tensor, values: List[Float], dimensions: List[Int], device: Int): Bool ->
+    let expected = placed(values, dimensions, device);
+    let valid = equal(tensor, expected) and shape(tensor) == dimensions and device_type(tensor) == device;
+    dispose(expected);
+    valid.
+
+verify(device: Int): Bool ->
+    let empty_tensor = empty([2, 3]);
+    let integer_full = full([2, 2], -3);
+    let floating_full = full_float([2, 2], 1.5);
+    let one_tensor = ones([2, 3]);
+    let zero_tensor = zeros([2, 3]);
+    let source = placed([1.0, 2.0, 3.0, 4.0], [2, 2], device);
+    let empty_like_tensor = empty_like(source);
+    let integer_like = full_like(source, 4);
+    let floating_like = full_like_float(source, 2.5);
+    let one_like = ones_like(source);
+    let zero_like = zeros_like(source);
+    let configured =
+        configured_float(
+            3,
+            [2, 2],
+            0.0,
+            7,
+            true,
+            0,
+            true,
+            device,
+            if {
+                device == 0 -> -1;
+                true -> 0
+            },
+            true,
+            false,
+            false,
+            0,
+            false,
+        );
+    let valid =
+        shape(empty_tensor) == [2, 3]
+            and dtype(empty_tensor) == 6
+            and device_type(empty_tensor) == 0
+            and matches(integer_full, [-3.0, -3.0, -3.0, -3.0], [2, 2], 0)
+            and dtype(integer_full) == 4
+            and matches(floating_full, [1.5, 1.5, 1.5, 1.5], [2, 2], 0)
+            and dtype(floating_full) == 6
+            and matches(one_tensor, [1.0, 1.0, 1.0, 1.0, 1.0, 1.0], [2, 3], 0)
+            and matches(zero_tensor, [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3], 0)
+            and shape(empty_like_tensor) == [2, 2]
+            and dtype(empty_like_tensor) == 7
+            and device_type(empty_like_tensor) == device
+            and matches(integer_like, [4.0, 4.0, 4.0, 4.0], [2, 2], device)
+            and matches(floating_like, [2.5, 2.5, 2.5, 2.5], [2, 2], device)
+            and matches(one_like, [1.0, 1.0, 1.0, 1.0], [2, 2], device)
+            and matches(zero_like, [0.0, 0.0, 0.0, 0.0], [2, 2], device)
+            and matches(configured, [0.0, 0.0, 0.0, 0.0], [2, 2], device);
+    dispose(configured);
+    dispose(zero_like);
+    dispose(one_like);
+    dispose(floating_like);
+    dispose(integer_like);
+    dispose(empty_like_tensor);
+    dispose(source);
+    dispose(zero_tensor);
+    dispose(one_tensor);
+    dispose(floating_full);
+    dispose(integer_full);
+    dispose(empty_tensor);
+    valid.
+
+@test
+pub creation_completion_executes_on_cpu_and_required_cuda(): Bool ->
+    let cpu_valid = verify(0);
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    cpu_valid and cuda_valid.

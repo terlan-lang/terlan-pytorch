@@ -1,0 +1,26 @@
+/**
+ * Exact tensor-source storage rebinding mutations.
+ */
+module pytorch.LinearStorageSourceCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Mutably rebinds tensor storage to an exact source tensor.
+ */
+@compiler.native {pytorch.linear_storage.set_source_tensor_in_place}
+pub set_source_tensor_in_place(tensor: Tensor, source: Tensor): Unit ->
+    native.
+
+/**
+ * Mutably rebinds tensor storage with explicit offset, size, and stride.
+ */
+@compiler.native {pytorch.linear_storage.set_source_tensor_storage_offset_in_place}
+pub set_source_tensor_storage_offset_in_place(
+    tensor: Tensor,
+    source: Tensor,
+    storage_offset: Int,
+    size: List[Int],
+    stride: List[Int],
+): Unit ->
+    native.

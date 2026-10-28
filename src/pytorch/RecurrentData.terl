@@ -1,0 +1,74 @@
+/**
+ * Generated exact CXX packed-sequence recurrent-operation completion surface.
+ */
+module pytorch.RecurrentData.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX packed tanh RNN sequence leaf.
+ */
+@compiler.native {pytorch.recurrent_data.rnn_tanh_data}
+pub rnn_tanh_data(
+    data: Tensor,
+    batch_sizes: Tensor,
+    hx: Tensor,
+    params: List[Tensor],
+    has_biases: Bool,
+    num_layers: Int,
+    dropout: Float,
+    train: Bool,
+    bidirectional: Bool,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX packed ReLU RNN sequence leaf.
+ */
+@compiler.native {pytorch.recurrent_data.rnn_relu_data}
+pub rnn_relu_data(
+    data: Tensor,
+    batch_sizes: Tensor,
+    hx: Tensor,
+    params: List[Tensor],
+    has_biases: Bool,
+    num_layers: Int,
+    dropout: Float,
+    train: Bool,
+    bidirectional: Bool,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX packed gated RNN sequence leaf.
+ */
+@compiler.native {pytorch.recurrent_data.gru_data}
+pub gru_data(
+    data: Tensor,
+    batch_sizes: Tensor,
+    hx: Tensor,
+    params: List[Tensor],
+    has_biases: Bool,
+    num_layers: Int,
+    dropout: Float,
+    train: Bool,
+    bidirectional: Bool,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX packed LSTM sequence leaf.
+ */
+@compiler.native {pytorch.recurrent_data.lstm_data}
+pub lstm_data(
+    data: Tensor,
+    batch_sizes: Tensor,
+    hx: List[Tensor],
+    params: List[Tensor],
+    has_biases: Bool,
+    num_layers: Int,
+    dropout: Float,
+    train: Bool,
+    bidirectional: Bool,
+): {Tensor, Tensor, Tensor} ->
+    native.

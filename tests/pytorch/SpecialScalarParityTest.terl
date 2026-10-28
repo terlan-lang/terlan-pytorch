@@ -1,0 +1,64 @@
+module pytorch.SpecialScalarParityTest.
+
+import pytorch.Dense.special_chebyshev_polynomial_t.
+import pytorch.Special.{special_chebyshev_polynomial_t_input_float, special_chebyshev_polynomial_t_input_float_out, special_chebyshev_polynomial_t_input_int, special_chebyshev_polynomial_t_input_int_out, special_chebyshev_polynomial_t_order_float, special_chebyshev_polynomial_t_order_float_out, special_chebyshev_polynomial_t_order_int, special_chebyshev_polynomial_t_order_int_out}.
+import pytorch.Tensor.{dispose, from_floats, item_float, mse_loss, shape, zeros}.
+
+import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Compares an output tensor with an independently dispatched reference.
+ */
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let error = mse_loss(actual, expected, 1);
+    let value = item_float(error);
+    dispose(error);
+    value == 0.0.
+
+/**
+ * Proves integer and floating scalar orders for immutable and output forms.
+ */
+@test
+pub scalar_orders_match_tensor_orders(): Bool ->
+    let input = from_floats([0.25, 0.5], [2]);
+    let orders = from_floats([2.0, 2.0], [2]);
+    let expected = special_chebyshev_polynomial_t(input, orders);
+    let integer_result = special_chebyshev_polynomial_t_order_int(input, 2);
+    let float_result = special_chebyshev_polynomial_t_order_float(input, 2.0);
+    let integer_output = zeros([0], DType.FLOAT64);
+    let float_output = zeros([0], DType.FLOAT64);
+    special_chebyshev_polynomial_t_order_int_out(integer_output, input, 2);
+    special_chebyshev_polynomial_t_order_float_out(float_output, input, 2.0);
+    let valid =
+        matches(integer_result, expected)
+            and matches(float_result, expected)
+            and matches(integer_output, expected)
+            and matches(float_output, expected)
+            and shape(input) == [2]
+            and shape(orders) == [2];
+    (dispose(float_output); dispose(integer_output); dispose(float_result); dispose(integer_result); dispose(expected); dispose(orders); dispose(input); valid).
+
+/**
+ * Proves integer and floating scalar inputs for immutable and output forms.
+ */
+@test
+pub scalar_inputs_match_tensor_inputs(): Bool ->
+    let inputs = from_floats([0.5, 0.5], [2]);
+    let orders = from_floats([2.0, 3.0], [2]);
+    let expected = special_chebyshev_polynomial_t(inputs, orders);
+    let integer_result = special_chebyshev_polynomial_t_input_int(0, orders);
+    let integer_expected_inputs = from_floats([0.0, 0.0], [2]);
+    let integer_expected = special_chebyshev_polynomial_t(integer_expected_inputs, orders);
+    let float_result = special_chebyshev_polynomial_t_input_float(0.5, orders);
+    let integer_output = zeros([0], DType.FLOAT64);
+    let float_output = zeros([0], DType.FLOAT64);
+    special_chebyshev_polynomial_t_input_int_out(integer_output, 0, orders);
+    special_chebyshev_polynomial_t_input_float_out(float_output, 0.5, orders);
+    let valid =
+        matches(integer_result, integer_expected)
+            and matches(float_result, expected)
+            and matches(integer_output, integer_expected)
+            and matches(float_output, expected)
+            and shape(inputs) == [2]
+            and shape(orders) == [2];
+    (dispose(float_output); dispose(integer_output); dispose(float_result); dispose(integer_expected); dispose(integer_expected_inputs); dispose(integer_result); dispose(expected); dispose(orders); dispose(inputs); valid).

@@ -1,0 +1,74 @@
+/**
+ * Generated exact CXX vector upsampling overloads.
+ */
+module pytorch.UpsampleVectorCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact vector bicubic upsampling overload.
+ */
+@compiler.native {pytorch.upsample_bicubic2d.vec}
+pub upsample_bicubic2d_vec(input: Tensor, output_size: List[Int], align_corners: Bool): Tensor ->
+    native.
+
+/**
+ * Exact vector bilinear upsampling overload.
+ */
+@compiler.native {pytorch.upsample_bilinear2d.vec}
+pub upsample_bilinear2d_vec(input: Tensor, output_size: List[Int], align_corners: Bool): Tensor ->
+    native.
+
+/**
+ * Exact vector bilinear upsampling output overload.
+ */
+@compiler.native {pytorch.upsample_bilinear2d.vec_out}
+pub upsample_bilinear2d_vec_out(
+    output: Tensor,
+    input: Tensor,
+    output_size: List[Int],
+    align_corners: Bool,
+): Unit ->
+    native.
+
+/**
+ * Exact vector linear upsampling overload.
+ */
+@compiler.native {pytorch.upsample_linear1d.vec}
+pub upsample_linear1d_vec(input: Tensor, output_size: List[Int], align_corners: Bool): Tensor ->
+    native.
+
+/**
+ * Exact vector nearest-1d upsampling overload.
+ */
+@compiler.native {pytorch.upsample_nearest1d.vec}
+pub upsample_nearest1d_vec(input: Tensor, output_size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact vector nearest-2d upsampling overload.
+ */
+@compiler.native {pytorch.upsample_nearest2d.vec}
+pub upsample_nearest2d_vec(input: Tensor, output_size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact vector nearest-2d upsampling output overload.
+ */
+@compiler.native {pytorch.upsample_nearest2d.vec_out}
+pub upsample_nearest2d_vec_out(output: Tensor, input: Tensor, output_size: List[Int]): Unit ->
+    native.
+
+/**
+ * Exact vector nearest-3d upsampling overload.
+ */
+@compiler.native {pytorch.upsample_nearest3d.vec}
+pub upsample_nearest3d_vec(input: Tensor, output_size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact vector trilinear upsampling overload.
+ */
+@compiler.native {pytorch.upsample_trilinear3d.vec}
+pub upsample_trilinear3d_vec(input: Tensor, output_size: List[Int], align_corners: Bool): Tensor ->
+    native.

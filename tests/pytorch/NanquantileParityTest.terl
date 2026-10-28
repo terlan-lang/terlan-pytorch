@@ -1,0 +1,34 @@
+/**
+ * CPU value and retained-output evidence for aten::nanquantile.
+ */
+module pytorch.NanquantileParityTest.
+
+import pytorch.NanquantileCompletion.{nanquantile_scalar, nanquantile_scalar_out, nanquantile_tensor, nanquantile_tensor_out}.
+import pytorch.Tensor.{dispose, dtype, from_floats, shape, to_dtype}.
+import pytorch.TypeRelations.allclose.
+
+@test
+pub nanquantile_forms_match(): Bool ->
+    let input = to_dtype(from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]), 7);
+    let scalar_actual = nanquantile_scalar(input, 0.5, 1, false, "linear");
+    let scalar_output = to_dtype(from_floats([0.0, 0.0], [2]), 7);
+    nanquantile_scalar_out(scalar_output, input, 0.5, 1, false, "linear");
+    let q = to_dtype(from_floats([0.5], [1]), 7);
+    let tensor_actual = nanquantile_tensor(input, q, 1, false, "linear");
+    let tensor_output = to_dtype(from_floats([0.0, 0.0], [1, 2]), 7);
+    (nanquantile_tensor_out(tensor_output, input, q, 1, false, "linear"); let expected = to_dtype(from_floats([1.5, 3.5], [2]), 7);
+let tensor_expected = to_dtype(from_floats([1.5, 3.5], [1, 2]), 7);
+let valid =
+    dtype(scalar_actual) == 7
+        and dtype(scalar_output) == 7
+        and dtype(tensor_actual) == 7
+        and dtype(tensor_output) == 7
+        and shape(scalar_actual) == [2]
+        and shape(scalar_output) == [2]
+        and shape(tensor_actual) == [1, 2]
+        and shape(tensor_output) == [1, 2]
+        and allclose(scalar_actual, expected, 0.00001, 0.00001, false)
+        and allclose(scalar_output, expected, 0.00001, 0.00001, false)
+        and allclose(tensor_actual, tensor_expected, 0.00001, 0.00001, false)
+        and allclose(tensor_output, tensor_expected, 0.00001, 0.00001, false);
+(dispose(tensor_expected); dispose(expected); dispose(tensor_output); dispose(tensor_actual); dispose(q); dispose(scalar_output); dispose(scalar_actual); dispose(input); valid)).

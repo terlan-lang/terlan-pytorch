@@ -1,0 +1,583 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Orchestrates the generated CXX CPU/CUDA validation pipeline.
+ *
+ * The Makefile remains a thin entry point for CI, while lifecycle, fixture
+ * selection, copying, and process diagnostics live in typed Terlan code.
+ */
+import std.collections.List.
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.Console.{eprintln, println}.
+import std.io.{Directory, File, Path}.
+import std.system.{Arguments, Process}.
+
+import type std.core.Option.
+import type std.system.Process.{EnvironmentEntry, Output}.
+
+child(parent: String, relative: String): String ->
+    if {
+        String.ends_with(parent, "/") -> String.append(parent, relative);
+        true -> String.concat([parent, "/", relative])
+    }.
+
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[terlan_pytorch_cxx_check]: ", message));
+    false.
+
+announce(message: String): Bool ->
+    let _printed = println(String.append("[terlan_pytorch_cxx_check] ", message));
+    true.
+
+basename(path: String): String ->
+    let {
+        Ok(parsed) <- Path.from_string(path);
+        Some(name) <- parsed.file_name()
+    } else {
+        _ -> path
+    };
+    name.
+
+run_command(
+    program: String,
+    arguments: List[String],
+    working_directory: String,
+    environment: List[EnvironmentEntry],
+): Bool ->
+    let base =
+        Process.with_output_limit_bytes(
+            Process.with_timeout_ms(
+                Process.with_working_directory(
+                    Process.with_arguments(Process.command(program), arguments),
+                    working_directory,
+                ),
+                3600000,
+            ),
+            16777216,
+        );
+    let request =
+        if {
+            environment == [] -> base;
+            true -> Process.with_environment(base, environment)
+        };
+    case Process.run(request) {
+        Err(reason) -> failure(reason.message);
+        Ok(output) ->
+            if {
+                output.status == 0 -> true;
+                true -> failure(String.append(output.stderr, output.stdout))
+            }
+    }.
+
+copy_one(source: String, destination: String): Bool ->
+    case File.copy(source, destination) {
+        Ok(Unit) -> true;
+        Err(reason) -> failure(reason.message)
+    }.
+
+copy_replace(source: String, destination: String): Bool ->
+    if {
+        not File.exists(destination) -> copy_one(source, destination);
+        true -> case File.delete(destination) {
+            Err(reason) -> failure(reason.message);
+            Ok(Unit) -> copy_one(source, destination)
+        }
+    }.
+
+copy_package_sources(paths: List[String], destination_root: String): Bool ->
+    case paths {
+        [] -> true;
+        [source | rest] ->
+            copy_replace(source, child(destination_root, basename(source)))
+                and copy_package_sources(rest, destination_root)
+    }.
+
+copy_package_source_tree(repository: String, destination_root: String): Bool ->
+    case Directory.files_recursive(child(repository, "package-src")) {
+        Err(_) -> failure("unable to enumerate package source modules");
+        Ok(paths) -> copy_package_sources(paths, destination_root)
+    }.
+
+copy_supports(paths: List[String], destination_root: String): Bool ->
+    case paths {
+        [] -> true;
+        [source | rest] ->
+            let name = basename(source);
+            if {
+                String.ends_with(name, "BehaviorSupport.terl")
+                    or name == "OutputCompletionDTypeSupport.terl" -> copy_one(source, child(destination_root, name))
+                    and copy_supports(rest, destination_root);
+                true -> copy_supports(rest, destination_root)
+            }
+    }.
+
+copy_tests(paths: List[String], destination_root: String, cuda: Bool): Bool ->
+    case paths {
+        [] -> true;
+        [source | rest] ->
+            let name = basename(source);
+            let selected =
+                if {
+                    cuda -> String.ends_with(name, "CudaBehaviorTest.terl");
+                    true -> String.ends_with(name, "BehaviorTest.terl")
+                        and not String.ends_with(name, "CudaBehaviorTest.terl")
+                };
+            if {
+                selected -> copy_one(source, child(destination_root, name))
+                    and copy_tests(rest, destination_root, cuda);
+                true -> copy_tests(rest, destination_root, cuda)
+            }
+    }.
+
+copy_native_tests(paths: List[String], destination_root: String): Bool ->
+    case paths {
+        [] -> true;
+        [source | rest] ->
+            let name = basename(source);
+            if {
+                name == "tensor_packet_cxx.rs"
+                    or name == "type_relations_cxx.rs"
+                    or name == "local_response_norm_cxx.rs"
+                    or name == "lp_pool1d_cxx.rs"
+                    or name == "max_unpool1d_cxx.rs"
+                    or name == "lp_pool23d_cxx.rs"
+                    or name == "gumbel_softmax_cxx.rs"
+                    or name == "gaussian_nll_loss_cxx.rs"
+                    or name == "interpolate_cxx.rs"
+                    or name == "quantized_internals_cxx.rs"
+                    or name == "cuda_record_stream_cxx.rs"
+                    or name == "exception_boundary_cxx.rs"
+                    or name == "multilabel_soft_margin_loss_cxx.rs" -> copy_one(source, child(destination_root, name))
+                    and copy_native_tests(rest, destination_root);
+                true -> copy_native_tests(rest, destination_root)
+            }
+    }.
+
+copy_public_tests(repository: String, generated_tests: String, cuda: Bool): Bool ->
+    let source = child(generated_tests, "pytorch");
+    let destination = child(generated_tests, "pytorch_runtime");
+    case {Directory.files_recursive(source), Directory.create_all(destination)} {
+        {Err(_), _} -> failure("unable to enumerate generated public tests");
+        {_, Err(_)} -> failure("unable to create generated public test staging directory");
+        {Ok(paths), Ok(Unit)} ->
+            copy_public_test_files(paths, destination, cuda)
+                and if {
+    cuda -> copy_replace(
+        child(repository, "tests/pytorch/CudaTest.terl"),
+        child(destination, "CudaTest.terl"),
+    );
+    true -> true
+}
+                and copy_replace(
+    child(repository, "tests/pytorch/LocalResponseNormParityTest.terl"),
+    child(destination, "LocalResponseNormParityTest.terl"),
+)
+                and copy_replace(
+    child(repository, "tests/pytorch/MultiLabelSoftMarginLossParityTest.terl"),
+    child(destination, "MultiLabelSoftMarginLossParityTest.terl"),
+)
+                and copy_replace(
+    child(repository, "tests/pytorch/LpPool1dParityTest.terl"),
+    child(destination, "LpPool1dParityTest.terl"),
+)
+                and copy_replace(
+    child(repository, "tests/pytorch/MaxUnpool1dParityTest.terl"),
+    child(destination, "MaxUnpool1dParityTest.terl"),
+)
+                and copy_replace(
+    child(repository, "tests/pytorch/LpPool23dParityTest.terl"),
+    child(destination, "LpPool23dParityTest.terl"),
+)
+                and copy_replace(
+    child(repository, "tests/pytorch/GumbelSoftmaxParityTest.terl"),
+    child(destination, "GumbelSoftmaxParityTest.terl"),
+)
+                and copy_replace(
+    child(repository, "tests/pytorch/GaussianNllLossParityTest.terl"),
+    child(destination, "GaussianNllLossParityTest.terl"),
+)
+                and copy_replace(
+    child(repository, "tests/pytorch/InterpolateParityTest.terl"),
+    child(destination, "InterpolateParityTest.terl"),
+)
+                and copy_replace(
+    child(repository, "tests/pytorch/UnravelIndexParityTest.terl"),
+    child(destination, "UnravelIndexParityTest.terl"),
+)
+                and copy_replace(
+    child(repository, "tests/pytorch/FlushDenormalParityTest.terl"),
+    child(destination, "FlushDenormalParityTest.terl"),
+)
+    }.
+
+copy_public_test_files(paths: List[String], destination: String, cuda: Bool): Bool ->
+    case paths {
+        [] -> true;
+        [source | rest] ->
+            let name = basename(source);
+            let selected =
+                String.ends_with(name, "Test.terl")
+                    and name != "TensorTest.terl"
+                    and (cuda or name != "CudaTest.terl");
+            if {
+                selected -> copy_one(source, child(destination, name))
+                    and copy_public_test_files(rest, destination, cuda);
+                true -> copy_public_test_files(rest, destination, cuda)
+            }
+    }.
+
+copy_fixtures(repository: String, generated: String, cuda: Bool): Bool ->
+    let source = child(repository, "tests/cxx");
+    let generated_src = child(generated, "src/pytorch");
+    let generated_tests = child(generated, "tests/pytorch_cxx");
+    let generated_native_tests = child(generated, "native/rust/tests");
+    copy_package_source_tree(repository, generated_src)
+        and case {
+    Directory.files_recursive(source),
+    Directory.create_all(generated_tests),
+    Directory.create_all(generated_native_tests),
+    copy_replace(
+        child(repository, "src/pytorch/Scatter.terl"),
+        child(generated_src, "Scatter.terl"),
+    ),
+    copy_replace(
+        child(repository, "src/pytorch/TypeRelations.terl"),
+        child(generated_src, "TypeRelations.terl"),
+    ),
+    copy_replace(child(repository, "src/pytorch/Tensor.terl"), child(generated_src, "Tensor.terl")),
+    copy_replace(
+        child(repository, "src/pytorch/ShapePartition.terl"),
+        child(generated_src, "ShapePartition.terl"),
+    ),
+} {
+    {Ok(paths), Ok(Unit), Ok(Unit), true, true, true, true} ->
+        copy_supports(paths, generated_src)
+            and copy_tests(paths, generated_tests, cuda)
+            and copy_native_tests(paths, generated_native_tests)
+            and copy_one(
+    child(repository, "tests/native/histogramdd_tensor_bins_cxx.rs"),
+    child(generated_native_tests, "histogramdd_tensor_bins_cxx.rs"),
+)
+            and copy_one(
+    child(repository, "tests/native/histogram_options_cxx.rs"),
+    child(generated_native_tests, "histogram_options_cxx.rs"),
+)
+            and copy_one(
+    child(repository, "tests/native/local_response_norm_cxx.rs"),
+    child(generated_native_tests, "local_response_norm_cxx.rs"),
+)
+            and copy_one(
+    child(repository, "tests/native/multilabel_soft_margin_loss_cxx.rs"),
+    child(generated_native_tests, "multilabel_soft_margin_loss_cxx.rs"),
+)
+            and copy_one(
+    child(repository, "tests/native/lp_pool1d_cxx.rs"),
+    child(generated_native_tests, "lp_pool1d_cxx.rs"),
+)
+            and copy_one(
+    child(repository, "tests/native/max_unpool1d_cxx.rs"),
+    child(generated_native_tests, "max_unpool1d_cxx.rs"),
+)
+            and copy_one(
+    child(repository, "tests/native/lp_pool23d_cxx.rs"),
+    child(generated_native_tests, "lp_pool23d_cxx.rs"),
+)
+            and copy_one(
+    child(repository, "tests/native/gumbel_softmax_cxx.rs"),
+    child(generated_native_tests, "gumbel_softmax_cxx.rs"),
+)
+            and copy_one(
+    child(repository, "tests/native/gaussian_nll_loss_cxx.rs"),
+    child(generated_native_tests, "gaussian_nll_loss_cxx.rs"),
+)
+            and copy_one(
+    child(repository, "tests/native/interpolate_cxx.rs"),
+    child(generated_native_tests, "interpolate_cxx.rs"),
+)
+            and copy_one(
+    child(repository, "tests/native/quantized_internals_cxx.rs"),
+    child(generated_native_tests, "quantized_internals_cxx.rs"),
+)
+            and copy_one(
+    child(repository, "tests/native/cuda_record_stream_cxx.rs"),
+    child(generated_native_tests, "cuda_record_stream_cxx.rs"),
+)
+            and copy_one(
+    child(repository, "native/rust/tests/exception_boundary_cxx.rs"),
+    child(generated_native_tests, "exception_boundary_cxx.rs"),
+);
+    _ -> failure("unable to prepare generated CXX fixture directories")
+}.
+
+remove_tree(path: String): Bool ->
+    let {
+        Ok(_entries) <- Directory.entries(path);
+        Err(reason) <- Directory.remove_all(path)
+    } else {
+        _ -> true
+    };
+    failure(reason.message).
+
+cuda_distribution_present(libtorch: String): Bool ->
+    File.exists(child(libtorch, "lib/libtorch_cuda.so"))
+        or File.exists(child(libtorch, "lib/libtorch_cuda.dylib"))
+        or File.exists(child(libtorch, "lib/torch_cuda.lib"))
+        or File.exists(child(libtorch, "bin/torch_cuda.dll")).
+
+environment(
+    repository: String,
+    libtorch: String,
+    target: String,
+    helper: String,
+    cuda: Bool,
+): List[EnvironmentEntry] ->
+    let lib_path = child(libtorch, "lib");
+    let cuda_path = child(repository, "vendor/cuda-runtime/usr/lib/x86_64-linux-gnu/libcusparseLt/12");
+    let nvshmem_path = child(repository, "vendor/cuda-runtime/usr/lib/x86_64-linux-gnu/nvshmem/12");
+    let system_cuda_path = "/usr/local/cuda/targets/x86_64-linux/lib";
+    let linker_path =
+        if {
+            cuda -> String.concat([cuda_path, ":", nvshmem_path, ":", system_cuda_path, ":", lib_path]);
+            true -> lib_path
+        };
+    [
+        Process.environment_entry("LIBTORCH", libtorch),
+        Process.environment_entry("LD_LIBRARY_PATH", linker_path),
+        Process.environment_entry("CARGO_TARGET_DIR", target),
+        Process.environment_entry("TERLAN_PYTORCH_NATIVE_BOUNDARY_HELPER_PATH", helper),
+        Process.environment_entry(
+            "TERLAN_PYTORCH_TEST_DEVICE",
+            if {
+                cuda -> "cuda";
+                true -> "cpu"
+            },
+        ),
+    ].
+
+execute(mode: String, repository: String, compiler: String, libtorch: String): Bool ->
+    let cuda = mode == "cuda";
+    let generated_name =
+        if {
+            cuda -> "_build/libtorch-cxx-cuda-generated";
+            true -> "_build/libtorch-cxx-generated"
+        };
+    let target_name =
+        if {
+            cuda -> "_build/libtorch-cxx-cuda-target";
+            true -> "_build/libtorch-cxx-target"
+        };
+    let generated = child(repository, generated_name);
+    let target = child(repository, target_name);
+    let manifest = child(repository, "libtorch-cxx.json");
+    let migration = child(repository, "bindings/cxx/migration.json");
+    let snapshot = child(repository, "bindings/cxx/contract-snapshot.json");
+    let helper = child(target, "debug/native-boundary-helper");
+    let generated_tests = child(generated, "tests");
+    let cargo_manifest = child(generated, "native/rust/Cargo.toml");
+    let env = environment(repository, libtorch, target, helper, cuda);
+    if {
+    cuda and not cuda_distribution_present(libtorch) -> failure("CUDA LibTorch library is missing");
+    true -> true
+}
+        and run_command(
+    compiler,
+    [
+        "run",
+        "scripts/CheckLibTorch.terls",
+        "--",
+        libtorch,
+        if {
+            cuda -> "cuda";
+            true -> "cpu"
+        },
+    ],
+    repository,
+    [],
+)
+        and remove_tree(generated)
+        and run_command(compiler, ["bind", "cpp", "--manifest", manifest, "--out", generated], repository, [])
+        and run_command(
+    compiler,
+    ["run", "scripts/PatchCxxGeneratedSurface.terls", "--", generated, repository],
+    repository,
+    [],
+)
+        and run_command(
+    compiler,
+    ["run", "scripts/CheckCxxExceptionSurface.terls", "--", repository, generated],
+    repository,
+    [],
+)
+        and run_command(
+    compiler,
+    ["run", "scripts/CheckCxxSourceOwnership.terls", "--", repository, generated],
+    repository,
+    [],
+)
+        and run_command(
+    "python3",
+    [
+        "scripts/check-cxx-migration.py",
+        migration,
+        snapshot,
+        child(generated, "bindings/native-binding-manifest.json"),
+    ],
+    repository,
+    [],
+)
+        and copy_fixtures(repository, generated, cuda)
+        and run_command(
+    compiler,
+    ["run", "scripts/PatchCxxGeneratedTests.terls", "--", generated],
+    repository,
+    [],
+)
+        and copy_public_tests(repository, generated_tests, cuda)
+        and announce("preparing generated CXX behavior fixtures")
+        and announce("building generated Rust/CXX test helpers")
+        and run_command(
+    "cargo",
+    ["test", "--offline", "--manifest-path", cargo_manifest, "--test", "tensor_packet_cxx"],
+    repository,
+    env,
+)
+        and run_command(
+    "cargo",
+    ["test", "--offline", "--manifest-path", cargo_manifest, "--test", "type_relations_cxx"],
+    repository,
+    env,
+)
+        and run_command(
+    "cargo",
+    ["test", "--offline", "--manifest-path", cargo_manifest, "--test", "local_response_norm_cxx"],
+    repository,
+    env,
+)
+        and run_command(
+    "cargo",
+    [
+        "test",
+        "--offline",
+        "--manifest-path",
+        cargo_manifest,
+        "--test",
+        "multilabel_soft_margin_loss_cxx",
+    ],
+    repository,
+    env,
+)
+        and run_command(
+    "cargo",
+    ["test", "--offline", "--manifest-path", cargo_manifest, "--test", "lp_pool1d_cxx"],
+    repository,
+    env,
+)
+        and run_command(
+    "cargo",
+    ["test", "--offline", "--manifest-path", cargo_manifest, "--test", "max_unpool1d_cxx"],
+    repository,
+    env,
+)
+        and run_command(
+    "cargo",
+    ["test", "--offline", "--manifest-path", cargo_manifest, "--test", "lp_pool23d_cxx"],
+    repository,
+    env,
+)
+        and run_command(
+    "cargo",
+    ["test", "--offline", "--manifest-path", cargo_manifest, "--test", "gumbel_softmax_cxx"],
+    repository,
+    env,
+)
+        and run_command(
+    "cargo",
+    ["test", "--offline", "--manifest-path", cargo_manifest, "--test", "gaussian_nll_loss_cxx"],
+    repository,
+    env,
+)
+        and run_command(
+    "cargo",
+    ["test", "--offline", "--manifest-path", cargo_manifest, "--test", "interpolate_cxx"],
+    repository,
+    env,
+)
+        and run_command(
+    "cargo",
+    ["test", "--offline", "--manifest-path", cargo_manifest, "--test", "quantized_internals_cxx"],
+    repository,
+    env,
+)
+        and run_command(
+    "cargo",
+    ["test", "--offline", "--manifest-path", cargo_manifest, "--test", "cuda_record_stream_cxx"],
+    repository,
+    env,
+)
+        and run_command(
+    "cargo",
+    ["test", "--offline", "--manifest-path", cargo_manifest, "--test", "exception_boundary_cxx"],
+    repository,
+    env,
+)
+        and if {
+    cuda -> announce(
+        "skipping histogramdd Tensor-bin test: bundled PyTorch 2.13 registers this ATen kernel for CPU only",
+    );
+    true -> run_command(
+        "cargo",
+        [
+            "test",
+            "--offline",
+            "--manifest-path",
+            cargo_manifest,
+            "--test",
+            "histogramdd_tensor_bins_cxx",
+        ],
+        repository,
+        env,
+    )
+}
+        and if {
+    cuda -> announce(
+        "skipping histogram option tests: bundled PyTorch 2.13 registers these ATen kernels for CPU only",
+    );
+    true -> run_command(
+        "cargo",
+        ["test", "--offline", "--manifest-path", cargo_manifest, "--test", "histogram_options_cxx"],
+        repository,
+        env,
+    )
+}
+        and run_command(
+    "cargo",
+    ["build", "--offline", "--manifest-path", cargo_manifest, "--bin", "native-boundary-helper"],
+    repository,
+    env,
+)
+        and announce("running generated CXX test tree")
+        and run_command(
+    compiler,
+    [
+        "--incremental",
+        "test",
+        child(generated_tests, "pytorch_cxx"),
+        child(generated_tests, "pytorch_runtime"),
+    ],
+    repository,
+    env,
+).
+
+entry(): Bool ->
+    case {Arguments.count(), Arguments.get(0), Arguments.get(1), Arguments.get(2), Arguments.get(3)} {
+        {4, Some(mode), Some(repository), Some(compiler), Some(libtorch)} ->
+            if {
+                mode == "cpu" or mode == "cuda" -> execute(mode, repository, compiler, libtorch);
+                true -> failure("usage: RunCxxChecks.terls <cpu|cuda> <repository> <terlc> <libtorch>")
+            };
+        _ -> failure("usage: RunCxxChecks.terls <cpu|cuda> <repository> <terlc> <libtorch>")
+    }.
+
+assert(entry());
+Unit.

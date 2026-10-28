@@ -1,0 +1,67 @@
+/**
+ * Public evidence for per-tensor affine fake quantization.
+ */
+module pytorch.FakeQuantizeParityTest.
+
+import pytorch.QuantizationCompletion.{fake_quantize_per_channel_affine, fake_quantize_per_channel_affine_cachemask, fake_quantize_per_channel_affine_cachemask_out, fake_quantize_per_tensor_affine, fake_quantize_per_tensor_affine_cachemask, fake_quantize_per_tensor_affine_cachemask_out, fake_quantize_per_tensor_affine_tensor_qparams}.
+import pytorch.Tensor.{dispose, from_floats, shape, to_dtype}.
+import pytorch.TypeRelations.allclose.
+
+/**
+ * Validates quantized rounding and output metadata against LibTorch.
+ */
+@test
+pub fake_quantize_per_tensor_affine_matches(): Bool ->
+    let source = from_floats([0.13, 0.27, 1.24], [3]);
+    let actual = fake_quantize_per_tensor_affine(source, 0.1, 0, 0, 255);
+    let expected = from_floats([0.1, 0.3, 1.2], [3]);
+    let valid = shape(actual) == [3] and allclose(actual, expected, 0.00001, 0.00001, false);
+    let scale = from_floats([0.1], [1]);
+    let zero_point_source = from_floats([0.0], [1]);
+    let zero_point = to_dtype(zero_point_source, 4);
+    let tensor_qparams = fake_quantize_per_tensor_affine_tensor_qparams(source, scale, zero_point, 0, 255);
+    let tensor_valid = allclose(tensor_qparams, expected, 0.00001, 0.00001, false);
+    let channel_scale_source = from_floats([0.1, 0.1, 0.1], [3]);
+    let channel_scale = to_dtype(channel_scale_source, 6);
+    let channel_zero_source = from_floats([0.0, 0.0, 0.0], [3]);
+    let channel_zero = to_dtype(channel_zero_source, 3);
+    let channel_qparams = fake_quantize_per_channel_affine(source, channel_scale, channel_zero, 0, 0, 255);
+    let channel_valid = allclose(channel_qparams, expected, 0.00001, 0.00001, false);
+    let {tensor_cache_output, tensor_cache_mask} = fake_quantize_per_tensor_affine_cachemask(source, 0.1, 0, 0, 255);
+    let {channel_cache_output, channel_cache_mask} = fake_quantize_per_channel_affine_cachemask(source, channel_scale, channel_zero, 0, 0, 255);
+    let tensor_out_output = from_floats([], [0]);
+    let tensor_out_mask = to_dtype(from_floats([0.0], [1]), 11);
+    fake_quantize_per_tensor_affine_cachemask_out(
+        tensor_out_output,
+        tensor_out_mask,
+        source,
+        0.1,
+        0,
+        0,
+        255,
+    );
+    let channel_out_output = from_floats([], [0]);
+    let channel_out_mask = to_dtype(from_floats([0.0], [1]), 11);
+    (fake_quantize_per_channel_affine_cachemask_out(
+    channel_out_output,
+    channel_out_mask,
+    source,
+    channel_scale,
+    channel_zero,
+    0,
+    0,
+    255,
+); let cache_valid =
+    shape(tensor_cache_output) == [3]
+        and shape(tensor_cache_mask) == [3]
+        and shape(channel_cache_output) == [3]
+        and shape(channel_cache_mask) == [3]
+        and shape(tensor_out_output) == [3]
+        and shape(tensor_out_mask) == [3]
+        and shape(channel_out_output) == [3]
+        and shape(channel_out_mask) == [3]
+        and allclose(tensor_cache_output, expected, 0.00001, 0.00001, false)
+        and allclose(channel_cache_output, expected, 0.00001, 0.00001, false)
+        and allclose(tensor_out_output, expected, 0.00001, 0.00001, false)
+        and allclose(channel_out_output, expected, 0.00001, 0.00001, false);
+(dispose(channel_out_mask); dispose(channel_out_output); dispose(tensor_out_mask); dispose(tensor_out_output); dispose(channel_cache_mask); dispose(channel_cache_output); dispose(tensor_cache_mask); dispose(tensor_cache_output); dispose(channel_qparams); dispose(channel_zero); dispose(channel_zero_source); dispose(channel_scale); dispose(channel_scale_source); dispose(tensor_qparams); dispose(zero_point); dispose(zero_point_source); dispose(scale); dispose(expected); dispose(actual); dispose(source); valid and tensor_valid and channel_valid and cache_valid)).

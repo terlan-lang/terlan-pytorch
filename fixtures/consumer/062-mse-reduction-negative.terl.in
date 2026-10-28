@@ -1,0 +1,10 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{full_float, mse_loss}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let predicted = full_float([2, 2], 2.0);
+    let target = full_float([2, 2], 1.0);
+    let loss = mse_loss(predicted, target, 3);
+    println("PYTORCH_MSE_REDUCTION_NOT_REJECTED").

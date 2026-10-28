@@ -1,0 +1,16 @@
+/**
+ * CPU shape and dtype evidence for aten::instance_norm.
+ */
+module pytorch.InstanceNormParityTest.
+
+import pytorch.InstanceNormCompletion.instance_norm_default.
+import pytorch.Tensor.{dispose, dtype, from_floats, shape}.
+
+@test
+pub instance_norm_default_matches(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0, 2.0, 4.0, 6.0, 8.0], [1, 2, 2, 2]);
+    let actual = instance_norm_default(input, true, 0.1, 0.00001, false);
+    let valid = shape(actual) == [1, 2, 2, 2] and dtype(actual) == dtype(input);
+    dispose(actual);
+    dispose(input);
+    valid.

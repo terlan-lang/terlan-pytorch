@@ -1,0 +1,25 @@
+module pytorch.TensorMethodAliasParityTest.
+
+import pytorch.Tensor.{cpu, dim, dispose, dtype, from_floats, get_device, is_cpu, is_pinned, ndimension, nelement, numel, to_dtype, type_as}.
+
+/**
+ * Proves the Tensor.cpu convenience method preserves CPU placement.
+ */
+@test
+pub tensor_cpu_alias_matches_pytorch(): Bool ->
+    let source = from_floats([1.0, 2.0], [2]);
+    let result = cpu(source);
+    let target = to_dtype(source, 7);
+    let typed = type_as(source, target);
+    let valid =
+        is_cpu(result)
+            and dim(source) == ndimension(source)
+            and numel(source) == nelement(source)
+            and get_device(source) == -1
+            and dtype(typed) == dtype(target)
+            and not is_pinned(source);
+    dispose(typed);
+    dispose(target);
+    dispose(result);
+    dispose(source);
+    valid.

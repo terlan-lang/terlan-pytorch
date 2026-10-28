@@ -1,0 +1,7 @@
+module pytorch_cxx.BinaryCudaBehaviorTest.
+
+import pytorch.BinaryBehaviorSupport.{binary_contracts_on}.
+
+@test
+pub cuda_binary_contracts(): Bool ->
+    binary_contracts_on("cuda:0", true).

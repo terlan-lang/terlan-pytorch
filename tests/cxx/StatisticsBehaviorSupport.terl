@@ -1,0 +1,25 @@
+module pytorch.StatisticsBehaviorSupport.
+
+import pytorch.Statistics.{aminmax, cumsum, mean_out, norm, std}.
+import pytorch.Tensor.{Float64, Strided, clone, dispose, is_cuda, ones_device, shape}.
+
+/**
+ * Exercises generated reduction, tuple, cumulative, and retained-output leaves.
+ */
+pub statistics_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let values = ones_device([2, 2], Float64, Strided, device_name);
+    let deviation = std(values, true);
+    let magnitude = norm(values, 2.0);
+    let cumulative = cumsum(values, 1);
+    let {minimum, maximum} = aminmax(values);
+    let output = clone(values);
+    mean_out(output, values);
+    let valid =
+        shape(deviation) == []
+            and shape(magnitude) == []
+            and shape(cumulative) == [2, 2]
+            and shape(minimum) == []
+            and shape(maximum) == []
+            and shape(output) == []
+            and is_cuda(values) == expected_cuda;
+    (dispose(output); dispose(maximum); dispose(minimum); dispose(cumulative); dispose(magnitude); dispose(deviation); dispose(values); valid).

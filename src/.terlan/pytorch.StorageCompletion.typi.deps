@@ -1,0 +1,10 @@
+module=pytorch.StorageCompletion
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=806229029124807013
+interface_hash=553566759801012056
+interface_doc_hash=8500930233144016328
+deps=2
+pytorch.StorageNative=13575419926877519275
+pytorch.Tensor=13489932768568026575

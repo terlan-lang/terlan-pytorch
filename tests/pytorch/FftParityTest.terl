@@ -1,0 +1,129 @@
+module pytorch.FftParityTest.
+
+import pytorch.Fft.{fft, fft2, fftn, fftshift, fftshift_all, hfft, hfft2, hfftn, ifft, ifft2, ifftn, ifftshift, ifftshift_all, ihfft, ihfft2, ihfftn, irfft, irfft2, irfftn, rfft, rfft2, rfftn}.
+import pytorch.Tensor.{dispose, from_floats, item_float, mse_loss, shape}.
+import pytorch.View.{real}.
+
+import type pytorch.Tensor.
+
+/**
+ * Compares two tensors with mean-squared error and releases the scalar result.
+ */
+matches_tensor(actual: Tensor, expected: Tensor, tolerance: Float): Bool ->
+    let error = mse_loss(actual, expected, 1);
+    let value = item_float(error);
+    dispose(error);
+    value < tolerance.
+
+/**
+ * Proves complex, real, and Hermitian one-dimensional transform round trips.
+ */
+@test
+pub one_dimensional_transforms_match_libtorch(): Bool ->
+    let input = from_floats([0.0, 1.0, 0.0, -1.0], [4]);
+    let complex_frequency = fft(input, -1, "ortho");
+    let complex_round_trip = ifft(complex_frequency, -1, "ortho");
+    let complex_real = real(complex_round_trip);
+    let real_frequency = rfft(input);
+    let real_round_trip = irfft(real_frequency);
+    let hermitian_frequency = ihfft(input);
+    let hermitian_round_trip = hfft(hermitian_frequency);
+    let valid =
+        shape(complex_frequency) == [4]
+            and shape(real_frequency) == [3]
+            and shape(hermitian_frequency) == [3]
+            and matches_tensor(complex_real, input, 1e-10)
+            and matches_tensor(real_round_trip, input, 1e-10)
+            and matches_tensor(hermitian_round_trip, input, 1e-10);
+    dispose(hermitian_round_trip);
+    dispose(hermitian_frequency);
+    dispose(real_round_trip);
+    dispose(real_frequency);
+    dispose(complex_real);
+    dispose(complex_round_trip);
+    dispose(complex_frequency);
+    dispose(input);
+    valid.
+
+/**
+ * Proves complex, real, and Hermitian two-dimensional transform round trips.
+ */
+@test
+pub two_dimensional_transforms_match_libtorch(): Bool ->
+    let input = from_floats([0.0, 1.0, 2.0, 3.0], [2, 2]);
+    let dimensions = [-2, -1];
+    let complex_frequency = fft2(input, dimensions, "forward");
+    let complex_round_trip = ifft2(complex_frequency, dimensions, "forward");
+    let complex_real = real(complex_round_trip);
+    let real_frequency = rfft2(input, dimensions);
+    let real_round_trip = irfft2(real_frequency, dimensions);
+    let hermitian_frequency = ihfft2(input, dimensions);
+    let hermitian_round_trip = hfft2(hermitian_frequency, dimensions);
+    let valid =
+        shape(complex_frequency) == [2, 2]
+            and shape(real_frequency) == [2, 2]
+            and shape(hermitian_frequency) == [2, 2]
+            and matches_tensor(complex_real, input, 1e-10)
+            and matches_tensor(real_round_trip, input, 1e-10)
+            and matches_tensor(hermitian_round_trip, input, 1e-10);
+    dispose(hermitian_round_trip);
+    dispose(hermitian_frequency);
+    dispose(real_round_trip);
+    dispose(real_frequency);
+    dispose(complex_real);
+    dispose(complex_round_trip);
+    dispose(complex_frequency);
+    dispose(input);
+    valid.
+
+/**
+ * Proves complex, real, and Hermitian N-dimensional transform round trips.
+ */
+@test
+pub n_dimensional_transforms_match_libtorch(): Bool ->
+    let input = from_floats([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0], [2, 2, 2]);
+    let dimensions = [0, 1, 2];
+    let complex_frequency = fftn(input, dimensions, "ortho");
+    let complex_round_trip = ifftn(complex_frequency, dimensions, "ortho");
+    let complex_real = real(complex_round_trip);
+    let real_frequency = rfftn(input, dimensions);
+    let real_round_trip = irfftn(real_frequency, dimensions);
+    let hermitian_frequency = ihfftn(input, dimensions);
+    let hermitian_round_trip = hfftn(hermitian_frequency, dimensions);
+    let valid =
+        shape(complex_frequency) == [2, 2, 2]
+            and shape(real_frequency) == [2, 2, 2]
+            and shape(hermitian_frequency) == [2, 2, 2]
+            and matches_tensor(complex_real, input, 1e-10)
+            and matches_tensor(real_round_trip, input, 1e-10)
+            and matches_tensor(hermitian_round_trip, input, 1e-10);
+    dispose(hermitian_round_trip);
+    dispose(hermitian_frequency);
+    dispose(real_round_trip);
+    dispose(real_frequency);
+    dispose(complex_real);
+    dispose(complex_round_trip);
+    dispose(complex_frequency);
+    dispose(input);
+    valid.
+
+/**
+ * Proves selected-axis and all-axis frequency shifts are mutual inverses.
+ */
+@test
+pub frequency_shifts_match_libtorch(): Bool ->
+    let input = from_floats([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], [2, 3]);
+    let selected = fftshift(input, [1]);
+    let selected_round_trip = ifftshift(selected, [1]);
+    let all_dimensions = fftshift_all(input);
+    let all_round_trip = ifftshift_all(all_dimensions);
+    let valid =
+        shape(selected) == [2, 3]
+            and matches_tensor(selected_round_trip, input, 1e-10)
+            and matches_tensor(all_round_trip, input, 1e-10);
+    dispose(all_round_trip);
+    dispose(all_dimensions);
+    dispose(selected_round_trip);
+    dispose(selected);
+    dispose(input);
+    valid.

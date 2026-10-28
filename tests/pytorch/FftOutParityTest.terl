@@ -1,0 +1,127 @@
+module pytorch.FftOutParityTest.
+
+import pytorch.Fft.{fft, fft2, fft2_out, fft_out, fftfreq, fftfreq_out, fftn, fftn_out, hfft, hfft2, hfft2_out, hfft_out, hfftn, hfftn_out, ifft, ifft2, ifft2_out, ifft_out, ifftn, ifftn_out, ihfft, ihfft2, ihfft2_out, ihfft_out, ihfftn, ihfftn_out, irfft, irfft2, irfft2_out, irfft_out, irfftn, irfftn_out, rfft, rfft2, rfft2_out, rfft_out, rfftfreq, rfftfreq_out, rfftn, rfftn_out}.
+import pytorch.Tensor.{dispose, from_floats, item_float, mse_loss, shape, sum, zeros}.
+import pytorch.View.real.
+
+import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Compares tensors through mean-squared error and releases the scalar.
+ */
+matches_tensor(actual: Tensor, expected: Tensor): Bool ->
+    let error = mse_loss(actual, expected, 1);
+    let value = item_float(error);
+    dispose(error);
+    value < 1e-10.
+
+/**
+ * Reduces a floating tensor and releases the scalar result.
+ */
+float_sum(tensor: Tensor): Float ->
+    let total = sum(tensor);
+    let value = item_float(total);
+    dispose(total);
+    value.
+
+/**
+ * Proves every one-dimensional FFT output overload through round trips.
+ */
+@test
+pub one_dimensional_out_transforms_match_libtorch(): Bool ->
+    let input = from_floats([0.0, 1.0, 0.0, -1.0], [4]);
+    let zero = from_floats([0.0, 0.0, 0.0, 0.0], [4]);
+    let fft_output = fft(zero, -1, "ortho");
+    fft_out(fft_output, input, -1, "ortho");
+    let ifft_output = ifft(fft_output, -1, "ortho");
+    (ifft_out(ifft_output, fft_output, -1, "ortho"); let ifft_real = real(ifft_output);
+let rfft_output = rfft(zero);
+(rfft_out(rfft_output, input); let irfft_output = irfft(rfft_output);
+(irfft_out(irfft_output, rfft_output); let ihfft_output = ihfft(zero);
+(ihfft_out(ihfft_output, input); let hfft_output = hfft(ihfft_output);
+(hfft_out(hfft_output, ihfft_output); let valid =
+    shape(fft_output) == [4]
+        and shape(rfft_output) == [3]
+        and shape(ihfft_output) == [3]
+        and matches_tensor(ifft_real, input)
+        and matches_tensor(irfft_output, input)
+        and matches_tensor(hfft_output, input)
+        and shape(input) == [4]
+        and shape(zero) == [4];
+(dispose(hfft_output); dispose(ihfft_output); dispose(irfft_output); dispose(rfft_output); dispose(ifft_real); dispose(ifft_output); dispose(fft_output); dispose(zero); dispose(input); valid)))))).
+
+/**
+ * Proves every two-dimensional FFT output overload through round trips.
+ */
+@test
+pub two_dimensional_out_transforms_match_libtorch(): Bool ->
+    let input = from_floats([0.0, 1.0, 2.0, 3.0], [2, 2]);
+    let zero = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let dimensions = [-2, -1];
+    let fft_output = fft2(zero, dimensions, "ortho");
+    fft2_out(fft_output, input, dimensions, "ortho");
+    let ifft_output = ifft2(fft_output, dimensions, "ortho");
+    (ifft2_out(ifft_output, fft_output, dimensions, "ortho"); let ifft_real = real(ifft_output);
+let rfft_output = rfft2(zero, dimensions);
+(rfft2_out(rfft_output, input, dimensions); let irfft_output = irfft2(rfft_output, dimensions);
+(irfft2_out(irfft_output, rfft_output, dimensions); let ihfft_output = ihfft2(zero, dimensions);
+(ihfft2_out(ihfft_output, input, dimensions); let hfft_output = hfft2(ihfft_output, dimensions);
+(hfft2_out(hfft_output, ihfft_output, dimensions); let valid =
+    shape(fft_output) == [2, 2]
+        and shape(rfft_output) == [2, 2]
+        and shape(ihfft_output) == [2, 2]
+        and matches_tensor(ifft_real, input)
+        and matches_tensor(irfft_output, input)
+        and matches_tensor(hfft_output, input)
+        and shape(input) == [2, 2]
+        and shape(zero) == [2, 2];
+(dispose(hfft_output); dispose(ihfft_output); dispose(irfft_output); dispose(rfft_output); dispose(ifft_real); dispose(ifft_output); dispose(fft_output); dispose(zero); dispose(input); valid)))))).
+
+/**
+ * Proves every N-dimensional FFT output overload through round trips.
+ */
+@test
+pub n_dimensional_out_transforms_match_libtorch(): Bool ->
+    let input = from_floats([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0], [2, 2, 2]);
+    let zero = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 2, 2]);
+    let dimensions = [0, 1, 2];
+    let fft_output = fftn(zero, dimensions, "ortho");
+    fftn_out(fft_output, input, dimensions, "ortho");
+    let ifft_output = ifftn(fft_output, dimensions, "ortho");
+    (ifftn_out(ifft_output, fft_output, dimensions, "ortho"); let ifft_real = real(ifft_output);
+let rfft_output = rfftn(zero, dimensions);
+(rfftn_out(rfft_output, input, dimensions); let irfft_output = irfftn(rfft_output, dimensions);
+(irfftn_out(irfft_output, rfft_output, dimensions); let ihfft_output = ihfftn(zero, dimensions);
+(ihfftn_out(ihfft_output, input, dimensions); let hfft_output = hfftn(ihfft_output, dimensions);
+(hfftn_out(hfft_output, ihfft_output, dimensions); let valid =
+    shape(fft_output) == [2, 2, 2]
+        and shape(rfft_output) == [2, 2, 2]
+        and shape(ihfft_output) == [2, 2, 2]
+        and matches_tensor(ifft_real, input)
+        and matches_tensor(irfft_output, input)
+        and matches_tensor(hfft_output, input)
+        and shape(input) == [2, 2, 2]
+        and shape(zero) == [2, 2, 2];
+(dispose(hfft_output); dispose(ihfft_output); dispose(irfft_output); dispose(rfft_output); dispose(ifft_real); dispose(ifft_output); dispose(fft_output); dispose(zero); dispose(input); valid)))))).
+
+/**
+ * Proves FFT frequency constructors and output overloads numerically.
+ */
+@test
+pub frequency_grids_match_libtorch(): Bool ->
+    let full = fftfreq(4);
+    let real = rfftfreq(4);
+    let full_output = zeros([0], DType.FLOAT64);
+    let real_output = zeros([0], DType.FLOAT64);
+    fftfreq_out(full_output, 4, 0.5);
+    rfftfreq_out(real_output, 4, 0.5);
+    let valid =
+        shape(full) == [4]
+            and shape(real) == [3]
+            and shape(full_output) == [4]
+            and shape(real_output) == [3]
+            and float_sum(full) == -0.5
+            and float_sum(real) == 0.75
+            and float_sum(full_output) == -1.0
+            and float_sum(real_output) == 1.5;
+    (dispose(real_output); dispose(full_output); dispose(real); dispose(full); valid).

@@ -1,0 +1,331 @@
+//! Generated exact CXX shape, view, indexing, and dimension operations.
+
+module pytorch.Shape.
+
+/// Exact generated CXX shape leaf for adaptive_avg_pool3d.
+
+pub adaptive_avg_pool3d(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for broadcast_to.
+
+pub broadcast_to(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for channel_shuffle.
+
+pub channel_shuffle(tensor: Tensor, value: Int): Tensor.
+
+/// Exact generated CXX shape leaf for count_nonzero_dim.
+
+pub count_nonzero_dim(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for diag.
+
+pub diag(tensor: Tensor, value: Int): Tensor.
+
+/// Writes exact aten::diag_embed.out values into retained storage.
+
+pub diag_embed_out(output: Tensor, tensor: Tensor, first: Int, second: Int, third: Int): Unit.
+
+/// Writes exact aten::diag.out values into retained storage.
+
+pub diag_out(output: Tensor, tensor: Tensor, value: Int): Unit.
+
+/// Exact generated CXX shape leaf for diagflat.
+
+pub diagflat(tensor: Tensor, value: Int): Tensor.
+
+/// Writes exact aten::diagonal_copy.out values into retained storage.
+
+pub diagonal_copy_out(output: Tensor, tensor: Tensor, first: Int, second: Int, third: Int): Unit.
+
+/// Exact generated CXX shape leaf for expand.
+
+pub expand(tensor: Tensor, size: List[Int], implicit: Bool = false): Tensor.
+
+/// Exact generated CXX shape leaf for expand_copy.
+
+pub expand_copy(tensor: Tensor, size: List[Int], implicit: Bool = false): Tensor.
+
+/// Exact generated CXX shape leaf for flip.
+
+pub flip(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Writes exact aten::flip.out values into retained storage.
+
+pub flip_out(output: Tensor, tensor: Tensor, values: List[Int]): Unit.
+
+/// Exact generated CXX shape leaf for glu.
+
+pub glu(tensor: Tensor, value: Int): Tensor.
+
+/// Exact generated CXX shape leaf for linalg_matrix_power.
+
+pub linalg_matrix_power(tensor: Tensor, value: Int): Tensor.
+
+/// Exact generated CXX shape leaf for linalg_tensorinv.
+
+pub linalg_tensorinv(tensor: Tensor, value: Int): Tensor.
+
+/// Exact generated CXX shape leaf for logcumsumexp.
+
+pub logcumsumexp(tensor: Tensor, value: Int): Tensor.
+
+/// Exact generated CXX shape leaf for matrix_power.
+
+pub matrix_power(tensor: Tensor, value: Int): Tensor.
+
+/// Writes exact aten::matrix_power.out values into retained storage.
+
+pub matrix_power_out(output: Tensor, tensor: Tensor, value: Int): Unit.
+
+/// Exact generated CXX shape leaf for moveaxis.
+
+pub moveaxis(tensor: Tensor, source: List[Int], destination: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for moveaxis_int.
+
+pub moveaxis_int(tensor: Tensor, first: Int, second: Int): Tensor.
+
+/// Exact generated CXX shape leaf for movedim.
+
+pub movedim(tensor: Tensor, source: List[Int], destination: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for movedim_int.
+
+pub movedim_int(tensor: Tensor, first: Int, second: Int): Tensor.
+
+/// Exact generated CXX shape leaf for mvlgamma.
+
+pub mvlgamma(tensor: Tensor, value: Int): Tensor.
+
+/// Computes multivariate log-gamma in retained storage through exact aten::mvlgamma_.
+
+pub mvlgamma_in_place(tensor: Tensor, value: Int): Unit.
+
+/// Writes exact aten::mvlgamma.out values into retained storage.
+
+pub mvlgamma_out(output: Tensor, tensor: Tensor, value: Int): Unit.
+
+/// Exact generated CXX shape leaf for narrow_copy.
+
+pub narrow_copy(tensor: Tensor, dimension: Int, start: Int, length: Int): Tensor.
+
+/// Exact generated CXX shape leaf for native_channel_shuffle.
+
+pub native_channel_shuffle(tensor: Tensor, value: Int): Tensor.
+
+/// Exact generated CXX shape leaf for one_hot.
+
+pub one_hot(tensor: Tensor, value: Int): Tensor.
+
+/// Exact generated CXX shape leaf for permute.
+
+pub permute(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for permute_copy.
+
+pub permute_copy(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Writes exact aten::permute_copy.out values into retained storage.
+
+pub permute_copy_out(output: Tensor, tensor: Tensor, values: List[Int]): Unit.
+
+/// Exact generated CXX shape leaf for pixel_shuffle.
+
+pub pixel_shuffle(tensor: Tensor, value: Int): Tensor.
+
+/// Writes exact aten::pixel_shuffle.out values into retained storage.
+
+pub pixel_shuffle_out(output: Tensor, tensor: Tensor, value: Int): Unit.
+
+/// Exact generated CXX shape leaf for pixel_unshuffle.
+
+pub pixel_unshuffle(tensor: Tensor, value: Int): Tensor.
+
+/// Writes exact aten::pixel_unshuffle.out values into retained storage.
+
+pub pixel_unshuffle_out(output: Tensor, tensor: Tensor, value: Int): Unit.
+
+/// Exact generated CXX shape leaf for reflection_pad1d.
+
+pub reflection_pad1d(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for reflection_pad2d.
+
+pub reflection_pad2d(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for reflection_pad3d.
+
+pub reflection_pad3d(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for repeat.
+
+pub repeat(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Writes exact aten::repeat.out values into retained storage.
+
+pub repeat_out(output: Tensor, tensor: Tensor, values: List[Int]): Unit.
+
+/// Exact generated CXX shape leaf for replication_pad1d.
+
+pub replication_pad1d(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for replication_pad2d.
+
+pub replication_pad2d(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for replication_pad3d.
+
+pub replication_pad3d(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for reshape.
+
+pub reshape(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for roll.
+
+pub roll(tensor: Tensor, shifts: List[Int], dimensions: List[Int] = []): Tensor.
+
+/// Writes exact aten::roll.out values into retained storage.
+
+pub roll_out(output: Tensor, tensor: Tensor, first: List[Int], second: List[Int]): Unit.
+
+/// Exact generated CXX shape leaf for rot90.
+
+pub rot90(tensor: Tensor, turns: Int = 1, dimensions: List[Int] = [0, 1]): Tensor.
+
+/// Writes exact aten::rot90.out values into retained storage.
+
+pub rot90_out(output: Tensor, tensor: Tensor, value: Int, values: List[Int]): Unit.
+
+/// Exact generated CXX shape leaf for select_copy_int.
+
+pub select_copy_int(tensor: Tensor, first: Int, second: Int): Tensor.
+
+/// Exact generated CXX shape leaf for select_int.
+
+pub select_int(tensor: Tensor, first: Int, second: Int): Tensor.
+
+/// Exact generated CXX shape leaf for special_multigammaln.
+
+pub special_multigammaln(tensor: Tensor, value: Int): Tensor.
+
+/// Exact generated CXX shape leaf for squeeze_copy_dim.
+
+pub squeeze_copy_dim(tensor: Tensor, value: Int): Tensor.
+
+/// Writes exact aten::squeeze_copy.dim_out values into retained storage.
+
+pub squeeze_copy_dimension_out(output: Tensor, tensor: Tensor, value: Int): Unit.
+
+/// Writes exact aten::squeeze_copy.dims_out values into retained storage.
+
+pub squeeze_copy_dimensions_out(output: Tensor, tensor: Tensor, values: List[Int]): Unit.
+
+/// Exact generated CXX shape leaf for squeeze_copy_dims.
+
+pub squeeze_copy_dims(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Writes exact aten::squeeze_copy.out values into retained storage.
+
+pub squeeze_copy_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX shape leaf for squeeze_dim.
+
+pub squeeze_dim(tensor: Tensor, value: Int): Tensor.
+
+/// Removes one singleton dimension in place through exact aten::squeeze_.dim.
+
+pub squeeze_dimension_in_place(tensor: Tensor, value: Int): Unit.
+
+/// Removes selected singleton dimensions in place through exact aten::squeeze_.dims.
+
+pub squeeze_dimensions_in_place(tensor: Tensor, values: List[Int]): Unit.
+
+/// Exact generated CXX shape leaf for squeeze_dims.
+
+pub squeeze_dims(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for sum_to_size.
+
+pub sum_to_size(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for swapaxes.
+
+pub swapaxes(tensor: Tensor, first: Int, second: Int): Tensor.
+
+/// Swaps two axes in place through exact aten::swapaxes_.
+
+pub swapaxes_in_place(tensor: Tensor, first: Int, second: Int): Unit.
+
+/// Exact generated CXX shape leaf for swapdims.
+
+pub swapdims(tensor: Tensor, first: Int, second: Int): Tensor.
+
+/// Swaps two dimensions in place through exact aten::swapdims_.
+
+pub swapdims_in_place(tensor: Tensor, first: Int, second: Int): Unit.
+
+/// Exact generated CXX shape leaf for tile.
+
+pub tile(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for transpose_copy_int.
+
+pub transpose_copy_int(tensor: Tensor, first: Int, second: Int): Tensor.
+
+/// Transposes two dimensions in place through exact aten::transpose_.
+
+pub transpose_in_place(tensor: Tensor, first: Int, second: Int): Unit.
+
+/// Exact generated CXX shape leaf for tril.
+
+pub tril(tensor: Tensor, value: Int): Tensor.
+
+/// Keeps a lower triangle in place through exact aten::tril_.
+
+pub tril_in_place(tensor: Tensor, value: Int): Unit.
+
+/// Writes exact aten::tril.out values into retained storage.
+
+pub tril_out(output: Tensor, tensor: Tensor, value: Int): Unit.
+
+/// Exact generated CXX shape leaf for triu.
+
+pub triu(tensor: Tensor, value: Int): Tensor.
+
+/// Keeps an upper triangle in place through exact aten::triu_.
+
+pub triu_in_place(tensor: Tensor, value: Int): Unit.
+
+/// Writes exact aten::triu.out values into retained storage.
+
+pub triu_out(output: Tensor, tensor: Tensor, value: Int): Unit.
+
+/// Exact generated CXX shape leaf for unflatten.
+
+pub unflatten(tensor: Tensor, dimension: Int, sizes: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for unsqueeze_copy.
+
+pub unsqueeze_copy(tensor: Tensor, value: Int): Tensor.
+
+/// Writes exact aten::unsqueeze_copy.out values into retained storage.
+
+pub unsqueeze_copy_out(output: Tensor, tensor: Tensor, value: Int): Unit.
+
+/// Inserts one singleton dimension in place through exact aten::unsqueeze_.
+
+pub unsqueeze_in_place(tensor: Tensor, value: Int): Unit.
+
+/// Exact generated CXX shape leaf for view.
+
+pub view(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Exact generated CXX shape leaf for view_copy.
+
+pub view_copy(tensor: Tensor, values: List[Int]): Tensor.
+
+/// Writes exact aten::view_copy.out values into retained storage.
+
+pub view_copy_out(output: Tensor, tensor: Tensor, values: List[Int]): Unit.

@@ -1,0 +1,148 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Applies the reviewed CXX-generated PyTorch compatibility surface.
+ *
+ * The canonical Terlan modules and native helper adapters are checked in next
+ * to this generated target.  Copying those typed sources is the stable
+ * equivalent of the former regex-heavy Python postprocessor: it keeps the
+ * generated leaves from the manifest while publishing the reviewed integer
+ * dtype/device conveniences and native error policy.
+ */
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.File.
+import std.system.Arguments.
+
+child(parent: String, relative: String): String ->
+    if {
+        String.ends_with(parent, "/") -> String.append(parent, relative);
+        true -> String.concat([parent, "/", relative])
+    }.
+
+canonical_files(): List[String] ->
+    [
+        "src/pytorch/Tensor.terl",
+        "src/pytorch/CreationCompletionNative.terl",
+        "src/pytorch/RangeNative.terl",
+        "src/pytorch/WindowNative.terl",
+        "src/pytorch/FunctionalCompletion.terl",
+        "src/pytorch/Sparse.terl",
+        "native/rust/src/bin/native_boundary_helper.rs",
+        "native/rust/build.rs",
+        "native/rust/src/lib.rs",
+    ].
+
+copy_one(repository: String, generated: String, relative: String): Bool ->
+    let source = child(repository, relative);
+    let destination = child(generated, relative);
+    case File.read_text(source) {
+        Err(_) -> true;
+        Ok(contents) ->
+            let adjusted =
+                if {
+                    relative == "native/rust/src/bin/native_boundary_helper.rs" -> String.append(contents, "\n");
+                    true -> contents
+                };
+            case File.write_text(destination, adjusted) {
+                Ok(Unit) -> true;
+                Err(_) -> false
+            }
+    }.
+
+patch_unique(generated: String): Bool ->
+    let path = child(generated, "src/pytorch/UniqueCompletion.terl");
+    case File.read_text(path) {
+        Err(_) -> true;
+        Ok(source) ->
+            let marker = "module pytorch.UniqueCompletion.\n\n";
+            let imports = "import pytorch.Tensor.{dispose, flatten}.\nimport std.core.Option.{None, Option, Some}.\n\n";
+            let patched =
+                if {
+                    String.contains(source, "import std.core.Option.") -> source;
+                    true -> source.replace(marker, String.append(marker, imports))
+                };
+            case File.write_text(path, patched) {
+                Ok(Unit) -> true;
+                Err(_) -> false
+            }
+    }.
+
+patch_generated_exception_adapters(generated: String): Bool ->
+    let path = child(generated, "native/rust/cpp/terlan_exception_adapters.cc");
+    case File.read_text(path) {
+        Err(_) -> true;
+        Ok(source) ->
+            let patched =
+                source
+                    .replace("at::compositeexplicitautograd::sparse_dim(self)", "self.sparse_dim()")
+                    .replace("at::compositeexplicitautograd::dense_dim(self)", "self.dense_dim()")
+                    .replace(
+                        "at::compositeexplicitautograd::is_coalesced(self)",
+                        "self.is_coalesced()",
+                    );
+            case File.write_text(path, patched) {
+                Ok(Unit) -> true;
+                Err(_) -> false
+            }
+    }.
+
+patch_generated_owned_adapters(generated: String): Bool ->
+    let path = child(generated, "native/rust/cpp/terlan_owned_value_adapters.cc");
+    case File.read_text(path) {
+        Err(_) -> true;
+        Ok(source) ->
+            let patched =
+                source
+                    .replace("at::compositeexplicitautograd::indices(self)", "self.indices()")
+                    .replace("at::compositeexplicitautograd::values(self)", "self.values()")
+                    .replace(
+                        "at::compositeexplicitautograd::crow_indices(self)",
+                        "self.crow_indices()",
+                    )
+                    .replace(
+                        "at::compositeexplicitautograd::col_indices(self)",
+                        "self.col_indices()",
+                    )
+                    .replace(
+                        "at::compositeexplicitautograd::ccol_indices(self)",
+                        "self.ccol_indices()",
+                    )
+                    .replace(
+                        "at::compositeexplicitautograd::row_indices(self)",
+                        "self.row_indices()",
+                    );
+            case File.write_text(path, patched) {
+                Ok(Unit) -> true;
+                Err(_) -> false
+            }
+    }.
+
+copy_all(repository: String, generated: String, paths: List[String]): Bool ->
+    case paths {
+        [] -> true;
+        [path | rest] ->
+            copy_one(repository, generated, path) and copy_all(repository, generated, rest)
+    }.
+
+execute(generated: String, repository: String): Bool ->
+    copy_all(repository, generated, canonical_files())
+        and patch_generated_exception_adapters(generated)
+        and patch_generated_owned_adapters(generated)
+        and patch_unique(generated).
+
+entry(): Bool ->
+    let generated =
+        case Arguments.get(0) {
+            Some(value) -> value;
+            None -> "generated"
+        };
+    let repository =
+        case Arguments.get(1) {
+            Some(value) -> value;
+            None -> "."
+        };
+    execute(generated, repository).
+
+assert(entry());
+Unit.

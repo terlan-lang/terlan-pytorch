@@ -1,0 +1,10 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{from_int, narrow, unsqueeze}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let scalar = from_int(4);
+    let vector = unsqueeze(scalar, -1);
+    let result = narrow(vector, 0, 1, 1);
+    println("PYTORCH_NARROW_BOUNDS_NOT_REJECTED").

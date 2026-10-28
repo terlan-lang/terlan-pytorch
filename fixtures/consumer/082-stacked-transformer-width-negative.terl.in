@@ -1,0 +1,11 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{add, full_float, matmul}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let layer_state = full_float([2, 2, 2], 1.0);
+    let width_changing_projection = full_float([2, 3], 1.0);
+    let projected = matmul(layer_state, width_changing_projection);
+    let next_layer_state = add(layer_state, projected, 1.0);
+    println("PYTORCH_STACKED_TRANSFORMER_WIDTH_NOT_REJECTED").

@@ -1,0 +1,19 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{embedding, from_floats, from_ints, full_float, matmul, transpose}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let source_embedding_weight = from_floats([0.0, 2.0, 2.0, 0.0], [2, 2]);
+    let three_batch_source_ids = from_ints(
+        [0, 0, 1, 1, 1, 0, 0, 1, 0], [3, 3]
+    );
+    let three_batch_memory = embedding(
+        source_embedding_weight, three_batch_source_ids, -1, false, false
+    );
+    let key_weight = full_float([2, 2], 0.0);
+    let memory_keys = matmul(three_batch_memory, key_weight);
+    let transposed_keys = transpose(memory_keys, 1, 2);
+    let two_batch_target_queries = full_float([2, 2, 2], 0.0);
+    let scores = matmul(two_batch_target_queries, transposed_keys);
+    println("PYTORCH_SEQ2SEQ_BATCH_NOT_REJECTED").

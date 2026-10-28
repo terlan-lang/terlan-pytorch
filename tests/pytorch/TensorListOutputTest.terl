@@ -1,0 +1,28 @@
+module pytorch.TensorListOutputTest.
+
+import pytorch.Tensor.{dispose, dispose_model, from_float, item_float, load_torchscript, torchscript_forward_tensor_list}.
+
+import type pytorch.Tensor.
+
+@test
+pub tensor_list_output_owns_each_returned_tensor(): Bool ->
+    let model = load_torchscript("fixtures/models/tensor_list.pt");
+    let input = from_float(3.0);
+    let outputs = torchscript_forward_tensor_list(model, input);
+    let outputs_valid = validate_outputs(outputs);
+    let input_unchanged = item_float(input) == 3.0;
+    dispose(input);
+    dispose_model(model);
+    outputs_valid and input_unchanged.
+
+validate_outputs(outputs: List[Tensor]): Bool ->
+    case outputs {
+        [doubled, original] -> validate_tensors(doubled, original);
+        _ -> false
+    }.
+
+validate_tensors(doubled: Tensor, original: Tensor): Bool ->
+    let valid = item_float(doubled) == 6.0 and item_float(original) == 3.0;
+    dispose(original);
+    dispose(doubled);
+    valid.

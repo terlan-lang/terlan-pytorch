@@ -1,0 +1,9 @@
+module=pytorch.CtcLossCompletion
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=5622584154762420275
+interface_hash=1433301596595336096
+interface_doc_hash=17929541195724638054
+deps=1
+pytorch.Tensor=13489932768568026575

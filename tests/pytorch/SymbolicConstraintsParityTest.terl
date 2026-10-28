@@ -1,0 +1,18 @@
+/**
+ * CPU runtime evidence for symbolic range constraints.
+ *
+ * Concrete Scalars are accepted by the frozen dispatcher and the constraints
+ * are intentionally observationally silent at runtime; this still exercises
+ * both exact ATen entry points and every optional-bound presence form.
+ */
+module pytorch.SymbolicConstraintsParityTest.
+
+import pytorch.SymbolicConstraints.{sym_constrain_range, sym_constrain_range_for_size}.
+
+@test
+pub symbolic_constraints_cpu_forms_match_libtorch(): Bool ->
+    sym_constrain_range(true, 3, 0.0, true, 1, true, 5);
+    sym_constrain_range(false, 0, 3.5, false, 0, false, 0);
+    sym_constrain_range_for_size(true, 4, 0.0, true, 1, false, 0);
+    sym_constrain_range_for_size(false, 0, 4.5, false, 0, true, 8);
+    true.

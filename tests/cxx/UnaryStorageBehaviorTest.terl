@@ -1,0 +1,7 @@
+module pytorch_cxx.UnaryStorageBehaviorTest.
+
+import pytorch.UnaryStorageBehaviorSupport.{unary_storage_contracts_on}.
+
+@test
+pub cpu_unary_storage_contracts(): Bool ->
+    unary_storage_contracts_on("cpu", false).

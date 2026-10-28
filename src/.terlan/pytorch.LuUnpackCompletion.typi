@@ -1,0 +1,11 @@
+//! Generated exact CXX LU unpacking forms.
+
+module pytorch.LuUnpackCompletion.
+
+/// Exact LU unpacking tuple form.
+
+pub lu_unpack_default(lu_data: Tensor, lu_pivots: Tensor, unpack_data: Bool = true, unpack_pivots: Bool = true): {Tensor, Tensor, Tensor}.
+
+/// Exact LU unpacking output form.
+
+pub lu_unpack_out_default(p: Tensor, l: Tensor, u: Tensor, lu_data: Tensor, lu_pivots: Tensor, unpack_data: Bool = true, unpack_pivots: Bool = true): Unit.

@@ -1,0 +1,55 @@
+//! Exact value counting and indexed reduction operations.
+
+module pytorch.Aggregation.
+
+/// A reduction supported by PyTorch index_reduce.
+
+pub type IndexReduction: Int =
+    PRODUCT = 0
+  | MEAN = 1
+  | MAXIMUM = 2
+  | MINIMUM = 3.
+
+/// Counts occurrences of nonnegative integer values.
+
+pub bincount(input: Tensor, minlength: Int = 0): Tensor.
+
+/// Writes unweighted counts into retained output storage.
+
+pub bincount_out(output: Tensor, input: Tensor, minlength: Int = 0): Unit.
+
+/// Counts occurrences using one floating-point weight per input value.
+
+pub bincount_weighted(input: Tensor, weights: Tensor, minlength: Int = 0): Tensor.
+
+/// Writes weighted counts into retained output storage.
+
+pub bincount_weighted_out(output: Tensor, input: Tensor, weights: Tensor, minlength: Int = 0): Unit.
+
+/// Counts values into equal-width bins with floating-point bounds.
+
+pub histc(input: Tensor, bins: Int = 100, minimum: Float = 0.0, maximum: Float = 0.0): Tensor.
+
+/// Counts values into equal-width bins with integer bounds.
+
+pub histc_int_bounds(input: Tensor, bins: Int, minimum: Int, maximum: Int): Tensor.
+
+/// Writes integer-bound histogram counts into retained output storage.
+
+pub histc_int_bounds_out(output: Tensor, input: Tensor, bins: Int, minimum: Int, maximum: Int): Unit.
+
+/// Writes floating-bound histogram counts into retained output storage.
+
+pub histc_out(output: Tensor, input: Tensor, bins: Int = 100, minimum: Float = 0.0, maximum: Float = 0.0): Unit.
+
+/// Reduces source slices into indexed destinations.
+
+pub index_reduce(input: Tensor, dimension: Int, index: Tensor, source: Tensor, reduction: IndexReduction, include_self: Bool = true): Tensor.
+
+/// Reduces source slices into input storage in place.
+
+pub index_reduce_in_place(input: Tensor, dimension: Int, index: Tensor, source: Tensor, reduction: IndexReduction, include_self: Bool = true): Unit.
+
+/// Writes an indexed reduction into retained output storage.
+
+pub index_reduce_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, source: Tensor, reduction: IndexReduction, include_self: Bool = true): Unit.

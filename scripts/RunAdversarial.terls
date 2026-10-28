@@ -1,0 +1,551 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Executes package-level PyTorch adversarial cases through temporary consumers.
+ */
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.Console.{eprintln, println}.
+import std.io.{Directory, File}.
+import std.system.{Arguments, Process}.
+
+import type std.core.Option.
+
+/**
+ * One source body and diagnostic expected from a rejected consumer.
+ */
+struct AdversarialCase {
+    name: String,
+    expected: String,
+    body: String,
+    disable_cuda: Bool,
+}.
+
+/**
+ * One group of adversarial cases sharing imports and a package namespace.
+ */
+struct AdversarialSuite {
+    name: String,
+    namespace: String,
+    imports: String,
+    cases: List[AdversarialCase],
+    summary: String,
+}.
+
+/**
+ * Joins a parent path and one relative child.
+ */
+child(parent: String, relative: String): String ->
+    if {
+        String.ends_with(parent, "/") -> String.append(parent, relative);
+        true -> String.concat([parent, "/", relative])
+    }.
+
+/**
+ * Reports one stable adversarial-runner failure.
+ */
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[terlan_pytorch_adversarial]: ", message));
+    false.
+
+/**
+ * Constructs one adversarial case without a CUDA environment override.
+ */
+adversarial(name: String, expected: String, body: String): AdversarialCase ->
+    AdversarialCase(name = name, expected = expected, body = body, disable_cuda = false).
+
+/**
+ * Constructs one adversarial case with CUDA explicitly disabled.
+ */
+cuda_unavailable(name: String, expected: String, body: String): AdversarialCase ->
+    AdversarialCase(name = name, expected = expected, body = body, disable_cuda = true).
+
+/**
+ * Returns Adam optimizer rejection cases.
+ */
+adam_suite(): AdversarialSuite ->
+    AdversarialSuite(
+        name = "adam",
+        namespace = "adam_adversarial",
+        imports = "import pytorch.Optimizer.{add_parameter, adam, cancel, restore, step}.\nimport pytorch.Tensor.{backward, from_floats, mse_loss, require_grad}.\nimport std.vm.Bytes.{from_list}.",
+        cases = [
+            adversarial(
+                "invalid_configuration",
+                "c_abi_status_7070",
+                "    let optimizer = adam(0.0, 0.9, 0.999, 0.00000001, 0.0);\n    step(optimizer).",
+            ),
+            adversarial(
+                "empty_step",
+                "c_abi_status_7072",
+                "    let optimizer = adam(0.1, 0.9, 0.999, 0.00000001, 0.0);\n    step(optimizer).",
+            ),
+            adversarial(
+                "duplicate_parameter",
+                "c_abi_status_7071",
+                "    let source = from_floats([1.0], [1]);\n    let parameter = require_grad(source);\n    let optimizer = adam(0.1, 0.9, 0.999, 0.00000001, 0.0);\n    add_parameter(optimizer, parameter);\n    add_parameter(optimizer, parameter).",
+            ),
+            adversarial(
+                "missing_gradient",
+                "c_abi_status_7073",
+                "    let source = from_floats([1.0], [1]);\n    let parameter = require_grad(source);\n    let optimizer = adam(0.1, 0.9, 0.999, 0.00000001, 0.0);\n    add_parameter(optimizer, parameter);\n    step(optimizer).",
+            ),
+            adversarial(
+                "corrupt_checkpoint",
+                "c_abi_status_7075",
+                "    let source = from_floats([1.0], [1]);\n    let parameter = require_grad(source);\n    let optimizer = adam(0.1, 0.9, 0.999, 0.00000001, 0.0);\n    add_parameter(optimizer, parameter);\n    restore(optimizer, from_list([1, 2, 3, 4])).",
+            ),
+            adversarial(
+                "cancelled",
+                "c_abi_status_7074",
+                "    let source = from_floats([1.0], [1]);\n    let parameter = require_grad(source);\n    let target = from_floats([0.0], [1]);\n    let loss = mse_loss(parameter, target, 1);\n    let optimizer = adam(0.1, 0.9, 0.999, 0.00000001, 0.0);\n    add_parameter(optimizer, parameter);\n    backward(loss);\n    cancel(optimizer);\n    step(optimizer).",
+            ),
+        ],
+        summary = "[terlan-pytorch-adam-adversarial] invalid-configuration=passed empty-step=passed duplicate-parameter=passed missing-gradient=passed corrupt-checkpoint=passed cancelled=passed",
+    ).
+
+/**
+ * Returns autograd rejection cases.
+ */
+autograd_suite(): AdversarialSuite ->
+    AdversarialSuite(
+        name = "autograd",
+        namespace = "autograd_adversarial",
+        imports = "import pytorch.Tensor.{backward, categorical_sample, clamp, from_ints, full_float, gradient, mse_loss, multiply, require_grad, sgd_step}.",
+        cases = [
+            adversarial(
+                "integer_leaf",
+                "c_abi_status_7061",
+                "    let integers = from_ints([1, 2], [2]);\n    let trainable = require_grad(integers);\n    backward(trainable).",
+            ),
+            adversarial(
+                "non_scalar_loss",
+                "c_abi_status_7062",
+                "    let source = full_float([2], 2.0);\n    let parameter = require_grad(source);\n    let squared = multiply(parameter, parameter);\n    backward(squared).",
+            ),
+            adversarial(
+                "missing_gradient",
+                "c_abi_status_7063",
+                "    let source = full_float([1], 2.0);\n    let parameter = require_grad(source);\n    let accumulated = gradient(parameter);\n    backward(accumulated).",
+            ),
+            adversarial(
+                "step_before_backward",
+                "c_abi_status_7063",
+                "    let source = full_float([1], 2.0);\n    let parameter = require_grad(source);\n    let updated = sgd_step(parameter, 0.1);\n    backward(updated).",
+            ),
+            adversarial(
+                "negative_learning_rate",
+                "c_abi_status_7060",
+                "    let source = full_float([1], 2.0);\n    let parameter = require_grad(source);\n    let target = full_float([1], 1.0);\n    let loss = mse_loss(parameter, target, 1);\n    backward(loss);\n    let updated = sgd_step(parameter, -0.1);\n    backward(updated).",
+            ),
+            adversarial(
+                "inverted_clamp_bounds",
+                "c_abi_status_7060",
+                "    let source = full_float([1], 1.0);\n    let result = clamp(source, 2.0, -2.0);\n    backward(result).",
+            ),
+            adversarial(
+                "negative_sampling_seed",
+                "c_abi_status_7060",
+                "    let probabilities = full_float([1, 2], 0.5);\n    let result = categorical_sample(probabilities, -1);\n    backward(result).",
+            ),
+            adversarial(
+                "integer_probabilities",
+                "c_abi_status_7061",
+                "    let probabilities = from_ints([1, 1], [1, 2]);\n    let result = categorical_sample(probabilities, 1);\n    backward(result).",
+            ),
+            adversarial(
+                "zero_probability_mass",
+                "c_abi_status_7068",
+                "    let probabilities = full_float([1, 2], 0.0);\n    let result = categorical_sample(probabilities, 1);\n    backward(result).",
+            ),
+        ],
+        summary = "[terlan-pytorch-autograd-adversarial] integer-leaf=passed non-scalar=passed missing-gradient=passed step-before-backward=passed invalid-rate=passed clamp-bounds=passed sampling-seed=passed sampling-dtype=passed sampling-mass=passed",
+    ).
+
+/**
+ * Returns tensor-construction rejection cases.
+ */
+construction_suite(): AdversarialSuite ->
+    AdversarialSuite(
+        name = "construction",
+        namespace = "construction_adversarial",
+        imports = "import type pytorch.Tensor.{DType}.\n\nimport pytorch.Tensor.{cuda, dispose, zeros, zeros_on}.",
+        cases = [
+            adversarial(
+                "negative_dimension",
+                "c_abi_status_7061",
+                "    let tensor = zeros([-1]);\n    dispose(tensor).",
+            ),
+            adversarial(
+                "shape_overflow",
+                "c_abi_status_7061",
+                "    let tensor = zeros([3037000500, 3037000500]);\n    dispose(tensor).",
+            ),
+            adversarial(
+                "negative_cuda_device",
+                "c_abi_status_7060",
+                "    let tensor = zeros_on([1], DType.FLOAT32, cuda(-1));\n    dispose(tensor).",
+            ),
+        ],
+        summary = "[terlan-pytorch-construction-adversarial] negative-dimension=passed shape-overflow=passed negative-cuda-device=passed",
+    ).
+
+/**
+ * Returns dtype rejection cases.
+ */
+dtype_suite(): AdversarialSuite ->
+    AdversarialSuite(
+        name = "dtype",
+        namespace = "dtype_adversarial",
+        imports = "import pytorch.Tensor.{dispose, from_float, to_dtype}.",
+        cases = [
+            adversarial(
+                "unsupported_dtype",
+                "c_abi_status_7064",
+                "    let source = from_float(1.0);\n    let converted = to_dtype(source, 9999);\n    dispose(converted);\n    dispose(source).",
+            ),
+        ],
+        summary = "[terlan-pytorch-dtype-adversarial] unsupported-dtype=passed",
+    ).
+
+/**
+ * Returns range and identity rejection cases.
+ */
+range_suite(): AdversarialSuite ->
+    AdversarialSuite(
+        name = "range",
+        namespace = "range_adversarial",
+        imports = "import type pytorch.Tensor.{DType}.\n\nimport pytorch.Tensor.{arange, dispose, eye, linspace}.",
+        cases = [
+            adversarial(
+                "zero_step",
+                "c_abi_status_7090",
+                "    let tensor = arange(0.0, 4.0, 0.0, DType.FLOAT32);\n    dispose(tensor).",
+            ),
+            adversarial(
+                "negative_steps",
+                "c_abi_status_7090",
+                "    let tensor = linspace(0.0, 1.0, -1, DType.FLOAT32);\n    dispose(tensor).",
+            ),
+            adversarial(
+                "negative_eye_dimension",
+                "c_abi_status_7090",
+                "    let tensor = eye(-1, 2, DType.FLOAT32);\n    dispose(tensor).",
+            ),
+        ],
+        summary = "[terlan-pytorch-range-adversarial] zero-step=passed negative-steps=passed negative-eye-dimension=passed",
+    ).
+
+/**
+ * Returns SGD optimizer rejection cases.
+ */
+sgd_suite(): AdversarialSuite ->
+    AdversarialSuite(
+        name = "sgd",
+        namespace = "sgd_adversarial",
+        imports = "import pytorch.Optimizer.{sgd, step}.",
+        cases = [
+            adversarial(
+                "invalid_nesterov",
+                "c_abi_status_7070",
+                "    let optimizer = sgd(0.1, 0.0, 0.0, 0.0, true);\n    step(optimizer).",
+            ),
+        ],
+        summary = "[terlan-pytorch-sgd-adversarial] invalid-nesterov=passed",
+    ).
+
+/**
+ * Returns ndarray exchange rejection cases.
+ */
+ndarray_suite(): AdversarialSuite ->
+    AdversarialSuite(
+        name = "ndarray",
+        namespace = "interop_adversarial",
+        imports = "import ndarray.Array.{dispose as dispose_array, export_tensor_packet, from_ints}.\nimport pytorch.Tensor.{dispose as dispose_tensor, from_packet}.\nimport std.vm.{Bytes}.",
+        cases = [
+            adversarial(
+                "double_claim",
+                "native_exchange.already_claimed",
+                "    let array = from_ints([1, 2], [2]);\n    let packet = export_tensor_packet(array, \"pytorch\");\n    let first = from_packet(packet);\n    let second = from_packet(packet);\n    dispose_tensor(second);\n    dispose_tensor(first);\n    dispose_array(array).",
+            ),
+            adversarial(
+                "wrong_consumer",
+                "native_exchange.consumer_mismatch",
+                "    let array = from_ints([1, 2], [2]);\n    let packet = export_tensor_packet(array, \"other_consumer\");\n    let tensor = from_packet(packet);\n    dispose_tensor(tensor);\n    dispose_array(array).",
+            ),
+            adversarial(
+                "stale_source",
+                "stale_handle",
+                "    let array = from_ints([1, 2], [2]);\n    dispose_array(array);\n    let _packet = export_tensor_packet(array, \"pytorch\");\n    Unit.",
+            ),
+            adversarial(
+                "malformed_layout",
+                "c_abi_status_7013",
+                "    let tensor = from_packet(Bytes.from_list([84, 78, 88, 80]));\n    dispose_tensor(tensor).",
+            ),
+            adversarial(
+                "unsupported_device",
+                "c_abi_status_7011",
+                "    let tensor = from_packet(Bytes.from_list([84, 78, 88, 80, 1, 1, 0, 64, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0]));\n    dispose_tensor(tensor).",
+            ),
+            adversarial(
+                "unsupported_dtype",
+                "c_abi_status_7012",
+                "    let tensor = from_packet(Bytes.from_list([84, 78, 88, 80, 1, 1, 99, 8, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1]));\n    dispose_tensor(tensor).",
+            ),
+        ],
+        summary = "[terlan-pytorch-ndarray-adversarial] double-claim=passed wrong-consumer=passed stale-source=passed malformed-layout=passed unsupported-device=passed unsupported-dtype=passed",
+    ).
+
+/**
+ * Returns CUDA stream rejection cases for one availability mode.
+ */
+cuda_suite(mode: String): Option[AdversarialSuite] ->
+    if {
+        mode == "unavailable" -> Some(
+            AdversarialSuite(
+                name = "cuda",
+                namespace = "cuda_adversarial",
+                imports = "import pytorch.Cuda.{create_stream, dispose, synchronize}.",
+                cases = [
+                    cuda_unavailable(
+                        "backend_unavailable",
+                        "c_abi_status_7071",
+                        "    let stream = create_stream(2147483647, false);\n    dispose(stream).",
+                    ),
+                ],
+                summary = "[terlan-pytorch-cuda-adversarial] backend-unavailable=passed",
+            ),
+        );
+        mode == "available" -> Some(
+            AdversarialSuite(
+                name = "cuda",
+                namespace = "cuda_adversarial",
+                imports = "import pytorch.Cuda.{create_stream, dispose, synchronize}.",
+                cases = [
+                    adversarial(
+                        "invalid_device",
+                        "c_abi_status_7074",
+                        "    let stream = create_stream(2147483647, false);\n    dispose(stream).",
+                    ),
+                    adversarial(
+                        "stale_stream",
+                        "stale_handle",
+                        "    let stream = create_stream(0, false);\n    dispose(stream);\n    synchronize(stream).",
+                    ),
+                ],
+                summary = "[terlan-pytorch-cuda-adversarial] invalid-device=passed stale-stream=passed",
+            ),
+        );
+        true -> None
+    }.
+
+/**
+ * Resolves a named adversarial suite.
+ */
+suite(name: String, mode: String): Option[AdversarialSuite] ->
+    if {
+        name == "adam" -> Some(adam_suite());
+        name == "autograd" -> Some(autograd_suite());
+        name == "construction" -> Some(construction_suite());
+        name == "cuda" -> cuda_suite(mode);
+        name == "dtype" -> Some(dtype_suite());
+        name == "ndarray" -> Some(ndarray_suite());
+        name == "range" -> Some(range_suite());
+        name == "sgd" -> Some(sgd_suite());
+        true -> None
+    }.
+
+/**
+ * Renders the temporary consumer manifest for one suite.
+ */
+manifest(selected: AdversarialSuite, repository: String, additional: String): String ->
+    String.concat(
+        [
+            "[package]\nname = \"terlan-pytorch-",
+            selected.name,
+            "-adversarial\"\nversion = \"0.0.0\"\nnamespace = \"",
+            selected.namespace,
+            "\"\n\n[build]\nsource_roots = [\"src\"]\nartifact = \"terlan-vm\"\n\n[dependencies]\npytorch = { path = \"",
+            repository,
+            "\" }\n",
+            if {
+                selected.name == "ndarray" -> String.concat(["ndarray = { path = \"", additional, "\" }\n"]);
+                true -> ""
+            },
+        ],
+    ).
+
+/**
+ * Renders one temporary adversarial module.
+ */
+source(selected: AdversarialSuite, current: AdversarialCase): String ->
+    String.concat(
+        [
+            "module ",
+            selected.namespace,
+            ".Main.\n\n",
+            selected.imports,
+            "\n\npub main(): Unit ->\n",
+            current.body,
+            "\n",
+        ],
+    ).
+
+/**
+ * Executes one generated consumer and verifies its expected rejection.
+ */
+run_case(
+    compiler: String,
+    workspace: String,
+    consumer: String,
+    main_path: String,
+    selected: AdversarialSuite,
+    current: AdversarialCase,
+): Bool ->
+    let write_result = File.write_text(main_path, source(selected, current));
+    case write_result {
+        Err(reason) -> failure(reason.message);
+        Ok(Unit) ->
+            let base =
+                Process.with_output_limit_bytes(
+                    Process.with_timeout_ms(
+                        Process.with_arguments(
+                            Process.command(compiler),
+                            [
+                                "run",
+                                consumer,
+                                "--target",
+                                "terlan-vm",
+                                "--out-dir",
+                                child(workspace, String.append("build-", current.name)),
+                            ],
+                        ),
+                        600000,
+                    ),
+                    16777216,
+                );
+            let request =
+                if {
+                    current.disable_cuda -> Process.with_environment(
+                        base,
+                        [Process.environment_entry("TERLAN_PYTORCH_DISABLE_CUDA", "1")],
+                    );
+                    true -> base
+                };
+            case Process.run(request) {
+                Err(reason) -> failure(reason.message);
+                Ok(output) ->
+                    let diagnostics = String.append(output.stdout, output.stderr);
+                    if {
+                        output.status == 0 -> failure(
+                            String.concat(
+                                [selected.name, ".", current.name, " unexpectedly succeeded"],
+                            ),
+                        );
+                        not String.contains(diagnostics, current.expected) -> failure(
+                            String.concat(
+                                [
+                                    selected.name,
+                                    ".",
+                                    current.name,
+                                    " did not report ",
+                                    current.expected,
+                                    ": ",
+                                    diagnostics,
+                                ],
+                            ),
+                        );
+                        true -> true
+                    }
+            }
+    }.
+
+/**
+ * Executes all cases in declaration order.
+ */
+run_cases(
+    compiler: String,
+    workspace: String,
+    consumer: String,
+    main_path: String,
+    selected: AdversarialSuite,
+    cases: List[AdversarialCase],
+): Bool ->
+    case cases {
+        [] -> true;
+        [current | rest] ->
+            if {
+                run_case(compiler, workspace, consumer, main_path, selected, current) -> run_cases(compiler, workspace, consumer, main_path, selected, rest);
+                true -> false
+            }
+    }.
+
+/**
+ * Materializes and executes one selected adversarial suite.
+ */
+execute(
+    selected: AdversarialSuite,
+    compiler: String,
+    repository: String,
+    additional: String,
+): Bool ->
+    let workspace_result = Directory.create_temporary("terlan-pytorch-adversarial");
+    case workspace_result {
+        Err(reason) -> failure(reason.message);
+        Ok(workspace) ->
+            let consumer = child(workspace, "consumer");
+            let source_directory = child(child(consumer, "src"), selected.namespace);
+            let main_path = child(source_directory, "Main.terl");
+            let prepared =
+                case Directory.create_all(source_directory) {
+                    Err(reason) -> failure(reason.message);
+                    Ok(Unit) ->
+                        case File.write_text(
+                            child(consumer, "terlan.toml"),
+                            manifest(selected, repository, additional),
+                        ) {
+                            Err(reason) -> failure(reason.message);
+                            Ok(Unit) ->
+                                run_cases(
+                                    compiler,
+                                    workspace,
+                                    consumer,
+                                    main_path,
+                                    selected,
+                                    selected.cases,
+                                )
+                        }
+                };
+            let cleaned =
+                case Directory.remove_all(workspace) {
+                    Ok(Unit) -> true;
+                    Err(reason) -> failure(reason.message)
+                };
+            if {
+                prepared and cleaned -> let _printed = println(selected.summary);
+                true;
+                true -> false
+            }
+    }.
+
+/**
+ * Parses the command line and runs one named suite.
+ */
+entry(): Bool ->
+    let arguments = {Arguments.get(0), Arguments.get(1), Arguments.get(2), Arguments.get(3)};
+    case arguments {
+        {Some(name), Some(compiler), Some(repository), None} ->
+            case suite(name, "available") {
+                Some(selected) -> execute(selected, compiler, repository, "");
+                None -> failure(String.append("unknown suite: ", name))
+            };
+        {Some(name), Some(compiler), Some(repository), Some(mode)} ->
+            case suite(name, mode) {
+                Some(selected) -> execute(selected, compiler, repository, mode);
+                None -> failure(String.concat(["unknown suite or mode: ", name, " ", mode]))
+            };
+        _ -> failure("usage: RunAdversarial.terls <suite> <terlc> <repository> [mode]")
+    }.
+
+assert(entry());
+Unit.

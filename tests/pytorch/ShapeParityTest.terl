@@ -1,0 +1,274 @@
+module pytorch.ShapeParityTest.
+
+import pytorch.Shape.{adaptive_avg_pool3d, broadcast_to, channel_shuffle, count_nonzero_dim, diag, diagflat, flip, glu, linalg_matrix_power, linalg_tensorinv, logcumsumexp, matrix_power, moveaxis_int, movedim_int, mvlgamma, native_channel_shuffle, one_hot, permute, permute_copy, pixel_shuffle, pixel_unshuffle, reflection_pad1d, reflection_pad2d, reflection_pad3d, repeat, replication_pad1d, replication_pad2d, replication_pad3d, reshape, select_copy_int, select_int, special_multigammaln, squeeze_copy_dim, squeeze_copy_dims, squeeze_dim, squeeze_dims, sum_to_size, swapaxes, swapdims, tile, transpose_copy_int, tril, triu, unsqueeze_copy, view, view_copy}.
+import pytorch.Tensor.{dispose, from_float, from_floats, from_ints, item, item_float, narrow, shape, strides, sum}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads one floating-point vector element through an owned view.
+ */
+vector_float(tensor: Tensor, index: Int): Float ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    value.
+
+/**
+ * Reads one integer vector element through an owned view.
+ */
+vector_int(tensor: Tensor, index: Int): Int ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item(element);
+    dispose(element);
+    value.
+
+/**
+ * Reduces a floating-point tensor and releases the scalar result.
+ */
+float_sum(tensor: Tensor): Float ->
+    let total = sum(tensor);
+    let value = item_float(total);
+    dispose(total);
+    value.
+
+/**
+ * Reduces an integer tensor and releases the scalar result.
+ */
+int_sum(tensor: Tensor): Int ->
+    let total = sum(tensor);
+    let value = item(total);
+    dispose(total);
+    value.
+
+/**
+ * Proves view, copy, axis movement, repetition, and squeeze schemas.
+ */
+@test
+pub view_and_axis_operations_match_libtorch(): Bool ->
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let vector = from_floats([1.0, 2.0, 3.0], [3]);
+    let singleton = from_floats([1.0, 2.0], [1, 2, 1]);
+    let reshaped = reshape(matrix, [3, 2]);
+    let viewed = view(matrix, [3, 2]);
+    let copied_view = view_copy(matrix, [3, 2]);
+    let permuted = permute(matrix, [1, 0]);
+    let copied_permutation = permute_copy(matrix, [1, 0]);
+    let copied_transpose = transpose_copy_int(matrix, 0, 1);
+    let axes_swapped = swapaxes(matrix, 0, 1);
+    let dimensions_swapped = swapdims(matrix, 0, 1);
+    let axis_moved = moveaxis_int(matrix, 0, 1);
+    let dimension_moved = movedim_int(matrix, 0, 1);
+    let broadcast = broadcast_to(vector, [2, 3]);
+    let repeated = repeat(vector, [2]);
+    let tiled = tile(vector, [2]);
+    let flipped = flip(vector, [0]);
+    let squeezed_dimension = squeeze_dim(singleton, 0);
+    let squeezed_dimensions = squeeze_dims(singleton, [0, 2]);
+    let copied_squeeze_dimension = squeeze_copy_dim(singleton, 0);
+    let copied_squeeze_dimensions = squeeze_copy_dims(singleton, [0, 2]);
+    let expanded = unsqueeze_copy(vector, 0);
+    let valid =
+        shape(reshaped) == [3, 2]
+            and shape(viewed) == [3, 2]
+            and shape(copied_view) == [3, 2]
+            and shape(permuted) == [3, 2]
+            and strides(permuted) == [1, 3]
+            and shape(copied_permutation) == [3, 2]
+            and shape(copied_transpose) == [3, 2]
+            and shape(axes_swapped) == [3, 2]
+            and shape(dimensions_swapped) == [3, 2]
+            and shape(axis_moved) == [3, 2]
+            and shape(dimension_moved) == [3, 2]
+            and shape(broadcast) == [2, 3]
+            and shape(repeated) == [6]
+            and shape(tiled) == [6]
+            and vector_float(flipped, 0) == 3.0
+            and vector_float(flipped, 2) == 1.0
+            and shape(squeezed_dimension) == [2, 1]
+            and shape(squeezed_dimensions) == [2]
+            and shape(copied_squeeze_dimension) == [2, 1]
+            and shape(copied_squeeze_dimensions) == [2]
+            and shape(expanded) == [1, 3]
+            and shape(matrix) == [2, 3];
+    dispose(expanded);
+    dispose(copied_squeeze_dimensions);
+    dispose(copied_squeeze_dimension);
+    dispose(squeezed_dimensions);
+    dispose(squeezed_dimension);
+    dispose(flipped);
+    dispose(tiled);
+    dispose(repeated);
+    dispose(broadcast);
+    dispose(dimension_moved);
+    dispose(axis_moved);
+    dispose(dimensions_swapped);
+    dispose(axes_swapped);
+    dispose(copied_transpose);
+    dispose(copied_permutation);
+    dispose(permuted);
+    dispose(copied_view);
+    dispose(viewed);
+    dispose(reshaped);
+    dispose(singleton);
+    dispose(vector);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves diagonal, triangular, selection, one-hot, and nonzero-count schemas.
+ */
+@test
+pub diagonal_and_index_operations_match_libtorch(): Bool ->
+    let vector = from_floats([1.0, 2.0, 3.0], [3]);
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let classes = from_ints([0, 2], [2]);
+    let sparse_values = from_ints([1, 0, 2, 0], [2, 2]);
+    let diagonal = diag(vector, 0);
+    let flattened_diagonal = diagflat(vector, 0);
+    let lower = tril(matrix, 0);
+    let upper = triu(matrix, 0);
+    let selected = select_int(matrix, 0, 1);
+    let copied_selection = select_copy_int(matrix, 0, 1);
+    let encoded = one_hot(classes, 3);
+    let counts = count_nonzero_dim(sparse_values, [1]);
+    let valid =
+        shape(diagonal) == [3, 3]
+            and float_sum(diagonal) == 6.0
+            and shape(flattened_diagonal) == [3, 3]
+            and float_sum(flattened_diagonal) == 6.0
+            and float_sum(lower) == 8.0
+            and float_sum(upper) == 7.0
+            and shape(selected) == [2]
+            and vector_float(selected, 0) == 3.0
+            and vector_float(selected, 1) == 4.0
+            and shape(copied_selection) == [2]
+            and shape(encoded) == [2, 3]
+            and int_sum(encoded) == 2
+            and shape(counts) == [2]
+            and vector_int(counts, 0) == 1
+            and vector_int(counts, 1) == 1;
+    dispose(counts);
+    dispose(encoded);
+    dispose(copied_selection);
+    dispose(selected);
+    dispose(upper);
+    dispose(lower);
+    dispose(flattened_diagonal);
+    dispose(diagonal);
+    dispose(sparse_values);
+    dispose(classes);
+    dispose(matrix);
+    dispose(vector);
+    valid.
+
+/**
+ * Proves channel shuffling, pixel shuffling, pixel unshuffling, and GLU.
+ */
+@test
+pub channel_and_pixel_operations_match_libtorch(): Bool ->
+    let channels = from_floats([1.0, 2.0, 3.0, 4.0], [1, 4, 1, 1]);
+    let glu_input = from_floats([1.0, 2.0, 0.0, 0.0], [1, 4]);
+    let shuffled = channel_shuffle(channels, 2);
+    let native_shuffled = native_channel_shuffle(channels, 2);
+    let pixels = pixel_shuffle(channels, 2);
+    let restored = pixel_unshuffle(pixels, 2);
+    let gated = glu(glu_input, 1);
+    let gated_sum = sum(gated);
+    let valid =
+        shape(shuffled) == [1, 4, 1, 1]
+            and float_sum(shuffled) == 10.0
+            and shape(native_shuffled) == [1, 4, 1, 1]
+            and float_sum(native_shuffled) == 10.0
+            and shape(pixels) == [1, 1, 2, 2]
+            and shape(restored) == [1, 4, 1, 1]
+            and float_sum(restored) == 10.0
+            and shape(gated) == [1, 2]
+            and item_float(gated_sum) == 1.5;
+    dispose(gated_sum);
+    dispose(gated);
+    dispose(restored);
+    dispose(pixels);
+    dispose(native_shuffled);
+    dispose(shuffled);
+    dispose(glu_input);
+    dispose(channels);
+    valid.
+
+/**
+ * Proves matrix powers, tensor inverse, cumulative logarithms, and multigamma aliases.
+ */
+@test
+pub linalg_and_cumulative_operations_match_libtorch(): Bool ->
+    let matrix = from_floats([2.0, 0.0, 0.0, 3.0], [2, 2]);
+    let zeros = from_floats([0.0, 0.0], [2]);
+    let gamma_input = from_float(3.0);
+    let powered = matrix_power(matrix, 2);
+    let linalg_powered = linalg_matrix_power(matrix, 2);
+    let tensor_inverse = linalg_tensorinv(matrix, 1);
+    let cumulative = logcumsumexp(zeros, 0);
+    let gamma = mvlgamma(gamma_input, 2);
+    let special_gamma = special_multigammaln(gamma_input, 2);
+    let cumulative_second = vector_float(cumulative, 1);
+    let valid =
+        float_sum(powered) == 13.0
+            and float_sum(linalg_powered) == 13.0
+            and shape(tensor_inverse) == [2, 2]
+            and float_sum(tensor_inverse) > 0.83
+            and float_sum(tensor_inverse) < 0.84
+            and vector_float(cumulative, 0) == 0.0
+            and cumulative_second > 0.69
+            and cumulative_second < 0.7
+            and item_float(gamma) == item_float(special_gamma);
+    dispose(special_gamma);
+    dispose(gamma);
+    dispose(cumulative);
+    dispose(tensor_inverse);
+    dispose(linalg_powered);
+    dispose(powered);
+    dispose(gamma_input);
+    dispose(zeros);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves padding, adaptive pooling, and reduction to an explicit target shape.
+ */
+@test
+pub padding_pooling_and_sum_to_size_match_libtorch(): Bool ->
+    let line = from_floats([1.0, 2.0, 3.0], [1, 1, 3]);
+    let plane = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2]);
+    let volume = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [1, 1, 2, 2, 2]);
+    let reducible = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let reflected_line = reflection_pad1d(line, [1, 1]);
+    let reflected_plane = reflection_pad2d(plane, [1, 1, 1, 1]);
+    let reflected_volume = reflection_pad3d(volume, [1, 1, 1, 1, 1, 1]);
+    let replicated_line = replication_pad1d(line, [1, 1]);
+    let replicated_plane = replication_pad2d(plane, [1, 1, 1, 1]);
+    let replicated_volume = replication_pad3d(volume, [1, 1, 1, 1, 1, 1]);
+    let pooled = adaptive_avg_pool3d(volume, [1, 1, 1]);
+    let reduced = sum_to_size(reducible, [1, 3]);
+    let valid =
+        shape(reflected_line) == [1, 1, 5]
+            and shape(reflected_plane) == [1, 1, 4, 4]
+            and shape(reflected_volume) == [1, 1, 4, 4, 4]
+            and shape(replicated_line) == [1, 1, 5]
+            and shape(replicated_plane) == [1, 1, 4, 4]
+            and shape(replicated_volume) == [1, 1, 4, 4, 4]
+            and shape(pooled) == [1, 1, 1, 1, 1]
+            and float_sum(pooled) == 4.5
+            and shape(reduced) == [1, 3]
+            and float_sum(reduced) == 21.0;
+    dispose(reduced);
+    dispose(pooled);
+    dispose(replicated_volume);
+    dispose(replicated_plane);
+    dispose(replicated_line);
+    dispose(reflected_volume);
+    dispose(reflected_plane);
+    dispose(reflected_line);
+    dispose(reducible);
+    dispose(volume);
+    dispose(plane);
+    dispose(line);
+    valid.

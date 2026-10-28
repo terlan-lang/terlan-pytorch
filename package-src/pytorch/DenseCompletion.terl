@@ -1,0 +1,34 @@
+/**
+ * Typed completion wrappers for dense matrix operations with explicit output dtype.
+ */
+module pytorch.DenseCompletion.
+
+import pytorch.Dense.{bmm, mm}.
+import pytorch.ResizeAsCompletion.resize_as_in_place.
+import pytorch.Tensor.{copy_in_place, dispose, to_dtype}.
+
+import type pytorch.Tensor.
+
+pub bmm_dtype(left: Tensor, right: Tensor, out_dtype: Int): Tensor ->
+    let result = bmm(left, right);
+    let converted = to_dtype(result, out_dtype);
+    dispose(result);
+    converted.
+
+pub bmm_dtype_out(output: Tensor, left: Tensor, right: Tensor, out_dtype: Int): Unit ->
+    let result = bmm_dtype(left, right, out_dtype);
+    resize_as_in_place(output, result, false, 0);
+    copy_in_place(output, result, false);
+    dispose(result).
+
+pub mm_dtype(left: Tensor, right: Tensor, out_dtype: Int): Tensor ->
+    let result = mm(left, right);
+    let converted = to_dtype(result, out_dtype);
+    dispose(result);
+    converted.
+
+pub mm_dtype_out(output: Tensor, left: Tensor, right: Tensor, out_dtype: Int): Unit ->
+    let result = mm_dtype(left, right, out_dtype);
+    resize_as_in_place(output, result, false, 0);
+    copy_in_place(output, result, false);
+    dispose(result).

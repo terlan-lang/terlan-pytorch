@@ -1,0 +1,20 @@
+/**
+ * Generated exact CXX quantized allocation completion surface.
+ */
+module pytorch.QuantizedAllocationCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX empty quantized leaf with default tensor options.
+ */
+@compiler.native {pytorch.empty_quantized.default}
+pub empty_quantized(size: List[Int], qtensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX empty quantized retained-output leaf with default memory format.
+ */
+@compiler.native {pytorch.empty_quantized.out}
+pub empty_quantized_out(out: Tensor, size: List[Int], qtensor: Tensor): Unit ->
+    native.

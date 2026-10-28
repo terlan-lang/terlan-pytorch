@@ -1,0 +1,70 @@
+/**
+ * CPU behavioral evidence for the internal rrelu_with_noise_backward forms.
+ */
+module pytorch.RreluWithNoiseBackwardParityTest.
+
+import pytorch.MultiMarginLossCompletion.{multi_margin_loss_backward, multi_margin_loss_backward_out, multi_margin_loss_default}.
+import pytorch.RandomCompletion.{rrelu_with_noise_backward, rrelu_with_noise_backward_out}.
+import pytorch.Tensor.{backward, clone, dispose, from_floats, from_ints, gradient, item_float, mse_loss, require_grad, shape}.
+
+import type pytorch.Tensor.
+
+@test
+pub rrelu_with_noise_backward_forms_match(): Bool ->
+    let gradient_output = from_floats([1.0, 1.0, 1.0], [3]);
+    let input = from_floats([-1.0, 2.0, -3.0], [3]);
+    let noise = from_floats([0.2, 0.3, 0.4], [3]);
+    let expected = from_floats([0.2, 0.3, 0.4], [3]);
+    let actual = rrelu_with_noise_backward(gradient_output, input, noise, 0.1, 0.3, true, false);
+    let output = from_floats([0.0, 0.0, 0.0], [3]);
+    rrelu_with_noise_backward_out(output, gradient_output, input, noise, 0.1, 0.3, true, false);
+    let error = mse_loss(actual, expected, 1);
+    let output_error = mse_loss(output, expected, 1);
+    let valid =
+        shape(actual) == [3]
+            and shape(output) == [3]
+            and item_float(error) == 0.0
+            and item_float(output_error) == 0.0;
+    (dispose(output_error); dispose(error); dispose(output); dispose(actual); dispose(expected); dispose(noise); dispose(input); dispose(gradient_output); valid).
+
+@test
+pub multi_margin_loss_backward_forms_match_autograd(): Bool ->
+    let expected_source = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let expected_input = require_grad(expected_source);
+    let target = from_ints([1, 2], [2]);
+    let expected_loss = multi_margin_loss_default(expected_input, target, 2.0, 1.0, 1);
+    backward(expected_loss);
+    let expected_gradient = gradient(expected_input);
+    let native_input = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let ignored_weight = from_floats([1.0, 1.0, 1.0], [3]);
+    let native_grad_output = from_floats([1.0], []);
+    let native_gradient =
+        multi_margin_loss_backward(
+            native_grad_output,
+            native_input,
+            target,
+            2.0,
+            1.0,
+            false,
+            ignored_weight,
+            1,
+        );
+    let gradient_slot = clone(native_input);
+    (multi_margin_loss_backward_out(
+    gradient_slot,
+    native_grad_output,
+    native_input,
+    target,
+    2.0,
+    1.0,
+    false,
+    ignored_weight,
+    1,
+); let error = mse_loss(native_gradient, expected_gradient, 1);
+let slot_error = mse_loss(gradient_slot, expected_gradient, 1);
+let valid =
+    shape(native_gradient) == [2, 3]
+        and shape(gradient_slot) == [2, 3]
+        and item_float(error) == 0.0
+        and item_float(slot_error) == 0.0;
+(dispose(slot_error); dispose(error); dispose(gradient_slot); dispose(native_gradient); dispose(native_grad_output); dispose(ignored_weight); dispose(native_input); dispose(expected_gradient); dispose(expected_loss); dispose(target); dispose(expected_input); dispose(expected_source); valid)).

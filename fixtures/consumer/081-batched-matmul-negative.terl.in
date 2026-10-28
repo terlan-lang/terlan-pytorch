@@ -1,0 +1,10 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{full_float, matmul}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let left = full_float([2, 2, 2], 1.0);
+    let incompatible_batches = full_float([3, 2, 2], 1.0);
+    let result = matmul(left, incompatible_batches);
+    println("PYTORCH_BATCHED_MATMUL_NOT_REJECTED").

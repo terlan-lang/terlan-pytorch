@@ -1,0 +1,35 @@
+//! Generated CXX CUDA stream surface.
+
+module pytorch.Cuda.
+
+/// Owned CUDA stream resource.
+
+pub opaque type Stream.
+
+/// Creates an owned CUDA stream resource.
+
+pub create_stream(device_index: Int, high_priority: Bool): Stream.
+
+/// Returns the stream device index.
+
+pub device_index(stream: Stream): Int.
+
+/// Releases an owned CUDA stream resource.
+
+pub dispose(stream: Stream): Unit.
+
+/// Records a tensor on an owned CUDA stream for allocator lifetime tracking.
+
+pub record_stream(tensor: Tensor, stream: Stream): Unit.
+
+/// Makes a CUDA stream current.
+
+pub set_current(stream: Stream): Unit.
+
+/// Synchronizes a CUDA stream.
+
+pub synchronize(stream: Stream): Unit.
+
+/// Synchronizes a CUDA device through an owned default-priority stream.
+
+pub synchronize_device(device_index: Int): Unit.

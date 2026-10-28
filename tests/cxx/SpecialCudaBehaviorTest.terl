@@ -1,0 +1,7 @@
+module pytorch_cxx.SpecialCudaBehaviorTest.
+
+import pytorch.SpecialBehaviorSupport.{special_contracts_on}.
+
+@test
+pub cuda_special_contracts(): Bool ->
+    special_contracts_on("cuda:0", true).

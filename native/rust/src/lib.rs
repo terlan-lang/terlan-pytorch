@@ -1,1055 +1,3184 @@
 #![deny(unsafe_op_in_unsafe_fn)]
 
+#[cxx::bridge(namespace = "at::native")]
 pub mod ffi {
-    #[repr(C)]
-    pub struct AtenTensorOpaque {
-        _private: [u8; 0],
-    }
-
-    #[repr(C)]
-    pub struct TerlanTorchScriptModelOpaque {
-        _private: [u8; 0],
-    }
-
-    #[repr(C)]
-    pub struct TerlanTorchScriptTensorPairOpaque {
-        _private: [u8; 0],
-    }
-
-    unsafe extern "C" {
-        pub fn aoti_torch_abi_version() -> u64;
-        pub fn aoti_torch_cpu__adaptive_avg_pool2d(input: *mut AtenTensorOpaque, output_size: *const i64, output_size_length: i64, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn aoti_torch_cpu_add_Tensor(left: *mut AtenTensorOpaque, right: *mut AtenTensorOpaque, alpha: f64, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn aoti_torch_aten_amax(tensor: *mut AtenTensorOpaque, dimensions: *const i64, dimensions_length: i64, keep_dimension: i32, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn torch_call_dispatcher(operator_name: *const std::ffi::c_char, overload_name: *const std::ffi::c_char, stack: *mut u64, extension_abi_version: u64) -> i32;
-        pub fn terlan_pytorch_conv2d(input: *mut AtenTensorOpaque, weight: *mut AtenTensorOpaque, bias: *mut AtenTensorOpaque, stride: *const i64, stride_length: i64, padding: *const i64, padding_length: i64, dilation: *const i64, dilation_length: i64, groups: i64, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn torch_delete_list(list: *mut ()) -> i32;
-        pub fn terlan_pytorch_delete_owned_bool_array(values: *mut u8);
-        pub fn terlan_pytorch_delete_owned_float_array(values: *mut f64);
-        pub fn terlan_pytorch_delete_owned_int_array(values: *mut i64);
-        pub fn terlan_pytorch_delete_owned_string(value: *mut std::ffi::c_char);
-        pub fn terlan_pytorch_delete_owned_string_array(values: *mut *mut std::ffi::c_char, lengths: *mut usize, count: usize);
-        pub fn torch_delete_stable_ivalue(value: *mut u64) -> i32;
-        pub fn torch_delete_string(string: *mut ()) -> i32;
-        pub fn aoti_torch_delete_tensor_object(tensor: *mut AtenTensorOpaque) -> i32;
-        pub fn terlan_pytorch_delete_tensor_pair(pair: *mut TerlanTorchScriptTensorPairOpaque) -> i32;
-        pub fn terlan_pytorch_delete_torchscript_model(model: *mut TerlanTorchScriptModelOpaque) -> i32;
-        pub fn aoti_torch_aten_full(shape: *const i64, shape_length: i64, value: f64, dtype: *mut i32, layout: *mut i32, device: *mut i32, device_index: i32, pin_memory: *mut i32, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn aoti_torch_get_device_index(tensor: *mut AtenTensorOpaque, device_index: *mut i32) -> i32;
-        pub fn aoti_torch_get_device_type(tensor: *mut AtenTensorOpaque, device_type: *mut i32) -> i32;
-        pub fn aoti_torch_get_dim(tensor: *mut AtenTensorOpaque, dim: *mut i64) -> i32;
-        pub fn aoti_torch_get_dtype(tensor: *mut AtenTensorOpaque, dtype: *mut i32) -> i32;
-        pub fn aoti_torch_get_numel(tensor: *mut AtenTensorOpaque, numel: *mut i64) -> i32;
-        pub fn aoti_torch_get_sizes(tensor: *mut AtenTensorOpaque, sizes: *mut *mut i64) -> i32;
-        pub fn aoti_torch_item_bool(tensor: *mut AtenTensorOpaque, item: *mut bool) -> i32;
-        pub fn aoti_torch_item_float64(tensor: *mut AtenTensorOpaque, item: *mut f64) -> i32;
-        pub fn aoti_torch_item_int64(tensor: *mut AtenTensorOpaque, item: *mut i64) -> i32;
-        pub fn torch_list_push_back(list: *mut (), element: u64) -> i32;
-        pub fn terlan_pytorch_load_torchscript(path: *const std::ffi::c_char, out_model: *mut *mut TerlanTorchScriptModelOpaque) -> i32;
-        pub fn aoti_torch_aten_narrow(tensor: *mut AtenTensorOpaque, dimension: i64, start: i64, length: i64, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn torch_new_list_reserve_size(capacity: usize, list: *mut *mut ()) -> i32;
-        pub fn torch_new_stable_ivalue(value: *mut *mut u64) -> i32;
-        pub fn torch_new_string_handle(data: *const std::ffi::c_char, length: usize, string: *mut *mut ()) -> i32;
-        pub fn aoti_torch_new_tensor_handle(tensor: *mut AtenTensorOpaque, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn terlan_pytorch_run_torchscript(input: *mut AtenTensorOpaque, path: *const std::ffi::c_char, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn aoti_torch_scalar_to_tensor_bool(value: bool, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn aoti_torch_scalar_to_tensor_float64(value: f64, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn aoti_torch_scalar_to_tensor_int64(value: i64, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn aoti_torch_aten_subtract_Tensor(left: *mut AtenTensorOpaque, right: *mut AtenTensorOpaque, alpha: f64, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn terlan_pytorch_tensor_from_f64(values: *const f64, values_length: i64, shape: *const i64, shape_length: i64, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn terlan_pytorch_tensor_from_i64(values: *const i64, values_length: i64, shape: *const i64, shape_length: i64, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn terlan_pytorch_tensor_pair_first(pair: *mut TerlanTorchScriptTensorPairOpaque, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn terlan_pytorch_tensor_pair_second(pair: *mut TerlanTorchScriptTensorPairOpaque, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn terlan_pytorch_torchscript_forward(model: *mut TerlanTorchScriptModelOpaque, input: *mut AtenTensorOpaque, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn terlan_pytorch_torchscript_forward2(model: *mut TerlanTorchScriptModelOpaque, first: *mut AtenTensorOpaque, second: *mut AtenTensorOpaque, out_tensor: *mut *mut AtenTensorOpaque) -> i32;
-        pub fn terlan_pytorch_torchscript_forward_bool(model: *mut TerlanTorchScriptModelOpaque, input: *mut AtenTensorOpaque, out_value: *mut bool) -> i32;
-        pub fn terlan_pytorch_torchscript_forward_bool_list(model: *mut TerlanTorchScriptModelOpaque, input: *mut AtenTensorOpaque, out_values: *mut *mut u8, out_length: *mut usize) -> i32;
-        pub fn terlan_pytorch_torchscript_forward_float(model: *mut TerlanTorchScriptModelOpaque, input: *mut AtenTensorOpaque, out_value: *mut f64) -> i32;
-        pub fn terlan_pytorch_torchscript_forward_float_list(model: *mut TerlanTorchScriptModelOpaque, input: *mut AtenTensorOpaque, out_values: *mut *mut f64, out_length: *mut usize) -> i32;
-        pub fn terlan_pytorch_torchscript_forward_int(model: *mut TerlanTorchScriptModelOpaque, input: *mut AtenTensorOpaque, out_value: *mut i64) -> i32;
-        pub fn terlan_pytorch_torchscript_forward_int_list(model: *mut TerlanTorchScriptModelOpaque, input: *mut AtenTensorOpaque, out_values: *mut *mut i64, out_length: *mut usize) -> i32;
-        pub fn terlan_pytorch_torchscript_forward_pair(model: *mut TerlanTorchScriptModelOpaque, input: *mut AtenTensorOpaque, out_pair: *mut *mut TerlanTorchScriptTensorPairOpaque) -> i32;
-        pub fn terlan_pytorch_torchscript_forward_string(model: *mut TerlanTorchScriptModelOpaque, input: *mut AtenTensorOpaque, out_value: *mut *mut std::ffi::c_char, out_length: *mut usize) -> i32;
-        pub fn terlan_pytorch_torchscript_forward_string_list(model: *mut TerlanTorchScriptModelOpaque, input: *mut AtenTensorOpaque, out_values: *mut *mut *mut std::ffi::c_char, out_lengths: *mut *mut usize, out_count: *mut usize) -> i32;
-    }
-}
-
-use std::ptr::NonNull;
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct CAbiError {
-    pub operation: &'static str,
-    pub status: i32,
-}
-
-pub struct Tensor {
-    raw: NonNull<ffi::AtenTensorOpaque>,
-}
-
-pub struct TorchScriptModel {
-    raw: NonNull<ffi::TerlanTorchScriptModelOpaque>,
-}
-
-pub struct TensorPair {
-    raw: NonNull<ffi::TerlanTorchScriptTensorPairOpaque>,
-}
-
-struct DispatcherInputGuard {
-    raw: Option<NonNull<ffi::AtenTensorOpaque>>,
-}
-
-impl DispatcherInputGuard {
-    fn new(raw: *mut ffi::AtenTensorOpaque) -> Option<Self> {
-        NonNull::new(raw).map(|raw| Self { raw: Some(raw) })
-    }
-
-    fn into_stable_ivalue(mut self) -> u64 {
-        self.raw.take().expect("dispatcher input guard is armed").as_ptr() as usize as u64
-    }
-}
-
-impl Drop for DispatcherInputGuard {
-    fn drop(&mut self) {
-        if let Some(raw) = self.raw.take() {
-            // SAFETY: an armed guard exclusively owns a duplicated handle not yet transferred to a dispatcher stack.
-            let status = unsafe { ffi::aoti_torch_delete_tensor_object(raw.as_ptr()) };
-            debug_assert_eq!(status, 0);
-        }
-    }
-}
-
-struct DispatcherOptionalValueGuard {
-    raw: Option<NonNull<u64>>,
-    destructor: unsafe extern "C" fn(*mut u64) -> i32,
-    success: i32,
-}
-
-impl DispatcherOptionalValueGuard {
-    fn new(
-        raw: *mut u64,
-        destructor: unsafe extern "C" fn(*mut u64) -> i32,
-        success: i32,
-    ) -> Option<Self> {
-        NonNull::new(raw).map(|raw| Self { raw: Some(raw), destructor, success })
-    }
-
-    fn write_stable_ivalue(&mut self, value: u64) {
-        // SAFETY: the allocator returned exclusive storage for one StableIValue.
-        unsafe { *self.raw.expect("dispatcher optional guard is armed").as_ptr() = value };
-    }
-
-    fn write_i64(&mut self, value: i64) {
-        self.write_stable_ivalue(value as u64);
-    }
-
-    fn into_stable_ivalue(mut self) -> u64 {
-        self.raw.take().expect("dispatcher optional guard is armed").as_ptr() as usize as u64
-    }
-}
-
-impl Drop for DispatcherOptionalValueGuard {
-    fn drop(&mut self) {
-        if let Some(raw) = self.raw.take() {
-            // SAFETY: an armed guard exclusively owns optional backing storage not yet transferred to the dispatcher.
-            let status = unsafe { (self.destructor)(raw.as_ptr()) };
-            debug_assert_eq!(status, self.success);
-        }
-    }
-}
-
-struct DispatcherListGuard {
-    raw: Option<NonNull<()>>,
-    destructor: unsafe extern "C" fn(*mut ()) -> i32,
-    success: i32,
-}
-
-impl DispatcherListGuard {
-    fn new(
-        raw: *mut (),
-        destructor: unsafe extern "C" fn(*mut ()) -> i32,
-        success: i32,
-    ) -> Option<Self> {
-        NonNull::new(raw).map(|raw| Self { raw: Some(raw), destructor, success })
-    }
-
-    fn as_ptr(&self) -> *mut () {
-        self.raw.expect("dispatcher list guard is armed").as_ptr()
-    }
-
-    fn into_stable_ivalue(mut self) -> u64 {
-        self.raw.take().expect("dispatcher list guard is armed").as_ptr() as usize as u64
-    }
-}
-
-impl Drop for DispatcherListGuard {
-    fn drop(&mut self) {
-        if let Some(raw) = self.raw.take() {
-            // SAFETY: an armed guard exclusively owns a dispatcher list not yet transferred to the stack.
-            let status = unsafe { (self.destructor)(raw.as_ptr()) };
-            debug_assert_eq!(status, self.success);
-        }
-    }
-}
-
-struct DispatcherStringGuard {
-    raw: Option<NonNull<()>>,
-    destructor: unsafe extern "C" fn(*mut ()) -> i32,
-    success: i32,
-}
-
-impl DispatcherStringGuard {
-    fn new(
-        raw: *mut (),
-        destructor: unsafe extern "C" fn(*mut ()) -> i32,
-        success: i32,
-    ) -> Option<Self> {
-        NonNull::new(raw).map(|raw| Self { raw: Some(raw), destructor, success })
-    }
-
-    fn into_stable_ivalue(mut self) -> u64 {
-        self.raw.take().expect("dispatcher string guard is armed").as_ptr() as usize as u64
-    }
-}
-
-impl Drop for DispatcherStringGuard {
-    fn drop(&mut self) {
-        if let Some(raw) = self.raw.take() {
-            // SAFETY: an armed guard exclusively owns a dispatcher string not yet transferred to the stack.
-            let status = unsafe { (self.destructor)(raw.as_ptr()) };
-            debug_assert_eq!(status, self.success);
-        }
-    }
-}
-
-impl Tensor {
-    pub fn from_int(value: i64) -> Result<Self, CAbiError> {
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_scalar_to_tensor_int64(value as i64, &mut raw) };
-        check_status("pytorch.tensor.from_int", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.from_int", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn from_float(value: f64) -> Result<Self, CAbiError> {
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_scalar_to_tensor_float64(value as f64, &mut raw) };
-        check_status("pytorch.tensor.from_float", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.from_float", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn from_bool(value: bool) -> Result<Self, CAbiError> {
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_scalar_to_tensor_bool(value as bool, &mut raw) };
-        check_status("pytorch.tensor.from_bool", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.from_bool", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn from_floats(values: &[f64], shape: &[i64]) -> Result<Self, CAbiError> {
-        let values_length = i64::try_from(values.len()).map_err(|_| CAbiError { operation: "pytorch.tensor.from_floats", status: -2 })?;
-        let shape_length = i64::try_from(shape.len()).map_err(|_| CAbiError { operation: "pytorch.tensor.from_floats", status: -2 })?;
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_tensor_from_f64(values.as_ptr(), values_length, shape.as_ptr(), shape_length, &mut raw) };
-        check_status("pytorch.tensor.from_floats", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.from_floats", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn from_ints(values: &[i64], shape: &[i64]) -> Result<Self, CAbiError> {
-        let values_length = i64::try_from(values.len()).map_err(|_| CAbiError { operation: "pytorch.tensor.from_ints", status: -2 })?;
-        let shape_length = i64::try_from(shape.len()).map_err(|_| CAbiError { operation: "pytorch.tensor.from_ints", status: -2 })?;
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_tensor_from_i64(values.as_ptr(), values_length, shape.as_ptr(), shape_length, &mut raw) };
-        check_status("pytorch.tensor.from_ints", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.from_ints", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn full_float(shape: &[i64], value: f64) -> Result<Self, CAbiError> {
-        let shape_length = i64::try_from(shape.len()).map_err(|_| CAbiError { operation: "pytorch.tensor.full_float", status: -2 })?;
-        let mut fixed_dtype: i32 = 7;
-        let mut fixed_device: i32 = 0;
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_aten_full(shape.as_ptr(), shape_length, value as f64, &mut fixed_dtype, std::ptr::null_mut(), &mut fixed_device, -1i32, std::ptr::null_mut(), &mut raw) };
-        check_status("pytorch.tensor.full_float", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.full_float", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn item(&self) -> Result<i64, CAbiError> {
-        let mut out_item: i64 = Default::default();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_item_int64(self.raw.as_ptr(), &mut out_item) };
-        check_status("pytorch.tensor.item", status as i32, 0)?;
-        Ok(out_item as i64)
-    }
-
-    pub fn item_float(&self) -> Result<f64, CAbiError> {
-        let mut out_item: f64 = Default::default();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_item_float64(self.raw.as_ptr(), &mut out_item) };
-        check_status("pytorch.tensor.item_float", status as i32, 0)?;
-        Ok(out_item as f64)
-    }
-
-    pub fn item_bool(&self) -> Result<bool, CAbiError> {
-        let mut out_item: bool = Default::default();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_item_bool(self.raw.as_ptr(), &mut out_item) };
-        check_status("pytorch.tensor.item_bool", status as i32, 0)?;
-        Ok(out_item)
-    }
-
-    pub fn dim(&self) -> Result<i64, CAbiError> {
-        let mut out_dim: i64 = Default::default();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_get_dim(self.raw.as_ptr(), &mut out_dim) };
-        check_status("pytorch.tensor.dim", status as i32, 0)?;
-        Ok(out_dim as i64)
-    }
-
-    pub fn numel(&self) -> Result<i64, CAbiError> {
-        let mut out_numel: i64 = Default::default();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_get_numel(self.raw.as_ptr(), &mut out_numel) };
-        check_status("pytorch.tensor.numel", status as i32, 0)?;
-        Ok(out_numel as i64)
-    }
-
-    pub fn shape(&self) -> Result<Vec<i64>, CAbiError> {
-        let sizes_length = self.dim()?;
-        let mut out_sizes: *mut i64 = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_get_sizes(self.raw.as_ptr(), &mut out_sizes) };
-        check_status("pytorch.tensor.shape", status as i32, 0)?;
-        let length = usize::try_from(sizes_length).map_err(|_| CAbiError { operation: "pytorch.tensor.shape", status: -2 })?;
-        let values = if length == 0 {
-            Vec::new()
-        } else {
-            let pointer = NonNull::new(out_sizes).ok_or(CAbiError { operation: "pytorch.tensor.shape", status: -1 })?;
-            // SAFETY: metadata ties this borrowed array to `self`; it is copied before the borrow ends.
-            unsafe { std::slice::from_raw_parts(pointer.as_ptr(), length).to_vec() }
-        };
-        Ok(values)
-    }
-
-    pub fn dtype(&self) -> Result<i64, CAbiError> {
-        let mut out_dtype: i32 = Default::default();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_get_dtype(self.raw.as_ptr(), &mut out_dtype) };
-        check_status("pytorch.tensor.dtype", status as i32, 0)?;
-        Ok(out_dtype as i64)
-    }
-
-    pub fn device_type(&self) -> Result<i64, CAbiError> {
-        let mut out_device_type: i32 = Default::default();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_get_device_type(self.raw.as_ptr(), &mut out_device_type) };
-        check_status("pytorch.tensor.device_type", status as i32, 0)?;
-        Ok(out_device_type as i64)
-    }
-
-    pub fn device_index(&self) -> Result<i64, CAbiError> {
-        let mut out_device_index: i32 = Default::default();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_get_device_index(self.raw.as_ptr(), &mut out_device_index) };
-        check_status("pytorch.tensor.device_index", status as i32, 0)?;
-        Ok(out_device_index as i64)
-    }
-
-    pub fn clone(&self) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_tensor: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_tensor) };
-        check_status("pytorch.tensor.clone.duplicate_handle.tensor", status as i32, 0)?;
-        let dispatcher_input_tensor = DispatcherInputGuard::new(dispatcher_raw_tensor).ok_or(CAbiError { operation: "pytorch.tensor.clone", status: -1 })?;
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_tensor.into_stable_ivalue(), 0u64];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::clone\0".as_ptr().cast(), "\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.clone", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.clone", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn unsqueeze(&self, dimension: i64) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_tensor: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_tensor) };
-        check_status("pytorch.tensor.unsqueeze.duplicate_handle.tensor", status as i32, 0)?;
-        let dispatcher_input_tensor = DispatcherInputGuard::new(dispatcher_raw_tensor).ok_or(CAbiError { operation: "pytorch.tensor.unsqueeze", status: -1 })?;
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_tensor.into_stable_ivalue(), dimension as u64];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::unsqueeze\0".as_ptr().cast(), "\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.unsqueeze", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.unsqueeze", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn matmul(&self, right: &Self) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_left: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_left) };
-        check_status("pytorch.tensor.matmul.duplicate_handle.left", status as i32, 0)?;
-        let dispatcher_input_left = DispatcherInputGuard::new(dispatcher_raw_left).ok_or(CAbiError { operation: "pytorch.tensor.matmul", status: -1 })?;
-        let mut dispatcher_raw_right: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(right.raw.as_ptr(), &mut dispatcher_raw_right) };
-        check_status("pytorch.tensor.matmul.duplicate_handle.right", status as i32, 0)?;
-        let dispatcher_input_right = DispatcherInputGuard::new(dispatcher_raw_right).ok_or(CAbiError { operation: "pytorch.tensor.matmul", status: -1 })?;
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_left.into_stable_ivalue(), dispatcher_input_right.into_stable_ivalue()];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::matmul\0".as_ptr().cast(), "\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.matmul", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.matmul", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn transpose(&self, dimension0: i64, dimension1: i64) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_tensor: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_tensor) };
-        check_status("pytorch.tensor.transpose.duplicate_handle.tensor", status as i32, 0)?;
-        let dispatcher_input_tensor = DispatcherInputGuard::new(dispatcher_raw_tensor).ok_or(CAbiError { operation: "pytorch.tensor.transpose", status: -1 })?;
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_tensor.into_stable_ivalue(), dimension0 as u64, dimension1 as u64];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::transpose\0".as_ptr().cast(), "int\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.transpose", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.transpose", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn multiply(&self, right: &Self) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_left: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_left) };
-        check_status("pytorch.tensor.multiply.duplicate_handle.left", status as i32, 0)?;
-        let dispatcher_input_left = DispatcherInputGuard::new(dispatcher_raw_left).ok_or(CAbiError { operation: "pytorch.tensor.multiply", status: -1 })?;
-        let mut dispatcher_raw_right: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(right.raw.as_ptr(), &mut dispatcher_raw_right) };
-        check_status("pytorch.tensor.multiply.duplicate_handle.right", status as i32, 0)?;
-        let dispatcher_input_right = DispatcherInputGuard::new(dispatcher_raw_right).ok_or(CAbiError { operation: "pytorch.tensor.multiply", status: -1 })?;
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_left.into_stable_ivalue(), dispatcher_input_right.into_stable_ivalue()];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::mul\0".as_ptr().cast(), "Tensor\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.multiply", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.multiply", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn add(&self, right: &Self, alpha: f64) -> Result<Self, CAbiError> {
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_cpu_add_Tensor(self.raw.as_ptr(), right.raw.as_ptr(), alpha as f64, &mut raw) };
-        check_status("pytorch.tensor.add", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.add", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn subtract(&self, right: &Self, alpha: f64) -> Result<Self, CAbiError> {
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_aten_subtract_Tensor(self.raw.as_ptr(), right.raw.as_ptr(), alpha as f64, &mut raw) };
-        check_status("pytorch.tensor.subtract", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.subtract", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn relu(&self) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_tensor: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_tensor) };
-        check_status("pytorch.tensor.relu.duplicate_handle.tensor", status as i32, 0)?;
-        let dispatcher_input_tensor = DispatcherInputGuard::new(dispatcher_raw_tensor).ok_or(CAbiError { operation: "pytorch.tensor.relu", status: -1 })?;
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_tensor.into_stable_ivalue()];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::relu\0".as_ptr().cast(), "\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.relu", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.relu", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn gelu(&self) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_tensor: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_tensor) };
-        check_status("pytorch.tensor.gelu.duplicate_handle.tensor", status as i32, 0)?;
-        let dispatcher_input_tensor = DispatcherInputGuard::new(dispatcher_raw_tensor).ok_or(CAbiError { operation: "pytorch.tensor.gelu", status: -1 })?;
-        let dispatcher_string_1_bytes: &[u8] = "none".as_bytes();
-        let mut dispatcher_string_1_raw: *mut () = std::ptr::null_mut();
-        // SAFETY: the reviewed allocator copies the fixed metadata bytes into one exclusive dispatcher string.
-        let status = unsafe { ffi::torch_new_string_handle(dispatcher_string_1_bytes.as_ptr().cast(), dispatcher_string_1_bytes.len(), &mut dispatcher_string_1_raw) };
-        check_status("pytorch.tensor.gelu.string.1.allocate", status as i32, 0)?;
-        let dispatcher_string_1 = DispatcherStringGuard::new(dispatcher_string_1_raw, ffi::torch_delete_string, 0).ok_or(CAbiError { operation: "pytorch.tensor.gelu", status: -1 })?;
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_tensor.into_stable_ivalue(), dispatcher_string_1.into_stable_ivalue()];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::gelu\0".as_ptr().cast(), "\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.gelu", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.gelu", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn softmax(&self, dimension: i64) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_tensor: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_tensor) };
-        check_status("pytorch.tensor.softmax.duplicate_handle.tensor", status as i32, 0)?;
-        let dispatcher_input_tensor = DispatcherInputGuard::new(dispatcher_raw_tensor).ok_or(CAbiError { operation: "pytorch.tensor.softmax", status: -1 })?;
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_tensor.into_stable_ivalue(), dimension as u64, 0u64];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::softmax\0".as_ptr().cast(), "int\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.softmax", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.softmax", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn argmax(&self, dimension: i64, keep_dimension: bool) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_tensor: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_tensor) };
-        check_status("pytorch.tensor.argmax.duplicate_handle.tensor", status as i32, 0)?;
-        let dispatcher_input_tensor = DispatcherInputGuard::new(dispatcher_raw_tensor).ok_or(CAbiError { operation: "pytorch.tensor.argmax", status: -1 })?;
-        let mut dispatcher_optional_dimension_raw: *mut u64 = std::ptr::null_mut();
-        // SAFETY: the reviewed allocator returns exclusive storage for one StableIValue.
-        let status = unsafe { ffi::torch_new_stable_ivalue(&mut dispatcher_optional_dimension_raw) };
-        check_status("pytorch.tensor.argmax.optional.dimension.allocate", status as i32, 0)?;
-        let mut dispatcher_optional_dimension = DispatcherOptionalValueGuard::new(dispatcher_optional_dimension_raw, ffi::torch_delete_stable_ivalue, 0).ok_or(CAbiError { operation: "pytorch.tensor.argmax", status: -1 })?;
-        dispatcher_optional_dimension.write_i64(dimension);
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_tensor.into_stable_ivalue(), dispatcher_optional_dimension.into_stable_ivalue(), u64::from(keep_dimension)];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::argmax\0".as_ptr().cast(), "\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.argmax", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.argmax", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn embedding(&self, indices: &Self, padding_index: i64, scale_gradient_by_frequency: bool, sparse: bool) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_weight: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_weight) };
-        check_status("pytorch.tensor.embedding.duplicate_handle.weight", status as i32, 0)?;
-        let dispatcher_input_weight = DispatcherInputGuard::new(dispatcher_raw_weight).ok_or(CAbiError { operation: "pytorch.tensor.embedding", status: -1 })?;
-        let mut dispatcher_raw_indices: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(indices.raw.as_ptr(), &mut dispatcher_raw_indices) };
-        check_status("pytorch.tensor.embedding.duplicate_handle.indices", status as i32, 0)?;
-        let dispatcher_input_indices = DispatcherInputGuard::new(dispatcher_raw_indices).ok_or(CAbiError { operation: "pytorch.tensor.embedding", status: -1 })?;
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_weight.into_stable_ivalue(), dispatcher_input_indices.into_stable_ivalue(), padding_index as u64, u64::from(scale_gradient_by_frequency), u64::from(sparse)];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::embedding\0".as_ptr().cast(), "\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.embedding", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.embedding", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn batch_norm(&self, weight: &Self, bias: &Self, running_mean: &Self, running_variance: &Self, training: bool, momentum: f64, epsilon: f64, cudnn_enabled: bool) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_input: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_input) };
-        check_status("pytorch.tensor.batch_norm.duplicate_handle.input", status as i32, 0)?;
-        let dispatcher_input_input = DispatcherInputGuard::new(dispatcher_raw_input).ok_or(CAbiError { operation: "pytorch.tensor.batch_norm", status: -1 })?;
-        let mut dispatcher_raw_weight: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(weight.raw.as_ptr(), &mut dispatcher_raw_weight) };
-        check_status("pytorch.tensor.batch_norm.duplicate_handle.weight", status as i32, 0)?;
-        let dispatcher_input_weight = DispatcherInputGuard::new(dispatcher_raw_weight).ok_or(CAbiError { operation: "pytorch.tensor.batch_norm", status: -1 })?;
-        let mut dispatcher_raw_bias: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(bias.raw.as_ptr(), &mut dispatcher_raw_bias) };
-        check_status("pytorch.tensor.batch_norm.duplicate_handle.bias", status as i32, 0)?;
-        let dispatcher_input_bias = DispatcherInputGuard::new(dispatcher_raw_bias).ok_or(CAbiError { operation: "pytorch.tensor.batch_norm", status: -1 })?;
-        let mut dispatcher_raw_running_mean: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(running_mean.raw.as_ptr(), &mut dispatcher_raw_running_mean) };
-        check_status("pytorch.tensor.batch_norm.duplicate_handle.running_mean", status as i32, 0)?;
-        let dispatcher_input_running_mean = DispatcherInputGuard::new(dispatcher_raw_running_mean).ok_or(CAbiError { operation: "pytorch.tensor.batch_norm", status: -1 })?;
-        let mut dispatcher_raw_running_variance: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(running_variance.raw.as_ptr(), &mut dispatcher_raw_running_variance) };
-        check_status("pytorch.tensor.batch_norm.duplicate_handle.running_variance", status as i32, 0)?;
-        let dispatcher_input_running_variance = DispatcherInputGuard::new(dispatcher_raw_running_variance).ok_or(CAbiError { operation: "pytorch.tensor.batch_norm", status: -1 })?;
-        let mut dispatcher_optional_weight_raw: *mut u64 = std::ptr::null_mut();
-        // SAFETY: the reviewed allocator returns exclusive storage for one StableIValue.
-        let status = unsafe { ffi::torch_new_stable_ivalue(&mut dispatcher_optional_weight_raw) };
-        check_status("pytorch.tensor.batch_norm.optional.weight.allocate", status as i32, 0)?;
-        let mut dispatcher_optional_weight = DispatcherOptionalValueGuard::new(dispatcher_optional_weight_raw, ffi::torch_delete_stable_ivalue, 0).ok_or(CAbiError { operation: "pytorch.tensor.batch_norm", status: -1 })?;
-        let mut dispatcher_optional_bias_raw: *mut u64 = std::ptr::null_mut();
-        // SAFETY: the reviewed allocator returns exclusive storage for one StableIValue.
-        let status = unsafe { ffi::torch_new_stable_ivalue(&mut dispatcher_optional_bias_raw) };
-        check_status("pytorch.tensor.batch_norm.optional.bias.allocate", status as i32, 0)?;
-        let mut dispatcher_optional_bias = DispatcherOptionalValueGuard::new(dispatcher_optional_bias_raw, ffi::torch_delete_stable_ivalue, 0).ok_or(CAbiError { operation: "pytorch.tensor.batch_norm", status: -1 })?;
-        let mut dispatcher_optional_running_mean_raw: *mut u64 = std::ptr::null_mut();
-        // SAFETY: the reviewed allocator returns exclusive storage for one StableIValue.
-        let status = unsafe { ffi::torch_new_stable_ivalue(&mut dispatcher_optional_running_mean_raw) };
-        check_status("pytorch.tensor.batch_norm.optional.running_mean.allocate", status as i32, 0)?;
-        let mut dispatcher_optional_running_mean = DispatcherOptionalValueGuard::new(dispatcher_optional_running_mean_raw, ffi::torch_delete_stable_ivalue, 0).ok_or(CAbiError { operation: "pytorch.tensor.batch_norm", status: -1 })?;
-        let mut dispatcher_optional_running_variance_raw: *mut u64 = std::ptr::null_mut();
-        // SAFETY: the reviewed allocator returns exclusive storage for one StableIValue.
-        let status = unsafe { ffi::torch_new_stable_ivalue(&mut dispatcher_optional_running_variance_raw) };
-        check_status("pytorch.tensor.batch_norm.optional.running_variance.allocate", status as i32, 0)?;
-        let mut dispatcher_optional_running_variance = DispatcherOptionalValueGuard::new(dispatcher_optional_running_variance_raw, ffi::torch_delete_stable_ivalue, 0).ok_or(CAbiError { operation: "pytorch.tensor.batch_norm", status: -1 })?;
-        dispatcher_optional_weight.write_stable_ivalue(dispatcher_input_weight.into_stable_ivalue());
-        dispatcher_optional_bias.write_stable_ivalue(dispatcher_input_bias.into_stable_ivalue());
-        dispatcher_optional_running_mean.write_stable_ivalue(dispatcher_input_running_mean.into_stable_ivalue());
-        dispatcher_optional_running_variance.write_stable_ivalue(dispatcher_input_running_variance.into_stable_ivalue());
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_input.into_stable_ivalue(), dispatcher_optional_weight.into_stable_ivalue(), dispatcher_optional_bias.into_stable_ivalue(), dispatcher_optional_running_mean.into_stable_ivalue(), dispatcher_optional_running_variance.into_stable_ivalue(), u64::from(training), momentum.to_bits(), epsilon.to_bits(), u64::from(cudnn_enabled)];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::batch_norm\0".as_ptr().cast(), "\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.batch_norm", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.batch_norm", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn layer_norm(&self, normalized_shape: &[i64], weight: &Self, bias: &Self, epsilon: f64, cudnn_enabled: bool) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_input: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_input) };
-        check_status("pytorch.tensor.layer_norm.duplicate_handle.input", status as i32, 0)?;
-        let dispatcher_input_input = DispatcherInputGuard::new(dispatcher_raw_input).ok_or(CAbiError { operation: "pytorch.tensor.layer_norm", status: -1 })?;
-        let mut dispatcher_raw_weight: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(weight.raw.as_ptr(), &mut dispatcher_raw_weight) };
-        check_status("pytorch.tensor.layer_norm.duplicate_handle.weight", status as i32, 0)?;
-        let dispatcher_input_weight = DispatcherInputGuard::new(dispatcher_raw_weight).ok_or(CAbiError { operation: "pytorch.tensor.layer_norm", status: -1 })?;
-        let mut dispatcher_raw_bias: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(bias.raw.as_ptr(), &mut dispatcher_raw_bias) };
-        check_status("pytorch.tensor.layer_norm.duplicate_handle.bias", status as i32, 0)?;
-        let dispatcher_input_bias = DispatcherInputGuard::new(dispatcher_raw_bias).ok_or(CAbiError { operation: "pytorch.tensor.layer_norm", status: -1 })?;
-        let mut dispatcher_optional_weight_raw: *mut u64 = std::ptr::null_mut();
-        // SAFETY: the reviewed allocator returns exclusive storage for one StableIValue.
-        let status = unsafe { ffi::torch_new_stable_ivalue(&mut dispatcher_optional_weight_raw) };
-        check_status("pytorch.tensor.layer_norm.optional.weight.allocate", status as i32, 0)?;
-        let mut dispatcher_optional_weight = DispatcherOptionalValueGuard::new(dispatcher_optional_weight_raw, ffi::torch_delete_stable_ivalue, 0).ok_or(CAbiError { operation: "pytorch.tensor.layer_norm", status: -1 })?;
-        let mut dispatcher_optional_bias_raw: *mut u64 = std::ptr::null_mut();
-        // SAFETY: the reviewed allocator returns exclusive storage for one StableIValue.
-        let status = unsafe { ffi::torch_new_stable_ivalue(&mut dispatcher_optional_bias_raw) };
-        check_status("pytorch.tensor.layer_norm.optional.bias.allocate", status as i32, 0)?;
-        let mut dispatcher_optional_bias = DispatcherOptionalValueGuard::new(dispatcher_optional_bias_raw, ffi::torch_delete_stable_ivalue, 0).ok_or(CAbiError { operation: "pytorch.tensor.layer_norm", status: -1 })?;
-        let mut dispatcher_list_normalized_shape_raw: *mut () = std::ptr::null_mut();
-        // SAFETY: the reviewed allocator returns one exclusive dispatcher list.
-        let status = unsafe { ffi::torch_new_list_reserve_size(normalized_shape.len(), &mut dispatcher_list_normalized_shape_raw) };
-        check_status("pytorch.tensor.layer_norm.list.normalized_shape.allocate", status as i32, 0)?;
-        let dispatcher_list_normalized_shape = DispatcherListGuard::new(dispatcher_list_normalized_shape_raw, ffi::torch_delete_list, 0).ok_or(CAbiError { operation: "pytorch.tensor.layer_norm", status: -1 })?;
-        for element in normalized_shape {
-            // SAFETY: the armed list guard owns the destination and integer StableIValues are copied by value.
-            let status = unsafe { ffi::torch_list_push_back(dispatcher_list_normalized_shape.as_ptr(), *element as u64) };
-            check_status("pytorch.tensor.layer_norm.list.normalized_shape.push", status as i32, 0)?;
-        }
-        dispatcher_optional_weight.write_stable_ivalue(dispatcher_input_weight.into_stable_ivalue());
-        dispatcher_optional_bias.write_stable_ivalue(dispatcher_input_bias.into_stable_ivalue());
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_input.into_stable_ivalue(), dispatcher_list_normalized_shape.into_stable_ivalue(), dispatcher_optional_weight.into_stable_ivalue(), dispatcher_optional_bias.into_stable_ivalue(), epsilon.to_bits(), u64::from(cudnn_enabled)];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::layer_norm\0".as_ptr().cast(), "\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.layer_norm", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.layer_norm", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn mse_loss(&self, target: &Self, reduction: i64) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_predicted: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_predicted) };
-        check_status("pytorch.tensor.mse_loss.duplicate_handle.predicted", status as i32, 0)?;
-        let dispatcher_input_predicted = DispatcherInputGuard::new(dispatcher_raw_predicted).ok_or(CAbiError { operation: "pytorch.tensor.mse_loss", status: -1 })?;
-        let mut dispatcher_raw_target: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(target.raw.as_ptr(), &mut dispatcher_raw_target) };
-        check_status("pytorch.tensor.mse_loss.duplicate_handle.target", status as i32, 0)?;
-        let dispatcher_input_target = DispatcherInputGuard::new(dispatcher_raw_target).ok_or(CAbiError { operation: "pytorch.tensor.mse_loss", status: -1 })?;
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_predicted.into_stable_ivalue(), dispatcher_input_target.into_stable_ivalue(), reduction as u64];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::mse_loss\0".as_ptr().cast(), "\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.mse_loss", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.mse_loss", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn mse_loss_gradient(&self, predicted: &Self, target: &Self, reduction: i64) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_grad_output: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_grad_output) };
-        check_status("pytorch.tensor.mse_loss_gradient.duplicate_handle.grad_output", status as i32, 0)?;
-        let dispatcher_input_grad_output = DispatcherInputGuard::new(dispatcher_raw_grad_output).ok_or(CAbiError { operation: "pytorch.tensor.mse_loss_gradient", status: -1 })?;
-        let mut dispatcher_raw_predicted: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(predicted.raw.as_ptr(), &mut dispatcher_raw_predicted) };
-        check_status("pytorch.tensor.mse_loss_gradient.duplicate_handle.predicted", status as i32, 0)?;
-        let dispatcher_input_predicted = DispatcherInputGuard::new(dispatcher_raw_predicted).ok_or(CAbiError { operation: "pytorch.tensor.mse_loss_gradient", status: -1 })?;
-        let mut dispatcher_raw_target: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(target.raw.as_ptr(), &mut dispatcher_raw_target) };
-        check_status("pytorch.tensor.mse_loss_gradient.duplicate_handle.target", status as i32, 0)?;
-        let dispatcher_input_target = DispatcherInputGuard::new(dispatcher_raw_target).ok_or(CAbiError { operation: "pytorch.tensor.mse_loss_gradient", status: -1 })?;
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_grad_output.into_stable_ivalue(), dispatcher_input_predicted.into_stable_ivalue(), dispatcher_input_target.into_stable_ivalue(), reduction as u64];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::mse_loss_backward\0".as_ptr().cast(), "\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.mse_loss_gradient", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.mse_loss_gradient", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn cross_entropy_loss(&self, target: &Self, reduction: i64, ignore_index: i64, label_smoothing: f64) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_logits: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_logits) };
-        check_status("pytorch.tensor.cross_entropy_loss.duplicate_handle.logits", status as i32, 0)?;
-        let dispatcher_input_logits = DispatcherInputGuard::new(dispatcher_raw_logits).ok_or(CAbiError { operation: "pytorch.tensor.cross_entropy_loss", status: -1 })?;
-        let mut dispatcher_raw_target: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(target.raw.as_ptr(), &mut dispatcher_raw_target) };
-        check_status("pytorch.tensor.cross_entropy_loss.duplicate_handle.target", status as i32, 0)?;
-        let dispatcher_input_target = DispatcherInputGuard::new(dispatcher_raw_target).ok_or(CAbiError { operation: "pytorch.tensor.cross_entropy_loss", status: -1 })?;
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_logits.into_stable_ivalue(), dispatcher_input_target.into_stable_ivalue(), 0u64, reduction as u64, ignore_index as u64, label_smoothing.to_bits()];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::cross_entropy_loss\0".as_ptr().cast(), "\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.cross_entropy_loss", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.cross_entropy_loss", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn narrow(&self, dimension: i64, start: i64, length: i64) -> Result<Self, CAbiError> {
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_aten_narrow(self.raw.as_ptr(), dimension as i64, start as i64, length as i64, &mut raw) };
-        check_status("pytorch.tensor.narrow", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.narrow", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn flatten(&self, start_dimension: i64, end_dimension: i64) -> Result<Self, CAbiError> {
-        let mut dispatcher_raw_tensor: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: the source handle is borrowed and the returned handle is an independent owner.
-        let status = unsafe { ffi::aoti_torch_new_tensor_handle(self.raw.as_ptr(), &mut dispatcher_raw_tensor) };
-        check_status("pytorch.tensor.flatten.duplicate_handle.tensor", status as i32, 0)?;
-        let dispatcher_input_tensor = DispatcherInputGuard::new(dispatcher_raw_tensor).ok_or(CAbiError { operation: "pytorch.tensor.flatten", status: -1 })?;
-        // StableIValue takes ownership of copied handle inputs; the selected output slot transfers ownership back.
-        let mut stack = [dispatcher_input_tensor.into_stable_ivalue(), start_dimension as u64, end_dimension as u64];
-        // SAFETY: metadata fixes the operator schema, stack layout, ABI version, and ownership transfer.
-        let status = unsafe { ffi::torch_call_dispatcher("aten::flatten\0".as_ptr().cast(), "using_ints\0".as_ptr().cast(), stack.as_mut_ptr(), 0x020d000000000000u64) };
-        check_status("pytorch.tensor.flatten", status as i32, 0)?;
-        let raw = stack[0] as usize as *mut ffi::AtenTensorOpaque;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.flatten", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn amax(&self, dimensions: &[i64], keep_dimension: bool) -> Result<Self, CAbiError> {
-        let dimensions_length = i64::try_from(dimensions.len()).map_err(|_| CAbiError { operation: "pytorch.tensor.amax", status: -2 })?;
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_aten_amax(self.raw.as_ptr(), dimensions.as_ptr(), dimensions_length, keep_dimension as i32, &mut raw) };
-        check_status("pytorch.tensor.amax", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.amax", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn conv2d(&self, weight: &Self, bias: &Self, stride: &[i64], padding: &[i64], dilation: &[i64], groups: i64) -> Result<Self, CAbiError> {
-        let stride_length = i64::try_from(stride.len()).map_err(|_| CAbiError { operation: "pytorch.tensor.conv2d", status: -2 })?;
-        let padding_length = i64::try_from(padding.len()).map_err(|_| CAbiError { operation: "pytorch.tensor.conv2d", status: -2 })?;
-        let dilation_length = i64::try_from(dilation.len()).map_err(|_| CAbiError { operation: "pytorch.tensor.conv2d", status: -2 })?;
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_conv2d(self.raw.as_ptr(), weight.raw.as_ptr(), bias.raw.as_ptr(), stride.as_ptr(), stride_length, padding.as_ptr(), padding_length, dilation.as_ptr(), dilation_length, groups as i64, &mut raw) };
-        check_status("pytorch.tensor.conv2d", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.conv2d", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn adaptive_avg_pool2d(&self, output_size: &[i64]) -> Result<Self, CAbiError> {
-        let output_size_length = i64::try_from(output_size.len()).map_err(|_| CAbiError { operation: "pytorch.tensor.adaptive_avg_pool2d", status: -2 })?;
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::aoti_torch_cpu__adaptive_avg_pool2d(self.raw.as_ptr(), output_size.as_ptr(), output_size_length, &mut raw) };
-        check_status("pytorch.tensor.adaptive_avg_pool2d", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.adaptive_avg_pool2d", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn run_torchscript(&self, path: &str) -> Result<Self, CAbiError> {
-        let path_c = std::ffi::CString::new(path.as_bytes()).map_err(|_| CAbiError { operation: "pytorch.tensor.run_torchscript", status: -3 })?;
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_run_torchscript(self.raw.as_ptr(), path_c.as_ptr(), &mut raw) };
-        check_status("pytorch.tensor.run_torchscript", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.tensor.run_torchscript", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-}
-
-impl Drop for Tensor {
-    fn drop(&mut self) {
-        // SAFETY: this adapter is the sole owner and invokes the destructor once.
-        let status = unsafe { ffi::aoti_torch_delete_tensor_object(self.raw.as_ptr()) };
-        debug_assert_eq!(status, 0);
-    }
-}
-
-impl TorchScriptModel {
-    pub fn load_torchscript(path: &str) -> Result<Self, CAbiError> {
-        let path_c = std::ffi::CString::new(path.as_bytes()).map_err(|_| CAbiError { operation: "pytorch.torchscript.load", status: -3 })?;
-        let mut raw: *mut ffi::TerlanTorchScriptModelOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_load_torchscript(path_c.as_ptr(), &mut raw) };
-        check_status("pytorch.torchscript.load", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.torchscript.load", status: -1 })?;
-        Ok(Self { raw })
-    }
-
-    pub fn torchscript_forward(&self, input: &Tensor) -> Result<Tensor, CAbiError> {
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_torchscript_forward(self.raw.as_ptr(), input.raw.as_ptr(), &mut raw) };
-        check_status("pytorch.torchscript.forward", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.torchscript.forward", status: -1 })?;
-        Ok(Tensor { raw })
-    }
-
-    pub fn torchscript_forward2(&self, first: &Tensor, second: &Tensor) -> Result<Tensor, CAbiError> {
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_torchscript_forward2(self.raw.as_ptr(), first.raw.as_ptr(), second.raw.as_ptr(), &mut raw) };
-        check_status("pytorch.torchscript.forward2", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.torchscript.forward2", status: -1 })?;
-        Ok(Tensor { raw })
-    }
-
-    pub fn torchscript_forward_pair(&self, input: &Tensor) -> Result<TensorPair, CAbiError> {
-        let mut raw: *mut ffi::TerlanTorchScriptTensorPairOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_torchscript_forward_pair(self.raw.as_ptr(), input.raw.as_ptr(), &mut raw) };
-        check_status("pytorch.torchscript.forward_pair", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.torchscript.forward_pair", status: -1 })?;
-        Ok(TensorPair { raw })
-    }
-
-    pub fn torchscript_forward_float(&self, input: &Tensor) -> Result<f64, CAbiError> {
-        let mut out_out_value: f64 = Default::default();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_torchscript_forward_float(self.raw.as_ptr(), input.raw.as_ptr(), &mut out_out_value) };
-        check_status("pytorch.torchscript.forward_float", status as i32, 0)?;
-        Ok(out_out_value as f64)
-    }
-
-    pub fn torchscript_forward_int(&self, input: &Tensor) -> Result<i64, CAbiError> {
-        let mut out_out_value: i64 = Default::default();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_torchscript_forward_int(self.raw.as_ptr(), input.raw.as_ptr(), &mut out_out_value) };
-        check_status("pytorch.torchscript.forward_int", status as i32, 0)?;
-        Ok(out_out_value as i64)
-    }
-
-    pub fn torchscript_forward_bool(&self, input: &Tensor) -> Result<bool, CAbiError> {
-        let mut out_out_value: bool = Default::default();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_torchscript_forward_bool(self.raw.as_ptr(), input.raw.as_ptr(), &mut out_out_value) };
-        check_status("pytorch.torchscript.forward_bool", status as i32, 0)?;
-        Ok(out_out_value)
-    }
-
-    pub fn torchscript_forward_string(&self, input: &Tensor) -> Result<String, CAbiError> {
-        let mut out_out_value: *mut std::ffi::c_char = std::ptr::null_mut();
-        let mut out_out_value_length: usize = 0;
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_torchscript_forward_string(self.raw.as_ptr(), input.raw.as_ptr(), &mut out_out_value, &mut out_out_value_length) };
-        check_status("pytorch.torchscript.forward_string", status as i32, 0)?;
-        let bytes = if out_out_value_length == 0 {
-            Ok(Vec::new())
-        } else {
-            NonNull::new(out_out_value).map(|pointer| {
-                // SAFETY: the producer returned `out_out_value_length` initialized bytes; they are copied before destruction.
-                unsafe { std::slice::from_raw_parts(pointer.as_ptr().cast::<u8>(), out_out_value_length).to_vec() }
-            }).ok_or(CAbiError { operation: "pytorch.torchscript.forward_string", status: -1 })
-        };
-        // SAFETY: ownership metadata transfers this pointer to the named destructor exactly once.
-        unsafe { ffi::terlan_pytorch_delete_owned_string(out_out_value) };
-        let bytes = bytes?;
-        let value = String::from_utf8(bytes).map_err(|_| CAbiError { operation: "pytorch.torchscript.forward_string", status: -3 })?;
-        Ok(value)
-    }
-
-    pub fn torchscript_forward_int_list(&self, input: &Tensor) -> Result<Vec<i64>, CAbiError> {
-        let mut out_out_values: *mut i64 = std::ptr::null_mut();
-        let mut out_out_values_length: usize = 0;
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_torchscript_forward_int_list(self.raw.as_ptr(), input.raw.as_ptr(), &mut out_out_values, &mut out_out_values_length) };
-        check_status("pytorch.torchscript.forward_int_list", status as i32, 0)?;
-        let values = if out_out_values_length == 0 {
-            Ok(Vec::new())
-        } else {
-            NonNull::new(out_out_values).map(|pointer| {
-                // SAFETY: the producer returned `out_out_values_length` initialized elements; they are copied before destruction.
-                unsafe { std::slice::from_raw_parts(pointer.as_ptr(), out_out_values_length).to_vec() }
-            }).ok_or(CAbiError { operation: "pytorch.torchscript.forward_int_list", status: -1 })
-        };
-        // SAFETY: ownership metadata transfers this array to the named destructor exactly once.
-        unsafe { ffi::terlan_pytorch_delete_owned_int_array(out_out_values) };
-        Ok(values?)
-    }
-
-    pub fn torchscript_forward_float_list(&self, input: &Tensor) -> Result<Vec<f64>, CAbiError> {
-        let mut out_out_values: *mut f64 = std::ptr::null_mut();
-        let mut out_out_values_length: usize = 0;
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_torchscript_forward_float_list(self.raw.as_ptr(), input.raw.as_ptr(), &mut out_out_values, &mut out_out_values_length) };
-        check_status("pytorch.torchscript.forward_float_list", status as i32, 0)?;
-        let values = if out_out_values_length == 0 {
-            Ok(Vec::new())
-        } else {
-            NonNull::new(out_out_values).map(|pointer| {
-                // SAFETY: the producer returned `out_out_values_length` initialized elements; they are copied before destruction.
-                unsafe { std::slice::from_raw_parts(pointer.as_ptr(), out_out_values_length).to_vec() }
-            }).ok_or(CAbiError { operation: "pytorch.torchscript.forward_float_list", status: -1 })
-        };
-        // SAFETY: ownership metadata transfers this array to the named destructor exactly once.
-        unsafe { ffi::terlan_pytorch_delete_owned_float_array(out_out_values) };
-        Ok(values?)
-    }
-
-    pub fn torchscript_forward_bool_list(&self, input: &Tensor) -> Result<Vec<bool>, CAbiError> {
-        let mut out_out_values: *mut u8 = std::ptr::null_mut();
-        let mut out_out_values_length: usize = 0;
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_torchscript_forward_bool_list(self.raw.as_ptr(), input.raw.as_ptr(), &mut out_out_values, &mut out_out_values_length) };
-        check_status("pytorch.torchscript.forward_bool_list", status as i32, 0)?;
-        let values = if out_out_values_length == 0 {
-            Ok(Vec::new())
-        } else {
-            NonNull::new(out_out_values).map(|pointer| {
-                // SAFETY: the producer returned `out_out_values_length` initialized elements; they are copied before destruction.
-                unsafe { std::slice::from_raw_parts(pointer.as_ptr(), out_out_values_length).to_vec() }
-            }).ok_or(CAbiError { operation: "pytorch.torchscript.forward_bool_list", status: -1 })
-        };
-        // SAFETY: ownership metadata transfers this array to the named destructor exactly once.
-        unsafe { ffi::terlan_pytorch_delete_owned_bool_array(out_out_values) };
-        let values = values?;
-        values.into_iter().map(|value| match value {
-            0 => Ok(false),
-            1 => Ok(true),
-            _ => Err(CAbiError { operation: "pytorch.torchscript.forward_bool_list", status: -4 }),
-        }).collect()
-    }
-
-    pub fn torchscript_forward_string_list(&self, input: &Tensor) -> Result<Vec<String>, CAbiError> {
-        let mut out_out_values: *mut *mut std::ffi::c_char = std::ptr::null_mut();
-        let mut out_out_values_lengths: *mut usize = std::ptr::null_mut();
-        let mut out_out_values_count: usize = 0;
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_torchscript_forward_string_list(self.raw.as_ptr(), input.raw.as_ptr(), &mut out_out_values, &mut out_out_values_lengths, &mut out_out_values_count) };
-        check_status("pytorch.torchscript.forward_string_list", status as i32, 0)?;
-        let bytes: Result<Vec<Vec<u8>>, CAbiError> = if out_out_values_count == 0 {
-            Ok(Vec::new())
-        } else {
-            match (NonNull::new(out_out_values), NonNull::new(out_out_values_lengths)) {
-                (Some(values_pointer), Some(lengths_pointer)) => {
-                    // SAFETY: the producer returned `out_out_values_count` initialized pointers and lengths; every string is copied before destruction.
-                    let value_pointers = unsafe { std::slice::from_raw_parts(values_pointer.as_ptr(), out_out_values_count) };
-                    let value_lengths = unsafe { std::slice::from_raw_parts(lengths_pointer.as_ptr(), out_out_values_count) };
-                    value_pointers.iter().zip(value_lengths).map(|(&value_pointer, &value_length)| {
-                        if value_length == 0 {
-                            Ok(Vec::new())
-                        } else {
-                            let value_pointer = NonNull::new(value_pointer).ok_or(CAbiError { operation: "pytorch.torchscript.forward_string_list", status: -1 })?;
-                            // SAFETY: the matching length describes this initialized string allocation.
-                            Ok(unsafe { std::slice::from_raw_parts(value_pointer.as_ptr().cast::<u8>(), value_length).to_vec() })
-                        }
-                    }).collect()
-                }
-                _ => Err(CAbiError { operation: "pytorch.torchscript.forward_string_list", status: -1 }),
-            }
-        };
-        // SAFETY: ownership metadata transfers both arrays and their string elements to the named destructor exactly once.
-        unsafe { ffi::terlan_pytorch_delete_owned_string_array(out_out_values, out_out_values_lengths, out_out_values_count) };
-        let bytes = bytes?;
-        bytes.into_iter().map(|value| String::from_utf8(value).map_err(|_| CAbiError { operation: "pytorch.torchscript.forward_string_list", status: -3 })).collect()
-    }
-
-}
-
-impl Drop for TorchScriptModel {
-    fn drop(&mut self) {
-        // SAFETY: this adapter is the sole owner and invokes the destructor once.
-        let status = unsafe { ffi::terlan_pytorch_delete_torchscript_model(self.raw.as_ptr()) };
-        debug_assert_eq!(status, 0);
-    }
-}
-
-impl TensorPair {
-    pub fn tensor_pair_first(&self) -> Result<Tensor, CAbiError> {
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_tensor_pair_first(self.raw.as_ptr(), &mut raw) };
-        check_status("pytorch.torchscript.tensor_pair_first", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.torchscript.tensor_pair_first", status: -1 })?;
-        Ok(Tensor { raw })
-    }
-
-    pub fn tensor_pair_second(&self) -> Result<Tensor, CAbiError> {
-        let mut raw: *mut ffi::AtenTensorOpaque = std::ptr::null_mut();
-        // SAFETY: generated arguments follow the reviewed ownership metadata.
-        let status = unsafe { ffi::terlan_pytorch_tensor_pair_second(self.raw.as_ptr(), &mut raw) };
-        check_status("pytorch.torchscript.tensor_pair_second", status as i32, 0)?;
-        let raw = NonNull::new(raw).ok_or(CAbiError { operation: "pytorch.torchscript.tensor_pair_second", status: -1 })?;
-        Ok(Tensor { raw })
-    }
-
-}
-
-impl Drop for TensorPair {
-    fn drop(&mut self) {
-        // SAFETY: this adapter is the sole owner and invokes the destructor once.
-        let status = unsafe { ffi::terlan_pytorch_delete_tensor_pair(self.raw.as_ptr()) };
-        debug_assert_eq!(status, 0);
-    }
-}
-
-pub fn abi_version() -> i64 {
-    // SAFETY: generated arguments follow the reviewed ownership metadata.
-    let value = unsafe { ffi::aoti_torch_abi_version() };
-    value as i64
-}
-
-fn check_status(operation: &'static str, status: i32, success: i32) -> Result<(), CAbiError> {
-    if status == success {
-        Ok(())
-    } else {
-        Err(CAbiError { operation, status })
+    unsafe extern "C++" {
+        include!("include/libtorch_bindings.hpp");
+        include!("include/terlan_enum_adapters.hpp");
+        include!("include/terlan_string_adapters.hpp");
+        include!("include/terlan_collection_adapters.hpp");
+        include!("include/terlan_exception_adapters.hpp");
+        include!("include/terlan_owned_value_adapters.hpp");
+        include!("include/terlan_mutation_adapters.hpp");
+        #[namespace = "at"]
+        type Tensor;
+        type Adam;
+        type AnomalyModeGuard;
+        type AutocastCpuGuard;
+        type CudaStream;
+        type DefaultDtypeGuard;
+        type DeterministicAlgorithmsGuard;
+        type Float32MatmulPrecisionGuard;
+        type Generator;
+        type HistogramddResult;
+        type InferenceModeGuard;
+        type StorageHandle;
+        type TorchScriptModel;
+        type WarningModeGuard;
+        #[namespace = "c10"]
+        type Scalar;
+        type TensorPair;
+        type TerlanPytorchTensorTensorResourceListInput;
+        fn terlan_resource_list_pytorch_tensor_tensor_new() -> UniquePtr<TerlanPytorchTensorTensorResourceListInput>;
+        fn terlan_resource_list_pytorch_tensor_tensor_push(values: Pin<&mut TerlanPytorchTensorTensorResourceListInput>, value: &Tensor) -> bool;
+        fn terlan_resource_pytorch_cuda_stream_copy(value: &CudaStream) -> UniquePtr<CudaStream>;
+        fn terlan_resource_pytorch_randomcompletion_generator_copy(value: &Generator) -> UniquePtr<Generator>;
+        fn terlan_resource_pytorch_storagenative_storagehandle_copy(value: &StorageHandle) -> UniquePtr<StorageHandle>;
+        fn terlan_resource_pytorch_tensor_tensor_copy(value: &Tensor) -> UniquePtr<Tensor>;
+        type TerlanOwnedTuplePytorchTensorEmbeddingBag;
+        type TerlanOwnedTuplePytorchTensorEmbeddingBagWeighted;
+        type TerlanOwnedTuplePytorchTensorEmbeddingBagPadding;
+        type TerlanOwnedTuplePytorchTensorEmbeddingBagPaddingWeighted;
+        type TerlanOwnedTuplePytorchRegularizationNativeDropout;
+        type TerlanOwnedTuplePytorchRegularizationNativeLayerNorm;
+        type TerlanOwnedTuplePytorchRegularizationNativeGroupNorm;
+        type TerlanOwnedTuplePytorchRegularizationNativeGroupNormBackward;
+        type TerlanOwnedTuplePytorchRegularizationNativeLayerNormBackward;
+        type TerlanOwnedTuplePytorchRegularizationNativeBatchNorm;
+        type TerlanOwnedTuplePytorchRegularizationNativeBatchNormBackward;
+        type TerlanOwnedTuplePytorchRegularizationLogSigmoidForward;
+        type TerlanOwnedTuplePytorchRegularizationBatchNormUpdateStats;
+        type TerlanOwnedTuplePytorchPoolingAdaptiveMaxPool1d;
+        type TerlanOwnedTuplePytorchPoolingAdaptiveMaxPool2d;
+        type TerlanOwnedTuplePytorchPoolingAdaptiveMaxPool3d;
+        type TerlanOwnedTuplePytorchPoolingMaxPool1dWithIndices;
+        type TerlanOwnedTuplePytorchPoolingMaxPool2dWithIndices;
+        type TerlanOwnedTuplePytorchPoolingMaxPool3dWithIndices;
+        type TerlanOwnedTuplePytorchPoolingFractionalMaxPool2d;
+        type TerlanOwnedTuplePytorchPoolingFractionalMaxPool3d;
+        type TerlanOwnedTuplePytorchSpatialGridSampler2dBackward;
+        type TerlanOwnedTuplePytorchSpatialGridSampler3dBackward;
+        type TerlanOwnedTuplePytorchLossNllLossForward;
+        type TerlanOwnedTuplePytorchLossNllLoss2dForward;
+        type TerlanOwnedTuplePytorchSelectionCummax;
+        type TerlanOwnedTuplePytorchSelectionCummin;
+        type TerlanOwnedTuplePytorchSelectionKthvalue;
+        type TerlanOwnedTuplePytorchSelectionMaxDim;
+        type TerlanOwnedTuplePytorchSelectionMedianDim;
+        type TerlanOwnedTuplePytorchSelectionMinDim;
+        type TerlanOwnedTuplePytorchSelectionMode;
+        type TerlanOwnedTuplePytorchSelectionNanmedianDim;
+        type TerlanOwnedTuplePytorchSelectionSort;
+        type TerlanOwnedTuplePytorchSelectionTopk;
+        type TerlanOwnedTuplePytorchLinearStorageCompletionConvTbcBackward;
+        type TerlanOwnedTuplePytorchConvolutionNativeConvolutionBackward;
+        type TerlanOwnedTuplePytorchCorrectionStatisticsCompletionStdMeanCorrectionDefault;
+        type TerlanOwnedTuplePytorchCorrectionStatisticsCompletionVarMeanCorrectionDefault;
+        type TerlanOwnedTuplePytorchCorrectionStatisticsCompletionStdMeanCorrectionDimensions;
+        type TerlanOwnedTuplePytorchCorrectionStatisticsCompletionVarMeanCorrectionDimensions;
+        type TerlanOwnedTuplePytorchUnaryFrexp;
+        type TerlanOwnedTuplePytorchRandomCompletionRreluWithNoiseFunctional;
+        type TerlanOwnedTuplePytorchHistogramCompletionHistogramBinCt;
+        type TerlanOwnedTuplePytorchHistogramCompletionHistogramBinsTensor;
+        type TerlanOwnedTuplePytorchUniqueCompletionUniqueConsecutive;
+        type TerlanOwnedTuplePytorchUniqueCompletionUniqueDim;
+        type TerlanOwnedTuplePytorchUniqueCompletionUniqueDimConsecutive;
+        type TerlanOwnedTuplePytorchSvdCompletionSvdDefault;
+        type TerlanOwnedTuplePytorchStatisticsAminmax;
+        type TerlanOwnedTuplePytorchStatisticsAminmaxDim;
+        type TerlanOwnedTuplePytorchStatisticsStdMean;
+        type TerlanOwnedTuplePytorchStatisticsVarMean;
+        type TerlanOwnedTuplePytorchStatisticsStdMeanDimensions;
+        type TerlanOwnedTuplePytorchStatisticsVarMeanDimensions;
+        type TerlanOwnedTuplePytorchLinalgGeqrf;
+        type TerlanOwnedTuplePytorchLinalgLinalgCholeskyEx;
+        type TerlanOwnedTuplePytorchLinalgLinalgEig;
+        type TerlanOwnedTuplePytorchLinalgLinalgEigh;
+        type TerlanOwnedTuplePytorchLinalgLinalgInvEx;
+        type TerlanOwnedTuplePytorchLinalgLinalgLdlFactor;
+        type TerlanOwnedTuplePytorchLinalgLinalgLdlFactorEx;
+        type TerlanOwnedTuplePytorchLinalgLinalgLu;
+        type TerlanOwnedTuplePytorchLinalgLinalgLuFactor;
+        type TerlanOwnedTuplePytorchLinalgLinalgLuFactorEx;
+        type TerlanOwnedTuplePytorchLinalgLinalgQr;
+        type TerlanOwnedTuplePytorchLinalgLinalgSlogdet;
+        type TerlanOwnedTuplePytorchLinalgLinalgSolveEx;
+        type TerlanOwnedTuplePytorchLinalgQr;
+        type TerlanOwnedTuplePytorchLinalgSlogdet;
+        type TerlanOwnedTuplePytorchLinalgTriangularSolve;
+        type TerlanOwnedTuplePytorchLinalgLinalgLstsq;
+        type TerlanOwnedTuplePytorchLinalgLinalgLstsqConfigured;
+        type TerlanOwnedTuplePytorchLinalgLinalgSvd;
+        type TerlanOwnedTuplePytorchLossCompletionMultilabelMarginLossForward;
+        type TerlanOwnedTuplePytorchQuantizationCompletionFakeQuantizePerTensorAffineCachemask;
+        type TerlanOwnedTuplePytorchQuantizationCompletionFakeQuantizePerChannelAffineCachemask;
+        type TerlanOwnedTuplePytorchLuUnpackCompletionLuUnpackDefault;
+        type TerlanOwnedTuplePytorchRecurrentLstmCell;
+        type TerlanOwnedTuplePytorchRecurrentRnnTanh;
+        type TerlanOwnedTuplePytorchRecurrentRnnRelu;
+        type TerlanOwnedTuplePytorchRecurrentGru;
+        type TerlanOwnedTuplePytorchRecurrentLstm;
+        type TerlanOwnedTuplePytorchQuantizationInternalsChooseQparamsOptimized;
+        type TerlanOwnedTuplePytorchRecurrentDataRnnTanhData;
+        type TerlanOwnedTuplePytorchRecurrentDataRnnReluData;
+        type TerlanOwnedTuplePytorchRecurrentDataGruData;
+        type TerlanOwnedTuplePytorchRecurrentDataLstmData;
+        fn adam_checkpoint(arg0: &Adam) -> Result<UniquePtr<CxxVector<u8>>>;
+        fn adam_create(arg0: f64, arg1: f64, arg2: f64, arg3: f64, arg4: f64) -> Result<UniquePtr<Adam>>;
+        fn adam_parameter_count(arg0: &Adam) -> Result<i64>;
+        fn adam_step_count(arg0: &Adam) -> Result<i64>;
+        fn anomaly_check_nan_enabled_exact() -> Result<bool>;
+        fn anomaly_mode_enabled_exact() -> Result<bool>;
+        fn anomaly_mode_enter_exact(enabled: bool, check_nan: bool) -> Result<UniquePtr<AnomalyModeGuard>>;
+        fn autocast_cache_enabled_exact() -> Result<bool>;
+        fn autocast_cpu_dtype_exact() -> Result<i64>;
+        fn autocast_cpu_enabled_exact() -> Result<bool>;
+        fn autocast_cpu_enter_exact(enabled: bool, dtype: i64, cache_enabled: bool) -> Result<UniquePtr<AutocastCpuGuard>>;
+        fn cuda_stream_create(device_index: i64, high_priority: bool) -> Result<UniquePtr<CudaStream>>;
+        fn cuda_stream_set_current(stream: &CudaStream) -> Result<()>;
+        fn cuda_stream_synchronize(stream: &CudaStream) -> Result<()>;
+        fn cudnn_is_acceptable_exact(input: &Tensor) -> Result<bool>;
+        fn default_dtype_enter_exact(dtype: i64) -> Result<UniquePtr<DefaultDtypeGuard>>;
+        fn default_dtype_exact() -> Result<i64>;
+        fn deterministic_algorithms_enabled_exact() -> Result<bool>;
+        fn deterministic_algorithms_enter_exact(enabled: bool, warn_only: bool) -> Result<UniquePtr<DeterministicAlgorithmsGuard>>;
+        fn deterministic_algorithms_warn_only_exact() -> Result<bool>;
+        fn deterministic_debug_mode_exact() -> Result<i64>;
+        fn float32_matmul_precision_enter_exact(code: i64) -> Result<UniquePtr<Float32MatmulPrecisionGuard>>;
+        fn float32_matmul_precision_exact() -> Result<UniquePtr<CxxString>>;
+        fn generator_create(seed: i64) -> Result<UniquePtr<Generator>>;
+        fn get_num_interop_threads_exact() -> Result<i64>;
+        fn get_num_threads_exact() -> Result<i64>;
+        fn grad_mode_enabled_exact() -> Result<bool>;
+        fn histogramdd_bins_result(input: &Tensor, bins: &[i64], has_range: bool, range: &[f64], has_weight: bool, weight: &Tensor, density: bool) -> Result<UniquePtr<HistogramddResult>>;
+        fn histogramdd_int_result(input: &Tensor, bins: i64, has_range: bool, range: &[f64], has_weight: bool, weight: &Tensor, density: bool) -> Result<UniquePtr<HistogramddResult>>;
+        fn inference_mode_enabled_exact() -> Result<bool>;
+        fn inference_mode_enter_exact(enabled: bool) -> Result<UniquePtr<InferenceModeGuard>>;
+        fn inference_mode_transition_probe_exact() -> Result<bool>;
+        fn init_num_threads_exact() -> Result<()>;
+        fn initial_seed_exact() -> Result<i64>;
+        fn is_vulkan_available_exact() -> Result<bool>;
+        fn manual_seed_exact(seed: i64) -> Result<UniquePtr<Generator>>;
+        fn seed_exact() -> Result<i64>;
+        fn set_anomaly_mode_exact(enabled: bool, check_nan: bool) -> Result<()>;
+        fn set_autocast_cache_enabled_exact(enabled: bool) -> Result<()>;
+        fn set_autocast_cpu_dtype_exact(dtype: i64) -> Result<()>;
+        fn set_autocast_cpu_enabled_exact(enabled: bool) -> Result<()>;
+        fn set_default_dtype_exact(dtype: i64) -> Result<()>;
+        fn set_deterministic_algorithms_exact(enabled: bool, warn_only: bool) -> Result<()>;
+        fn set_deterministic_debug_mode_exact(mode: i64) -> Result<()>;
+        fn set_float32_matmul_precision_code_exact(code: i64) -> Result<()>;
+        fn set_flush_denormal_exact(enabled: bool) -> Result<bool>;
+        fn set_grad_mode_enabled_exact(enabled: bool) -> Result<()>;
+        fn set_num_interop_threads_exact(count: i64) -> Result<()>;
+        fn set_num_threads_exact(count: i64) -> Result<()>;
+        fn set_rng_state_exact(state: &Tensor) -> Result<()>;
+        fn set_warn_always_exact(enabled: bool) -> Result<()>;
+        fn sgd_create(arg0: f64, arg1: f64, arg2: f64, arg3: f64, arg4: bool) -> Result<UniquePtr<Adam>>;
+        fn storage_from_tensor(tensor: &Tensor) -> Result<UniquePtr<StorageHandle>>;
+        fn storage_is_shared(tensor: &Tensor) -> Result<bool>;
+        fn sym_constrain_range_exact(scalar_is_integer: bool, scalar_integer: i64, scalar_floating: f64, has_min: bool, min: i64, has_max: bool, max: i64) -> Result<()>;
+        fn sym_constrain_range_for_size_exact(scalar_is_integer: bool, scalar_integer: i64, scalar_floating: f64, has_min: bool, min: i64, has_max: bool, max: i64) -> Result<()>;
+        fn sym_is_contiguous_exact(input: &Tensor, memory_format: i64) -> Result<bool>;
+        fn tensor_abi_version() -> Result<i64>;
+        fn tensor_backward(arg0: &Tensor) -> Result<()>;
+        fn tensor_backward_with_gradient(arg0: &Tensor, arg1: &Tensor, arg2: bool, arg3: bool) -> Result<()>;
+        fn tensor_device_index(arg0: &Tensor) -> Result<i64>;
+        fn tensor_device_type(arg0: &Tensor) -> Result<i64>;
+        fn tensor_dtype(arg0: &Tensor) -> Result<i64>;
+        fn tensor_item_bool(arg0: &Tensor) -> Result<bool>;
+        fn tensor_item_float(arg0: &Tensor) -> Result<f64>;
+        fn tensor_item_int(arg0: &Tensor) -> Result<i64>;
+        fn tensor_load_torchscript(arg0: &str) -> Result<UniquePtr<TorchScriptModel>>;
+        fn tensor_pair_first(arg0: &TensorPair) -> Result<UniquePtr<Tensor>>;
+        fn tensor_pair_second(arg0: &TensorPair) -> Result<UniquePtr<Tensor>>;
+        fn tensor_qscheme(tensor: &Tensor) -> Result<i64>;
+        fn tensor_run_torchscript(arg0: &Tensor, arg1: &str) -> Result<UniquePtr<Tensor>>;
+        fn tensor_storage_offset(arg0: &Tensor) -> Result<i64>;
+        fn tensor_torchscript_forward(arg0: &TorchScriptModel, arg1: &Tensor) -> Result<UniquePtr<Tensor>>;
+        fn tensor_torchscript_forward2(arg0: &TorchScriptModel, arg1: &Tensor, arg2: &Tensor) -> Result<UniquePtr<Tensor>>;
+        fn tensor_torchscript_forward_bool(arg0: &TorchScriptModel, arg1: &Tensor) -> Result<bool>;
+        fn tensor_torchscript_forward_bool_list(arg0: &TorchScriptModel, arg1: &Tensor) -> Result<UniquePtr<CxxVector<u8>>>;
+        fn tensor_torchscript_forward_float(arg0: &TorchScriptModel, arg1: &Tensor) -> Result<f64>;
+        fn tensor_torchscript_forward_float_list(arg0: &TorchScriptModel, arg1: &Tensor) -> Result<UniquePtr<CxxVector<f64>>>;
+        fn tensor_torchscript_forward_int(arg0: &TorchScriptModel, arg1: &Tensor) -> Result<i64>;
+        fn tensor_torchscript_forward_int_list(arg0: &TorchScriptModel, arg1: &Tensor) -> Result<UniquePtr<CxxVector<i64>>>;
+        fn tensor_torchscript_forward_optional_tensor(arg0: &TorchScriptModel, arg1: &Tensor) -> Result<UniquePtr<Tensor>>;
+        fn tensor_torchscript_forward_string(arg0: &TorchScriptModel, arg1: &Tensor) -> Result<UniquePtr<CxxString>>;
+        fn tensor_torchscript_forward_string_list(arg0: &TorchScriptModel, arg1: &Tensor) -> Result<UniquePtr<CxxVector<CxxString>>>;
+        fn warn_always_enabled_exact() -> Result<bool>;
+        fn warning_mode_enter_exact(enabled: bool) -> Result<UniquePtr<WarningModeGuard>>;
+        #[namespace = "at"]
+        fn q_per_channel_axis(self: &Tensor) -> i64;
+        #[namespace = "at"]
+        fn q_scale(self: &Tensor) -> f64;
+        #[namespace = "at"]
+        fn q_zero_point(self: &Tensor) -> i64;
+        #[namespace = "terlan::tensor_packet"]
+        fn export_tensor_packet(tensor: &Tensor) -> Result<UniquePtr<CxxVector<u8>>>;
+        #[namespace = "terlan::tensor_packet"]
+        fn import_tensor_packet(packet: &[u8]) -> Result<UniquePtr<Tensor>>;
+        fn terlan_owned_value_pytorch_tensor_ones(size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_ones_dtype(size: &[i64], dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_ones_layout(size: &[i64], dtype: i64, layout: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_ones_device(size: &[i64], dtype: i64, layout: i64, device: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_ones_options(size: &[i64], dtype: i64, layout: i64, device: &str, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_item(value: &Tensor) -> UniquePtr<Scalar>;
+        fn terlan_owned_value_pytorch_tensor_mul_int(value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_abs(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_detach(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_ceil(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_floor(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_reciprocal(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_round(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_sign(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_square(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_trunc(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_clone(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_relu(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_multiply(value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_multiply_scalar(value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_negate(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_unsqueeze(self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_matmul(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_transpose(self_value: &Tensor, dim0: i64, dim1: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_exp(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_sqrt(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_log(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_minimum(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_gather(self_value: &Tensor, dim: i64, index: &Tensor, sparse_grad: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_mean(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_sum(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_mean_dimensions(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_sum_dimensions(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_gelu(self_value: &Tensor, approximate: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_softmax(self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_argmax(self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_embedding(weight: &Tensor, indices: &Tensor, padding_idx: i64, scale_grad_by_freq: bool, sparse: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_embedding_renorm(self_value: &Tensor, indices: &Tensor, max_norm: f64, norm_type: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_batch_norm(input: &Tensor, weight: &Tensor, bias: &Tensor, running_mean: &Tensor, running_var: &Tensor, training: bool, momentum: f64, eps: f64, cudnn_enabled: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_layer_norm(input: &Tensor, normalized_shape: &[i64], weight: &Tensor, bias: &Tensor, eps: f64, cudnn_enable: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_mse_loss(self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_narrow(self_value: &Tensor, dim: i64, start: i64, length: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_flatten(self_value: &Tensor, start_dim: i64, end_dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_amax(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_adaptive_avg_pool2d(self_value: &Tensor, output_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_copy(self_value: &Tensor, src: &Tensor, non_blocking: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_from_int(arg0: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_from_float(arg0: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_from_bool(arg0: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_from_floats(arg0: &[f64], arg1: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_from_ints(arg0: &[i64], arg1: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_full_float(arg0: &[i64], arg1: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_to_device(arg0: &Tensor, arg1: i64, arg2: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_to_dtype(arg0: &Tensor, arg1: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_to_other(tensor: &Tensor, other: &Tensor, non_blocking: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_to_device_dtype(tensor: &Tensor, device_type: i64, device_index: i64, dtype: i64, non_blocking: bool, copy: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_to_dtype_layout(tensor: &Tensor, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device_type: i64, device_index: i64, has_pin_memory: bool, pin_memory: bool, non_blocking: bool, copy: bool, has_memory_format: bool, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_nested_from_tensor_list(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_nested_to_padded_tensor(tensor: &Tensor, padding: f64, has_output_size: bool, output_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_to_padded_tensor(tensor: &Tensor, padding: f64, has_output_size: bool, output_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_from_file(filename: &str, has_shared: bool, shared: bool, has_size: bool, size: i64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: i64, device_type: i64, device_index: i64, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_full_typed_native(arg0: &[i64], arg1: f64, arg2: i64, arg3: i64, arg4: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_empty_typed_native(arg0: &[i64], arg1: i64, arg2: i64, arg3: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_arange_typed_native(arg0: f64, arg1: f64, arg2: f64, arg3: i64, arg4: i64, arg5: i64, arg6: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_linspace_typed_native(arg0: f64, arg1: f64, arg2: i64, arg3: i64, arg4: i64, arg5: i64, arg6: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_logspace_typed_native(arg0: f64, arg1: f64, arg2: i64, arg3: f64, arg4: i64, arg5: i64, arg6: i64, arg7: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_eye_typed_native(arg0: i64, arg1: i64, arg2: i64, arg3: i64, arg4: i64, arg5: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_add(self_value: &Tensor, other: &Tensor, alpha: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_subtract(self_value: &Tensor, other: &Tensor, alpha: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_divide(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_add_scalar(self_value: &Tensor, other: f64, alpha: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_require_grad(arg0: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_backward_many_token(outputs: &TerlanPytorchTensorTensorResourceListInput, grad_outputs: &TerlanPytorchTensorTensorResourceListInput, retain_graph: bool, create_graph: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_autograd_grad(arg0: &Tensor, arg1: &Tensor, arg2: &Tensor, arg3: bool, arg4: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_gradient(arg0: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_gradient_with_graph(arg0: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_sgd_step(arg0: &Tensor, arg1: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_categorical_sample(arg0: &Tensor, arg1: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_mse_loss_gradient(arg0: &Tensor, arg1: &Tensor, arg2: &Tensor, arg3: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_cross_entropy_loss(arg0: &Tensor, arg1: &Tensor, arg2: i64, arg3: i64, arg4: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_clamp(arg0: &Tensor, arg1: f64, arg2: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_conv2d(arg0: &Tensor, arg1: &Tensor, arg2: &Tensor, arg3: &[i64], arg4: &[i64], arg5: &[i64], arg6: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_torchscript_forward_pair(arg0: &TorchScriptModel, arg1: &Tensor) -> UniquePtr<TensorPair>;
+        fn terlan_owned_value_pytorch_tensor_tanh(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_resize_cxx(self_value: &Tensor, size: &[i64], has_memory_format: bool, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_empty_strided_cxx(size: &[i64], stride: &[i64], has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensor_empty_permuted_cxx(size: &[i64], physical_layout: &[i64], has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorjoining_block_diag(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorjoining_cartesian_prod(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorjoining_column_stack(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorjoining_dstack(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorjoining_hstack(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorjoining_row_stack(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorjoining_vstack(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorjoining_cat(tensors: &TerlanPytorchTensorTensorResourceListInput, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorjoining_stack(tensors: &TerlanPytorchTensorTensorResourceListInput, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorjoining_concat(tensors: &TerlanPytorchTensorTensorResourceListInput, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorjoining_concatenate(tensors: &TerlanPytorchTensorTensorResourceListInput, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distance_cosine_similarity(x1: &Tensor, x2: &Tensor, dim: i64, eps: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distance_chalf(input: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distance_pairwise_distance(x1: &Tensor, x2: &Tensor, p: f64, eps: f64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_regularization_alpha_dropout(input: &Tensor, p: f64, train: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_regularization_dropout(input: &Tensor, p: f64, train: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_regularization_feature_dropout(input: &Tensor, p: f64, train: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_regularization_native_dropout_backward(grad_output: &Tensor, mask: &Tensor, scale: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_regularization_log_sigmoid_backward(grad_output: &Tensor, input: &Tensor, buffer: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dropoutcompletion_feature_alpha_dropout(input: &Tensor, p: f64, train: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_glucompletion_glu_jvp(glu: &Tensor, x: &Tensor, dx: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_glucompletion_glu_backward_jvp(grad_x: &Tensor, grad_glu: &Tensor, x: &Tensor, dgrad_glu: &Tensor, dx: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_adaptive_avg_pool1d(self_value: &Tensor, output_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_avg_pool1d(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_max_pool1d(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_avg_pool2d(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_avg_pool3d(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_avg_pool2d_backward(grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_avg_pool3d_backward(grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_max_pool2d(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_max_pool3d(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_adaptive_max_pool2d_backward(grad_output: &Tensor, self_value: &Tensor, indices: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_adaptive_max_pool3d_backward(grad_output: &Tensor, self_value: &Tensor, indices: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_fractional_max_pool2d_backward(grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], output_size: &[i64], indices: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_fractional_max_pool3d_backward(grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], output_size: &[i64], indices: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_max_pool2d_with_indices_backward(grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool, indices: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_max_pool3d_with_indices_backward(grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool, indices: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_max_unpool2d(self_value: &Tensor, indices: &Tensor, output_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_max_unpool3d(self_value: &Tensor, indices: &Tensor, output_size: &[i64], stride: &[i64], padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_avg_pool2d_divisor(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool, divisor_override: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_avg_pool3d_divisor(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool, divisor_override: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_avg_pool2d_backward_divisor(grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool, divisor_override: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_pooling_avg_pool3d_backward_divisor(grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool, divisor_override: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_spatial_affine_grid_generator(theta: &Tensor, size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_spatial_affine_grid_generator_backward(grad: &Tensor, size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_spatial_grid_sampler(input: &Tensor, grid: &Tensor, interpolation_mode: i64, padding_mode: i64, align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_spatial_grid_sampler_2d(input: &Tensor, grid: &Tensor, interpolation_mode: i64, padding_mode: i64, align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_spatial_grid_sampler_3d(input: &Tensor, grid: &Tensor, interpolation_mode: i64, padding_mode: i64, align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shapegradient_diagonal(self_value: &Tensor, offset: i64, dim1: i64, dim2: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shapegradient_diagonal_backward(grad_output: &Tensor, input_sizes: &[i64], offset: i64, dim1: i64, dim2: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shapegradient_select_backward(grad_output: &Tensor, input_sizes: &[i64], dim: i64, index: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shapegradient_slice_backward(grad_output: &Tensor, input_sizes: &[i64], dim: i64, start: i64, end: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shapegradient_unfold_backward(grad_in: &Tensor, input_sizes: &[i64], dim: i64, size: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_paddingbackwardcompletion_reflection_pad1d_backward(grad_output: &Tensor, self_value: &Tensor, padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_paddingbackwardcompletion_reflection_pad2d_backward(grad_output: &Tensor, self_value: &Tensor, padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_paddingbackwardcompletion_reflection_pad3d_backward(grad_output: &Tensor, self_value: &Tensor, padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_paddingbackwardcompletion_replication_pad1d_backward(grad_output: &Tensor, self_value: &Tensor, padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_paddingbackwardcompletion_replication_pad2d_backward(grad_output: &Tensor, self_value: &Tensor, padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_paddingbackwardcompletion_replication_pad3d_backward(grad_output: &Tensor, self_value: &Tensor, padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_integrationcompletion_cumulative_trapezoid_dx_int(y: &Tensor, dx: i64, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_integrationcompletion_cumulative_trapezoid_dx_float(y: &Tensor, dx: f64, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_integrationcompletion_cumulative_trapezoid_x(y: &Tensor, x: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_integrationcompletion_trapezoid_dx_int(y: &Tensor, dx: i64, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_integrationcompletion_trapezoid_dx_float(y: &Tensor, dx: f64, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_integrationcompletion_trapezoid_x(y: &Tensor, x: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_integrationcompletion_trapz_dx(y: &Tensor, dx: f64, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_integrationcompletion_trapz_x(y: &Tensor, x: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_integrationcompletion_kl_div(self_value: &Tensor, target: &Tensor, reduction: i64, log_target: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_nantonumnative_nan_to_num_configured(self_value: &Tensor, has_nan: bool, nan: f64, has_posinf: bool, posinf: f64, has_neginf: bool, neginf: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_strided_as_strided(self_value: &Tensor, size: &[i64], stride: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_strided_as_strided_copy(self_value: &Tensor, size: &[i64], stride: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_strided_as_strided_scatter(self_value: &Tensor, src: &Tensor, size: &[i64], stride: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_strided_as_strided_offset(self_value: &Tensor, size: &[i64], stride: &[i64], storage_offset: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_strided_as_strided_copy_offset(self_value: &Tensor, size: &[i64], stride: &[i64], storage_offset: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_strided_as_strided_scatter_offset(self_value: &Tensor, src: &Tensor, size: &[i64], stride: &[i64], storage_offset: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexfillnative_index_fill_scalar(self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexfillnative_index_fill_tensor(self_value: &Tensor, dim: i64, index: &Tensor, value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_lerpnative_lerp_scalar(self_value: &Tensor, end: &Tensor, weight_is_int: bool, weight_int: i64, weight_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_lerpnative_lerp_tensor(self_value: &Tensor, end: &Tensor, weight: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_wherenative_where_scalar(condition: &Tensor, self_is_int: bool, self_int: i64, self_float: f64, other_is_int: bool, other_int: i64, other_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_wherenative_where_scalar_other(condition: &Tensor, self_value: &Tensor, other_is_int: bool, other_int: i64, other_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_wherenative_where_scalar_self(condition: &Tensor, self_is_int: bool, self_int: i64, self_float: f64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexmutationnative_index_add(self_value: &Tensor, dim: i64, index: &Tensor, source: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexmutationnative_index_select_backward(grad: &Tensor, self_sizes: &[i64], dim: i64, index: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fillnative_fill_scalar(self_value: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fillnative_masked_fill_scalar(self_value: &Tensor, mask: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_hardshrink_int(self_value: &Tensor, lambd: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_hardshrink_float(self_value: &Tensor, lambd: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_hardshrink_backward_int(grad_out: &Tensor, self_value: &Tensor, lambd: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_hardshrink_backward_float(grad_out: &Tensor, self_value: &Tensor, lambd: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_softshrink_int(self_value: &Tensor, lambd: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_softshrink_float(self_value: &Tensor, lambd: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_softshrink_backward_int(grad_output: &Tensor, self_value: &Tensor, lambd: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_softshrink_backward_float(grad_output: &Tensor, self_value: &Tensor, lambd: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_softplus_int(self_value: &Tensor, beta: i64, threshold: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_softplus_float(self_value: &Tensor, beta: f64, threshold: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_softplus_backward_int(grad_output: &Tensor, self_value: &Tensor, beta: i64, threshold: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_softplus_backward_float(grad_output: &Tensor, self_value: &Tensor, beta: f64, threshold: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_threshold_int(self_value: &Tensor, threshold: i64, value: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_threshold_float(self_value: &Tensor, threshold: f64, value: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_threshold_backward_int(grad_output: &Tensor, self_value: &Tensor, threshold: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_activationcompletion_threshold_backward_float(grad_output: &Tensor, self_value: &Tensor, threshold: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_celu_int(self_value: &Tensor, alpha: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_celu_float(self_value: &Tensor, alpha: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_elu_int(self_value: &Tensor, alpha: i64, scale: i64, input_scale: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_elu_float(self_value: &Tensor, alpha: f64, scale: f64, input_scale: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_elu_backward_int(grad_output: &Tensor, alpha: i64, scale: i64, input_scale: i64, is_result: bool, self_or_result: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_elu_backward_float(grad_output: &Tensor, alpha: f64, scale: f64, input_scale: f64, is_result: bool, self_or_result: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_hardtanh_int(self_value: &Tensor, min_val: i64, max_val: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_hardtanh_float(self_value: &Tensor, min_val: f64, max_val: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_hardtanh_backward_int(grad_output: &Tensor, self_value: &Tensor, min_val: i64, max_val: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_hardtanh_backward_float(grad_output: &Tensor, self_value: &Tensor, min_val: f64, max_val: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_leaky_relu_int(self_value: &Tensor, negative_slope: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_leaky_relu_float(self_value: &Tensor, negative_slope: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_leaky_relu_backward_int(grad_output: &Tensor, self_value: &Tensor, negative_slope: i64, self_is_result: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_extendedactivationcompletion_leaky_relu_backward_float(grad_output: &Tensor, self_value: &Tensor, negative_slope: f64, self_is_result: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_cosine_embedding_loss(input1: &Tensor, input2: &Tensor, target: &Tensor, margin: f64, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_hinge_embedding_loss(self_value: &Tensor, target: &Tensor, margin: f64, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_huber_loss(self_value: &Tensor, target: &Tensor, reduction: i64, delta: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_huber_loss_backward(grad_output: &Tensor, self_value: &Tensor, target: &Tensor, reduction: i64, delta: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_l1_loss(self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_nll_loss_backward(grad_output: &Tensor, input: &Tensor, target: &Tensor, has_weight: bool, weight: &Tensor, reduction: i64, ignore_index: i64, total_weight: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_nll_loss2d_backward(grad_output: &Tensor, input: &Tensor, target: &Tensor, has_weight: bool, weight: &Tensor, reduction: i64, ignore_index: i64, total_weight: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_nll_loss_nd(input: &Tensor, target: &Tensor, has_weight: bool, weight: &Tensor, reduction: i64, ignore_index: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_margin_ranking_loss(input1: &Tensor, input2: &Tensor, target: &Tensor, margin: f64, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_poisson_nll_loss(input: &Tensor, target: &Tensor, log_input: bool, full: bool, eps: f64, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_smooth_l1_loss(self_value: &Tensor, target: &Tensor, reduction: i64, beta: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_smooth_l1_loss_backward(grad_output: &Tensor, self_value: &Tensor, target: &Tensor, reduction: i64, beta: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_soft_margin_loss(self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_loss_triplet_margin_loss(anchor: &Tensor, positive: &Tensor, negative: &Tensor, margin: f64, p: f64, eps: f64, swap: bool, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shapecompletion_narrow_view(self_value: &Tensor, dim: i64, start: i64, length: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shapecompletion_narrow_tensor(self_value: &Tensor, dim: i64, start: &Tensor, length: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shapecompletion_unfold(value: &Tensor, dimension: i64, size: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shapecompletion_trace_backward(grad: &Tensor, sizes: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shapecompletion_zero(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shapecompletion_im2col(self_value: &Tensor, kernel_size: &[i64], dilation: &[i64], padding: &[i64], stride: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shapecompletion_col2im(self_value: &Tensor, output_size: &[i64], kernel_size: &[i64], dilation: &[i64], padding: &[i64], stride: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shapecompletion_tensordot(self_value: &Tensor, other: &Tensor, dims_self: &[i64], dims_other: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_argsort_stable(self_value: &Tensor, stable: bool, dim: i64, descending: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_bucketize(self_value: &Tensor, boundaries: &Tensor, out_int32: bool, right: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_diag_embed(self_value: &Tensor, offset: i64, dim1: i64, dim2: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_diagonal_copy(self_value: &Tensor, offset: i64, dim1: i64, dim2: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_diagonal_scatter(self_value: &Tensor, src: &Tensor, offset: i64, dim1: i64, dim2: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_index_copy(self_value: &Tensor, dim: i64, index: &Tensor, source: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_index_select(self_value: &Tensor, dim: i64, index: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_isin(elements: &Tensor, test_elements: &Tensor, assume_unique: bool, invert: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_masked_fill_tensor(self_value: &Tensor, mask: &Tensor, value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_masked_scatter(self_value: &Tensor, mask: &Tensor, source: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_put(self_value: &Tensor, index: &Tensor, source: &Tensor, accumulate: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_scatter(self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_scatter_add(self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_select_scatter(self_value: &Tensor, src: &Tensor, dim: i64, index: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_unfold_copy(self_value: &Tensor, dimension: i64, size: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_where_tensor(condition: &Tensor, self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_index_tensor(tensor: &Tensor, indices: &TerlanPytorchTensorTensorResourceListInput, present: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_indexing_index_put(tensor: &Tensor, indices: &TerlanPytorchTensorTensorResourceListInput, present: &[i64], values: &Tensor, accumulate: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_gradients_cumprod_backward(grad: &Tensor, input: &Tensor, dim: i64, output: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_gradients_embedding_backward(grad: &Tensor, indices: &Tensor, num_weights: i64, padding_idx: i64, scale_grad_by_freq: bool, sparse: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_gradients_embedding_dense_backward(grad_output: &Tensor, indices: &Tensor, num_weights: i64, padding_idx: i64, scale_grad_by_freq: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_gradients_embedding_sparse_backward(grad: &Tensor, indices: &Tensor, num_weights: i64, padding_idx: i64, scale_grad_by_freq: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_gradients_fake_quantize_per_channel_affine_cachemask_backward(grad: &Tensor, mask: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_gradients_fake_quantize_per_tensor_affine_cachemask_backward(grad: &Tensor, mask: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_gradients_gather_backward(grad: &Tensor, self_value: &Tensor, dim: i64, index: &Tensor, sparse_grad: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_gradients_gelu_backward(grad_output: &Tensor, self_value: &Tensor, approximate: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_gradients_logit_backward(grad_output: &Tensor, self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_gradients_logit_backward_epsilon(grad_output: &Tensor, self_value: &Tensor, eps: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_gradients_glu_backward(grad_output: &Tensor, self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_gradients_masked_select_backward(grad: &Tensor, input: &Tensor, mask: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_gradients_soft_margin_loss_backward(grad_output: &Tensor, self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_bmm(self_value: &Tensor, mat2: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_complex(real: &Tensor, imag: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_divide_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_expand_as(value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_fill_tensor(self_value: &Tensor, value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_ger(self_value: &Tensor, vec2: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_hardsigmoid_backward(grad_output: &Tensor, self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_hardswish_backward(grad_output: &Tensor, self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_infinitely_differentiable_gelu_backward(grad: &Tensor, self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_linalg_householder_product(input: &Tensor, tau: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_linalg_matmul(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_matrix_exp_backward(self_value: &Tensor, grad: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_mish_backward(grad_output: &Tensor, self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_mm(self_value: &Tensor, mat2: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_multiply_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_mv(self_value: &Tensor, vec: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_orgqr(self_value: &Tensor, input2: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_outer(self_value: &Tensor, vec2: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_polar(abs: &Tensor, angle: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_prelu(self_value: &Tensor, weight: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_reshape_as(value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_sigmoid_backward(grad_output: &Tensor, output: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_silu_backward(grad_output: &Tensor, self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_chebyshev_polynomial_t(x: &Tensor, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_chebyshev_polynomial_u(x: &Tensor, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_chebyshev_polynomial_v(x: &Tensor, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_chebyshev_polynomial_w(x: &Tensor, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_gammainc(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_gammaincc(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_hermite_polynomial_h(x: &Tensor, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_hermite_polynomial_he(x: &Tensor, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_laguerre_polynomial_l(x: &Tensor, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_legendre_polynomial_p(x: &Tensor, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_shifted_chebyshev_polynomial_t(x: &Tensor, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_shifted_chebyshev_polynomial_u(x: &Tensor, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_shifted_chebyshev_polynomial_v(x: &Tensor, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_special_shifted_chebyshev_polynomial_w(x: &Tensor, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_tanh_backward(grad_output: &Tensor, output: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_type_as(value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_dense_view_as(value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_linear_no_bias(input: &Tensor, weight: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_linear_with_bias(input: &Tensor, weight: &Tensor, bias: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_log_softmax_default_dtype(self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_log_softmax_dtype(self_value: &Tensor, dim: i64, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_group_norm_no_affine(input: &Tensor, num_groups: i64, eps: f64, cudnn_enabled: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_group_norm_weight(input: &Tensor, num_groups: i64, weight: &Tensor, eps: f64, cudnn_enabled: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_group_norm_bias(input: &Tensor, num_groups: i64, bias: &Tensor, eps: f64, cudnn_enabled: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_group_norm_affine(input: &Tensor, num_groups: i64, weight: &Tensor, bias: &Tensor, eps: f64, cudnn_enabled: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_diff_basic(self_value: &Tensor, n: i64, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_diff_prepend(self_value: &Tensor, n: i64, dim: i64, prepend: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_diff_append(self_value: &Tensor, n: i64, dim: i64, append: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_diff_both(self_value: &Tensor, n: i64, dim: i64, prepend: &Tensor, append: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_masked_scatter_backward(grad_output: &Tensor, mask: &Tensor, sizes: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_normalize_norm(self_value: &Tensor, p: f64, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_normalize_clamp_min(self_value: &Tensor, min: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_normalize_divide(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_local_response_norm_configured(input: &Tensor, size: i64, alpha: f64, beta: f64, k: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_multilabel_soft_margin_loss_configured(input: &Tensor, target: &Tensor, has_weight: bool, weight: &Tensor, has_size_average: bool, size_average: bool, has_reduce: bool, reduce: bool, reduction: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_lp_pool1d_configured(input: &Tensor, norm_type_is_int: bool, norm_type_int: i64, norm_type_float: f64, kernel_size: i64, has_stride: bool, stride: i64, ceil_mode: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_max_unpool1d_configured(input: &Tensor, indices: &Tensor, kernel_size: i64, has_stride: bool, stride: i64, padding: i64, has_output_size: bool, output_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_lp_pool2d_configured(input: &Tensor, norm_type_is_int: bool, norm_type_int: i64, norm_type_float: f64, kernel_size: i64, has_stride: bool, stride: i64, ceil_mode: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_lp_pool3d_configured(input: &Tensor, norm_type_is_int: bool, norm_type_int: i64, norm_type_float: f64, kernel_size: i64, has_stride: bool, stride: i64, ceil_mode: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_gumbel_softmax_configured(logits: &Tensor, tau: f64, hard: bool, eps: f64, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_gaussian_nll_loss_configured(input: &Tensor, target: &Tensor, var_is_tensor: bool, var_tensor: &Tensor, var_scalar: f64, full: bool, eps: f64, reduction: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_functionalcompletion_interpolate_configured(input: &Tensor, has_size: bool, size: &[i64], has_scale: bool, scale_factor: &[f64], mode: &str, has_align_corners: bool, align_corners: bool, has_recompute: bool, recompute_scale_factor: bool, antialias: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_paddingnative_constant_pad_configured(self_value: &Tensor, pad: &[i64], value_is_int: bool, integer_value: i64, floating_value: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_paddingnative_pad_without_value(self_value: &Tensor, pad: &[i64], mode: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_paddingnative_pad_with_value(self_value: &Tensor, pad: &[i64], mode: &str, value: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binarycrossentropycompletion_binary_cross_entropy(self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binarycrossentropycompletion_binary_cross_entropy_weight(self_value: &Tensor, target: &Tensor, weight: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binarycrossentropycompletion_binary_cross_entropy_backward(grad_output: &Tensor, self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binarycrossentropycompletion_binary_cross_entropy_backward_weight(grad_output: &Tensor, self_value: &Tensor, target: &Tensor, weight: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binarycrossentropycompletion_binary_cross_entropy_with_logits(self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binarycrossentropycompletion_binary_cross_entropy_with_logits_weight(self_value: &Tensor, target: &Tensor, weight: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binarycrossentropycompletion_binary_cross_entropy_with_logits_positive_weight(self_value: &Tensor, target: &Tensor, pos_weight: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binarycrossentropycompletion_binary_cross_entropy_with_logits_both_weights(self_value: &Tensor, target: &Tensor, weight: &Tensor, pos_weight: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_division_div_right_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_division_div_right_int_mode(self_value: &Tensor, other: i64, rounding_mode: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_division_div_right_float(self_value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_division_div_right_float_mode(self_value: &Tensor, other: f64, rounding_mode: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_division_div_tensor_mode(self_value: &Tensor, other: &Tensor, rounding_mode: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_division_divide_right_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_division_divide_right_int_mode(self_value: &Tensor, other: i64, rounding_mode: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_division_divide_right_float(self_value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_division_divide_right_float_mode(self_value: &Tensor, other: f64, rounding_mode: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_division_divide_tensor_mode(self_value: &Tensor, other: &Tensor, rounding_mode: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_division_true_divide_right_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_division_true_divide_right_float(self_value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_slicenative_slice_all(self_value: &Tensor, dim: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_slicenative_slice_from(self_value: &Tensor, dim: i64, start: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_slicenative_slice_until(self_value: &Tensor, dim: i64, end: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_slicenative_slice_bounds(self_value: &Tensor, dim: i64, start: i64, end: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_slicenative_slice_copy_all(self_value: &Tensor, dim: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_slicenative_slice_copy_from(self_value: &Tensor, dim: i64, start: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_slicenative_slice_copy_until(self_value: &Tensor, dim: i64, end: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_slicenative_slice_copy_bounds(self_value: &Tensor, dim: i64, start: i64, end: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_slicenative_slice_scatter_all(self_value: &Tensor, src: &Tensor, dim: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_slicenative_slice_scatter_from(self_value: &Tensor, src: &Tensor, dim: i64, start: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_slicenative_slice_scatter_until(self_value: &Tensor, src: &Tensor, dim: i64, end: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_slicenative_slice_scatter_bounds(self_value: &Tensor, src: &Tensor, dim: i64, start: i64, end: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_fft(self_value: &Tensor, dim: i64, norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_hfft(self_value: &Tensor, dim: i64, norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_ifft(self_value: &Tensor, dim: i64, norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_ihfft(self_value: &Tensor, dim: i64, norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_irfft(self_value: &Tensor, dim: i64, norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_rfft(self_value: &Tensor, dim: i64, norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_fft2(self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_hfft2(self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_ifft2(self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_ihfft2(self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_irfft2(self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_rfft2(self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_fftn(self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_hfftn(self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_ifftn(self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_ihfftn(self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_irfftn(self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_rfftn(self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_fftfreq(n: i64, d: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_rfftfreq(n: i64, d: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_fftshift(self_value: &Tensor, dim: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_fftshift_all(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_ifftshift(self_value: &Tensor, dim: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fft_ifftshift_all(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_selection_nonzero_static(tensor: &Tensor, size: i64, fill_value: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_selection_value_selecting_reduction_backward_exact(gradient: &Tensor, dimension: i64, indices: &Tensor, sizes: &[i64], keep_dimension: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorlisttransforms_flatten_dense_tensors(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorlisttransforms_pad_sequence_native(sequences: &TerlanPytorchTensorTensorResourceListInput, batch_first: bool, padding_value: f64, padding_side: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_tensorlisttransforms_einsum_native(equation: &str, tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_numericalcompletionnative_cdist_default_compute(x1: &Tensor, x2: &Tensor, p: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_numericalcompletionnative_cdist_compute(x1: &Tensor, x2: &Tensor, p: f64, compute_mode: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_numericalcompletionnative_chain_matmul_native(matrices: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_numericalcompletionnative_contiguous_native(value: &Tensor, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_numericalcompletionnative_cross_default_dimension(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_numericalcompletionnative_cross_dimension(self_value: &Tensor, other: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linearstoragecompletion_bilinear_no_bias(input1: &Tensor, input2: &Tensor, weight: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linearstoragecompletion_bilinear_with_bias(input1: &Tensor, input2: &Tensor, weight: &Tensor, bias: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linearstoragecompletion_conv_tbc(self_value: &Tensor, weight: &Tensor, bias: &Tensor, pad: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linearstoragecompletion_cummaxmin_backward(grad: &Tensor, input: &Tensor, indices: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linearstoragecompletion_set_empty(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linearstoragecompletion_set_source_tensor(self_value: &Tensor, source: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_adjoint(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_alias(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_alias_copy(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_atleast_1d(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_atleast_2d(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_atleast_3d(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_detach(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_detach_copy(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_imag(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_lift(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_lift_fresh(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_lift_fresh_copy(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_positive(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_ravel(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_real(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_resolve_conj(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_resolve_neg(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_squeeze(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_squeeze_copy(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_t(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_t_copy(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_view_as_complex(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_view_as_complex_copy(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_view_as_real(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_view_as_real_copy(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_conj(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_data(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_mH(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_mT(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_matrix_H(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_view_numpy_T(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_convolution(input: &Tensor, weight: &Tensor, has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64], dilation: &[i64], transposed: bool, output_padding: &[i64], groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv1d_no_bias(input: &Tensor, weight: &Tensor, stride: &[i64], padding: &[i64], dilation: &[i64], groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv2d_no_bias(input: &Tensor, weight: &Tensor, stride: &[i64], padding: &[i64], dilation: &[i64], groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv3d_no_bias(input: &Tensor, weight: &Tensor, stride: &[i64], padding: &[i64], dilation: &[i64], groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv1d_with_bias(input: &Tensor, weight: &Tensor, bias: &Tensor, stride: &[i64], padding: &[i64], dilation: &[i64], groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv2d_with_bias(input: &Tensor, weight: &Tensor, bias: &Tensor, stride: &[i64], padding: &[i64], dilation: &[i64], groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv3d_with_bias(input: &Tensor, weight: &Tensor, bias: &Tensor, stride: &[i64], padding: &[i64], dilation: &[i64], groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv1d_padding_no_bias(input: &Tensor, weight: &Tensor, stride: &[i64], padding: &str, dilation: &[i64], groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv2d_padding_no_bias(input: &Tensor, weight: &Tensor, stride: &[i64], padding: &str, dilation: &[i64], groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv3d_padding_no_bias(input: &Tensor, weight: &Tensor, stride: &[i64], padding: &str, dilation: &[i64], groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv1d_padding_with_bias(input: &Tensor, weight: &Tensor, bias: &Tensor, stride: &[i64], padding: &str, dilation: &[i64], groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv2d_padding_with_bias(input: &Tensor, weight: &Tensor, bias: &Tensor, stride: &[i64], padding: &str, dilation: &[i64], groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv3d_padding_with_bias(input: &Tensor, weight: &Tensor, bias: &Tensor, stride: &[i64], padding: &str, dilation: &[i64], groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv_transpose1d_no_bias(input: &Tensor, weight: &Tensor, stride: &[i64], padding: &[i64], output_padding: &[i64], groups: i64, dilation: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv_transpose2d_no_bias(input: &Tensor, weight: &Tensor, stride: &[i64], padding: &[i64], output_padding: &[i64], groups: i64, dilation: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv_transpose3d_no_bias(input: &Tensor, weight: &Tensor, stride: &[i64], padding: &[i64], output_padding: &[i64], groups: i64, dilation: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv_transpose1d_with_bias(input: &Tensor, weight: &Tensor, bias: &Tensor, stride: &[i64], padding: &[i64], output_padding: &[i64], groups: i64, dilation: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv_transpose2d_with_bias(input: &Tensor, weight: &Tensor, bias: &Tensor, stride: &[i64], padding: &[i64], output_padding: &[i64], groups: i64, dilation: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_convolutionnative_conv_transpose3d_with_bias(input: &Tensor, weight: &Tensor, bias: &Tensor, stride: &[i64], padding: &[i64], output_padding: &[i64], groups: i64, dilation: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_correctionstatisticscompletion_std_correction_default(self_value: &Tensor, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_correctionstatisticscompletion_var_correction_default(self_value: &Tensor, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_correctionstatisticscompletion_std_correction_dimensions(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_correctionstatisticscompletion_var_correction_dimensions(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_correctionstatisticscompletion_std_correction_int(self_value: &Tensor, correction: i64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_correctionstatisticscompletion_var_correction_int(self_value: &Tensor, correction: i64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_correctionstatisticscompletion_std_correction_float(self_value: &Tensor, correction: f64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_correctionstatisticscompletion_var_correction_float(self_value: &Tensor, correction: f64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_correctionstatisticscompletion_std_correction_dimensions_int(self_value: &Tensor, dim: &[i64], correction: i64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_correctionstatisticscompletion_var_correction_dimensions_int(self_value: &Tensor, dim: &[i64], correction: i64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_correctionstatisticscompletion_std_correction_dimensions_float(self_value: &Tensor, dim: &[i64], correction: f64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_correctionstatisticscompletion_var_correction_dimensions_float(self_value: &Tensor, dim: &[i64], correction: f64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_repeatinterleavenative_repeat_indices_native(repeats: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_repeatinterleavenative_repeat_indices_output_size_native(repeats: &Tensor, output_size: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_repeatinterleavenative_repeat_tensor_flat_native(self_value: &Tensor, repeats: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_repeatinterleavenative_repeat_tensor_flat_output_size_native(self_value: &Tensor, repeats: &Tensor, output_size: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_repeatinterleavenative_repeat_tensor_dimension_native(self_value: &Tensor, repeats: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_repeatinterleavenative_repeat_tensor_dimension_output_size_native(self_value: &Tensor, repeats: &Tensor, dim: i64, output_size: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_repeatinterleavenative_repeat_scalar_flat_native(self_value: &Tensor, repeats: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_repeatinterleavenative_repeat_scalar_flat_output_size_native(self_value: &Tensor, repeats: i64, output_size: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_repeatinterleavenative_repeat_scalar_dimension_native(self_value: &Tensor, repeats: i64, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_repeatinterleavenative_repeat_scalar_dimension_output_size_native(self_value: &Tensor, repeats: i64, dim: i64, output_size: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fusedarithmeticnative_fused_addbmm(self_value: &Tensor, batch1: &Tensor, batch2: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fusedarithmeticnative_fused_addcdiv(self_value: &Tensor, tensor1: &Tensor, tensor2: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fusedarithmeticnative_fused_addcmul(self_value: &Tensor, tensor1: &Tensor, tensor2: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fusedarithmeticnative_fused_addmm(self_value: &Tensor, mat1: &Tensor, mat2: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fusedarithmeticnative_fused_addmm_dtype(self_value: &Tensor, mat1: &Tensor, mat2: &Tensor, out_dtype: i64, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fusedarithmeticnative_fused_addmv(self_value: &Tensor, mat: &Tensor, vec: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fusedarithmeticnative_fused_addr(self_value: &Tensor, vec1: &Tensor, vec2: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fusedarithmeticnative_fused_baddbmm(self_value: &Tensor, batch1: &Tensor, batch2: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_fusedarithmeticnative_fused_baddbmm_dtype(self_value: &Tensor, batch1: &Tensor, batch2: &Tensor, out_dtype: i64, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scaledarithmeticnative_scaled_add_tensor_cxx(self_value: &Tensor, other: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scaledarithmeticnative_scaled_sub_tensor_cxx(self_value: &Tensor, other: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scaledarithmeticnative_scaled_rsub_tensor_cxx(self_value: &Tensor, other: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scaledarithmeticnative_scaled_add_scalar_cxx(self_value: &Tensor, right_is_int: bool, right_int: i64, right_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scaledarithmeticnative_scaled_sub_scalar_cxx(self_value: &Tensor, right_is_int: bool, right_int: i64, right_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scaledarithmeticnative_scaled_rsub_scalar_cxx(self_value: &Tensor, right_is_int: bool, right_int: i64, right_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_clampnative_clamp_scalar_min(self_value: &Tensor, bound_is_int: bool, bound_int: i64, bound_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_clampnative_clamp_scalar_max(self_value: &Tensor, bound_is_int: bool, bound_int: i64, bound_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_clampnative_clamp_scalar_min_max(self_value: &Tensor, min_is_int: bool, min_int: i64, min_float: f64, max_is_int: bool, max_int: i64, max_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_clampnative_clamp_tensor_min(self_value: &Tensor, min: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_clampnative_clamp_tensor_max(self_value: &Tensor, max: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_clampnative_clamp_tensor_min_max(self_value: &Tensor, min: &Tensor, max: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_aggregationnative_aggregation_bincount_weighted(self_value: &Tensor, weights: &Tensor, minlength: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_aggregationnative_aggregation_bincount_unweighted(self_value: &Tensor, minlength: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_aggregationnative_aggregation_histc_int(self_value: &Tensor, bins: i64, min: i64, max: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_aggregationnative_aggregation_histc_float(self_value: &Tensor, bins: i64, min: f64, max: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_aggregationnative_aggregation_index_reduce(self_value: &Tensor, dim: i64, index: &Tensor, source: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_windownative_window_bartlett(window_length: i64, periodic: bool, dtype: i64, layout: i64, device: &str, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_windownative_window_blackman(window_length: i64, periodic: bool, dtype: i64, layout: i64, device: &str, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_windownative_window_hamming(window_length: i64, periodic: bool, alpha: f64, beta: f64, dtype: i64, layout: i64, device: &str, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_windownative_window_hann(window_length: i64, periodic: bool, dtype: i64, layout: i64, device: &str, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_windownative_window_kaiser(window_length: i64, periodic: bool, beta: f64, dtype: i64, layout: i64, device: &str, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_arctan2(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_atan2(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_bitwise_and_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_bitwise_left_shift_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_bitwise_or_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_bitwise_right_shift_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_bitwise_xor_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_clamp_max_tensor(self_value: &Tensor, max: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_clamp_min_tensor(self_value: &Tensor, min: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_copysign_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_dot(self_value: &Tensor, tensor: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_eq_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_float_power_tensor(self_value: &Tensor, exponent: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_floor_divide(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_fmax(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_fmin(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_fmod_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_gcd(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_ge_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_greater_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_greater_equal_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_gt_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_heaviside(self_value: &Tensor, values: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_hypot(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_igamma(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_igammac(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_inner(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_isclose(self_value: &Tensor, other: &Tensor, rtol: f64, atol: f64, equal_nan: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_kron(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_lcm(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_ldexp_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_le_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_less_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_less_equal_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_logaddexp(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_logaddexp2(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_logical_and(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_logical_or(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_logical_xor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_lt_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_masked_select(self_value: &Tensor, mask: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_max_other(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_maximum(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_min_other(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_ne_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_nextafter(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_not_equal_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_pow_tensor(self_value: &Tensor, exponent: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_remainder_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_special_xlog1py(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_special_xlogy(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_special_zeta(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_take(self_value: &Tensor, index: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_true_divide_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_vdot(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binary_xlogy_tensor(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_tensor_src(self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_tensor_legacy_add(self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_tensor_legacy_multiply(self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_tensor_add(self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_tensor_modern_sum(self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_tensor_modern_prod(self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_tensor_modern_mean(self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_tensor_modern_amax(self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_tensor_modern_amin(self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_scalar_int(self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_scalar_float(self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_scalar_reduce_int_add(self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64, reduce: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_scalar_reduce_int_multiply(self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64, reduce: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_scalar_reduce_float_add(self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64, reduce: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scatternative_scatter_scalar_reduce_float_multiply(self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64, reduce: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_arange_end(end_is_integer: bool, end_integer: i64, end_floating: f64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_arange_start_end(start_is_integer: bool, start_integer: i64, start_floating: f64, end_is_integer: bool, end_integer: i64, end_floating: f64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_arange_start_end_step(start_is_integer: bool, start_integer: i64, start_floating: f64, end_is_integer: bool, end_integer: i64, end_floating: f64, step_is_integer: bool, step_integer: i64, step_floating: f64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_eye_square(n: i64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_eye_rect(n: i64, m: i64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_linspace_scalar_scalar(start_is_integer: bool, start_integer: i64, start_floating: f64, end_is_integer: bool, end_integer: i64, end_floating: f64, steps: i64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_linspace_tensor_tensor(start: &Tensor, end: &Tensor, steps: i64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_linspace_tensor_scalar(start: &Tensor, end_is_integer: bool, end_integer: i64, end_floating: f64, steps: i64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_linspace_scalar_tensor(start_is_integer: bool, start_integer: i64, start_floating: f64, end: &Tensor, steps: i64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_logspace_scalar_scalar(start_is_integer: bool, start_integer: i64, start_floating: f64, end_is_integer: bool, end_integer: i64, end_floating: f64, steps: i64, base: f64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_logspace_tensor_tensor(start: &Tensor, end: &Tensor, steps: i64, base: f64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_logspace_tensor_scalar(start: &Tensor, end_is_integer: bool, end_integer: i64, end_floating: f64, steps: i64, base: f64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_logspace_scalar_tensor(start_is_integer: bool, start_integer: i64, start_floating: f64, end: &Tensor, steps: i64, base: f64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_range_start_end(start_is_integer: bool, start_integer: i64, start_floating: f64, end_is_integer: bool, end_integer: i64, end_floating: f64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_range_range_start_end_step(start_is_integer: bool, start_integer: i64, start_floating: f64, end_is_integer: bool, end_integer: i64, end_floating: f64, step_is_integer: bool, step_integer: i64, step_floating: f64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_tril_indices_cxx(row: i64, col: i64, offset: i64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rangenative_triu_indices_cxx(row: i64, col: i64, offset: i64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_chebyshev_polynomial_u_right_int(x: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_chebyshev_polynomial_u_left_int(x: i64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_chebyshev_polynomial_u_right_float(x: &Tensor, n: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_chebyshev_polynomial_u_left_float(x: f64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_chebyshev_polynomial_v_right_int(x: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_chebyshev_polynomial_v_left_int(x: i64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_chebyshev_polynomial_v_right_float(x: &Tensor, n: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_chebyshev_polynomial_v_left_float(x: f64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_chebyshev_polynomial_w_right_int(x: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_chebyshev_polynomial_w_left_int(x: i64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_chebyshev_polynomial_w_right_float(x: &Tensor, n: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_chebyshev_polynomial_w_left_float(x: f64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_hermite_polynomial_h_right_int(x: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_hermite_polynomial_h_left_int(x: i64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_hermite_polynomial_h_right_float(x: &Tensor, n: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_hermite_polynomial_h_left_float(x: f64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_hermite_polynomial_he_right_int(x: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_hermite_polynomial_he_left_int(x: i64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_hermite_polynomial_he_right_float(x: &Tensor, n: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_hermite_polynomial_he_left_float(x: f64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_laguerre_polynomial_l_right_int(x: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_laguerre_polynomial_l_left_int(x: i64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_laguerre_polynomial_l_right_float(x: &Tensor, n: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_laguerre_polynomial_l_left_float(x: f64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_legendre_polynomial_p_right_int(x: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_legendre_polynomial_p_left_int(x: i64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_legendre_polynomial_p_right_float(x: &Tensor, n: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_legendre_polynomial_p_left_float(x: f64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_t_right_int(x: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_t_left_int(x: i64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_t_right_float(x: &Tensor, n: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_t_left_float(x: f64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_u_right_int(x: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_u_left_int(x: i64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_u_right_float(x: &Tensor, n: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_u_left_float(x: f64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_v_right_int(x: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_v_left_int(x: i64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_v_right_float(x: &Tensor, n: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_v_left_float(x: f64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_w_right_int(x: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_w_left_int(x: i64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_w_right_float(x: &Tensor, n: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_w_left_float(x: f64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_xlog1py_right_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_xlog1py_left_int(self_value: i64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_xlog1py_right_float(self_value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_xlog1py_left_float(self_value: f64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_xlogy_right_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_xlogy_left_int(self_value: i64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_xlogy_right_float(self_value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_xlogy_left_float(self_value: f64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_zeta_right_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_zeta_left_int(self_value: i64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_zeta_right_float(self_value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_specialscalarnative_ss_zeta_left_float(self_value: f64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_creationcompletionnative_creation_empty(size: &[i64], has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool, has_memory_format: bool, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_creationcompletionnative_creation_full(size: &[i64], fill_value_is_integer: bool, fill_value_integer: i64, fill_value_floating: f64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_creationcompletionnative_creation_ones(size: &[i64], has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_creationcompletionnative_creation_zeros(size: &[i64], has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_creationcompletionnative_creation_empty_like(self_value: &Tensor, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool, has_memory_format: bool, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_creationcompletionnative_creation_full_like(self_value: &Tensor, fill_value_is_integer: bool, fill_value_integer: i64, fill_value_floating: f64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool, has_memory_format: bool, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_creationcompletionnative_creation_ones_like(self_value: &Tensor, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool, has_memory_format: bool, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_creationcompletionnative_creation_zeros_like(self_value: &Tensor, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device: &str, has_pin_memory: bool, pin_memory: bool, has_memory_format: bool, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_bitwise_and_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_bitwise_or_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_bitwise_xor_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_bitwise_left_shift_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_bitwise_right_shift_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_remainder_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_pow_int(self_value: &Tensor, exponent: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_float_power_int(self_value: &Tensor, exponent: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_mul_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_floor_divide_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_xlogy_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_copysign_int(self_value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_remainder_float(self_value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_pow_float(self_value: &Tensor, exponent: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_float_power_float(self_value: &Tensor, exponent: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_mul_float(self_value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_floor_divide_float(self_value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_xlogy_float(self_value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_fmod_float(self_value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_copysign_float(self_value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_left_bitwise_and_int(self_value: i64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_left_bitwise_or_int(self_value: i64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_left_bitwise_xor_int(self_value: i64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_left_bitwise_left_shift_int(self_value: i64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_left_bitwise_right_shift_int(self_value: i64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_left_remainder_int(self_value: i64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_left_pow_int(self_value: i64, exponent: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_left_float_power_int(self_value: i64, exponent: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_left_xlogy_int(self_value: i64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_left_remainder_float(self_value: f64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_left_pow_float(self_value: f64, exponent: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_left_float_power_float(self_value: f64, exponent: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_left_xlogy_float(self_value: f64, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_eq_float(value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_ne_float(value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_lt_float(value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_le_float(value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_gt_float(value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_ge_float(value: &Tensor, other: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_eq_int(value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_ne_int(value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_lt_int(value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_le_int(value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_gt_int(value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_binaryscalarnative_binary_scalar_right_ge_int(value: &Tensor, other: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_lookupnative_lookup_isin_tensor_scalar(elements: &Tensor, test_element_is_integer: bool, test_element_integer: i64, test_element_floating: f64, assume_unique: bool, invert: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_lookupnative_lookup_isin_scalar_tensor(element_is_integer: bool, element_integer: i64, element_floating: f64, test_elements: &Tensor, assume_unique: bool, invert: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_lookupnative_lookup_searchsorted_tensor(sorted_sequence: &Tensor, self_value: &Tensor, out_int32: bool, right: bool, has_side: bool, side: &str, has_sorter: bool, sorter: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_lookupnative_lookup_searchsorted_scalar(sorted_sequence: &Tensor, self_is_integer: bool, self_integer: i64, self_floating: f64, out_int32: bool, right: bool, has_side: bool, side: &str, has_sorter: bool, sorter: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_lookupnative_lookup_bucketize_scalar(self_is_integer: bool, self_integer: i64, self_floating: f64, boundaries: &Tensor, out_int32: bool, right: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unarystoragenative_round_decimals(self_value: &Tensor, decimals: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_abs(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_ceil(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_floor(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_frac(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_reciprocal(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_round(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_sign(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_square(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_trunc(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_acos(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_acosh(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_all(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_any(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_argwhere(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_asin(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_asinh(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_atan(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_atanh(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_bitwise_not(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_cos(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_cosh(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_deg2rad(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_erf(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_erfc(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_erfinv(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_exp2(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_expm1(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_hardsigmoid(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_hardswish(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_isfinite(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_isinf(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_isnan(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_isneginf(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_isposinf(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_log10(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_log1p(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_log2(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_logical_not(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_max(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_median(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_min(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_mish(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_nonzero(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_rad2deg(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_relu6(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_rsqrt(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_selu(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_sigmoid(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_signbit(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_silu(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_sin(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_sinc(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_sinh(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_tan(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_tanh(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_unary_trace(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_channel_shuffle(self_value: &Tensor, groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_diag(self_value: &Tensor, diagonal: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_diagflat(self_value: &Tensor, offset: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_glu(self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_linalg_matrix_power(self_value: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_linalg_tensorinv(self_value: &Tensor, ind: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_logcumsumexp(self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_matrix_power(self_value: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_moveaxis_int(self_value: &Tensor, source: i64, destination: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_movedim_int(self_value: &Tensor, source: i64, destination: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_mvlgamma(self_value: &Tensor, p: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_native_channel_shuffle(self_value: &Tensor, groups: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_one_hot(self_value: &Tensor, num_classes: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_pixel_shuffle(self_value: &Tensor, upscale_factor: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_pixel_unshuffle(self_value: &Tensor, downscale_factor: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_select_int(self_value: &Tensor, dim: i64, index: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_select_copy_int(self_value: &Tensor, dim: i64, index: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_special_multigammaln(self_value: &Tensor, p: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_squeeze_dim(self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_squeeze_copy_dim(self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_swapaxes(self_value: &Tensor, axis0: i64, axis1: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_swapdims(self_value: &Tensor, dim0: i64, dim1: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_transpose_copy_int(self_value: &Tensor, dim0: i64, dim1: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_tril(self_value: &Tensor, diagonal: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_triu(self_value: &Tensor, diagonal: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_unsqueeze_copy(self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_adaptive_avg_pool3d(self_value: &Tensor, output_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_broadcast_to(self_value: &Tensor, size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_count_nonzero_dim(self_value: &Tensor, dim: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_flip(self_value: &Tensor, dims: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_permute(self_value: &Tensor, dims: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_permute_copy(self_value: &Tensor, dims: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_reflection_pad1d(self_value: &Tensor, padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_reflection_pad2d(self_value: &Tensor, padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_reflection_pad3d(self_value: &Tensor, padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_repeat(value: &Tensor, repeats: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_replication_pad1d(self_value: &Tensor, padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_replication_pad2d(self_value: &Tensor, padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_replication_pad3d(self_value: &Tensor, padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_reshape(self_value: &Tensor, shape: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_squeeze_dims(self_value: &Tensor, dim: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_squeeze_copy_dims(self_value: &Tensor, dim: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_sum_to_size(value: &Tensor, size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_tile(self_value: &Tensor, dims: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_view(value: &Tensor, size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_view_copy(self_value: &Tensor, size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_expand(value: &Tensor, size: &[i64], implicit: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_expand_copy(self_value: &Tensor, size: &[i64], implicit: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_moveaxis(self_value: &Tensor, source: &[i64], destination: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_movedim(self_value: &Tensor, source: &[i64], destination: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_narrow_copy(self_value: &Tensor, dim: i64, start: i64, length: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_roll(self_value: &Tensor, shifts: &[i64], dims: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_rot90(self_value: &Tensor, k: i64, dims: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_shape_unflatten(self_value: &Tensor, dim: i64, sizes: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_absolute(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_angle(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_arccos(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_arccosh(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_arcsin(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_arcsinh(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_arctan(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_arctanh(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_conj_physical(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_corrcoef(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_det(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_digamma(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_fix(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_fliplr(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_flipud(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_i0(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_inverse(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_isreal(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_lgamma(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_linalg_eigvals(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_linalg_matrix_exp(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_log_sigmoid(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_logdet(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_matrix_exp(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_msort(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_nanmedian(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_negative(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_sgn(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_bessel_j0(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_bessel_j1(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_bessel_y0(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_bessel_y1(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_digamma(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_entr(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_erf(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_erfc(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_erfcx(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_erfinv(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_exp2(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_expit(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_expm1(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_gammaln(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_i0(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_i0e(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_i1(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_i1e(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_log1p(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_log_ndtr(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_modified_bessel_i0(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_modified_bessel_i1(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_modified_bessel_k0(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_modified_bessel_k1(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_ndtr(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_ndtri(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_psi(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_sinc(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_airy_ai(x: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_logsumexp(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_polygamma(self_value: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_polygamma(self_value: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_round(self_value: &Tensor, decimals: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_scaled_modified_bessel_k0(x: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_scaled_modified_bessel_k1(x: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_spherical_bessel_j0(x: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_logit(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_logit_epsilon(self_value: &Tensor, eps: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_logit(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_logit_epsilon(self_value: &Tensor, eps: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_softmax(self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_softmax_dtype(self_value: &Tensor, dim: i64, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_log_softmax(self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_log_softmax_dtype(self_value: &Tensor, dim: i64, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_chebyshev_polynomial_t_order_int(x: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_chebyshev_polynomial_t_order_float(x: &Tensor, n: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_chebyshev_polynomial_t_input_int(x: i64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_special_special_chebyshev_polynomial_t_input_float(x: f64, n: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_get_rng_state() -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_rand_generator(generator: &Generator, size: &[i64], has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device_type: i64, device_index: i64, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_randn_generator(generator: &Generator, size: &[i64], has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device_type: i64, device_index: i64, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_randperm_generator(generator: &Generator, n: i64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device_type: i64, device_index: i64, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_generator_rand_like(generator: &Generator, input: &Tensor, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device_type: i64, device_index: i64, has_pin_memory: bool, pin_memory: bool, has_memory_format: bool, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_generator_randn_like(generator: &Generator, input: &Tensor, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device_type: i64, device_index: i64, has_pin_memory: bool, pin_memory: bool, has_memory_format: bool, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_generator_randint(generator: &Generator, high: i64, size: &[i64], has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device_type: i64, device_index: i64, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_generator_randint_low(generator: &Generator, low: i64, high: i64, size: &[i64], has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device_type: i64, device_index: i64, has_pin_memory: bool, pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_generator_randint_like(generator: &Generator, input: &Tensor, high: i64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device_type: i64, device_index: i64, has_pin_memory: bool, pin_memory: bool, has_memory_format: bool, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_generator_randint_like_tensor(generator: &Generator, input: &Tensor, high: &Tensor, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device_type: i64, device_index: i64, has_pin_memory: bool, pin_memory: bool, has_memory_format: bool, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_generator_randint_like_low(generator: &Generator, input: &Tensor, low: i64, high: i64, has_dtype: bool, dtype: i64, has_layout: bool, layout: i64, has_device: bool, device_type: i64, device_index: i64, has_pin_memory: bool, pin_memory: bool, has_memory_format: bool, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_rand_default(size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_randn_default(size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_randint_default(high: i64, size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_randint_low_default(low: i64, high: i64, size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_rand_like_default(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_randn_like_default(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_randint_like_default(self_value: &Tensor, high: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_randint_like_low_dtype_default(self_value: &Tensor, low: i64, high: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_randint_like_tensor_default(self_value: &Tensor, high: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_random_default(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_random_from(self_value: &Tensor, from: i64, to: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_random_to(self_value: &Tensor, to: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_rrelu_default(self_value: &Tensor, lower: f64, upper: f64, training: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_rrelu_with_noise(self_value: &Tensor, noise: &Tensor, has_generator: bool, generator: &Generator, lower: f64, upper: f64, training: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randomcompletion_rrelu_with_noise_backward(grad_output: &Tensor, self_value: &Tensor, noise: &Tensor, lower: f64, upper: f64, training: bool, self_is_result: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_spectralcompletion_stft_default(self_value: &Tensor, n_fft: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_spectralcompletion_stft_center_default(self_value: &Tensor, n_fft: i64, center: bool, pad_mode: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_spectralcompletion_istft_default(self_value: &Tensor, n_fft: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_segmentreducecompletion_segment_reduce_lengths(data: &Tensor, reduce: &str, lengths: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_attentioncompletion_scaled_dot_product_attention_default(query: &Tensor, key: &Tensor, value: &Tensor, dropout_p: f64, is_causal: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizedallocationcompletion_empty_quantized(size: &[i64], qtensor: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_ctclosscompletion_ctc_loss_intlist(log_probs: &Tensor, targets: &Tensor, input_lengths: &[i64], target_lengths: &[i64], blank: i64, reduction: i64, zero_infinity: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_ctclosscompletion_ctc_loss_tensor(log_probs: &Tensor, targets: &Tensor, input_lengths: &Tensor, target_lengths: &Tensor, blank: i64, reduction: i64, zero_infinity: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_covcompletion_cov(self_value: &Tensor, correction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_cholesky(self_value: &Tensor, upper: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_cholesky_inverse(self_value: &Tensor, upper: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_linalg_matrix_rank(self_value: &Tensor, tol: f64, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_linalg_pinv(self_value: &Tensor, rcond: f64, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_nuclear_norm(self_value: &Tensor, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_pdist(self_value: &Tensor, p: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_pinverse(self_value: &Tensor, rcond: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_dist(self_value: &Tensor, other: &Tensor, p: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_norm(self_value: &Tensor, p: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_norm_dimensions(self_value: &Tensor, p: f64, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_norm_except_dimension(v: &Tensor, pow: i64, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_renorm(self_value: &Tensor, p: f64, dim: i64, maxnorm: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_std(self_value: &Tensor, unbiased: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_var(self_value: &Tensor, unbiased: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_all_dim(self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_any_dim(self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_argsort(self_value: &Tensor, dim: i64, descending: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_combinations(self_value: &Tensor, r: i64, with_replacement: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_amin(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_argmax_all(self_value: &Tensor, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_argmin(self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_argmin_all(self_value: &Tensor, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_count_nonzero(self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_count_nonzero_all(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_all_dimensions(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_any_dimensions(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_logsumexp(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_prod(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_prod_dim(self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_cumsum(self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_cumprod(self_value: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_cumsum_dtype(self_value: &Tensor, dim: i64, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_cumprod_dtype(self_value: &Tensor, dim: i64, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_std_dimensions(self_value: &Tensor, dim: &[i64], unbiased: bool, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_var_dimensions(self_value: &Tensor, dim: &[i64], unbiased: bool, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_norm_dimensions_to_dtype(arg0: &Tensor, arg1: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_nanmean_native(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_nanmean_dimensions_native(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_nanmean_dimensions_dtype_native(self_value: &Tensor, dim: &[i64], dtype: i64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_nansum_native(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_nansum_dimensions_native(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_nansum_dimensions_dtype_native(self_value: &Tensor, dim: &[i64], dtype: i64, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_frobenius_norm_dimensions(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_statistics_nuclear_norm_dimensions(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_correctionstatisticspairnative_std_mean_correction_int_pair(self_value: &Tensor, correction: i64, keepdim: bool) -> UniquePtr<TensorPair>;
+        fn terlan_owned_value_pytorch_correctionstatisticspairnative_std_mean_correction_float_pair(self_value: &Tensor, correction: f64, keepdim: bool) -> UniquePtr<TensorPair>;
+        fn terlan_owned_value_pytorch_correctionstatisticspairnative_std_mean_correction_dimensions_int_pair(self_value: &Tensor, dim: &[i64], correction: i64, keepdim: bool) -> UniquePtr<TensorPair>;
+        fn terlan_owned_value_pytorch_correctionstatisticspairnative_std_mean_correction_dimensions_float_pair(self_value: &Tensor, dim: &[i64], correction: f64, keepdim: bool) -> UniquePtr<TensorPair>;
+        fn terlan_owned_value_pytorch_correctionstatisticspairnative_var_mean_correction_int_pair(self_value: &Tensor, correction: i64, keepdim: bool) -> UniquePtr<TensorPair>;
+        fn terlan_owned_value_pytorch_correctionstatisticspairnative_var_mean_correction_float_pair(self_value: &Tensor, correction: f64, keepdim: bool) -> UniquePtr<TensorPair>;
+        fn terlan_owned_value_pytorch_correctionstatisticspairnative_var_mean_correction_dimensions_int_pair(self_value: &Tensor, dim: &[i64], correction: i64, keepdim: bool) -> UniquePtr<TensorPair>;
+        fn terlan_owned_value_pytorch_correctionstatisticspairnative_var_mean_correction_dimensions_float_pair(self_value: &Tensor, dim: &[i64], correction: f64, keepdim: bool) -> UniquePtr<TensorPair>;
+        fn terlan_owned_value_pytorch_sparse_to_sparse_dimensions(self_value: &Tensor, sparse_dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_to_dense(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_coalesce(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_indices(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_values(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_crow_indices(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_col_indices(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_ccol_indices(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_row_indices(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_to_sparse_csr(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_to_sparse_csr_configured(self_value: &Tensor, dense_dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_to_sparse_csc(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_to_sparse_csc_configured(self_value: &Tensor, dense_dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_to_sparse_bsr(self_value: &Tensor, blocksize: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_to_sparse_bsr_configured(self_value: &Tensor, blocksize: &[i64], dense_dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_to_sparse_bsc(self_value: &Tensor, blocksize: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_to_sparse_bsc_configured(self_value: &Tensor, blocksize: &[i64], dense_dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_copy_sparse_to_sparse(self_value: &Tensor, src: &Tensor, non_blocking: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_resize_as_sparse(self_value: &Tensor, the_template: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_sparse_resize(self_value: &Tensor, size: &[i64], sparse_dim: i64, dense_dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_sparse_resize_and_clear(self_value: &Tensor, size: &[i64], sparse_dim: i64, dense_dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_crow_indices_copy(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_col_indices_copy(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_ccol_indices_copy(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_row_indices_copy(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_indices_copy(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_values_copy(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_sparse_mask(self_value: &Tensor, mask: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_to_dense_configured(self_value: &Tensor, dtype: i64, has_dtype: bool, masked_grad: bool, has_masked_grad: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_to_sparse_configured(self_value: &Tensor, layout: i64, has_layout: bool, block_size: &[i64], has_block_size: bool, dense_dim: i64, has_dense_dim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_coo_empty_configured(size: &[i64], dtype: i64, has_dtype: bool, layout: i64, has_layout: bool, device_type: i64, device_index: i64, has_device: bool, pin_memory: bool, has_pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_coo_from_components_configured(indices: &Tensor, values: &Tensor, size: &[i64], has_size: bool, dtype: i64, has_dtype: bool, layout: i64, has_layout: bool, device_type: i64, device_index: i64, has_device: bool, pin_memory: bool, has_pin_memory: bool, is_coalesced: bool, has_is_coalesced: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_compressed_from_components_configured(kind: i64, compressed: &Tensor, plain: &Tensor, values: &Tensor, size: &[i64], has_size: bool, dtype: i64, has_dtype: bool, layout: i64, has_layout: bool, device_type: i64, device_index: i64, has_device: bool, pin_memory: bool, has_pin_memory: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_sampled_addmm_numeric(mask: &Tensor, left: &Tensor, right: &Tensor, beta: f64, beta_is_integer: bool, alpha: f64, alpha_is_integer: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparse_to_dense_backward_configured(gradient: &Tensor, input: &Tensor, masked_grad: bool, has_masked_grad: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_cholesky_solve(self_value: &Tensor, input2: &Tensor, upper: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_cholesky(self_value: &Tensor, upper: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_cross(self_value: &Tensor, other: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_det(A: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_inv(A: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_ldl_solve(LD: &Tensor, pivots: &Tensor, B: &Tensor, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_lu_solve(LU: &Tensor, pivots: &Tensor, B: &Tensor, left: bool, adjoint: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_matrix_rank_tolerance(self_value: &Tensor, tol: &Tensor, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_pinv_rcond(self_value: &Tensor, rcond: &Tensor, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_solve(A: &Tensor, B: &Tensor, left: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_solve_triangular(self_value: &Tensor, B: &Tensor, upper: bool, left: bool, unitriangular: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_vecdot(x: &Tensor, y: &Tensor, dim: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_lu_solve(self_value: &Tensor, LU_data: &Tensor, LU_pivots: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_ormqr(self_value: &Tensor, input2: &Tensor, input3: &Tensor, left: bool, transpose: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_cond_string(self_value: &Tensor, p: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_cond_default(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_cond_int(self_value: &Tensor, p: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_cond_float(self_value: &Tensor, p: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_matrix_norm_int(self_value: &Tensor, p: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_matrix_norm_float(self_value: &Tensor, p: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_matrix_norm_int_configured(self_value: &Tensor, p: i64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_matrix_norm_float_configured(self_value: &Tensor, p: f64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_norm_default(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_norm_int(self_value: &Tensor, p: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_norm_float(self_value: &Tensor, p: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_norm_int_configured(self_value: &Tensor, p: i64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_norm_float_configured(self_value: &Tensor, p: f64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_vector_norm_int(self_value: &Tensor, p: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_vector_norm_float(self_value: &Tensor, p: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_vector_norm_int_configured(self_value: &Tensor, p: i64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_vector_norm_float_configured(self_value: &Tensor, p: f64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_powsum_int(self_value: &Tensor, p: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_powsum_float(self_value: &Tensor, p: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_powsum_int_configured(self_value: &Tensor, p: i64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_powsum_float_configured(self_value: &Tensor, p: f64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_eigvalsh(self_value: &Tensor, UPLO: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_matrix_rank_default(self_value: &Tensor, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_matrix_rank_tolerances(self_value: &Tensor, atol: f64, rtol: f64, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_matrix_rank_tensor_default(self_value: &Tensor, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_matrix_rank_tensor_absolute(self_value: &Tensor, atol: &Tensor, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_matrix_rank_tensor_relative(self_value: &Tensor, rtol: &Tensor, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_matrix_rank_tensor_tolerances(self_value: &Tensor, atol: &Tensor, rtol: &Tensor, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_pinv_default(self_value: &Tensor, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_pinv_tolerances(self_value: &Tensor, atol: f64, rtol: f64, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_pinv_tensor_default(self_value: &Tensor, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_pinv_tensor_absolute(self_value: &Tensor, atol: &Tensor, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_pinv_tensor_relative(self_value: &Tensor, rtol: &Tensor, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_pinv_tensor_tolerances(self_value: &Tensor, atol: &Tensor, rtol: &Tensor, hermitian: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_svdvals(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_vander(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_vander_columns(self_value: &Tensor, n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_matrix_norm_string(self_value: &Tensor, p: &str, dim: &[i64], keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_matrix_norm_string_dtype(self_value: &Tensor, p: &str, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_norm_string(self_value: &Tensor, p: &str, keepdim: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_norm_string_dimensions(self_value: &Tensor, p: &str, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_tensorsolve(self_value: &Tensor, other: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_tensorsolve_dimensions(self_value: &Tensor, other: &Tensor, dim: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_multi_dot(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_linalg_linalg_diagonal(A: &Tensor, offset: i64, dim1: i64, dim2: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_losscompletion_multilabel_margin_loss(self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_losscompletion_multilabel_margin_loss_backward(grad_output: &Tensor, input: &Tensor, target: &Tensor, reduction: i64, is_target: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizationcompletion_fake_quantize_per_tensor_affine(self_value: &Tensor, scale: f64, zero_point: i64, quant_min: i64, quant_max: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizationcompletion_fake_quantize_per_tensor_affine_tensor_qparams(self_value: &Tensor, scale: &Tensor, zero_point: &Tensor, quant_min: i64, quant_max: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizationcompletion_fake_quantize_per_channel_affine(self_value: &Tensor, scale: &Tensor, zero_point: &Tensor, axis: i64, quant_min: i64, quant_max: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizationcompletion_quantize_per_channel(self_value: &Tensor, scales: &Tensor, zero_points: &Tensor, axis: i64, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizationcompletion_quantize_per_tensor(self_value: &Tensor, scale: f64, zero_point: i64, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizationcompletion_quantize_per_tensor_tensor_qparams(self_value: &Tensor, scale: &Tensor, zero_point: &Tensor, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizationcompletion_quantize_per_tensor_dynamic(self_value: &Tensor, dtype: i64, reduce_range: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizationcompletion_int_repr(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizationcompletion_dequantize(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizationcompletion_q_per_channel_scales(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizationcompletion_q_per_channel_zero_points(value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_exponential(self_value: &Tensor, lambd: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_poisson(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_binomial(count: &Tensor, prob: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_cauchy(self_value: &Tensor, median: f64, sigma: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_geometric(self_value: &Tensor, p: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_log_normal(self_value: &Tensor, mean: f64, std: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_uniform(self_value: &Tensor, from: f64, to: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_normal_functional(self_value: &Tensor, mean: f64, std: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_normal_tensor_tensor(mean: &Tensor, std: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_normal_tensor_float(mean: &Tensor, std: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_normal_float_tensor(mean: f64, std: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_normal_float_float(mean: f64, std: f64, size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_bernoulli(self_value: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_bernoulli_probability(self_value: &Tensor, p: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_bernoulli_tensor(self_value: &Tensor, p: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_distributioncompletion_multinomial(self_value: &Tensor, num_samples: i64, replacement: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_hashcompletion_hash_tensor(self_value: &Tensor, dim: &[i64], keepdim: bool, mode: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_resizeascompletion_resize_as(self_value: &Tensor, the_template: &Tensor, has_memory_format: bool, memory_format: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sliceinversecompletion_slice_inverse_all(self_value: &Tensor, src: &Tensor, dim: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sliceinversecompletion_slice_inverse_from(self_value: &Tensor, src: &Tensor, dim: i64, start: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sliceinversecompletion_slice_inverse_until(self_value: &Tensor, src: &Tensor, dim: i64, end: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sliceinversecompletion_slice_inverse_bounds(self_value: &Tensor, src: &Tensor, dim: i64, start: i64, end: i64, step: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rmsnormcompletion_rms_norm_default(input: &Tensor, normalized_shape: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rmsnormcompletion_rms_norm_weight(input: &Tensor, normalized_shape: &[i64], weight: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rmsnormcompletion_rms_norm_eps(input: &Tensor, normalized_shape: &[i64], eps: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_rmsnormcompletion_rms_norm_weight_eps(input: &Tensor, normalized_shape: &[i64], weight: &Tensor, eps: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_nlllosscompletion_nll_loss_default(self_value: &Tensor, target: &Tensor, reduction: i64, ignore_index: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_nlllosscompletion_nll_loss_weight(self_value: &Tensor, target: &Tensor, weight: &Tensor, reduction: i64, ignore_index: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_multimarginlosscompletion_multi_margin_loss_default(self_value: &Tensor, target: &Tensor, p: f64, margin: f64, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_multimarginlosscompletion_multi_margin_loss_weight(self_value: &Tensor, target: &Tensor, p: f64, margin: f64, weight: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_multimarginlosscompletion_multi_margin_loss_backward(grad_output: &Tensor, input: &Tensor, target: &Tensor, p: f64, margin: f64, has_weight: bool, weight: &Tensor, reduction: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplebilinear2dcompletion_upsample_bilinear2d(self_value: &Tensor, output_size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplebicubic2dcompletion_upsample_bicubic2d(self_value: &Tensor, output_size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_nllloss2dcompletion_nll_loss2d_default(self_value: &Tensor, target: &Tensor, reduction: i64, ignore_index: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_nllloss2dcompletion_nll_loss2d_weight(self_value: &Tensor, target: &Tensor, weight: &Tensor, reduction: i64, ignore_index: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_viewdtypecompletion_view_dtype(self_value: &Tensor, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_viewcopydtypecompletion_view_copy_dtype(self_value: &Tensor, dtype: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantilecompletion_quantile_tensor(self_value: &Tensor, q: &Tensor, dim: i64, keepdim: bool, interpolation: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantilecompletion_quantile_scalar(self_value: &Tensor, q: f64, dim: i64, keepdim: bool, interpolation: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_nanquantilecompletion_nanquantile_tensor(self_value: &Tensor, q: &Tensor, dim: i64, keepdim: bool, interpolation: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_nanquantilecompletion_nanquantile_scalar(self_value: &Tensor, q: f64, dim: i64, keepdim: bool, interpolation: &str) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_randpermcompletion_randperm_default(n: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_instancenormcompletion_instance_norm_default(input: &Tensor, use_input_stats: bool, momentum: f64, eps: f64, cudnn_enabled: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplelinear1dcompletion_upsample_linear1d(self_value: &Tensor, output_size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplenearest1dcompletion_upsample_nearest1d(self_value: &Tensor, output_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplenearest2dcompletion_upsample_nearest2d(self_value: &Tensor, output_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplenearest3dcompletion_upsample_nearest3d(self_value: &Tensor, output_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplebackwardcompletion_upsample_nearest1d_backward(grad_output: &Tensor, output_size: &[i64], input_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplebackwardcompletion_upsample_nearest2d_backward(grad_output: &Tensor, output_size: &[i64], input_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplebackwardcompletion_upsample_nearest3d_backward(grad_output: &Tensor, output_size: &[i64], input_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplebackwardcompletion_upsample_linear1d_backward(grad_output: &Tensor, output_size: &[i64], input_size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplebackwardcompletion_upsample_trilinear3d_backward(grad_output: &Tensor, output_size: &[i64], input_size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplebackwardcompletion_upsample_bilinear2d_backward(grad_output: &Tensor, output_size: &[i64], input_size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplebackwardcompletion_upsample_bicubic2d_backward(grad_output: &Tensor, output_size: &[i64], input_size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsampletrilinear3dcompletion_upsample_trilinear3d(self_value: &Tensor, output_size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparsematmulcompletion_hspmm_default(mat1: &Tensor, mat2: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparsematmulcompletion_smm_default(self_value: &Tensor, mat2: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_sparsematmulcompletion_sspaddmm_default(self_value: &Tensor, mat1: &Tensor, mat2: &Tensor, beta: f64, alpha: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplevectorcompletion_upsample_bicubic2d_vec(self_value: &Tensor, output_size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplevectorcompletion_upsample_bilinear2d_vec(self_value: &Tensor, output_size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplevectorcompletion_upsample_linear1d_vec(self_value: &Tensor, output_size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplevectorcompletion_upsample_nearest1d_vec(self_value: &Tensor, output_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplevectorcompletion_upsample_nearest2d_vec(self_value: &Tensor, output_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplevectorcompletion_upsample_nearest3d_vec(self_value: &Tensor, output_size: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_upsamplevectorcompletion_upsample_trilinear3d_vec(self_value: &Tensor, output_size: &[i64], align_corners: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_histogramddnative_histogramdd_tensor_bins_result(input: &Tensor, bins: &TerlanPytorchTensorTensorResourceListInput, has_range: bool, range: &[f64], has_weight: bool, weight: &Tensor, density: bool) -> UniquePtr<HistogramddResult>;
+        fn terlan_owned_value_pytorch_histogramddnative_histogramdd_result_hist(result: &HistogramddResult) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_storagenative_storage_set(tensor: &Tensor, source: &StorageHandle) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_storagenative_storage_set_offset(tensor: &Tensor, source: &StorageHandle, storage_offset: i64, size: &[i64], stride: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_recurrent_rnn_tanh_cell(input: &Tensor, hx: &Tensor, w_ih: &Tensor, w_hh: &Tensor, has_b_ih: bool, b_ih: &Tensor, has_b_hh: bool, b_hh: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_recurrent_rnn_relu_cell(input: &Tensor, hx: &Tensor, w_ih: &Tensor, w_hh: &Tensor, has_b_ih: bool, b_ih: &Tensor, has_b_hh: bool, b_hh: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_recurrent_gru_cell(input: &Tensor, hx: &Tensor, w_ih: &Tensor, w_hh: &Tensor, has_b_ih: bool, b_ih: &Tensor, has_b_hh: bool, b_hh: &Tensor) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_legacyconvolution_thnn_conv2d(input: &Tensor, weight: &Tensor, kernel_size: &[i64], has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_legacyconvolution_slow_conv3d(input: &Tensor, weight: &Tensor, kernel_size: &[i64], has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_legacyconvolution_slow_conv_dilated2d(input: &Tensor, weight: &Tensor, kernel_size: &[i64], has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64], dilation: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_legacyconvolution_slow_conv_dilated3d(input: &Tensor, weight: &Tensor, kernel_size: &[i64], has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64], dilation: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_legacyconvolution_slow_conv_transpose2d(input: &Tensor, weight: &Tensor, kernel_size: &[i64], has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64], output_padding: &[i64], dilation: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_legacyconvolution_slow_conv_transpose3d(input: &Tensor, weight: &Tensor, kernel_size: &[i64], has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64], output_padding: &[i64], dilation: &[i64]) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizationinternals_fused_moving_avg_obs_fake_quant(self_value: &Tensor, observer_on: &Tensor, fake_quant_on: &Tensor, running_min: &Tensor, running_max: &Tensor, scale: &Tensor, zero_point: &Tensor, averaging_const: f64, quant_min: i64, quant_max: i64, ch_axis: i64, per_row_fake_quant: bool, symmetric_quant: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizedpooling_quantized_max_pool1d(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizedpooling_quantized_max_pool2d(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizedpooling_quantized_max_pool3d(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_quantizednormalization_quantized_batch_norm(input: &Tensor, has_weight: bool, weight: &Tensor, has_bias: bool, bias: &Tensor, mean: &Tensor, var: &Tensor, eps: f64, output_scale: f64, output_zero_point: i64) -> UniquePtr<Tensor>;
+        fn terlan_owned_value_pytorch_scalartensorcompletion_scalar_tensor(scalar_is_integer: bool, scalar_integer: i64, scalar_floating: f64) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag(arg0: &Tensor, arg1: &Tensor, arg2: &Tensor, arg3: bool, arg4: i64, arg5: bool, arg6: bool) -> UniquePtr<TerlanOwnedTuplePytorchTensorEmbeddingBag>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_take_0(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBag>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_take_1(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBag>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_take_2(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBag>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_take_3(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBag>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_weighted(arg0: &Tensor, arg1: &Tensor, arg2: &Tensor, arg3: bool, arg4: i64, arg5: bool, arg6: &Tensor, arg7: bool) -> UniquePtr<TerlanOwnedTuplePytorchTensorEmbeddingBagWeighted>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_weighted_take_0(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBagWeighted>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_weighted_take_1(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBagWeighted>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_weighted_take_2(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBagWeighted>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_weighted_take_3(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBagWeighted>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_padding(arg0: &Tensor, arg1: &Tensor, arg2: &Tensor, arg3: bool, arg4: i64, arg5: bool, arg6: bool, arg7: i64) -> UniquePtr<TerlanOwnedTuplePytorchTensorEmbeddingBagPadding>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_padding_take_0(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBagPadding>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_padding_take_1(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBagPadding>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_padding_take_2(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBagPadding>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_padding_take_3(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBagPadding>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_padding_weighted(arg0: &Tensor, arg1: &Tensor, arg2: &Tensor, arg3: bool, arg4: i64, arg5: bool, arg6: &Tensor, arg7: bool, arg8: i64) -> UniquePtr<TerlanOwnedTuplePytorchTensorEmbeddingBagPaddingWeighted>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_padding_weighted_take_0(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBagPaddingWeighted>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_padding_weighted_take_1(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBagPaddingWeighted>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_padding_weighted_take_2(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBagPaddingWeighted>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_tensor_embedding_bag_padding_weighted_take_3(value: Pin<&mut TerlanOwnedTuplePytorchTensorEmbeddingBagPaddingWeighted>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_dropout(input: &Tensor, p: f64, train: bool) -> UniquePtr<TerlanOwnedTuplePytorchRegularizationNativeDropout>;
+        fn terlan_owned_tuple_pytorch_regularization_native_dropout_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeDropout>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_dropout_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeDropout>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_layer_norm(input: &Tensor, normalized_shape: &[i64], has_weight: bool, weight: &Tensor, has_bias: bool, bias: &Tensor, eps: f64) -> UniquePtr<TerlanOwnedTuplePytorchRegularizationNativeLayerNorm>;
+        fn terlan_owned_tuple_pytorch_regularization_native_layer_norm_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeLayerNorm>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_layer_norm_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeLayerNorm>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_layer_norm_take_2(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeLayerNorm>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_group_norm(input: &Tensor, has_weight: bool, weight: &Tensor, has_bias: bool, bias: &Tensor, n: i64, c: i64, hxw: i64, group: i64, eps: f64) -> UniquePtr<TerlanOwnedTuplePytorchRegularizationNativeGroupNorm>;
+        fn terlan_owned_tuple_pytorch_regularization_native_group_norm_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeGroupNorm>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_group_norm_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeGroupNorm>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_group_norm_take_2(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeGroupNorm>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_group_norm_backward(grad_out: &Tensor, input: &Tensor, mean: &Tensor, rstd: &Tensor, has_weight: bool, weight: &Tensor, n: i64, c: i64, hxw: i64, group: i64, output_mask_input: bool, output_mask_weight: bool, output_mask_bias: bool) -> UniquePtr<TerlanOwnedTuplePytorchRegularizationNativeGroupNormBackward>;
+        fn terlan_owned_tuple_pytorch_regularization_native_group_norm_backward_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeGroupNormBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_group_norm_backward_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeGroupNormBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_group_norm_backward_take_2(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeGroupNormBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_layer_norm_backward(grad_out: &Tensor, input: &Tensor, normalized_shape: &[i64], mean: &Tensor, rstd: &Tensor, has_weight: bool, weight: &Tensor, has_bias: bool, bias: &Tensor, output_mask_input: bool, output_mask_weight: bool, output_mask_bias: bool) -> UniquePtr<TerlanOwnedTuplePytorchRegularizationNativeLayerNormBackward>;
+        fn terlan_owned_tuple_pytorch_regularization_native_layer_norm_backward_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeLayerNormBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_layer_norm_backward_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeLayerNormBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_layer_norm_backward_take_2(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeLayerNormBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_batch_norm(input: &Tensor, has_weight: bool, weight: &Tensor, has_bias: bool, bias: &Tensor, has_running_mean: bool, running_mean: &Tensor, has_running_var: bool, running_var: &Tensor, training: bool, momentum: f64, eps: f64) -> UniquePtr<TerlanOwnedTuplePytorchRegularizationNativeBatchNorm>;
+        fn terlan_owned_tuple_pytorch_regularization_native_batch_norm_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeBatchNorm>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_batch_norm_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeBatchNorm>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_batch_norm_take_2(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeBatchNorm>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_batch_norm_backward(grad_out: &Tensor, input: &Tensor, has_weight: bool, weight: &Tensor, has_running_mean: bool, running_mean: &Tensor, has_running_var: bool, running_var: &Tensor, has_save_mean: bool, save_mean: &Tensor, has_save_invstd: bool, save_invstd: &Tensor, train: bool, eps: f64, output_mask_input: bool, output_mask_weight: bool, output_mask_bias: bool) -> UniquePtr<TerlanOwnedTuplePytorchRegularizationNativeBatchNormBackward>;
+        fn terlan_owned_tuple_pytorch_regularization_native_batch_norm_backward_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeBatchNormBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_batch_norm_backward_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeBatchNormBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_native_batch_norm_backward_take_2(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationNativeBatchNormBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_log_sigmoid_forward(input: &Tensor) -> UniquePtr<TerlanOwnedTuplePytorchRegularizationLogSigmoidForward>;
+        fn terlan_owned_tuple_pytorch_regularization_log_sigmoid_forward_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationLogSigmoidForward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_log_sigmoid_forward_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationLogSigmoidForward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_batch_norm_update_stats(input: &Tensor, has_running_mean: bool, running_mean: &Tensor, has_running_var: bool, running_var: &Tensor, momentum: f64) -> UniquePtr<TerlanOwnedTuplePytorchRegularizationBatchNormUpdateStats>;
+        fn terlan_owned_tuple_pytorch_regularization_batch_norm_update_stats_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationBatchNormUpdateStats>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_regularization_batch_norm_update_stats_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRegularizationBatchNormUpdateStats>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_adaptive_max_pool1d(self_value: &Tensor, output_size: &[i64]) -> UniquePtr<TerlanOwnedTuplePytorchPoolingAdaptiveMaxPool1d>;
+        fn terlan_owned_tuple_pytorch_pooling_adaptive_max_pool1d_take_0(value: Pin<&mut TerlanOwnedTuplePytorchPoolingAdaptiveMaxPool1d>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_adaptive_max_pool1d_take_1(value: Pin<&mut TerlanOwnedTuplePytorchPoolingAdaptiveMaxPool1d>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_adaptive_max_pool2d(self_value: &Tensor, output_size: &[i64]) -> UniquePtr<TerlanOwnedTuplePytorchPoolingAdaptiveMaxPool2d>;
+        fn terlan_owned_tuple_pytorch_pooling_adaptive_max_pool2d_take_0(value: Pin<&mut TerlanOwnedTuplePytorchPoolingAdaptiveMaxPool2d>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_adaptive_max_pool2d_take_1(value: Pin<&mut TerlanOwnedTuplePytorchPoolingAdaptiveMaxPool2d>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_adaptive_max_pool3d(self_value: &Tensor, output_size: &[i64]) -> UniquePtr<TerlanOwnedTuplePytorchPoolingAdaptiveMaxPool3d>;
+        fn terlan_owned_tuple_pytorch_pooling_adaptive_max_pool3d_take_0(value: Pin<&mut TerlanOwnedTuplePytorchPoolingAdaptiveMaxPool3d>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_adaptive_max_pool3d_take_1(value: Pin<&mut TerlanOwnedTuplePytorchPoolingAdaptiveMaxPool3d>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_max_pool1d_with_indices(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<TerlanOwnedTuplePytorchPoolingMaxPool1dWithIndices>;
+        fn terlan_owned_tuple_pytorch_pooling_max_pool1d_with_indices_take_0(value: Pin<&mut TerlanOwnedTuplePytorchPoolingMaxPool1dWithIndices>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_max_pool1d_with_indices_take_1(value: Pin<&mut TerlanOwnedTuplePytorchPoolingMaxPool1dWithIndices>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_max_pool2d_with_indices(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<TerlanOwnedTuplePytorchPoolingMaxPool2dWithIndices>;
+        fn terlan_owned_tuple_pytorch_pooling_max_pool2d_with_indices_take_0(value: Pin<&mut TerlanOwnedTuplePytorchPoolingMaxPool2dWithIndices>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_max_pool2d_with_indices_take_1(value: Pin<&mut TerlanOwnedTuplePytorchPoolingMaxPool2dWithIndices>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_max_pool3d_with_indices(self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<TerlanOwnedTuplePytorchPoolingMaxPool3dWithIndices>;
+        fn terlan_owned_tuple_pytorch_pooling_max_pool3d_with_indices_take_0(value: Pin<&mut TerlanOwnedTuplePytorchPoolingMaxPool3dWithIndices>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_max_pool3d_with_indices_take_1(value: Pin<&mut TerlanOwnedTuplePytorchPoolingMaxPool3dWithIndices>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_fractional_max_pool2d(self_value: &Tensor, kernel_size: &[i64], output_size: &[i64], random_samples: &Tensor) -> UniquePtr<TerlanOwnedTuplePytorchPoolingFractionalMaxPool2d>;
+        fn terlan_owned_tuple_pytorch_pooling_fractional_max_pool2d_take_0(value: Pin<&mut TerlanOwnedTuplePytorchPoolingFractionalMaxPool2d>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_fractional_max_pool2d_take_1(value: Pin<&mut TerlanOwnedTuplePytorchPoolingFractionalMaxPool2d>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_fractional_max_pool3d(self_value: &Tensor, kernel_size: &[i64], output_size: &[i64], random_samples: &Tensor) -> UniquePtr<TerlanOwnedTuplePytorchPoolingFractionalMaxPool3d>;
+        fn terlan_owned_tuple_pytorch_pooling_fractional_max_pool3d_take_0(value: Pin<&mut TerlanOwnedTuplePytorchPoolingFractionalMaxPool3d>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_pooling_fractional_max_pool3d_take_1(value: Pin<&mut TerlanOwnedTuplePytorchPoolingFractionalMaxPool3d>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_spatial_grid_sampler_2d_backward(grad_output: &Tensor, input: &Tensor, grid: &Tensor, interpolation_mode: i64, padding_mode: i64, align_corners: bool, output_mask_input: bool, output_mask_grid: bool) -> UniquePtr<TerlanOwnedTuplePytorchSpatialGridSampler2dBackward>;
+        fn terlan_owned_tuple_pytorch_spatial_grid_sampler_2d_backward_take_0(value: Pin<&mut TerlanOwnedTuplePytorchSpatialGridSampler2dBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_spatial_grid_sampler_2d_backward_take_1(value: Pin<&mut TerlanOwnedTuplePytorchSpatialGridSampler2dBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_spatial_grid_sampler_3d_backward(grad_output: &Tensor, input: &Tensor, grid: &Tensor, interpolation_mode: i64, padding_mode: i64, align_corners: bool, output_mask_input: bool, output_mask_grid: bool) -> UniquePtr<TerlanOwnedTuplePytorchSpatialGridSampler3dBackward>;
+        fn terlan_owned_tuple_pytorch_spatial_grid_sampler_3d_backward_take_0(value: Pin<&mut TerlanOwnedTuplePytorchSpatialGridSampler3dBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_spatial_grid_sampler_3d_backward_take_1(value: Pin<&mut TerlanOwnedTuplePytorchSpatialGridSampler3dBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_loss_nll_loss_forward(input: &Tensor, target: &Tensor, has_weight: bool, weight: &Tensor, reduction: i64, ignore_index: i64) -> UniquePtr<TerlanOwnedTuplePytorchLossNllLossForward>;
+        fn terlan_owned_tuple_pytorch_loss_nll_loss_forward_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLossNllLossForward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_loss_nll_loss_forward_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLossNllLossForward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_loss_nll_loss2d_forward(input: &Tensor, target: &Tensor, has_weight: bool, weight: &Tensor, reduction: i64, ignore_index: i64) -> UniquePtr<TerlanOwnedTuplePytorchLossNllLoss2dForward>;
+        fn terlan_owned_tuple_pytorch_loss_nll_loss2d_forward_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLossNllLoss2dForward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_loss_nll_loss2d_forward_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLossNllLoss2dForward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_cummax(self_value: &Tensor, dim: i64) -> UniquePtr<TerlanOwnedTuplePytorchSelectionCummax>;
+        fn terlan_owned_tuple_pytorch_selection_cummax_take_0(value: Pin<&mut TerlanOwnedTuplePytorchSelectionCummax>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_cummax_take_1(value: Pin<&mut TerlanOwnedTuplePytorchSelectionCummax>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_cummin(self_value: &Tensor, dim: i64) -> UniquePtr<TerlanOwnedTuplePytorchSelectionCummin>;
+        fn terlan_owned_tuple_pytorch_selection_cummin_take_0(value: Pin<&mut TerlanOwnedTuplePytorchSelectionCummin>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_cummin_take_1(value: Pin<&mut TerlanOwnedTuplePytorchSelectionCummin>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_kthvalue(self_value: &Tensor, k: i64, dim: i64, keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchSelectionKthvalue>;
+        fn terlan_owned_tuple_pytorch_selection_kthvalue_take_0(value: Pin<&mut TerlanOwnedTuplePytorchSelectionKthvalue>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_kthvalue_take_1(value: Pin<&mut TerlanOwnedTuplePytorchSelectionKthvalue>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_max_dim(self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchSelectionMaxDim>;
+        fn terlan_owned_tuple_pytorch_selection_max_dim_take_0(value: Pin<&mut TerlanOwnedTuplePytorchSelectionMaxDim>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_max_dim_take_1(value: Pin<&mut TerlanOwnedTuplePytorchSelectionMaxDim>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_median_dim(self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchSelectionMedianDim>;
+        fn terlan_owned_tuple_pytorch_selection_median_dim_take_0(value: Pin<&mut TerlanOwnedTuplePytorchSelectionMedianDim>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_median_dim_take_1(value: Pin<&mut TerlanOwnedTuplePytorchSelectionMedianDim>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_min_dim(self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchSelectionMinDim>;
+        fn terlan_owned_tuple_pytorch_selection_min_dim_take_0(value: Pin<&mut TerlanOwnedTuplePytorchSelectionMinDim>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_min_dim_take_1(value: Pin<&mut TerlanOwnedTuplePytorchSelectionMinDim>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_mode(self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchSelectionMode>;
+        fn terlan_owned_tuple_pytorch_selection_mode_take_0(value: Pin<&mut TerlanOwnedTuplePytorchSelectionMode>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_mode_take_1(value: Pin<&mut TerlanOwnedTuplePytorchSelectionMode>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_nanmedian_dim(self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchSelectionNanmedianDim>;
+        fn terlan_owned_tuple_pytorch_selection_nanmedian_dim_take_0(value: Pin<&mut TerlanOwnedTuplePytorchSelectionNanmedianDim>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_nanmedian_dim_take_1(value: Pin<&mut TerlanOwnedTuplePytorchSelectionNanmedianDim>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_sort(self_value: &Tensor, dim: i64, descending: bool) -> UniquePtr<TerlanOwnedTuplePytorchSelectionSort>;
+        fn terlan_owned_tuple_pytorch_selection_sort_take_0(value: Pin<&mut TerlanOwnedTuplePytorchSelectionSort>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_sort_take_1(value: Pin<&mut TerlanOwnedTuplePytorchSelectionSort>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_topk(self_value: &Tensor, k: i64, dim: i64, largest: bool, sorted: bool) -> UniquePtr<TerlanOwnedTuplePytorchSelectionTopk>;
+        fn terlan_owned_tuple_pytorch_selection_topk_take_0(value: Pin<&mut TerlanOwnedTuplePytorchSelectionTopk>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_selection_topk_take_1(value: Pin<&mut TerlanOwnedTuplePytorchSelectionTopk>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linearstoragecompletion_conv_tbc_backward(self_value: &Tensor, input: &Tensor, weight: &Tensor, bias: &Tensor, pad: i64) -> UniquePtr<TerlanOwnedTuplePytorchLinearStorageCompletionConvTbcBackward>;
+        fn terlan_owned_tuple_pytorch_linearstoragecompletion_conv_tbc_backward_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinearStorageCompletionConvTbcBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linearstoragecompletion_conv_tbc_backward_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinearStorageCompletionConvTbcBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linearstoragecompletion_conv_tbc_backward_take_2(value: Pin<&mut TerlanOwnedTuplePytorchLinearStorageCompletionConvTbcBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_convolutionnative_convolution_backward(grad_output: &Tensor, input: &Tensor, weight: &Tensor, has_bias_sizes: bool, bias_sizes: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], transposed: bool, output_padding: &[i64], groups: i64, output_mask_input: bool, output_mask_weight: bool, output_mask_bias: bool) -> UniquePtr<TerlanOwnedTuplePytorchConvolutionNativeConvolutionBackward>;
+        fn terlan_owned_tuple_pytorch_convolutionnative_convolution_backward_take_0(value: Pin<&mut TerlanOwnedTuplePytorchConvolutionNativeConvolutionBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_convolutionnative_convolution_backward_take_1(value: Pin<&mut TerlanOwnedTuplePytorchConvolutionNativeConvolutionBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_convolutionnative_convolution_backward_take_2(value: Pin<&mut TerlanOwnedTuplePytorchConvolutionNativeConvolutionBackward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_correctionstatisticscompletion_std_mean_correction_default(self_value: &Tensor, keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchCorrectionStatisticsCompletionStdMeanCorrectionDefault>;
+        fn terlan_owned_tuple_pytorch_correctionstatisticscompletion_std_mean_correction_default_take_0(value: Pin<&mut TerlanOwnedTuplePytorchCorrectionStatisticsCompletionStdMeanCorrectionDefault>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_correctionstatisticscompletion_std_mean_correction_default_take_1(value: Pin<&mut TerlanOwnedTuplePytorchCorrectionStatisticsCompletionStdMeanCorrectionDefault>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_correctionstatisticscompletion_var_mean_correction_default(self_value: &Tensor, keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchCorrectionStatisticsCompletionVarMeanCorrectionDefault>;
+        fn terlan_owned_tuple_pytorch_correctionstatisticscompletion_var_mean_correction_default_take_0(value: Pin<&mut TerlanOwnedTuplePytorchCorrectionStatisticsCompletionVarMeanCorrectionDefault>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_correctionstatisticscompletion_var_mean_correction_default_take_1(value: Pin<&mut TerlanOwnedTuplePytorchCorrectionStatisticsCompletionVarMeanCorrectionDefault>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_correctionstatisticscompletion_std_mean_correction_dimensions(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchCorrectionStatisticsCompletionStdMeanCorrectionDimensions>;
+        fn terlan_owned_tuple_pytorch_correctionstatisticscompletion_std_mean_correction_dimensions_take_0(value: Pin<&mut TerlanOwnedTuplePytorchCorrectionStatisticsCompletionStdMeanCorrectionDimensions>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_correctionstatisticscompletion_std_mean_correction_dimensions_take_1(value: Pin<&mut TerlanOwnedTuplePytorchCorrectionStatisticsCompletionStdMeanCorrectionDimensions>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_correctionstatisticscompletion_var_mean_correction_dimensions(self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchCorrectionStatisticsCompletionVarMeanCorrectionDimensions>;
+        fn terlan_owned_tuple_pytorch_correctionstatisticscompletion_var_mean_correction_dimensions_take_0(value: Pin<&mut TerlanOwnedTuplePytorchCorrectionStatisticsCompletionVarMeanCorrectionDimensions>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_correctionstatisticscompletion_var_mean_correction_dimensions_take_1(value: Pin<&mut TerlanOwnedTuplePytorchCorrectionStatisticsCompletionVarMeanCorrectionDimensions>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_unary_frexp(self_value: &Tensor) -> UniquePtr<TerlanOwnedTuplePytorchUnaryFrexp>;
+        fn terlan_owned_tuple_pytorch_unary_frexp_take_0(value: Pin<&mut TerlanOwnedTuplePytorchUnaryFrexp>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_unary_frexp_take_1(value: Pin<&mut TerlanOwnedTuplePytorchUnaryFrexp>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_randomcompletion_rrelu_with_noise_functional(self_value: &Tensor, noise: &Tensor, has_generator: bool, generator: &Generator, lower: f64, upper: f64, training: bool) -> UniquePtr<TerlanOwnedTuplePytorchRandomCompletionRreluWithNoiseFunctional>;
+        fn terlan_owned_tuple_pytorch_randomcompletion_rrelu_with_noise_functional_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRandomCompletionRreluWithNoiseFunctional>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_randomcompletion_rrelu_with_noise_functional_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRandomCompletionRreluWithNoiseFunctional>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_histogramcompletion_histogram_bin_ct(self_value: &Tensor, bins: i64, has_range: bool, range: &[f64], has_weight: bool, weight: &Tensor, density: bool) -> UniquePtr<TerlanOwnedTuplePytorchHistogramCompletionHistogramBinCt>;
+        fn terlan_owned_tuple_pytorch_histogramcompletion_histogram_bin_ct_take_0(value: Pin<&mut TerlanOwnedTuplePytorchHistogramCompletionHistogramBinCt>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_histogramcompletion_histogram_bin_ct_take_1(value: Pin<&mut TerlanOwnedTuplePytorchHistogramCompletionHistogramBinCt>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_histogramcompletion_histogram_bins_tensor(self_value: &Tensor, bins: &Tensor, has_weight: bool, weight: &Tensor, density: bool) -> UniquePtr<TerlanOwnedTuplePytorchHistogramCompletionHistogramBinsTensor>;
+        fn terlan_owned_tuple_pytorch_histogramcompletion_histogram_bins_tensor_take_0(value: Pin<&mut TerlanOwnedTuplePytorchHistogramCompletionHistogramBinsTensor>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_histogramcompletion_histogram_bins_tensor_take_1(value: Pin<&mut TerlanOwnedTuplePytorchHistogramCompletionHistogramBinsTensor>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_uniquecompletion_unique_consecutive(self_value: &Tensor, return_inverse: bool, return_counts: bool) -> UniquePtr<TerlanOwnedTuplePytorchUniqueCompletionUniqueConsecutive>;
+        fn terlan_owned_tuple_pytorch_uniquecompletion_unique_consecutive_take_0(value: Pin<&mut TerlanOwnedTuplePytorchUniqueCompletionUniqueConsecutive>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_uniquecompletion_unique_consecutive_take_1(value: Pin<&mut TerlanOwnedTuplePytorchUniqueCompletionUniqueConsecutive>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_uniquecompletion_unique_consecutive_take_2(value: Pin<&mut TerlanOwnedTuplePytorchUniqueCompletionUniqueConsecutive>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_uniquecompletion_unique_dim(self_value: &Tensor, dim: i64, sorted: bool, return_inverse: bool, return_counts: bool) -> UniquePtr<TerlanOwnedTuplePytorchUniqueCompletionUniqueDim>;
+        fn terlan_owned_tuple_pytorch_uniquecompletion_unique_dim_take_0(value: Pin<&mut TerlanOwnedTuplePytorchUniqueCompletionUniqueDim>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_uniquecompletion_unique_dim_take_1(value: Pin<&mut TerlanOwnedTuplePytorchUniqueCompletionUniqueDim>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_uniquecompletion_unique_dim_take_2(value: Pin<&mut TerlanOwnedTuplePytorchUniqueCompletionUniqueDim>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_uniquecompletion_unique_dim_consecutive(self_value: &Tensor, dim: i64, return_inverse: bool, return_counts: bool) -> UniquePtr<TerlanOwnedTuplePytorchUniqueCompletionUniqueDimConsecutive>;
+        fn terlan_owned_tuple_pytorch_uniquecompletion_unique_dim_consecutive_take_0(value: Pin<&mut TerlanOwnedTuplePytorchUniqueCompletionUniqueDimConsecutive>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_uniquecompletion_unique_dim_consecutive_take_1(value: Pin<&mut TerlanOwnedTuplePytorchUniqueCompletionUniqueDimConsecutive>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_uniquecompletion_unique_dim_consecutive_take_2(value: Pin<&mut TerlanOwnedTuplePytorchUniqueCompletionUniqueDimConsecutive>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_svdcompletion_svd_default(self_value: &Tensor, some: bool, compute_uv: bool) -> UniquePtr<TerlanOwnedTuplePytorchSvdCompletionSvdDefault>;
+        fn terlan_owned_tuple_pytorch_svdcompletion_svd_default_take_0(value: Pin<&mut TerlanOwnedTuplePytorchSvdCompletionSvdDefault>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_svdcompletion_svd_default_take_1(value: Pin<&mut TerlanOwnedTuplePytorchSvdCompletionSvdDefault>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_svdcompletion_svd_default_take_2(value: Pin<&mut TerlanOwnedTuplePytorchSvdCompletionSvdDefault>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_statistics_aminmax(self_value: &Tensor, keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchStatisticsAminmax>;
+        fn terlan_owned_tuple_pytorch_statistics_aminmax_take_0(value: Pin<&mut TerlanOwnedTuplePytorchStatisticsAminmax>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_statistics_aminmax_take_1(value: Pin<&mut TerlanOwnedTuplePytorchStatisticsAminmax>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_statistics_aminmax_dim(self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchStatisticsAminmaxDim>;
+        fn terlan_owned_tuple_pytorch_statistics_aminmax_dim_take_0(value: Pin<&mut TerlanOwnedTuplePytorchStatisticsAminmaxDim>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_statistics_aminmax_dim_take_1(value: Pin<&mut TerlanOwnedTuplePytorchStatisticsAminmaxDim>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_statistics_std_mean(self_value: &Tensor, unbiased: bool) -> UniquePtr<TerlanOwnedTuplePytorchStatisticsStdMean>;
+        fn terlan_owned_tuple_pytorch_statistics_std_mean_take_0(value: Pin<&mut TerlanOwnedTuplePytorchStatisticsStdMean>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_statistics_std_mean_take_1(value: Pin<&mut TerlanOwnedTuplePytorchStatisticsStdMean>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_statistics_var_mean(self_value: &Tensor, unbiased: bool) -> UniquePtr<TerlanOwnedTuplePytorchStatisticsVarMean>;
+        fn terlan_owned_tuple_pytorch_statistics_var_mean_take_0(value: Pin<&mut TerlanOwnedTuplePytorchStatisticsVarMean>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_statistics_var_mean_take_1(value: Pin<&mut TerlanOwnedTuplePytorchStatisticsVarMean>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_statistics_std_mean_dimensions(self_value: &Tensor, dim: &[i64], unbiased: bool, keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchStatisticsStdMeanDimensions>;
+        fn terlan_owned_tuple_pytorch_statistics_std_mean_dimensions_take_0(value: Pin<&mut TerlanOwnedTuplePytorchStatisticsStdMeanDimensions>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_statistics_std_mean_dimensions_take_1(value: Pin<&mut TerlanOwnedTuplePytorchStatisticsStdMeanDimensions>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_statistics_var_mean_dimensions(self_value: &Tensor, dim: &[i64], unbiased: bool, keepdim: bool) -> UniquePtr<TerlanOwnedTuplePytorchStatisticsVarMeanDimensions>;
+        fn terlan_owned_tuple_pytorch_statistics_var_mean_dimensions_take_0(value: Pin<&mut TerlanOwnedTuplePytorchStatisticsVarMeanDimensions>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_statistics_var_mean_dimensions_take_1(value: Pin<&mut TerlanOwnedTuplePytorchStatisticsVarMeanDimensions>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_geqrf(self_value: &Tensor) -> UniquePtr<TerlanOwnedTuplePytorchLinalgGeqrf>;
+        fn terlan_owned_tuple_pytorch_linalg_geqrf_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgGeqrf>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_geqrf_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgGeqrf>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_cholesky_ex(self_value: &Tensor, upper: bool, check_errors: bool) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgCholeskyEx>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_cholesky_ex_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgCholeskyEx>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_cholesky_ex_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgCholeskyEx>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_eig(self_value: &Tensor) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgEig>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_eig_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgEig>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_eig_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgEig>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_eigh(self_value: &Tensor, UPLO: &str) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgEigh>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_eigh_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgEigh>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_eigh_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgEigh>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_inv_ex(A: &Tensor, check_errors: bool) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgInvEx>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_inv_ex_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgInvEx>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_inv_ex_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgInvEx>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_ldl_factor(self_value: &Tensor, hermitian: bool) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgLdlFactor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_ldl_factor_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLdlFactor>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_ldl_factor_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLdlFactor>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_ldl_factor_ex(self_value: &Tensor, hermitian: bool, check_errors: bool) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgLdlFactorEx>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_ldl_factor_ex_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLdlFactorEx>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_ldl_factor_ex_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLdlFactorEx>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_ldl_factor_ex_take_2(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLdlFactorEx>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lu(A: &Tensor, pivot: bool) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgLu>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lu_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLu>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lu_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLu>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lu_take_2(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLu>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lu_factor(A: &Tensor, pivot: bool) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgLuFactor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lu_factor_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLuFactor>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lu_factor_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLuFactor>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lu_factor_ex(A: &Tensor, pivot: bool, check_errors: bool) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgLuFactorEx>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lu_factor_ex_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLuFactorEx>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lu_factor_ex_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLuFactorEx>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lu_factor_ex_take_2(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLuFactorEx>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_qr(A: &Tensor, mode: &str) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgQr>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_qr_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgQr>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_qr_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgQr>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_slogdet(A: &Tensor) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgSlogdet>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_slogdet_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgSlogdet>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_slogdet_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgSlogdet>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_solve_ex(A: &Tensor, B: &Tensor, left: bool, check_errors: bool) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgSolveEx>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_solve_ex_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgSolveEx>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_solve_ex_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgSolveEx>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_qr(self_value: &Tensor, some: bool) -> UniquePtr<TerlanOwnedTuplePytorchLinalgQr>;
+        fn terlan_owned_tuple_pytorch_linalg_qr_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgQr>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_qr_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgQr>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_slogdet(self_value: &Tensor) -> UniquePtr<TerlanOwnedTuplePytorchLinalgSlogdet>;
+        fn terlan_owned_tuple_pytorch_linalg_slogdet_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgSlogdet>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_slogdet_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgSlogdet>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_triangular_solve(self_value: &Tensor, A: &Tensor, upper: bool, transpose: bool, unitriangular: bool) -> UniquePtr<TerlanOwnedTuplePytorchLinalgTriangularSolve>;
+        fn terlan_owned_tuple_pytorch_linalg_triangular_solve_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgTriangularSolve>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_triangular_solve_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgTriangularSolve>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lstsq(a: &Tensor, b: &Tensor) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgLstsq>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lstsq_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLstsq>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lstsq_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLstsq>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lstsq_take_2(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLstsq>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lstsq_take_3(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLstsq>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lstsq_configured(a: &Tensor, b: &Tensor, rcond: f64, driver: &str) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgLstsqConfigured>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lstsq_configured_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLstsqConfigured>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lstsq_configured_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLstsqConfigured>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lstsq_configured_take_2(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLstsqConfigured>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_lstsq_configured_take_3(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgLstsqConfigured>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_svd(self_value: &Tensor, full: bool) -> UniquePtr<TerlanOwnedTuplePytorchLinalgLinalgSvd>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_svd_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgSvd>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_svd_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgSvd>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_linalg_linalg_svd_take_2(value: Pin<&mut TerlanOwnedTuplePytorchLinalgLinalgSvd>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_losscompletion_multilabel_margin_loss_forward(input: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<TerlanOwnedTuplePytorchLossCompletionMultilabelMarginLossForward>;
+        fn terlan_owned_tuple_pytorch_losscompletion_multilabel_margin_loss_forward_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLossCompletionMultilabelMarginLossForward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_losscompletion_multilabel_margin_loss_forward_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLossCompletionMultilabelMarginLossForward>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_quantizationcompletion_fake_quantize_per_tensor_affine_cachemask(self_value: &Tensor, scale: f64, zero_point: i64, quant_min: i64, quant_max: i64) -> UniquePtr<TerlanOwnedTuplePytorchQuantizationCompletionFakeQuantizePerTensorAffineCachemask>;
+        fn terlan_owned_tuple_pytorch_quantizationcompletion_fake_quantize_per_tensor_affine_cachemask_take_0(value: Pin<&mut TerlanOwnedTuplePytorchQuantizationCompletionFakeQuantizePerTensorAffineCachemask>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_quantizationcompletion_fake_quantize_per_tensor_affine_cachemask_take_1(value: Pin<&mut TerlanOwnedTuplePytorchQuantizationCompletionFakeQuantizePerTensorAffineCachemask>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_quantizationcompletion_fake_quantize_per_channel_affine_cachemask(self_value: &Tensor, scale: &Tensor, zero_point: &Tensor, axis: i64, quant_min: i64, quant_max: i64) -> UniquePtr<TerlanOwnedTuplePytorchQuantizationCompletionFakeQuantizePerChannelAffineCachemask>;
+        fn terlan_owned_tuple_pytorch_quantizationcompletion_fake_quantize_per_channel_affine_cachemask_take_0(value: Pin<&mut TerlanOwnedTuplePytorchQuantizationCompletionFakeQuantizePerChannelAffineCachemask>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_quantizationcompletion_fake_quantize_per_channel_affine_cachemask_take_1(value: Pin<&mut TerlanOwnedTuplePytorchQuantizationCompletionFakeQuantizePerChannelAffineCachemask>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_luunpackcompletion_lu_unpack_default(lu_data: &Tensor, lu_pivots: &Tensor, unpack_data: bool, unpack_pivots: bool) -> UniquePtr<TerlanOwnedTuplePytorchLuUnpackCompletionLuUnpackDefault>;
+        fn terlan_owned_tuple_pytorch_luunpackcompletion_lu_unpack_default_take_0(value: Pin<&mut TerlanOwnedTuplePytorchLuUnpackCompletionLuUnpackDefault>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_luunpackcompletion_lu_unpack_default_take_1(value: Pin<&mut TerlanOwnedTuplePytorchLuUnpackCompletionLuUnpackDefault>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_luunpackcompletion_lu_unpack_default_take_2(value: Pin<&mut TerlanOwnedTuplePytorchLuUnpackCompletionLuUnpackDefault>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrent_lstm_cell(input: &Tensor, hx: &TerlanPytorchTensorTensorResourceListInput, w_ih: &Tensor, w_hh: &Tensor, has_b_ih: bool, b_ih: &Tensor, has_b_hh: bool, b_hh: &Tensor) -> UniquePtr<TerlanOwnedTuplePytorchRecurrentLstmCell>;
+        fn terlan_owned_tuple_pytorch_recurrent_lstm_cell_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentLstmCell>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrent_lstm_cell_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentLstmCell>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrent_rnn_tanh(input: &Tensor, hx: &Tensor, params: &TerlanPytorchTensorTensorResourceListInput, has_biases: bool, num_layers: i64, dropout: f64, train: bool, bidirectional: bool, batch_first: bool) -> UniquePtr<TerlanOwnedTuplePytorchRecurrentRnnTanh>;
+        fn terlan_owned_tuple_pytorch_recurrent_rnn_tanh_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentRnnTanh>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrent_rnn_tanh_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentRnnTanh>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrent_rnn_relu(input: &Tensor, hx: &Tensor, params: &TerlanPytorchTensorTensorResourceListInput, has_biases: bool, num_layers: i64, dropout: f64, train: bool, bidirectional: bool, batch_first: bool) -> UniquePtr<TerlanOwnedTuplePytorchRecurrentRnnRelu>;
+        fn terlan_owned_tuple_pytorch_recurrent_rnn_relu_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentRnnRelu>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrent_rnn_relu_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentRnnRelu>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrent_gru(input: &Tensor, hx: &Tensor, params: &TerlanPytorchTensorTensorResourceListInput, has_biases: bool, num_layers: i64, dropout: f64, train: bool, bidirectional: bool, batch_first: bool) -> UniquePtr<TerlanOwnedTuplePytorchRecurrentGru>;
+        fn terlan_owned_tuple_pytorch_recurrent_gru_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentGru>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrent_gru_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentGru>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrent_lstm(input: &Tensor, hx: &TerlanPytorchTensorTensorResourceListInput, params: &TerlanPytorchTensorTensorResourceListInput, has_biases: bool, num_layers: i64, dropout: f64, train: bool, bidirectional: bool, batch_first: bool) -> UniquePtr<TerlanOwnedTuplePytorchRecurrentLstm>;
+        fn terlan_owned_tuple_pytorch_recurrent_lstm_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentLstm>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrent_lstm_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentLstm>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrent_lstm_take_2(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentLstm>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_quantizationinternals_choose_qparams_optimized(input: &Tensor, numel: i64, n_bins: i64, ratio: f64, bit_width: i64) -> UniquePtr<TerlanOwnedTuplePytorchQuantizationInternalsChooseQparamsOptimized>;
+        fn terlan_owned_tuple_pytorch_quantizationinternals_choose_qparams_optimized_take_0(value: Pin<&mut TerlanOwnedTuplePytorchQuantizationInternalsChooseQparamsOptimized>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_quantizationinternals_choose_qparams_optimized_take_1(value: Pin<&mut TerlanOwnedTuplePytorchQuantizationInternalsChooseQparamsOptimized>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrentdata_rnn_tanh_data(data: &Tensor, batch_sizes: &Tensor, hx: &Tensor, params: &TerlanPytorchTensorTensorResourceListInput, has_biases: bool, num_layers: i64, dropout: f64, train: bool, bidirectional: bool) -> UniquePtr<TerlanOwnedTuplePytorchRecurrentDataRnnTanhData>;
+        fn terlan_owned_tuple_pytorch_recurrentdata_rnn_tanh_data_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentDataRnnTanhData>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrentdata_rnn_tanh_data_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentDataRnnTanhData>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrentdata_rnn_relu_data(data: &Tensor, batch_sizes: &Tensor, hx: &Tensor, params: &TerlanPytorchTensorTensorResourceListInput, has_biases: bool, num_layers: i64, dropout: f64, train: bool, bidirectional: bool) -> UniquePtr<TerlanOwnedTuplePytorchRecurrentDataRnnReluData>;
+        fn terlan_owned_tuple_pytorch_recurrentdata_rnn_relu_data_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentDataRnnReluData>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrentdata_rnn_relu_data_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentDataRnnReluData>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrentdata_gru_data(data: &Tensor, batch_sizes: &Tensor, hx: &Tensor, params: &TerlanPytorchTensorTensorResourceListInput, has_biases: bool, num_layers: i64, dropout: f64, train: bool, bidirectional: bool) -> UniquePtr<TerlanOwnedTuplePytorchRecurrentDataGruData>;
+        fn terlan_owned_tuple_pytorch_recurrentdata_gru_data_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentDataGruData>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrentdata_gru_data_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentDataGruData>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrentdata_lstm_data(data: &Tensor, batch_sizes: &Tensor, hx: &TerlanPytorchTensorTensorResourceListInput, params: &TerlanPytorchTensorTensorResourceListInput, has_biases: bool, num_layers: i64, dropout: f64, train: bool, bidirectional: bool) -> UniquePtr<TerlanOwnedTuplePytorchRecurrentDataLstmData>;
+        fn terlan_owned_tuple_pytorch_recurrentdata_lstm_data_take_0(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentDataLstmData>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrentdata_lstm_data_take_1(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentDataLstmData>) -> UniquePtr<Tensor>;
+        fn terlan_owned_tuple_pytorch_recurrentdata_lstm_data_take_2(value: Pin<&mut TerlanOwnedTuplePytorchRecurrentDataLstmData>) -> UniquePtr<Tensor>;
+        fn terlan_mutation_pytorch_typerelationsnative_retain_grad_native(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_requires_grad_in_place(self_value: Pin<&mut Tensor>, _requires_grad: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_gather_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, sparse_grad: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_embedding_out(out: Pin<&mut Tensor>, weight: &Tensor, indices: &Tensor, padding_idx: i64, scale_grad_by_freq: bool, sparse: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_embedding_renorm_in_place(self_value: Pin<&mut Tensor>, indices: &Tensor, max_norm: f64, norm_type: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_embedding_renorm_out(out: Pin<&mut Tensor>, self_value: &Tensor, indices: &Tensor, max_norm: f64, norm_type: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor, src: &Tensor, non_blocking: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_to_padded_tensor_out(output: Pin<&mut Tensor>, tensor: &Tensor, padding: f64, has_output_size: bool, output_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_from_file_out(output: Pin<&mut Tensor>, filename: &str, has_shared: bool, shared: bool, has_size: bool, size: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_gelu_out(out: Pin<&mut Tensor>, self_value: &Tensor, approximate: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_gelu_in_place(self_value: Pin<&mut Tensor>, approximate: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_copy_in_place(arg0: Pin<&mut Tensor>, arg1: &Tensor, arg2: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_resize_out_cxx(out: Pin<&mut Tensor>, self_value: &Tensor, size: &[i64], has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_resize_in_place_cxx(self_value: Pin<&mut Tensor>, size: &[i64], has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_empty_strided_out_cxx(out: Pin<&mut Tensor>, size: &[i64], stride: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensor_empty_permuted_out_cxx(out: Pin<&mut Tensor>, physical_layout: &[i64], stride: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensorjoining_block_diag_out(out: Pin<&mut Tensor>, tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensorjoining_column_stack_out(out: Pin<&mut Tensor>, tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensorjoining_dstack_out(out: Pin<&mut Tensor>, tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensorjoining_hstack_out(out: Pin<&mut Tensor>, tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensorjoining_row_stack_out(out: Pin<&mut Tensor>, tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensorjoining_vstack_out(out: Pin<&mut Tensor>, tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensorjoining_cat_out(out: Pin<&mut Tensor>, tensors: &TerlanPytorchTensorTensorResourceListInput, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensorjoining_stack_out(out: Pin<&mut Tensor>, tensors: &TerlanPytorchTensorTensorResourceListInput, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensorjoining_concat_out(out: Pin<&mut Tensor>, tensors: &TerlanPytorchTensorTensorResourceListInput, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_tensorjoining_concatenate_out(out: Pin<&mut Tensor>, tensors: &TerlanPytorchTensorTensorResourceListInput, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_regularization_native_dropout_out(output: Pin<&mut Tensor>, mask: Pin<&mut Tensor>, input: &Tensor, p: f64, train: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_regularization_native_layer_norm_out(output: Pin<&mut Tensor>, mean: Pin<&mut Tensor>, rstd: Pin<&mut Tensor>, input: &Tensor, normalized_shape: &[i64], has_weight: bool, weight: &Tensor, has_bias: bool, bias: &Tensor, eps: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_regularization_native_group_norm_out(output: Pin<&mut Tensor>, mean: Pin<&mut Tensor>, rstd: Pin<&mut Tensor>, input: &Tensor, has_weight: bool, weight: &Tensor, has_bias: bool, bias: &Tensor, n: i64, c: i64, hxw: i64, group: i64, eps: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_regularization_native_group_norm_backward_out(grad_input: Pin<&mut Tensor>, grad_weight: Pin<&mut Tensor>, grad_bias: Pin<&mut Tensor>, grad_out: &Tensor, input: &Tensor, mean: &Tensor, rstd: &Tensor, has_weight: bool, weight: &Tensor, n: i64, c: i64, hxw: i64, group: i64, output_mask_input: bool, output_mask_weight: bool, output_mask_bias: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_regularization_native_layer_norm_backward_out(grad_input: Pin<&mut Tensor>, grad_weight: Pin<&mut Tensor>, grad_bias: Pin<&mut Tensor>, grad_out: &Tensor, input: &Tensor, normalized_shape: &[i64], mean: &Tensor, rstd: &Tensor, has_weight: bool, weight: &Tensor, has_bias: bool, bias: &Tensor, output_mask_input: bool, output_mask_weight: bool, output_mask_bias: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_regularization_native_batch_norm_out(output: Pin<&mut Tensor>, save_mean: Pin<&mut Tensor>, save_invstd: Pin<&mut Tensor>, input: &Tensor, has_weight: bool, weight: &Tensor, has_bias: bool, bias: &Tensor, has_running_mean: bool, running_mean: &Tensor, has_running_var: bool, running_var: &Tensor, training: bool, momentum: f64, eps: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_regularization_native_batch_norm_backward_out(grad_input: Pin<&mut Tensor>, grad_weight: Pin<&mut Tensor>, grad_bias: Pin<&mut Tensor>, grad_out: &Tensor, input: &Tensor, has_weight: bool, weight: &Tensor, has_running_mean: bool, running_mean: &Tensor, has_running_var: bool, running_var: &Tensor, has_save_mean: bool, save_mean: &Tensor, has_save_invstd: bool, save_invstd: &Tensor, train: bool, eps: f64, output_mask_input: bool, output_mask_weight: bool, output_mask_bias: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_regularization_log_sigmoid_forward_out(output: Pin<&mut Tensor>, buffer: Pin<&mut Tensor>, input: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_regularization_log_sigmoid_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, input: &Tensor, buffer: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_regularization_batch_norm_update_stats_out(out_mean: Pin<&mut Tensor>, out_var: Pin<&mut Tensor>, input: &Tensor, has_running_mean: bool, running_mean: &Tensor, has_running_var: bool, running_var: &Tensor, momentum: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_dropoutcompletion_alpha_dropout_in_place(self_value: Pin<&mut Tensor>, p: f64, train: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_dropoutcompletion_dropout_in_place(self_value: Pin<&mut Tensor>, p: f64, train: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_dropoutcompletion_feature_alpha_dropout_in_place(self_value: Pin<&mut Tensor>, p: f64, train: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_dropoutcompletion_feature_dropout_in_place(self_value: Pin<&mut Tensor>, p: f64, train: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_glucompletion_glu_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_glucompletion_glu_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_glucompletion_glu_jvp_out(out: Pin<&mut Tensor>, glu: &Tensor, x: &Tensor, dx: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_glucompletion_glu_backward_jvp_out(out: Pin<&mut Tensor>, grad_x: &Tensor, grad_glu: &Tensor, x: &Tensor, dgrad_glu: &Tensor, dx: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_adaptive_avg_pool1d_out(out: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_adaptive_avg_pool2d_out(out: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_adaptive_avg_pool3d_out(out: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_adaptive_avg_pool3d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_adaptive_max_pool2d_out(out: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_adaptive_max_pool3d_out(out: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_adaptive_max_pool2d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, indices: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_adaptive_max_pool3d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, indices: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_avg_pool1d_out(out: Pin<&mut Tensor>, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_avg_pool2d_out(out: Pin<&mut Tensor>, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_avg_pool3d_out(out: Pin<&mut Tensor>, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_avg_pool2d_out_divisor(out: Pin<&mut Tensor>, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool, divisor_override: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_avg_pool3d_out_divisor(out: Pin<&mut Tensor>, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool, divisor_override: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_avg_pool2d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_avg_pool3d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_avg_pool2d_backward_out_divisor(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool, divisor_override: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_avg_pool3d_backward_out_divisor(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], ceil_mode: bool, count_include_pad: bool, divisor_override: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_fractional_max_pool2d_out(output: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, kernel_size: &[i64], output_size: &[i64], random_samples: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_fractional_max_pool3d_out(output: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, kernel_size: &[i64], output_size: &[i64], random_samples: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_fractional_max_pool2d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], output_size: &[i64], indices: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_fractional_max_pool3d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], output_size: &[i64], indices: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_max_pool2d_with_indices_out(out: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_max_pool3d_with_indices_out(out: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_max_pool2d_with_indices_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool, indices: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_max_pool3d_with_indices_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool, indices: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_max_unpool2d_out(out: Pin<&mut Tensor>, self_value: &Tensor, indices: &Tensor, output_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_pooling_max_unpool3d_out(out: Pin<&mut Tensor>, self_value: &Tensor, indices: &Tensor, output_size: &[i64], stride: &[i64], padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_spatial_affine_grid_generator_out(out: Pin<&mut Tensor>, theta: &Tensor, size: &[i64], align_corners: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_spatial_grid_sampler_2d_out(out: Pin<&mut Tensor>, input: &Tensor, grid: &Tensor, interpolation_mode: i64, padding_mode: i64, align_corners: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_spatial_grid_sampler_3d_out(out: Pin<&mut Tensor>, input: &Tensor, grid: &Tensor, interpolation_mode: i64, padding_mode: i64, align_corners: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_spatial_grid_sampler_2d_backward_out(grad_input: Pin<&mut Tensor>, grad_grid: Pin<&mut Tensor>, grad_output: &Tensor, input: &Tensor, grid: &Tensor, interpolation_mode: i64, padding_mode: i64, align_corners: bool, output_mask_input: bool, output_mask_grid: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_spatial_grid_sampler_3d_backward_out(grad_input: Pin<&mut Tensor>, grad_grid: Pin<&mut Tensor>, grad_output: &Tensor, input: &Tensor, grid: &Tensor, interpolation_mode: i64, padding_mode: i64, align_corners: bool, output_mask_input: bool, output_mask_grid: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapegradient_diagonal_scatter_out(out: Pin<&mut Tensor>, self_value: &Tensor, src: &Tensor, offset: i64, dim1: i64, dim2: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapegradient_diagonal_backward_out(out: Pin<&mut Tensor>, grad_output: &Tensor, input_sizes: &[i64], offset: i64, dim1: i64, dim2: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapegradient_select_backward_out(out: Pin<&mut Tensor>, grad_output: &Tensor, input_sizes: &[i64], dim: i64, index: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapegradient_slice_backward_out(out: Pin<&mut Tensor>, grad_output: &Tensor, input_sizes: &[i64], dim: i64, start: i64, end: i64, step: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapegradient_unfold_backward_out(out: Pin<&mut Tensor>, grad_in: &Tensor, input_sizes: &[i64], dim: i64, size: i64, step: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_paddingbackwardcompletion_reflection_pad1d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_paddingbackwardcompletion_reflection_pad2d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_paddingbackwardcompletion_reflection_pad3d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_paddingbackwardcompletion_replication_pad1d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_paddingbackwardcompletion_replication_pad2d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_paddingbackwardcompletion_replication_pad3d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_nantonumnative_nan_to_num_configured_out(out: Pin<&mut Tensor>, self_value: &Tensor, has_nan: bool, nan: f64, has_posinf: bool, posinf: f64, has_neginf: bool, neginf: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_nantonumnative_nan_to_num_configured_in_place(self_value: Pin<&mut Tensor>, has_nan: bool, nan: f64, has_posinf: bool, posinf: f64, has_neginf: bool, neginf: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_strided_as_strided_in_place(self_value: Pin<&mut Tensor>, size: &[i64], stride: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_strided_as_strided_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor, size: &[i64], stride: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_strided_as_strided_scatter_out(out: Pin<&mut Tensor>, self_value: &Tensor, src: &Tensor, size: &[i64], stride: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_strided_as_strided_in_place_offset(self_value: Pin<&mut Tensor>, size: &[i64], stride: &[i64], storage_offset: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_strided_as_strided_copy_out_offset(out: Pin<&mut Tensor>, self_value: &Tensor, size: &[i64], stride: &[i64], storage_offset: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_strided_as_strided_scatter_out_offset(out: Pin<&mut Tensor>, self_value: &Tensor, src: &Tensor, size: &[i64], stride: &[i64], storage_offset: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexfillnative_index_fill_scalar_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexfillnative_index_fill_scalar_in_place(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexfillnative_index_fill_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexfillnative_index_fill_tensor_in_place(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_lerpnative_lerp_scalar_out(out: Pin<&mut Tensor>, self_value: &Tensor, end: &Tensor, weight_is_int: bool, weight_int: i64, weight_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_lerpnative_lerp_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, end: &Tensor, weight: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_lerpnative_lerp_tensor_in_place(self_value: Pin<&mut Tensor>, end: &Tensor, weight: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_wherenative_where_tensor_out(out: Pin<&mut Tensor>, condition: &Tensor, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexmutationnative_index_add_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, source: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexmutationnative_index_add_in_place(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, source: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexmutationnative_index_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, source: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexmutationnative_index_copy_in_place(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, source: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexmutationnative_index_select_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fillnative_fill_scalar_out(out: Pin<&mut Tensor>, self_value: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fillnative_fill_scalar_in_place(self_value: Pin<&mut Tensor>, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fillnative_fill_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fillnative_fill_tensor_in_place(self_value: Pin<&mut Tensor>, value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fillnative_fill_diagonal_in_place(self_value: Pin<&mut Tensor>, value_is_int: bool, value_int: i64, value_float: f64, wrap: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fillnative_masked_fill_scalar_out(out: Pin<&mut Tensor>, self_value: &Tensor, mask: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fillnative_masked_fill_scalar_in_place(self_value: Pin<&mut Tensor>, mask: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fillnative_masked_fill_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, mask: &Tensor, value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fillnative_masked_fill_tensor_in_place(self_value: Pin<&mut Tensor>, mask: &Tensor, value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_hardshrink_out_int(out: Pin<&mut Tensor>, self_value: &Tensor, lambd: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_hardshrink_out_float(out: Pin<&mut Tensor>, self_value: &Tensor, lambd: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_hardshrink_backward_out_int(grad_input: Pin<&mut Tensor>, grad_out: &Tensor, self_value: &Tensor, lambd: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_hardshrink_backward_out_float(grad_input: Pin<&mut Tensor>, grad_out: &Tensor, self_value: &Tensor, lambd: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_softshrink_out_int(out: Pin<&mut Tensor>, self_value: &Tensor, lambd: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_softshrink_out_float(out: Pin<&mut Tensor>, self_value: &Tensor, lambd: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_softshrink_backward_out_int(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, lambd: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_softshrink_backward_out_float(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, lambd: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_softplus_out_int(out: Pin<&mut Tensor>, self_value: &Tensor, beta: i64, threshold: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_softplus_out_float(out: Pin<&mut Tensor>, self_value: &Tensor, beta: f64, threshold: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_softplus_backward_out_int(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, beta: i64, threshold: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_softplus_backward_out_float(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, beta: f64, threshold: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_threshold_out_int(out: Pin<&mut Tensor>, self_value: &Tensor, threshold: i64, value: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_threshold_out_float(out: Pin<&mut Tensor>, self_value: &Tensor, threshold: f64, value: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_threshold_backward_out_int(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, threshold: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_activationcompletion_threshold_backward_out_float(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, threshold: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_celu_out_int(out: Pin<&mut Tensor>, self_value: &Tensor, alpha: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_celu_out_float(out: Pin<&mut Tensor>, self_value: &Tensor, alpha: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_celu_in_place_int(self_value: Pin<&mut Tensor>, alpha: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_celu_in_place_float(self_value: Pin<&mut Tensor>, alpha: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_elu_out_int(out: Pin<&mut Tensor>, self_value: &Tensor, alpha: i64, scale: i64, input_scale: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_elu_out_float(out: Pin<&mut Tensor>, self_value: &Tensor, alpha: f64, scale: f64, input_scale: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_elu_in_place_int(self_value: Pin<&mut Tensor>, alpha: i64, scale: i64, input_scale: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_elu_in_place_float(self_value: Pin<&mut Tensor>, alpha: f64, scale: f64, input_scale: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_elu_backward_out_int(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, alpha: i64, scale: i64, input_scale: i64, is_result: bool, self_or_result: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_elu_backward_out_float(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, alpha: f64, scale: f64, input_scale: f64, is_result: bool, self_or_result: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_hardtanh_out_int(out: Pin<&mut Tensor>, self_value: &Tensor, min_val: i64, max_val: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_hardtanh_out_float(out: Pin<&mut Tensor>, self_value: &Tensor, min_val: f64, max_val: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_hardtanh_in_place_int(self_value: Pin<&mut Tensor>, min_val: i64, max_val: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_hardtanh_in_place_float(self_value: Pin<&mut Tensor>, min_val: f64, max_val: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_hardtanh_backward_out_int(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, min_val: i64, max_val: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_hardtanh_backward_out_float(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, min_val: f64, max_val: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_leaky_relu_out_int(out: Pin<&mut Tensor>, self_value: &Tensor, negative_slope: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_leaky_relu_out_float(out: Pin<&mut Tensor>, self_value: &Tensor, negative_slope: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_leaky_relu_in_place_int(self_value: Pin<&mut Tensor>, negative_slope: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_leaky_relu_in_place_float(self_value: Pin<&mut Tensor>, negative_slope: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_leaky_relu_backward_out_int(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, negative_slope: i64, self_is_result: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_extendedactivationcompletion_leaky_relu_backward_out_float(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, negative_slope: f64, self_is_result: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_loss_nll_loss_forward_out(output: Pin<&mut Tensor>, total_weight: Pin<&mut Tensor>, input: &Tensor, target: &Tensor, has_weight: bool, weight: &Tensor, reduction: i64, ignore_index: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_loss_nll_loss_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, input: &Tensor, target: &Tensor, has_weight: bool, weight: &Tensor, reduction: i64, ignore_index: i64, total_weight: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_loss_nll_loss2d_forward_out(output: Pin<&mut Tensor>, total_weight: Pin<&mut Tensor>, input: &Tensor, target: &Tensor, has_weight: bool, weight: &Tensor, reduction: i64, ignore_index: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_loss_nll_loss2d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, input: &Tensor, target: &Tensor, has_weight: bool, weight: &Tensor, reduction: i64, ignore_index: i64, total_weight: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_loss_huber_loss_out(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, reduction: i64, delta: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_loss_huber_loss_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, target: &Tensor, reduction: i64, delta: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_loss_mse_loss_out(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_loss_mse_loss_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_loss_smooth_l1_loss_out(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, reduction: i64, beta: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_loss_smooth_l1_loss_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, target: &Tensor, reduction: i64, beta: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_loss_soft_margin_loss_out(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_loss_soft_margin_loss_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapecompletion_channel_shuffle_out(out: Pin<&mut Tensor>, self_value: &Tensor, groups: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapecompletion_transpose_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim0: i64, dim1: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapecompletion_select_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapecompletion_select_scatter_out(out: Pin<&mut Tensor>, self_value: &Tensor, src: &Tensor, dim: i64, index: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapecompletion_narrow_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, start: i64, length: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapecompletion_unfold_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor, dimension: i64, size: i64, step: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapecompletion_zero_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapecompletion_im2col_out(out: Pin<&mut Tensor>, self_value: &Tensor, kernel_size: &[i64], dilation: &[i64], padding: &[i64], stride: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapecompletion_col2im_out(out: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64], kernel_size: &[i64], dilation: &[i64], padding: &[i64], stride: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shapecompletion_tensordot_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor, dims_self: &[i64], dims_other: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexing_masked_scatter_out(out: Pin<&mut Tensor>, self_value: &Tensor, mask: &Tensor, source: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexing_masked_scatter_in_place(self_value: Pin<&mut Tensor>, mask: &Tensor, source: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexing_put_out(out: Pin<&mut Tensor>, self_value: &Tensor, index: &Tensor, source: &Tensor, accumulate: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexing_put_in_place(self_value: Pin<&mut Tensor>, index: &Tensor, source: &Tensor, accumulate: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexing_index_tensor_out(output: Pin<&mut Tensor>, tensor: &Tensor, indices: &TerlanPytorchTensorTensorResourceListInput, present: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexing_index_put_out(output: Pin<&mut Tensor>, tensor: &Tensor, indices: &TerlanPytorchTensorTensorResourceListInput, present: &[i64], values: &Tensor, accumulate: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_indexing_index_put_in_place(tensor: Pin<&mut Tensor>, indices: &TerlanPytorchTensorTensorResourceListInput, present: &[i64], values: &Tensor, accumulate: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_gradients_embedding_dense_backward_out(out: Pin<&mut Tensor>, grad_output: &Tensor, indices: &Tensor, num_weights: i64, padding_idx: i64, scale_grad_by_freq: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_gradients_gelu_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, approximate: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_gradients_logit_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_gradients_logit_backward_epsilon_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, eps: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_dense_bmm_out(out: Pin<&mut Tensor>, self_value: &Tensor, mat2: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_dense_ger_out(out: Pin<&mut Tensor>, self_value: &Tensor, vec2: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_dense_matmul_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_dense_mm_out(out: Pin<&mut Tensor>, self_value: &Tensor, mat2: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_dense_mv_out(out: Pin<&mut Tensor>, self_value: &Tensor, vec: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_dense_orgqr_out(out: Pin<&mut Tensor>, self_value: &Tensor, input2: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_dense_outer_out(out: Pin<&mut Tensor>, self_value: &Tensor, vec2: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_functionalcompletion_linear_out_no_bias(out: Pin<&mut Tensor>, input: &Tensor, weight: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_functionalcompletion_linear_out_with_bias(out: Pin<&mut Tensor>, input: &Tensor, weight: &Tensor, bias: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_functionalcompletion_log_softmax_out_default_dtype(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_functionalcompletion_log_softmax_out_dtype(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_functionalcompletion_diff_out_basic(out: Pin<&mut Tensor>, self_value: &Tensor, n: i64, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_functionalcompletion_diff_out_prepend(out: Pin<&mut Tensor>, self_value: &Tensor, n: i64, dim: i64, prepend: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_functionalcompletion_diff_out_append(out: Pin<&mut Tensor>, self_value: &Tensor, n: i64, dim: i64, append: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_functionalcompletion_diff_out_both(out: Pin<&mut Tensor>, self_value: &Tensor, n: i64, dim: i64, prepend: &Tensor, append: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_paddingnative_constant_pad_configured_out(out: Pin<&mut Tensor>, self_value: &Tensor, pad: &[i64], value_is_int: bool, integer_value: i64, floating_value: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binarycrossentropycompletion_binary_cross_entropy_out(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binarycrossentropycompletion_binary_cross_entropy_weight_out(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, weight: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binarycrossentropycompletion_binary_cross_entropy_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binarycrossentropycompletion_binary_cross_entropy_backward_weight_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, target: &Tensor, weight: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binarycrossentropycompletion_binary_cross_entropy_with_logits_out(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binarycrossentropycompletion_binary_cross_entropy_with_logits_weight_out(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, weight: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binarycrossentropycompletion_binary_cross_entropy_with_logits_positive_weight_out(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, pos_weight: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binarycrossentropycompletion_binary_cross_entropy_with_logits_both_weights_out(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, weight: &Tensor, pos_weight: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_div_right_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_div_right_int_mode_in_place(self_value: Pin<&mut Tensor>, other: i64, rounding_mode: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_div_right_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_div_right_int_mode_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64, rounding_mode: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_div_right_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_div_right_float_mode_in_place(self_value: Pin<&mut Tensor>, other: f64, rounding_mode: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_div_right_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_div_right_float_mode_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64, rounding_mode: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_div_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_div_tensor_mode_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor, rounding_mode: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_div_tensor_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_div_tensor_mode_in_place(self_value: Pin<&mut Tensor>, other: &Tensor, rounding_mode: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_divide_right_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_divide_right_int_mode_in_place(self_value: Pin<&mut Tensor>, other: i64, rounding_mode: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_divide_right_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_divide_right_float_mode_in_place(self_value: Pin<&mut Tensor>, other: f64, rounding_mode: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_divide_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_divide_tensor_mode_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor, rounding_mode: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_divide_tensor_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_divide_tensor_mode_in_place(self_value: Pin<&mut Tensor>, other: &Tensor, rounding_mode: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_true_divide_right_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_true_divide_right_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_true_divide_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_division_true_divide_tensor_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_slicenative_slice_copy_out_all(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, step: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_slicenative_slice_copy_out_from(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, start: i64, step: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_slicenative_slice_copy_out_until(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, end: i64, step: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_slicenative_slice_copy_out_bounds(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, start: i64, end: i64, step: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_slicenative_slice_scatter_out_all(out: Pin<&mut Tensor>, self_value: &Tensor, src: &Tensor, dim: i64, step: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_slicenative_slice_scatter_out_from(out: Pin<&mut Tensor>, self_value: &Tensor, src: &Tensor, dim: i64, start: i64, step: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_slicenative_slice_scatter_out_until(out: Pin<&mut Tensor>, self_value: &Tensor, src: &Tensor, dim: i64, end: i64, step: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_slicenative_slice_scatter_out_bounds(out: Pin<&mut Tensor>, self_value: &Tensor, src: &Tensor, dim: i64, start: i64, end: i64, step: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_fft_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_hfft_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_ifft_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_ihfft_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_irfft_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_rfft_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_fft2_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_hfft2_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_ifft2_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_ihfft2_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_irfft2_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_rfft2_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_fftn_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_hfftn_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_ifftn_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_ihfftn_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_irfftn_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_rfftn_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], norm: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_fftfreq_out(out: Pin<&mut Tensor>, n: i64, d: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fft_rfftfreq_out(out: Pin<&mut Tensor>, n: i64, d: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_selection_cummax_out(values: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_selection_cummin_out(values: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_selection_median_dim_out(values: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_selection_mode_out(values: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_selection_nanmedian_dim_out(values: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_selection_kthvalue_out(values: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, k: i64, dim: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_selection_sort_out(values: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, descending: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_selection_topk_out(values: Pin<&mut Tensor>, indices: Pin<&mut Tensor>, self_value: &Tensor, k: i64, dim: i64, largest: bool, sorted: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_selection_nonzero_static_out(output: Pin<&mut Tensor>, tensor: &Tensor, size: i64, fill_value: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_numericalcompletionnative_argsort_stable_out(out: Pin<&mut Tensor>, self_value: &Tensor, stable: bool, dim: i64, descending: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_numericalcompletionnative_chain_matmul_out_native(out: Pin<&mut Tensor>, matrices: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_numericalcompletionnative_clone_out_default_memory(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_numericalcompletionnative_clone_out_memory(out: Pin<&mut Tensor>, self_value: &Tensor, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_numericalcompletionnative_cross_out_default_dimension(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_numericalcompletionnative_cross_out_dimension(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_complex_out(out: Pin<&mut Tensor>, real: &Tensor, imag: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_dist_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor, p: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_expand_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor, size: &[i64], implicit: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_lu_solve_out(out: Pin<&mut Tensor>, self_value: &Tensor, LU_data: &Tensor, LU_pivots: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_native_dropout_backward_out(out: Pin<&mut Tensor>, grad_output: &Tensor, mask: &Tensor, scale: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_ormqr_out(out: Pin<&mut Tensor>, self_value: &Tensor, input2: &Tensor, input3: &Tensor, left: bool, transpose: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_polar_out(out: Pin<&mut Tensor>, abs: &Tensor, angle: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_reflection_pad1d_out(out: Pin<&mut Tensor>, self_value: &Tensor, padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_reflection_pad2d_out(out: Pin<&mut Tensor>, self_value: &Tensor, padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_reflection_pad3d_out(out: Pin<&mut Tensor>, self_value: &Tensor, padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_replication_pad1d_out(out: Pin<&mut Tensor>, self_value: &Tensor, padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_replication_pad2d_out(out: Pin<&mut Tensor>, self_value: &Tensor, padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_replication_pad3d_out(out: Pin<&mut Tensor>, self_value: &Tensor, padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_renorm_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: f64, dim: i64, maxnorm: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_slogdet_out(sign: Pin<&mut Tensor>, logabsdet: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_outputcompletion_softmax_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linearstoragecompletion_conv_tbc_out(out: Pin<&mut Tensor>, self_value: &Tensor, weight: &Tensor, bias: &Tensor, pad: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linearstoragecompletion_set_empty_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linearstoragecompletion_set_empty_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linearstoragecompletion_set_source_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, source: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linearstoragesourcecompletion_set_source_tensor_in_place(self_value: Pin<&mut Tensor>, source: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linearstoragesourcecompletion_set_source_tensor_storage_offset_in_place(self_value: Pin<&mut Tensor>, source: &Tensor, storage_offset: i64, size: &[i64], stride: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_convolutionnative_convolution_backward_out(grad_input: Pin<&mut Tensor>, grad_weight: Pin<&mut Tensor>, grad_bias: Pin<&mut Tensor>, grad_output: &Tensor, input: &Tensor, weight: &Tensor, has_bias_sizes: bool, bias_sizes: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], transposed: bool, output_padding: &[i64], groups: i64, output_mask_input: bool, output_mask_weight: bool, output_mask_bias: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_convolutionnative_convolution_out(output: Pin<&mut Tensor>, input: &Tensor, weight: &Tensor, has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64], dilation: &[i64], transposed: bool, output_padding: &[i64], groups: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_std_correction_out_default(out: Pin<&mut Tensor>, self_value: &Tensor, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_var_correction_out_default(out: Pin<&mut Tensor>, self_value: &Tensor, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_std_correction_out_dimensions(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_var_correction_out_dimensions(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_std_correction_out_int(out: Pin<&mut Tensor>, self_value: &Tensor, correction: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_var_correction_out_int(out: Pin<&mut Tensor>, self_value: &Tensor, correction: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_std_correction_out_float(out: Pin<&mut Tensor>, self_value: &Tensor, correction: f64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_var_correction_out_float(out: Pin<&mut Tensor>, self_value: &Tensor, correction: f64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_std_correction_out_dimensions_int(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], correction: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_var_correction_out_dimensions_int(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], correction: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_std_correction_out_dimensions_float(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], correction: f64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_var_correction_out_dimensions_float(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], correction: f64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_std_mean_correction_out_default(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_var_mean_correction_out_default(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_std_mean_correction_out_dimensions(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticscompletion_var_mean_correction_out_dimensions(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_repeatinterleavenative_repeat_indices_out_native(out: Pin<&mut Tensor>, repeats: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_repeatinterleavenative_repeat_indices_out_output_size_native(out: Pin<&mut Tensor>, repeats: &Tensor, output_size: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_addbmm_out(out: Pin<&mut Tensor>, self_value: &Tensor, batch1: &Tensor, batch2: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_addcdiv_out(out: Pin<&mut Tensor>, self_value: &Tensor, tensor1: &Tensor, tensor2: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_addcmul_out(out: Pin<&mut Tensor>, self_value: &Tensor, tensor1: &Tensor, tensor2: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_addmm_out(out: Pin<&mut Tensor>, self_value: &Tensor, mat1: &Tensor, mat2: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_addmm_out_dtype(out: Pin<&mut Tensor>, self_value: &Tensor, mat1: &Tensor, mat2: &Tensor, out_dtype: i64, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_addmv_out(out: Pin<&mut Tensor>, self_value: &Tensor, mat: &Tensor, vec: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_addr_out(out: Pin<&mut Tensor>, self_value: &Tensor, vec1: &Tensor, vec2: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_baddbmm_out(out: Pin<&mut Tensor>, self_value: &Tensor, batch1: &Tensor, batch2: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_baddbmm_out_dtype(out: Pin<&mut Tensor>, self_value: &Tensor, batch1: &Tensor, batch2: &Tensor, out_dtype: i64, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_addbmm_in_place(self_value: Pin<&mut Tensor>, batch1: &Tensor, batch2: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_addcdiv_in_place(self_value: Pin<&mut Tensor>, tensor1: &Tensor, tensor2: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_addcmul_in_place(self_value: Pin<&mut Tensor>, tensor1: &Tensor, tensor2: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_addmm_in_place(self_value: Pin<&mut Tensor>, mat1: &Tensor, mat2: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_addmv_in_place(self_value: Pin<&mut Tensor>, mat: &Tensor, vec: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_addr_in_place(self_value: Pin<&mut Tensor>, vec1: &Tensor, vec2: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_fusedarithmeticnative_fused_baddbmm_in_place(self_value: Pin<&mut Tensor>, batch1: &Tensor, batch2: &Tensor, beta_is_int: bool, beta_int: i64, beta_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scaledarithmeticnative_scaled_add_tensor_out_cxx(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scaledarithmeticnative_scaled_sub_tensor_out_cxx(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scaledarithmeticnative_scaled_rsub_tensor_out_cxx(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scaledarithmeticnative_scaled_add_tensor_in_place_cxx(self_value: Pin<&mut Tensor>, other: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scaledarithmeticnative_scaled_sub_tensor_in_place_cxx(self_value: Pin<&mut Tensor>, other: &Tensor, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scaledarithmeticnative_scaled_add_scalar_out_cxx(out: Pin<&mut Tensor>, self_value: &Tensor, right_is_int: bool, right_int: i64, right_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scaledarithmeticnative_scaled_sub_scalar_out_cxx(out: Pin<&mut Tensor>, self_value: &Tensor, right_is_int: bool, right_int: i64, right_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scaledarithmeticnative_scaled_rsub_scalar_out_cxx(out: Pin<&mut Tensor>, self_value: &Tensor, right_is_int: bool, right_int: i64, right_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scaledarithmeticnative_scaled_add_scalar_in_place_cxx(self_value: Pin<&mut Tensor>, right_is_int: bool, right_int: i64, right_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scaledarithmeticnative_scaled_sub_scalar_in_place_cxx(self_value: Pin<&mut Tensor>, right_is_int: bool, right_int: i64, right_float: f64, alpha_is_int: bool, alpha_int: i64, alpha_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_clampnative_clamp_scalar_min_out(out: Pin<&mut Tensor>, self_value: &Tensor, bound_is_int: bool, bound_int: i64, bound_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_clampnative_clamp_scalar_max_out(out: Pin<&mut Tensor>, self_value: &Tensor, bound_is_int: bool, bound_int: i64, bound_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_clampnative_clamp_scalar_min_max_out(out: Pin<&mut Tensor>, self_value: &Tensor, min_is_int: bool, min_int: i64, min_float: f64, max_is_int: bool, max_int: i64, max_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_clampnative_clamp_scalar_min_in_place(self_value: Pin<&mut Tensor>, bound_is_int: bool, bound_int: i64, bound_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_clampnative_clamp_scalar_max_in_place(self_value: Pin<&mut Tensor>, bound_is_int: bool, bound_int: i64, bound_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_clampnative_clamp_scalar_min_max_in_place(self_value: Pin<&mut Tensor>, min_is_int: bool, min_int: i64, min_float: f64, max_is_int: bool, max_int: i64, max_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_clampnative_clamp_tensor_min_out(out: Pin<&mut Tensor>, self_value: &Tensor, min: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_clampnative_clamp_tensor_max_out(out: Pin<&mut Tensor>, self_value: &Tensor, max: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_clampnative_clamp_tensor_min_max_out(out: Pin<&mut Tensor>, self_value: &Tensor, min: &Tensor, max: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_clampnative_clamp_tensor_min_in_place(self_value: Pin<&mut Tensor>, min: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_clampnative_clamp_tensor_max_in_place(self_value: Pin<&mut Tensor>, max: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_clampnative_clamp_tensor_min_max_in_place(self_value: Pin<&mut Tensor>, min: &Tensor, max: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_aggregationnative_aggregation_bincount_weighted_out(out: Pin<&mut Tensor>, self_value: &Tensor, weights: &Tensor, minlength: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_aggregationnative_aggregation_bincount_unweighted_out(out: Pin<&mut Tensor>, self_value: &Tensor, minlength: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_aggregationnative_aggregation_histc_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, bins: i64, min: i64, max: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_aggregationnative_aggregation_histc_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, bins: i64, min: f64, max: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_aggregationnative_aggregation_index_reduce_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, source: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_aggregationnative_aggregation_index_reduce_in_place(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, source: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_windownative_window_bartlett_out(out: Pin<&mut Tensor>, window_length: i64, periodic: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_windownative_window_blackman_out(out: Pin<&mut Tensor>, window_length: i64, periodic: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_windownative_window_hamming_out(out: Pin<&mut Tensor>, window_length: i64, periodic: bool, alpha: f64, beta: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_windownative_window_hann_out(out: Pin<&mut Tensor>, window_length: i64, periodic: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_windownative_window_kaiser_out(out: Pin<&mut Tensor>, window_length: i64, periodic: bool, beta: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_fmax_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_fmin_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_maximum_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_minimum_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_fmod_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_fmod_tensor_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_logical_and_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_logical_and_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_logical_or_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_logical_or_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_logical_xor_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_logical_xor_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_arctan2_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_atan2_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_copysign_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_dot_out(out: Pin<&mut Tensor>, self_value: &Tensor, tensor: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_gcd_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_heaviside_out(out: Pin<&mut Tensor>, self_value: &Tensor, values: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_hypot_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_igamma_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_igammac_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_inner_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_kron_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_lcm_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_ldexp_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_logaddexp_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_logaddexp2_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_masked_select_out(out: Pin<&mut Tensor>, self_value: &Tensor, mask: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_max_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_min_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_nextafter_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_take_out(out: Pin<&mut Tensor>, self_value: &Tensor, index: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_vdot_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_arctan2_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_atan2_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_copysign_tensor_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_gcd_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_heaviside_in_place(self_value: Pin<&mut Tensor>, values: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_hypot_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_igamma_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_igammac_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_lcm_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_ldexp_tensor_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_nextafter_in_place(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_max_dim_out(max: Pin<&mut Tensor>, max_values: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binary_min_dim_out(min: Pin<&mut Tensor>, min_indices: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_out_src(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_out_legacy_add(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_out_legacy_multiply(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_out_add(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_out_modern_sum(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_out_modern_prod(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_out_modern_mean(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_out_modern_amax(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_out_modern_amin(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_in_src(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, src: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_in_legacy_add(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, src: &Tensor, reduce: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_in_legacy_multiply(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, src: &Tensor, reduce: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_in_add(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, src: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_in_modern_sum(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_in_modern_prod(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_in_modern_mean(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_in_modern_amax(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_tensor_in_modern_amin(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, src: &Tensor, reduce: &str, include_self: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_scalar_out_int(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_scalar_out_float(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_scalar_out_reduce_int_add(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64, reduce: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_scalar_out_reduce_int_multiply(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64, reduce: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_scalar_out_reduce_float_add(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64, reduce: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_scalar_out_reduce_float_multiply(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64, reduce: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_scalar_in_int(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_scalar_in_float(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_scalar_in_reduce_int_add(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64, reduce: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_scalar_in_reduce_int_multiply(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64, reduce: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_scalar_in_reduce_float_add(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64, reduce: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_scatternative_scatter_scalar_in_reduce_float_multiply(self_value: Pin<&mut Tensor>, dim: i64, index: &Tensor, value_is_int: bool, value_int: i64, value_float: f64, reduce: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_arange_out_end(out: Pin<&mut Tensor>, end_is_integer: bool, end_integer: i64, end_floating: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_arange_out_start_end_step(out: Pin<&mut Tensor>, start_is_integer: bool, start_integer: i64, start_floating: f64, end_is_integer: bool, end_integer: i64, end_floating: f64, step_is_integer: bool, step_integer: i64, step_floating: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_eye_out_square(out: Pin<&mut Tensor>, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_eye_out_rect(out: Pin<&mut Tensor>, n: i64, m: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_linspace_out_scalar_scalar(out: Pin<&mut Tensor>, start_is_integer: bool, start_integer: i64, start_floating: f64, end_is_integer: bool, end_integer: i64, end_floating: f64, steps: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_linspace_out_tensor_tensor(out: Pin<&mut Tensor>, start: &Tensor, end: &Tensor, steps: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_linspace_out_tensor_scalar(out: Pin<&mut Tensor>, start: &Tensor, end_is_integer: bool, end_integer: i64, end_floating: f64, steps: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_linspace_out_scalar_tensor(out: Pin<&mut Tensor>, start_is_integer: bool, start_integer: i64, start_floating: f64, end: &Tensor, steps: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_logspace_out_scalar_scalar(out: Pin<&mut Tensor>, start_is_integer: bool, start_integer: i64, start_floating: f64, end_is_integer: bool, end_integer: i64, end_floating: f64, steps: i64, base: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_logspace_out_tensor_tensor(out: Pin<&mut Tensor>, start: &Tensor, end: &Tensor, steps: i64, base: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_logspace_out_tensor_scalar(out: Pin<&mut Tensor>, start: &Tensor, end_is_integer: bool, end_integer: i64, end_floating: f64, steps: i64, base: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_logspace_out_scalar_tensor(out: Pin<&mut Tensor>, start_is_integer: bool, start_integer: i64, start_floating: f64, end: &Tensor, steps: i64, base: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_range_out_start_end(out: Pin<&mut Tensor>, start_is_integer: bool, start_integer: i64, start_floating: f64, end_is_integer: bool, end_integer: i64, end_floating: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_range_range_out_start_end_step(out: Pin<&mut Tensor>, start_is_integer: bool, start_integer: i64, start_floating: f64, end_is_integer: bool, end_integer: i64, end_floating: f64, step_is_integer: bool, step_integer: i64, step_floating: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_tril_indices_out_exact(out: Pin<&mut Tensor>, row: i64, col: i64, offset: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_rangenative_triu_indices_out_exact(out: Pin<&mut Tensor>, row: i64, col: i64, offset: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_chebyshev_polynomial_u_right_int_out(out: Pin<&mut Tensor>, x: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_chebyshev_polynomial_u_left_int_out(out: Pin<&mut Tensor>, x: i64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_chebyshev_polynomial_u_right_float_out(out: Pin<&mut Tensor>, x: &Tensor, n: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_chebyshev_polynomial_u_left_float_out(out: Pin<&mut Tensor>, x: f64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_chebyshev_polynomial_v_right_int_out(out: Pin<&mut Tensor>, x: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_chebyshev_polynomial_v_left_int_out(out: Pin<&mut Tensor>, x: i64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_chebyshev_polynomial_v_right_float_out(out: Pin<&mut Tensor>, x: &Tensor, n: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_chebyshev_polynomial_v_left_float_out(out: Pin<&mut Tensor>, x: f64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_chebyshev_polynomial_w_right_int_out(out: Pin<&mut Tensor>, x: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_chebyshev_polynomial_w_left_int_out(out: Pin<&mut Tensor>, x: i64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_chebyshev_polynomial_w_right_float_out(out: Pin<&mut Tensor>, x: &Tensor, n: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_chebyshev_polynomial_w_left_float_out(out: Pin<&mut Tensor>, x: f64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_hermite_polynomial_h_right_int_out(out: Pin<&mut Tensor>, x: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_hermite_polynomial_h_left_int_out(out: Pin<&mut Tensor>, x: i64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_hermite_polynomial_h_right_float_out(out: Pin<&mut Tensor>, x: &Tensor, n: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_hermite_polynomial_h_left_float_out(out: Pin<&mut Tensor>, x: f64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_hermite_polynomial_he_right_int_out(out: Pin<&mut Tensor>, x: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_hermite_polynomial_he_left_int_out(out: Pin<&mut Tensor>, x: i64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_hermite_polynomial_he_right_float_out(out: Pin<&mut Tensor>, x: &Tensor, n: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_hermite_polynomial_he_left_float_out(out: Pin<&mut Tensor>, x: f64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_laguerre_polynomial_l_right_int_out(out: Pin<&mut Tensor>, x: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_laguerre_polynomial_l_left_int_out(out: Pin<&mut Tensor>, x: i64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_laguerre_polynomial_l_right_float_out(out: Pin<&mut Tensor>, x: &Tensor, n: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_laguerre_polynomial_l_left_float_out(out: Pin<&mut Tensor>, x: f64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_legendre_polynomial_p_right_int_out(out: Pin<&mut Tensor>, x: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_legendre_polynomial_p_left_int_out(out: Pin<&mut Tensor>, x: i64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_legendre_polynomial_p_right_float_out(out: Pin<&mut Tensor>, x: &Tensor, n: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_legendre_polynomial_p_left_float_out(out: Pin<&mut Tensor>, x: f64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_t_right_int_out(out: Pin<&mut Tensor>, x: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_t_left_int_out(out: Pin<&mut Tensor>, x: i64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_t_right_float_out(out: Pin<&mut Tensor>, x: &Tensor, n: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_t_left_float_out(out: Pin<&mut Tensor>, x: f64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_u_right_int_out(out: Pin<&mut Tensor>, x: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_u_left_int_out(out: Pin<&mut Tensor>, x: i64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_u_right_float_out(out: Pin<&mut Tensor>, x: &Tensor, n: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_u_left_float_out(out: Pin<&mut Tensor>, x: f64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_v_right_int_out(out: Pin<&mut Tensor>, x: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_v_left_int_out(out: Pin<&mut Tensor>, x: i64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_v_right_float_out(out: Pin<&mut Tensor>, x: &Tensor, n: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_v_left_float_out(out: Pin<&mut Tensor>, x: f64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_w_right_int_out(out: Pin<&mut Tensor>, x: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_w_left_int_out(out: Pin<&mut Tensor>, x: i64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_w_right_float_out(out: Pin<&mut Tensor>, x: &Tensor, n: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_shifted_chebyshev_polynomial_w_left_float_out(out: Pin<&mut Tensor>, x: f64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_xlog1py_right_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_xlog1py_left_int_out(out: Pin<&mut Tensor>, self_value: i64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_xlog1py_right_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_xlog1py_left_float_out(out: Pin<&mut Tensor>, self_value: f64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_xlogy_right_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_xlogy_left_int_out(out: Pin<&mut Tensor>, self_value: i64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_xlogy_right_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_xlogy_left_float_out(out: Pin<&mut Tensor>, self_value: f64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_zeta_right_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_zeta_left_int_out(out: Pin<&mut Tensor>, self_value: i64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_zeta_right_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_specialscalarnative_ss_zeta_left_float_out(out: Pin<&mut Tensor>, self_value: f64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_creationcompletionnative_creation_empty_out(out: Pin<&mut Tensor>, size: &[i64], has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_creationcompletionnative_creation_full_out(out: Pin<&mut Tensor>, size: &[i64], fill_value_is_integer: bool, fill_value_integer: i64, fill_value_floating: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_creationcompletionnative_creation_ones_out(out: Pin<&mut Tensor>, size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_creationcompletionnative_creation_zeros_out(out: Pin<&mut Tensor>, size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_creationcompletionnative_creation_empty_like_out(out: Pin<&mut Tensor>, self_value: &Tensor, has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_creationcompletionnative_creation_full_like_out(out: Pin<&mut Tensor>, self_value: &Tensor, fill_value_is_integer: bool, fill_value_integer: i64, fill_value_floating: f64, has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_creationcompletionnative_creation_ones_like_out(out: Pin<&mut Tensor>, self_value: &Tensor, has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_creationcompletionnative_creation_zeros_like_out(out: Pin<&mut Tensor>, self_value: &Tensor, has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_bitwise_and(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_bitwise_and(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_bitwise_or(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_bitwise_or(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_bitwise_xor(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_bitwise_xor(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_bitwise_left_shift(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_bitwise_left_shift(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_bitwise_right_shift(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_bitwise_right_shift(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_remainder(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_remainder(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_pow(out: Pin<&mut Tensor>, self_value: &Tensor, exponent: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_pow(self_value: Pin<&mut Tensor>, exponent: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_float_power(out: Pin<&mut Tensor>, self_value: &Tensor, exponent: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_float_power(self_value: Pin<&mut Tensor>, exponent: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_mul(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_mul(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_floor_divide(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_floor_divide(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_xlogy(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_xlogy(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_bitwise_and_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_bitwise_and_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_bitwise_or_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_bitwise_or_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_bitwise_xor_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_bitwise_xor_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_bitwise_left_shift_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_bitwise_left_shift_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_bitwise_right_shift_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_bitwise_right_shift_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_remainder_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_remainder_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_pow_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, exponent: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_pow_int_in_place(self_value: Pin<&mut Tensor>, exponent: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_float_power_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, exponent: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_float_power_int_in_place(self_value: Pin<&mut Tensor>, exponent: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_mul_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_mul_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_floor_divide_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_floor_divide_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_xlogy_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_xlogy_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_copysign_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_copysign_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_remainder_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_remainder_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_pow_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, exponent: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_pow_float_in_place(self_value: Pin<&mut Tensor>, exponent: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_float_power_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, exponent: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_float_power_float_in_place(self_value: Pin<&mut Tensor>, exponent: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_mul_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_mul_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_floor_divide_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_floor_divide_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_xlogy_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_xlogy_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_fmod_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_fmod_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_copysign_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_copysign_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_left_bitwise_and_int_out(out: Pin<&mut Tensor>, self_value: i64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_left_bitwise_or_int_out(out: Pin<&mut Tensor>, self_value: i64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_left_bitwise_xor_int_out(out: Pin<&mut Tensor>, self_value: i64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_left_bitwise_left_shift_int_out(out: Pin<&mut Tensor>, self_value: i64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_left_bitwise_right_shift_int_out(out: Pin<&mut Tensor>, self_value: i64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_left_remainder_int_out(out: Pin<&mut Tensor>, self_value: i64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_left_pow_int_out(out: Pin<&mut Tensor>, self_value: i64, exponent: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_left_float_power_int_out(out: Pin<&mut Tensor>, self_value: i64, exponent: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_left_xlogy_int_out(out: Pin<&mut Tensor>, self_value: i64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_left_remainder_float_out(out: Pin<&mut Tensor>, self_value: f64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_left_pow_float_out(out: Pin<&mut Tensor>, self_value: f64, exponent: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_left_float_power_float_out(out: Pin<&mut Tensor>, self_value: f64, exponent: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_left_xlogy_float_out(out: Pin<&mut Tensor>, self_value: f64, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_eq_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_eq_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_ne_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_ne_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_lt_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_lt_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_le_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_le_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_gt_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_gt_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_ge_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_ge_float_in_place(self_value: Pin<&mut Tensor>, other: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_eq_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_eq_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_ne_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_ne_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_lt_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_lt_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_le_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_le_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_gt_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_gt_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_ge_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_scalar_right_ge_int_in_place(self_value: Pin<&mut Tensor>, other: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_eq(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_eq(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_ne(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_ne(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_lt(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_lt(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_le(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_le(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_gt(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_gt(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_out_ge(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_binaryscalarnative_binary_tensor_in_ge(self_value: Pin<&mut Tensor>, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_lookupnative_lookup_isin_tensor_tensor_out(out: Pin<&mut Tensor>, elements: &Tensor, test_elements: &Tensor, assume_unique: bool, invert: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_lookupnative_lookup_isin_tensor_scalar_out(out: Pin<&mut Tensor>, elements: &Tensor, test_element_is_integer: bool, test_element_integer: i64, test_element_floating: f64, assume_unique: bool, invert: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_lookupnative_lookup_isin_scalar_tensor_out(out: Pin<&mut Tensor>, element_is_integer: bool, element_integer: i64, element_floating: f64, test_elements: &Tensor, assume_unique: bool, invert: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_lookupnative_lookup_searchsorted_tensor_out(out: Pin<&mut Tensor>, sorted_sequence: &Tensor, self_value: &Tensor, out_int32: bool, right: bool, has_side: bool, side: &str, has_sorter: bool, sorter: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_lookupnative_lookup_searchsorted_scalar_out(out: Pin<&mut Tensor>, sorted_sequence: &Tensor, self_is_integer: bool, self_integer: i64, self_floating: f64, out_int32: bool, right: bool, has_side: bool, side: &str, has_sorter: bool, sorter: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_lookupnative_lookup_bucketize_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, boundaries: &Tensor, out_int32: bool, right: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_lookupnative_lookup_bucketize_scalar_out(out: Pin<&mut Tensor>, self_is_integer: bool, self_integer: i64, self_floating: f64, boundaries: &Tensor, out_int32: bool, right: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_acos_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_acos_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_acosh_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_acosh_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_asin_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_asin_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_asinh_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_asinh_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_atan_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_atan_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_atanh_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_atanh_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_cos_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_cos_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_cosh_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_cosh_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sin_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sin_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sinh_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sinh_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_tan_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_tan_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_tanh_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_tanh_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_abs_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_abs_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_bitwise_not_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_bitwise_not_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_ceil_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_ceil_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_deg2rad_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_deg2rad_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_erf_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_erf_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_erfc_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_erfc_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_erfinv_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_erfinv_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_exp2_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_exp2_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_expm1_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_expm1_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_floor_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_floor_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_frac_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_frac_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_hardsigmoid_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_hardsigmoid_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_hardswish_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_hardswish_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_log10_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_log10_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_log1p_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_log1p_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_log2_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_log2_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_logical_not_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_logical_not_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_mish_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_mish_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_rad2deg_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_rad2deg_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_reciprocal_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_reciprocal_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_round_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_round_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_rsqrt_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_rsqrt_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sigmoid_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sigmoid_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sign_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sign_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_silu_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_silu_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sinc_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sinc_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_square_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_square_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_trunc_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_trunc_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_relu6_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_selu_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_absolute_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_absolute_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_arccos_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_arccos_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_arccosh_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_arccosh_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_arcsin_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_arcsin_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_arcsinh_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_arcsinh_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_arctan_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_arctan_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_arctanh_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_arctanh_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_all_all_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_any_all_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_isinf_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_isnan_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_isneginf_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_isposinf_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_signbit_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_max_unary_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_median_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_min_unary_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_nonzero_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_trace_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_hardsigmoid_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_hardswish_backward_out(out: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sigmoid_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, output: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_silu_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_tanh_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, output: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_round_decimals_out(out: Pin<&mut Tensor>, self_value: &Tensor, decimals: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_round_decimals_in_place(self_value: Pin<&mut Tensor>, decimals: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_frexp_out(mantissa: Pin<&mut Tensor>, exponent: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_alias_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_angle_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_conj_physical_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_detach_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_digamma_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_exp_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_fix_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_i0_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_inverse_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_lgamma_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_lift_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_lift_fresh_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_log_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_log_sigmoid_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_msort_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_neg_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_negative_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_relu_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sgn_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sqrt_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_t_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_view_as_complex_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_view_as_real_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_conj_physical_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_detach_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_digamma_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_exp_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_fix_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_i0_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_lgamma_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_log_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_neg_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_negative_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_relu_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sgn_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_squeeze_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_sqrt_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_t_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_unarystoragenative_zero_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_diag_out(out: Pin<&mut Tensor>, self_value: &Tensor, diagonal: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_matrix_power_out(out: Pin<&mut Tensor>, self_value: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_mvlgamma_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_pixel_shuffle_out(out: Pin<&mut Tensor>, self_value: &Tensor, upscale_factor: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_pixel_unshuffle_out(out: Pin<&mut Tensor>, self_value: &Tensor, downscale_factor: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_squeeze_copy_dimension_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_tril_out(out: Pin<&mut Tensor>, self_value: &Tensor, diagonal: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_triu_out(out: Pin<&mut Tensor>, self_value: &Tensor, diagonal: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_unsqueeze_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_flip_out(out: Pin<&mut Tensor>, self_value: &Tensor, dims: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_permute_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor, dims: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_repeat_out(out: Pin<&mut Tensor>, self_value: &Tensor, repeats: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_squeeze_copy_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_view_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor, size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_squeeze_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_diag_embed_out(out: Pin<&mut Tensor>, self_value: &Tensor, offset: i64, dim1: i64, dim2: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_diagonal_copy_out(out: Pin<&mut Tensor>, self_value: &Tensor, offset: i64, dim1: i64, dim2: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_roll_out(out: Pin<&mut Tensor>, self_value: &Tensor, shifts: &[i64], dims: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_rot90_out(out: Pin<&mut Tensor>, self_value: &Tensor, k: i64, dims: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_squeeze_dimension_in_place(self_value: Pin<&mut Tensor>, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_mvlgamma_in_place(self_value: Pin<&mut Tensor>, p: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_tril_in_place(self_value: Pin<&mut Tensor>, diagonal: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_triu_in_place(self_value: Pin<&mut Tensor>, diagonal: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_unsqueeze_in_place(self_value: Pin<&mut Tensor>, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_squeeze_dimensions_in_place(self_value: Pin<&mut Tensor>, dim: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_swapaxes_in_place(self_value: Pin<&mut Tensor>, axis0: i64, axis1: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_swapdims_in_place(self_value: Pin<&mut Tensor>, dim0: i64, dim1: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_shape_transpose_in_place(self_value: Pin<&mut Tensor>, dim0: i64, dim1: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_polygamma_out(out: Pin<&mut Tensor>, self_value: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_polygamma_in_place(self_value: Pin<&mut Tensor>, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_logit_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_logit_epsilon_out(out: Pin<&mut Tensor>, self_value: &Tensor, eps: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_logit_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_logit_epsilon_in_place(self_value: Pin<&mut Tensor>, eps: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_airy_ai_out(out: Pin<&mut Tensor>, x: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_bessel_j0_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_bessel_j1_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_bessel_y0_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_bessel_y1_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_digamma_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_entr_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_erf_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_erfc_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_erfcx_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_erfinv_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_exp2_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_expit_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_expm1_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_gammaln_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_i0_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_i0e_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_i1_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_i1e_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_log1p_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_log_ndtr_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_modified_bessel_i0_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_modified_bessel_i1_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_modified_bessel_k0_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_modified_bessel_k1_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_ndtr_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_ndtri_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_psi_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_scaled_modified_bessel_k0_out(out: Pin<&mut Tensor>, x: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_scaled_modified_bessel_k1_out(out: Pin<&mut Tensor>, x: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_sinc_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_spherical_bessel_j0_out(out: Pin<&mut Tensor>, x: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_gammainc_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_gammaincc_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_xlog1py_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_xlogy_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_zeta_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_logit_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_logit_epsilon_out(out: Pin<&mut Tensor>, self_value: &Tensor, eps: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_logsumexp_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_multigammaln_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_polygamma_out(out: Pin<&mut Tensor>, self_value: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_round_out(out: Pin<&mut Tensor>, self_value: &Tensor, decimals: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_chebyshev_polynomial_t_out(out: Pin<&mut Tensor>, x: &Tensor, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_chebyshev_polynomial_u_out(out: Pin<&mut Tensor>, x: &Tensor, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_chebyshev_polynomial_v_out(out: Pin<&mut Tensor>, x: &Tensor, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_chebyshev_polynomial_w_out(out: Pin<&mut Tensor>, x: &Tensor, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_hermite_polynomial_h_out(out: Pin<&mut Tensor>, x: &Tensor, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_hermite_polynomial_he_out(out: Pin<&mut Tensor>, x: &Tensor, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_laguerre_polynomial_l_out(out: Pin<&mut Tensor>, x: &Tensor, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_legendre_polynomial_p_out(out: Pin<&mut Tensor>, x: &Tensor, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_shifted_chebyshev_polynomial_t_out(out: Pin<&mut Tensor>, x: &Tensor, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_shifted_chebyshev_polynomial_u_out(out: Pin<&mut Tensor>, x: &Tensor, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_shifted_chebyshev_polynomial_v_out(out: Pin<&mut Tensor>, x: &Tensor, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_shifted_chebyshev_polynomial_w_out(out: Pin<&mut Tensor>, x: &Tensor, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_chebyshev_polynomial_t_order_int_out(out: Pin<&mut Tensor>, x: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_chebyshev_polynomial_t_order_float_out(out: Pin<&mut Tensor>, x: &Tensor, n: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_chebyshev_polynomial_t_input_int_out(out: Pin<&mut Tensor>, x: i64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_special_special_chebyshev_polynomial_t_input_float_out(out: Pin<&mut Tensor>, x: f64, n: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_rand_generator_out(output: Pin<&mut Tensor>, size: &[i64], generator: &Generator) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_randn_generator_out(output: Pin<&mut Tensor>, size: &[i64], generator: &Generator) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_randperm_generator_out(output: Pin<&mut Tensor>, n: i64, generator: &Generator) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_generator_rand_like_out(output: Pin<&mut Tensor>, input: &Tensor, generator: &Generator, has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_generator_randn_like_out(output: Pin<&mut Tensor>, input: &Tensor, generator: &Generator, has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_generator_randint_out(output: Pin<&mut Tensor>, high: i64, size: &[i64], generator: &Generator) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_generator_randint_low_out(output: Pin<&mut Tensor>, low: i64, high: i64, size: &[i64], generator: &Generator) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_generator_randint_like_out(output: Pin<&mut Tensor>, input: &Tensor, high: i64, generator: &Generator, has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_generator_randint_like_tensor_out(output: Pin<&mut Tensor>, input: &Tensor, high: &Tensor, generator: &Generator, has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_generator_randint_like_low_out(output: Pin<&mut Tensor>, input: &Tensor, low: i64, high: i64, generator: &Generator, has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_rand_out(out: Pin<&mut Tensor>, size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_randn_out(out: Pin<&mut Tensor>, size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_randint_out(out: Pin<&mut Tensor>, high: i64, size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_randint_low_out(out: Pin<&mut Tensor>, low: i64, high: i64, size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_rand_like_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_randn_like_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_randint_like_out_default(out: Pin<&mut Tensor>, self_value: &Tensor, high: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_randint_like_tensor_out_default(out: Pin<&mut Tensor>, self_value: &Tensor, high: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_randint_like_low_dtype_out_default(out: Pin<&mut Tensor>, self_value: &Tensor, low: i64, high: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_random_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_random_from_out(out: Pin<&mut Tensor>, self_value: &Tensor, from: i64, to: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_random_to_out(out: Pin<&mut Tensor>, self_value: &Tensor, to: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_random_in_place(self_value: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_random_from_in_place(self_value: Pin<&mut Tensor>, from: i64, to: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_random_to_in_place(self_value: Pin<&mut Tensor>, to: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_rrelu_in_place(self_value: Pin<&mut Tensor>, lower: f64, upper: f64, training: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_rrelu_with_noise_in_place(self_value: Pin<&mut Tensor>, noise: Pin<&mut Tensor>, lower: f64, upper: f64, training: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_rrelu_with_noise_out(output: Pin<&mut Tensor>, self_value: &Tensor, noise: &Tensor, has_generator: bool, generator: &Generator, lower: f64, upper: f64, training: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randomcompletion_rrelu_with_noise_backward_out(output: Pin<&mut Tensor>, grad_output: &Tensor, self_value: &Tensor, noise: &Tensor, lower: f64, upper: f64, training: bool, self_is_result: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_segmentreducecompletion_segment_reduce_lengths_out(out: Pin<&mut Tensor>, data: &Tensor, reduce: &str, lengths: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_histogramcompletion_histogram_bin_ct_out(hist: Pin<&mut Tensor>, bin_edges: Pin<&mut Tensor>, self_value: &Tensor, bins: i64, has_range: bool, range: &[f64], has_weight: bool, weight: &Tensor, density: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_histogramcompletion_histogram_bins_tensor_out(hist: Pin<&mut Tensor>, bin_edges: Pin<&mut Tensor>, self_value: &Tensor, bins: &Tensor, has_weight: bool, weight: &Tensor, density: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_uniquecompletion_unique_consecutive_out(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, out2: Pin<&mut Tensor>, self_value: &Tensor, return_inverse: bool, return_counts: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_uniquecompletion_unique_dim_out(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, out2: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, sorted: bool, return_inverse: bool, return_counts: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_uniquecompletion_unique_dim_consecutive_out(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, out2: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, return_inverse: bool, return_counts: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_svdcompletion_svd_out(U: Pin<&mut Tensor>, S: Pin<&mut Tensor>, V: Pin<&mut Tensor>, self_value: &Tensor, some: bool, compute_uv: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizedallocationcompletion_empty_quantized_out(out: Pin<&mut Tensor>, size: &[i64], qtensor: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_cumsum_out_dtype(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_cumprod_out_dtype(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_cumsum_in_place(self_value: Pin<&mut Tensor>, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_cumsum_in_place_dtype(self_value: Pin<&mut Tensor>, dim: i64, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_cumprod_in_place(self_value: Pin<&mut Tensor>, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_cumprod_in_place_dtype(self_value: Pin<&mut Tensor>, dim: i64, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_norm_dimensions_copy_in_place(arg0: Pin<&mut Tensor>, arg1: &Tensor, arg2: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_nanmean_out_native(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_nanmean_dimensions_out_native(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_nanmean_dimensions_dtype_out_native(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], dtype: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_nansum_out_native(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_nansum_dimensions_out_native(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_nansum_dimensions_dtype_out_native(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], dtype: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_amax_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_amin_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_all_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_any_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_all_dimension_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_any_dimension_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_argmax_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_argmin_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_argmax_all_out(out: Pin<&mut Tensor>, self_value: &Tensor, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_argmin_all_out(out: Pin<&mut Tensor>, self_value: &Tensor, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_count_nonzero_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_count_nonzero_all_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_count_nonzero_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_aminmax_dim_out(min: Pin<&mut Tensor>, max: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_aminmax_all_out(min: Pin<&mut Tensor>, max: Pin<&mut Tensor>, self_value: &Tensor, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_nanmedian_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_logsumexp_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_mean_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_prod_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_sum_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_mean_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_sum_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_mean_all_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_sum_all_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_prod_dimension_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_std_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], unbiased: bool, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_var_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], unbiased: bool, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_std_all_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, unbiased: bool, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_var_all_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, unbiased: bool, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_cumprod_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_cumsum_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_logcumsumexp_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_cholesky_out(out: Pin<&mut Tensor>, self_value: &Tensor, upper: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_cholesky_inverse_out(out: Pin<&mut Tensor>, self_value: &Tensor, upper: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_nuclear_norm_out(out: Pin<&mut Tensor>, self_value: &Tensor, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_cholesky_solve_out(out: Pin<&mut Tensor>, self_value: &Tensor, input2: &Tensor, upper: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_frobenius_norm_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_statistics_nuclear_norm_dimensions_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticspairnative_std_mean_correction_out_int(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, correction: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticspairnative_std_mean_correction_out_float(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, correction: f64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticspairnative_std_mean_correction_out_dimensions_int(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], correction: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticspairnative_std_mean_correction_out_dimensions_float(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], correction: f64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticspairnative_var_mean_correction_out_int(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, correction: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticspairnative_var_mean_correction_out_float(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, correction: f64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticspairnative_var_mean_correction_out_dimensions_int(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], correction: i64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_correctionstatisticspairnative_var_mean_correction_out_dimensions_float(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], correction: f64, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_sparse_mask_out(out: Pin<&mut Tensor>, self_value: &Tensor, mask: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_copy_sparse_to_sparse_out(out: Pin<&mut Tensor>, self_value: &Tensor, src: &Tensor, non_blocking: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_resize_as_sparse_in_place(self_value: Pin<&mut Tensor>, shape: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_sparse_resize_in_place(self_value: Pin<&mut Tensor>, size: &[i64], sparse_dim: i64, dense_dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_sparse_resize_and_clear_in_place(self_value: Pin<&mut Tensor>, size: &[i64], sparse_dim: i64, dense_dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_crow_indices_copy_out(output: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_col_indices_copy_out(output: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_ccol_indices_copy_out(output: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_row_indices_copy_out(output: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_indices_copy_out(output: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_values_copy_out(output: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_copy_sparse_to_sparse_in_place(self_value: Pin<&mut Tensor>, source: &Tensor, non_blocking: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_resize_as_sparse_out(output: Pin<&mut Tensor>, self_value: &Tensor, shape: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_sparse_resize_out(output: Pin<&mut Tensor>, self_value: &Tensor, size: &[i64], sparse_dim: i64, dense_dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_sparse_resize_and_clear_out(output: Pin<&mut Tensor>, self_value: &Tensor, size: &[i64], sparse_dim: i64, dense_dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_coo_empty_out(output: Pin<&mut Tensor>, size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparse_sampled_addmm_numeric_out(output: Pin<&mut Tensor>, mask: &Tensor, left: &Tensor, right: &Tensor, beta: f64, beta_is_integer: bool, alpha: f64, alpha_is_integer: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_cholesky_ex_out(L: Pin<&mut Tensor>, info: Pin<&mut Tensor>, self_value: &Tensor, upper: bool, check_errors: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_eig_out(eigenvalues: Pin<&mut Tensor>, eigenvectors: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_eigh_out(eigvals: Pin<&mut Tensor>, eigvecs: Pin<&mut Tensor>, self_value: &Tensor, UPLO: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_inv_ex_out(inverse: Pin<&mut Tensor>, info: Pin<&mut Tensor>, A: &Tensor, check_errors: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_ldl_factor_out(LD: Pin<&mut Tensor>, pivots: Pin<&mut Tensor>, self_value: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_ldl_factor_ex_out(LD: Pin<&mut Tensor>, pivots: Pin<&mut Tensor>, info: Pin<&mut Tensor>, self_value: &Tensor, hermitian: bool, check_errors: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_lu_out(P: Pin<&mut Tensor>, L: Pin<&mut Tensor>, U: Pin<&mut Tensor>, A: &Tensor, pivot: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_lu_factor_out(LU: Pin<&mut Tensor>, pivots: Pin<&mut Tensor>, A: &Tensor, pivot: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_lu_factor_ex_out(LU: Pin<&mut Tensor>, pivots: Pin<&mut Tensor>, info: Pin<&mut Tensor>, A: &Tensor, pivot: bool, check_errors: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_qr_out(Q: Pin<&mut Tensor>, R: Pin<&mut Tensor>, A: &Tensor, mode: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_slogdet_out(sign: Pin<&mut Tensor>, logabsdet: Pin<&mut Tensor>, A: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_solve_ex_out(result: Pin<&mut Tensor>, info: Pin<&mut Tensor>, A: &Tensor, B: &Tensor, left: bool, check_errors: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_det_out(out: Pin<&mut Tensor>, A: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_cholesky_out(out: Pin<&mut Tensor>, self_value: &Tensor, upper: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_cross_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_inv_out(out: Pin<&mut Tensor>, A: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_ldl_solve_out(out: Pin<&mut Tensor>, LD: &Tensor, pivots: &Tensor, B: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_lu_solve_out(out: Pin<&mut Tensor>, LU: &Tensor, pivots: &Tensor, B: &Tensor, left: bool, adjoint: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matmul_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_solve_out(out: Pin<&mut Tensor>, A: &Tensor, B: &Tensor, left: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_solve_triangular_out(out: Pin<&mut Tensor>, self_value: &Tensor, B: &Tensor, upper: bool, left: bool, unitriangular: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_vecdot_out(out: Pin<&mut Tensor>, x: &Tensor, y: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_eigvals_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_eigvalsh_out(out: Pin<&mut Tensor>, self_value: &Tensor, UPLO: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_householder_product_out(out: Pin<&mut Tensor>, input: &Tensor, tau: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_exp_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_power_out(out: Pin<&mut Tensor>, self_value: &Tensor, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_svdvals_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_tensorinv_out(out: Pin<&mut Tensor>, self_value: &Tensor, ind: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_tensorsolve_out(out: Pin<&mut Tensor>, self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_multi_dot_out(out: Pin<&mut Tensor>, tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_rank_out_default(out: Pin<&mut Tensor>, self_value: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_rank_out_absolute(out: Pin<&mut Tensor>, self_value: &Tensor, tol: f64, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_rank_out_relative(out: Pin<&mut Tensor>, self_value: &Tensor, tol: f64, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_rank_out_tolerances(out: Pin<&mut Tensor>, self_value: &Tensor, atol: f64, rtol: f64, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_rank_out_tensor_default(out: Pin<&mut Tensor>, self_value: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_rank_out_tensor_absolute(out: Pin<&mut Tensor>, self_value: &Tensor, atol: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_rank_out_tensor_relative(out: Pin<&mut Tensor>, self_value: &Tensor, rtol: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_rank_out_tensor_tolerances(out: Pin<&mut Tensor>, self_value: &Tensor, atol: &Tensor, rtol: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_rank_out_tolerance(out: Pin<&mut Tensor>, self_value: &Tensor, tol: f64, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_rank_out_tensor_tolerance(out: Pin<&mut Tensor>, self_value: &Tensor, tol: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_pinv_out_default(out: Pin<&mut Tensor>, self_value: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_pinv_out_absolute(out: Pin<&mut Tensor>, self_value: &Tensor, rcond: f64, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_pinv_out_relative(out: Pin<&mut Tensor>, self_value: &Tensor, rcond: f64, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_pinv_out_tolerances(out: Pin<&mut Tensor>, self_value: &Tensor, atol: f64, rtol: f64, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_pinv_out_tensor_default(out: Pin<&mut Tensor>, self_value: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_pinv_out_tensor_absolute(out: Pin<&mut Tensor>, self_value: &Tensor, atol: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_pinv_out_tensor_relative(out: Pin<&mut Tensor>, self_value: &Tensor, rtol: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_pinv_out_tensor_tolerances(out: Pin<&mut Tensor>, self_value: &Tensor, atol: &Tensor, rtol: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_pinv_out_rcond(out: Pin<&mut Tensor>, self_value: &Tensor, rcond: f64, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_pinv_out_tensor_rcond(out: Pin<&mut Tensor>, self_value: &Tensor, rcond: &Tensor, hermitian: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_cond_string_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_norm_string_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: &str, dim: &[i64], keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_norm_string_out_dtype(out: Pin<&mut Tensor>, self_value: &Tensor, p: &str, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_norm_string_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: &str, keepdim: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_norm_string_out_dimensions(out: Pin<&mut Tensor>, self_value: &Tensor, p: &str, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_cond_default_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_cond_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_cond_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_norm_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_norm_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_norm_int_configured_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: i64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_matrix_norm_float_configured_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: f64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_norm_default_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_norm_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_norm_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_norm_int_configured_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: i64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_norm_float_configured_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: f64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_vector_norm_int_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_vector_norm_float_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_vector_norm_int_configured_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: i64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_vector_norm_float_configured_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: f64, dim: &[i64], keepdim: bool, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_lstsq_out(solution: Pin<&mut Tensor>, residuals: Pin<&mut Tensor>, rank: Pin<&mut Tensor>, singular_values: Pin<&mut Tensor>, a: &Tensor, b: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_lstsq_out_configured(solution: Pin<&mut Tensor>, residuals: Pin<&mut Tensor>, rank: Pin<&mut Tensor>, singular_values: Pin<&mut Tensor>, a: &Tensor, b: &Tensor, rcond: f64, driver: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_linalg_linalg_svd_out(u: Pin<&mut Tensor>, s: Pin<&mut Tensor>, vh: Pin<&mut Tensor>, self_value: &Tensor, full: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_cuda_record_stream(tensor: Pin<&mut Tensor>, stream: &CudaStream) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_optimizer_add_parameter(arg0: Pin<&mut Adam>, arg1: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_optimizer_zero_grad(arg0: Pin<&mut Adam>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_optimizer_step(arg0: Pin<&mut Adam>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_optimizer_restore(arg0: Pin<&mut Adam>, arg1: &[u8]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_optimizer_cancel(arg0: Pin<&mut Adam>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_losscompletion_multilabel_margin_loss_out(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_losscompletion_multilabel_margin_loss_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, input: &Tensor, target: &Tensor, reduction: i64, is_target: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_losscompletion_multilabel_margin_loss_forward_out(output: Pin<&mut Tensor>, is_target: Pin<&mut Tensor>, input: &Tensor, target: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizationcompletion_fake_quantize_per_tensor_affine_cachemask_out(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, scale: f64, zero_point: i64, quant_min: i64, quant_max: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizationcompletion_fake_quantize_per_channel_affine_cachemask_out(out0: Pin<&mut Tensor>, out1: Pin<&mut Tensor>, self_value: &Tensor, scale: &Tensor, zero_point: &Tensor, axis: i64, quant_min: i64, quant_max: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizationcompletion_quantize_per_channel_out(out: Pin<&mut Tensor>, self_value: &Tensor, scales: &Tensor, zero_points: &Tensor, axis: i64, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizationcompletion_quantize_per_tensor_tensor_qparams_out(out: Pin<&mut Tensor>, self_value: &Tensor, scale: &Tensor, zero_point: &Tensor, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizationcompletion_quantize_per_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, scale: f64, zero_point: i64, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizationcompletion_quantize_per_tensor_dynamic_out(out: Pin<&mut Tensor>, self_value: &Tensor, dtype: i64, reduce_range: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizationcompletion_int_repr_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizationcompletion_dequantize_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizationcompletion_q_per_channel_scales_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizationcompletion_q_per_channel_zero_points_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_exponential_out(out: Pin<&mut Tensor>, self_value: &Tensor, lambd: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_poisson_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_binomial_out(out: Pin<&mut Tensor>, count: &Tensor, prob: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_cauchy_out(out: Pin<&mut Tensor>, self_value: &Tensor, median: f64, sigma: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_geometric_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_log_normal_out(out: Pin<&mut Tensor>, self_value: &Tensor, mean: f64, std: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_uniform_out(out: Pin<&mut Tensor>, self_value: &Tensor, from: f64, to: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_uniform_inplace(self_value: Pin<&mut Tensor>, from: f64, to: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_normal_out(out: Pin<&mut Tensor>, self_value: &Tensor, mean: f64, std: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_normal_inplace(self_value: Pin<&mut Tensor>, mean: f64, std: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_exponential_inplace(self_value: Pin<&mut Tensor>, lambd: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_cauchy_inplace(self_value: Pin<&mut Tensor>, median: f64, sigma: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_geometric_inplace(self_value: Pin<&mut Tensor>, p: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_log_normal_inplace(self_value: Pin<&mut Tensor>, mean: f64, std: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_normal_tensor_tensor_out(out: Pin<&mut Tensor>, mean: &Tensor, std: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_normal_tensor_float_out(out: Pin<&mut Tensor>, mean: &Tensor, std: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_normal_float_tensor_out(out: Pin<&mut Tensor>, mean: f64, std: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_normal_float_float_out(out: Pin<&mut Tensor>, mean: f64, std: f64, size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_bernoulli_out(out: Pin<&mut Tensor>, self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_bernoulli_probability_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_bernoulli_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, p: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_bernoulli_inplace(self_value: Pin<&mut Tensor>, p: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_bernoulli_tensor_inplace(self_value: Pin<&mut Tensor>, p: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_distributioncompletion_multinomial_out(out: Pin<&mut Tensor>, self_value: &Tensor, num_samples: i64, replacement: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_hashcompletion_hash_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, dim: &[i64], keepdim: bool, mode: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_resizeascompletion_resize_as_out(out: Pin<&mut Tensor>, self_value: &Tensor, the_template: &Tensor, has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_resizeascompletion_resize_as_in_place(self_value: Pin<&mut Tensor>, the_template: &Tensor, has_memory_format: bool, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_newemptystridedcompletion_new_empty_strided_out(out: Pin<&mut Tensor>, self_value: &Tensor, size: &[i64], stride: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_nlllosscompletion_nll_loss_out_default(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, reduction: i64, ignore_index: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_nlllosscompletion_nll_loss_out_weight(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, weight: &Tensor, reduction: i64, ignore_index: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_multimarginlosscompletion_multi_margin_loss_out_default(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, p: f64, margin: f64, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_multimarginlosscompletion_multi_margin_loss_out_weight(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, p: f64, margin: f64, weight: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_multimarginlosscompletion_multi_margin_loss_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, input: &Tensor, target: &Tensor, p: f64, margin: f64, has_weight: bool, weight: &Tensor, reduction: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplebilinear2dcompletion_upsample_bilinear2d_out(out: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64], align_corners: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplebicubic2dcompletion_upsample_bicubic2d_out(out: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64], align_corners: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_nllloss2dcompletion_nll_loss2d_out_default(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, reduction: i64, ignore_index: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_nllloss2dcompletion_nll_loss2d_out_weight(out: Pin<&mut Tensor>, self_value: &Tensor, target: &Tensor, weight: &Tensor, reduction: i64, ignore_index: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_viewcopydtypecompletion_view_copy_dtype_out(out: Pin<&mut Tensor>, self_value: &Tensor, dtype: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantilecompletion_quantile_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, q: &Tensor, dim: i64, keepdim: bool, interpolation: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantilecompletion_quantile_scalar_out(out: Pin<&mut Tensor>, self_value: &Tensor, q: f64, dim: i64, keepdim: bool, interpolation: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_nanquantilecompletion_nanquantile_tensor_out(out: Pin<&mut Tensor>, self_value: &Tensor, q: &Tensor, dim: i64, keepdim: bool, interpolation: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_nanquantilecompletion_nanquantile_scalar_out(out: Pin<&mut Tensor>, self_value: &Tensor, q: f64, dim: i64, keepdim: bool, interpolation: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_randpermcompletion_randperm_out(out: Pin<&mut Tensor>, n: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplelinear1dcompletion_upsample_linear1d_out(out: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64], align_corners: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplenearest1dcompletion_upsample_nearest1d_out(out: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplenearest2dcompletion_upsample_nearest2d_out(out: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplenearest3dcompletion_upsample_nearest3d_out(out: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_setdatacompletion_set_data(self_value: Pin<&mut Tensor>, new_data: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplebackwardcompletion_upsample_nearest1d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, output_size: &[i64], input_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplebackwardcompletion_upsample_nearest2d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, output_size: &[i64], input_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplebackwardcompletion_upsample_nearest3d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, output_size: &[i64], input_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplebackwardcompletion_upsample_linear1d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, output_size: &[i64], input_size: &[i64], align_corners: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplebackwardcompletion_upsample_trilinear3d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, output_size: &[i64], input_size: &[i64], align_corners: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplebackwardcompletion_upsample_bilinear2d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, output_size: &[i64], input_size: &[i64], align_corners: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplebackwardcompletion_upsample_bicubic2d_backward_out(grad_input: Pin<&mut Tensor>, grad_output: &Tensor, output_size: &[i64], input_size: &[i64], align_corners: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsampletrilinear3dcompletion_upsample_trilinear3d_out(out: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64], align_corners: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_luunpackcompletion_lu_unpack_out_default(p: Pin<&mut Tensor>, l: Pin<&mut Tensor>, u: Pin<&mut Tensor>, lu_data: &Tensor, lu_pivots: &Tensor, unpack_data: bool, unpack_pivots: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparsematmulcompletion_hspmm_out_default(out: Pin<&mut Tensor>, mat1: &Tensor, mat2: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_sparsematmulcompletion_sspaddmm_out_default(out: Pin<&mut Tensor>, self_value: &Tensor, mat1: &Tensor, mat2: &Tensor, beta: f64, alpha: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplevectorcompletion_upsample_bilinear2d_vec_out(out: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64], align_corners: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_upsamplevectorcompletion_upsample_nearest2d_vec_out(out: Pin<&mut Tensor>, self_value: &Tensor, output_size: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_storagenative_storage_share_memory(tensor: Pin<&mut Tensor>) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_storagenative_storage_set_out(output: Pin<&mut Tensor>, tensor: &Tensor, source: &StorageHandle) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_storagenative_storage_set_offset_out(output: Pin<&mut Tensor>, tensor: &Tensor, source: &StorageHandle, storage_offset: i64, size: &[i64], stride: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_storagenative_storage_set_in_place(tensor: Pin<&mut Tensor>, source: &StorageHandle) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_storagenative_storage_set_in_place_offset(tensor: Pin<&mut Tensor>, source: &StorageHandle, storage_offset: i64, size: &[i64], stride: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_legacyconvolution_thnn_conv2d_out(output: Pin<&mut Tensor>, input: &Tensor, weight: &Tensor, kernel_size: &[i64], has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_legacyconvolution_slow_conv3d_forward_out(output: Pin<&mut Tensor>, input: &Tensor, weight: &Tensor, kernel_size: &[i64], has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_legacyconvolution_slow_conv3d_out(output: Pin<&mut Tensor>, input: &Tensor, weight: &Tensor, kernel_size: &[i64], has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_legacyconvolution_slow_conv_dilated2d_out(output: Pin<&mut Tensor>, input: &Tensor, weight: &Tensor, kernel_size: &[i64], has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64], dilation: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_legacyconvolution_slow_conv_dilated3d_out(output: Pin<&mut Tensor>, input: &Tensor, weight: &Tensor, kernel_size: &[i64], has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64], dilation: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_legacyconvolution_slow_conv_transpose2d_out(output: Pin<&mut Tensor>, input: &Tensor, weight: &Tensor, kernel_size: &[i64], has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64], output_padding: &[i64], dilation: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_legacyconvolution_slow_conv_transpose3d_out(output: Pin<&mut Tensor>, input: &Tensor, weight: &Tensor, kernel_size: &[i64], has_bias: bool, bias: &Tensor, stride: &[i64], padding: &[i64], output_padding: &[i64], dilation: &[i64]) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizedpooling_quantized_max_pool1d_out(out: Pin<&mut Tensor>, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizedpooling_quantized_max_pool2d_out(out: Pin<&mut Tensor>, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizedpooling_quantized_max_pool3d_out(out: Pin<&mut Tensor>, self_value: &Tensor, kernel_size: &[i64], stride: &[i64], padding: &[i64], dilation: &[i64], ceil_mode: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_mutation_pytorch_quantizednormalization_quantized_batch_norm_out(out: Pin<&mut Tensor>, input: &Tensor, has_weight: bool, weight: &Tensor, has_bias: bool, bias: &Tensor, mean: &Tensor, var: &Tensor, eps: f64, output_scale: f64, output_zero_point: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_string_pytorch_tensor_device(value: &Tensor) -> UniquePtr<CxxString>;
+        fn terlan_collection_pytorch_tensor_shape(value: &Tensor) -> UniquePtr<CxxVector<i64>>;
+        fn terlan_collection_pytorch_tensor_strides(value: &Tensor) -> UniquePtr<CxxVector<i64>>;
+        type TerlanPytorchTensorBroadcastTensorsResourceListResult;
+        fn terlan_collection_pytorch_tensor_broadcast_tensors_resources(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanPytorchTensorBroadcastTensorsResourceListResult>;
+        fn terlan_collection_pytorch_tensor_broadcast_tensors_resources_is_ok(result: &TerlanPytorchTensorBroadcastTensorsResourceListResult) -> bool;
+        fn terlan_collection_pytorch_tensor_broadcast_tensors_resources_len(result: &TerlanPytorchTensorBroadcastTensorsResourceListResult) -> usize;
+        fn terlan_collection_pytorch_tensor_broadcast_tensors_resources_element(result: &TerlanPytorchTensorBroadcastTensorsResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_tensor_broadcast_tensors_resources_code(result: &TerlanPytorchTensorBroadcastTensorsResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_tensor_broadcast_tensors_resources_message(result: &TerlanPytorchTensorBroadcastTensorsResourceListResult) -> &CxxString;
+        type TerlanPytorchTensorMeshgridResourceListResult;
+        fn terlan_collection_pytorch_tensor_meshgrid_resources(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanPytorchTensorMeshgridResourceListResult>;
+        fn terlan_collection_pytorch_tensor_meshgrid_resources_is_ok(result: &TerlanPytorchTensorMeshgridResourceListResult) -> bool;
+        fn terlan_collection_pytorch_tensor_meshgrid_resources_len(result: &TerlanPytorchTensorMeshgridResourceListResult) -> usize;
+        fn terlan_collection_pytorch_tensor_meshgrid_resources_element(result: &TerlanPytorchTensorMeshgridResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_tensor_meshgrid_resources_code(result: &TerlanPytorchTensorMeshgridResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_tensor_meshgrid_resources_message(result: &TerlanPytorchTensorMeshgridResourceListResult) -> &CxxString;
+        type TerlanPytorchTensorMeshgridIndexingResourceListResult;
+        fn terlan_collection_pytorch_tensor_meshgrid_indexing_resources(tensors: &TerlanPytorchTensorTensorResourceListInput, indexing: &str) -> UniquePtr<TerlanPytorchTensorMeshgridIndexingResourceListResult>;
+        fn terlan_collection_pytorch_tensor_meshgrid_indexing_resources_is_ok(result: &TerlanPytorchTensorMeshgridIndexingResourceListResult) -> bool;
+        fn terlan_collection_pytorch_tensor_meshgrid_indexing_resources_len(result: &TerlanPytorchTensorMeshgridIndexingResourceListResult) -> usize;
+        fn terlan_collection_pytorch_tensor_meshgrid_indexing_resources_element(result: &TerlanPytorchTensorMeshgridIndexingResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_tensor_meshgrid_indexing_resources_code(result: &TerlanPytorchTensorMeshgridIndexingResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_tensor_meshgrid_indexing_resources_message(result: &TerlanPytorchTensorMeshgridIndexingResourceListResult) -> &CxxString;
+        type TerlanPytorchTensorAutogradGradManyResourceListResult;
+        fn terlan_collection_pytorch_tensor_autograd_grad_many_resources(outputs: &TerlanPytorchTensorTensorResourceListInput, inputs: &TerlanPytorchTensorTensorResourceListInput, grad_outputs: &TerlanPytorchTensorTensorResourceListInput, retain_graph: bool, create_graph: bool) -> UniquePtr<TerlanPytorchTensorAutogradGradManyResourceListResult>;
+        fn terlan_collection_pytorch_tensor_autograd_grad_many_resources_is_ok(result: &TerlanPytorchTensorAutogradGradManyResourceListResult) -> bool;
+        fn terlan_collection_pytorch_tensor_autograd_grad_many_resources_len(result: &TerlanPytorchTensorAutogradGradManyResourceListResult) -> usize;
+        fn terlan_collection_pytorch_tensor_autograd_grad_many_resources_element(result: &TerlanPytorchTensorAutogradGradManyResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_tensor_autograd_grad_many_resources_code(result: &TerlanPytorchTensorAutogradGradManyResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_tensor_autograd_grad_many_resources_message(result: &TerlanPytorchTensorAutogradGradManyResourceListResult) -> &CxxString;
+        type TerlanPytorchTensorTorchscriptForwardTensorListResourceListResult;
+        fn terlan_collection_pytorch_tensor_torchscript_forward_tensor_list_resources(arg0: &TorchScriptModel, arg1: &Tensor) -> UniquePtr<TerlanPytorchTensorTorchscriptForwardTensorListResourceListResult>;
+        fn terlan_collection_pytorch_tensor_torchscript_forward_tensor_list_resources_is_ok(result: &TerlanPytorchTensorTorchscriptForwardTensorListResourceListResult) -> bool;
+        fn terlan_collection_pytorch_tensor_torchscript_forward_tensor_list_resources_len(result: &TerlanPytorchTensorTorchscriptForwardTensorListResourceListResult) -> usize;
+        fn terlan_collection_pytorch_tensor_torchscript_forward_tensor_list_resources_element(result: &TerlanPytorchTensorTorchscriptForwardTensorListResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_tensor_torchscript_forward_tensor_list_resources_code(result: &TerlanPytorchTensorTorchscriptForwardTensorListResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_tensor_torchscript_forward_tensor_list_resources_message(result: &TerlanPytorchTensorTorchscriptForwardTensorListResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionChunkResourceListResult;
+        fn terlan_collection_pytorch_shapepartition_chunk_resources(value: &Tensor, chunks: i64, dim: i64) -> UniquePtr<TerlanPytorchShapePartitionChunkResourceListResult>;
+        fn terlan_collection_pytorch_shapepartition_chunk_resources_is_ok(result: &TerlanPytorchShapePartitionChunkResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartition_chunk_resources_len(result: &TerlanPytorchShapePartitionChunkResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartition_chunk_resources_element(result: &TerlanPytorchShapePartitionChunkResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartition_chunk_resources_code(result: &TerlanPytorchShapePartitionChunkResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartition_chunk_resources_message(result: &TerlanPytorchShapePartitionChunkResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionSplitSizeResourceListResult;
+        fn terlan_collection_pytorch_shapepartition_split_size_resources(value: &Tensor, split_size: i64, dim: i64) -> UniquePtr<TerlanPytorchShapePartitionSplitSizeResourceListResult>;
+        fn terlan_collection_pytorch_shapepartition_split_size_resources_is_ok(result: &TerlanPytorchShapePartitionSplitSizeResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartition_split_size_resources_len(result: &TerlanPytorchShapePartitionSplitSizeResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartition_split_size_resources_element(result: &TerlanPytorchShapePartitionSplitSizeResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartition_split_size_resources_code(result: &TerlanPytorchShapePartitionSplitSizeResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartition_split_size_resources_message(result: &TerlanPytorchShapePartitionSplitSizeResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionSplitSizesResourceListResult;
+        fn terlan_collection_pytorch_shapepartition_split_sizes_resources(value: &Tensor, split_size: &[i64], dim: i64) -> UniquePtr<TerlanPytorchShapePartitionSplitSizesResourceListResult>;
+        fn terlan_collection_pytorch_shapepartition_split_sizes_resources_is_ok(result: &TerlanPytorchShapePartitionSplitSizesResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartition_split_sizes_resources_len(result: &TerlanPytorchShapePartitionSplitSizesResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartition_split_sizes_resources_element(result: &TerlanPytorchShapePartitionSplitSizesResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartition_split_sizes_resources_code(result: &TerlanPytorchShapePartitionSplitSizesResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartition_split_sizes_resources_message(result: &TerlanPytorchShapePartitionSplitSizesResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionTensorSplitSectionsResourceListResult;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_sections_resources(value: &Tensor, sections: i64, dim: i64) -> UniquePtr<TerlanPytorchShapePartitionTensorSplitSectionsResourceListResult>;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_sections_resources_is_ok(result: &TerlanPytorchShapePartitionTensorSplitSectionsResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_sections_resources_len(result: &TerlanPytorchShapePartitionTensorSplitSectionsResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_sections_resources_element(result: &TerlanPytorchShapePartitionTensorSplitSectionsResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_sections_resources_code(result: &TerlanPytorchShapePartitionTensorSplitSectionsResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_sections_resources_message(result: &TerlanPytorchShapePartitionTensorSplitSectionsResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionTensorSplitIndicesResourceListResult;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_indices_resources(value: &Tensor, indices: &[i64], dim: i64) -> UniquePtr<TerlanPytorchShapePartitionTensorSplitIndicesResourceListResult>;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_indices_resources_is_ok(result: &TerlanPytorchShapePartitionTensorSplitIndicesResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_indices_resources_len(result: &TerlanPytorchShapePartitionTensorSplitIndicesResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_indices_resources_element(result: &TerlanPytorchShapePartitionTensorSplitIndicesResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_indices_resources_code(result: &TerlanPytorchShapePartitionTensorSplitIndicesResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_indices_resources_message(result: &TerlanPytorchShapePartitionTensorSplitIndicesResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionTensorSplitTensorResourceListResult;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_tensor_resources(value: &Tensor, tensor_indices_or_sections: &Tensor, dim: i64) -> UniquePtr<TerlanPytorchShapePartitionTensorSplitTensorResourceListResult>;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_tensor_resources_is_ok(result: &TerlanPytorchShapePartitionTensorSplitTensorResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_tensor_resources_len(result: &TerlanPytorchShapePartitionTensorSplitTensorResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_tensor_resources_element(result: &TerlanPytorchShapePartitionTensorSplitTensorResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_tensor_resources_code(result: &TerlanPytorchShapePartitionTensorSplitTensorResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartition_tensor_split_tensor_resources_message(result: &TerlanPytorchShapePartitionTensorSplitTensorResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionUnbindResourceListResult;
+        fn terlan_collection_pytorch_shapepartition_unbind_resources(value: &Tensor, dim: i64) -> UniquePtr<TerlanPytorchShapePartitionUnbindResourceListResult>;
+        fn terlan_collection_pytorch_shapepartition_unbind_resources_is_ok(result: &TerlanPytorchShapePartitionUnbindResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartition_unbind_resources_len(result: &TerlanPytorchShapePartitionUnbindResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartition_unbind_resources_element(result: &TerlanPytorchShapePartitionUnbindResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartition_unbind_resources_code(result: &TerlanPytorchShapePartitionUnbindResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartition_unbind_resources_message(result: &TerlanPytorchShapePartitionUnbindResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionDsplitSectionsResourceListResult;
+        fn terlan_collection_pytorch_shapepartition_dsplit_sections_resources(self_value: &Tensor, sections: i64) -> UniquePtr<TerlanPytorchShapePartitionDsplitSectionsResourceListResult>;
+        fn terlan_collection_pytorch_shapepartition_dsplit_sections_resources_is_ok(result: &TerlanPytorchShapePartitionDsplitSectionsResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartition_dsplit_sections_resources_len(result: &TerlanPytorchShapePartitionDsplitSectionsResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartition_dsplit_sections_resources_element(result: &TerlanPytorchShapePartitionDsplitSectionsResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartition_dsplit_sections_resources_code(result: &TerlanPytorchShapePartitionDsplitSectionsResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartition_dsplit_sections_resources_message(result: &TerlanPytorchShapePartitionDsplitSectionsResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionHsplitSectionsResourceListResult;
+        fn terlan_collection_pytorch_shapepartition_hsplit_sections_resources(self_value: &Tensor, sections: i64) -> UniquePtr<TerlanPytorchShapePartitionHsplitSectionsResourceListResult>;
+        fn terlan_collection_pytorch_shapepartition_hsplit_sections_resources_is_ok(result: &TerlanPytorchShapePartitionHsplitSectionsResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartition_hsplit_sections_resources_len(result: &TerlanPytorchShapePartitionHsplitSectionsResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartition_hsplit_sections_resources_element(result: &TerlanPytorchShapePartitionHsplitSectionsResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartition_hsplit_sections_resources_code(result: &TerlanPytorchShapePartitionHsplitSectionsResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartition_hsplit_sections_resources_message(result: &TerlanPytorchShapePartitionHsplitSectionsResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionVsplitSectionsResourceListResult;
+        fn terlan_collection_pytorch_shapepartition_vsplit_sections_resources(self_value: &Tensor, sections: i64) -> UniquePtr<TerlanPytorchShapePartitionVsplitSectionsResourceListResult>;
+        fn terlan_collection_pytorch_shapepartition_vsplit_sections_resources_is_ok(result: &TerlanPytorchShapePartitionVsplitSectionsResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartition_vsplit_sections_resources_len(result: &TerlanPytorchShapePartitionVsplitSectionsResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartition_vsplit_sections_resources_element(result: &TerlanPytorchShapePartitionVsplitSectionsResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartition_vsplit_sections_resources_code(result: &TerlanPytorchShapePartitionVsplitSectionsResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartition_vsplit_sections_resources_message(result: &TerlanPytorchShapePartitionVsplitSectionsResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionDsplitIndicesResourceListResult;
+        fn terlan_collection_pytorch_shapepartition_dsplit_indices_resources(self_value: &Tensor, indices: &[i64]) -> UniquePtr<TerlanPytorchShapePartitionDsplitIndicesResourceListResult>;
+        fn terlan_collection_pytorch_shapepartition_dsplit_indices_resources_is_ok(result: &TerlanPytorchShapePartitionDsplitIndicesResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartition_dsplit_indices_resources_len(result: &TerlanPytorchShapePartitionDsplitIndicesResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartition_dsplit_indices_resources_element(result: &TerlanPytorchShapePartitionDsplitIndicesResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartition_dsplit_indices_resources_code(result: &TerlanPytorchShapePartitionDsplitIndicesResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartition_dsplit_indices_resources_message(result: &TerlanPytorchShapePartitionDsplitIndicesResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionHsplitIndicesResourceListResult;
+        fn terlan_collection_pytorch_shapepartition_hsplit_indices_resources(self_value: &Tensor, indices: &[i64]) -> UniquePtr<TerlanPytorchShapePartitionHsplitIndicesResourceListResult>;
+        fn terlan_collection_pytorch_shapepartition_hsplit_indices_resources_is_ok(result: &TerlanPytorchShapePartitionHsplitIndicesResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartition_hsplit_indices_resources_len(result: &TerlanPytorchShapePartitionHsplitIndicesResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartition_hsplit_indices_resources_element(result: &TerlanPytorchShapePartitionHsplitIndicesResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartition_hsplit_indices_resources_code(result: &TerlanPytorchShapePartitionHsplitIndicesResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartition_hsplit_indices_resources_message(result: &TerlanPytorchShapePartitionHsplitIndicesResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionVsplitIndicesResourceListResult;
+        fn terlan_collection_pytorch_shapepartition_vsplit_indices_resources(self_value: &Tensor, indices: &[i64]) -> UniquePtr<TerlanPytorchShapePartitionVsplitIndicesResourceListResult>;
+        fn terlan_collection_pytorch_shapepartition_vsplit_indices_resources_is_ok(result: &TerlanPytorchShapePartitionVsplitIndicesResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartition_vsplit_indices_resources_len(result: &TerlanPytorchShapePartitionVsplitIndicesResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartition_vsplit_indices_resources_element(result: &TerlanPytorchShapePartitionVsplitIndicesResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartition_vsplit_indices_resources_code(result: &TerlanPytorchShapePartitionVsplitIndicesResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartition_vsplit_indices_resources_message(result: &TerlanPytorchShapePartitionVsplitIndicesResourceListResult) -> &CxxString;
+        type TerlanPytorchWhereNativeNonzeroNumpyResourceListResult;
+        fn terlan_collection_pytorch_wherenative_nonzero_numpy_resources(self_value: &Tensor) -> UniquePtr<TerlanPytorchWhereNativeNonzeroNumpyResourceListResult>;
+        fn terlan_collection_pytorch_wherenative_nonzero_numpy_resources_is_ok(result: &TerlanPytorchWhereNativeNonzeroNumpyResourceListResult) -> bool;
+        fn terlan_collection_pytorch_wherenative_nonzero_numpy_resources_len(result: &TerlanPytorchWhereNativeNonzeroNumpyResourceListResult) -> usize;
+        fn terlan_collection_pytorch_wherenative_nonzero_numpy_resources_element(result: &TerlanPytorchWhereNativeNonzeroNumpyResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_wherenative_nonzero_numpy_resources_code(result: &TerlanPytorchWhereNativeNonzeroNumpyResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_wherenative_nonzero_numpy_resources_message(result: &TerlanPytorchWhereNativeNonzeroNumpyResourceListResult) -> &CxxString;
+        type TerlanPytorchWhereNativeWhereIndicesResourceListResult;
+        fn terlan_collection_pytorch_wherenative_where_indices_resources(condition: &Tensor) -> UniquePtr<TerlanPytorchWhereNativeWhereIndicesResourceListResult>;
+        fn terlan_collection_pytorch_wherenative_where_indices_resources_is_ok(result: &TerlanPytorchWhereNativeWhereIndicesResourceListResult) -> bool;
+        fn terlan_collection_pytorch_wherenative_where_indices_resources_len(result: &TerlanPytorchWhereNativeWhereIndicesResourceListResult) -> usize;
+        fn terlan_collection_pytorch_wherenative_where_indices_resources_element(result: &TerlanPytorchWhereNativeWhereIndicesResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_wherenative_where_indices_resources_code(result: &TerlanPytorchWhereNativeWhereIndicesResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_wherenative_where_indices_resources_message(result: &TerlanPytorchWhereNativeWhereIndicesResourceListResult) -> &CxxString;
+        type TerlanPytorchGradientsGradientArrayResourceListResult;
+        fn terlan_collection_pytorch_gradients_gradient_array_resources(tensor: &Tensor, dim: &[i64], edge_order: i64) -> UniquePtr<TerlanPytorchGradientsGradientArrayResourceListResult>;
+        fn terlan_collection_pytorch_gradients_gradient_array_resources_is_ok(result: &TerlanPytorchGradientsGradientArrayResourceListResult) -> bool;
+        fn terlan_collection_pytorch_gradients_gradient_array_resources_len(result: &TerlanPytorchGradientsGradientArrayResourceListResult) -> usize;
+        fn terlan_collection_pytorch_gradients_gradient_array_resources_element(result: &TerlanPytorchGradientsGradientArrayResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_gradients_gradient_array_resources_code(result: &TerlanPytorchGradientsGradientArrayResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_gradients_gradient_array_resources_message(result: &TerlanPytorchGradientsGradientArrayResourceListResult) -> &CxxString;
+        type TerlanPytorchGradientsGradientScalarArrayResourceListResult;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_resources(tensor: &Tensor, spacing: f64, dim: &[i64], edge_order: i64) -> UniquePtr<TerlanPytorchGradientsGradientScalarArrayResourceListResult>;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_resources_is_ok(result: &TerlanPytorchGradientsGradientScalarArrayResourceListResult) -> bool;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_resources_len(result: &TerlanPytorchGradientsGradientScalarArrayResourceListResult) -> usize;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_resources_element(result: &TerlanPytorchGradientsGradientScalarArrayResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_resources_code(result: &TerlanPytorchGradientsGradientScalarArrayResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_resources_message(result: &TerlanPytorchGradientsGradientScalarArrayResourceListResult) -> &CxxString;
+        type TerlanPytorchGradientsGradientScalarIntResourceListResult;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_int_resources(tensor: &Tensor, has_spacing: bool, spacing: f64, has_dim: bool, dim: i64, edge_order: i64) -> UniquePtr<TerlanPytorchGradientsGradientScalarIntResourceListResult>;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_int_resources_is_ok(result: &TerlanPytorchGradientsGradientScalarIntResourceListResult) -> bool;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_int_resources_len(result: &TerlanPytorchGradientsGradientScalarIntResourceListResult) -> usize;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_int_resources_element(result: &TerlanPytorchGradientsGradientScalarIntResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_int_resources_code(result: &TerlanPytorchGradientsGradientScalarIntResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_int_resources_message(result: &TerlanPytorchGradientsGradientScalarIntResourceListResult) -> &CxxString;
+        type TerlanPytorchGradientsGradientScalarArrayArrayResourceListResult;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_array_resources(tensor: &Tensor, spacing: &[f64], dim: &[i64], edge_order: i64) -> UniquePtr<TerlanPytorchGradientsGradientScalarArrayArrayResourceListResult>;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_array_resources_is_ok(result: &TerlanPytorchGradientsGradientScalarArrayArrayResourceListResult) -> bool;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_array_resources_len(result: &TerlanPytorchGradientsGradientScalarArrayArrayResourceListResult) -> usize;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_array_resources_element(result: &TerlanPytorchGradientsGradientScalarArrayArrayResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_array_resources_code(result: &TerlanPytorchGradientsGradientScalarArrayArrayResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_array_resources_message(result: &TerlanPytorchGradientsGradientScalarArrayArrayResourceListResult) -> &CxxString;
+        type TerlanPytorchGradientsGradientScalarArrayIntResourceListResult;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_int_resources(tensor: &Tensor, spacing: &[f64], has_dim: bool, dim: i64, edge_order: i64) -> UniquePtr<TerlanPytorchGradientsGradientScalarArrayIntResourceListResult>;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_int_resources_is_ok(result: &TerlanPytorchGradientsGradientScalarArrayIntResourceListResult) -> bool;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_int_resources_len(result: &TerlanPytorchGradientsGradientScalarArrayIntResourceListResult) -> usize;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_int_resources_element(result: &TerlanPytorchGradientsGradientScalarArrayIntResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_int_resources_code(result: &TerlanPytorchGradientsGradientScalarArrayIntResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_gradients_gradient_scalar_array_int_resources_message(result: &TerlanPytorchGradientsGradientScalarArrayIntResourceListResult) -> &CxxString;
+        type TerlanPytorchGradientsGradientTensorArrayResourceListResult;
+        fn terlan_collection_pytorch_gradients_gradient_tensor_array_resources(tensor: &Tensor, spacing: &TerlanPytorchTensorTensorResourceListInput, dim: &[i64], edge_order: i64) -> UniquePtr<TerlanPytorchGradientsGradientTensorArrayResourceListResult>;
+        fn terlan_collection_pytorch_gradients_gradient_tensor_array_resources_is_ok(result: &TerlanPytorchGradientsGradientTensorArrayResourceListResult) -> bool;
+        fn terlan_collection_pytorch_gradients_gradient_tensor_array_resources_len(result: &TerlanPytorchGradientsGradientTensorArrayResourceListResult) -> usize;
+        fn terlan_collection_pytorch_gradients_gradient_tensor_array_resources_element(result: &TerlanPytorchGradientsGradientTensorArrayResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_gradients_gradient_tensor_array_resources_code(result: &TerlanPytorchGradientsGradientTensorArrayResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_gradients_gradient_tensor_array_resources_message(result: &TerlanPytorchGradientsGradientTensorArrayResourceListResult) -> &CxxString;
+        type TerlanPytorchGradientsGradientTensorArrayIntResourceListResult;
+        fn terlan_collection_pytorch_gradients_gradient_tensor_array_int_resources(tensor: &Tensor, spacing: &TerlanPytorchTensorTensorResourceListInput, has_dim: bool, dim: i64, edge_order: i64) -> UniquePtr<TerlanPytorchGradientsGradientTensorArrayIntResourceListResult>;
+        fn terlan_collection_pytorch_gradients_gradient_tensor_array_int_resources_is_ok(result: &TerlanPytorchGradientsGradientTensorArrayIntResourceListResult) -> bool;
+        fn terlan_collection_pytorch_gradients_gradient_tensor_array_int_resources_len(result: &TerlanPytorchGradientsGradientTensorArrayIntResourceListResult) -> usize;
+        fn terlan_collection_pytorch_gradients_gradient_tensor_array_int_resources_element(result: &TerlanPytorchGradientsGradientTensorArrayIntResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_gradients_gradient_tensor_array_int_resources_code(result: &TerlanPytorchGradientsGradientTensorArrayIntResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_gradients_gradient_tensor_array_int_resources_message(result: &TerlanPytorchGradientsGradientTensorArrayIntResourceListResult) -> &CxxString;
+        type TerlanPytorchTensorListTransformsBroadcastTensorsResourceListResult;
+        fn terlan_collection_pytorch_tensorlisttransforms_broadcast_tensors_resources(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanPytorchTensorListTransformsBroadcastTensorsResourceListResult>;
+        fn terlan_collection_pytorch_tensorlisttransforms_broadcast_tensors_resources_is_ok(result: &TerlanPytorchTensorListTransformsBroadcastTensorsResourceListResult) -> bool;
+        fn terlan_collection_pytorch_tensorlisttransforms_broadcast_tensors_resources_len(result: &TerlanPytorchTensorListTransformsBroadcastTensorsResourceListResult) -> usize;
+        fn terlan_collection_pytorch_tensorlisttransforms_broadcast_tensors_resources_element(result: &TerlanPytorchTensorListTransformsBroadcastTensorsResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_tensorlisttransforms_broadcast_tensors_resources_code(result: &TerlanPytorchTensorListTransformsBroadcastTensorsResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_tensorlisttransforms_broadcast_tensors_resources_message(result: &TerlanPytorchTensorListTransformsBroadcastTensorsResourceListResult) -> &CxxString;
+        type TerlanPytorchTensorListTransformsMeshgridResourceListResult;
+        fn terlan_collection_pytorch_tensorlisttransforms_meshgrid_resources(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanPytorchTensorListTransformsMeshgridResourceListResult>;
+        fn terlan_collection_pytorch_tensorlisttransforms_meshgrid_resources_is_ok(result: &TerlanPytorchTensorListTransformsMeshgridResourceListResult) -> bool;
+        fn terlan_collection_pytorch_tensorlisttransforms_meshgrid_resources_len(result: &TerlanPytorchTensorListTransformsMeshgridResourceListResult) -> usize;
+        fn terlan_collection_pytorch_tensorlisttransforms_meshgrid_resources_element(result: &TerlanPytorchTensorListTransformsMeshgridResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_tensorlisttransforms_meshgrid_resources_code(result: &TerlanPytorchTensorListTransformsMeshgridResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_tensorlisttransforms_meshgrid_resources_message(result: &TerlanPytorchTensorListTransformsMeshgridResourceListResult) -> &CxxString;
+        type TerlanPytorchTensorListTransformsMeshgridIndexingResourceListResult;
+        fn terlan_collection_pytorch_tensorlisttransforms_meshgrid_indexing_resources(tensors: &TerlanPytorchTensorTensorResourceListInput, indexing: &str) -> UniquePtr<TerlanPytorchTensorListTransformsMeshgridIndexingResourceListResult>;
+        fn terlan_collection_pytorch_tensorlisttransforms_meshgrid_indexing_resources_is_ok(result: &TerlanPytorchTensorListTransformsMeshgridIndexingResourceListResult) -> bool;
+        fn terlan_collection_pytorch_tensorlisttransforms_meshgrid_indexing_resources_len(result: &TerlanPytorchTensorListTransformsMeshgridIndexingResourceListResult) -> usize;
+        fn terlan_collection_pytorch_tensorlisttransforms_meshgrid_indexing_resources_element(result: &TerlanPytorchTensorListTransformsMeshgridIndexingResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_tensorlisttransforms_meshgrid_indexing_resources_code(result: &TerlanPytorchTensorListTransformsMeshgridIndexingResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_tensorlisttransforms_meshgrid_indexing_resources_message(result: &TerlanPytorchTensorListTransformsMeshgridIndexingResourceListResult) -> &CxxString;
+        type TerlanPytorchTensorListTransformsUnflattenDenseTensorsResourceListResult;
+        fn terlan_collection_pytorch_tensorlisttransforms_unflatten_dense_tensors_resources(flat: &Tensor, tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanPytorchTensorListTransformsUnflattenDenseTensorsResourceListResult>;
+        fn terlan_collection_pytorch_tensorlisttransforms_unflatten_dense_tensors_resources_is_ok(result: &TerlanPytorchTensorListTransformsUnflattenDenseTensorsResourceListResult) -> bool;
+        fn terlan_collection_pytorch_tensorlisttransforms_unflatten_dense_tensors_resources_len(result: &TerlanPytorchTensorListTransformsUnflattenDenseTensorsResourceListResult) -> usize;
+        fn terlan_collection_pytorch_tensorlisttransforms_unflatten_dense_tensors_resources_element(result: &TerlanPytorchTensorListTransformsUnflattenDenseTensorsResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_tensorlisttransforms_unflatten_dense_tensors_resources_code(result: &TerlanPytorchTensorListTransformsUnflattenDenseTensorsResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_tensorlisttransforms_unflatten_dense_tensors_resources_message(result: &TerlanPytorchTensorListTransformsUnflattenDenseTensorsResourceListResult) -> &CxxString;
+        type TerlanPytorchViewAtleast1dSequenceResourceListResult;
+        fn terlan_collection_pytorch_view_atleast_1d_sequence_resources(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanPytorchViewAtleast1dSequenceResourceListResult>;
+        fn terlan_collection_pytorch_view_atleast_1d_sequence_resources_is_ok(result: &TerlanPytorchViewAtleast1dSequenceResourceListResult) -> bool;
+        fn terlan_collection_pytorch_view_atleast_1d_sequence_resources_len(result: &TerlanPytorchViewAtleast1dSequenceResourceListResult) -> usize;
+        fn terlan_collection_pytorch_view_atleast_1d_sequence_resources_element(result: &TerlanPytorchViewAtleast1dSequenceResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_view_atleast_1d_sequence_resources_code(result: &TerlanPytorchViewAtleast1dSequenceResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_view_atleast_1d_sequence_resources_message(result: &TerlanPytorchViewAtleast1dSequenceResourceListResult) -> &CxxString;
+        type TerlanPytorchViewAtleast2dSequenceResourceListResult;
+        fn terlan_collection_pytorch_view_atleast_2d_sequence_resources(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanPytorchViewAtleast2dSequenceResourceListResult>;
+        fn terlan_collection_pytorch_view_atleast_2d_sequence_resources_is_ok(result: &TerlanPytorchViewAtleast2dSequenceResourceListResult) -> bool;
+        fn terlan_collection_pytorch_view_atleast_2d_sequence_resources_len(result: &TerlanPytorchViewAtleast2dSequenceResourceListResult) -> usize;
+        fn terlan_collection_pytorch_view_atleast_2d_sequence_resources_element(result: &TerlanPytorchViewAtleast2dSequenceResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_view_atleast_2d_sequence_resources_code(result: &TerlanPytorchViewAtleast2dSequenceResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_view_atleast_2d_sequence_resources_message(result: &TerlanPytorchViewAtleast2dSequenceResourceListResult) -> &CxxString;
+        type TerlanPytorchViewAtleast3dSequenceResourceListResult;
+        fn terlan_collection_pytorch_view_atleast_3d_sequence_resources(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanPytorchViewAtleast3dSequenceResourceListResult>;
+        fn terlan_collection_pytorch_view_atleast_3d_sequence_resources_is_ok(result: &TerlanPytorchViewAtleast3dSequenceResourceListResult) -> bool;
+        fn terlan_collection_pytorch_view_atleast_3d_sequence_resources_len(result: &TerlanPytorchViewAtleast3dSequenceResourceListResult) -> usize;
+        fn terlan_collection_pytorch_view_atleast_3d_sequence_resources_element(result: &TerlanPytorchViewAtleast3dSequenceResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_view_atleast_3d_sequence_resources_code(result: &TerlanPytorchViewAtleast3dSequenceResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_view_atleast_3d_sequence_resources_message(result: &TerlanPytorchViewAtleast3dSequenceResourceListResult) -> &CxxString;
+        type TerlanPytorchQuantizationCompletionQuantizePerTensorTensorsResourceListResult;
+        fn terlan_collection_pytorch_quantizationcompletion_quantize_per_tensor_tensors_resources(tensors: &TerlanPytorchTensorTensorResourceListInput, scales: &Tensor, zero_points: &Tensor, dtype: i64) -> UniquePtr<TerlanPytorchQuantizationCompletionQuantizePerTensorTensorsResourceListResult>;
+        fn terlan_collection_pytorch_quantizationcompletion_quantize_per_tensor_tensors_resources_is_ok(result: &TerlanPytorchQuantizationCompletionQuantizePerTensorTensorsResourceListResult) -> bool;
+        fn terlan_collection_pytorch_quantizationcompletion_quantize_per_tensor_tensors_resources_len(result: &TerlanPytorchQuantizationCompletionQuantizePerTensorTensorsResourceListResult) -> usize;
+        fn terlan_collection_pytorch_quantizationcompletion_quantize_per_tensor_tensors_resources_element(result: &TerlanPytorchQuantizationCompletionQuantizePerTensorTensorsResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_quantizationcompletion_quantize_per_tensor_tensors_resources_code(result: &TerlanPytorchQuantizationCompletionQuantizePerTensorTensorsResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_quantizationcompletion_quantize_per_tensor_tensors_resources_message(result: &TerlanPytorchQuantizationCompletionQuantizePerTensorTensorsResourceListResult) -> &CxxString;
+        type TerlanPytorchQuantizationCompletionDequantizeTensorsResourceListResult;
+        fn terlan_collection_pytorch_quantizationcompletion_dequantize_tensors_resources(tensors: &TerlanPytorchTensorTensorResourceListInput) -> UniquePtr<TerlanPytorchQuantizationCompletionDequantizeTensorsResourceListResult>;
+        fn terlan_collection_pytorch_quantizationcompletion_dequantize_tensors_resources_is_ok(result: &TerlanPytorchQuantizationCompletionDequantizeTensorsResourceListResult) -> bool;
+        fn terlan_collection_pytorch_quantizationcompletion_dequantize_tensors_resources_len(result: &TerlanPytorchQuantizationCompletionDequantizeTensorsResourceListResult) -> usize;
+        fn terlan_collection_pytorch_quantizationcompletion_dequantize_tensors_resources_element(result: &TerlanPytorchQuantizationCompletionDequantizeTensorsResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_quantizationcompletion_dequantize_tensors_resources_code(result: &TerlanPytorchQuantizationCompletionDequantizeTensorsResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_quantizationcompletion_dequantize_tensors_resources_message(result: &TerlanPytorchQuantizationCompletionDequantizeTensorsResourceListResult) -> &CxxString;
+        type TerlanPytorchHistogramddNativeHistogramddResultBinEdgesResourceListResult;
+        fn terlan_collection_pytorch_histogramddnative_histogramdd_result_bin_edges_resources(result: &HistogramddResult) -> UniquePtr<TerlanPytorchHistogramddNativeHistogramddResultBinEdgesResourceListResult>;
+        fn terlan_collection_pytorch_histogramddnative_histogramdd_result_bin_edges_resources_is_ok(result: &TerlanPytorchHistogramddNativeHistogramddResultBinEdgesResourceListResult) -> bool;
+        fn terlan_collection_pytorch_histogramddnative_histogramdd_result_bin_edges_resources_len(result: &TerlanPytorchHistogramddNativeHistogramddResultBinEdgesResourceListResult) -> usize;
+        fn terlan_collection_pytorch_histogramddnative_histogramdd_result_bin_edges_resources_element(result: &TerlanPytorchHistogramddNativeHistogramddResultBinEdgesResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_histogramddnative_histogramdd_result_bin_edges_resources_code(result: &TerlanPytorchHistogramddNativeHistogramddResultBinEdgesResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_histogramddnative_histogramdd_result_bin_edges_resources_message(result: &TerlanPytorchHistogramddNativeHistogramddResultBinEdgesResourceListResult) -> &CxxString;
+        type TerlanPytorchShapePartitionCompletionUnsafeChunkResourceListResult;
+        fn terlan_collection_pytorch_shapepartitioncompletion_unsafe_chunk_resources(input: &Tensor, chunks: i64, dimension: i64) -> UniquePtr<TerlanPytorchShapePartitionCompletionUnsafeChunkResourceListResult>;
+        fn terlan_collection_pytorch_shapepartitioncompletion_unsafe_chunk_resources_is_ok(result: &TerlanPytorchShapePartitionCompletionUnsafeChunkResourceListResult) -> bool;
+        fn terlan_collection_pytorch_shapepartitioncompletion_unsafe_chunk_resources_len(result: &TerlanPytorchShapePartitionCompletionUnsafeChunkResourceListResult) -> usize;
+        fn terlan_collection_pytorch_shapepartitioncompletion_unsafe_chunk_resources_element(result: &TerlanPytorchShapePartitionCompletionUnsafeChunkResourceListResult, index: usize) -> UniquePtr<Tensor>;
+        fn terlan_collection_pytorch_shapepartitioncompletion_unsafe_chunk_resources_code(result: &TerlanPytorchShapePartitionCompletionUnsafeChunkResourceListResult) -> &CxxString;
+        fn terlan_collection_pytorch_shapepartitioncompletion_unsafe_chunk_resources_message(result: &TerlanPytorchShapePartitionCompletionUnsafeChunkResourceListResult) -> &CxxString;
+        type TerlanExceptionEnvelope;
+        fn is_ok(self: &TerlanExceptionEnvelope) -> bool;
+        fn value(self: &TerlanExceptionEnvelope) -> i64;
+        fn float_value(self: &TerlanExceptionEnvelope) -> f64;
+        fn bool_value(self: &TerlanExceptionEnvelope) -> bool;
+        fn code(self: &TerlanExceptionEnvelope) -> &CxxString;
+        fn message(self: &TerlanExceptionEnvelope) -> &CxxString;
+        fn terlan_exception_pytorch_typerelationsnative_allclose_native(self_value: &Tensor, other: &Tensor, rtol: f64, atol: f64, equal_nan: bool) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_equal_native(self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_is_same_size_native(self_value: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_is_complex_native(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_is_conj_native(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_is_distributed_native(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_is_floating_point_native(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_is_inference_native(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_is_leaf_native(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_is_neg_native(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_is_nonzero_native(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_is_signed_native(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_retains_grad_native(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_is_set_to_native(value: &Tensor, tensor: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_get_device_native(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_output_nr_native(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_size_dimension_native(value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_stride_dimension_native(value: &Tensor, dim: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_can_cast_native(from_: i64, to: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_promote_types_native(type1: i64, type2: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_result_type_tensor_native(tensor: &Tensor, other: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_result_type_scalar_native(tensor: &Tensor, scalar_is_integer: bool, scalar_integer: i64, scalar_floating: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_result_type_scalar_tensor_native(tensor: &Tensor, scalar_is_integer: bool, scalar_integer: i64, scalar_floating: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_typerelationsnative_result_type_scalar_scalar_native(first_is_integer: bool, first_integer: i64, first_floating: f64, second_is_integer: bool, second_integer: i64, second_floating: f64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_scalar_to_int(value: &Scalar) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_scalar_to_float(value: &Scalar) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_is_defined(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_is_cpu(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_is_cuda(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_requires_grad(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_is_leaf(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_has_storage(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_is_complex(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_is_floating_point(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_is_quantized(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_is_signed(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_is_sparse(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_is_contiguous(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_is_contiguous_memory_format_native(value: &Tensor, memory_format: i64) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_dim(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_numel(value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_tensor_is_pinned_cxx(self_value: &Tensor, has_device: bool, device: &str) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_sparse_sparse_dim(self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_sparse_dense_dim(self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_sparse_is_coalesced(self_value: &Tensor) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_exception_pytorch_cuda_device_index(stream: &CudaStream) -> UniquePtr<TerlanExceptionEnvelope>;
+        fn terlan_enum_pytorch_tensor_dtype(value: &Tensor) -> UniquePtr<CxxString>;
+        fn terlan_enum_pytorch_tensor_layout(value: &Tensor) -> UniquePtr<CxxString>;
     }
 }

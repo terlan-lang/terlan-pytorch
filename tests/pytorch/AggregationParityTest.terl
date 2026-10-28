@@ -1,0 +1,120 @@
+/**
+ * CPU and required-CUDA evidence for counting and indexed reduction.
+ */
+module pytorch.AggregationParityTest.
+
+import pytorch.Aggregation.{IndexReduction, bincount, bincount_out, bincount_weighted, bincount_weighted_out, histc, histc_int_bounds, histc_int_bounds_out, histc_out, index_reduce, index_reduce_in_place, index_reduce_out}.
+import pytorch.Tensor.{clone, device_type, dispose, dtype, from_floats, from_ints, to_device}.
+import pytorch.TypeRelations.equal.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed_float(values: List[Float], shape: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, shape);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+placed_int(values: List[Int], shape: List[Int], device: Int): Tensor ->
+    let host = from_ints(values, shape);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches_float(tensor: Tensor, values: List[Float], shape: List[Int], device: Int): Bool ->
+    let expected = placed_float(values, shape, device);
+    let valid = equal(tensor, expected) and dtype(tensor) == 7 and device_type(tensor) == device;
+    dispose(expected);
+    valid.
+
+matches_int(tensor: Tensor, values: List[Int], shape: List[Int], device: Int): Bool ->
+    let expected = placed_int(values, shape, device);
+    let valid = equal(tensor, expected) and dtype(tensor) == 4 and device_type(tensor) == device;
+    dispose(expected);
+    valid.
+
+index_case(
+    input: Tensor,
+    index: Tensor,
+    source: Tensor,
+    reduction: IndexReduction,
+    include_self: Bool,
+    expected_values: List[Float],
+    device: Int,
+): Bool ->
+    let functional = index_reduce(input, 0, index, source, reduction, include_self);
+    let output = placed_float([], [0], device);
+    let mutation = clone(input);
+    index_reduce_out(output, input, 0, index, source, reduction, include_self);
+    index_reduce_in_place(mutation, 0, index, source, reduction, include_self);
+    let valid =
+        matches_float(functional, expected_values, [2, 2], device)
+            and matches_float(output, expected_values, [2, 2], device)
+            and matches_float(mutation, expected_values, [2, 2], device);
+    (dispose(mutation); dispose(output); dispose(functional); valid).
+
+verify(device: Int): Bool ->
+    let values = placed_int([0, 1, 1, 3, 3, 3], [6], device);
+    let weights = placed_float([0.5, 1.0, 1.5, 2.0, 2.5, 3.0], [6], device);
+    let unweighted = bincount(values, 6);
+    let weighted = bincount_weighted(values, weights, 6);
+    let unweighted_output = placed_int([], [0], device);
+    let weighted_output = placed_float([], [0], device);
+    bincount_out(unweighted_output, values, 6);
+    bincount_weighted_out(weighted_output, values, weights, 6);
+    let count_valid =
+        matches_int(unweighted, [1, 2, 0, 3, 0, 0], [6], device)
+            and matches_float(weighted, [0.5, 2.5, 0.0, 7.5, 0.0, 0.0], [6], device)
+            and matches_int(unweighted_output, [1, 2, 0, 3, 0, 0], [6], device)
+            and matches_float(weighted_output, [0.5, 2.5, 0.0, 7.5, 0.0, 0.0], [6], device)
+            and matches_int(values, [0, 1, 1, 3, 3, 3], [6], device)
+            and matches_float(weights, [0.5, 1.0, 1.5, 2.0, 2.5, 3.0], [6], device);
+    let histogram_input = placed_float([-1.0, 0.0, 0.5, 1.0, 2.0, 3.0], [2, 3], device);
+    let histogram = histc(histogram_input, 4, -1.0, 3.0);
+    let integer_histogram = histc_int_bounds(histogram_input, 4, -1, 3);
+    let histogram_output = placed_float([], [0], device);
+    let integer_histogram_output = placed_float([], [0], device);
+    (histc_out(histogram_output, histogram_input, 4, -1.0, 3.0); histc_int_bounds_out(integer_histogram_output, histogram_input, 4, -1, 3); let histogram_valid =
+    matches_float(histogram, [1.0, 2.0, 1.0, 2.0], [4], device)
+        and matches_float(integer_histogram, [1.0, 2.0, 1.0, 2.0], [4], device)
+        and matches_float(histogram_output, [1.0, 2.0, 1.0, 2.0], [4], device)
+        and matches_float(integer_histogram_output, [1.0, 2.0, 1.0, 2.0], [4], device)
+        and matches_float(histogram_input, [-1.0, 0.0, 0.5, 1.0, 2.0, 3.0], [2, 3], device);
+let input = placed_float([10.0, 20.0, 30.0, 40.0], [2, 2], device);
+let index = placed_int([0, 1, 0], [3], device);
+let source = placed_float([2.0, 3.0, 4.0, 5.0, 6.0, 7.0], [3, 2], device);
+let reductions_valid =
+    index_case(input, index, source, IndexReduction.PRODUCT, true, [120.0, 420.0, 120.0, 200.0], device)
+        and index_case(input, index, source, IndexReduction.PRODUCT, false, [12.0, 21.0, 4.0, 5.0], device)
+        and index_case(input, index, source, IndexReduction.MEAN, true, [6.0, 10.0, 17.0, 22.5], device)
+        and index_case(input, index, source, IndexReduction.MEAN, false, [4.0, 5.0, 4.0, 5.0], device)
+        and index_case(input, index, source, IndexReduction.MAXIMUM, true, [10.0, 20.0, 30.0, 40.0], device)
+        and index_case(input, index, source, IndexReduction.MAXIMUM, false, [6.0, 7.0, 4.0, 5.0], device)
+        and index_case(input, index, source, IndexReduction.MINIMUM, true, [2.0, 3.0, 4.0, 5.0], device)
+        and index_case(input, index, source, IndexReduction.MINIMUM, false, [2.0, 3.0, 4.0, 5.0], device)
+        and matches_float(input, [10.0, 20.0, 30.0, 40.0], [2, 2], device)
+        and matches_int(index, [0, 1, 0], [3], device)
+        and matches_float(source, [2.0, 3.0, 4.0, 5.0, 6.0, 7.0], [3, 2], device);
+(dispose(source); dispose(index); dispose(input); dispose(integer_histogram_output); dispose(histogram_output); dispose(integer_histogram); dispose(histogram); dispose(histogram_input); dispose(weighted_output); dispose(unweighted_output); dispose(weighted); dispose(unweighted); dispose(weights); dispose(values); count_valid and histogram_valid and reductions_valid)).
+
+@test
+pub counting_and_index_reduction_execute_on_cpu_and_required_cuda(): Bool ->
+    let cpu_valid = verify(0);
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    cpu_valid and cuda_valid.

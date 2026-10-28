@@ -1,0 +1,35 @@
+/**
+ * Public max_unpool1d parity for default stride, explicit padding, and output size.
+ */
+module pytorch.MaxUnpool1dParityTest.
+
+import pytorch.FunctionalCompletion.max_unpool1d.
+import pytorch.Tensor.{dispose, from_floats, from_ints}.
+import pytorch.TypeRelationsNative.allclose_native.
+
+@test
+pub max_unpool1d_matches_stride_padding_and_target_output_size(): Bool ->
+    let input = from_floats([10.0, 20.0], [1, 1, 2]);
+    let default_indices = from_ints([0, 5], [1, 1, 2]);
+    let default_expected = from_floats([10.0, 0.0, 0.0, 0.0, 0.0, 20.0], [1, 1, 6]);
+    let default_result = max_unpool1d(input, default_indices, 3);
+    let default_valid = allclose_native(default_result, default_expected, 0.0, 0.0, false);
+    let padded_indices = from_ints([0, 2], [1, 1, 2]);
+    let padded_expected = from_floats([10.0, 0.0, 20.0], [1, 1, 3]);
+    let padded_result = max_unpool1d(input, padded_indices, 3, 2, 1);
+    let padded_valid = allclose_native(padded_result, padded_expected, 0.0, 0.0, false);
+    let sized_indices = from_ints([0, 3], [1, 1, 2]);
+    let sized_expected = from_floats([10.0, 0.0, 0.0, 20.0], [1, 1, 4]);
+    let sized_result = max_unpool1d(input, sized_indices, 3, 2, 0, [1, 1, 4]);
+    let sized_valid = allclose_native(sized_result, sized_expected, 0.0, 0.0, false);
+    dispose(sized_result);
+    dispose(sized_expected);
+    dispose(sized_indices);
+    dispose(padded_result);
+    dispose(padded_expected);
+    dispose(padded_indices);
+    dispose(default_result);
+    dispose(default_expected);
+    dispose(default_indices);
+    dispose(input);
+    default_valid and padded_valid and sized_valid.

@@ -1,0 +1,730 @@
+/**
+ * Generated direct-CXX implementation of adaptive, average, maximum, fractional, backward, and unpooling operations.
+ */
+module pytorch.Pooling.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes the exact aten::adaptive_avg_pool1d schema.
+ */
+@compiler.native {pytorch.pooling.adaptive_avg_pool1d}
+pub adaptive_avg_pool1d(tensor: Tensor, output_size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::avg_pool1d schema with all trailing defaults.
+ */
+@compiler.native {pytorch.pooling.avg_pool1d}
+pub avg_pool1d(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    ceil_mode: Bool = false,
+    count_include_pad: Bool = true,
+): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::max_pool1d schema with all trailing defaults.
+ */
+@compiler.native {pytorch.pooling.max_pool1d}
+pub max_pool1d(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    dilation: List[Int] = [1],
+    ceil_mode: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Computes two-dimensional average pooling with no divisor override.
+ */
+@compiler.native {pytorch.pooling.avg_pool2d}
+pub avg_pool2d(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    ceil_mode: Bool = false,
+    count_include_pad: Bool = true,
+): Tensor ->
+    native.
+
+/**
+ * Computes three-dimensional average pooling with no divisor override.
+ */
+@compiler.native {pytorch.pooling.avg_pool3d}
+pub avg_pool3d(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    ceil_mode: Bool = false,
+    count_include_pad: Bool = true,
+): Tensor ->
+    native.
+
+/**
+ * Routes a two-dimensional average-pool gradient back to the input shape.
+ */
+@compiler.native {pytorch.pooling.avg_pool2d_backward}
+pub avg_pool2d_backward(
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    ceil_mode: Bool,
+    count_include_pad: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Routes a three-dimensional average-pool gradient back to the input shape.
+ */
+@compiler.native {pytorch.pooling.avg_pool3d_backward}
+pub avg_pool3d_backward(
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    ceil_mode: Bool,
+    count_include_pad: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::max_pool2d schema with all trailing defaults.
+ */
+@compiler.native {pytorch.pooling.max_pool2d}
+pub max_pool2d(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    dilation: List[Int] = [1],
+    ceil_mode: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::max_pool3d schema with all trailing defaults.
+ */
+@compiler.native {pytorch.pooling.max_pool3d}
+pub max_pool3d(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    dilation: List[Int] = [1],
+    ceil_mode: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Executes the exact aten::adaptive_max_pool1d schema and returns values with indices.
+ */
+@compiler.native {pytorch.pooling.adaptive_max_pool1d}
+pub adaptive_max_pool1d(tensor: Tensor, output_size: List[Int]): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Executes the exact aten::adaptive_max_pool2d schema and returns values with indices.
+ */
+@compiler.native {pytorch.pooling.adaptive_max_pool2d}
+pub adaptive_max_pool2d(tensor: Tensor, output_size: List[Int]): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Executes the exact aten::adaptive_max_pool3d schema and returns values with indices.
+ */
+@compiler.native {pytorch.pooling.adaptive_max_pool3d}
+pub adaptive_max_pool3d(tensor: Tensor, output_size: List[Int]): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Executes the exact aten::max_pool1d_with_indices schema with all trailing defaults.
+ */
+@compiler.native {pytorch.pooling.max_pool1d_with_indices}
+pub max_pool1d_with_indices(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    dilation: List[Int] = [1],
+    ceil_mode: Bool = false,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Executes the exact aten::max_pool2d_with_indices schema with all trailing defaults.
+ */
+@compiler.native {pytorch.pooling.max_pool2d_with_indices}
+pub max_pool2d_with_indices(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    dilation: List[Int] = [1],
+    ceil_mode: Bool = false,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Executes the exact aten::max_pool3d_with_indices schema with all trailing defaults.
+ */
+@compiler.native {pytorch.pooling.max_pool3d_with_indices}
+pub max_pool3d_with_indices(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    dilation: List[Int] = [1],
+    ceil_mode: Bool = false,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Executes exact two-dimensional fractional maximum pooling and returns values with source indices.
+ */
+@compiler.native {pytorch.pooling.fractional_max_pool2d}
+pub fractional_max_pool2d(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    output_size: List[Int],
+    random_samples: Tensor,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Executes exact three-dimensional fractional maximum pooling and returns values with source indices.
+ */
+@compiler.native {pytorch.pooling.fractional_max_pool3d}
+pub fractional_max_pool3d(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    output_size: List[Int],
+    random_samples: Tensor,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Routes adaptive two-dimensional maximum-pool gradients through saved source indices.
+ */
+@compiler.native {pytorch.pooling.adaptive_max_pool2d_backward}
+pub adaptive_max_pool2d_backward(gradient: Tensor, tensor: Tensor, indices: Tensor): Tensor ->
+    native.
+
+/**
+ * Routes adaptive three-dimensional maximum-pool gradients through saved source indices.
+ */
+@compiler.native {pytorch.pooling.adaptive_max_pool3d_backward}
+pub adaptive_max_pool3d_backward(gradient: Tensor, tensor: Tensor, indices: Tensor): Tensor ->
+    native.
+
+/**
+ * Routes fractional two-dimensional maximum-pool gradients through saved source indices.
+ */
+@compiler.native {pytorch.pooling.fractional_max_pool2d_backward}
+pub fractional_max_pool2d_backward(
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    output_size: List[Int],
+    indices: Tensor,
+): Tensor ->
+    native.
+
+/**
+ * Routes fractional three-dimensional maximum-pool gradients through saved source indices.
+ */
+@compiler.native {pytorch.pooling.fractional_max_pool3d_backward}
+pub fractional_max_pool3d_backward(
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    output_size: List[Int],
+    indices: Tensor,
+): Tensor ->
+    native.
+
+/**
+ * Routes indexed two-dimensional maximum-pool gradients to source positions.
+ */
+@compiler.native {pytorch.pooling.max_pool2d_with_indices_backward}
+pub max_pool2d_with_indices_backward(
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+    ceil_mode: Bool,
+    indices: Tensor,
+): Tensor ->
+    native.
+
+/**
+ * Routes indexed three-dimensional maximum-pool gradients to source positions.
+ */
+@compiler.native {pytorch.pooling.max_pool3d_with_indices_backward}
+pub max_pool3d_with_indices_backward(
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+    ceil_mode: Bool,
+    indices: Tensor,
+): Tensor ->
+    native.
+
+/**
+ * Scatters two-dimensional maximum-pool values back to their indexed output positions.
+ */
+@compiler.native {pytorch.pooling.max_unpool2d}
+pub max_unpool2d(tensor: Tensor, indices: Tensor, output_size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Scatters three-dimensional maximum-pool values back to their indexed output positions.
+ */
+@compiler.native {pytorch.pooling.max_unpool3d}
+pub max_unpool3d(
+    tensor: Tensor,
+    indices: Tensor,
+    output_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+): Tensor ->
+    native.
+
+/**
+ * Computes two-dimensional average pooling with an explicit divisor override.
+ */
+@compiler.native {pytorch.pooling.avg_pool2d_divisor}
+pub avg_pool2d_divisor(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    ceil_mode: Bool,
+    count_include_pad: Bool,
+    divisor: Int,
+): Tensor ->
+    native.
+
+/**
+ * Computes three-dimensional average pooling with an explicit divisor override.
+ */
+@compiler.native {pytorch.pooling.avg_pool3d_divisor}
+pub avg_pool3d_divisor(
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    ceil_mode: Bool,
+    count_include_pad: Bool,
+    divisor: Int,
+): Tensor ->
+    native.
+
+/**
+ * Routes a two-dimensional average-pool gradient with an explicit divisor override.
+ */
+@compiler.native {pytorch.pooling.avg_pool2d_backward_divisor}
+pub avg_pool2d_backward_divisor(
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    ceil_mode: Bool,
+    count_include_pad: Bool,
+    divisor: Int,
+): Tensor ->
+    native.
+
+/**
+ * Routes a three-dimensional average-pool gradient with an explicit divisor override.
+ */
+@compiler.native {pytorch.pooling.avg_pool3d_backward_divisor}
+pub avg_pool3d_backward_divisor(
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    ceil_mode: Bool,
+    count_include_pad: Bool,
+    divisor: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes adaptive one-dimensional average-pool values into retained storage.
+ */
+@compiler.native {pytorch.pooling.adaptive_avg_pool1d_out}
+pub adaptive_avg_pool1d_out(output: Tensor, tensor: Tensor, output_size: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes adaptive two-dimensional average-pool values into retained storage.
+ */
+@compiler.native {pytorch.pooling.adaptive_avg_pool2d_out}
+pub adaptive_avg_pool2d_out(output: Tensor, tensor: Tensor, output_size: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes adaptive three-dimensional average-pool values into retained storage.
+ */
+@compiler.native {pytorch.pooling.adaptive_avg_pool3d_out}
+pub adaptive_avg_pool3d_out(output: Tensor, tensor: Tensor, output_size: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes adaptive three-dimensional average-pool gradients into retained storage.
+ */
+@compiler.native {pytorch.pooling.adaptive_avg_pool3d_backward_out}
+pub adaptive_avg_pool3d_backward_out(output: Tensor, gradient: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Writes adaptive two-dimensional maximum-pool values and indices into retained storage.
+ */
+@compiler.native {pytorch.pooling.adaptive_max_pool2d_out}
+pub adaptive_max_pool2d_out(
+    output: Tensor,
+    indices_output: Tensor,
+    tensor: Tensor,
+    output_size: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Writes adaptive three-dimensional maximum-pool values and indices into retained storage.
+ */
+@compiler.native {pytorch.pooling.adaptive_max_pool3d_out}
+pub adaptive_max_pool3d_out(
+    output: Tensor,
+    indices_output: Tensor,
+    tensor: Tensor,
+    output_size: List[Int],
+): Unit ->
+    native.
+
+/**
+ * Writes adaptive two-dimensional maximum-pool gradients into retained storage.
+ */
+@compiler.native {pytorch.pooling.adaptive_max_pool2d_backward_out}
+pub adaptive_max_pool2d_backward_out(
+    output: Tensor,
+    gradient: Tensor,
+    tensor: Tensor,
+    indices: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Writes adaptive three-dimensional maximum-pool gradients into retained storage.
+ */
+@compiler.native {pytorch.pooling.adaptive_max_pool3d_backward_out}
+pub adaptive_max_pool3d_backward_out(
+    output: Tensor,
+    gradient: Tensor,
+    tensor: Tensor,
+    indices: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Writes one-dimensional average-pool values into retained storage.
+ */
+@compiler.native {pytorch.pooling.avg_pool1d_out}
+pub avg_pool1d_out(
+    output: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    ceil_mode: Bool = false,
+    count_include_pad: Bool = true,
+): Unit ->
+    native.
+
+/**
+ * Writes two-dimensional average-pool values without a divisor override into retained storage.
+ */
+@compiler.native {pytorch.pooling.avg_pool2d_out}
+pub avg_pool2d_out(
+    output: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    ceil_mode: Bool = false,
+    count_include_pad: Bool = true,
+): Unit ->
+    native.
+
+/**
+ * Writes three-dimensional average-pool values without a divisor override into retained storage.
+ */
+@compiler.native {pytorch.pooling.avg_pool3d_out}
+pub avg_pool3d_out(
+    output: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    ceil_mode: Bool = false,
+    count_include_pad: Bool = true,
+): Unit ->
+    native.
+
+/**
+ * Writes two-dimensional average-pool values with an explicit divisor override into retained storage.
+ */
+@compiler.native {pytorch.pooling.avg_pool2d_out_divisor}
+pub avg_pool2d_out_divisor(
+    output: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    ceil_mode: Bool,
+    count_include_pad: Bool,
+    divisor: Int,
+): Unit ->
+    native.
+
+/**
+ * Writes three-dimensional average-pool values with an explicit divisor override into retained storage.
+ */
+@compiler.native {pytorch.pooling.avg_pool3d_out_divisor}
+pub avg_pool3d_out_divisor(
+    output: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    ceil_mode: Bool,
+    count_include_pad: Bool,
+    divisor: Int,
+): Unit ->
+    native.
+
+/**
+ * Writes two-dimensional average-pool gradients without a divisor override into retained storage.
+ */
+@compiler.native {pytorch.pooling.avg_pool2d_backward_out}
+pub avg_pool2d_backward_out(
+    output: Tensor,
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    ceil_mode: Bool,
+    count_include_pad: Bool,
+): Unit ->
+    native.
+
+/**
+ * Writes three-dimensional average-pool gradients without a divisor override into retained storage.
+ */
+@compiler.native {pytorch.pooling.avg_pool3d_backward_out}
+pub avg_pool3d_backward_out(
+    output: Tensor,
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    ceil_mode: Bool,
+    count_include_pad: Bool,
+): Unit ->
+    native.
+
+/**
+ * Writes two-dimensional average-pool gradients with an explicit divisor override into retained storage.
+ */
+@compiler.native {pytorch.pooling.avg_pool2d_backward_out_divisor}
+pub avg_pool2d_backward_out_divisor(
+    output: Tensor,
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    ceil_mode: Bool,
+    count_include_pad: Bool,
+    divisor: Int,
+): Unit ->
+    native.
+
+/**
+ * Writes three-dimensional average-pool gradients with an explicit divisor override into retained storage.
+ */
+@compiler.native {pytorch.pooling.avg_pool3d_backward_out_divisor}
+pub avg_pool3d_backward_out_divisor(
+    output: Tensor,
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    ceil_mode: Bool,
+    count_include_pad: Bool,
+    divisor: Int,
+): Unit ->
+    native.
+
+/**
+ * Writes fractional two-dimensional maximum-pool values and indices into retained storage.
+ */
+@compiler.native {pytorch.pooling.fractional_max_pool2d_out}
+pub fractional_max_pool2d_out(
+    output: Tensor,
+    indices_output: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    output_size: List[Int],
+    random_samples: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Writes fractional three-dimensional maximum-pool values and indices into retained storage.
+ */
+@compiler.native {pytorch.pooling.fractional_max_pool3d_out}
+pub fractional_max_pool3d_out(
+    output: Tensor,
+    indices_output: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    output_size: List[Int],
+    random_samples: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Writes fractional two-dimensional maximum-pool gradients into retained storage.
+ */
+@compiler.native {pytorch.pooling.fractional_max_pool2d_backward_out}
+pub fractional_max_pool2d_backward_out(
+    output: Tensor,
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    output_size: List[Int],
+    indices: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Writes fractional three-dimensional maximum-pool gradients into retained storage.
+ */
+@compiler.native {pytorch.pooling.fractional_max_pool3d_backward_out}
+pub fractional_max_pool3d_backward_out(
+    output: Tensor,
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    output_size: List[Int],
+    indices: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Writes indexed two-dimensional maximum-pool values and indices into retained storage.
+ */
+@compiler.native {pytorch.pooling.max_pool2d_with_indices_out}
+pub max_pool2d_with_indices_out(
+    output: Tensor,
+    indices_output: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    dilation: List[Int] = [1],
+    ceil_mode: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Writes indexed three-dimensional maximum-pool values and indices into retained storage.
+ */
+@compiler.native {pytorch.pooling.max_pool3d_with_indices_out}
+pub max_pool3d_with_indices_out(
+    output: Tensor,
+    indices_output: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int] = [],
+    padding: List[Int] = [0],
+    dilation: List[Int] = [1],
+    ceil_mode: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Writes indexed two-dimensional maximum-pool gradients into retained storage.
+ */
+@compiler.native {pytorch.pooling.max_pool2d_with_indices_backward_out}
+pub max_pool2d_with_indices_backward_out(
+    output: Tensor,
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+    ceil_mode: Bool,
+    indices: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Writes indexed three-dimensional maximum-pool gradients into retained storage.
+ */
+@compiler.native {pytorch.pooling.max_pool3d_with_indices_backward_out}
+pub max_pool3d_with_indices_backward_out(
+    output: Tensor,
+    gradient: Tensor,
+    tensor: Tensor,
+    kernel_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+    dilation: List[Int],
+    ceil_mode: Bool,
+    indices: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Writes two-dimensional maximum-unpool values into retained storage.
+ */
+@compiler.native {pytorch.pooling.max_unpool2d_out}
+pub max_unpool2d_out(output: Tensor, tensor: Tensor, indices: Tensor, output_size: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes three-dimensional maximum-unpool values into retained storage.
+ */
+@compiler.native {pytorch.pooling.max_unpool3d_out}
+pub max_unpool3d_out(
+    output: Tensor,
+    tensor: Tensor,
+    indices: Tensor,
+    output_size: List[Int],
+    stride: List[Int],
+    padding: List[Int],
+): Unit ->
+    native.

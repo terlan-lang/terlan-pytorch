@@ -1,0 +1,41 @@
+//! Typed optional-bound tensor slicing, independent copies, and replacement.
+
+module pytorch.Slice.
+
+/// Returns a present slice endpoint, including zero or a negative index.
+
+@pure
+pub bound(value: Int): List[Int].
+
+/// Returns an absent slice endpoint.
+
+@pure
+pub no_bound(): List[Int].
+
+/// Returns the whole tensor as a shared-storage view using PyTorch defaults.
+
+pub slice(tensor: Tensor): Tensor.
+
+/// Returns a shared-storage view with independently optional bounds.
+
+pub slice(tensor: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Tensor.
+
+/// Returns a full independently owned copy using PyTorch defaults.
+
+pub slice_copy(tensor: Tensor): Tensor.
+
+/// Returns independently owned storage with optional slice bounds.
+
+pub slice_copy(tensor: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Tensor.
+
+/// Writes the exact sliced result into retained output storage.
+
+pub slice_copy_out(output: Tensor, tensor: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Unit.
+
+/// Replaces a slice and returns independently owned storage.
+
+pub slice_scatter(tensor: Tensor, source: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Tensor.
+
+/// Writes a slice replacement into retained output storage.
+
+pub slice_scatter_out(output: Tensor, tensor: Tensor, source: Tensor, dimension: Int, start: List[Int], end: List[Int], step: Int): Unit.

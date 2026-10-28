@@ -1,0 +1,7 @@
+module pytorch_cxx.OutputCompletionBehaviorTest.
+
+import pytorch.OutputCompletionBehaviorSupport.{output_completion_contracts_on}.
+
+@test
+pub generated_cxx_output_completion_contracts(): Bool ->
+    output_completion_contracts_on("cpu").

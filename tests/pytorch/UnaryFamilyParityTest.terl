@@ -1,0 +1,292 @@
+module pytorch.UnaryFamilyParityTest.
+
+import pytorch.Tensor.{dispose, from_bool, from_float, from_floats, from_int, item, item_bool, item_float, narrow, negate, shape, sqrt}.
+import pytorch.Unary.{acos, acosh, all, any, argwhere, asin, asinh, atan, atanh, bitwise_not, cos, cosh, deg2rad, erf, erfc, erfinv, exp2, expm1, frexp, hardsigmoid, hardswish, isfinite, isinf, isnan, isneginf, isposinf, log10, log1p, log2, logical_not, max, median, min, mish, nonzero, rad2deg, reciprocal, relu6, rsqrt, selu, sigmoid, signbit, silu, sin, sinc, sinh, tan, tanh, trace}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads one coordinate from a two-dimensional integer tensor.
+ */
+coordinate(tensor: Tensor, row: Int): Int ->
+    let selected_row = narrow(tensor, 0, row, 1);
+    let selected_cell = narrow(selected_row, 1, 0, 1);
+    let value = item(selected_cell);
+    dispose(selected_cell);
+    dispose(selected_row);
+    value.
+
+/**
+ * Reads one floating-point vector element through an owned view.
+ */
+vector_float(tensor: Tensor, index: Int): Float ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    value.
+
+/**
+ * Reads one integer vector element through an owned view.
+ */
+vector_int(tensor: Tensor, index: Int): Int ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item(element);
+    dispose(element);
+    value.
+
+/**
+ * Proves the inverse, circular, and hyperbolic unary dispatcher family.
+ */
+@test
+pub inverse_and_trigonometric_operations_match_libtorch(): Bool ->
+    let zero = from_float(0.0);
+    let one = from_float(1.0);
+    let inverse_cosine = acos(one);
+    let inverse_hyperbolic_cosine = acosh(one);
+    let inverse_sine = asin(zero);
+    let inverse_hyperbolic_sine = asinh(zero);
+    let inverse_tangent = atan(zero);
+    let inverse_hyperbolic_tangent = atanh(zero);
+    let cosine = cos(zero);
+    let hyperbolic_cosine = cosh(zero);
+    let sine = sin(zero);
+    let hyperbolic_sine = sinh(zero);
+    let tangent = tan(zero);
+    let hyperbolic_tangent = tanh(zero);
+    let valid =
+        item_float(inverse_cosine) == 0.0
+            and item_float(inverse_hyperbolic_cosine) == 0.0
+            and item_float(inverse_sine) == 0.0
+            and item_float(inverse_hyperbolic_sine) == 0.0
+            and item_float(inverse_tangent) == 0.0
+            and item_float(inverse_hyperbolic_tangent) == 0.0
+            and item_float(cosine) == 1.0
+            and item_float(hyperbolic_cosine) == 1.0
+            and item_float(sine) == 0.0
+            and item_float(hyperbolic_sine) == 0.0
+            and item_float(tangent) == 0.0
+            and item_float(hyperbolic_tangent) == 0.0
+            and item_float(zero) == 0.0
+            and item_float(one) == 1.0;
+    dispose(hyperbolic_tangent);
+    dispose(tangent);
+    dispose(hyperbolic_sine);
+    dispose(sine);
+    dispose(hyperbolic_cosine);
+    dispose(cosine);
+    dispose(inverse_hyperbolic_tangent);
+    dispose(inverse_tangent);
+    dispose(inverse_hyperbolic_sine);
+    dispose(inverse_sine);
+    dispose(inverse_hyperbolic_cosine);
+    dispose(inverse_cosine);
+    dispose(one);
+    dispose(zero);
+    valid.
+
+/**
+ * Proves conversion, exponential, logarithmic, and scalar special functions.
+ */
+@test
+pub conversion_and_special_operations_match_libtorch(): Bool ->
+    let zero = from_float(0.0);
+    let three = from_float(3.0);
+    let four = from_float(4.0);
+    let eight = from_float(8.0);
+    let hundred = from_float(100.0);
+    let radians = deg2rad(zero);
+    let degrees = rad2deg(zero);
+    let error = erf(zero);
+    let complementary_error = erfc(zero);
+    let inverse_error = erfinv(zero);
+    let power_of_two = exp2(three);
+    let exponential_minus_one = expm1(zero);
+    let common_logarithm = log10(hundred);
+    let logarithm_one_plus = log1p(zero);
+    let binary_logarithm = log2(eight);
+    let reciprocal_root = rsqrt(four);
+    let logistic = sigmoid(zero);
+    let normalized_sinc = sinc(zero);
+    let valid =
+        item_float(radians) == 0.0
+            and item_float(degrees) == 0.0
+            and item_float(error) == 0.0
+            and item_float(complementary_error) == 1.0
+            and item_float(inverse_error) == 0.0
+            and item_float(power_of_two) == 8.0
+            and item_float(exponential_minus_one) == 0.0
+            and item_float(common_logarithm) == 2.0
+            and item_float(logarithm_one_plus) == 0.0
+            and item_float(binary_logarithm) == 3.0
+            and item_float(reciprocal_root) == 0.5
+            and item_float(logistic) == 0.5
+            and item_float(normalized_sinc) == 1.0;
+    dispose(normalized_sinc);
+    dispose(logistic);
+    dispose(reciprocal_root);
+    dispose(binary_logarithm);
+    dispose(logarithm_one_plus);
+    dispose(common_logarithm);
+    dispose(exponential_minus_one);
+    dispose(power_of_two);
+    dispose(inverse_error);
+    dispose(complementary_error);
+    dispose(error);
+    dispose(degrees);
+    dispose(radians);
+    dispose(hundred);
+    dispose(eight);
+    dispose(four);
+    dispose(three);
+    dispose(zero);
+    valid.
+
+/**
+ * Proves the parameter-free activation family at exact branch boundaries.
+ */
+@test
+pub activation_operations_match_libtorch(): Bool ->
+    let zero = from_float(0.0);
+    let hard_sigmoid = hardsigmoid(zero);
+    let hard_swish = hardswish(zero);
+    let mish_value = mish(zero);
+    let relu6_value = relu6(zero);
+    let selu_value = selu(zero);
+    let silu_value = silu(zero);
+    let valid =
+        item_float(hard_sigmoid) == 0.5
+            and item_float(hard_swish) == 0.0
+            and item_float(mish_value) == 0.0
+            and item_float(relu6_value) == 0.0
+            and item_float(selu_value) == 0.0
+            and item_float(silu_value) == 0.0
+            and item_float(zero) == 0.0;
+    dispose(silu_value);
+    dispose(selu_value);
+    dispose(relu6_value);
+    dispose(mish_value);
+    dispose(hard_swish);
+    dispose(hard_sigmoid);
+    dispose(zero);
+    valid.
+
+/**
+ * Proves finite, infinity, NaN, and sign-bit classification.
+ */
+@test
+pub special_value_classification_matches_libtorch(): Bool ->
+    let zero = from_float(0.0);
+    let finite = from_float(3.0);
+    let negative = from_float(-1.0);
+    let positive_infinity = reciprocal(zero);
+    let negative_infinity = negate(positive_infinity);
+    let nan_value = sqrt(negative);
+    let finite_result = isfinite(finite);
+    let infinity_result = isinf(positive_infinity);
+    let negative_infinity_result = isneginf(negative_infinity);
+    let nan_result = isnan(nan_value);
+    let positive_infinity_result = isposinf(positive_infinity);
+    let sign_result = signbit(negative);
+    let valid =
+        item_bool(finite_result)
+            and item_bool(infinity_result)
+            and item_bool(negative_infinity_result)
+            and item_bool(nan_result)
+            and item_bool(positive_infinity_result)
+            and item_bool(sign_result);
+    dispose(sign_result);
+    dispose(positive_infinity_result);
+    dispose(nan_result);
+    dispose(negative_infinity_result);
+    dispose(infinity_result);
+    dispose(finite_result);
+    dispose(nan_value);
+    dispose(negative_infinity);
+    dispose(positive_infinity);
+    dispose(negative);
+    dispose(finite);
+    dispose(zero);
+    valid.
+
+/**
+ * Proves logical, bitwise, scalar reduction, and matrix trace behavior.
+ */
+@test
+pub logical_bitwise_and_reduction_operations_match_libtorch(): Bool ->
+    let truth = from_bool(true);
+    let falsehood = from_bool(false);
+    let integer = from_int(5);
+    let values = from_floats([3.0, 1.0, 2.0], [3]);
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let all_result = all(truth);
+    let any_result = any(falsehood);
+    let complement = bitwise_not(integer);
+    let logical_complement = logical_not(falsehood);
+    let maximum = max(values);
+    let middle = median(values);
+    let minimum = min(values);
+    let diagonal = trace(matrix);
+    let valid =
+        item_bool(all_result)
+            and not item_bool(any_result)
+            and item(complement) == -6
+            and item_bool(logical_complement)
+            and item_float(maximum) == 3.0
+            and item_float(middle) == 2.0
+            and item_float(minimum) == 1.0
+            and item_float(diagonal) == 5.0;
+    dispose(diagonal);
+    dispose(minimum);
+    dispose(middle);
+    dispose(maximum);
+    dispose(logical_complement);
+    dispose(complement);
+    dispose(any_result);
+    dispose(all_result);
+    dispose(matrix);
+    dispose(values);
+    dispose(integer);
+    dispose(falsehood);
+    dispose(truth);
+    valid.
+
+/**
+ * Proves both coordinate-producing nonzero schemas and source ownership.
+ */
+@test
+pub nonzero_coordinate_operations_match_libtorch(): Bool ->
+    let source = from_floats([0.0, 4.0, 0.0, 5.0], [4]);
+    let nonzero_coordinates = nonzero(source);
+    let argument_coordinates = argwhere(source);
+    let valid =
+        shape(nonzero_coordinates) == [2, 1]
+            and shape(argument_coordinates) == [2, 1]
+            and coordinate(nonzero_coordinates, 0) == 1
+            and coordinate(nonzero_coordinates, 1) == 3
+            and coordinate(argument_coordinates, 0) == 1
+            and coordinate(argument_coordinates, 1) == 3
+            and shape(source) == [4];
+    dispose(argument_coordinates);
+    dispose(nonzero_coordinates);
+    dispose(source);
+    valid.
+
+/**
+ * Proves mantissa and exponent decomposition with independent result ownership.
+ */
+@test
+pub floating_point_decomposition_matches_libtorch(): Bool ->
+    let source = from_floats([8.0, 0.75], [2]);
+    let {mantissa, exponent} = frexp(source);
+    let valid =
+        shape(mantissa) == [2]
+            and shape(exponent) == [2]
+            and vector_float(mantissa, 0) == 0.5
+            and vector_float(mantissa, 1) == 0.75
+            and vector_int(exponent, 0) == 4
+            and vector_int(exponent, 1) == 0
+            and shape(source) == [2];
+    dispose(exponent);
+    dispose(mantissa);
+    dispose(source);
+    valid.

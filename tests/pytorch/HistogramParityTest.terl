@@ -1,0 +1,102 @@
+/**
+ * CPU shape evidence for histogram tuple and retained-output forms.
+ */
+module pytorch.HistogramParityTest.
+
+import pytorch.HistogramCompletion.{histogram_bin_ct, histogram_bin_ct_out, histogram_bins_tensor, histogram_bins_tensor_out, histogramdd_int, histogramdd_tensor_bins}.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+import pytorch.TypeRelations.allclose.
+
+import type pytorch.Tensor.
+
+dispose_edges(edges: List[Tensor]): Unit ->
+    case edges {
+        [] -> Unit;
+        [edge | rest] -> (dispose(edge); dispose_edges(rest))
+    }.
+
+@test
+pub histogram_tuple_and_output_forms_preserve_shapes(): Bool ->
+    let input = from_floats([0.1, 0.2, 0.8, 1.2], [4]);
+    let {hist, edges} = histogram_bin_ct(input, 2, false, [], false, input, false);
+    let out_hist = from_floats([], [0]);
+    let out_edges = from_floats([], [0]);
+    histogram_bin_ct_out(out_hist, out_edges, input, 2, false, [], false, input, false);
+    let bins = from_floats([0.0, 0.5, 1.0, 1.5], [4]);
+    let {tensor_hist, tensor_edges} = histogram_bins_tensor(input, bins, false, input, false);
+    let tensor_out_hist = from_floats([], [0]);
+    let tensor_out_edges = from_floats([], [0]);
+    (histogram_bins_tensor_out(tensor_out_hist, tensor_out_edges, input, bins, false, input, false); let valid =
+    shape(hist) == [2]
+        and shape(edges) == [3]
+        and shape(out_hist) == [2]
+        and shape(out_edges) == [3]
+        and shape(tensor_hist) == [3]
+        and shape(tensor_edges) == [4]
+        and shape(tensor_out_hist) == [3]
+        and shape(tensor_out_edges) == [4];
+(dispose(tensor_out_edges); dispose(tensor_out_hist); dispose(tensor_edges); dispose(tensor_hist); dispose(bins); dispose(out_edges); dispose(out_hist); dispose(edges); dispose(hist); dispose(input); valid)).
+
+@test
+pub histogramdd_integer_bins_executes(): Bool ->
+    let input = from_floats([0.1, 0.2, 0.8, 1.2], [4, 1]);
+    let {hist, edges} = histogramdd_int(input, 2, false, [], false, input, false);
+    let valid = shape(hist) == [2];
+    dispose_edges(edges);
+    dispose(hist);
+    dispose(input);
+    valid.
+
+@test
+pub histogram_range_and_weight_match_count_and_tensor_bin_forms(): Bool ->
+    let input = from_floats([0.1, 0.2, 0.8, 1.2], [4]);
+    let weight = from_floats([1.0, 2.0, 3.0, 4.0], [4]);
+    let expected_counts = from_floats([3.0, 3.0], [2]);
+    let expected_range_edges = from_floats([0.0, 0.5, 1.0], [3]);
+    let {count_hist, count_edges} = histogram_bin_ct(input, 2, true, [0.0, 1.0], true, weight, false);
+    let weighted_count_matches = allclose(count_hist, expected_counts);
+    let bounded_edges_match = allclose(count_edges, expected_range_edges);
+    let bins = from_floats([0.0, 0.5, 1.5], [3]);
+    let expected_tensor_counts = from_floats([3.0, 7.0], [2]);
+    let {tensor_hist, tensor_edges} = histogram_bins_tensor(input, bins, true, weight, false);
+    let weighted_tensor_matches = allclose(tensor_hist, expected_tensor_counts);
+    let tensor_edges_match = allclose(tensor_edges, bins);
+    let out_count_hist = from_floats([], [0]);
+    let out_count_edges = from_floats([], [0]);
+    histogram_bin_ct_out(
+        out_count_hist,
+        out_count_edges,
+        input,
+        2,
+        true,
+        [0.0, 1.0],
+        true,
+        weight,
+        false,
+    );
+    let retained_count_matches = allclose(out_count_hist, expected_counts);
+    let retained_range_matches = allclose(out_count_edges, expected_range_edges);
+    let out_tensor_hist = from_floats([], [0]);
+    let out_tensor_edges = from_floats([], [0]);
+    (histogram_bins_tensor_out(out_tensor_hist, out_tensor_edges, input, bins, true, weight, false); let retained_tensor_matches = allclose(out_tensor_hist, expected_tensor_counts);
+let retained_tensor_edges_match = allclose(out_tensor_edges, bins);
+(dispose(out_tensor_edges); dispose(out_tensor_hist); dispose(out_count_edges); dispose(out_count_hist); dispose(tensor_edges); dispose(tensor_hist); dispose(expected_tensor_counts); dispose(bins); dispose(count_edges); dispose(count_hist); dispose(expected_range_edges); dispose(expected_counts); dispose(weight); dispose(input); weighted_count_matches
+    and bounded_edges_match
+    and weighted_tensor_matches
+    and tensor_edges_match
+    and retained_count_matches
+    and retained_range_matches
+    and retained_tensor_matches
+    and retained_tensor_edges_match)).
+
+@test
+pub histogramdd_tensor_bins_executes(): Bool ->
+    let input = from_floats([0.1, 0.2, 0.8, 1.2], [4, 1]);
+    let bins = from_floats([0.0, 0.5, 1.0, 1.5], [4]);
+    let {hist, edges} = histogramdd_tensor_bins(input, [bins], false, [], false, input, false);
+    let valid = shape(hist) == [3];
+    dispose_edges(edges);
+    dispose(hist);
+    dispose(bins);
+    dispose(input);
+    valid.

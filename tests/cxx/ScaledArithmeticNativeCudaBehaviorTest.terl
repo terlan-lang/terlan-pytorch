@@ -1,0 +1,7 @@
+module pytorch_cxx.ScaledArithmeticNativeCudaBehaviorTest.
+
+import pytorch.ScaledArithmeticNativeBehaviorSupport.{scaled_arithmetic_contracts_on}.
+
+@test
+pub generated_cxx_cuda_scaled_arithmetic_contracts(): Bool ->
+    scaled_arithmetic_contracts_on("cuda:0").

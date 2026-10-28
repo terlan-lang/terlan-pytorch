@@ -1,0 +1,20 @@
+/**
+ * Generated CXX instance-normalization completion surface.
+ */
+module pytorch.InstanceNormCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Applies instance normalization using input statistics and default absent
+ * affine/running-stat tensors.
+ */
+@compiler.native {pytorch.instance_norm.instance_norm_default}
+pub instance_norm_default(
+    input: Tensor,
+    use_input_stats: Bool,
+    momentum: Float,
+    eps: Float,
+    cudnn_enabled: Bool,
+): Tensor ->
+    native.

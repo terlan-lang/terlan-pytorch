@@ -1,0 +1,43 @@
+module pytorch.OptionalOutputTest.
+
+import pytorch.Tensor.{dispose, dispose_model, from_float, item_float, load_torchscript, torchscript_forward_optional_tensor}.
+import std.core.Option.{None, Some}.
+
+import type pytorch.Tensor.
+import type std.core.Option.
+
+@test
+pub optional_tensor_output_preserves_none_and_owned_some_semantics(): Bool ->
+    let model = load_torchscript("fixtures/models/optional_tensor.pt");
+    let positive = from_float(3.0);
+    let non_positive = from_float(0.0);
+    let present = torchscript_forward_optional_tensor(model, positive);
+    let absent = torchscript_forward_optional_tensor(model, non_positive);
+    let present_valid = validate_present(present);
+    let absent_valid = validate_absent(absent);
+    let inputs_unchanged = item_float(positive) == 3.0 and item_float(non_positive) == 0.0;
+    dispose(non_positive);
+    dispose(positive);
+    dispose_model(model);
+    present_valid and absent_valid and inputs_unchanged.
+
+validate_present(value: Option[Tensor]): Bool ->
+    case value {
+        Some(tensor) -> validate_present_tensor(tensor);
+        None -> false
+    }.
+
+validate_present_tensor(tensor: Tensor): Bool ->
+    let valid = item_float(tensor) == 6.0;
+    dispose(tensor);
+    valid.
+
+validate_absent(value: Option[Tensor]): Bool ->
+    case value {
+        Some(tensor) -> dispose_and_false(tensor);
+        None -> true
+    }.
+
+dispose_and_false(tensor: Tensor): Bool ->
+    dispose(tensor);
+    false.

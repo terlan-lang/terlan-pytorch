@@ -1,0 +1,306 @@
+/**
+ * Generated CXX fake-quantization completion surface.
+ */
+module pytorch.QuantizationCompletion.
+
+import pytorch.Tensor.{copy_in_place, dispose}.
+
+import type pytorch.Tensor.
+
+/**
+ * Applies per-tensor affine fake quantization.
+ */
+@compiler.native {pytorch.quantization.fake_quantize_per_tensor_affine}
+pub fake_quantize_per_tensor_affine(
+    input: Tensor,
+    scale: Float,
+    zero_point: Int,
+    quant_min: Int,
+    quant_max: Int,
+): Tensor ->
+    native.
+
+/**
+ * Applies per-tensor affine fake quantization with tensor qparams.
+ */
+@compiler.native {pytorch.quantization.fake_quantize_per_tensor_affine_tensor_qparams}
+pub fake_quantize_per_tensor_affine_tensor_qparams(
+    input: Tensor,
+    scale: Tensor,
+    zero_point: Tensor,
+    quant_min: Int,
+    quant_max: Int,
+): Tensor ->
+    native.
+
+/**
+ * Applies per-channel affine fake quantization.
+ */
+@compiler.native {pytorch.quantization.fake_quantize_per_channel_affine}
+pub fake_quantize_per_channel_affine(
+    input: Tensor,
+    scale: Tensor,
+    zero_point: Tensor,
+    axis: Int,
+    quant_min: Int,
+    quant_max: Int,
+): Tensor ->
+    native.
+
+/**
+ * Applies per-tensor affine fake quantization and returns its cache mask.
+ */
+@compiler.native {pytorch.quantization.fake_quantize_per_tensor_affine_cachemask}
+pub fake_quantize_per_tensor_affine_cachemask(
+    input: Tensor,
+    scale: Float,
+    zero_point: Int,
+    quant_min: Int,
+    quant_max: Int,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Applies per-channel affine fake quantization and returns its cache mask.
+ */
+@compiler.native {pytorch.quantization.fake_quantize_per_channel_affine_cachemask}
+pub fake_quantize_per_channel_affine_cachemask(
+    input: Tensor,
+    scale: Tensor,
+    zero_point: Tensor,
+    axis: Int,
+    quant_min: Int,
+    quant_max: Int,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Writes per-tensor affine fake quantization and its cache mask into retained outputs.
+ */
+@compiler.native {pytorch.quantization.fake_quantize_per_tensor_affine_cachemask.out}
+pub fake_quantize_per_tensor_affine_cachemask_out(
+    output: Tensor,
+    mask: Tensor,
+    input: Tensor,
+    scale: Float,
+    zero_point: Int,
+    quant_min: Int,
+    quant_max: Int,
+): Unit ->
+    native.
+
+/**
+ * Writes per-channel affine fake quantization and its cache mask into retained outputs.
+ */
+@compiler.native {pytorch.quantization.fake_quantize_per_channel_affine_cachemask.out}
+pub fake_quantize_per_channel_affine_cachemask_out(
+    output: Tensor,
+    mask: Tensor,
+    input: Tensor,
+    scale: Tensor,
+    zero_point: Tensor,
+    axis: Int,
+    quant_min: Int,
+    quant_max: Int,
+): Unit ->
+    native.
+
+/**
+ * Applies per-tensor affine quantization.
+ */
+@compiler.native {pytorch.quantization.quantize_per_tensor}
+pub quantize_per_tensor(input: Tensor, scale: Float, zero_point: Int, dtype: Int): Tensor ->
+    native.
+
+/**
+ * Applies per-channel affine quantization.
+ */
+@compiler.native {pytorch.quantization.quantize_per_channel}
+pub quantize_per_channel(
+    input: Tensor,
+    scales: Tensor,
+    zero_points: Tensor,
+    axis: Int,
+    dtype: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes per-channel affine quantization into retained output storage.
+ */
+@compiler.native {pytorch.quantization.quantize_per_channel_out}
+pub quantize_per_channel_out(
+    output: Tensor,
+    input: Tensor,
+    scales: Tensor,
+    zero_points: Tensor,
+    axis: Int,
+    dtype: Int,
+): Unit ->
+    native.
+
+/**
+ * Applies per-tensor affine quantization with tensor qparams.
+ */
+@compiler.native {pytorch.quantization.quantize_per_tensor_tensor_qparams}
+pub quantize_per_tensor_tensor_qparams(
+    input: Tensor,
+    scale: Tensor,
+    zero_point: Tensor,
+    dtype: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes tensor-qparams affine quantization into retained output storage.
+ */
+@compiler.native {pytorch.quantization.quantize_per_tensor_tensor_qparams_out}
+pub quantize_per_tensor_tensor_qparams_out(
+    output: Tensor,
+    input: Tensor,
+    scale: Tensor,
+    zero_point: Tensor,
+    dtype: Int,
+): Unit ->
+    native.
+
+/**
+ * Applies per-tensor affine quantization independently to a tensor list.
+ */
+@compiler.native {pytorch.quantization.quantize_per_tensor_tensors}
+pub quantize_per_tensor_tensors(
+    tensors: List[Tensor],
+    scales: Tensor,
+    zero_points: Tensor,
+    dtype: Int,
+): List[Tensor] ->
+    native.
+
+/**
+ * Writes per-tensor affine quantization into retained output storage.
+ */
+@compiler.native {pytorch.quantization.quantize_per_tensor_out}
+pub quantize_per_tensor_out(
+    output: Tensor,
+    input: Tensor,
+    scale: Float,
+    zero_point: Int,
+    dtype: Int,
+): Unit ->
+    native.
+
+/**
+ * Converts a quantized tensor to a floating tensor.
+ */
+@compiler.native {pytorch.quantization.dequantize}
+pub dequantize(input: Tensor): Tensor ->
+    native.
+
+/**
+ * Dequantizes each tensor in a tensor list.
+ */
+@compiler.native {pytorch.quantization.dequantize_tensors}
+pub dequantize_tensors(tensors: List[Tensor]): List[Tensor] ->
+    native.
+
+/**
+ * Dequantizes into caller-owned tensor-list outputs, preserving the ATen
+ * tensors_out contract through element-wise retained-storage copies.
+ */
+pub dequantize_tensors_out(tensors: List[Tensor], outputs: List[Tensor]): Unit ->
+    let values = dequantize_tensors(tensors);
+    copy_tensor_list(values, outputs).
+
+copy_tensor_list(values: List[Tensor], outputs: List[Tensor]): Unit ->
+    case values {
+        [] -> Unit;
+        [value | rest_values] -> copy_tensor_item(value, rest_values, outputs)
+    }.
+
+copy_tensor_item(value: Tensor, rest_values: List[Tensor], outputs: List[Tensor]): Unit ->
+    case outputs {
+        [] -> dispose(value);
+        [target | rest_out] -> copy_tensor_value(target, value, rest_values, rest_out)
+    }.
+
+copy_tensor_value(
+    target: Tensor,
+    value: Tensor,
+    rest_values: List[Tensor],
+    rest_out: List[Tensor],
+): Unit ->
+    copy_in_place(target, value);
+    dispose(value);
+    copy_tensor_list(rest_values, rest_out).
+
+/**
+ * Writes a dequantized floating tensor into retained output storage.
+ */
+@compiler.native {pytorch.quantization.dequantize_out}
+pub dequantize_out(output: Tensor, input: Tensor): Unit ->
+    native.
+
+/**
+ * Applies dynamic per-tensor quantization.
+ */
+@compiler.native {pytorch.quantization.quantize_per_tensor_dynamic}
+pub quantize_per_tensor_dynamic(input: Tensor, dtype: Int, reduce_range: Bool): Tensor ->
+    native.
+
+/**
+ * Writes dynamic per-tensor quantization into retained output storage.
+ */
+@compiler.native {pytorch.quantization.quantize_per_tensor_dynamic_out}
+pub quantize_per_tensor_dynamic_out(
+    output: Tensor,
+    input: Tensor,
+    dtype: Int,
+    reduce_range: Bool,
+): Unit ->
+    native.
+
+/**
+ * Returns the underlying integer representation of a quantized tensor.
+ */
+@compiler.native {pytorch.quantization.int_repr}
+pub int_repr(input: Tensor): Tensor ->
+    native.
+
+/**
+ * Writes the integer representation into retained output storage.
+ */
+@compiler.native {pytorch.quantization.int_repr_out}
+pub int_repr_out(output: Tensor, input: Tensor): Unit ->
+    native.
+
+@compiler.native {pytorch.quantization.q_scale}
+pub q_scale(input: Tensor): Float ->
+    native.
+
+@compiler.native {pytorch.quantization.q_zero_point}
+pub q_zero_point(input: Tensor): Int ->
+    native.
+
+@compiler.native {pytorch.quantization.qscheme}
+pub qscheme(input: Tensor): Int ->
+    native.
+
+@compiler.native {pytorch.quantization.q_per_channel_axis}
+pub q_per_channel_axis(input: Tensor): Int ->
+    native.
+
+@compiler.native {pytorch.quantization.q_per_channel_scales}
+pub q_per_channel_scales(input: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.quantization.q_per_channel_zero_points}
+pub q_per_channel_zero_points(input: Tensor): Tensor ->
+    native.
+
+@compiler.native {pytorch.quantization.q_per_channel_scales_out}
+pub q_per_channel_scales_out(output: Tensor, input: Tensor): Unit ->
+    native.
+
+@compiler.native {pytorch.quantization.q_per_channel_zero_points_out}
+pub q_per_channel_zero_points_out(output: Tensor, input: Tensor): Unit ->
+    native.

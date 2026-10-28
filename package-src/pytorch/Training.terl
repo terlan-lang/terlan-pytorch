@@ -1,0 +1,50 @@
+/**
+ * Functional training helpers built from the owned PyTorch tensor surface.
+ */
+module pytorch.Training.
+
+import pytorch.Tensor.{Tensor, batch_norm, clone}.
+
+/**
+ * Owns a training-mode batch-normalization output and its updated statistics.
+ */
+pub struct BatchNormTrainingResult {
+    output: Tensor,
+    running_mean: Tensor,
+    running_variance: Tensor,
+}.
+
+/**
+ * Applies training-mode batch normalization without mutating caller-owned
+ * running statistics. The returned result owns the output and both updated
+ * statistic tensors.
+ */
+pub batch_norm_training(
+    input: Tensor,
+    weight: Tensor,
+    bias: Tensor,
+    running_mean: Tensor,
+    running_variance: Tensor,
+    momentum: Float,
+    epsilon: Float,
+    cudnn_enabled: Bool,
+): BatchNormTrainingResult ->
+    let next_mean = clone(running_mean);
+    let next_variance = clone(running_variance);
+    let output =
+        batch_norm(
+            input,
+            weight,
+            bias,
+            next_mean,
+            next_variance,
+            true,
+            momentum,
+            epsilon,
+            cudnn_enabled,
+        );
+    BatchNormTrainingResult(
+        output = output,
+        running_mean = next_mean,
+        running_variance = next_variance,
+    ).

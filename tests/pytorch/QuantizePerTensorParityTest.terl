@@ -1,0 +1,68 @@
+/**
+ * CPU quantization evidence for per-tensor quantization and dequantization.
+ */
+module pytorch.QuantizePerTensorParityTest.
+
+import pytorch.QuantizationCompletion.{dequantize, dequantize_out, dequantize_tensors, int_repr, int_repr_out, quantize_per_channel, quantize_per_channel_out, quantize_per_tensor, quantize_per_tensor_dynamic, quantize_per_tensor_dynamic_out, quantize_per_tensor_out, quantize_per_tensor_tensor_qparams, quantize_per_tensor_tensor_qparams_out, quantize_per_tensor_tensors}.
+import pytorch.Tensor.{dispose, dtype, from_floats, is_quantized, shape, to_dtype}.
+import std.collections.List.
+
+@test
+pub quantize_per_tensor_preserves_shape_and_quantizes(): Bool ->
+    let source = from_floats([-1.0, 0.0, 1.0, 2.0], [2, 2]);
+    let input = to_dtype(source, 6);
+    let actual = quantize_per_tensor(input, 0.1, 0, 12);
+    quantize_per_tensor_out(actual, input, 0.1, 0, 12);
+    let channel_scale = from_floats([0.1, 0.2], [2]);
+    let channel_zero_source = from_floats([0.0, 0.0], [2]);
+    let channel_zero = to_dtype(channel_zero_source, 4);
+    let channel = quantize_per_channel(input, channel_scale, channel_zero, 0, 12);
+    (quantize_per_channel_out(channel, input, channel_scale, channel_zero, 0, 12); let scale = from_floats([0.1], [1]);
+let zero_point_source = from_floats([0.0], [1]);
+let zero_point = to_dtype(zero_point_source, 4);
+let tensor_qparams = quantize_per_tensor_tensor_qparams(input, scale, zero_point, 12);
+(quantize_per_tensor_tensor_qparams_out(tensor_qparams, input, scale, zero_point, 12); let dynamic_output = quantize_per_tensor_dynamic(input, 12, false);
+(quantize_per_tensor_dynamic_out(dynamic_output, input, 12, false); let restored = dequantize(actual);
+(dequantize_out(restored, actual); let integers = int_repr(actual);
+(int_repr_out(integers, actual); let valid =
+    shape(actual) == [2, 2]
+        and is_quantized(actual)
+        and shape(channel) == [2, 2]
+        and is_quantized(channel)
+        and shape(tensor_qparams) == [2, 2]
+        and is_quantized(tensor_qparams)
+        and shape(integers) == [2, 2]
+        and shape(dynamic_output) == [2, 2]
+        and is_quantized(dynamic_output)
+        and shape(restored) == [2, 2]
+        and dtype(restored) == 6;
+(dispose(actual); dispose(channel); dispose(channel_zero); dispose(channel_zero_source); dispose(channel_scale); dispose(tensor_qparams); dispose(integers); dispose(dynamic_output); dispose(restored); dispose(zero_point); dispose(zero_point_source); dispose(scale); dispose(input); dispose(source); valid)))))).
+
+@test
+pub quantize_per_tensor_tensors_preserves_list_outputs(): Bool ->
+    let first = to_dtype(from_floats([-1.0, 0.0], [2]), 6);
+    let second = to_dtype(from_floats([1.0, 2.0], [2]), 6);
+    let scales = from_floats([0.1, 0.2], [2]);
+    let zero_source = from_floats([0.0, 0.0], [2]);
+    let zero_points = to_dtype(zero_source, 4);
+    let outputs = quantize_per_tensor_tensors([first, second], scales, zero_points, 12);
+    let restored = dequantize_tensors(outputs);
+    let valid =
+        outputs.length() == 2
+            and is_quantized(outputs[0])
+            and is_quantized(outputs[1])
+            and shape(outputs[0]) == [2]
+            and shape(outputs[1]) == [2]
+            and restored.length() == 2
+            and dtype(restored[0]) == 6
+            and dtype(restored[1]) == 6;
+    dispose(restored[0]);
+    dispose(restored[1]);
+    dispose(outputs[0]);
+    dispose(outputs[1]);
+    dispose(zero_points);
+    dispose(zero_source);
+    dispose(scales);
+    dispose(second);
+    dispose(first);
+    valid.

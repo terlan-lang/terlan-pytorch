@@ -1,0 +1,12 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{add, full_float, matmul}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let decoder_state = full_float([2, 2, 2], 1.0);
+    let attention = full_float([2, 2, 3], 0.3333333333333333);
+    let width_three_memory_values = full_float([2, 3, 3], 1.0);
+    let width_three_context = matmul(attention, width_three_memory_values);
+    let invalid_decoder_state = add(decoder_state, width_three_context, 1.0);
+    println("PYTORCH_DECODER_CONTEXT_WIDTH_NOT_REJECTED").

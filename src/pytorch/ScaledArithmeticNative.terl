@@ -1,0 +1,478 @@
+/**
+ * Alpha-scaled addition, subtraction, and reverse subtraction composed in Terlan from exact generated CXX leaves.
+ */
+module pytorch.ScaledArithmeticNative.
+
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+
+/**
+ * Applies alpha-scaled tensor arithmetic selected by a reviewed operation identifier.
+ */
+pub scaled_tensor(
+    left: Tensor,
+    operation: Int,
+    right: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    if {
+        operation == 0 -> scaled_add_tensor_cxx(left, right, alpha_is_int, alpha_int, alpha_float);
+        operation == 1 -> scaled_sub_tensor_cxx(left, right, alpha_is_int, alpha_int, alpha_float);
+        operation == 2 -> scaled_rsub_tensor_cxx(left, right, alpha_is_int, alpha_int, alpha_float);
+        true -> let _failed = fail(exit_reason(7140));
+        scaled_add_tensor_cxx(left, right, alpha_is_int, alpha_int, alpha_float)
+    }.
+
+/**
+ * Writes alpha-scaled tensor arithmetic into retained output storage.
+ */
+pub scaled_tensor_out(
+    output: Tensor,
+    left: Tensor,
+    operation: Int,
+    right: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    if {
+        operation == 0 -> scaled_add_tensor_out_cxx(output, left, right, alpha_is_int, alpha_int, alpha_float);
+        operation == 1 -> scaled_sub_tensor_out_cxx(output, left, right, alpha_is_int, alpha_int, alpha_float);
+        operation == 2 -> scaled_rsub_tensor_out_cxx(output, left, right, alpha_is_int, alpha_int, alpha_float);
+        true -> let _failed = fail(exit_reason(7140));
+        scaled_add_tensor_out_cxx(output, left, right, alpha_is_int, alpha_int, alpha_float)
+    }.
+
+/**
+ * Applies supported alpha-scaled tensor arithmetic in place.
+ */
+pub scaled_tensor_in_place(
+    left: Tensor,
+    operation: Int,
+    right: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    if {
+        operation == 0 -> scaled_add_tensor_in_place_cxx(left, right, alpha_is_int, alpha_int, alpha_float);
+        operation == 1 -> scaled_sub_tensor_in_place_cxx(left, right, alpha_is_int, alpha_int, alpha_float);
+        true -> fail(exit_reason(7140))
+    }.
+
+/**
+ * Applies alpha-scaled arithmetic with an exact integer scalar operand.
+ */
+pub scaled_scalar_int(
+    left: Tensor,
+    operation: Int,
+    right: Int,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    if {
+        operation == 0 -> scaled_add_scalar_cxx(left, true, right, 0.0, alpha_is_int, alpha_int, alpha_float);
+        operation == 1 -> scaled_sub_scalar_cxx(left, true, right, 0.0, alpha_is_int, alpha_int, alpha_float);
+        operation == 2 -> scaled_rsub_scalar_cxx(left, true, right, 0.0, alpha_is_int, alpha_int, alpha_float);
+        true -> let _failed = fail(exit_reason(7140));
+        scaled_add_scalar_cxx(left, true, right, 0.0, alpha_is_int, alpha_int, alpha_float)
+    }.
+
+/**
+ * Writes alpha-scaled integer-scalar arithmetic into retained output storage.
+ */
+pub scaled_scalar_int_out(
+    output: Tensor,
+    left: Tensor,
+    operation: Int,
+    right: Int,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    if {
+        operation == 0 -> scaled_add_scalar_out_cxx(
+            output,
+            left,
+            true,
+            right,
+            0.0,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 1 -> scaled_sub_scalar_out_cxx(
+            output,
+            left,
+            true,
+            right,
+            0.0,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 2 -> scaled_rsub_scalar_out_cxx(
+            output,
+            left,
+            true,
+            right,
+            0.0,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        true -> let _failed = fail(exit_reason(7140));
+        scaled_add_scalar_out_cxx(
+            output,
+            left,
+            true,
+            right,
+            0.0,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        )
+    }.
+
+/**
+ * Applies supported alpha-scaled integer-scalar arithmetic in place.
+ */
+pub scaled_scalar_int_in_place(
+    left: Tensor,
+    operation: Int,
+    right: Int,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    if {
+        operation == 0 -> scaled_add_scalar_in_place_cxx(left, true, right, 0.0, alpha_is_int, alpha_int, alpha_float);
+        operation == 1 -> scaled_sub_scalar_in_place_cxx(left, true, right, 0.0, alpha_is_int, alpha_int, alpha_float);
+        true -> fail(exit_reason(7140))
+    }.
+
+/**
+ * Applies alpha-scaled arithmetic with a floating-point scalar operand.
+ */
+pub scaled_scalar_float(
+    left: Tensor,
+    operation: Int,
+    right: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    if {
+        operation == 0 -> scaled_add_scalar_cxx(left, false, 0, right, alpha_is_int, alpha_int, alpha_float);
+        operation == 1 -> scaled_sub_scalar_cxx(left, false, 0, right, alpha_is_int, alpha_int, alpha_float);
+        operation == 2 -> scaled_rsub_scalar_cxx(left, false, 0, right, alpha_is_int, alpha_int, alpha_float);
+        true -> let _failed = fail(exit_reason(7140));
+        scaled_add_scalar_cxx(left, false, 0, right, alpha_is_int, alpha_int, alpha_float)
+    }.
+
+/**
+ * Writes alpha-scaled floating-scalar arithmetic into retained output storage.
+ */
+pub scaled_scalar_float_out(
+    output: Tensor,
+    left: Tensor,
+    operation: Int,
+    right: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    if {
+        operation == 0 -> scaled_add_scalar_out_cxx(
+            output,
+            left,
+            false,
+            0,
+            right,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 1 -> scaled_sub_scalar_out_cxx(
+            output,
+            left,
+            false,
+            0,
+            right,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        operation == 2 -> scaled_rsub_scalar_out_cxx(
+            output,
+            left,
+            false,
+            0,
+            right,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        );
+        true -> let _failed = fail(exit_reason(7140));
+        scaled_add_scalar_out_cxx(
+            output,
+            left,
+            false,
+            0,
+            right,
+            alpha_is_int,
+            alpha_int,
+            alpha_float,
+        )
+    }.
+
+/**
+ * Applies supported alpha-scaled floating-scalar arithmetic in place.
+ */
+pub scaled_scalar_float_in_place(
+    left: Tensor,
+    operation: Int,
+    right: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    if {
+        operation == 0 -> scaled_add_scalar_in_place_cxx(left, false, 0, right, alpha_is_int, alpha_int, alpha_float);
+        operation == 1 -> scaled_sub_scalar_in_place_cxx(left, false, 0, right, alpha_is_int, alpha_int, alpha_float);
+        true -> fail(exit_reason(7140))
+    }.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_add_tensor_cxx}
+scaled_add_tensor_cxx(
+    left: Tensor,
+    right: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_sub_tensor_cxx}
+scaled_sub_tensor_cxx(
+    left: Tensor,
+    right: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_rsub_tensor_cxx}
+scaled_rsub_tensor_cxx(
+    left: Tensor,
+    right: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_add_tensor_out_cxx}
+scaled_add_tensor_out_cxx(
+    output: Tensor,
+    left: Tensor,
+    right: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_sub_tensor_out_cxx}
+scaled_sub_tensor_out_cxx(
+    output: Tensor,
+    left: Tensor,
+    right: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_rsub_tensor_out_cxx}
+scaled_rsub_tensor_out_cxx(
+    output: Tensor,
+    left: Tensor,
+    right: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_add_tensor_in_place_cxx}
+scaled_add_tensor_in_place_cxx(
+    left: Tensor,
+    right: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_sub_tensor_in_place_cxx}
+scaled_sub_tensor_in_place_cxx(
+    left: Tensor,
+    right: Tensor,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_add_scalar_cxx}
+scaled_add_scalar_cxx(
+    left: Tensor,
+    right_is_int: Bool,
+    right_int: Int,
+    right_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_sub_scalar_cxx}
+scaled_sub_scalar_cxx(
+    left: Tensor,
+    right_is_int: Bool,
+    right_int: Int,
+    right_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_rsub_scalar_cxx}
+scaled_rsub_scalar_cxx(
+    left: Tensor,
+    right_is_int: Bool,
+    right_int: Int,
+    right_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_add_scalar_out_cxx}
+scaled_add_scalar_out_cxx(
+    output: Tensor,
+    left: Tensor,
+    right_is_int: Bool,
+    right_int: Int,
+    right_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_sub_scalar_out_cxx}
+scaled_sub_scalar_out_cxx(
+    output: Tensor,
+    left: Tensor,
+    right_is_int: Bool,
+    right_int: Int,
+    right_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_rsub_scalar_out_cxx}
+scaled_rsub_scalar_out_cxx(
+    output: Tensor,
+    left: Tensor,
+    right_is_int: Bool,
+    right_int: Int,
+    right_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_add_scalar_in_place_cxx}
+scaled_add_scalar_in_place_cxx(
+    left: Tensor,
+    right_is_int: Bool,
+    right_int: Int,
+    right_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scaled arithmetic.
+ */
+@compiler.native {pytorch.scaled_arithmetic.cxx.scaled_sub_scalar_in_place_cxx}
+scaled_sub_scalar_in_place_cxx(
+    left: Tensor,
+    right_is_int: Bool,
+    right_int: Int,
+    right_float: Float,
+    alpha_is_int: Bool,
+    alpha_int: Int,
+    alpha_float: Float,
+): Unit ->
+    native.

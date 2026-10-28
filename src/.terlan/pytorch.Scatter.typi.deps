@@ -1,0 +1,10 @@
+module=pytorch.Scatter
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=5016147953831505459
+interface_hash=8641447163022857243
+interface_doc_hash=1278642119354139927
+deps=2
+pytorch.ScatterNative=4964540799340187747
+pytorch.Tensor=13489932768568026575

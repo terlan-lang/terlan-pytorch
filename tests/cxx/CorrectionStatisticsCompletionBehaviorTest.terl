@@ -1,0 +1,19 @@
+module pytorch_cxx.CorrectionStatisticsCompletionBehaviorTest.
+
+import pytorch.CorrectionStatisticsCompletionBehaviorSupport.{standard_deviation_contracts_on, standard_deviation_mean_contracts_on, variance_contracts_on, variance_mean_contracts_on}.
+
+@test
+pub generated_cxx_correction_standard_deviation_contracts(): Bool ->
+    standard_deviation_contracts_on("cpu").
+
+@test
+pub generated_cxx_correction_variance_contracts(): Bool ->
+    variance_contracts_on("cpu").
+
+@test
+pub generated_cxx_correction_standard_deviation_mean_contracts(): Bool ->
+    standard_deviation_mean_contracts_on("cpu").
+
+@test
+pub generated_cxx_correction_variance_mean_contracts(): Bool ->
+    variance_mean_contracts_on("cpu").

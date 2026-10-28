@@ -1,0 +1,14 @@
+//! Ownership-preserving composition of torch.unravel_index over exact tensor
+//! arithmetic leaves.  The public PyTorch result is a tuple; Terlan represents
+//! the same dynamically-sized result as an owned List[Tensor].
+
+module pytorch.UnravelIndex.
+
+/// Converts flattened integer indices into one coordinate tensor per shape
+/// dimension, matching torch.unravel_index for non-empty positive shapes.
+
+pub unravel_index(indices: Tensor, shape: List[Int]): List[Tensor].
+
+/// Scalar-shape overload matching torch.unravel_index's one-dimensional form.
+
+pub unravel_index(indices: Tensor, shape: Int): List[Tensor].

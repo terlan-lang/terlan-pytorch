@@ -1,0 +1,7 @@
+module pytorch_cxx.LookupCudaBehaviorTest.
+
+import pytorch.LookupBehaviorSupport.{lookup_contracts_on}.
+
+@test
+pub cuda_lookup_contracts(): Bool ->
+    lookup_contracts_on("cuda:0", true).

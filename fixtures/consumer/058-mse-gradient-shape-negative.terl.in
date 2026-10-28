@@ -1,0 +1,11 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{from_float, from_floats, mse_loss_gradient}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let grad_output = from_float(1.0);
+    let predicted = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let target = from_floats([1.0, 2.0, 3.0], [3]);
+    let gradient = mse_loss_gradient(grad_output, predicted, target, 1);
+    println("PYTORCH_MSE_GRADIENT_SHAPE_NOT_REJECTED").

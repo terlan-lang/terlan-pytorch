@@ -1,0 +1,43 @@
+/**
+ * CPU runtime evidence for vector-form upsampling overloads.
+ */
+module pytorch.UpsampleVectorParityTest.
+
+import pytorch.Tensor.{dispose, from_floats, shape}.
+import pytorch.UpsampleVectorCompletion.{upsample_bicubic2d_vec, upsample_bilinear2d_vec, upsample_bilinear2d_vec_out, upsample_linear1d_vec, upsample_nearest1d_vec, upsample_nearest2d_vec, upsample_nearest2d_vec_out, upsample_nearest3d_vec, upsample_trilinear3d_vec}.
+
+@test
+pub vector_upsampling_preserves_requested_shapes(): Bool ->
+    let input_1d = from_floats([0.0, 1.0], [1, 1, 2]);
+    let input_2d = from_floats([0.0, 1.0, 2.0, 3.0], [1, 1, 2, 2]);
+    let input_3d = from_floats([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0], [1, 1, 2, 2, 2]);
+    let linear = upsample_linear1d_vec(input_1d, [4], true);
+    let nearest_1d = upsample_nearest1d_vec(input_1d, [4]);
+    let bilinear = upsample_bilinear2d_vec(input_2d, [4, 4], false);
+    let bicubic = upsample_bicubic2d_vec(input_2d, [4, 4], false);
+    let nearest_2d = upsample_nearest2d_vec(input_2d, [4, 4]);
+    let nearest_3d = upsample_nearest3d_vec(input_3d, [4, 4, 4]);
+    let trilinear = upsample_trilinear3d_vec(input_3d, [4, 4, 4], false);
+    let bilinear_out =
+        from_floats(
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [1, 1, 4, 4],
+        );
+    let nearest_2d_out =
+        from_floats(
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [1, 1, 4, 4],
+        );
+    upsample_bilinear2d_vec_out(bilinear_out, input_2d, [4, 4], false);
+    upsample_nearest2d_vec_out(nearest_2d_out, input_2d, [4, 4]);
+    let valid =
+        shape(linear) == [1, 1, 4]
+            and shape(nearest_1d) == [1, 1, 4]
+            and shape(bilinear) == [1, 1, 4, 4]
+            and shape(bicubic) == [1, 1, 4, 4]
+            and shape(nearest_2d) == [1, 1, 4, 4]
+            and shape(nearest_3d) == [1, 1, 4, 4, 4]
+            and shape(trilinear) == [1, 1, 4, 4, 4]
+            and shape(bilinear_out) == [1, 1, 4, 4]
+            and shape(nearest_2d_out) == [1, 1, 4, 4];
+    (dispose(nearest_2d_out); dispose(bilinear_out); dispose(trilinear); dispose(nearest_3d); dispose(nearest_2d); dispose(bicubic); dispose(bilinear); dispose(nearest_1d); dispose(linear); dispose(input_3d); dispose(input_2d); dispose(input_1d); valid).

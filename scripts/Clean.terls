@@ -1,0 +1,84 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Removes generated and fixture artifacts without shell globbing or rm -rf.
+ */
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.Console.{eprintln, println}.
+import std.io.{Directory, File}.
+import std.system.{Arguments}.
+
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[terlan_pytorch_clean]: ", message));
+    false.
+
+remove_tree(path: String): Bool ->
+    let {
+        Ok(_) <- Directory.entries(path);
+        Err(reason) <- Directory.remove_all(path)
+    } else {
+        _ -> true
+    };
+    failure(reason.message).
+
+remove_file(path: String): Bool ->
+    if {
+        not File.exists(path) -> true;
+        true -> case File.delete(path) {
+            Ok(Unit) -> true;
+            Err(reason) -> failure(reason.message)
+        }
+    }.
+
+child(parent: String, relative: String): String ->
+    if {
+        String.ends_with(parent, "/") -> String.append(parent, relative);
+        true -> String.concat([parent, "/", relative])
+    }.
+
+remove_trees(root: String, paths: List[String]): Bool ->
+    case paths {
+        [] -> true;
+        [path | rest] -> remove_tree(child(root, path)) and remove_trees(root, rest)
+    }.
+
+remove_files(root: String, paths: List[String]): Bool ->
+    case paths {
+        [] -> true;
+        [path | rest] -> remove_file(child(root, path)) and remove_files(root, rest)
+    }.
+
+execute(root: String): Bool ->
+    let trees = ["generated/native/rust/target", "generated/.terlan/native-aot", "_build", "fixtures/dist"];
+    let models =
+        [
+            "fixtures/models/double.pt",
+            "fixtures/models/weighted_difference.pt",
+            "fixtures/models/tensor_pair.pt",
+            "fixtures/models/scalar_float.pt",
+            "fixtures/models/scalar_int.pt",
+            "fixtures/models/scalar_bool.pt",
+            "fixtures/models/scalar_string.pt",
+            "fixtures/models/int_list.pt",
+            "fixtures/models/float_list.pt",
+            "fixtures/models/bool_list.pt",
+            "fixtures/models/string_list.pt",
+            "fixtures/models/optional_tensor.pt",
+            "fixtures/models/tensor_list.pt",
+        ];
+    let cleaned = remove_trees(root, trees) and remove_files(root, models);
+    if {
+        cleaned -> let _printed = println("Terlan-generated artifacts removed.");
+        true;
+        true -> false
+    }.
+
+entry(): Bool ->
+    case {Arguments.count(), Arguments.get(0), Arguments.get(1)} {
+        {1, Some(root), None} -> execute(root);
+        _ -> failure("usage: Clean.terls <repository-root>")
+    }.
+
+assert(entry());
+Unit.

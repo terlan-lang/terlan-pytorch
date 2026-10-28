@@ -1,0 +1,7 @@
+module pytorch_cxx.RangeBehaviorTest.
+
+import pytorch.RangeBehaviorSupport.{range_contracts_on}.
+
+@test
+pub cpu_range_contracts(): Bool ->
+    range_contracts_on(false).

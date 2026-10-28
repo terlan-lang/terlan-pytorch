@@ -1,0 +1,49 @@
+/**
+ * Generated CXX resize-as completion surface.
+ */
+module pytorch.ResizeAsCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Public-compatible resize_as form using LibTorch's default memory format.
+ */
+pub resize_as_default(input: Tensor, the_template: Tensor): Tensor ->
+    resize_as(input, the_template, false, 0).
+
+/**
+ * Resizes a tensor to match a template tensor.
+ */
+@compiler.native {pytorch.resize_as.resize_as}
+pub resize_as(
+    input: Tensor,
+    the_template: Tensor,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Tensor ->
+    native.
+
+/**
+ * Resizes retained output storage to match a template tensor.
+ */
+@compiler.native {pytorch.resize_as.resize_as_out}
+pub resize_as_out(
+    output: Tensor,
+    input: Tensor,
+    the_template: Tensor,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.
+
+/**
+ * Resizes a tensor in place to match a template tensor.
+ */
+@compiler.native {pytorch.resize_as.resize_as_in_place}
+pub resize_as_in_place(
+    input: Tensor,
+    the_template: Tensor,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.

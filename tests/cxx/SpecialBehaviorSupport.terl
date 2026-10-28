@@ -1,0 +1,28 @@
+module pytorch.SpecialBehaviorSupport.
+
+import pytorch.Special.{special_chebyshev_polynomial_t_order_int, special_erf, special_round, special_softmax}.
+import pytorch.Tensor.{Float64, Strided, dispose, dtype, is_cuda, ones_device, shape}.
+
+/**
+ * Exercises representative generated special-function, scalar-overload, and
+ * optional-parameter leaves.
+ */
+pub special_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let values = ones_device([2, 2], Float64, Strided, device_name);
+    let erf_value = special_erf(values);
+    let rounded = special_round(values);
+    let softmax_value = special_softmax(values, 1);
+    let chebyshev = special_chebyshev_polynomial_t_order_int(values, 2);
+    let valid =
+        shape(erf_value) == [2, 2]
+            and shape(rounded) == [2, 2]
+            and shape(softmax_value) == [2, 2]
+            and shape(chebyshev) == [2, 2]
+            and dtype(rounded) == Float64
+            and is_cuda(values) == expected_cuda;
+    dispose(chebyshev);
+    dispose(softmax_value);
+    dispose(rounded);
+    dispose(erf_value);
+    dispose(values);
+    valid.

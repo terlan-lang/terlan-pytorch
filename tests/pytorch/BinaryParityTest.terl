@@ -1,0 +1,300 @@
+module pytorch.BinaryParityTest.
+
+import pytorch.Binary.{arctan2, atan2, bitwise_and_tensor, bitwise_left_shift_tensor, bitwise_or_tensor, bitwise_right_shift_tensor, bitwise_xor_tensor, clamp_max_tensor, clamp_min_tensor, copysign_tensor, dot, eq_tensor, float_power_tensor, floor_divide, fmax, fmin, fmod_tensor, gcd, ge_tensor, greater_equal_tensor, greater_tensor, gt_tensor, heaviside, hypot, igamma, igammac, inner, kron, lcm, ldexp_tensor, le_tensor, less_equal_tensor, less_tensor, logaddexp, logaddexp2, logical_and, logical_or, logical_xor, lt_tensor, masked_select, max_other, maximum, min_other, ne_tensor, nextafter, not_equal_tensor, pow_tensor, remainder_tensor, special_xlog1py, special_xlogy, special_zeta, take, true_divide_tensor, vdot, xlogy_tensor}.
+import pytorch.Tensor.{dispose, from_bool, from_float, from_floats, from_int, from_ints, item, item_bool, item_float, narrow, shape, sum}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads one floating-point vector element from an owned one-element view.
+ */
+vector_item(tensor: Tensor, index: Int): Float ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    value.
+
+/**
+ * Proves scalar-shaped arithmetic and special-function schemas.
+ */
+@test
+pub arithmetic_and_special_functions_match_libtorch(): Bool ->
+    let zero = from_float(0.0);
+    let one = from_float(1.0);
+    let two = from_float(2.0);
+    let three = from_float(3.0);
+    let four = from_float(4.0);
+    let seven = from_float(7.0);
+    let negative_one = from_float(-1.0);
+    let exponent_two = from_int(2);
+    let angle = arctan2(zero, one);
+    let angle_alias = atan2(zero, one);
+    let capped = clamp_max_tensor(four, two);
+    let floored = clamp_min_tensor(one, two);
+    let signed = copysign_tensor(three, negative_one);
+    let floating_power = float_power_tensor(two, three);
+    let quotient_floor = floor_divide(seven, two);
+    let floating_maximum = fmax(two, three);
+    let floating_minimum = fmin(two, three);
+    let modulus = fmod_tensor(seven, four);
+    let hypotenuse = hypot(three, four);
+    let scaled = ldexp_tensor(three, exponent_two);
+    let natural_sum = logaddexp(zero, zero);
+    let binary_sum = logaddexp2(zero, zero);
+    let adjacent = nextafter(one, two);
+    let power = pow_tensor(two, three);
+    let remainder = remainder_tensor(seven, four);
+    let quotient = true_divide_tensor(seven, two);
+    let gamma = igamma(one, one);
+    let complementary_gamma = igammac(one, one);
+    let logarithmic_product = xlogy_tensor(two, one);
+    let special_logarithmic_product = special_xlogy(two, one);
+    let special_logarithm_one_plus = special_xlog1py(two, zero);
+    let zeta = special_zeta(two, one);
+    let gamma_value = item_float(gamma);
+    let complementary_gamma_value = item_float(complementary_gamma);
+    let natural_sum_value = item_float(natural_sum);
+    let adjacent_value = item_float(adjacent);
+    let zeta_value = item_float(zeta);
+    let valid =
+        item_float(angle) == 0.0
+            and item_float(angle_alias) == 0.0
+            and item_float(capped) == 2.0
+            and item_float(floored) == 2.0
+            and item_float(signed) == -3.0
+            and item_float(floating_power) == 8.0
+            and item_float(quotient_floor) == 3.0
+            and item_float(floating_maximum) == 3.0
+            and item_float(floating_minimum) == 2.0
+            and item_float(modulus) == 3.0
+            and item_float(hypotenuse) == 5.0
+            and item_float(scaled) == 12.0
+            and natural_sum_value > 0.69
+            and natural_sum_value < 0.7
+            and item_float(binary_sum) == 1.0
+            and adjacent_value > 1.0
+            and adjacent_value < 2.0
+            and item_float(power) == 8.0
+            and item_float(remainder) == 3.0
+            and item_float(quotient) == 3.5
+            and gamma_value > 0.63
+            and gamma_value < 0.64
+            and complementary_gamma_value > 0.36
+            and complementary_gamma_value < 0.37
+            and item_float(logarithmic_product) == 0.0
+            and item_float(special_logarithmic_product) == 0.0
+            and item_float(special_logarithm_one_plus) == 0.0
+            and zeta_value > 1.64
+            and zeta_value < 1.65
+            and item_float(two) == 2.0;
+    dispose(zeta);
+    dispose(special_logarithm_one_plus);
+    dispose(special_logarithmic_product);
+    dispose(logarithmic_product);
+    dispose(complementary_gamma);
+    dispose(gamma);
+    dispose(quotient);
+    dispose(remainder);
+    dispose(power);
+    dispose(adjacent);
+    dispose(binary_sum);
+    dispose(natural_sum);
+    dispose(scaled);
+    dispose(hypotenuse);
+    dispose(modulus);
+    dispose(floating_minimum);
+    dispose(floating_maximum);
+    dispose(quotient_floor);
+    dispose(floating_power);
+    dispose(signed);
+    dispose(floored);
+    dispose(capped);
+    dispose(angle_alias);
+    dispose(angle);
+    dispose(exponent_two);
+    dispose(negative_one);
+    dispose(seven);
+    dispose(four);
+    dispose(three);
+    dispose(two);
+    dispose(one);
+    dispose(zero);
+    valid.
+
+/**
+ * Proves every immutable tensor-tensor bitwise schema and integer GCD/LCM.
+ */
+@test
+pub bitwise_and_integer_operations_match_libtorch(): Bool ->
+    let six = from_int(6);
+    let three = from_int(3);
+    let two = from_int(2);
+    let eight = from_int(8);
+    let twelve = from_int(12);
+    let eighteen = from_int(18);
+    let conjunction = bitwise_and_tensor(six, three);
+    let disjunction = bitwise_or_tensor(six, three);
+    let exclusive = bitwise_xor_tensor(six, three);
+    let shifted_left = bitwise_left_shift_tensor(three, two);
+    let shifted_right = bitwise_right_shift_tensor(eight, two);
+    let divisor = gcd(twelve, eighteen);
+    let multiple = lcm(twelve, eighteen);
+    let valid =
+        item(conjunction) == 2
+            and item(disjunction) == 7
+            and item(exclusive) == 5
+            and item(shifted_left) == 12
+            and item(shifted_right) == 2
+            and item(divisor) == 6
+            and item(multiple) == 36
+            and item(six) == 6;
+    dispose(multiple);
+    dispose(divisor);
+    dispose(shifted_right);
+    dispose(shifted_left);
+    dispose(exclusive);
+    dispose(disjunction);
+    dispose(conjunction);
+    dispose(eighteen);
+    dispose(twelve);
+    dispose(eight);
+    dispose(two);
+    dispose(three);
+    dispose(six);
+    valid.
+
+/**
+ * Proves all comparison aliases and logical tensor operations.
+ */
+@test
+pub comparison_and_logical_operations_match_libtorch(): Bool ->
+    let two = from_float(2.0);
+    let three = from_float(3.0);
+    let truth = from_bool(true);
+    let falsehood = from_bool(false);
+    let equal = eq_tensor(two, three);
+    let greater_or_equal = ge_tensor(two, three);
+    let greater = greater_tensor(two, three);
+    let greater_or_equal_alias = greater_equal_tensor(two, three);
+    let greater_alias = gt_tensor(two, three);
+    let less_or_equal = le_tensor(two, three);
+    let less = less_tensor(two, three);
+    let less_or_equal_alias = less_equal_tensor(two, three);
+    let less_alias = lt_tensor(two, three);
+    let unequal = ne_tensor(two, three);
+    let unequal_alias = not_equal_tensor(two, three);
+    let logical_conjunction = logical_and(truth, falsehood);
+    let logical_disjunction = logical_or(truth, falsehood);
+    let logical_exclusive = logical_xor(truth, falsehood);
+    let valid =
+        not item_bool(equal)
+            and not item_bool(greater_or_equal)
+            and not item_bool(greater)
+            and not item_bool(greater_or_equal_alias)
+            and not item_bool(greater_alias)
+            and item_bool(less_or_equal)
+            and item_bool(less)
+            and item_bool(less_or_equal_alias)
+            and item_bool(less_alias)
+            and item_bool(unequal)
+            and item_bool(unequal_alias)
+            and not item_bool(logical_conjunction)
+            and item_bool(logical_disjunction)
+            and item_bool(logical_exclusive);
+    dispose(logical_exclusive);
+    dispose(logical_disjunction);
+    dispose(logical_conjunction);
+    dispose(unequal_alias);
+    dispose(unequal);
+    dispose(less_alias);
+    dispose(less_or_equal_alias);
+    dispose(less);
+    dispose(less_or_equal);
+    dispose(greater_alias);
+    dispose(greater_or_equal_alias);
+    dispose(greater);
+    dispose(greater_or_equal);
+    dispose(equal);
+    dispose(falsehood);
+    dispose(truth);
+    dispose(three);
+    dispose(two);
+    valid.
+
+/**
+ * Proves element selection, extrema, and explicit index gathering.
+ */
+@test
+pub selection_and_extrema_operations_match_libtorch(): Bool ->
+    let two = from_float(2.0);
+    let three = from_float(3.0);
+    let values = from_floats([1.0, 2.0, 3.0], [3]);
+    let threshold = from_float(1.0);
+    let indices = from_ints([2, 0], [2]);
+    let maximum_other = max_other(two, three);
+    let maximum_value = maximum(two, three);
+    let minimum_other = min_other(two, three);
+    let mask = greater_tensor(values, threshold);
+    let selected = masked_select(values, mask);
+    let taken = take(values, indices);
+    let valid =
+        item_float(maximum_other) == 3.0
+            and item_float(maximum_value) == 3.0
+            and item_float(minimum_other) == 2.0
+            and shape(selected) == [2]
+            and vector_item(selected, 0) == 2.0
+            and vector_item(selected, 1) == 3.0
+            and shape(taken) == [2]
+            and vector_item(taken, 0) == 3.0
+            and vector_item(taken, 1) == 1.0
+            and shape(values) == [3];
+    dispose(taken);
+    dispose(selected);
+    dispose(mask);
+    dispose(minimum_other);
+    dispose(maximum_value);
+    dispose(maximum_other);
+    dispose(indices);
+    dispose(threshold);
+    dispose(values);
+    dispose(three);
+    dispose(two);
+    valid.
+
+/**
+ * Proves vector contractions, Kronecker product, and heaviside selection.
+ */
+@test
+pub contraction_and_piecewise_operations_match_libtorch(): Bool ->
+    let left = from_floats([1.0, 2.0], [2]);
+    let right = from_floats([3.0, 4.0], [2]);
+    let steps = from_floats([-1.0, 0.0, 2.0], [3]);
+    let zero_values = from_floats([0.5, 0.5, 0.5], [3]);
+    let dot_product = dot(left, right);
+    let inner_product = inner(left, right);
+    let conjugate_dot = vdot(left, right);
+    let kronecker = kron(left, right);
+    let kronecker_sum = sum(kronecker);
+    let step_values = heaviside(steps, zero_values);
+    let step_sum = sum(step_values);
+    let valid =
+        item_float(dot_product) == 11.0
+            and item_float(inner_product) == 11.0
+            and item_float(conjugate_dot) == 11.0
+            and shape(kronecker) == [4]
+            and item_float(kronecker_sum) == 21.0
+            and item_float(step_sum) == 1.5
+            and shape(left) == [2]
+            and shape(right) == [2];
+    dispose(step_sum);
+    dispose(step_values);
+    dispose(kronecker_sum);
+    dispose(kronecker);
+    dispose(conjugate_dot);
+    dispose(inner_product);
+    dispose(dot_product);
+    dispose(zero_values);
+    dispose(steps);
+    dispose(right);
+    dispose(left);
+    valid.

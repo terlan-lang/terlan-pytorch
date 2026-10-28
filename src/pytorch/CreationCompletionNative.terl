@@ -1,0 +1,621 @@
+/**
+ * Generated exact CXX dense creation and like dispatchers.
+ */
+module pytorch.CreationCompletionNative.
+
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+import type pytorch.Tensor.{DType, Device, Layout}.
+
+/**
+ * Contiguous memory format.
+ */
+pub type Contiguous.
+
+/**
+ * Preserve memory format.
+ */
+pub type Preserve.
+
+/**
+ * Channels-last memory format.
+ */
+pub type ChannelsLast.
+
+/**
+ * Channels-last 3D memory format.
+ */
+pub type ChannelsLast3d.
+
+/**
+ * Finite public memory-format values.
+ */
+pub type MemoryFormat =
+      Atom["contiguous"]
+    | Atom["preserve"]
+    | Atom["channels_last"]
+    | Atom["channels_last_3d"].
+
+/**
+ * Creates an empty, full, ones, or zeros tensor with exact optional arguments.
+ */
+pub create_configured(
+    operation: Int,
+    shape: List[Int],
+    fill_is_integer: Bool,
+    fill_integer: Int,
+    fill_floating: Float,
+    dtype: Int,
+    has_dtype: Bool,
+    layout: Int,
+    has_layout: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool,
+    memory_format: Int,
+    has_memory_format: Bool,
+): Tensor ->
+    if {
+        operation == 0 -> creation_empty(
+            shape,
+            has_dtype,
+            creation_dtype(dtype),
+            has_layout,
+            creation_layout(layout),
+            has_device,
+            creation_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+            has_memory_format,
+            creation_memory_format(memory_format),
+        );
+        operation == 1 -> creation_full(
+            shape,
+            fill_is_integer,
+            fill_integer,
+            fill_floating,
+            has_dtype,
+            creation_dtype(dtype),
+            has_layout,
+            creation_layout(layout),
+            has_device,
+            creation_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        );
+        operation == 2 -> creation_ones(
+            shape,
+            has_dtype,
+            creation_dtype(dtype),
+            has_layout,
+            creation_layout(layout),
+            has_device,
+            creation_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        );
+        operation == 3 -> creation_zeros(
+            shape,
+            has_dtype,
+            creation_dtype(dtype),
+            has_layout,
+            creation_layout(layout),
+            has_device,
+            creation_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+        );
+        true -> let _failed = fail(exit_reason(7250));
+        creation_empty(
+            shape,
+            has_dtype,
+            creation_dtype(dtype),
+            has_layout,
+            creation_layout(layout),
+            has_device,
+            creation_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+            has_memory_format,
+            creation_memory_format(memory_format),
+        )
+    }.
+
+/**
+ * Writes an empty, full, ones, or zeros result into retained output storage.
+ */
+pub create_out(
+    output: Tensor,
+    operation: Int,
+    shape: List[Int],
+    fill_is_integer: Bool,
+    fill_integer: Int,
+    fill_floating: Float,
+    memory_format: Int,
+    has_memory_format: Bool,
+): Unit ->
+    if {
+        operation == 0 -> creation_empty_out(output, shape, has_memory_format, creation_memory_format(memory_format));
+        operation == 1 -> creation_full_out(output, shape, fill_is_integer, fill_integer, fill_floating);
+        operation == 2 -> creation_ones_out(output, shape);
+        operation == 3 -> creation_zeros_out(output, shape);
+        true -> fail(exit_reason(7250))
+    }.
+
+/**
+ * Creates an empty, full, ones, or zeros tensor like an input with exact optional arguments.
+ */
+pub like_configured(
+    input: Tensor,
+    operation: Int,
+    fill_is_integer: Bool,
+    fill_integer: Int,
+    fill_floating: Float,
+    dtype: Int,
+    has_dtype: Bool,
+    layout: Int,
+    has_layout: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_device: Bool,
+    pin_memory: Bool,
+    has_pin_memory: Bool,
+    memory_format: Int,
+    has_memory_format: Bool,
+): Tensor ->
+    if {
+        operation == 0 -> creation_empty_like(
+            input,
+            has_dtype,
+            creation_dtype(dtype),
+            has_layout,
+            creation_layout(layout),
+            has_device,
+            creation_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+            has_memory_format,
+            creation_memory_format(memory_format),
+        );
+        operation == 1 -> creation_full_like(
+            input,
+            fill_is_integer,
+            fill_integer,
+            fill_floating,
+            has_dtype,
+            creation_dtype(dtype),
+            has_layout,
+            creation_layout(layout),
+            has_device,
+            creation_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+            has_memory_format,
+            creation_memory_format(memory_format),
+        );
+        operation == 2 -> creation_ones_like(
+            input,
+            has_dtype,
+            creation_dtype(dtype),
+            has_layout,
+            creation_layout(layout),
+            has_device,
+            creation_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+            has_memory_format,
+            creation_memory_format(memory_format),
+        );
+        operation == 3 -> creation_zeros_like(
+            input,
+            has_dtype,
+            creation_dtype(dtype),
+            has_layout,
+            creation_layout(layout),
+            has_device,
+            creation_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+            has_memory_format,
+            creation_memory_format(memory_format),
+        );
+        true -> let _failed = fail(exit_reason(7250));
+        creation_empty_like(
+            input,
+            has_dtype,
+            creation_dtype(dtype),
+            has_layout,
+            creation_layout(layout),
+            has_device,
+            creation_device(device_type, device_index),
+            has_pin_memory,
+            pin_memory,
+            has_memory_format,
+            creation_memory_format(memory_format),
+        )
+    }.
+
+/**
+ * Writes an empty, full, ones, or zeros like-result into retained output storage.
+ */
+pub like_out(
+    output: Tensor,
+    input: Tensor,
+    operation: Int,
+    fill_is_integer: Bool,
+    fill_integer: Int,
+    fill_floating: Float,
+    memory_format: Int,
+    has_memory_format: Bool,
+): Unit ->
+    if {
+        operation == 0 -> creation_empty_like_out(
+            output,
+            input,
+            has_memory_format,
+            creation_memory_format(memory_format),
+        );
+        operation == 1 -> creation_full_like_out(
+            output,
+            input,
+            fill_is_integer,
+            fill_integer,
+            fill_floating,
+            has_memory_format,
+            creation_memory_format(memory_format),
+        );
+        operation == 2 -> creation_ones_like_out(
+            output,
+            input,
+            has_memory_format,
+            creation_memory_format(memory_format),
+        );
+        operation == 3 -> creation_zeros_like_out(
+            output,
+            input,
+            has_memory_format,
+            creation_memory_format(memory_format),
+        );
+        true -> fail(exit_reason(7250))
+    }.
+
+/**
+ * Maps stable dtype selectors.
+ */
+creation_dtype(code: Int): Int ->
+    if {
+        code == 0 -> 0;
+        code == 1 -> 1;
+        code == 2 -> 2;
+        code == 3 -> 3;
+        code == 4 -> 4;
+        code == 5 -> 5;
+        code == 6 -> 6;
+        code == 7 -> 7;
+        code == 8 -> 8;
+        code == 9 -> 9;
+        code == 10 -> 10;
+        code == 11 -> 11;
+        code == 12 -> 12;
+        code == 13 -> 13;
+        code == 14 -> 14;
+        code == 15 -> 15;
+        code == 16 -> 16;
+        code == 17 -> 17;
+        code == 18 -> 18;
+        code == 19 -> 19;
+        code == 20 -> 20;
+        code == 21 -> 21;
+        code == 22 -> 22;
+        code == 23 -> 23;
+        code == 24 -> 24;
+        code == 25 -> 25;
+        code == 26 -> 26;
+        code == 27 -> 27;
+        code == 28 -> 28;
+        code == 29 -> 29;
+        code == 30 -> 30;
+        code == 31 -> 31;
+        code == 32 -> 32;
+        code == 33 -> 33;
+        code == 34 -> 34;
+        code == 35 -> 35;
+        code == 36 -> 36;
+        code == 37 -> 37;
+        code == 38 -> 38;
+        code == 39 -> 39;
+        code == 40 -> 40;
+        code == 41 -> 41;
+        code == 42 -> 42;
+        code == 43 -> 43;
+        code == 44 -> 44;
+        code == 45 -> 45;
+        true -> let _failed = fail(exit_reason(7250));
+        6
+    }.
+
+/**
+ * Maps stable layout selectors.
+ */
+creation_layout(code: Int): Int ->
+    if {
+        code == 0 -> 0;
+        code == 1 -> 1;
+        code == 2 -> 2;
+        code == 3 -> 3;
+        code == 4 -> 4;
+        code == 5 -> 5;
+        code == 6 -> 6;
+        code == 7 -> 7;
+        true -> let _failed = fail(exit_reason(7250));
+        0
+    }.
+
+/**
+ * Maps stable device selectors.
+ */
+creation_device(kind: Int, index: Int): Device ->
+    if {
+        kind == 0 -> "cpu";
+        kind == 1 -> "cuda:" + std.core.Int.to_string(index);
+        true -> let _failed = fail(exit_reason(7250));
+        "cpu"
+    }.
+
+/**
+ * Maps stable memory-format selectors.
+ */
+creation_memory_format(code: Int): Int ->
+    if {
+        code == 0 -> 0;
+        code == 1 -> 1;
+        code == 2 -> 2;
+        code == 3 -> 3;
+        true -> let _failed = fail(exit_reason(7250));
+        0
+    }.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_empty}
+creation_empty(
+    size: List[Int],
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_empty_out}
+creation_empty_out(
+    out: Tensor,
+    size: List[Int],
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_full}
+creation_full(
+    size: List[Int],
+    fill_value_is_integer: Bool,
+    fill_value_integer: Int,
+    fill_value_floating: Float,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_full_out}
+creation_full_out(
+    out: Tensor,
+    size: List[Int],
+    fill_value_is_integer: Bool,
+    fill_value_integer: Int,
+    fill_value_floating: Float,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_ones}
+creation_ones(
+    size: List[Int],
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_ones_out}
+creation_ones_out(out: Tensor, size: List[Int]): Unit ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_zeros}
+creation_zeros(
+    size: List[Int],
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_zeros_out}
+creation_zeros_out(out: Tensor, size: List[Int]): Unit ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_empty_like}
+creation_empty_like(
+    self: Tensor,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_empty_like_out}
+creation_empty_like_out(
+    out: Tensor,
+    self: Tensor,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_full_like}
+creation_full_like(
+    self: Tensor,
+    fill_value_is_integer: Bool,
+    fill_value_integer: Int,
+    fill_value_floating: Float,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_full_like_out}
+creation_full_like_out(
+    out: Tensor,
+    self: Tensor,
+    fill_value_is_integer: Bool,
+    fill_value_integer: Int,
+    fill_value_floating: Float,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_ones_like}
+creation_ones_like(
+    self: Tensor,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_ones_like_out}
+creation_ones_like_out(
+    out: Tensor,
+    self: Tensor,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_zeros_like}
+creation_zeros_like(
+    self: Tensor,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device: Device,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Tensor ->
+    native.
+
+/**
+ * Generated exact CXX creation leaf.
+ */
+@compiler.native {pytorch.creation_completion_native.cxx.creation_zeros_like_out}
+creation_zeros_like_out(
+    out: Tensor,
+    self: Tensor,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.

@@ -1,0 +1,580 @@
+/**
+ * Generated exact CXX shape, view, indexing, and dimension operations.
+ */
+module pytorch.Shape.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX shape leaf for channel_shuffle.
+ */
+@compiler.native {pytorch.shape.channel_shuffle}
+pub channel_shuffle(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for diag.
+ */
+@compiler.native {pytorch.shape.diag}
+pub diag(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for diagflat.
+ */
+@compiler.native {pytorch.shape.diagflat}
+pub diagflat(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for glu.
+ */
+@compiler.native {pytorch.shape.glu}
+pub glu(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for linalg_matrix_power.
+ */
+@compiler.native {pytorch.shape.linalg_matrix_power}
+pub linalg_matrix_power(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for linalg_tensorinv.
+ */
+@compiler.native {pytorch.shape.linalg_tensorinv}
+pub linalg_tensorinv(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for logcumsumexp.
+ */
+@compiler.native {pytorch.shape.logcumsumexp}
+pub logcumsumexp(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for matrix_power.
+ */
+@compiler.native {pytorch.shape.matrix_power}
+pub matrix_power(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for moveaxis_int.
+ */
+@compiler.native {pytorch.shape.moveaxis_int}
+pub moveaxis_int(tensor: Tensor, first: Int, second: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for movedim_int.
+ */
+@compiler.native {pytorch.shape.movedim_int}
+pub movedim_int(tensor: Tensor, first: Int, second: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for mvlgamma.
+ */
+@compiler.native {pytorch.shape.mvlgamma}
+pub mvlgamma(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for native_channel_shuffle.
+ */
+@compiler.native {pytorch.shape.native_channel_shuffle}
+pub native_channel_shuffle(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for one_hot.
+ */
+@compiler.native {pytorch.shape.one_hot}
+pub one_hot(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for pixel_shuffle.
+ */
+@compiler.native {pytorch.shape.pixel_shuffle}
+pub pixel_shuffle(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for pixel_unshuffle.
+ */
+@compiler.native {pytorch.shape.pixel_unshuffle}
+pub pixel_unshuffle(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for select_int.
+ */
+@compiler.native {pytorch.shape.select_int}
+pub select_int(tensor: Tensor, first: Int, second: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for select_copy_int.
+ */
+@compiler.native {pytorch.shape.select_copy_int}
+pub select_copy_int(tensor: Tensor, first: Int, second: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for special_multigammaln.
+ */
+@compiler.native {pytorch.shape.special_multigammaln}
+pub special_multigammaln(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for squeeze_dim.
+ */
+@compiler.native {pytorch.shape.squeeze_dim}
+pub squeeze_dim(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for squeeze_copy_dim.
+ */
+@compiler.native {pytorch.shape.squeeze_copy_dim}
+pub squeeze_copy_dim(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for swapaxes.
+ */
+@compiler.native {pytorch.shape.swapaxes}
+pub swapaxes(tensor: Tensor, first: Int, second: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for swapdims.
+ */
+@compiler.native {pytorch.shape.swapdims}
+pub swapdims(tensor: Tensor, first: Int, second: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for transpose_copy_int.
+ */
+@compiler.native {pytorch.shape.transpose_copy_int}
+pub transpose_copy_int(tensor: Tensor, first: Int, second: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for tril.
+ */
+@compiler.native {pytorch.shape.tril}
+pub tril(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for triu.
+ */
+@compiler.native {pytorch.shape.triu}
+pub triu(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for unsqueeze_copy.
+ */
+@compiler.native {pytorch.shape.unsqueeze_copy}
+pub unsqueeze_copy(tensor: Tensor, value: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for adaptive_avg_pool3d.
+ */
+@compiler.native {pytorch.shape.adaptive_avg_pool3d}
+pub adaptive_avg_pool3d(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for broadcast_to.
+ */
+@compiler.native {pytorch.shape.broadcast_to}
+pub broadcast_to(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for count_nonzero_dim.
+ */
+@compiler.native {pytorch.shape.count_nonzero_dim}
+pub count_nonzero_dim(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for flip.
+ */
+@compiler.native {pytorch.shape.flip}
+pub flip(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for permute.
+ */
+@compiler.native {pytorch.shape.permute}
+pub permute(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for permute_copy.
+ */
+@compiler.native {pytorch.shape.permute_copy}
+pub permute_copy(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for reflection_pad1d.
+ */
+@compiler.native {pytorch.shape.reflection_pad1d}
+pub reflection_pad1d(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for reflection_pad2d.
+ */
+@compiler.native {pytorch.shape.reflection_pad2d}
+pub reflection_pad2d(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for reflection_pad3d.
+ */
+@compiler.native {pytorch.shape.reflection_pad3d}
+pub reflection_pad3d(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for repeat.
+ */
+@compiler.native {pytorch.shape.repeat}
+pub repeat(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for replication_pad1d.
+ */
+@compiler.native {pytorch.shape.replication_pad1d}
+pub replication_pad1d(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for replication_pad2d.
+ */
+@compiler.native {pytorch.shape.replication_pad2d}
+pub replication_pad2d(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for replication_pad3d.
+ */
+@compiler.native {pytorch.shape.replication_pad3d}
+pub replication_pad3d(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for reshape.
+ */
+@compiler.native {pytorch.shape.reshape}
+pub reshape(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for squeeze_dims.
+ */
+@compiler.native {pytorch.shape.squeeze_dims}
+pub squeeze_dims(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for squeeze_copy_dims.
+ */
+@compiler.native {pytorch.shape.squeeze_copy_dims}
+pub squeeze_copy_dims(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for sum_to_size.
+ */
+@compiler.native {pytorch.shape.sum_to_size}
+pub sum_to_size(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for tile.
+ */
+@compiler.native {pytorch.shape.tile}
+pub tile(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for view.
+ */
+@compiler.native {pytorch.shape.view}
+pub view(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for view_copy.
+ */
+@compiler.native {pytorch.shape.view_copy}
+pub view_copy(tensor: Tensor, values: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for expand.
+ */
+@compiler.native {pytorch.shape.expand}
+pub expand(tensor: Tensor, size: List[Int], implicit: Bool = false): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for expand_copy.
+ */
+@compiler.native {pytorch.shape.expand_copy}
+pub expand_copy(tensor: Tensor, size: List[Int], implicit: Bool = false): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for moveaxis.
+ */
+@compiler.native {pytorch.shape.moveaxis_list}
+pub moveaxis(tensor: Tensor, source: List[Int], destination: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for movedim.
+ */
+@compiler.native {pytorch.shape.movedim_list}
+pub movedim(tensor: Tensor, source: List[Int], destination: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for narrow_copy.
+ */
+@compiler.native {pytorch.shape.narrow_copy}
+pub narrow_copy(tensor: Tensor, dimension: Int, start: Int, length: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for roll.
+ */
+@compiler.native {pytorch.shape.roll}
+pub roll(tensor: Tensor, shifts: List[Int], dimensions: List[Int] = []): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for rot90.
+ */
+@compiler.native {pytorch.shape.rot90}
+pub rot90(tensor: Tensor, turns: Int = 1, dimensions: List[Int] = [0, 1]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX shape leaf for unflatten.
+ */
+@compiler.native {pytorch.shape.unflatten_int}
+pub unflatten(tensor: Tensor, dimension: Int, sizes: List[Int]): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::diag.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.diag_out}
+pub diag_out(output: Tensor, tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::matrix_power.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.matrix_power_out}
+pub matrix_power_out(output: Tensor, tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::mvlgamma.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.mvlgamma_out}
+pub mvlgamma_out(output: Tensor, tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::pixel_shuffle.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.pixel_shuffle_out}
+pub pixel_shuffle_out(output: Tensor, tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::pixel_unshuffle.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.pixel_unshuffle_out}
+pub pixel_unshuffle_out(output: Tensor, tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::squeeze_copy.dim_out values into retained storage.
+ */
+@compiler.native {pytorch.shape.squeeze_copy_dimension_out}
+pub squeeze_copy_dimension_out(output: Tensor, tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::tril.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.tril_out}
+pub tril_out(output: Tensor, tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::triu.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.triu_out}
+pub triu_out(output: Tensor, tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::unsqueeze_copy.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.unsqueeze_copy_out}
+pub unsqueeze_copy_out(output: Tensor, tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::flip.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.flip_out}
+pub flip_out(output: Tensor, tensor: Tensor, values: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes exact aten::permute_copy.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.permute_copy_out}
+pub permute_copy_out(output: Tensor, tensor: Tensor, values: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes exact aten::repeat.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.repeat_out}
+pub repeat_out(output: Tensor, tensor: Tensor, values: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes exact aten::squeeze_copy.dims_out values into retained storage.
+ */
+@compiler.native {pytorch.shape.squeeze_copy_dimensions_out}
+pub squeeze_copy_dimensions_out(output: Tensor, tensor: Tensor, values: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes exact aten::view_copy.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.view_copy_out}
+pub view_copy_out(output: Tensor, tensor: Tensor, values: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes exact aten::squeeze_copy.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.squeeze_copy_out}
+pub squeeze_copy_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Writes exact aten::diag_embed.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.diag_embed_out}
+pub diag_embed_out(output: Tensor, tensor: Tensor, first: Int, second: Int, third: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::diagonal_copy.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.diagonal_copy_out}
+pub diagonal_copy_out(output: Tensor, tensor: Tensor, first: Int, second: Int, third: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::roll.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.roll_out}
+pub roll_out(output: Tensor, tensor: Tensor, first: List[Int], second: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes exact aten::rot90.out values into retained storage.
+ */
+@compiler.native {pytorch.shape.rot90_out}
+pub rot90_out(output: Tensor, tensor: Tensor, value: Int, values: List[Int]): Unit ->
+    native.
+
+/**
+ * Removes one singleton dimension in place through exact aten::squeeze_.dim.
+ */
+@compiler.native {pytorch.shape.squeeze_dimension_in_place}
+pub squeeze_dimension_in_place(tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Computes multivariate log-gamma in retained storage through exact aten::mvlgamma_.
+ */
+@compiler.native {pytorch.shape.mvlgamma_in_place}
+pub mvlgamma_in_place(tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Keeps a lower triangle in place through exact aten::tril_.
+ */
+@compiler.native {pytorch.shape.tril_in_place}
+pub tril_in_place(tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Keeps an upper triangle in place through exact aten::triu_.
+ */
+@compiler.native {pytorch.shape.triu_in_place}
+pub triu_in_place(tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Inserts one singleton dimension in place through exact aten::unsqueeze_.
+ */
+@compiler.native {pytorch.shape.unsqueeze_in_place}
+pub unsqueeze_in_place(tensor: Tensor, value: Int): Unit ->
+    native.
+
+/**
+ * Removes selected singleton dimensions in place through exact aten::squeeze_.dims.
+ */
+@compiler.native {pytorch.shape.squeeze_dimensions_in_place}
+pub squeeze_dimensions_in_place(tensor: Tensor, values: List[Int]): Unit ->
+    native.
+
+/**
+ * Swaps two axes in place through exact aten::swapaxes_.
+ */
+@compiler.native {pytorch.shape.swapaxes_in_place}
+pub swapaxes_in_place(tensor: Tensor, first: Int, second: Int): Unit ->
+    native.
+
+/**
+ * Swaps two dimensions in place through exact aten::swapdims_.
+ */
+@compiler.native {pytorch.shape.swapdims_in_place}
+pub swapdims_in_place(tensor: Tensor, first: Int, second: Int): Unit ->
+    native.
+
+/**
+ * Transposes two dimensions in place through exact aten::transpose_.
+ */
+@compiler.native {pytorch.shape.transpose_in_place}
+pub transpose_in_place(tensor: Tensor, first: Int, second: Int): Unit ->
+    native.

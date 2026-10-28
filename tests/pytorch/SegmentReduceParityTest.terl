@@ -1,0 +1,17 @@
+/**
+ * CPU runtime evidence for segment reduction with explicit lengths.
+ */
+module pytorch.SegmentReduceParityTest.
+
+import pytorch.SegmentReduceCompletion.{segment_reduce_lengths, segment_reduce_lengths_out}.
+import pytorch.Tensor.{dispose, from_floats, from_ints, shape}.
+
+@test
+pub segment_reduce_lengths_preserves_expected_shape(): Bool ->
+    let data = from_floats([1.0, 2.0, 3.0, 4.0], [4]);
+    let lengths = from_ints([2, 2], [2]);
+    let output = segment_reduce_lengths(data, "sum", lengths);
+    let retained = from_floats([0.0, 0.0], [2]);
+    segment_reduce_lengths_out(retained, data, "sum", lengths);
+    let valid = shape(output) == [2] and shape(retained) == [2];
+    (dispose(retained); dispose(output); dispose(lengths); dispose(data); valid).

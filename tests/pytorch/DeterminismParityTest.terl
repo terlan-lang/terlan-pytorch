@@ -1,0 +1,64 @@
+/**
+ * CPU runtime evidence for LibTorch deterministic-algorithm configuration.
+ */
+module pytorch.DeterminismParityTest.
+
+import pytorch.BackendAvailability.{are_deterministic_algorithms_enabled, dispose_deterministic_algorithms, enter_deterministic_algorithms, get_deterministic_debug_mode, is_deterministic_algorithms_warn_only_enabled, set_deterministic_debug_mode, use_deterministic_algorithms}.
+
+@test
+pub deterministic_configuration_matches_libtorch(): Bool ->
+    let original_enabled = are_deterministic_algorithms_enabled();
+    let original_warn_only = is_deterministic_algorithms_warn_only_enabled();
+    use_deterministic_algorithms(true, false);
+    let strict =
+        are_deterministic_algorithms_enabled()
+            and not is_deterministic_algorithms_warn_only_enabled()
+            and get_deterministic_debug_mode() == 2;
+    (use_deterministic_algorithms(true, true); let warn =
+    are_deterministic_algorithms_enabled()
+        and is_deterministic_algorithms_warn_only_enabled()
+        and get_deterministic_debug_mode() == 1;
+(set_deterministic_debug_mode(0); let disabled =
+    not are_deterministic_algorithms_enabled()
+        and not is_deterministic_algorithms_warn_only_enabled()
+        and get_deterministic_debug_mode() == 0;
+(set_deterministic_debug_mode(1); let mode_one =
+    are_deterministic_algorithms_enabled()
+        and is_deterministic_algorithms_warn_only_enabled()
+        and get_deterministic_debug_mode() == 1;
+(set_deterministic_debug_mode(2); let mode_two =
+    are_deterministic_algorithms_enabled()
+        and not is_deterministic_algorithms_warn_only_enabled()
+        and get_deterministic_debug_mode() == 2;
+(use_deterministic_algorithms(original_enabled, original_warn_only); strict and warn and disabled and mode_one and mode_two))))).
+
+@test
+pub deterministic_guard_restores_prior_state(): Bool ->
+    let original_enabled = are_deterministic_algorithms_enabled();
+    let original_warn_only = is_deterministic_algorithms_warn_only_enabled();
+    let guard = enter_deterministic_algorithms(not original_enabled, not original_warn_only);
+    let entered =
+        are_deterministic_algorithms_enabled() == not original_enabled
+            and is_deterministic_algorithms_warn_only_enabled() == not original_warn_only;
+    dispose_deterministic_algorithms(guard);
+    entered
+        and are_deterministic_algorithms_enabled() == original_enabled
+        and is_deterministic_algorithms_warn_only_enabled() == original_warn_only.
+
+@test
+pub deterministic_guards_nest_and_restore(): Bool ->
+    let original_enabled = are_deterministic_algorithms_enabled();
+    let original_warn_only = is_deterministic_algorithms_warn_only_enabled();
+    let outer = enter_deterministic_algorithms(true, false);
+    let inner = enter_deterministic_algorithms(false, true);
+    let inner_state =
+        not are_deterministic_algorithms_enabled()
+            and is_deterministic_algorithms_warn_only_enabled();
+    dispose_deterministic_algorithms(inner);
+    let outer_state =
+        are_deterministic_algorithms_enabled()
+            and not is_deterministic_algorithms_warn_only_enabled();
+    (dispose_deterministic_algorithms(outer); inner_state
+    and outer_state
+    and are_deterministic_algorithms_enabled() == original_enabled
+    and is_deterministic_algorithms_warn_only_enabled() == original_warn_only).

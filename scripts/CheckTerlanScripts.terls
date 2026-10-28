@@ -1,0 +1,91 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Enforces Terlan ownership of repository support and validation scripts.
+ */
+import std.core.Option.{None, Option, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.String.
+import std.io.Console.{eprintln, println}.
+import std.io.Directory.
+import std.system.{Arguments, Environment}.
+
+/**
+ * Reports one stable script-policy failure.
+ */
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[terlan_pytorch_shell_script]: ", message));
+    false.
+
+/**
+ * Returns the first prohibited shell script in sorted traversal order.
+ */
+find_shell_script(paths: List[String]): Option[String] ->
+    case paths {
+        [] -> None;
+        [path | rest] ->
+            if {
+                String.ends_with(path, ".sh") -> Some(path);
+                true -> find_shell_script(rest)
+            }
+    }.
+
+/**
+ * Returns the first removed hand-written PyTorch ABI source if one returns.
+ */
+find_legacy_abi_source(paths: List[String]): Option[String] ->
+    case paths {
+        [] -> None;
+        [path | rest] ->
+            if {
+                String.contains(path, "/bindings/terlan_pytorch_")
+                    and (String.ends_with(path, ".c")
+    or String.ends_with(path, ".cc")
+    or String.ends_with(path, ".cpp")
+    or String.ends_with(path, ".h")
+    or String.ends_with(path, ".hpp")) -> Some(path);
+                String.contains(path, "/native/rust/c/") -> Some(path);
+                true -> find_legacy_abi_source(rest)
+            }
+    }.
+
+/**
+ * Scans repository-owned sources while excluding dependencies and artifacts.
+ */
+check(root: String): Bool ->
+    case Directory.files_recursive_excluding(root, [".git", "_build", "generated", "target", "vendor"]) {
+        Err(reason) -> failure(reason.message);
+        Ok(paths) ->
+            case find_shell_script(paths) {
+                Some(path) ->
+                    failure(String.append("support shell script must be Terlan-owned: ", path));
+                None ->
+                    case find_legacy_abi_source(paths) {
+                        Some(path) ->
+                            failure(
+                                String.append(
+                                    "hand-written PyTorch ABI source must be migrated to CXX: ",
+                                    path,
+                                ),
+                            );
+                        None ->
+                            let _printed =
+                                println(
+                                    "Repository support scripts are Terlan-owned and the active PyTorch ABI is CXX-generated.",
+                                );
+                            true
+                    }
+            }
+    }.
+
+/**
+ * Parses an optional repository root and executes the policy scan.
+ */
+entry(): Bool ->
+    case {Arguments.count(), Arguments.get(0), Arguments.get(1)} {
+        {0, None, None} -> check(Environment.current_directory());
+        {1, Some(root), None} -> check(root);
+        _ -> failure("usage: CheckTerlanScripts.terls [repository-root]")
+    }.
+
+assert(entry());
+Unit.

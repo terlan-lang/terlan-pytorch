@@ -1,0 +1,7 @@
+module pytorch_cxx.RangeCudaBehaviorTest.
+
+import pytorch.RangeBehaviorSupport.{range_contracts_on}.
+
+@test
+pub cuda_range_contracts(): Bool ->
+    range_contracts_on(true).

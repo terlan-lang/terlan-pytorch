@@ -1,0 +1,117 @@
+/**
+ * Typed indexed addition, copy mutation, selection output, and selection gradients.
+ */
+module pytorch.IndexMutation.
+
+import pytorch.IndexMutationNative.{index_add as native_index_add, index_add_in_place as native_index_add_in_place, index_add_out as native_index_add_out, index_copy_in_place as native_index_copy_in_place, index_copy_out as native_index_copy_out, index_select_backward as native_index_select_backward, index_select_out as native_index_select_out}.
+
+import type pytorch.Tensor.
+
+/**
+ * Adds source slices at explicit indices with an integer alpha.
+ */
+pub index_add_int(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    alpha: Int = 1,
+): Tensor ->
+    native_index_add(input, dimension, index, source, true, alpha, 0.0).
+
+/**
+ * Writes indexed addition with an integer alpha into retained output storage.
+ */
+pub index_add_int_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    alpha: Int = 1,
+): Unit ->
+    native_index_add_out(output, input, dimension, index, source, true, alpha, 0.0).
+
+/**
+ * Adds source slices with an integer alpha into the input in place.
+ */
+pub index_add_int_in_place(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    alpha: Int = 1,
+): Unit ->
+    native_index_add_in_place(input, dimension, index, source, true, alpha, 0.0).
+
+/**
+ * Adds source slices at explicit indices with a floating-point alpha.
+ */
+pub index_add_float(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    alpha: Float,
+): Tensor ->
+    native_index_add(input, dimension, index, source, false, 0, alpha).
+
+/**
+ * Writes indexed addition with a floating-point alpha into retained output storage.
+ */
+pub index_add_float_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    alpha: Float,
+): Unit ->
+    native_index_add_out(output, input, dimension, index, source, false, 0, alpha).
+
+/**
+ * Adds source slices with a floating-point alpha into the input in place.
+ */
+pub index_add_float_in_place(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    alpha: Float,
+): Unit ->
+    native_index_add_in_place(input, dimension, index, source, false, 0, alpha).
+
+/**
+ * Writes indexed source slices into retained output storage.
+ */
+pub index_copy_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+): Unit ->
+    native_index_copy_out(output, input, dimension, index, source).
+
+/**
+ * Copies indexed source slices into the input in place.
+ */
+pub index_copy_in_place(input: Tensor, dimension: Int, index: Tensor, source: Tensor): Unit ->
+    native_index_copy_in_place(input, dimension, index, source).
+
+/**
+ * Writes selected slices into retained output storage.
+ */
+pub index_select_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor): Unit ->
+    native_index_select_out(output, input, dimension, index).
+
+/**
+ * Scatters selected gradients back into the original input shape.
+ */
+pub index_select_backward(
+    gradient: Tensor,
+    input_shape: List[Int],
+    dimension: Int,
+    index: Tensor,
+): Tensor ->
+    native_index_select_backward(gradient, input_shape, dimension, index).

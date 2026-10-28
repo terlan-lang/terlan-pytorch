@@ -1,0 +1,43 @@
+//! Typed indexed addition, copy mutation, selection output, and selection gradients.
+
+module pytorch.IndexMutation.
+
+/// Adds source slices at explicit indices with a floating-point alpha.
+
+pub index_add_float(input: Tensor, dimension: Int, index: Tensor, source: Tensor, alpha: Float): Tensor.
+
+/// Adds source slices with a floating-point alpha into the input in place.
+
+pub index_add_float_in_place(input: Tensor, dimension: Int, index: Tensor, source: Tensor, alpha: Float): Unit.
+
+/// Writes indexed addition with a floating-point alpha into retained output storage.
+
+pub index_add_float_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, source: Tensor, alpha: Float): Unit.
+
+/// Adds source slices at explicit indices with an integer alpha.
+
+pub index_add_int(input: Tensor, dimension: Int, index: Tensor, source: Tensor, alpha: Int = 1): Tensor.
+
+/// Adds source slices with an integer alpha into the input in place.
+
+pub index_add_int_in_place(input: Tensor, dimension: Int, index: Tensor, source: Tensor, alpha: Int = 1): Unit.
+
+/// Writes indexed addition with an integer alpha into retained output storage.
+
+pub index_add_int_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, source: Tensor, alpha: Int = 1): Unit.
+
+/// Copies indexed source slices into the input in place.
+
+pub index_copy_in_place(input: Tensor, dimension: Int, index: Tensor, source: Tensor): Unit.
+
+/// Writes indexed source slices into retained output storage.
+
+pub index_copy_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, source: Tensor): Unit.
+
+/// Scatters selected gradients back into the original input shape.
+
+pub index_select_backward(gradient: Tensor, input_shape: List[Int], dimension: Int, index: Tensor): Tensor.
+
+/// Writes selected slices into retained output storage.
+
+pub index_select_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor): Unit.

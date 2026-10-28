@@ -1,0 +1,82 @@
+/**
+ * Exact GLU retained-output and Jacobian-vector parity on CPU and CUDA.
+ */
+module pytorch.GluCompletionParityTest.
+
+import pytorch.GluCompletion.{glu_backward_jvp, glu_backward_jvp_out, glu_backward_out, glu_jvp, glu_jvp_out, glu_out}.
+import pytorch.Gradients.glu_backward.
+import pytorch.Shape.glu.
+import pytorch.Tensor.{backward, device_type, dispose, dtype, from_floats, gradient, require_grad, shape, sum, to_device}.
+import pytorch.TypeRelations.allclose.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(tensor: Tensor, expected: Tensor, dimensions: List[Int], device: Int): Bool ->
+    allclose(tensor, expected, 1e-12, 1e-12, false)
+        and shape(tensor) == dimensions
+        and dtype(tensor) == 7
+        and device_type(tensor) == device.
+
+verify(device: Int): Bool ->
+    let input = placed([1.0, 2.0, 0.0, 0.0, 3.0, 4.0, 0.0, 0.0], [2, 4], device);
+    let gradient_glu = placed([1.0, 1.0, 1.0, 1.0], [2, 2], device);
+    let input_tangent = placed([0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0], [2, 4], device);
+    let gradient_glu_tangent = placed([0.25, 0.5, 0.75, 1.0], [2, 2], device);
+    let forward_output = placed([], [0], device);
+    let backward_output = placed([], [0], device);
+    let forward_jvp_output = placed([], [0], device);
+    let backward_jvp_output = placed([], [0], device);
+    let forward = glu(input, 1);
+    glu_out(forward_output, input, 1);
+    let forward_valid = matches(forward_output, forward, [2, 2], device);
+    let gradient_input = glu_backward(gradient_glu, input, 1);
+    (glu_backward_out(backward_output, gradient_glu, input, 1); let backward_valid = matches(backward_output, gradient_input, [2, 4], device);
+let forward_jvp = glu_jvp(forward, input, input_tangent, 1);
+(glu_jvp_out(forward_jvp_output, forward, input, input_tangent, 1); let forward_jvp_valid = matches(forward_jvp_output, forward_jvp, [2, 2], device);
+let backward_jvp = glu_backward_jvp(gradient_input, gradient_glu, input, gradient_glu_tangent, input_tangent, 1);
+(glu_backward_jvp_out(
+    backward_jvp_output,
+    gradient_input,
+    gradient_glu,
+    input,
+    gradient_glu_tangent,
+    input_tangent,
+    1,
+); let backward_jvp_valid = matches(backward_jvp_output, backward_jvp, [2, 4], device);
+let leaf = require_grad(placed([1.0, 2.0, 0.0, 0.0], [1, 4], device));
+let connected = glu(leaf, 1);
+let loss = sum(connected);
+(backward(loss); let derivative = gradient(leaf);
+let expected_derivative = placed([0.5, 0.5, 0.25, 0.5], [1, 4], device);
+let sources_valid = matches(input, placed([1.0, 2.0, 0.0, 0.0, 3.0, 4.0, 0.0, 0.0], [2, 4], device), [2, 4], device);
+let valid =
+    forward_valid
+        and backward_valid
+        and forward_jvp_valid
+        and backward_jvp_valid
+        and matches(derivative, expected_derivative, [1, 4], device)
+        and sources_valid;
+(dispose(expected_derivative); dispose(derivative); dispose(loss); dispose(connected); dispose(leaf); dispose(backward_jvp); dispose(forward_jvp); dispose(gradient_input); dispose(forward); dispose(backward_jvp_output); dispose(forward_jvp_output); dispose(backward_output); dispose(forward_output); dispose(gradient_glu_tangent); dispose(input_tangent); dispose(gradient_glu); dispose(input); valid))))).
+
+@test
+pub glu_completion_on_cpu_and_required_cuda(): Bool ->
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    let cpu_valid = verify(0);
+    cpu_valid and cuda_valid.

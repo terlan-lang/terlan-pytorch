@@ -1,0 +1,627 @@
+//! Generated exact CXX retained-output and in-place unary operations.
+
+module pytorch.UnaryStorageNative.
+
+/// Exact generated CXX unary-storage leaf for abs_in_place.
+
+pub abs_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for abs_out.
+
+pub abs_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for absolute_in_place.
+
+pub absolute_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for absolute_out.
+
+pub absolute_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for acos_in_place.
+
+pub acos_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for acos_out.
+
+pub acos_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for acosh_in_place.
+
+pub acosh_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for acosh_out.
+
+pub acosh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact aten::alias_copy.out result into retained output storage.
+
+pub alias_copy_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for all_all_out.
+
+pub all_all_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact aten::angle.out result into retained output storage.
+
+pub angle_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for any_all_out.
+
+pub any_all_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for arccos_in_place.
+
+pub arccos_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for arccos_out.
+
+pub arccos_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for arccosh_in_place.
+
+pub arccosh_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for arccosh_out.
+
+pub arccosh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for arcsin_in_place.
+
+pub arcsin_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for arcsin_out.
+
+pub arcsin_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for arcsinh_in_place.
+
+pub arcsinh_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for arcsinh_out.
+
+pub arcsinh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for arctan_in_place.
+
+pub arctan_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for arctan_out.
+
+pub arctan_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for arctanh_in_place.
+
+pub arctanh_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for arctanh_out.
+
+pub arctanh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for asin_in_place.
+
+pub asin_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for asin_out.
+
+pub asin_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for asinh_in_place.
+
+pub asinh_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for asinh_out.
+
+pub asinh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for atan_in_place.
+
+pub atan_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for atan_out.
+
+pub atan_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for atanh_in_place.
+
+pub atanh_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for atanh_out.
+
+pub atanh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for bitwise_not_in_place.
+
+pub bitwise_not_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for bitwise_not_out.
+
+pub bitwise_not_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for ceil_in_place.
+
+pub ceil_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for ceil_out.
+
+pub ceil_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through exact aten::conj_physical_.
+
+pub conj_physical_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact aten::conj_physical.out result into retained output storage.
+
+pub conj_physical_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for cos_in_place.
+
+pub cos_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for cos_out.
+
+pub cos_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for cosh_in_place.
+
+pub cosh_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for cosh_out.
+
+pub cosh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for deg2rad_in_place.
+
+pub deg2rad_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for deg2rad_out.
+
+pub deg2rad_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact aten::detach_copy.out result into retained output storage.
+
+pub detach_copy_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Detaches retained tensor storage from autograd through exact aten::detach_.
+
+pub detach_in_place(tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through exact aten::digamma_.
+
+pub digamma_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact aten::digamma.out result into retained output storage.
+
+pub digamma_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for erf_in_place.
+
+pub erf_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for erf_out.
+
+pub erf_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for erfc_in_place.
+
+pub erfc_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for erfc_out.
+
+pub erfc_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for erfinv_in_place.
+
+pub erfinv_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for erfinv_out.
+
+pub erfinv_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for exp2_in_place.
+
+pub exp2_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for exp2_out.
+
+pub exp2_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through exact aten::exp_.
+
+pub exp_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact aten::exp.out result into retained output storage.
+
+pub exp_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for expm1_in_place.
+
+pub expm1_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for expm1_out.
+
+pub expm1_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through exact aten::fix_.
+
+pub fix_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact aten::fix.out result into retained output storage.
+
+pub fix_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for floor_in_place.
+
+pub floor_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for floor_out.
+
+pub floor_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for frac_in_place.
+
+pub frac_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for frac_out.
+
+pub frac_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for frexp_out.
+
+pub frexp_out(mantissa: Tensor, exponent: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for hardsigmoid_backward_out.
+
+pub hardsigmoid_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for hardsigmoid_in_place.
+
+pub hardsigmoid_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for hardsigmoid_out.
+
+pub hardsigmoid_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for hardswish_backward_out.
+
+pub hardswish_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for hardswish_in_place.
+
+pub hardswish_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for hardswish_out.
+
+pub hardswish_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through exact aten::i0_.
+
+pub i0_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact aten::i0.out result into retained output storage.
+
+pub i0_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact aten::inverse.out result into retained output storage.
+
+pub inverse_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for isinf_out.
+
+pub isinf_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for isnan_out.
+
+pub isnan_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for isneginf_out.
+
+pub isneginf_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for isposinf_out.
+
+pub isposinf_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through exact aten::lgamma_.
+
+pub lgamma_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact aten::lgamma.out result into retained output storage.
+
+pub lgamma_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact aten::lift_fresh_copy.out result into retained output storage.
+
+pub lift_fresh_copy_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact aten::lift.out result into retained output storage.
+
+pub lift_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for log10_in_place.
+
+pub log10_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for log10_out.
+
+pub log10_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for log1p_in_place.
+
+pub log1p_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for log1p_out.
+
+pub log1p_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for log2_in_place.
+
+pub log2_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for log2_out.
+
+pub log2_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through exact aten::log_.
+
+pub log_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact aten::log.out result into retained output storage.
+
+pub log_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact aten::log_sigmoid.out result into retained output storage.
+
+pub log_sigmoid_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for logical_not_in_place.
+
+pub logical_not_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for logical_not_out.
+
+pub logical_not_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for max_unary_out.
+
+pub max_unary_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for median_out.
+
+pub median_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for min_unary_out.
+
+pub min_unary_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for mish_in_place.
+
+pub mish_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for mish_out.
+
+pub mish_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact aten::msort.out result into retained output storage.
+
+pub msort_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through exact aten::neg_.
+
+pub neg_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact aten::neg.out result into retained output storage.
+
+pub neg_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through exact aten::negative_.
+
+pub negative_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact aten::negative.out result into retained output storage.
+
+pub negative_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for nonzero_out.
+
+pub nonzero_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for rad2deg_in_place.
+
+pub rad2deg_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for rad2deg_out.
+
+pub rad2deg_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for reciprocal_in_place.
+
+pub reciprocal_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for reciprocal_out.
+
+pub reciprocal_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for relu6_in_place.
+
+pub relu6_in_place(tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through exact aten::relu_.
+
+pub relu_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact aten::relu.out result into retained output storage.
+
+pub relu_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for round_decimals.
+
+pub round_decimals(tensor: Tensor, decimals: Int): Tensor.
+
+/// Exact generated CXX unary-storage leaf for round_decimals_in_place.
+
+pub round_decimals_in_place(tensor: Tensor, decimals: Int): Unit.
+
+/// Exact generated CXX unary-storage leaf for round_decimals_out.
+
+pub round_decimals_out(output: Tensor, tensor: Tensor, decimals: Int): Unit.
+
+/// Exact generated CXX unary-storage leaf for round_in_place.
+
+pub round_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for round_out.
+
+pub round_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for rsqrt_in_place.
+
+pub rsqrt_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for rsqrt_out.
+
+pub rsqrt_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for selu_in_place.
+
+pub selu_in_place(tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through exact aten::sgn_.
+
+pub sgn_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact aten::sgn.out result into retained output storage.
+
+pub sgn_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for sigmoid_backward_out.
+
+pub sigmoid_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for sigmoid_in_place.
+
+pub sigmoid_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for sigmoid_out.
+
+pub sigmoid_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for sign_in_place.
+
+pub sign_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for sign_out.
+
+pub sign_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for signbit_out.
+
+pub signbit_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for silu_backward_out.
+
+pub silu_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for silu_in_place.
+
+pub silu_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for silu_out.
+
+pub silu_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for sin_in_place.
+
+pub sin_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for sin_out.
+
+pub sin_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for sinc_in_place.
+
+pub sinc_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for sinc_out.
+
+pub sinc_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for sinh_in_place.
+
+pub sinh_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for sinh_out.
+
+pub sinh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through exact aten::sqrt_.
+
+pub sqrt_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact aten::sqrt.out result into retained output storage.
+
+pub sqrt_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for square_in_place.
+
+pub square_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for square_out.
+
+pub square_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Removes every singleton dimension from retained tensor storage through exact aten::squeeze_.
+
+pub squeeze_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact aten::t_copy.out result into retained output storage.
+
+pub t_copy_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through exact aten::t_.
+
+pub t_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for tan_in_place.
+
+pub tan_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for tan_out.
+
+pub tan_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for tanh_backward_out.
+
+pub tanh_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for tanh_in_place.
+
+pub tanh_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for tanh_out.
+
+pub tanh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for trace_out.
+
+pub trace_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for trunc_in_place.
+
+pub trunc_in_place(tensor: Tensor): Unit.
+
+/// Exact generated CXX unary-storage leaf for trunc_out.
+
+pub trunc_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact aten::view_as_complex_copy.out result into retained output storage.
+
+pub view_as_complex_copy_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact aten::view_as_real_copy.out result into retained output storage.
+
+pub view_as_real_copy_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Fills retained tensor storage with zeros through exact aten::zero_.
+
+pub zero_in_place(tensor: Tensor): Unit.

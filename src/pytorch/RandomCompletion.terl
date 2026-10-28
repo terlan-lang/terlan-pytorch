@@ -1,0 +1,680 @@
+/**
+ * Generated exact CXX random tensor completion surface.
+ */
+module pytorch.RandomCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Owned seeded CPU random generator.
+ */
+pub opaque type Generator.
+
+/**
+ * Creates an owned seeded CPU generator.
+ */
+@compiler.native {pytorch.random.generator.create}
+pub generator_create(seed: Int): Generator ->
+    native.
+
+/**
+ * Seeds LibTorch's global generators and returns the seeded CPU generator.
+ */
+@compiler.native {pytorch.random.manual_seed}
+pub manual_seed(seed: Int): Generator ->
+    native.
+
+/**
+ * Returns the current LibTorch CPU generator seed.
+ */
+@compiler.native {pytorch.random.initial_seed}
+pub initial_seed(): Int ->
+    native.
+
+/**
+ * Seeds the LibTorch CPU generator from an implementation-generated seed.
+ */
+@compiler.native {pytorch.random.seed}
+pub seed(): Int ->
+    native.
+
+/**
+ * Returns the serialized LibTorch CPU generator state.
+ */
+@compiler.native {pytorch.random.get_rng_state}
+pub get_rng_state(): Tensor ->
+    native.
+
+/**
+ * Restores the serialized LibTorch CPU generator state.
+ */
+@compiler.native {pytorch.random.set_rng_state}
+pub set_rng_state(state: Tensor): Unit ->
+    native.
+
+/**
+ * Generates random values with an explicit seeded generator and option presence.
+ */
+@compiler.native {pytorch.rand.generator}
+pub rand_generator(
+    generator: Generator,
+    size: List[Int],
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Writes random values with an explicit seeded generator.
+ */
+@compiler.native {pytorch.rand.generator_out}
+pub rand_generator_out(out: Tensor, size: List[Int], generator: Generator): Unit ->
+    native.
+
+/**
+ * Generates normally distributed values with an explicit seeded generator.
+ */
+@compiler.native {pytorch.randn.generator}
+pub randn_generator(
+    generator: Generator,
+    size: List[Int],
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Writes normally distributed values with an explicit seeded generator.
+ */
+@compiler.native {pytorch.randn.generator_out}
+pub randn_generator_out(out: Tensor, size: List[Int], generator: Generator): Unit ->
+    native.
+
+/**
+ * Generates a random permutation with an explicit seeded generator.
+ */
+@compiler.native {pytorch.randperm.generator}
+pub randperm_generator(
+    generator: Generator,
+    n: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Writes a random permutation with an explicit seeded generator.
+ */
+@compiler.native {pytorch.randperm.generator_out}
+pub randperm_generator_out(out: Tensor, n: Int, generator: Generator): Unit ->
+    native.
+
+/**
+ * Generates like the input with an explicit seeded generator.
+ */
+@compiler.native {pytorch.rand_like.generator}
+pub generator_rand_like(
+    generator: Generator,
+    input: Tensor,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes like the input with an explicit seeded generator.
+ */
+@compiler.native {pytorch.rand_like.generator_out}
+pub generator_rand_like_out(
+    out: Tensor,
+    input: Tensor,
+    generator: Generator,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.
+
+/**
+ * Generates normally distributed values like the input with an explicit seeded generator.
+ */
+@compiler.native {pytorch.randn_like.generator}
+pub generator_randn_like(
+    generator: Generator,
+    input: Tensor,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes normally distributed values like the input with an explicit seeded generator.
+ */
+@compiler.native {pytorch.randn_like.generator_out}
+pub generator_randn_like_out(
+    out: Tensor,
+    input: Tensor,
+    generator: Generator,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.
+
+/**
+ * Generates bounded integer values with an explicit seeded generator.
+ */
+@compiler.native {pytorch.randint.generator}
+pub generator_randint(
+    generator: Generator,
+    high: Int,
+    size: List[Int],
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Writes bounded integer values with an explicit seeded generator.
+ */
+@compiler.native {pytorch.randint.generator_out}
+pub generator_randint_out(out: Tensor, high: Int, size: List[Int], generator: Generator): Unit ->
+    native.
+
+/**
+ * Generates low/high bounded integers with an explicit seeded generator.
+ */
+@compiler.native {pytorch.randint.low_generator}
+pub generator_randint_low(
+    generator: Generator,
+    low: Int,
+    high: Int,
+    size: List[Int],
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Writes low/high bounded integers with an explicit seeded generator.
+ */
+@compiler.native {pytorch.randint.low_generator_out}
+pub generator_randint_low_out(
+    out: Tensor,
+    low: Int,
+    high: Int,
+    size: List[Int],
+    generator: Generator,
+): Unit ->
+    native.
+
+/**
+ * Generates scalar-bounded integer values like an input with an explicit generator.
+ */
+@compiler.native {pytorch.randint_like.generator}
+pub generator_randint_like(
+    generator: Generator,
+    input: Tensor,
+    high: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes scalar-bounded integer values like an input with an explicit generator.
+ */
+@compiler.native {pytorch.randint_like.generator_out}
+pub generator_randint_like_out(
+    out: Tensor,
+    input: Tensor,
+    high: Int,
+    generator: Generator,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.
+
+/**
+ * Generates tensor-bounded integer values like an input with an explicit generator.
+ */
+@compiler.native {pytorch.randint_like.Tensor_generator}
+pub generator_randint_like_tensor(
+    generator: Generator,
+    input: Tensor,
+    high: Tensor,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes tensor-bounded integer values like an input with an explicit generator.
+ */
+@compiler.native {pytorch.randint_like.Tensor_generator_out}
+pub generator_randint_like_tensor_out(
+    out: Tensor,
+    input: Tensor,
+    high: Tensor,
+    generator: Generator,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.
+
+/**
+ * Generates low/high integer values like an input with an explicit generator.
+ */
+@compiler.native {pytorch.randint_like.low_generator_dtype}
+pub generator_randint_like_low(
+    generator: Generator,
+    input: Tensor,
+    low: Int,
+    high: Int,
+    has_dtype: Bool,
+    dtype: Int,
+    has_layout: Bool,
+    layout: Int,
+    has_device: Bool,
+    device_type: Int,
+    device_index: Int,
+    has_pin_memory: Bool,
+    pin_memory: Bool,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes low/high integer values like an input with an explicit generator.
+ */
+@compiler.native {pytorch.randint_like.low_generator_dtype_out}
+pub generator_randint_like_low_out(
+    out: Tensor,
+    input: Tensor,
+    low: Int,
+    high: Int,
+    generator: Generator,
+    has_memory_format: Bool,
+    memory_format: Int,
+): Unit ->
+    native.
+
+/**
+ * Releases an owned seeded CPU generator.
+ */
+@compiler.native {pytorch.random.generator.dispose}
+pub generator_dispose(generator: Generator): Unit ->
+    native.
+
+/**
+ * Exact generated CXX rand leaf.
+ */
+@compiler.native {pytorch.rand.rand_default}
+pub rand_default(size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX rand output leaf.
+ */
+@compiler.native {pytorch.rand.rand_out}
+pub rand_out(out: Tensor, size: List[Int]): Unit ->
+    native.
+
+/**
+ * Exact generated CXX randn leaf.
+ */
+@compiler.native {pytorch.randn.randn_default}
+pub randn_default(size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX randn output leaf.
+ */
+@compiler.native {pytorch.randn.randn_out}
+pub randn_out(out: Tensor, size: List[Int]): Unit ->
+    native.
+
+/**
+ * Exact generated CXX randint high leaf.
+ */
+@compiler.native {pytorch.randint.randint_default}
+pub randint_default(high: Int, size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX randint high output leaf.
+ */
+@compiler.native {pytorch.randint.randint_out}
+pub randint_out(out: Tensor, high: Int, size: List[Int]): Unit ->
+    native.
+
+/**
+ * Exact generated CXX randint low/high leaf.
+ */
+@compiler.native {pytorch.randint.low}
+pub randint_low_default(low: Int, high: Int, size: List[Int]): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX randint low/high output leaf.
+ */
+@compiler.native {pytorch.randint.low_out}
+pub randint_low_out(out: Tensor, low: Int, high: Int, size: List[Int]): Unit ->
+    native.
+
+/**
+ * Exact generated CXX rand_like leaf.
+ */
+@compiler.native {pytorch.rand_like.rand_like_default}
+pub rand_like_default(input: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX rand_like output leaf.
+ */
+@compiler.native {pytorch.rand_like.rand_like_out}
+pub rand_like_out(out: Tensor, input: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX randn_like leaf.
+ */
+@compiler.native {pytorch.randn_like.randn_like_default}
+pub randn_like_default(input: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX randn_like output leaf.
+ */
+@compiler.native {pytorch.randn_like.randn_like_out}
+pub randn_like_out(out: Tensor, input: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX randint_like high leaf.
+ */
+@compiler.native {pytorch.randint_like.default}
+pub randint_like_default(input: Tensor, high: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX randint_like low/high leaf.
+ */
+@compiler.native {pytorch.randint_like.low_dtype}
+pub randint_like_low_dtype_default(input: Tensor, low: Int, high: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX tensor-bound randint_like leaf.
+ */
+@compiler.native {pytorch.randint_like.tensor}
+pub randint_like_tensor_default(input: Tensor, high: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX randint_like high output leaf.
+ */
+@compiler.native {pytorch.randint_like.out}
+pub randint_like_out_default(out: Tensor, input: Tensor, high: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX tensor-bound randint_like output leaf.
+ */
+@compiler.native {pytorch.randint_like.tensor_out}
+pub randint_like_tensor_out_default(out: Tensor, input: Tensor, high: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX randint_like low/high output leaf.
+ */
+@compiler.native {pytorch.randint_like.low_dtype_out}
+pub randint_like_low_dtype_out_default(out: Tensor, input: Tensor, low: Int, high: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX random leaf.
+ */
+@compiler.native {pytorch.random.random_default}
+pub random_default(input: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX random output leaf.
+ */
+@compiler.native {pytorch.random.random_out}
+pub random_out(out: Tensor, input: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX random from leaf.
+ */
+@compiler.native {pytorch.random.from}
+pub random_from(input: Tensor, from: Int, to: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX random from output leaf.
+ */
+@compiler.native {pytorch.random.from_out}
+pub random_from_out(out: Tensor, input: Tensor, from: Int, to: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX random to leaf.
+ */
+@compiler.native {pytorch.random.to}
+pub random_to(input: Tensor, to: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX random to output leaf.
+ */
+@compiler.native {pytorch.random.to_out}
+pub random_to_out(out: Tensor, input: Tensor, to: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX random in-place leaf.
+ */
+@compiler.native {pytorch.random.in_place}
+pub random_in_place(input: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX random from in-place leaf.
+ */
+@compiler.native {pytorch.random.from_in_place}
+pub random_from_in_place(input: Tensor, from: Int, to: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX random to in-place leaf.
+ */
+@compiler.native {pytorch.random.to_in_place}
+pub random_to_in_place(input: Tensor, to: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX rrelu leaf.
+ */
+@compiler.native {pytorch.rrelu.rrelu_default}
+pub rrelu_default(
+    input: Tensor,
+    lower: Float = 0.125,
+    upper: Float = 0.3333333333333333,
+    training: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX rrelu in-place leaf.
+ */
+@compiler.native {pytorch.rrelu.rrelu_in_place}
+pub rrelu_in_place(
+    input: Tensor,
+    lower: Float = 0.125,
+    upper: Float = 0.3333333333333333,
+    training: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX rrelu-with-noise in-place leaf.
+ */
+@compiler.native {pytorch.rrelu_with_noise.in_place}
+pub rrelu_with_noise_in_place(
+    input: Tensor,
+    noise: Tensor,
+    lower: Float = 0.125,
+    upper: Float = 0.3333333333333333,
+    training: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX functional rrelu-with-noise leaf.
+ */
+@compiler.native {pytorch.rrelu_with_noise.functional}
+pub rrelu_with_noise_functional(
+    input: Tensor,
+    noise: Tensor,
+    has_generator: Bool,
+    generator: Generator,
+    lower: Float = 0.125,
+    upper: Float = 0.3333333333333333,
+    training: Bool = false,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX rrelu-with-noise value leaf.
+ */
+@compiler.native {pytorch.rrelu_with_noise.value}
+pub rrelu_with_noise(
+    input: Tensor,
+    noise: Tensor,
+    has_generator: Bool,
+    generator: Generator,
+    lower: Float = 0.125,
+    upper: Float = 0.3333333333333333,
+    training: Bool = false,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX retained-output rrelu-with-noise value leaf.
+ */
+@compiler.native {pytorch.rrelu_with_noise.value_out}
+pub rrelu_with_noise_out(
+    output: Tensor,
+    input: Tensor,
+    noise: Tensor,
+    has_generator: Bool,
+    generator: Generator,
+    lower: Float = 0.125,
+    upper: Float = 0.3333333333333333,
+    training: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX rrelu-with-noise backward leaf.
+ */
+@compiler.native {pytorch.rrelu_with_noise.backward}
+pub rrelu_with_noise_backward(
+    gradient_output: Tensor,
+    input: Tensor,
+    noise: Tensor,
+    lower: Float,
+    upper: Float,
+    training: Bool,
+    self_is_result: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX rrelu-with-noise backward retained-output leaf.
+ */
+@compiler.native {pytorch.rrelu_with_noise.backward_out}
+pub rrelu_with_noise_backward_out(
+    output: Tensor,
+    gradient_output: Tensor,
+    input: Tensor,
+    noise: Tensor,
+    lower: Float,
+    upper: Float,
+    training: Bool,
+    self_is_result: Bool,
+): Unit ->
+    native.

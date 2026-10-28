@@ -1,0 +1,31 @@
+/**
+ * CPU evidence for Tensor?[] indexing and indexed update adapters.
+ */
+module pytorch.IndexTensorOptionalParityTest.
+
+import pytorch.Indexing.{index_put, index_put_in_place, index_put_out, index_tensor, index_tensor_out}.
+import pytorch.Tensor.{dispose, from_floats, from_ints, item_float, sum}.
+
+@test
+pub tensor_optional_index_and_update_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let index = from_ints([1], [1]);
+    let values = from_floats([9.0, 8.0, 7.0], [3]);
+    let selected = index_tensor(input, [index], [1]);
+    let selected_out = from_floats([], [0]);
+    index_tensor_out(selected_out, input, [index], [1]);
+    let updated = index_put(input, [index], [1], values, false);
+    let updated_out = from_floats([], [0]);
+    (index_put_out(updated_out, input, [index], [1], values, false); let updated_in_place = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+(index_put_in_place(updated_in_place, [index], [1], values, false); let selected_sum = sum(selected);
+let selected_out_sum = sum(selected_out);
+let updated_sum = sum(updated);
+let updated_out_sum = sum(updated_out);
+let updated_in_place_sum = sum(updated_in_place);
+let valid =
+    item_float(selected_sum) == 15.0
+        and item_float(selected_out_sum) == 15.0
+        and item_float(updated_sum) == 30.0
+        and item_float(updated_out_sum) == 30.0
+        and item_float(updated_in_place_sum) == 30.0;
+(dispose(updated_in_place_sum); dispose(updated_sum); dispose(updated_out_sum); dispose(selected_sum); dispose(selected_out_sum); dispose(updated_in_place); dispose(updated_out); dispose(updated); dispose(selected_out); dispose(selected); dispose(values); dispose(index); dispose(input); valid))).

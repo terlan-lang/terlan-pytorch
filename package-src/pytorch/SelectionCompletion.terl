@@ -1,0 +1,48 @@
+/**
+ * Compatibility aliases for stable sort schemas.
+ */
+module pytorch.SelectionCompletion.
+
+import pytorch.Selection.{sort}.
+import pytorch.Tensor.{copy_in_place, dispose, gather, resize_in_place, shape}.
+
+import type pytorch.Tensor.
+
+pub sort_stable(
+    input: Tensor,
+    stable: Bool,
+    dimension: Int = -1,
+    descending: Bool = false,
+): {Tensor, Tensor} ->
+    sort(input, dimension, descending).
+
+pub sort_values_stable(
+    values: Tensor,
+    indices: Tensor,
+    input: Tensor,
+    stable: Bool,
+    dimension: Int = -1,
+    descending: Bool = false,
+): Unit ->
+    let {sorted_values, sorted_indices} = sort(input, dimension, descending);
+    resize_in_place(values, shape(sorted_values), false, 0);
+    resize_in_place(indices, shape(sorted_indices), false, 0);
+    copy_in_place(values, sorted_values);
+    copy_in_place(indices, sorted_indices);
+    dispose(sorted_indices);
+    dispose(sorted_values).
+
+/**
+ * Implements take-along-dimension through the equivalent dense gather leaf.
+ */
+pub take_along_dim(input: Tensor, indices: Tensor, dimension: Int): Tensor ->
+    gather(input, dimension, indices, false).
+
+/**
+ * Writes take-along-dimension results into retained output storage.
+ */
+pub take_along_dim_out(output: Tensor, input: Tensor, indices: Tensor, dimension: Int): Unit ->
+    let gathered = gather(input, dimension, indices, false);
+    resize_in_place(output, shape(gathered), false, 0);
+    copy_in_place(output, gathered);
+    dispose(gathered).

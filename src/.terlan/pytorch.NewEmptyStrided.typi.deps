@@ -1,0 +1,9 @@
+module=pytorch.NewEmptyStrided
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=12351141046440086069
+interface_hash=13421626405898059532
+interface_doc_hash=10342397698007561747
+deps=1
+pytorch.Tensor=13489932768568026575

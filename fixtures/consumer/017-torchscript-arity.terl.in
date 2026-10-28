@@ -1,0 +1,11 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{load_torchscript, from_float, torchscript_forward2}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let single_input_model = load_torchscript("$model");
+    let first = from_float(3.0);
+    let second = from_float(4.0);
+    let output = torchscript_forward2(single_input_model, first, second);
+    println("PYTORCH_TORCHSCRIPT_ARITY_UNEXPECTED_SUCCESS").

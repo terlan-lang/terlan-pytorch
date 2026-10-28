@@ -1,0 +1,34 @@
+/**
+ * CPU evidence for file-backed tensor construction and retained output.
+ */
+module pytorch.FromFileParityTest.
+
+import pytorch.Tensor.{device_type, dispose, dtype, empty_typed_native, from_file, from_file_out, shape}.
+
+@test
+pub file_backed_paths_match_libtorch(): Bool ->
+    let mapped =
+        from_file(
+            "fixtures/models/invalid.pt",
+            false,
+            false,
+            true,
+            4,
+            true,
+            6,
+            true,
+            0,
+            1,
+            0,
+            -1,
+            true,
+            false,
+        );
+    let output = empty_typed_native([0], 6, 0, -1);
+    from_file_out(output, "fixtures/models/invalid.pt", false, false, true, 4);
+    let valid =
+        shape(mapped) == [4]
+            and dtype(mapped) == 6
+            and device_type(mapped) == 0
+            and shape(output) == [4];
+    (dispose(output); dispose(mapped); valid).

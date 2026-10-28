@@ -1,0 +1,128 @@
+/**
+ * CPU evidence for seeded Generator ownership and generator-backed random ops.
+ */
+module pytorch.GeneratorParityTest.
+
+import pytorch.RandomCompletion.{generator_create, generator_dispose, generator_rand_like, generator_rand_like_out, generator_randint_like_low, generator_randint_like_low_out, generator_randint_low, generator_randint_low_out, generator_randn_like, generator_randn_like_out, rand_generator, rand_generator_out, randn_generator, randn_generator_out, randperm_generator, randperm_generator_out}.
+import pytorch.Tensor.{dispose, empty_typed_native, from_floats, item_float, numel, sum}.
+import pytorch.TypeRelations.equal.
+
+@test
+pub seeded_generator_rand_matches_libtorch(): Bool ->
+    let first_generator = generator_create(123);
+    let second_generator = generator_create(123);
+    let first_output_generator = generator_create(123);
+    let first = rand_generator(first_generator, [2, 2], false, 0, false, 0, false, 0, -1, false, false);
+    let second = rand_generator(second_generator, [2, 2], false, 0, false, 0, false, 0, -1, false, false);
+    let output = empty_typed_native([2, 2], 6, 0, -1);
+    rand_generator_out(output, [2, 2], first_output_generator);
+    let normal_generator = generator_create(456);
+    let normal_output_generator = generator_create(456);
+    let normal = randn_generator(normal_generator, [2, 2], false, 0, false, 0, false, 0, -1, false, false);
+    let normal_output = empty_typed_native([2, 2], 6, 0, -1);
+    (randn_generator_out(normal_output, [2, 2], normal_output_generator); let permutation_generator = generator_create(789);
+let permutation = randperm_generator(permutation_generator, 4, false, 0, false, 0, false, 0, -1, false, false);
+let permutation_output = empty_typed_native([4], 4, 0, -1);
+(randperm_generator_out(permutation_output, 4, permutation_generator); let like_input = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+let like_generator = generator_create(246);
+let like_output_generator = generator_create(246);
+let like =
+    generator_rand_like(
+        like_generator,
+        like_input,
+        false,
+        0,
+        false,
+        0,
+        false,
+        0,
+        -1,
+        false,
+        false,
+        false,
+        0,
+    );
+let like_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+(generator_rand_like_out(like_output, like_input, like_output_generator, false, 0); let normal_like_generator = generator_create(357);
+let normal_like_output_generator = generator_create(357);
+let normal_like =
+    generator_randn_like(
+        normal_like_generator,
+        like_input,
+        false,
+        0,
+        false,
+        0,
+        false,
+        0,
+        -1,
+        false,
+        false,
+        false,
+        0,
+    );
+let normal_like_output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+(generator_randn_like_out(normal_like_output, like_input, normal_like_output_generator, false, 0); let first_sum = sum(first);
+let second_sum = sum(second);
+let output_sum = sum(output);
+let normal_sum = sum(normal);
+let normal_output_sum = sum(normal_output);
+let like_sum = sum(like);
+let like_output_sum = sum(like_output);
+let normal_like_sum = sum(normal_like);
+let normal_like_output_sum = sum(normal_like_output);
+let valid =
+    item_float(first_sum) == item_float(second_sum)
+        and item_float(output_sum) != 0.0
+        and item_float(normal_sum) == item_float(normal_output_sum)
+        and item_float(like_sum) == item_float(like_output_sum)
+        and item_float(normal_like_sum) == item_float(normal_like_output_sum)
+        and numel(permutation) == 4
+        and numel(permutation_output) == 4;
+(dispose(normal_like_output_sum); dispose(normal_like_sum); dispose(like_output_sum); dispose(like_sum); dispose(normal_output_sum); dispose(normal_sum); dispose(output_sum); dispose(second_sum); dispose(first_sum); dispose(normal_like_output); dispose(normal_like); dispose(like_output); dispose(like); dispose(like_input); dispose(permutation_output); dispose(permutation); dispose(normal_output); dispose(normal); dispose(output); dispose(second); dispose(first); generator_dispose(normal_like_output_generator); generator_dispose(normal_like_generator); generator_dispose(like_output_generator); generator_dispose(like_generator); generator_dispose(permutation_generator); generator_dispose(normal_output_generator); generator_dispose(normal_generator); generator_dispose(first_output_generator); generator_dispose(second_generator); generator_dispose(first_generator); valid))))).
+
+@test
+pub seeded_generator_randint_low_matches_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let low_generator = generator_create(900);
+    let low_output_generator = generator_create(900);
+    let low =
+        generator_randint_low(
+            low_generator,
+            2,
+            7,
+            [2, 2],
+            false,
+            0,
+            false,
+            0,
+            false,
+            0,
+            -1,
+            false,
+            false,
+        );
+    let low_output = empty_typed_native([2, 2], 4, 0, -1);
+    generator_randint_low_out(low_output, 2, 7, [2, 2], low_output_generator);
+    let low_like_generator = generator_create(901);
+    let low_like_output_generator = generator_create(901);
+    let low_like =
+        generator_randint_like_low(
+            low_like_generator,
+            input,
+            2,
+            7,
+            false,
+            0,
+            false,
+            0,
+            false,
+            0,
+            -1,
+            false,
+            false,
+            false,
+            0,
+        );
+    let low_like_output = empty_typed_native([2, 2], 4, 0, -1);
+    (generator_randint_like_low_out(low_like_output, input, 2, 7, low_like_output_generator, false, 0); let valid = equal(low, low_output) and equal(low_like, low_like_output); (dispose(low_like_output); dispose(low_like); dispose(low_output); dispose(low); dispose(input); generator_dispose(low_like_output_generator); generator_dispose(low_like_generator); generator_dispose(low_output_generator); generator_dispose(low_generator); valid)).

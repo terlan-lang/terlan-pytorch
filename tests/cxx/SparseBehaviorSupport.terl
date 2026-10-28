@@ -1,0 +1,30 @@
+module pytorch.SparseBehaviorSupport.
+
+import pytorch.Sparse.{coalesce, dense_dim, indices_copy, is_coalesced, sparse_dim, to_dense, to_sparse_dimensions, values_copy}.
+import pytorch.Tensor.{Float64, Strided, dispose, is_cuda, ones_device, shape}.
+
+/**
+ * Exercises generated sparse conversion, metadata, and owned component copies.
+ */
+pub sparse_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let dense = ones_device([2, 3], Float64, Strided, device_name);
+    let sparse = to_sparse_dimensions(dense, 2);
+    let canonical = coalesce(sparse);
+    let coordinates = indices_copy(canonical);
+    let values = values_copy(canonical);
+    let restored = to_dense(canonical);
+    let valid =
+        sparse_dim(canonical) == 2
+            and dense_dim(canonical) == 0
+            and is_coalesced(canonical)
+            and shape(coordinates) == [2, 6]
+            and shape(values) == [6]
+            and shape(restored) == [2, 3]
+            and is_cuda(dense) == expected_cuda;
+    dispose(restored);
+    dispose(values);
+    dispose(coordinates);
+    dispose(canonical);
+    dispose(sparse);
+    dispose(dense);
+    valid.

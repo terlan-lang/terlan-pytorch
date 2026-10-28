@@ -1,0 +1,14 @@
+/**
+ * CPU runtime evidence for LibTorch global random-generator state.
+ */
+module pytorch.GlobalRandomStateParityTest.
+
+import pytorch.RandomCompletion.{generator_dispose, initial_seed, manual_seed}.
+
+@test
+pub global_random_state_matches_libtorch(): Bool ->
+    let generator = manual_seed(123456);
+    let seeded = initial_seed() == 123456;
+    generator_dispose(generator);
+    let restored = manual_seed(0);
+    (generator_dispose(restored); seeded and initial_seed() == 0).

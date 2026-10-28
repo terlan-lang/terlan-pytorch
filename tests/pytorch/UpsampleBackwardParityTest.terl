@@ -1,0 +1,67 @@
+/**
+ * CPU shape and dtype evidence for upsampling backward operators.
+ */
+module pytorch.UpsampleBackwardParityTest.
+
+import pytorch.Tensor.{dispose, dtype, from_floats, shape}.
+import pytorch.UpsampleBackwardCompletion.{upsample_linear1d_backward, upsample_linear1d_backward_out, upsample_nearest1d_backward, upsample_nearest1d_backward_out, upsample_nearest2d_backward, upsample_nearest2d_backward_out, upsample_nearest3d_backward, upsample_nearest3d_backward_out}.
+
+@test
+pub nearest1d_backward_forms_match(): Bool ->
+    let grad = from_floats([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], [1, 1, 8]);
+    let actual = upsample_nearest1d_backward(grad, [8], [1, 1, 4]);
+    let output = from_floats([], [0]);
+    upsample_nearest1d_backward_out(output, grad, [8], [1, 1, 4]);
+    let valid =
+        shape(actual) == [1, 1, 4]
+            and shape(output) == [1, 1, 4]
+            and dtype(actual) == dtype(grad)
+            and dtype(output) == dtype(grad);
+    (dispose(output); dispose(actual); dispose(grad); valid).
+
+@test
+pub nearest2d_backward_forms_match(): Bool ->
+    let grad =
+        from_floats(
+            [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            [1, 1, 4, 4],
+        );
+    let actual = upsample_nearest2d_backward(grad, [4, 4], [1, 1, 2, 2]);
+    let output = from_floats([], [0]);
+    upsample_nearest2d_backward_out(output, grad, [4, 4], [1, 1, 2, 2]);
+    let valid =
+        shape(actual) == [1, 1, 2, 2]
+            and shape(output) == [1, 1, 2, 2]
+            and dtype(actual) == dtype(grad)
+            and dtype(output) == dtype(grad);
+    (dispose(output); dispose(actual); dispose(grad); valid).
+
+@test
+pub nearest3d_backward_forms_match(): Bool ->
+    let grad =
+        from_floats(
+            [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            [1, 1, 2, 2, 4],
+        );
+    let actual = upsample_nearest3d_backward(grad, [2, 2, 4], [1, 1, 1, 1, 2]);
+    let output = from_floats([], [0]);
+    upsample_nearest3d_backward_out(output, grad, [2, 2, 4], [1, 1, 1, 1, 2]);
+    let valid =
+        shape(actual) == [1, 1, 1, 1, 2]
+            and shape(output) == [1, 1, 1, 1, 2]
+            and dtype(actual) == dtype(grad)
+            and dtype(output) == dtype(grad);
+    (dispose(output); dispose(actual); dispose(grad); valid).
+
+@test
+pub linear1d_backward_forms_match(): Bool ->
+    let grad = from_floats([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], [1, 1, 8]);
+    let actual = upsample_linear1d_backward(grad, [8], [1, 1, 4], false);
+    let output = from_floats([], [0]);
+    upsample_linear1d_backward_out(output, grad, [8], [1, 1, 4], false);
+    let valid =
+        shape(actual) == [1, 1, 4]
+            and shape(output) == [1, 1, 4]
+            and dtype(actual) == dtype(grad)
+            and dtype(output) == dtype(grad);
+    (dispose(output); dispose(actual); dispose(grad); valid).

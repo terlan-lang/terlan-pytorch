@@ -1,0 +1,68 @@
+/**
+ * Typed conditional tensor selection and true-index extraction.
+ */
+module pytorch.Where.
+
+import pytorch.WhereNative.{where_indices as native_where_indices, where_scalar, where_scalar_other, where_scalar_self, where_tensor_out as native_where_tensor_out}.
+
+import type pytorch.Tensor.
+
+/**
+ * Returns one owned index tensor for each condition dimension.
+ */
+pub where_indices(condition: Tensor): List[Tensor] ->
+    native_where_indices(condition).
+
+/**
+ * Selects between two integer scalar values.
+ */
+pub where_int_int(condition: Tensor, when_true: Int, when_false: Int): Tensor ->
+    where_scalar(condition, true, when_true, 0.0, true, when_false, 0.0).
+
+/**
+ * Selects between two floating-point scalar values.
+ */
+pub where_float_float(condition: Tensor, when_true: Float, when_false: Float): Tensor ->
+    where_scalar(condition, false, 0, when_true, false, 0, when_false).
+
+/**
+ * Selects between an integer true value and a floating-point false value.
+ */
+pub where_int_float(condition: Tensor, when_true: Int, when_false: Float): Tensor ->
+    where_scalar(condition, true, when_true, 0.0, false, 0, when_false).
+
+/**
+ * Selects between a floating-point true value and an integer false value.
+ */
+pub where_float_int(condition: Tensor, when_true: Float, when_false: Int): Tensor ->
+    where_scalar(condition, false, 0, when_true, true, when_false, 0.0).
+
+/**
+ * Selects between a tensor and an integer false value.
+ */
+pub where_tensor_int(condition: Tensor, when_true: Tensor, when_false: Int): Tensor ->
+    where_scalar_other(condition, when_true, true, when_false, 0.0).
+
+/**
+ * Selects between a tensor and a floating-point false value.
+ */
+pub where_tensor_float(condition: Tensor, when_true: Tensor, when_false: Float): Tensor ->
+    where_scalar_other(condition, when_true, false, 0, when_false).
+
+/**
+ * Selects between an integer true value and a tensor.
+ */
+pub where_int_tensor(condition: Tensor, when_true: Int, when_false: Tensor): Tensor ->
+    where_scalar_self(condition, true, when_true, 0.0, when_false).
+
+/**
+ * Selects between a floating-point true value and a tensor.
+ */
+pub where_float_tensor(condition: Tensor, when_true: Float, when_false: Tensor): Tensor ->
+    where_scalar_self(condition, false, 0, when_true, when_false).
+
+/**
+ * Writes tensor selection into retained output storage.
+ */
+pub where_tensor_out(output: Tensor, condition: Tensor, when_true: Tensor, when_false: Tensor): Unit ->
+    native_where_tensor_out(output, condition, when_true, when_false).

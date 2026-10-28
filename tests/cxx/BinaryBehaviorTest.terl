@@ -1,0 +1,7 @@
+module pytorch_cxx.BinaryBehaviorTest.
+
+import pytorch.BinaryBehaviorSupport.{binary_contracts_on}.
+
+@test
+pub cpu_binary_contracts(): Bool ->
+    binary_contracts_on("cpu", false).

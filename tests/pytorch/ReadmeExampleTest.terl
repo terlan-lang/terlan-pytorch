@@ -1,0 +1,14 @@
+module pytorch.ReadmeExampleTest.
+
+import pytorch.Tensor.{amax, dispose, from_floats, item_float, relu, shape}.
+
+@test
+pub readme_example_executes(): Bool ->
+    let input = from_floats([-2.0, 3.0], [2]);
+    let output = relu(input);
+    let maximum = amax(output, [0], false);
+    let valid = shape(output) == [2] and item_float(maximum) == 3.0;
+    dispose(maximum);
+    dispose(output);
+    dispose(input);
+    valid.

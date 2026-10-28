@@ -1,0 +1,7 @@
+module pytorch_cxx.ConvolutionNativeCudaBehaviorTest.
+
+import pytorch.ConvolutionNativeBehaviorSupport.{convolution_native_contracts_on}.
+
+@test
+pub generated_cxx_cuda_convolution_native_contracts(): Bool ->
+    convolution_native_contracts_on("cuda:0").

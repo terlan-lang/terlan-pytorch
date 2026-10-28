@@ -1,0 +1,18 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{dispose, dtype, from_float, item_float, run_torchscript}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = from_float(3.0);
+    let output = run_torchscript(input, "$model");
+    let observed_input = item_float(input);
+    let observed_output = item_float(output);
+    let observed_dtype = dtype(output);
+    dispose(output);
+    dispose(input);
+    if {
+        observed_input == 3.0 and observed_output == 6.0 and observed_dtype == 7 ->
+            println("PYTORCH_TORCHSCRIPT_INFERENCE_CONSUMER_OK");
+        true -> println("PYTORCH_TORCHSCRIPT_INFERENCE_CONSUMER_FAILED")
+    }.

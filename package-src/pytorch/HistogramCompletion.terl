@@ -1,0 +1,101 @@
+/**
+ * Generated exact CXX histogram tuple/output completion surface.
+ */
+module pytorch.HistogramCompletion.
+
+import pytorch.HistogramddNative.{histogramdd_bins_result, histogramdd_int_result, histogramdd_result_bin_edges, histogramdd_result_dispose, histogramdd_result_hist, histogramdd_tensor_bins_result}.
+
+import type pytorch.Tensor.
+
+@compiler.native {pytorch.histogram.bin_ct}
+pub histogram_bin_ct(
+    input: Tensor,
+    bins: Int,
+    has_range: Bool,
+    range: List[Float],
+    has_weight: Bool,
+    weight: Tensor,
+    density: Bool,
+): {Tensor, Tensor} ->
+    native.
+
+@compiler.native {pytorch.histogram.bin_ct_out}
+pub histogram_bin_ct_out(
+    hist: Tensor,
+    bin_edges: Tensor,
+    input: Tensor,
+    bins: Int,
+    has_range: Bool,
+    range: List[Float],
+    has_weight: Bool,
+    weight: Tensor,
+    density: Bool,
+): Unit ->
+    native.
+
+@compiler.native {pytorch.histogram.bins_tensor}
+pub histogram_bins_tensor(
+    input: Tensor,
+    bins: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    density: Bool,
+): {Tensor, Tensor} ->
+    native.
+
+@compiler.native {pytorch.histogram.bins_tensor_out}
+pub histogram_bins_tensor_out(
+    hist: Tensor,
+    bin_edges: Tensor,
+    input: Tensor,
+    bins: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    density: Bool,
+): Unit ->
+    native.
+
+pub histogramdd_int(
+    input: Tensor,
+    bins: Int,
+    has_range: Bool,
+    range: List[Float],
+    has_weight: Bool,
+    weight: Tensor,
+    density: Bool,
+): {Tensor, List[Tensor]} ->
+    let result = histogramdd_int_result(input, bins, has_range, range, has_weight, weight, density);
+    let hist = histogramdd_result_hist(result);
+    let edges = histogramdd_result_bin_edges(result);
+    histogramdd_result_dispose(result);
+    {hist, edges}.
+
+pub histogramdd_bins(
+    input: Tensor,
+    bins: List[Int],
+    has_range: Bool,
+    range: List[Float],
+    has_weight: Bool,
+    weight: Tensor,
+    density: Bool,
+): {Tensor, List[Tensor]} ->
+    let result = histogramdd_bins_result(input, bins, has_range, range, has_weight, weight, density);
+    let hist = histogramdd_result_hist(result);
+    let edges = histogramdd_result_bin_edges(result);
+    histogramdd_result_dispose(result);
+    {hist, edges}.
+
+pub histogramdd_tensor_bins(
+    input: Tensor,
+    bins: List[Tensor],
+    has_range: Bool,
+    range: List[Float],
+    has_weight: Bool,
+    weight: Tensor,
+    density: Bool,
+): {Tensor, List[Tensor]} ->
+    let result = histogramdd_tensor_bins_result(input, bins, has_range, range, has_weight, weight, density);
+    let hist = histogramdd_result_hist(result);
+    let edges = histogramdd_result_bin_edges(result);
+    histogramdd_result_dispose(result);
+    {hist, edges}.

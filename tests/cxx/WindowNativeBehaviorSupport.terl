@@ -1,0 +1,52 @@
+module pytorch.WindowNativeBehaviorSupport.
+
+import pytorch.Tensor.{Float64, Strided, dispose, dtype, is_cuda, ones_device, shape}.
+import pytorch.TypeRelationsNative.{allclose_native}.
+import pytorch.WindowNative.{window_native, window_out_native}.
+
+window_forms_match(
+    operation: Int,
+    alpha: Float,
+    beta: Float,
+    device_name: String,
+    expected_cuda: Bool,
+): Bool ->
+    let functional =
+        window_native(
+            operation,
+            8,
+            true,
+            alpha,
+            beta,
+            7,
+            if {
+                expected_cuda -> 1;
+                true -> 0
+            },
+            if {
+                expected_cuda -> 0;
+                true -> -1
+            },
+            false,
+        );
+    let output = ones_device([0], Float64, Strided, device_name);
+    window_out_native(output, operation, 8, true, alpha, beta);
+    let valid =
+        shape(functional) == [8]
+            and shape(output) == [8]
+            and dtype(functional) == Float64
+            and dtype(output) == Float64
+            and is_cuda(functional) == expected_cuda
+            and is_cuda(output) == expected_cuda
+            and allclose_native(functional, output, 0.0, 0.0, false);
+    (dispose(output); dispose(functional); valid).
+
+/**
+ * Executes every generated window constructor and retained-output leaf on one backend.
+ */
+pub window_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    window_forms_match(0, 0.54, 0.46, device_name, expected_cuda)
+        and window_forms_match(1, 0.54, 0.46, device_name, expected_cuda)
+        and window_forms_match(2, 0.54, 0.46, device_name, expected_cuda)
+        and window_forms_match(3, 0.54, 0.46, device_name, expected_cuda)
+        and window_forms_match(4, 0.0, 12.0, device_name, expected_cuda).

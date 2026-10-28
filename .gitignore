@@ -1,4 +1,6 @@
 /generated/
+/.terlan/
+/_build/
 /fixtures/dist/
 /fixtures/models/double.pt
 /fixtures/models/weighted_difference.pt
@@ -11,6 +13,8 @@
 /fixtures/models/float_list.pt
 /fixtures/models/bool_list.pt
 /fixtures/models/string_list.pt
+/fixtures/models/optional_tensor.pt
+/fixtures/models/tensor_list.pt
 /target/
 /native/rust/target/
 /upstream/

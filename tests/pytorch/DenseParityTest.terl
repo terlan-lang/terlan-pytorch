@@ -1,0 +1,307 @@
+module pytorch.DenseParityTest.
+
+import pytorch.Binary.{eq_tensor}.
+import pytorch.Dense.{bmm, bmm_out, complex, divide_tensor, expand_as, fill_tensor, ger, ger_out, hardsigmoid_backward, hardswish_backward, infinitely_differentiable_gelu_backward, linalg_householder_product, linalg_matmul, matmul_out, matrix_exp_backward, mish_backward, mm, mm_out, multiply_tensor, mv, mv_out, orgqr, orgqr_out, outer, outer_out, polar, prelu, reshape_as, sigmoid_backward, silu_backward, special_chebyshev_polynomial_t, special_chebyshev_polynomial_u, special_chebyshev_polynomial_v, special_chebyshev_polynomial_w, special_gammainc, special_gammaincc, special_hermite_polynomial_h, special_hermite_polynomial_he, special_laguerre_polynomial_l, special_legendre_polynomial_p, special_shifted_chebyshev_polynomial_t, special_shifted_chebyshev_polynomial_u, special_shifted_chebyshev_polynomial_v, special_shifted_chebyshev_polynomial_w, tanh_backward, type_as, view_as}.
+import pytorch.Tensor.{clone, dispose, dtype, from_float, from_floats, from_ints, item_bool, item_float, matmul, shape, sum}.
+import pytorch.Unary.{abs, all, isfinite}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reduces a floating-point tensor and releases its scalar result.
+ */
+float_sum(tensor: Tensor): Float ->
+    let total = sum(tensor);
+    let value = item_float(total);
+    dispose(total);
+    value.
+
+/**
+ * Classifies every tensor element as finite and releases both intermediates.
+ */
+all_finite(tensor: Tensor): Bool ->
+    let classifications = isfinite(tensor);
+    let reduced = all(classifications);
+    let value = item_bool(reduced);
+    dispose(reduced);
+    dispose(classifications);
+    value.
+
+/**
+ * Compares complete tensor values and releases both compared tensors.
+ */
+same_and_dispose(actual: Tensor, expected: Tensor): Bool ->
+    let comparisons = eq_tensor(actual, expected);
+    let reduced = all(comparisons);
+    let value = item_bool(reduced);
+    dispose(reduced);
+    dispose(comparisons);
+    dispose(expected);
+    dispose(actual);
+    value.
+
+/**
+ * Proves dense matrix, batch-matrix, matrix-vector, and outer products.
+ */
+@test
+pub dense_linear_algebra_matches_libtorch(): Bool ->
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let identity = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
+    let batch_matrix = from_floats([1.0, 2.0, 3.0, 4.0], [1, 2, 2]);
+    let batch_identity = from_floats([1.0, 0.0, 0.0, 1.0], [1, 2, 2]);
+    let left_vector = from_floats([1.0, 2.0], [2]);
+    let right_vector = from_floats([3.0, 4.0], [2]);
+    let matrix_product = mm(matrix, identity);
+    let linalg_product = linalg_matmul(matrix, identity);
+    let batch_product = bmm(batch_matrix, batch_identity);
+    let matrix_vector = mv(matrix, left_vector);
+    let ger_product = ger(left_vector, right_vector);
+    let outer_product = outer(left_vector, right_vector);
+    let multiplied = multiply_tensor(left_vector, right_vector);
+    let divided = divide_tensor(left_vector, right_vector);
+    let divided_sum = float_sum(divided);
+    let valid =
+        shape(matrix_product) == [2, 2]
+            and float_sum(matrix_product) == 10.0
+            and float_sum(linalg_product) == 10.0
+            and shape(batch_product) == [1, 2, 2]
+            and float_sum(batch_product) == 10.0
+            and shape(matrix_vector) == [2]
+            and float_sum(matrix_vector) == 16.0
+            and shape(ger_product) == [2, 2]
+            and float_sum(ger_product) == 21.0
+            and float_sum(outer_product) == 21.0
+            and float_sum(multiplied) == 11.0
+            and divided_sum > 0.83
+            and divided_sum < 0.84
+            and shape(matrix) == [2, 2];
+    dispose(divided);
+    dispose(multiplied);
+    dispose(outer_product);
+    dispose(ger_product);
+    dispose(matrix_vector);
+    dispose(batch_product);
+    dispose(linalg_product);
+    dispose(matrix_product);
+    dispose(right_vector);
+    dispose(left_vector);
+    dispose(batch_identity);
+    dispose(batch_matrix);
+    dispose(identity);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves shape matching, fill, and dtype matching with independent handles.
+ */
+@test
+pub dense_shape_and_dtype_matching_match_libtorch(): Bool ->
+    let vector = from_floats([1.0, 2.0, 3.0], [3]);
+    let matrix_template = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]);
+    let flat = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [6]);
+    let fill_value = from_float(3.0);
+    let integer_template = from_ints([0, 0, 0], [3]);
+    let expanded = expand_as(vector, matrix_template);
+    let filled = fill_tensor(vector, fill_value);
+    let reshaped = reshape_as(flat, matrix_template);
+    let viewed = view_as(flat, matrix_template);
+    let typed = type_as(vector, integer_template);
+    let valid =
+        shape(expanded) == [2, 3]
+            and float_sum(expanded) == 12.0
+            and shape(filled) == [3]
+            and float_sum(filled) == 9.0
+            and shape(reshaped) == [2, 3]
+            and shape(viewed) == [2, 3]
+            and dtype(typed) == dtype(integer_template)
+            and shape(typed) == [3]
+            and shape(vector) == [3];
+    dispose(typed);
+    dispose(viewed);
+    dispose(reshaped);
+    dispose(filled);
+    dispose(expanded);
+    dispose(integer_template);
+    dispose(fill_value);
+    dispose(flat);
+    dispose(matrix_template);
+    dispose(vector);
+    valid.
+
+/**
+ * Proves complex Cartesian and polar construction without exposing complex scalars.
+ */
+@test
+pub dense_complex_construction_matches_libtorch(): Bool ->
+    let real = from_float(3.0);
+    let imaginary = from_float(4.0);
+    let magnitude = from_float(2.0);
+    let angle = from_float(0.0);
+    let cartesian = complex(real, imaginary);
+    let polar_value = polar(magnitude, angle);
+    let cartesian_magnitude = abs(cartesian);
+    let polar_magnitude = abs(polar_value);
+    let valid =
+        item_float(cartesian_magnitude) == 5.0
+            and item_float(polar_magnitude) == 2.0
+            and dtype(cartesian) == dtype(real) + 3
+            and dtype(polar_value) == dtype(magnitude) + 3;
+    dispose(polar_magnitude);
+    dispose(cartesian_magnitude);
+    dispose(polar_value);
+    dispose(cartesian);
+    dispose(angle);
+    dispose(magnitude);
+    dispose(imaginary);
+    dispose(real);
+    valid.
+
+/**
+ * Proves explicit activation backward kernels at stable derivative points.
+ */
+@test
+pub activation_backward_kernels_match_libtorch(): Bool ->
+    let gradient = from_float(1.0);
+    let zero = from_float(0.0);
+    let half = from_float(0.5);
+    let hard_sigmoid = hardsigmoid_backward(gradient, zero);
+    let hard_swish = hardswish_backward(gradient, zero);
+    let gelu = infinitely_differentiable_gelu_backward(gradient, zero);
+    let mish = mish_backward(gradient, zero);
+    let sigmoid = sigmoid_backward(gradient, half);
+    let silu = silu_backward(gradient, zero);
+    let tanh = tanh_backward(gradient, zero);
+    let hard_sigmoid_value = item_float(hard_sigmoid);
+    let mish_value = item_float(mish);
+    let valid =
+        hard_sigmoid_value > 0.16
+            and hard_sigmoid_value < 0.17
+            and item_float(hard_swish) == 0.5
+            and item_float(gelu) == 0.5
+            and mish_value > 0.59
+            and mish_value < 0.61
+            and item_float(sigmoid) == 0.25
+            and item_float(silu) == 0.5
+            and item_float(tanh) == 1.0;
+    dispose(tanh);
+    dispose(silu);
+    dispose(sigmoid);
+    dispose(mish);
+    dispose(gelu);
+    dispose(hard_swish);
+    dispose(hard_sigmoid);
+    dispose(half);
+    dispose(zero);
+    dispose(gradient);
+    valid.
+
+/**
+ * Proves PReLU, reflector products, ORGQR, and matrix exponential backward.
+ */
+@test
+pub dense_advanced_kernels_execute_with_finite_results(): Bool ->
+    let prelu_input = from_floats([-1.0, 2.0], [2]);
+    let prelu_weight = from_float(0.25);
+    let reflector = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
+    let tau = from_floats([0.0, 0.0], [2]);
+    let zero_matrix = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let identity_gradient = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
+    let prelu_value = prelu(prelu_input, prelu_weight);
+    let householder = linalg_householder_product(reflector, tau);
+    let qr = orgqr(reflector, tau);
+    let exponential_gradient = matrix_exp_backward(zero_matrix, identity_gradient);
+    let householder_finite = all_finite(householder);
+    let qr_finite = all_finite(qr);
+    let gradient_finite = all_finite(exponential_gradient);
+    let valid =
+        float_sum(prelu_value) == 1.75
+            and shape(householder) == [2, 2]
+            and householder_finite
+            and shape(qr) == [2, 2]
+            and qr_finite
+            and shape(exponential_gradient) == [2, 2]
+            and gradient_finite;
+    dispose(exponential_gradient);
+    dispose(qr);
+    dispose(householder);
+    dispose(prelu_value);
+    dispose(identity_gradient);
+    dispose(zero_matrix);
+    dispose(tau);
+    dispose(reflector);
+    dispose(prelu_weight);
+    dispose(prelu_input);
+    valid.
+
+/**
+ * Proves retained outputs for dense matrix and vector operations.
+ */
+@test
+pub dense_retained_outputs_match_functional_results(): Bool ->
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let identity = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
+    let matrix_expected = matmul(matrix, identity);
+    let matrix_output = clone(matrix_expected);
+    matmul_out(matrix_output, matrix, identity);
+    let matrix_ok = same_and_dispose(matrix_output, matrix_expected);
+    let mm_expected = mm(matrix, identity);
+    let mm_output = clone(mm_expected);
+    (mm_out(mm_output, matrix, identity); let mm_ok = same_and_dispose(mm_output, mm_expected); let batch = from_floats([1.0, 2.0, 3.0, 4.0], [1, 2, 2]); let batch_identity = from_floats([1.0, 0.0, 0.0, 1.0], [1, 2, 2]); let batch_expected = bmm(batch, batch_identity); let batch_output = clone(batch_expected); (bmm_out(batch_output, batch, batch_identity); let batch_ok = same_and_dispose(batch_output, batch_expected); let left_vector = from_floats([1.0, 2.0], [2]); let right_vector = from_floats([3.0, 4.0], [2]); let ger_expected = ger(left_vector, right_vector); let ger_output = clone(ger_expected); (ger_out(ger_output, left_vector, right_vector); let ger_ok = same_and_dispose(ger_output, ger_expected); let outer_expected = outer(left_vector, right_vector); let outer_output = clone(outer_expected); (outer_out(outer_output, left_vector, right_vector); let outer_ok = same_and_dispose(outer_output, outer_expected); let vector_expected = mv(matrix, left_vector); let vector_output = clone(vector_expected); (mv_out(vector_output, matrix, left_vector); let vector_ok = same_and_dispose(vector_output, vector_expected); let reflectors = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]); let tau = from_floats([0.0, 0.0], [2]); let qr_expected = orgqr(reflectors, tau); let qr_output = clone(qr_expected); (orgqr_out(qr_output, reflectors, tau); let qr_ok = same_and_dispose(qr_output, qr_expected); (dispose(tau); dispose(reflectors); dispose(right_vector); dispose(left_vector); dispose(batch_identity); dispose(batch); dispose(identity); dispose(matrix); matrix_ok and mm_ok and batch_ok and ger_ok and outer_ok and vector_ok and qr_ok))))))).
+
+/**
+ * Proves tensor-order special polynomials and regularized gamma complements.
+ */
+@test
+pub tensor_order_special_functions_match_libtorch(): Bool ->
+    let one = from_float(1.0);
+    let order_two = from_float(2.0);
+    let chebyshev_t = special_chebyshev_polynomial_t(one, order_two);
+    let chebyshev_u = special_chebyshev_polynomial_u(one, order_two);
+    let chebyshev_v = special_chebyshev_polynomial_v(one, order_two);
+    let chebyshev_w = special_chebyshev_polynomial_w(one, order_two);
+    let gamma = special_gammainc(one, one);
+    let complementary_gamma = special_gammaincc(one, one);
+    let hermite_h = special_hermite_polynomial_h(one, order_two);
+    let hermite_he = special_hermite_polynomial_he(one, order_two);
+    let laguerre = special_laguerre_polynomial_l(one, order_two);
+    let legendre = special_legendre_polynomial_p(one, order_two);
+    let shifted_t = special_shifted_chebyshev_polynomial_t(one, order_two);
+    let shifted_u = special_shifted_chebyshev_polynomial_u(one, order_two);
+    let shifted_v = special_shifted_chebyshev_polynomial_v(one, order_two);
+    let shifted_w = special_shifted_chebyshev_polynomial_w(one, order_two);
+    let gamma_value = item_float(gamma);
+    let complementary_gamma_value = item_float(complementary_gamma);
+    let valid =
+        item_float(chebyshev_t) == 1.0
+            and item_float(chebyshev_u) == 3.0
+            and item_float(chebyshev_v) == 1.0
+            and item_float(chebyshev_w) == 5.0
+            and gamma_value > 0.63
+            and gamma_value < 0.64
+            and complementary_gamma_value > 0.36
+            and complementary_gamma_value < 0.37
+            and item_float(hermite_h) == 2.0
+            and item_float(hermite_he) == 0.0
+            and item_float(laguerre) == -0.5
+            and item_float(legendre) == 1.0
+            and item_float(shifted_t) == 1.0
+            and item_float(shifted_u) == 3.0
+            and item_float(shifted_v) == 1.0
+            and item_float(shifted_w) == 5.0;
+    dispose(shifted_w);
+    dispose(shifted_v);
+    dispose(shifted_u);
+    dispose(shifted_t);
+    dispose(legendre);
+    dispose(laguerre);
+    dispose(hermite_he);
+    dispose(hermite_h);
+    dispose(complementary_gamma);
+    dispose(gamma);
+    dispose(chebyshev_w);
+    dispose(chebyshev_v);
+    dispose(chebyshev_u);
+    dispose(chebyshev_t);
+    dispose(order_two);
+    dispose(one);
+    valid.

@@ -1,0 +1,141 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Fetches and safely extracts the pinned CPU LibTorch distribution.
+ */
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.crypto.Hash.
+import std.io.Console.{eprintln, println}.
+import std.io.{Archive, Directory, File}.
+import std.system.{Environment, Process}.
+
+/**
+ * Joins a parent path and one relative child.
+ */
+child(parent: String, relative: String): String ->
+    if {
+        String.ends_with(parent, "/") -> String.append(parent, relative);
+        true -> String.concat([parent, "/", relative])
+    }.
+
+/**
+ * Reports one stable distribution-fetch failure.
+ */
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[terlan_pytorch_fetch_libtorch]: ", message));
+    false.
+
+/**
+ * Reports whether an existing archive has the pinned digest.
+ */
+archive_valid(archive: String, expected: String): Bool ->
+    case Hash.sha256_file(archive) {
+        Ok(actual) -> actual == expected;
+        Err(_reason) -> false
+    }.
+
+/**
+ * Downloads one archive with bounded output and wall-clock duration.
+ */
+download(url: String, archive: String): Bool ->
+    let request =
+        Process.with_output_limit_bytes(
+            Process.with_timeout_ms(
+                Process.with_arguments(
+                    Process.command("curl"),
+                    ["--fail", "--location", "--retry", "3", url, "--output", archive],
+                ),
+                600000,
+            ),
+            16777216,
+        );
+    case Process.run(request) {
+        Err(reason) -> failure(reason.message);
+        Ok(output) ->
+            if {
+                output.status == 0 -> true;
+                true -> failure(String.append(output.stderr, output.stdout))
+            }
+    }.
+
+/**
+ * Removes one existing archive before a replacement download.
+ */
+remove_archive(archive: String): Bool ->
+    if {
+        not File.exists(archive) -> true;
+        true -> case File.delete(archive) {
+            Ok(Unit) -> true;
+            Err(reason) -> failure(reason.message)
+        }
+    }.
+
+/**
+ * Ensures the pinned archive exists and matches its digest.
+ */
+ensure_archive(archive: String, url: String, expected: String): Bool ->
+    if {
+        archive_valid(archive, expected) -> true;
+        not remove_archive(archive) -> false;
+        not download(url, archive) -> false;
+        not archive_valid(archive, expected) -> failure("downloaded archive digest mismatch");
+        true -> true
+    }.
+
+/**
+ * Reports whether the extracted distribution has the pinned version.
+ */
+distribution_valid(destination: String, version: String): Bool ->
+    case File.read_text(child(destination, "libtorch/build-version")) {
+        Ok(actual) -> String.trim(actual) == version;
+        Err(_reason) -> false
+    }.
+
+/**
+ * Safely replaces an invalid extracted distribution.
+ */
+ensure_distribution(archive: String, destination: String, version: String): Bool ->
+    if {
+        distribution_valid(destination, version) -> true;
+        true -> let removed =
+            if {
+                File.exists(child(destination, "libtorch/build-version")) -> case Directory.remove_all(destination) {
+                    Ok(Unit) -> true;
+                    Err(reason) -> failure(reason.message)
+                };
+                true -> case Directory.remove_all(destination) {
+                    Ok(Unit) -> true;
+                    Err(_reason) -> true
+                }
+            };
+        if {
+            not removed -> false;
+            true -> case Archive.extract(archive, destination) {
+                Ok(Unit) -> distribution_valid(destination, version);
+                Err(_reason) -> failure("cannot safely extract pinned LibTorch archive")
+            }
+        }
+    }.
+
+/**
+ * Fetches the pinned distribution below the current repository.
+ */
+entry(): Bool ->
+    let root = Environment.current_directory();
+    let version = "2.13.0+cpu";
+    let vendor = child(root, "vendor");
+    let archive = child(vendor, String.concat(["libtorch-", version, ".zip"]));
+    let destination = child(vendor, String.append("libtorch-", version));
+    let url = "https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.13.0%2Bcpu.zip";
+    let expected = "edbf4cbed78433d803e90a65f1752e57783d164bce66c95c0872b2ab8f5c159e";
+    let {
+        Ok(Unit) <- Directory.create_all(vendor);
+        true <- ensure_archive(archive, url, expected);
+        true <- ensure_distribution(archive, destination, version)
+    } else {
+        _ -> false
+    };
+    (let _printed = println(child(destination, "libtorch")); true).
+
+assert(entry());
+Unit.

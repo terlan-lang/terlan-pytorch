@@ -1,0 +1,692 @@
+/**
+ * Typed scalar, retained-output, and in-place binary operations.
+ */
+module pytorch.BinaryScalar.
+
+import pytorch.BinaryScalarNative.{binary_scalar_left_float, binary_scalar_left_float_out, binary_scalar_left_int, binary_scalar_left_int_out, binary_scalar_right_float, binary_scalar_right_float_in_place, binary_scalar_right_float_out, binary_scalar_right_int, binary_scalar_right_int_in_place, binary_scalar_right_int_out, binary_tensor_in_place, binary_tensor_out}.
+
+import type pytorch.Tensor.
+
+/**
+ * Writes elementwise bitwise AND for two tensors into retained output storage.
+ */
+pub bitwise_and_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 0, right).
+
+/**
+ * Applies elementwise bitwise AND with a tensor right operand in place.
+ */
+pub bitwise_and_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 0, right).
+
+/**
+ * Returns elementwise bitwise AND with an integer scalar right operand.
+ */
+pub bitwise_and_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 0, scalar).
+
+/**
+ * Returns elementwise bitwise AND with an integer scalar left operand.
+ */
+pub bitwise_and_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    binary_scalar_left_int(0, scalar, tensor).
+
+/**
+ * Writes elementwise bitwise AND with an integer scalar right operand.
+ */
+pub bitwise_and_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 0, scalar).
+
+/**
+ * Writes elementwise bitwise AND with an integer scalar left operand.
+ */
+pub bitwise_and_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    binary_scalar_left_int_out(output, 0, scalar, tensor).
+
+/**
+ * Applies elementwise bitwise AND with an integer scalar right operand in place.
+ */
+pub bitwise_and_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 0, scalar).
+
+/**
+ * Writes elementwise bitwise OR for two tensors into retained output storage.
+ */
+pub bitwise_or_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 1, right).
+
+/**
+ * Applies elementwise bitwise OR with a tensor right operand in place.
+ */
+pub bitwise_or_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 1, right).
+
+/**
+ * Returns elementwise bitwise OR with an integer scalar right operand.
+ */
+pub bitwise_or_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 1, scalar).
+
+/**
+ * Returns elementwise bitwise OR with an integer scalar left operand.
+ */
+pub bitwise_or_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    binary_scalar_left_int(1, scalar, tensor).
+
+/**
+ * Writes elementwise bitwise OR with an integer scalar right operand.
+ */
+pub bitwise_or_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 1, scalar).
+
+/**
+ * Writes elementwise bitwise OR with an integer scalar left operand.
+ */
+pub bitwise_or_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    binary_scalar_left_int_out(output, 1, scalar, tensor).
+
+/**
+ * Applies elementwise bitwise OR with an integer scalar right operand in place.
+ */
+pub bitwise_or_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 1, scalar).
+
+/**
+ * Writes elementwise bitwise XOR for two tensors into retained output storage.
+ */
+pub bitwise_xor_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 2, right).
+
+/**
+ * Applies elementwise bitwise XOR with a tensor right operand in place.
+ */
+pub bitwise_xor_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 2, right).
+
+/**
+ * Returns elementwise bitwise XOR with an integer scalar right operand.
+ */
+pub bitwise_xor_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 2, scalar).
+
+/**
+ * Returns elementwise bitwise XOR with an integer scalar left operand.
+ */
+pub bitwise_xor_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    binary_scalar_left_int(2, scalar, tensor).
+
+/**
+ * Writes elementwise bitwise XOR with an integer scalar right operand.
+ */
+pub bitwise_xor_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 2, scalar).
+
+/**
+ * Writes elementwise bitwise XOR with an integer scalar left operand.
+ */
+pub bitwise_xor_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    binary_scalar_left_int_out(output, 2, scalar, tensor).
+
+/**
+ * Applies elementwise bitwise XOR with an integer scalar right operand in place.
+ */
+pub bitwise_xor_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 2, scalar).
+
+/**
+ * Writes elementwise bitwise left shift for two tensors into retained output storage.
+ */
+pub bitwise_left_shift_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 3, right).
+
+/**
+ * Applies elementwise bitwise left shift with a tensor right operand in place.
+ */
+pub bitwise_left_shift_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 3, right).
+
+/**
+ * Returns elementwise bitwise left shift with an integer scalar right operand.
+ */
+pub bitwise_left_shift_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 3, scalar).
+
+/**
+ * Returns elementwise bitwise left shift with an integer scalar left operand.
+ */
+pub bitwise_left_shift_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    binary_scalar_left_int(3, scalar, tensor).
+
+/**
+ * Writes elementwise bitwise left shift with an integer scalar right operand.
+ */
+pub bitwise_left_shift_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 3, scalar).
+
+/**
+ * Writes elementwise bitwise left shift with an integer scalar left operand.
+ */
+pub bitwise_left_shift_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    binary_scalar_left_int_out(output, 3, scalar, tensor).
+
+/**
+ * Applies elementwise bitwise left shift with an integer scalar right operand in place.
+ */
+pub bitwise_left_shift_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 3, scalar).
+
+/**
+ * Writes elementwise bitwise right shift for two tensors into retained output storage.
+ */
+pub bitwise_right_shift_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 4, right).
+
+/**
+ * Applies elementwise bitwise right shift with a tensor right operand in place.
+ */
+pub bitwise_right_shift_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 4, right).
+
+/**
+ * Returns elementwise bitwise right shift with an integer scalar right operand.
+ */
+pub bitwise_right_shift_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 4, scalar).
+
+/**
+ * Returns elementwise bitwise right shift with an integer scalar left operand.
+ */
+pub bitwise_right_shift_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    binary_scalar_left_int(4, scalar, tensor).
+
+/**
+ * Writes elementwise bitwise right shift with an integer scalar right operand.
+ */
+pub bitwise_right_shift_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 4, scalar).
+
+/**
+ * Writes elementwise bitwise right shift with an integer scalar left operand.
+ */
+pub bitwise_right_shift_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    binary_scalar_left_int_out(output, 4, scalar, tensor).
+
+/**
+ * Applies elementwise bitwise right shift with an integer scalar right operand in place.
+ */
+pub bitwise_right_shift_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 4, scalar).
+
+/**
+ * Writes elementwise remainder for two tensors into retained output storage.
+ */
+pub remainder_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 5, right).
+
+/**
+ * Applies elementwise remainder with a tensor right operand in place.
+ */
+pub remainder_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 5, right).
+
+/**
+ * Returns elementwise remainder with an integer scalar right operand.
+ */
+pub remainder_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 5, scalar).
+
+/**
+ * Returns elementwise remainder with an integer scalar left operand.
+ */
+pub remainder_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    binary_scalar_left_int(5, scalar, tensor).
+
+/**
+ * Writes elementwise remainder with an integer scalar right operand.
+ */
+pub remainder_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 5, scalar).
+
+/**
+ * Writes elementwise remainder with an integer scalar left operand.
+ */
+pub remainder_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    binary_scalar_left_int_out(output, 5, scalar, tensor).
+
+/**
+ * Applies elementwise remainder with an integer scalar right operand in place.
+ */
+pub remainder_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 5, scalar).
+
+/**
+ * Returns elementwise remainder with a floating-point scalar right operand.
+ */
+pub remainder_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 5, scalar).
+
+/**
+ * Returns elementwise remainder with a floating-point scalar left operand.
+ */
+pub remainder_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    binary_scalar_left_float(5, scalar, tensor).
+
+/**
+ * Writes elementwise remainder with a floating-point scalar right operand.
+ */
+pub remainder_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 5, scalar).
+
+/**
+ * Writes elementwise remainder with a floating-point scalar left operand.
+ */
+pub remainder_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    binary_scalar_left_float_out(output, 5, scalar, tensor).
+
+/**
+ * Applies elementwise remainder with a floating-point scalar right operand in place.
+ */
+pub remainder_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 5, scalar).
+
+/**
+ * Returns elementwise floating-point remainder with a scalar right operand.
+ */
+pub fmod_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 17, scalar).
+
+/**
+ * Writes elementwise floating-point remainder with a scalar right operand.
+ */
+pub fmod_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 17, scalar).
+
+/**
+ * Applies floating-point remainder with a scalar right operand in place.
+ */
+pub fmod_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 17, scalar).
+
+/**
+ * Writes elementwise power for two tensors into retained output storage.
+ */
+pub pow_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 6, right).
+
+/**
+ * Applies elementwise power with a tensor right operand in place.
+ */
+pub pow_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 6, right).
+
+/**
+ * Returns elementwise power with an integer scalar right operand.
+ */
+pub pow_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 6, scalar).
+
+/**
+ * Returns elementwise power with an integer scalar left operand.
+ */
+pub pow_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    binary_scalar_left_int(6, scalar, tensor).
+
+/**
+ * Writes elementwise power with an integer scalar right operand.
+ */
+pub pow_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 6, scalar).
+
+/**
+ * Writes elementwise power with an integer scalar left operand.
+ */
+pub pow_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    binary_scalar_left_int_out(output, 6, scalar, tensor).
+
+/**
+ * Applies elementwise power with an integer scalar right operand in place.
+ */
+pub pow_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 6, scalar).
+
+/**
+ * Returns elementwise power with a floating-point scalar right operand.
+ */
+pub pow_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 6, scalar).
+
+/**
+ * Returns elementwise power with a floating-point scalar left operand.
+ */
+pub pow_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    binary_scalar_left_float(6, scalar, tensor).
+
+/**
+ * Writes elementwise power with a floating-point scalar right operand.
+ */
+pub pow_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 6, scalar).
+
+/**
+ * Writes elementwise power with a floating-point scalar left operand.
+ */
+pub pow_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    binary_scalar_left_float_out(output, 6, scalar, tensor).
+
+/**
+ * Applies elementwise power with a floating-point scalar right operand in place.
+ */
+pub pow_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 6, scalar).
+
+/**
+ * Writes elementwise floating power for two tensors into retained output storage.
+ */
+pub float_power_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 7, right).
+
+/**
+ * Applies elementwise floating power with a tensor right operand in place.
+ */
+pub float_power_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 7, right).
+
+/**
+ * Returns elementwise floating power with an integer scalar right operand.
+ */
+pub float_power_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 7, scalar).
+
+/**
+ * Returns elementwise floating power with an integer scalar left operand.
+ */
+pub float_power_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    binary_scalar_left_int(7, scalar, tensor).
+
+/**
+ * Writes elementwise floating power with an integer scalar right operand.
+ */
+pub float_power_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 7, scalar).
+
+/**
+ * Writes elementwise floating power with an integer scalar left operand.
+ */
+pub float_power_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    binary_scalar_left_int_out(output, 7, scalar, tensor).
+
+/**
+ * Applies elementwise floating power with an integer scalar right operand in place.
+ */
+pub float_power_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 7, scalar).
+
+/**
+ * Returns elementwise floating power with a floating-point scalar right operand.
+ */
+pub float_power_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 7, scalar).
+
+/**
+ * Returns elementwise floating power with a floating-point scalar left operand.
+ */
+pub float_power_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    binary_scalar_left_float(7, scalar, tensor).
+
+/**
+ * Writes elementwise floating power with a floating-point scalar right operand.
+ */
+pub float_power_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 7, scalar).
+
+/**
+ * Writes elementwise floating power with a floating-point scalar left operand.
+ */
+pub float_power_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    binary_scalar_left_float_out(output, 7, scalar, tensor).
+
+/**
+ * Applies elementwise floating power with a floating-point scalar right operand in place.
+ */
+pub float_power_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 7, scalar).
+
+/**
+ * Writes elementwise multiplication for two tensors into retained output storage.
+ */
+pub mul_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 8, right).
+
+/**
+ * Multiplies by a tensor in place.
+ */
+pub mul_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 8, right).
+
+/**
+ * Multiplies by an integer scalar.
+ */
+pub mul_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 8, scalar).
+
+/**
+ * Writes multiplication by an integer scalar into retained output storage.
+ */
+pub mul_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 8, scalar).
+
+/**
+ * Multiplies by an integer scalar in place.
+ */
+pub mul_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 8, scalar).
+
+/**
+ * Multiplies by a floating-point scalar.
+ */
+pub mul_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 8, scalar).
+
+/**
+ * Writes multiplication by a floating-point scalar into retained output storage.
+ */
+pub mul_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 8, scalar).
+
+/**
+ * Multiplies by a floating-point scalar in place.
+ */
+pub mul_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 8, scalar).
+
+/**
+ * Writes the multiply alias for two tensors into retained output storage.
+ */
+pub multiply_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 8, right).
+
+/**
+ * Applies the multiply alias with a tensor in place.
+ */
+pub multiply_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 8, right).
+
+/**
+ * Applies the multiply alias with an integer scalar.
+ */
+pub multiply_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 8, scalar).
+
+/**
+ * Applies the multiply alias with an integer scalar in place.
+ */
+pub multiply_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 8, scalar).
+
+/**
+ * Applies the multiply alias with a floating-point scalar.
+ */
+pub multiply_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 8, scalar).
+
+/**
+ * Applies the multiply alias with a floating-point scalar in place.
+ */
+pub multiply_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 8, scalar).
+
+/**
+ * Writes floor division for two tensors into retained output storage.
+ */
+pub floor_divide_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 9, right).
+
+/**
+ * Applies floor division by a tensor in place.
+ */
+pub floor_divide_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 9, right).
+
+/**
+ * Applies floor division by an integer scalar.
+ */
+pub floor_divide_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 9, scalar).
+
+/**
+ * Writes floor division by an integer scalar into retained output storage.
+ */
+pub floor_divide_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 9, scalar).
+
+/**
+ * Applies floor division by an integer scalar in place.
+ */
+pub floor_divide_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 9, scalar).
+
+/**
+ * Applies floor division by a floating-point scalar.
+ */
+pub floor_divide_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 9, scalar).
+
+/**
+ * Writes floor division by a floating-point scalar into retained output storage.
+ */
+pub floor_divide_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 9, scalar).
+
+/**
+ * Applies floor division by a floating-point scalar in place.
+ */
+pub floor_divide_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 9, scalar).
+
+/**
+ * Writes xlogy for two tensors into retained output storage.
+ */
+pub xlogy_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    binary_tensor_out(output, left, 10, right).
+
+/**
+ * Applies xlogy with a tensor right operand in place.
+ */
+pub xlogy_tensor_in_place(left: Tensor, right: Tensor): Unit ->
+    binary_tensor_in_place(left, 10, right).
+
+/**
+ * Returns xlogy with an integer scalar right operand.
+ */
+pub xlogy_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 10, scalar).
+
+/**
+ * Returns xlogy with an integer scalar left operand.
+ */
+pub xlogy_left_int(scalar: Int, tensor: Tensor): Tensor ->
+    binary_scalar_left_int(10, scalar, tensor).
+
+/**
+ * Writes xlogy with an integer scalar right operand.
+ */
+pub xlogy_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 10, scalar).
+
+/**
+ * Writes xlogy with an integer scalar left operand.
+ */
+pub xlogy_left_int_out(output: Tensor, scalar: Int, tensor: Tensor): Unit ->
+    binary_scalar_left_int_out(output, 10, scalar, tensor).
+
+/**
+ * Applies xlogy with an integer scalar right operand in place.
+ */
+pub xlogy_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 10, scalar).
+
+/**
+ * Returns xlogy with a floating-point scalar right operand.
+ */
+pub xlogy_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 10, scalar).
+
+/**
+ * Returns xlogy with a floating-point scalar left operand.
+ */
+pub xlogy_left_float(scalar: Float, tensor: Tensor): Tensor ->
+    binary_scalar_left_float(10, scalar, tensor).
+
+/**
+ * Writes xlogy with a floating-point scalar right operand.
+ */
+pub xlogy_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 10, scalar).
+
+/**
+ * Writes xlogy with a floating-point scalar left operand.
+ */
+pub xlogy_left_float_out(output: Tensor, scalar: Float, tensor: Tensor): Unit ->
+    binary_scalar_left_float_out(output, 10, scalar, tensor).
+
+/**
+ * Applies xlogy with a floating-point scalar right operand in place.
+ */
+pub xlogy_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 10, scalar).
+
+/**
+ * Returns values from a tensor with signs copied from an integer scalar.
+ */
+pub copysign_right_int(tensor: Tensor, scalar: Int): Tensor ->
+    binary_scalar_right_int(tensor, 18, scalar).
+
+/**
+ * Writes values with signs copied from an integer scalar into retained storage.
+ */
+pub copysign_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_out(output, tensor, 18, scalar).
+
+/**
+ * Copies signs from an integer scalar into a tensor in place.
+ */
+pub copysign_right_int_in_place(tensor: Tensor, scalar: Int): Unit ->
+    binary_scalar_right_int_in_place(tensor, 18, scalar).
+
+/**
+ * Returns values from a tensor with signs copied from a floating-point scalar.
+ */
+pub copysign_right_float(tensor: Tensor, scalar: Float): Tensor ->
+    binary_scalar_right_float(tensor, 18, scalar).
+
+/**
+ * Writes values with signs copied from a floating-point scalar into retained storage.
+ */
+pub copysign_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_out(output, tensor, 18, scalar).
+
+/**
+ * Copies signs from a floating-point scalar into a tensor in place.
+ */
+pub copysign_right_float_in_place(tensor: Tensor, scalar: Float): Unit ->
+    binary_scalar_right_float_in_place(tensor, 18, scalar).

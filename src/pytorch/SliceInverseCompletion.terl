@@ -1,0 +1,41 @@
+/**
+ * Generated direct-CXX implementation of slice inverse mutation.
+ */
+module pytorch.SliceInverseCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Writes source into the full input slice.
+ */
+@compiler.native {pytorch.slice_inverse.slice_inverse_all}
+pub slice_inverse_all(input: Tensor, source: Tensor, dimension: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Writes source into the input slice from a starting bound.
+ */
+@compiler.native {pytorch.slice_inverse.slice_inverse_from}
+pub slice_inverse_from(input: Tensor, source: Tensor, dimension: Int, start: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Writes source into the input slice through an ending bound.
+ */
+@compiler.native {pytorch.slice_inverse.slice_inverse_until}
+pub slice_inverse_until(input: Tensor, source: Tensor, dimension: Int, end: Int, step: Int): Tensor ->
+    native.
+
+/**
+ * Writes source into the input slice between bounds.
+ */
+@compiler.native {pytorch.slice_inverse.slice_inverse_bounds}
+pub slice_inverse_bounds(
+    input: Tensor,
+    source: Tensor,
+    dimension: Int,
+    start: Int,
+    end: Int,
+    step: Int,
+): Tensor ->
+    native.

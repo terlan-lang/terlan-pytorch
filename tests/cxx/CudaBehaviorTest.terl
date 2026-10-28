@@ -1,0 +1,13 @@
+module pytorch_cxx.CudaBehaviorTest.
+
+/**
+ * Generated CXX CUDA behavior evidence for the public synchronization
+ * composition.
+ */
+
+import pytorch.Cuda.synchronize_device.
+
+@test
+pub synchronize_device_composition_executes(): Bool ->
+    synchronize_device(0);
+    true.

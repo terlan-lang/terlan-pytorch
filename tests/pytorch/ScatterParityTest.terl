@@ -1,0 +1,113 @@
+module pytorch.ScatterParityTest.
+
+import pytorch.Scatter.{LegacyReduction, Reduction, scatter_add_in_place, scatter_add_out, scatter_reduce, scatter_reduce_in_place, scatter_reduce_out, scatter_tensor_in_place, scatter_tensor_out, scatter_tensor_reduce, scatter_tensor_reduce_in_place, scatter_tensor_reduce_out, scatter_value_float, scatter_value_float_in_place, scatter_value_float_out, scatter_value_int, scatter_value_int_in_place, scatter_value_int_out, scatter_value_reduce_float, scatter_value_reduce_float_in_place, scatter_value_reduce_float_out, scatter_value_reduce_int, scatter_value_reduce_int_in_place, scatter_value_reduce_int_out}.
+import pytorch.Tensor.{dispose, from_floats, from_ints, item_float, sum}.
+
+/**
+ * Proves plain tensor and typed scalar scatter storage contracts.
+ */
+@test
+pub plain_and_scalar_forms_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0], [3]);
+    let index = from_ints([0, 2], [2]);
+    let source = from_floats([5.0, 6.0], [2]);
+    let tensor_output = from_floats([0.0, 0.0, 0.0], [3]);
+    let tensor_mutation = from_floats([1.0, 2.0, 3.0], [3]);
+    scatter_tensor_out(tensor_output, input, 0, index, source);
+    scatter_tensor_in_place(tensor_mutation, 0, index, source);
+    let integer = scatter_value_int(input, 0, index, 7);
+    let floating = scatter_value_float(input, 0, index, 0.5);
+    let integer_output = from_floats([0.0, 0.0, 0.0], [3]);
+    let floating_output = from_floats([0.0, 0.0, 0.0], [3]);
+    let integer_mutation = from_floats([1.0, 2.0, 3.0], [3]);
+    let floating_mutation = from_floats([1.0, 2.0, 3.0], [3]);
+    (scatter_value_int_out(integer_output, input, 0, index, 7); scatter_value_float_out(floating_output, input, 0, index, 0.5); scatter_value_int_in_place(integer_mutation, 0, index, 7); scatter_value_float_in_place(floating_mutation, 0, index, 0.5); let tensor_output_total = sum(tensor_output);
+let tensor_mutation_total = sum(tensor_mutation);
+let integer_total = sum(integer);
+let floating_total = sum(floating);
+let integer_output_total = sum(integer_output);
+let floating_output_total = sum(floating_output);
+let integer_mutation_total = sum(integer_mutation);
+let floating_mutation_total = sum(floating_mutation);
+let input_total = sum(input);
+let valid =
+    item_float(tensor_output_total) == 13.0
+        and item_float(tensor_mutation_total) == 13.0
+        and item_float(integer_total) == 16.0
+        and item_float(floating_total) == 3.0
+        and item_float(integer_output_total) == 16.0
+        and item_float(floating_output_total) == 3.0
+        and item_float(integer_mutation_total) == 16.0
+        and item_float(floating_mutation_total) == 3.0
+        and item_float(input_total) == 6.0;
+(dispose(input_total); dispose(floating_mutation_total); dispose(integer_mutation_total); dispose(floating_output_total); dispose(integer_output_total); dispose(floating_total); dispose(integer_total); dispose(tensor_mutation_total); dispose(tensor_output_total); dispose(floating_mutation); dispose(integer_mutation); dispose(floating_output); dispose(integer_output); dispose(floating); dispose(integer); dispose(tensor_mutation); dispose(tensor_output); dispose(source); dispose(index); dispose(input); valid)).
+
+/**
+ * Proves legacy tensor and typed scalar reduction storage contracts.
+ */
+@test
+pub legacy_reduction_forms_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0], [3]);
+    let index = from_ints([0, 2], [2]);
+    let source = from_floats([5.0, 6.0], [2]);
+    let tensor = scatter_tensor_reduce(input, 0, index, source, LegacyReduction.ADD);
+    let tensor_output = from_floats([0.0, 0.0, 0.0], [3]);
+    let tensor_mutation = from_floats([1.0, 2.0, 3.0], [3]);
+    scatter_tensor_reduce_out(tensor_output, input, 0, index, source, LegacyReduction.ADD);
+    scatter_tensor_reduce_in_place(tensor_mutation, 0, index, source, LegacyReduction.ADD);
+    let integer = scatter_value_reduce_int(input, 0, index, 5, LegacyReduction.ADD);
+    let floating = scatter_value_reduce_float(input, 0, index, 0.5, LegacyReduction.MULTIPLY);
+    let integer_output = from_floats([0.0, 0.0, 0.0], [3]);
+    let floating_output = from_floats([0.0, 0.0, 0.0], [3]);
+    let integer_mutation = from_floats([1.0, 2.0, 3.0], [3]);
+    let floating_mutation = from_floats([1.0, 2.0, 3.0], [3]);
+    (scatter_value_reduce_int_out(integer_output, input, 0, index, 5, LegacyReduction.ADD); scatter_value_reduce_float_out(floating_output, input, 0, index, 0.5, LegacyReduction.MULTIPLY); scatter_value_reduce_int_in_place(integer_mutation, 0, index, 5, LegacyReduction.ADD); scatter_value_reduce_float_in_place(floating_mutation, 0, index, 0.5, LegacyReduction.MULTIPLY); let tensor_total = sum(tensor);
+let tensor_output_total = sum(tensor_output);
+let tensor_mutation_total = sum(tensor_mutation);
+let integer_total = sum(integer);
+let floating_total = sum(floating);
+let integer_output_total = sum(integer_output);
+let floating_output_total = sum(floating_output);
+let integer_mutation_total = sum(integer_mutation);
+let floating_mutation_total = sum(floating_mutation);
+let valid =
+    item_float(tensor_total) == 17.0
+        and item_float(tensor_output_total) == 17.0
+        and item_float(tensor_mutation_total) == 17.0
+        and item_float(integer_total) == 16.0
+        and item_float(floating_total) == 4.0
+        and item_float(integer_output_total) == 16.0
+        and item_float(floating_output_total) == 4.0
+        and item_float(integer_mutation_total) == 16.0
+        and item_float(floating_mutation_total) == 4.0;
+(dispose(floating_mutation_total); dispose(integer_mutation_total); dispose(floating_output_total); dispose(integer_output_total); dispose(floating_total); dispose(integer_total); dispose(tensor_mutation_total); dispose(tensor_output_total); dispose(tensor_total); dispose(floating_mutation); dispose(integer_mutation); dispose(floating_output); dispose(integer_output); dispose(floating); dispose(integer); dispose(tensor_mutation); dispose(tensor_output); dispose(tensor); dispose(source); dispose(index); dispose(input); valid)).
+
+/**
+ * Proves additive and modern reduced scatter storage contracts.
+ */
+@test
+pub additive_and_modern_reductions_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0], [3]);
+    let index = from_ints([0, 2], [2]);
+    let source = from_floats([5.0, 6.0], [2]);
+    let additive_output = from_floats([0.0, 0.0, 0.0], [3]);
+    let additive_mutation = from_floats([1.0, 2.0, 3.0], [3]);
+    scatter_add_out(additive_output, input, 0, index, source);
+    scatter_add_in_place(additive_mutation, 0, index, source);
+    let reduced = scatter_reduce(input, 0, index, source, Reduction.SUM, true);
+    let reduced_output = from_floats([0.0, 0.0, 0.0], [3]);
+    let reduced_mutation = from_floats([1.0, 2.0, 3.0], [3]);
+    (scatter_reduce_out(reduced_output, input, 0, index, source, Reduction.PRODUCT, true); scatter_reduce_in_place(reduced_mutation, 0, index, source, Reduction.MAXIMUM, false); let additive_output_total = sum(additive_output);
+let additive_mutation_total = sum(additive_mutation);
+let reduced_total = sum(reduced);
+let reduced_output_total = sum(reduced_output);
+let reduced_mutation_total = sum(reduced_mutation);
+let input_total = sum(input);
+let valid =
+    item_float(additive_output_total) == 17.0
+        and item_float(additive_mutation_total) == 17.0
+        and item_float(reduced_total) == 17.0
+        and item_float(reduced_output_total) == 25.0
+        and item_float(reduced_mutation_total) == 13.0
+        and item_float(input_total) == 6.0;
+(dispose(input_total); dispose(reduced_mutation_total); dispose(reduced_output_total); dispose(reduced_total); dispose(additive_mutation_total); dispose(additive_output_total); dispose(reduced_mutation); dispose(reduced_output); dispose(reduced); dispose(additive_mutation); dispose(additive_output); dispose(source); dispose(index); dispose(input); valid)).

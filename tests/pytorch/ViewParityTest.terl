@@ -1,0 +1,180 @@
+module pytorch.ViewParityTest.
+
+import pytorch.Dense.{complex}.
+import pytorch.Tensor.{dispose, from_float, from_floats, item_float, narrow, shape, strides, sum}.
+import pytorch.Unary.{abs}.
+import pytorch.View.{adjoint, alias, alias_copy, atleast_1d, atleast_2d, atleast_3d, conj, data, detach, detach_copy, imag, lift, lift_fresh, lift_fresh_copy, mH, mT, matrix_H, numpy_T, positive, ravel, real, resolve_conj, resolve_neg, squeeze, squeeze_copy, t, t_copy, view_as_complex, view_as_complex_copy, view_as_real, view_as_real_copy}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reduces a floating-point tensor and releases its scalar result.
+ */
+float_sum(tensor: Tensor): Float ->
+    let total = sum(tensor);
+    let value = item_float(total);
+    dispose(total);
+    value.
+
+/**
+ * Reads one vector element through an owned view.
+ */
+vector_item(tensor: Tensor, index: Int): Float ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    value.
+
+/**
+ * Proves minimum-rank normalization for scalar input.
+ */
+@test
+pub minimum_rank_views_match_libtorch(): Bool ->
+    let scalar = from_float(3.0);
+    let rank_one = atleast_1d(scalar);
+    let rank_two = atleast_2d(scalar);
+    let rank_three = atleast_3d(scalar);
+    let valid =
+        shape(rank_one) == [1]
+            and shape(rank_two) == [1, 1]
+            and shape(rank_three) == [1, 1, 1]
+            and item_float(scalar) == 3.0;
+    dispose(rank_three);
+    dispose(rank_two);
+    dispose(rank_one);
+    dispose(scalar);
+    valid.
+
+/**
+ * Proves dense aliases, detached handles, lift variants, ravel, and squeeze.
+ */
+@test
+pub alias_and_detach_views_match_libtorch(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0], [1, 2, 2]);
+    let aliased = alias(source);
+    let copied_alias = alias_copy(source);
+    let data_view = data(source);
+    let detached = detach(source);
+    let copied_detach = detach_copy(source);
+    let lifted = lift(source);
+    let fresh_lift = lift_fresh(source);
+    let copied_fresh_lift = lift_fresh_copy(source);
+    let positive_view = positive(source);
+    let flattened = ravel(source);
+    let squeezed = squeeze(source);
+    let copied_squeeze = squeeze_copy(source);
+    let resolved_negative = resolve_neg(source);
+    let valid =
+        shape(aliased) == [1, 2, 2]
+            and shape(copied_alias) == [1, 2, 2]
+            and shape(data_view) == [1, 2, 2]
+            and shape(detached) == [1, 2, 2]
+            and shape(copied_detach) == [1, 2, 2]
+            and shape(lifted) == [1, 2, 2]
+            and shape(fresh_lift) == [1, 2, 2]
+            and shape(copied_fresh_lift) == [1, 2, 2]
+            and shape(positive_view) == [1, 2, 2]
+            and shape(flattened) == [4]
+            and float_sum(flattened) == 10.0
+            and shape(squeezed) == [2, 2]
+            and shape(copied_squeeze) == [2, 2]
+            and shape(resolved_negative) == [1, 2, 2]
+            and shape(source) == [1, 2, 2];
+    dispose(resolved_negative);
+    dispose(copied_squeeze);
+    dispose(squeezed);
+    dispose(flattened);
+    dispose(positive_view);
+    dispose(copied_fresh_lift);
+    dispose(fresh_lift);
+    dispose(lifted);
+    dispose(copied_detach);
+    dispose(detached);
+    dispose(data_view);
+    dispose(copied_alias);
+    dispose(aliased);
+    dispose(source);
+    valid.
+
+/**
+ * Proves transpose, adjoint, matrix-Hermitian, and copy variants.
+ */
+@test
+pub transpose_and_adjoint_views_match_libtorch(): Bool ->
+    let matrix = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let adjoint_view = adjoint(matrix);
+    let hermitian_view = mH(matrix);
+    let transpose_view = mT(matrix);
+    let matrix_hermitian = matrix_H(matrix);
+    let numpy_transpose = numpy_T(matrix);
+    let ordinary_transpose = t(matrix);
+    let copied_transpose = t_copy(matrix);
+    let valid =
+        shape(adjoint_view) == [3, 2]
+            and shape(hermitian_view) == [3, 2]
+            and shape(transpose_view) == [3, 2]
+            and shape(matrix_hermitian) == [3, 2]
+            and shape(numpy_transpose) == [3, 2]
+            and shape(ordinary_transpose) == [3, 2]
+            and strides(ordinary_transpose) == [1, 3]
+            and shape(copied_transpose) == [3, 2]
+            and strides(copied_transpose) == [2, 1]
+            and shape(matrix) == [2, 3];
+    dispose(copied_transpose);
+    dispose(ordinary_transpose);
+    dispose(numpy_transpose);
+    dispose(matrix_hermitian);
+    dispose(transpose_view);
+    dispose(hermitian_view);
+    dispose(adjoint_view);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves conjugate, real/imaginary, and real-complex storage views and copies.
+ */
+@test
+pub real_and_complex_views_match_libtorch(): Bool ->
+    let real_source = from_float(3.0);
+    let imaginary_source = from_float(4.0);
+    let cartesian = complex(real_source, imaginary_source);
+    let conjugated = conj(cartesian);
+    let resolved = resolve_conj(conjugated);
+    let real_part = real(cartesian);
+    let imaginary_part = imag(cartesian);
+    let real_view = view_as_real(cartesian);
+    let copied_real_view = view_as_real_copy(cartesian);
+    let packed = from_floats([3.0, 4.0], [1, 2]);
+    let complex_view = view_as_complex(packed);
+    let copied_complex_view = view_as_complex_copy(packed);
+    let resolved_magnitude = abs(resolved);
+    let viewed_magnitude = abs(complex_view);
+    let copied_magnitude = abs(copied_complex_view);
+    let valid =
+        item_float(real_part) == 3.0
+            and item_float(imaginary_part) == 4.0
+            and shape(real_view) == [2]
+            and vector_item(real_view, 0) == 3.0
+            and vector_item(real_view, 1) == 4.0
+            and shape(copied_real_view) == [2]
+            and shape(complex_view) == [1]
+            and shape(copied_complex_view) == [1]
+            and item_float(resolved_magnitude) == 5.0
+            and item_float(viewed_magnitude) == 5.0
+            and item_float(copied_magnitude) == 5.0;
+    dispose(copied_magnitude);
+    dispose(viewed_magnitude);
+    dispose(resolved_magnitude);
+    dispose(copied_complex_view);
+    dispose(complex_view);
+    dispose(packed);
+    dispose(copied_real_view);
+    dispose(real_view);
+    dispose(imaginary_part);
+    dispose(real_part);
+    dispose(resolved);
+    dispose(conjugated);
+    dispose(cartesian);
+    dispose(imaginary_source);
+    dispose(real_source);
+    valid.

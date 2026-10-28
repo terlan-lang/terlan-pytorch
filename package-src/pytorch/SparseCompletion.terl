@@ -1,0 +1,46 @@
+/**
+ * Compatibility aliases for legacy dense-to-COO tensor methods.
+ */
+module pytorch.SparseCompletion.
+
+import pytorch.Sparse.to_sparse_configured.
+import pytorch.Tensor.{dispose, sum as dense_sum, sum_dimensions, to_dtype}.
+
+import type pytorch.Tensor.
+
+/**
+ * Converts a dense tensor to the default sparse COO layout.
+ */
+pub to_sparse_coo(input: Tensor): Tensor ->
+    to_sparse_configured(input, 1, true, [], false, 0, false).
+
+/**
+ * Implements torch.sparse.sum's optional dimension and dtype contract over
+ * the generated ATen sum leaves. An absent dimension reduces all axes;
+ * an absent dtype preserves LibTorch's input dtype inference.
+ */
+sum_with_dtype(input: Tensor, dimensions: List[Int], has_dimensions: Bool, dtype: Int): Tensor ->
+    let converted = to_dtype(input, dtype);
+    let result =
+        if {
+            has_dimensions -> sum_dimensions(converted, dimensions, false);
+            true -> dense_sum(converted)
+        };
+    dispose(converted);
+    result.
+
+/**
+ * Exact sparse reduction adapter for torch.sparse.sum.
+ */
+pub sparse_sum(
+    input: Tensor,
+    dimensions: List[Int],
+    has_dimensions: Bool,
+    dtype: Int,
+    has_dtype: Bool,
+): Tensor ->
+    if {
+        has_dtype -> sum_with_dtype(input, dimensions, has_dimensions, dtype);
+        has_dimensions -> sum_dimensions(input, dimensions, false);
+        true -> dense_sum(input)
+    }.

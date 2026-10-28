@@ -1,0 +1,7 @@
+module pytorch_cxx.WindowNativeBehaviorTest.
+
+import pytorch.WindowNativeBehaviorSupport.{window_contracts_on}.
+
+@test
+pub cpu_window_contracts(): Bool ->
+    window_contracts_on("cpu", false).

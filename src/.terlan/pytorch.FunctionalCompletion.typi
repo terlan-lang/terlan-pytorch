@@ -1,0 +1,323 @@
+//! Generated direct-CXX implementation of functional completion operations.
+
+module pytorch.FunctionalCompletion.
+
+/// Executes exact aten::diff with append only.
+
+pub diff_append(input: Tensor, order: Int, dimension: Int, append: Tensor): Tensor.
+
+/// Executes exact aten::diff without boundary tensors.
+
+pub diff_basic(input: Tensor, order: Int, dimension: Int): Tensor.
+
+/// Executes exact aten::diff with both boundary tensors.
+
+pub diff_both(input: Tensor, order: Int, dimension: Int, prepend: Tensor, append: Tensor): Tensor.
+
+/// Writes exact aten::diff.out with append only.
+
+pub diff_out_append(output: Tensor, input: Tensor, order: Int, dimension: Int, append: Tensor): Unit.
+
+/// Writes exact aten::diff.out without boundary tensors.
+
+pub diff_out_basic(output: Tensor, input: Tensor, order: Int, dimension: Int): Unit.
+
+/// Writes exact aten::diff.out with both boundary tensors.
+
+pub diff_out_both(output: Tensor, input: Tensor, order: Int, dimension: Int, prepend: Tensor, append: Tensor): Unit.
+
+/// Writes exact aten::diff.out with prepend only.
+
+pub diff_out_prepend(output: Tensor, input: Tensor, order: Int, dimension: Int, prepend: Tensor): Unit.
+
+/// Executes exact aten::diff with prepend only.
+
+pub diff_prepend(input: Tensor, order: Int, dimension: Int, prepend: Tensor): Tensor.
+
+/// Applies Gaussian negative log-likelihood loss with tensor variance.
+
+pub gaussian_nll_loss(input: Tensor, target: Tensor, variance: Tensor, full: Bool, eps: Float, reduction: String): Tensor.
+
+/// Applies Gaussian negative log-likelihood loss with scalar variance.
+
+pub gaussian_nll_loss(input: Tensor, target: Tensor, variance: Float, full: Bool, eps: Float, reduction: String): Tensor.
+
+/// Executes Gaussian negative log-likelihood loss through the generated CXX adapter.
+
+pub gaussian_nll_loss_configured(input: Tensor, target: Tensor, var_is_tensor: Bool, var_tensor: Tensor, var_scalar: Float, full: Bool, eps: Float, reduction: String): Tensor.
+
+/// Computes Gaussian negative log-likelihood loss with scalar variance.
+
+pub gaussian_nll_loss_scalar(input: Tensor, target: Tensor, variance: Float, full: Bool, eps: Float, reduction: String): Tensor.
+
+/// Computes Gaussian negative log-likelihood loss with tensor variance.
+
+pub gaussian_nll_loss_tensor(input: Tensor, target: Tensor, variance: Tensor, full: Bool, eps: Float, reduction: String): Tensor.
+
+/// Executes exact aten::group_norm with weight and bias.
+
+pub group_norm_affine(input: Tensor, groups: Int, weight: Tensor, bias: Tensor, epsilon: Float, cudnn_enabled: Bool): Tensor.
+
+/// Executes exact aten::group_norm with bias only.
+
+pub group_norm_bias(input: Tensor, groups: Int, bias: Tensor, epsilon: Float, cudnn_enabled: Bool): Tensor.
+
+/// Executes exact aten::group_norm without affine tensors.
+
+pub group_norm_no_affine(input: Tensor, groups: Int, epsilon: Float, cudnn_enabled: Bool): Tensor.
+
+/// Executes exact aten::group_norm with weight only.
+
+pub group_norm_weight(input: Tensor, groups: Int, weight: Tensor, epsilon: Float, cudnn_enabled: Bool): Tensor.
+
+/// Applies gumbel-softmax with the PyTorch tau, hard, eps, and dim call shape.
+
+pub gumbel_softmax(logits: Tensor, tau: Float, hard: Bool, eps: Float, dimension: Int): Tensor.
+
+/// Executes the LibTorch C++ gumbel-softmax functional; eps is accepted for Python compatibility and ignored upstream.
+
+pub gumbel_softmax_configured(logits: Tensor, tau: Float, hard: Bool, eps: Float, dimension: Int): Tensor.
+
+/// Applies interpolation with size/scale, mode, alignment, recomputation, and anti-alias options.
+
+pub interpolate(input: Tensor, has_size: Bool, size: List[Int], has_scale: Bool, scale_factor: List[Float], mode: String, has_align_corners: Bool, align_corners: Bool, has_recompute: Bool, recompute_scale_factor: Bool, antialias: Bool): Tensor.
+
+/// Executes the LibTorch C++ interpolation functional with explicit optional presence.
+
+pub interpolate_configured(input: Tensor, has_size: Bool, size: List[Int], has_scale: Bool, scale_factor: List[Float], mode: String, has_align_corners: Bool, align_corners: Bool, has_recompute: Bool, recompute_scale_factor: Bool, antialias: Bool): Tensor.
+
+/// Executes exact aten::linear without bias.
+
+pub linear_no_bias(input: Tensor, weight: Tensor): Tensor.
+
+/// Writes exact aten::linear.out without bias.
+
+pub linear_out_no_bias(output: Tensor, input: Tensor, weight: Tensor): Unit.
+
+/// Writes exact aten::linear.out with bias.
+
+pub linear_out_with_bias(output: Tensor, input: Tensor, weight: Tensor, bias: Tensor): Unit.
+
+/// Executes exact aten::linear with bias.
+
+pub linear_with_bias(input: Tensor, weight: Tensor, bias: Tensor): Tensor.
+
+/// Applies local response normalization over channels with PyTorch defaults.
+
+pub local_response_norm(input: Tensor, size: Int, alpha: Float = 0.0001, beta: Float = 0.75, k: Float = 1.0): Tensor.
+
+/// Executes the LibTorch C++ local_response_norm functional with explicit parameters.
+
+pub local_response_norm_configured(input: Tensor, size: Int, alpha: Float, beta: Float, k: Float): Tensor.
+
+/// Executes exact aten::log_softmax.int with inferred dtype.
+
+pub log_softmax_default_dtype(input: Tensor, dimension: Int): Tensor.
+
+/// Executes exact aten::log_softmax.int with explicit dtype.
+
+pub log_softmax_dtype(input: Tensor, dimension: Int, dtype: Int): Tensor.
+
+/// Writes exact aten::log_softmax.int_out with inferred dtype.
+
+pub log_softmax_out_default_dtype(output: Tensor, input: Tensor, dimension: Int): Unit.
+
+/// Writes exact aten::log_softmax.int_out with explicit dtype.
+
+pub log_softmax_out_dtype(output: Tensor, input: Tensor, dimension: Int, dtype: Int): Unit.
+
+/// Applies integer-norm lp_pool1d with PyTorch default stride and ceil_mode.
+
+pub lp_pool1d(input: Tensor, norm_type: Int, kernel_size: Int): Tensor.
+
+/// Applies floating-norm lp_pool1d with PyTorch default stride and ceil_mode.
+
+pub lp_pool1d(input: Tensor, norm_type: Float, kernel_size: Int): Tensor.
+
+/// Applies integer-norm lp_pool1d with default stride and explicit ceil_mode.
+
+pub lp_pool1d(input: Tensor, norm_type: Int, kernel_size: Int, ceil_mode: Bool): Tensor.
+
+/// Applies floating-norm lp_pool1d with default stride and explicit ceil_mode.
+
+pub lp_pool1d(input: Tensor, norm_type: Float, kernel_size: Int, ceil_mode: Bool): Tensor.
+
+/// Applies integer-norm lp_pool1d with explicit stride.
+
+pub lp_pool1d(input: Tensor, norm_type: Int, kernel_size: Int, stride: Int): Tensor.
+
+/// Applies floating-norm lp_pool1d with explicit stride.
+
+pub lp_pool1d(input: Tensor, norm_type: Float, kernel_size: Int, stride: Int): Tensor.
+
+/// Applies integer-norm lp_pool1d with explicit stride and ceil_mode.
+
+pub lp_pool1d(input: Tensor, norm_type: Int, kernel_size: Int, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Applies floating-norm lp_pool1d with explicit stride and ceil_mode.
+
+pub lp_pool1d(input: Tensor, norm_type: Float, kernel_size: Int, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Executes the LibTorch C++ lp_pool1d functional with exact Python infinity handling.
+
+pub lp_pool1d_configured(input: Tensor, norm_type_is_int: Bool, norm_type_int: Int, norm_type_float: Float, kernel_size: Int, has_stride: Bool, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Projects a floating lp_pool1d norm type into the configured CXX call.
+
+pub lp_pool1d_float(input: Tensor, norm_type: Float, kernel_size: Int, has_stride: Bool, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Projects an integer lp_pool1d norm type into the configured CXX call.
+
+pub lp_pool1d_int(input: Tensor, norm_type: Int, kernel_size: Int, has_stride: Bool, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Applies integer-norm lp_pool2d with default stride and ceil mode.
+
+pub lp_pool2d(input: Tensor, norm_type: Int, kernel_size: Int): Tensor.
+
+/// Applies floating-norm lp_pool2d with default stride and ceil mode.
+
+pub lp_pool2d(input: Tensor, norm_type: Float, kernel_size: Int): Tensor.
+
+/// Applies integer-norm lp_pool2d with default stride and explicit ceil mode.
+
+pub lp_pool2d(input: Tensor, norm_type: Int, kernel_size: Int, ceil_mode: Bool): Tensor.
+
+/// Applies floating-norm lp_pool2d with default stride and explicit ceil mode.
+
+pub lp_pool2d(input: Tensor, norm_type: Float, kernel_size: Int, ceil_mode: Bool): Tensor.
+
+/// Applies integer-norm lp_pool2d with explicit stride.
+
+pub lp_pool2d(input: Tensor, norm_type: Int, kernel_size: Int, stride: Int): Tensor.
+
+/// Applies floating-norm lp_pool2d with explicit stride.
+
+pub lp_pool2d(input: Tensor, norm_type: Float, kernel_size: Int, stride: Int): Tensor.
+
+/// Applies integer-norm lp_pool2d with explicit stride and ceil mode.
+
+pub lp_pool2d(input: Tensor, norm_type: Int, kernel_size: Int, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Applies floating-norm lp_pool2d with explicit stride and ceil mode.
+
+pub lp_pool2d(input: Tensor, norm_type: Float, kernel_size: Int, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Executes the LibTorch C++ lp_pool2d functional with exact infinity handling.
+
+pub lp_pool2d_configured(input: Tensor, norm_type_is_int: Bool, norm_type_int: Int, norm_type_float: Float, kernel_size: Int, has_stride: Bool, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Projects a floating lp_pool2d norm type into the configured CXX call.
+
+pub lp_pool2d_float(input: Tensor, norm_type: Float, kernel_size: Int, has_stride: Bool, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Projects an integer lp_pool2d norm type into the configured CXX call.
+
+pub lp_pool2d_int(input: Tensor, norm_type: Int, kernel_size: Int, has_stride: Bool, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Applies integer-norm lp_pool3d with default stride and ceil mode.
+
+pub lp_pool3d(input: Tensor, norm_type: Int, kernel_size: Int): Tensor.
+
+/// Applies floating-norm lp_pool3d with default stride and ceil mode.
+
+pub lp_pool3d(input: Tensor, norm_type: Float, kernel_size: Int): Tensor.
+
+/// Applies integer-norm lp_pool3d with default stride and explicit ceil mode.
+
+pub lp_pool3d(input: Tensor, norm_type: Int, kernel_size: Int, ceil_mode: Bool): Tensor.
+
+/// Applies floating-norm lp_pool3d with default stride and explicit ceil mode.
+
+pub lp_pool3d(input: Tensor, norm_type: Float, kernel_size: Int, ceil_mode: Bool): Tensor.
+
+/// Applies integer-norm lp_pool3d with explicit stride.
+
+pub lp_pool3d(input: Tensor, norm_type: Int, kernel_size: Int, stride: Int): Tensor.
+
+/// Applies floating-norm lp_pool3d with explicit stride.
+
+pub lp_pool3d(input: Tensor, norm_type: Float, kernel_size: Int, stride: Int): Tensor.
+
+/// Applies integer-norm lp_pool3d with explicit stride and ceil mode.
+
+pub lp_pool3d(input: Tensor, norm_type: Int, kernel_size: Int, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Applies floating-norm lp_pool3d with explicit stride and ceil mode.
+
+pub lp_pool3d(input: Tensor, norm_type: Float, kernel_size: Int, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Executes the LibTorch C++ lp_pool3d functional with exact infinity handling.
+
+pub lp_pool3d_configured(input: Tensor, norm_type_is_int: Bool, norm_type_int: Int, norm_type_float: Float, kernel_size: Int, has_stride: Bool, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Projects a floating lp_pool3d norm type into the configured CXX call.
+
+pub lp_pool3d_float(input: Tensor, norm_type: Float, kernel_size: Int, has_stride: Bool, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Projects an integer lp_pool3d norm type into the configured CXX call.
+
+pub lp_pool3d_int(input: Tensor, norm_type: Int, kernel_size: Int, has_stride: Bool, stride: Int, ceil_mode: Bool): Tensor.
+
+/// Executes exact aten::masked_scatter_backward.
+
+pub masked_scatter_backward(gradient: Tensor, mask: Tensor, sizes: List[Int]): Tensor.
+
+/// Applies max_unpool1d with PyTorch default stride and padding.
+
+pub max_unpool1d(input: Tensor, indices: Tensor, kernel_size: Int): Tensor.
+
+/// Applies max_unpool1d with an explicit stride.
+
+pub max_unpool1d(input: Tensor, indices: Tensor, kernel_size: Int, stride: Int): Tensor.
+
+/// Applies max_unpool1d with explicit stride and padding.
+
+pub max_unpool1d(input: Tensor, indices: Tensor, kernel_size: Int, stride: Int, padding: Int): Tensor.
+
+/// Applies max_unpool1d with explicit stride, padding, and target output size.
+
+pub max_unpool1d(input: Tensor, indices: Tensor, kernel_size: Int, stride: Int, padding: Int, output_size: List[Int]): Tensor.
+
+/// Executes the LibTorch C++ max_unpool1d functional with optional stride, padding, and output size.
+
+pub max_unpool1d_configured(input: Tensor, indices: Tensor, kernel_size: Int, has_stride: Bool, stride: Int, padding: Int, has_output_size: Bool, output_size: List[Int]): Tensor.
+
+/// Computes multilabel soft-margin loss with all PyTorch defaults.
+
+pub multilabel_soft_margin_loss(input: Tensor, target: Tensor): Tensor.
+
+/// Computes multilabel soft-margin loss with optional weight and the default reduction.
+
+pub multilabel_soft_margin_loss(input: Tensor, target: Tensor, weight: std.core.Option.Option[pytorch.Tensor]): Tensor.
+
+/// Computes multilabel soft-margin loss with optional weight and size_average.
+
+pub multilabel_soft_margin_loss(input: Tensor, target: Tensor, weight: std.core.Option.Option[pytorch.Tensor], size_average: std.core.Option.Option[Bool]): Tensor.
+
+/// Computes multilabel soft-margin loss with optional legacy reduction flags.
+
+pub multilabel_soft_margin_loss(input: Tensor, target: Tensor, weight: std.core.Option.Option[pytorch.Tensor], size_average: std.core.Option.Option[Bool], reduce: std.core.Option.Option[Bool]): Tensor.
+
+/// Computes multilabel soft-margin loss with PyTorch optional weight and reduction semantics.
+
+pub multilabel_soft_margin_loss(input: Tensor, target: Tensor, weight: std.core.Option.Option[pytorch.Tensor], size_average: std.core.Option.Option[Bool], reduce: std.core.Option.Option[Bool], reduction: String): Tensor.
+
+/// Executes the LibTorch C++ multilabel_soft_margin_loss functional with explicit options.
+
+pub multilabel_soft_margin_loss_configured(input: Tensor, target: Tensor, has_weight: Bool, weight: Tensor, has_size_average: Bool, size_average: Bool, has_reduce: Bool, reduce: Bool, reduction: String): Tensor.
+
+/// Normalizes a tensor along one dimension using an epsilon floor.
+
+pub normalize(input: Tensor, p: Float = 2.0, dimension: Int = 1, epsilon: Float = 1e-12): Tensor.
+
+/// upsample compatibility alias backed by generated interpolation.
+
+pub upsample(input: Tensor, has_size: Bool, size: List[Int], has_scale: Bool, scale_factor: List[Float], mode: String, has_align_corners: Bool, align_corners: Bool, has_recompute: Bool, recompute_scale_factor: Bool, antialias: Bool): Tensor.
+
+/// upsample_bilinear compatibility alias backed by generated interpolation.
+
+pub upsample_bilinear(input: Tensor, has_size: Bool, size: List[Int], has_scale: Bool, scale_factor: List[Float]): Tensor.
+
+/// upsample_nearest compatibility alias backed by generated interpolation.
+
+pub upsample_nearest(input: Tensor, has_size: Bool, size: List[Int], has_scale: Bool, scale_factor: List[Float]): Tensor.

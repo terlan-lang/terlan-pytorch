@@ -1,0 +1,290 @@
+module pytorch.ComparisonScalarParityTest.
+
+import pytorch.ComparisonScalar.{eq_right_float, eq_right_float_in_place, eq_right_float_out, eq_tensor_in_place, eq_tensor_out, ge_right_float, ge_right_float_in_place, ge_right_float_out, ge_tensor_in_place, ge_tensor_out, greater_equal_right_float, greater_equal_right_float_in_place, greater_equal_right_float_out, greater_equal_tensor_in_place, greater_equal_tensor_out, greater_right_float, greater_right_float_in_place, greater_right_float_out, greater_tensor_in_place, greater_tensor_out, gt_right_float, gt_right_float_in_place, gt_right_float_out, gt_tensor_in_place, gt_tensor_out, le_right_float, le_right_float_in_place, le_right_float_out, le_tensor_in_place, le_tensor_out, less_equal_right_float, less_equal_right_float_in_place, less_equal_right_float_out, less_equal_tensor_in_place, less_equal_tensor_out, less_right_float, less_right_float_in_place, less_right_float_out, less_tensor_in_place, less_tensor_out, lt_right_float, lt_right_float_in_place, lt_right_float_out, lt_tensor_in_place, lt_tensor_out, ne_right_float, ne_right_float_in_place, ne_right_float_out, ne_tensor_in_place, ne_tensor_out, not_equal_right_float, not_equal_right_float_in_place, not_equal_right_float_out, not_equal_tensor_in_place, not_equal_tensor_out}.
+import pytorch.Tensor.{dispose, from_bool, from_float, item_bool, item_float}.
+
+/**
+ * Proves every missing eq scalar, output, and mutation schema.
+ */
+@test
+pub eq_overloads_match_libtorch(): Bool ->
+    let left = from_float(3.0);
+    let right = from_float(3.0);
+    let scalar_value = eq_right_float(left, 3.0);
+    let tensor_output = from_bool(false);
+    let scalar_output = from_bool(false);
+    let tensor_mutation = from_float(3.0);
+    let scalar_mutation = from_float(3.0);
+    eq_tensor_out(tensor_output, left, right);
+    eq_right_float_out(scalar_output, left, 3.0);
+    eq_tensor_in_place(tensor_mutation, right);
+    eq_right_float_in_place(scalar_mutation, 3.0);
+    let valid =
+        item_bool(scalar_value) == true
+            and item_bool(tensor_output) == true
+            and item_bool(scalar_output) == true
+            and item_float(tensor_mutation) == 1.0
+            and item_float(scalar_mutation) == 1.0
+            and item_float(left) == 3.0
+            and item_float(right) == 3.0;
+    (dispose(scalar_mutation); dispose(tensor_mutation); dispose(scalar_output); dispose(tensor_output); dispose(scalar_value); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every missing ne scalar, output, and mutation schema.
+ */
+@test
+pub ne_overloads_match_libtorch(): Bool ->
+    let left = from_float(3.0);
+    let right = from_float(3.0);
+    let scalar_value = ne_right_float(left, 3.0);
+    let tensor_output = from_bool(false);
+    let scalar_output = from_bool(false);
+    let tensor_mutation = from_float(3.0);
+    let scalar_mutation = from_float(3.0);
+    ne_tensor_out(tensor_output, left, right);
+    ne_right_float_out(scalar_output, left, 3.0);
+    ne_tensor_in_place(tensor_mutation, right);
+    ne_right_float_in_place(scalar_mutation, 3.0);
+    let valid =
+        item_bool(scalar_value) == false
+            and item_bool(tensor_output) == false
+            and item_bool(scalar_output) == false
+            and item_float(tensor_mutation) == 0.0
+            and item_float(scalar_mutation) == 0.0
+            and item_float(left) == 3.0
+            and item_float(right) == 3.0;
+    (dispose(scalar_mutation); dispose(tensor_mutation); dispose(scalar_output); dispose(tensor_output); dispose(scalar_value); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every missing not_equal scalar, output, and mutation schema.
+ */
+@test
+pub not_equal_overloads_match_libtorch(): Bool ->
+    let left = from_float(3.0);
+    let right = from_float(3.0);
+    let scalar_value = not_equal_right_float(left, 3.0);
+    let tensor_output = from_bool(false);
+    let scalar_output = from_bool(false);
+    let tensor_mutation = from_float(3.0);
+    let scalar_mutation = from_float(3.0);
+    not_equal_tensor_out(tensor_output, left, right);
+    not_equal_right_float_out(scalar_output, left, 3.0);
+    not_equal_tensor_in_place(tensor_mutation, right);
+    not_equal_right_float_in_place(scalar_mutation, 3.0);
+    let valid =
+        item_bool(scalar_value) == false
+            and item_bool(tensor_output) == false
+            and item_bool(scalar_output) == false
+            and item_float(tensor_mutation) == 0.0
+            and item_float(scalar_mutation) == 0.0
+            and item_float(left) == 3.0
+            and item_float(right) == 3.0;
+    (dispose(scalar_mutation); dispose(tensor_mutation); dispose(scalar_output); dispose(tensor_output); dispose(scalar_value); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every missing lt scalar, output, and mutation schema.
+ */
+@test
+pub lt_overloads_match_libtorch(): Bool ->
+    let left = from_float(3.0);
+    let right = from_float(3.0);
+    let scalar_value = lt_right_float(left, 3.0);
+    let tensor_output = from_bool(false);
+    let scalar_output = from_bool(false);
+    let tensor_mutation = from_float(3.0);
+    let scalar_mutation = from_float(3.0);
+    lt_tensor_out(tensor_output, left, right);
+    lt_right_float_out(scalar_output, left, 3.0);
+    lt_tensor_in_place(tensor_mutation, right);
+    lt_right_float_in_place(scalar_mutation, 3.0);
+    let valid =
+        item_bool(scalar_value) == false
+            and item_bool(tensor_output) == false
+            and item_bool(scalar_output) == false
+            and item_float(tensor_mutation) == 0.0
+            and item_float(scalar_mutation) == 0.0
+            and item_float(left) == 3.0
+            and item_float(right) == 3.0;
+    (dispose(scalar_mutation); dispose(tensor_mutation); dispose(scalar_output); dispose(tensor_output); dispose(scalar_value); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every missing less scalar, output, and mutation schema.
+ */
+@test
+pub less_overloads_match_libtorch(): Bool ->
+    let left = from_float(3.0);
+    let right = from_float(3.0);
+    let scalar_value = less_right_float(left, 3.0);
+    let tensor_output = from_bool(false);
+    let scalar_output = from_bool(false);
+    let tensor_mutation = from_float(3.0);
+    let scalar_mutation = from_float(3.0);
+    less_tensor_out(tensor_output, left, right);
+    less_right_float_out(scalar_output, left, 3.0);
+    less_tensor_in_place(tensor_mutation, right);
+    less_right_float_in_place(scalar_mutation, 3.0);
+    let valid =
+        item_bool(scalar_value) == false
+            and item_bool(tensor_output) == false
+            and item_bool(scalar_output) == false
+            and item_float(tensor_mutation) == 0.0
+            and item_float(scalar_mutation) == 0.0
+            and item_float(left) == 3.0
+            and item_float(right) == 3.0;
+    (dispose(scalar_mutation); dispose(tensor_mutation); dispose(scalar_output); dispose(tensor_output); dispose(scalar_value); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every missing le scalar, output, and mutation schema.
+ */
+@test
+pub le_overloads_match_libtorch(): Bool ->
+    let left = from_float(3.0);
+    let right = from_float(3.0);
+    let scalar_value = le_right_float(left, 3.0);
+    let tensor_output = from_bool(false);
+    let scalar_output = from_bool(false);
+    let tensor_mutation = from_float(3.0);
+    let scalar_mutation = from_float(3.0);
+    le_tensor_out(tensor_output, left, right);
+    le_right_float_out(scalar_output, left, 3.0);
+    le_tensor_in_place(tensor_mutation, right);
+    le_right_float_in_place(scalar_mutation, 3.0);
+    let valid =
+        item_bool(scalar_value) == true
+            and item_bool(tensor_output) == true
+            and item_bool(scalar_output) == true
+            and item_float(tensor_mutation) == 1.0
+            and item_float(scalar_mutation) == 1.0
+            and item_float(left) == 3.0
+            and item_float(right) == 3.0;
+    (dispose(scalar_mutation); dispose(tensor_mutation); dispose(scalar_output); dispose(tensor_output); dispose(scalar_value); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every missing less_equal scalar, output, and mutation schema.
+ */
+@test
+pub less_equal_overloads_match_libtorch(): Bool ->
+    let left = from_float(3.0);
+    let right = from_float(3.0);
+    let scalar_value = less_equal_right_float(left, 3.0);
+    let tensor_output = from_bool(false);
+    let scalar_output = from_bool(false);
+    let tensor_mutation = from_float(3.0);
+    let scalar_mutation = from_float(3.0);
+    less_equal_tensor_out(tensor_output, left, right);
+    less_equal_right_float_out(scalar_output, left, 3.0);
+    less_equal_tensor_in_place(tensor_mutation, right);
+    less_equal_right_float_in_place(scalar_mutation, 3.0);
+    let valid =
+        item_bool(scalar_value) == true
+            and item_bool(tensor_output) == true
+            and item_bool(scalar_output) == true
+            and item_float(tensor_mutation) == 1.0
+            and item_float(scalar_mutation) == 1.0
+            and item_float(left) == 3.0
+            and item_float(right) == 3.0;
+    (dispose(scalar_mutation); dispose(tensor_mutation); dispose(scalar_output); dispose(tensor_output); dispose(scalar_value); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every missing gt scalar, output, and mutation schema.
+ */
+@test
+pub gt_overloads_match_libtorch(): Bool ->
+    let left = from_float(3.0);
+    let right = from_float(3.0);
+    let scalar_value = gt_right_float(left, 3.0);
+    let tensor_output = from_bool(false);
+    let scalar_output = from_bool(false);
+    let tensor_mutation = from_float(3.0);
+    let scalar_mutation = from_float(3.0);
+    gt_tensor_out(tensor_output, left, right);
+    gt_right_float_out(scalar_output, left, 3.0);
+    gt_tensor_in_place(tensor_mutation, right);
+    gt_right_float_in_place(scalar_mutation, 3.0);
+    let valid =
+        item_bool(scalar_value) == false
+            and item_bool(tensor_output) == false
+            and item_bool(scalar_output) == false
+            and item_float(tensor_mutation) == 0.0
+            and item_float(scalar_mutation) == 0.0
+            and item_float(left) == 3.0
+            and item_float(right) == 3.0;
+    (dispose(scalar_mutation); dispose(tensor_mutation); dispose(scalar_output); dispose(tensor_output); dispose(scalar_value); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every missing greater scalar, output, and mutation schema.
+ */
+@test
+pub greater_overloads_match_libtorch(): Bool ->
+    let left = from_float(3.0);
+    let right = from_float(3.0);
+    let scalar_value = greater_right_float(left, 3.0);
+    let tensor_output = from_bool(false);
+    let scalar_output = from_bool(false);
+    let tensor_mutation = from_float(3.0);
+    let scalar_mutation = from_float(3.0);
+    greater_tensor_out(tensor_output, left, right);
+    greater_right_float_out(scalar_output, left, 3.0);
+    greater_tensor_in_place(tensor_mutation, right);
+    greater_right_float_in_place(scalar_mutation, 3.0);
+    let valid =
+        item_bool(scalar_value) == false
+            and item_bool(tensor_output) == false
+            and item_bool(scalar_output) == false
+            and item_float(tensor_mutation) == 0.0
+            and item_float(scalar_mutation) == 0.0
+            and item_float(left) == 3.0
+            and item_float(right) == 3.0;
+    (dispose(scalar_mutation); dispose(tensor_mutation); dispose(scalar_output); dispose(tensor_output); dispose(scalar_value); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every missing ge scalar, output, and mutation schema.
+ */
+@test
+pub ge_overloads_match_libtorch(): Bool ->
+    let left = from_float(3.0);
+    let right = from_float(3.0);
+    let scalar_value = ge_right_float(left, 3.0);
+    let tensor_output = from_bool(false);
+    let scalar_output = from_bool(false);
+    let tensor_mutation = from_float(3.0);
+    let scalar_mutation = from_float(3.0);
+    ge_tensor_out(tensor_output, left, right);
+    ge_right_float_out(scalar_output, left, 3.0);
+    ge_tensor_in_place(tensor_mutation, right);
+    ge_right_float_in_place(scalar_mutation, 3.0);
+    let valid =
+        item_bool(scalar_value) == true
+            and item_bool(tensor_output) == true
+            and item_bool(scalar_output) == true
+            and item_float(tensor_mutation) == 1.0
+            and item_float(scalar_mutation) == 1.0
+            and item_float(left) == 3.0
+            and item_float(right) == 3.0;
+    (dispose(scalar_mutation); dispose(tensor_mutation); dispose(scalar_output); dispose(tensor_output); dispose(scalar_value); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every missing greater_equal scalar, output, and mutation schema.
+ */
+@test
+pub greater_equal_overloads_match_libtorch(): Bool ->
+    let left = from_float(3.0);
+    let right = from_float(3.0);
+    let scalar_value = greater_equal_right_float(left, 3.0);
+    let tensor_output = from_bool(false);
+    let scalar_output = from_bool(false);
+    let tensor_mutation = from_float(3.0);
+    let scalar_mutation = from_float(3.0);
+    greater_equal_tensor_out(tensor_output, left, right);
+    greater_equal_right_float_out(scalar_output, left, 3.0);
+    greater_equal_tensor_in_place(tensor_mutation, right);
+    greater_equal_right_float_in_place(scalar_mutation, 3.0);
+    let valid =
+        item_bool(scalar_value) == true
+            and item_bool(tensor_output) == true
+            and item_bool(scalar_output) == true
+            and item_float(tensor_mutation) == 1.0
+            and item_float(scalar_mutation) == 1.0
+            and item_float(left) == 3.0
+            and item_float(right) == 3.0;
+    (dispose(scalar_mutation); dispose(tensor_mutation); dispose(scalar_output); dispose(tensor_output); dispose(scalar_value); dispose(right); dispose(left); valid).

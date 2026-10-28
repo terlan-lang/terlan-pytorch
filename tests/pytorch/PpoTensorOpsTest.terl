@@ -1,0 +1,144 @@
+module pytorch.PpoTensorOpsTest.
+
+import pytorch.Tensor.{backward, clamp, dispose, divide, exp, from_float, from_floats, gradient, item_float, log, mean, mean_dimensions, minimum, negate, require_grad, shape, sqrt, sum, sum_dimensions}.
+
+@test
+pub division_is_elementwise_and_preserves_inputs(): Bool ->
+    let left = from_floats([1.0, 2.0, 4.0, 8.0], [4]);
+    let right = from_floats([2.0, 2.0, 2.0, 2.0], [4]);
+    let divided = divide(left, right);
+    let divided_total = sum(divided);
+    let observed = item_float(divided_total);
+    let observed_shape = shape(left);
+    dispose(divided_total);
+    dispose(divided);
+    dispose(right);
+    dispose(left);
+    observed == 7.5 and observed_shape == [4].
+
+@test
+pub exponentiation_computes_elementwise_exponential(): Bool ->
+    let source = from_float(0.0);
+    let result = exp(source);
+    let observed = item_float(result);
+    dispose(result);
+    dispose(source);
+    observed == 1.0.
+
+@test
+pub square_root_computes_elementwise_roots(): Bool ->
+    let source = from_float(4.0);
+    let result = sqrt(source);
+    let observed = item_float(result);
+    dispose(result);
+    dispose(source);
+    observed == 2.0.
+
+@test
+pub logarithm_computes_elementwise_natural_logarithm(): Bool ->
+    let source = from_float(1.0);
+    let result = log(source);
+    let observed = item_float(result);
+    dispose(result);
+    dispose(source);
+    observed == 0.0.
+
+@test
+pub clamp_applies_inclusive_scalar_bounds(): Bool ->
+    let source = from_floats([1.0, 2.0, 4.0, 8.0], [4]);
+    let clamped = clamp(source, 2.0, 4.0);
+    let clamped_total = sum(clamped);
+    let observed = item_float(clamped_total);
+    let observed_shape = shape(source);
+    dispose(clamped_total);
+    dispose(clamped);
+    dispose(source);
+    observed == 12.0 and observed_shape == [4].
+
+@test
+pub minimum_selects_elementwise_values(): Bool ->
+    let left = from_floats([1.0, 2.0, 4.0, 8.0], [4]);
+    let right = from_floats([2.0, 2.0, 2.0, 2.0], [4]);
+    let limited = minimum(left, right);
+    let limited_total = sum(limited);
+    let observed = item_float(limited_total);
+    dispose(limited_total);
+    dispose(limited);
+    dispose(right);
+    dispose(left);
+    observed == 7.0.
+
+@test
+pub mean_reduces_all_elements_without_consuming_input(): Bool ->
+    let source = from_floats([1.0, 2.0, 4.0, 8.0], [4]);
+    let average = mean(source);
+    let observed = item_float(average);
+    let observed_shape = shape(source);
+    dispose(average);
+    dispose(source);
+    observed == 3.75 and observed_shape == [4].
+
+@test
+pub sum_reduces_all_elements_without_consuming_input(): Bool ->
+    let source = from_floats([1.0, 2.0, 4.0, 8.0], [4]);
+    let total = sum(source);
+    let observed = item_float(total);
+    let observed_shape = shape(source);
+    dispose(total);
+    dispose(source);
+    observed == 15.0 and observed_shape == [4].
+
+@test
+pub selected_dimension_reductions_preserve_remaining_axes(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let row_sums = sum_dimensions(source, [1], false);
+    let column_means = mean_dimensions(source, [0], false);
+    let row_total = sum(row_sums);
+    let column_total = sum(column_means);
+    let observed_row_total = item_float(row_total);
+    let observed_column_total = item_float(column_total);
+    let observed_row_shape = shape(row_sums);
+    let observed_column_shape = shape(column_means);
+    dispose(column_total);
+    dispose(row_total);
+    dispose(column_means);
+    dispose(row_sums);
+    dispose(source);
+    observed_row_total == 10.0
+        and observed_column_total == 5.0
+        and observed_row_shape == [2]
+        and observed_column_shape == [2].
+
+@test
+pub negation_changes_every_sign_without_consuming_input(): Bool ->
+    let source = from_floats([1.0, 2.0, 4.0, 8.0], [4]);
+    let negated = negate(source);
+    let negated_total = sum(negated);
+    let observed = item_float(negated_total);
+    let observed_shape = shape(source);
+    dispose(negated_total);
+    dispose(negated);
+    dispose(source);
+    observed == -15.0 and observed_shape == [4].
+
+@test
+pub ppo_tensor_operations_form_one_differentiable_graph(): Bool ->
+    let initial = from_float(4.0);
+    let parameter = require_grad(initial);
+    let rooted = sqrt(parameter);
+    let logged = log(rooted);
+    let restored = exp(logged);
+    let divisor = from_float(2.0);
+    let ratio = divide(restored, divisor);
+    let clipped = clamp(ratio, 0.5, 1.5);
+    let ceiling = from_float(2.0);
+    let limited = minimum(clipped, ceiling);
+    let negated = negate(limited);
+    let total = sum(negated);
+    let loss = mean(total);
+    backward(loss);
+    let accumulated = gradient(parameter);
+    let observed_loss = item_float(loss);
+    let observed_gradient = item_float(accumulated);
+    let observed_parameter = item_float(parameter);
+    (dispose(accumulated); dispose(loss); dispose(total); dispose(negated); dispose(limited); dispose(ceiling); dispose(clipped); dispose(ratio); dispose(divisor); dispose(restored); dispose(logged); dispose(rooted); dispose(parameter); dispose(initial); observed_loss == -1.0 and observed_gradient == -0.125 and observed_parameter == 4.0).

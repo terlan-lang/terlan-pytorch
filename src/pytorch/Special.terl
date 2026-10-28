@@ -1,0 +1,1006 @@
+/**
+ * Generated exact CXX special-function and mathematical-operation surface.
+ */
+module pytorch.Special.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX special leaf for absolute.
+ */
+@compiler.native {pytorch.special.absolute}
+pub absolute(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for angle.
+ */
+@compiler.native {pytorch.special.angle}
+pub angle(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for arccos.
+ */
+@compiler.native {pytorch.special.arccos}
+pub arccos(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for arccosh.
+ */
+@compiler.native {pytorch.special.arccosh}
+pub arccosh(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for arcsin.
+ */
+@compiler.native {pytorch.special.arcsin}
+pub arcsin(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for arcsinh.
+ */
+@compiler.native {pytorch.special.arcsinh}
+pub arcsinh(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for arctan.
+ */
+@compiler.native {pytorch.special.arctan}
+pub arctan(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for arctanh.
+ */
+@compiler.native {pytorch.special.arctanh}
+pub arctanh(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for conj_physical.
+ */
+@compiler.native {pytorch.special.conj_physical}
+pub conj_physical(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for corrcoef.
+ */
+@compiler.native {pytorch.special.corrcoef}
+pub corrcoef(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for det.
+ */
+@compiler.native {pytorch.special.det}
+pub det(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for digamma.
+ */
+@compiler.native {pytorch.special.digamma}
+pub digamma(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for fix.
+ */
+@compiler.native {pytorch.special.fix}
+pub fix(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for fliplr.
+ */
+@compiler.native {pytorch.special.fliplr}
+pub fliplr(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for flipud.
+ */
+@compiler.native {pytorch.special.flipud}
+pub flipud(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for i0.
+ */
+@compiler.native {pytorch.special.i0}
+pub i0(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for inverse.
+ */
+@compiler.native {pytorch.special.inverse}
+pub inverse(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for isreal.
+ */
+@compiler.native {pytorch.special.isreal}
+pub isreal(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for lgamma.
+ */
+@compiler.native {pytorch.special.lgamma}
+pub lgamma(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for linalg_eigvals.
+ */
+@compiler.native {pytorch.special.linalg_eigvals}
+pub linalg_eigvals(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for linalg_matrix_exp.
+ */
+@compiler.native {pytorch.special.linalg_matrix_exp}
+pub linalg_matrix_exp(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for log_sigmoid.
+ */
+@compiler.native {pytorch.special.log_sigmoid}
+pub log_sigmoid(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for logdet.
+ */
+@compiler.native {pytorch.special.logdet}
+pub logdet(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for matrix_exp.
+ */
+@compiler.native {pytorch.special.matrix_exp}
+pub matrix_exp(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for msort.
+ */
+@compiler.native {pytorch.special.msort}
+pub msort(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for nanmedian.
+ */
+@compiler.native {pytorch.special.nanmedian}
+pub nanmedian(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for negative.
+ */
+@compiler.native {pytorch.special.negative}
+pub negative(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for sgn.
+ */
+@compiler.native {pytorch.special.sgn}
+pub sgn(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_bessel_j0.
+ */
+@compiler.native {pytorch.special.special_bessel_j0}
+pub special_bessel_j0(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_bessel_j1.
+ */
+@compiler.native {pytorch.special.special_bessel_j1}
+pub special_bessel_j1(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_bessel_y0.
+ */
+@compiler.native {pytorch.special.special_bessel_y0}
+pub special_bessel_y0(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_bessel_y1.
+ */
+@compiler.native {pytorch.special.special_bessel_y1}
+pub special_bessel_y1(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_digamma.
+ */
+@compiler.native {pytorch.special.special_digamma}
+pub special_digamma(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_entr.
+ */
+@compiler.native {pytorch.special.special_entr}
+pub special_entr(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_erf.
+ */
+@compiler.native {pytorch.special.special_erf}
+pub special_erf(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_erfc.
+ */
+@compiler.native {pytorch.special.special_erfc}
+pub special_erfc(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_erfcx.
+ */
+@compiler.native {pytorch.special.special_erfcx}
+pub special_erfcx(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_erfinv.
+ */
+@compiler.native {pytorch.special.special_erfinv}
+pub special_erfinv(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_exp2.
+ */
+@compiler.native {pytorch.special.special_exp2}
+pub special_exp2(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_expit.
+ */
+@compiler.native {pytorch.special.special_expit}
+pub special_expit(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_expm1.
+ */
+@compiler.native {pytorch.special.special_expm1}
+pub special_expm1(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_gammaln.
+ */
+@compiler.native {pytorch.special.special_gammaln}
+pub special_gammaln(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_i0.
+ */
+@compiler.native {pytorch.special.special_i0}
+pub special_i0(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_i0e.
+ */
+@compiler.native {pytorch.special.special_i0e}
+pub special_i0e(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_i1.
+ */
+@compiler.native {pytorch.special.special_i1}
+pub special_i1(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_i1e.
+ */
+@compiler.native {pytorch.special.special_i1e}
+pub special_i1e(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_log1p.
+ */
+@compiler.native {pytorch.special.special_log1p}
+pub special_log1p(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_log_ndtr.
+ */
+@compiler.native {pytorch.special.special_log_ndtr}
+pub special_log_ndtr(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_modified_bessel_i0.
+ */
+@compiler.native {pytorch.special.special_modified_bessel_i0}
+pub special_modified_bessel_i0(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_modified_bessel_i1.
+ */
+@compiler.native {pytorch.special.special_modified_bessel_i1}
+pub special_modified_bessel_i1(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_modified_bessel_k0.
+ */
+@compiler.native {pytorch.special.special_modified_bessel_k0}
+pub special_modified_bessel_k0(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_modified_bessel_k1.
+ */
+@compiler.native {pytorch.special.special_modified_bessel_k1}
+pub special_modified_bessel_k1(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_ndtr.
+ */
+@compiler.native {pytorch.special.special_ndtr}
+pub special_ndtr(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_ndtri.
+ */
+@compiler.native {pytorch.special.special_ndtri}
+pub special_ndtri(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_psi.
+ */
+@compiler.native {pytorch.special.special_psi}
+pub special_psi(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_sinc.
+ */
+@compiler.native {pytorch.special.special_sinc}
+pub special_sinc(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_airy_ai.
+ */
+@compiler.native {pytorch.special.special_airy_ai}
+pub special_airy_ai(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_logsumexp.
+ */
+@compiler.native {pytorch.special.special_logsumexp}
+pub special_logsumexp(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool = false): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_polygamma.
+ */
+@compiler.native {pytorch.special.special_polygamma}
+pub special_polygamma(tensor: Tensor, order: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for polygamma.
+ */
+@compiler.native {pytorch.special.polygamma}
+pub polygamma(tensor: Tensor, order: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for polygamma_out.
+ */
+@compiler.native {pytorch.special.polygamma_out}
+pub polygamma_out(output: Tensor, tensor: Tensor, order: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for polygamma_in_place.
+ */
+@compiler.native {pytorch.special.polygamma_in_place}
+pub polygamma_in_place(tensor: Tensor, order: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_round.
+ */
+@compiler.native {pytorch.special.special_round}
+pub special_round(tensor: Tensor, decimals: Int = 0): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_scaled_modified_bessel_k0.
+ */
+@compiler.native {pytorch.special.special_scaled_modified_bessel_k0}
+pub special_scaled_modified_bessel_k0(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_scaled_modified_bessel_k1.
+ */
+@compiler.native {pytorch.special.special_scaled_modified_bessel_k1}
+pub special_scaled_modified_bessel_k1(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_spherical_bessel_j0.
+ */
+@compiler.native {pytorch.special.special_spherical_bessel_j0}
+pub special_spherical_bessel_j0(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_logit.
+ */
+@compiler.native {pytorch.special.special_logit}
+pub special_logit(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_logit_epsilon.
+ */
+@compiler.native {pytorch.special.special_logit_epsilon}
+pub special_logit_epsilon(tensor: Tensor, epsilon: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for logit.
+ */
+@compiler.native {pytorch.special.logit}
+pub logit(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for logit_epsilon.
+ */
+@compiler.native {pytorch.special.logit_epsilon}
+pub logit_epsilon(tensor: Tensor, epsilon: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for logit_out.
+ */
+@compiler.native {pytorch.special.logit_out}
+pub logit_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for logit_epsilon_out.
+ */
+@compiler.native {pytorch.special.logit_epsilon_out}
+pub logit_epsilon_out(output: Tensor, tensor: Tensor, epsilon: Float): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for logit_in_place.
+ */
+@compiler.native {pytorch.special.logit_in_place}
+pub logit_in_place(tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for logit_epsilon_in_place.
+ */
+@compiler.native {pytorch.special.logit_epsilon_in_place}
+pub logit_epsilon_in_place(tensor: Tensor, epsilon: Float): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_softmax.
+ */
+@compiler.native {pytorch.special.special_softmax}
+pub special_softmax(tensor: Tensor, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_softmax_dtype.
+ */
+@compiler.native {pytorch.special.special_softmax_dtype}
+pub special_softmax_dtype(tensor: Tensor, dimension: Int, dtype: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_log_softmax.
+ */
+@compiler.native {pytorch.special.special_log_softmax}
+pub special_log_softmax(tensor: Tensor, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_log_softmax_dtype.
+ */
+@compiler.native {pytorch.special.special_log_softmax_dtype}
+pub special_log_softmax_dtype(tensor: Tensor, dimension: Int, dtype: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_airy_ai_out.
+ */
+@compiler.native {pytorch.special.special_airy_ai_out}
+pub special_airy_ai_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_bessel_j0_out.
+ */
+@compiler.native {pytorch.special.special_bessel_j0_out}
+pub special_bessel_j0_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_bessel_j1_out.
+ */
+@compiler.native {pytorch.special.special_bessel_j1_out}
+pub special_bessel_j1_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_bessel_y0_out.
+ */
+@compiler.native {pytorch.special.special_bessel_y0_out}
+pub special_bessel_y0_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_bessel_y1_out.
+ */
+@compiler.native {pytorch.special.special_bessel_y1_out}
+pub special_bessel_y1_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_digamma_out.
+ */
+@compiler.native {pytorch.special.special_digamma_out}
+pub special_digamma_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_entr_out.
+ */
+@compiler.native {pytorch.special.special_entr_out}
+pub special_entr_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_erf_out.
+ */
+@compiler.native {pytorch.special.special_erf_out}
+pub special_erf_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_erfc_out.
+ */
+@compiler.native {pytorch.special.special_erfc_out}
+pub special_erfc_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_erfcx_out.
+ */
+@compiler.native {pytorch.special.special_erfcx_out}
+pub special_erfcx_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_erfinv_out.
+ */
+@compiler.native {pytorch.special.special_erfinv_out}
+pub special_erfinv_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_exp2_out.
+ */
+@compiler.native {pytorch.special.special_exp2_out}
+pub special_exp2_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_expit_out.
+ */
+@compiler.native {pytorch.special.special_expit_out}
+pub special_expit_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_expm1_out.
+ */
+@compiler.native {pytorch.special.special_expm1_out}
+pub special_expm1_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_gammaln_out.
+ */
+@compiler.native {pytorch.special.special_gammaln_out}
+pub special_gammaln_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_i0_out.
+ */
+@compiler.native {pytorch.special.special_i0_out}
+pub special_i0_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_i0e_out.
+ */
+@compiler.native {pytorch.special.special_i0e_out}
+pub special_i0e_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_i1_out.
+ */
+@compiler.native {pytorch.special.special_i1_out}
+pub special_i1_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_i1e_out.
+ */
+@compiler.native {pytorch.special.special_i1e_out}
+pub special_i1e_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_log1p_out.
+ */
+@compiler.native {pytorch.special.special_log1p_out}
+pub special_log1p_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_log_ndtr_out.
+ */
+@compiler.native {pytorch.special.special_log_ndtr_out}
+pub special_log_ndtr_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_modified_bessel_i0_out.
+ */
+@compiler.native {pytorch.special.special_modified_bessel_i0_out}
+pub special_modified_bessel_i0_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_modified_bessel_i1_out.
+ */
+@compiler.native {pytorch.special.special_modified_bessel_i1_out}
+pub special_modified_bessel_i1_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_modified_bessel_k0_out.
+ */
+@compiler.native {pytorch.special.special_modified_bessel_k0_out}
+pub special_modified_bessel_k0_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_modified_bessel_k1_out.
+ */
+@compiler.native {pytorch.special.special_modified_bessel_k1_out}
+pub special_modified_bessel_k1_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_ndtr_out.
+ */
+@compiler.native {pytorch.special.special_ndtr_out}
+pub special_ndtr_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_ndtri_out.
+ */
+@compiler.native {pytorch.special.special_ndtri_out}
+pub special_ndtri_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_psi_out.
+ */
+@compiler.native {pytorch.special.special_psi_out}
+pub special_psi_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_scaled_modified_bessel_k0_out.
+ */
+@compiler.native {pytorch.special.special_scaled_modified_bessel_k0_out}
+pub special_scaled_modified_bessel_k0_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_scaled_modified_bessel_k1_out.
+ */
+@compiler.native {pytorch.special.special_scaled_modified_bessel_k1_out}
+pub special_scaled_modified_bessel_k1_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_sinc_out.
+ */
+@compiler.native {pytorch.special.special_sinc_out}
+pub special_sinc_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_spherical_bessel_j0_out.
+ */
+@compiler.native {pytorch.special.special_spherical_bessel_j0_out}
+pub special_spherical_bessel_j0_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_gammainc_out.
+ */
+@compiler.native {pytorch.special.special_gammainc_out}
+pub special_gammainc_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_gammaincc_out.
+ */
+@compiler.native {pytorch.special.special_gammaincc_out}
+pub special_gammaincc_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_xlog1py_out.
+ */
+@compiler.native {pytorch.special.special_xlog1py_out}
+pub special_xlog1py_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_xlogy_out.
+ */
+@compiler.native {pytorch.special.special_xlogy_out}
+pub special_xlogy_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_zeta_out.
+ */
+@compiler.native {pytorch.special.special_zeta_out}
+pub special_zeta_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_logit_out.
+ */
+@compiler.native {pytorch.special.special_logit_out}
+pub special_logit_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_logit_epsilon_out.
+ */
+@compiler.native {pytorch.special.special_logit_epsilon_out}
+pub special_logit_epsilon_out(output: Tensor, tensor: Tensor, epsilon: Float): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_logsumexp_out.
+ */
+@compiler.native {pytorch.special.special_logsumexp_out}
+pub special_logsumexp_out(
+    output: Tensor,
+    tensor: Tensor,
+    dimensions: List[Int],
+    keep_dimension: Bool = false,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_multigammaln_out.
+ */
+@compiler.native {pytorch.special.special_multigammaln_out}
+pub special_multigammaln_out(output: Tensor, tensor: Tensor, order: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_polygamma_out.
+ */
+@compiler.native {pytorch.special.special_polygamma_out}
+pub special_polygamma_out(output: Tensor, tensor: Tensor, order: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_round_out.
+ */
+@compiler.native {pytorch.special.special_round_out}
+pub special_round_out(output: Tensor, tensor: Tensor, decimals: Int = 0): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_chebyshev_polynomial_t_out.
+ */
+@compiler.native {pytorch.special.special_chebyshev_polynomial_t_out}
+pub special_chebyshev_polynomial_t_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_chebyshev_polynomial_u_out.
+ */
+@compiler.native {pytorch.special.special_chebyshev_polynomial_u_out}
+pub special_chebyshev_polynomial_u_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_chebyshev_polynomial_v_out.
+ */
+@compiler.native {pytorch.special.special_chebyshev_polynomial_v_out}
+pub special_chebyshev_polynomial_v_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_chebyshev_polynomial_w_out.
+ */
+@compiler.native {pytorch.special.special_chebyshev_polynomial_w_out}
+pub special_chebyshev_polynomial_w_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_hermite_polynomial_h_out.
+ */
+@compiler.native {pytorch.special.special_hermite_polynomial_h_out}
+pub special_hermite_polynomial_h_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_hermite_polynomial_he_out.
+ */
+@compiler.native {pytorch.special.special_hermite_polynomial_he_out}
+pub special_hermite_polynomial_he_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_laguerre_polynomial_l_out.
+ */
+@compiler.native {pytorch.special.special_laguerre_polynomial_l_out}
+pub special_laguerre_polynomial_l_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_legendre_polynomial_p_out.
+ */
+@compiler.native {pytorch.special.special_legendre_polynomial_p_out}
+pub special_legendre_polynomial_p_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_shifted_chebyshev_polynomial_t_out.
+ */
+@compiler.native {pytorch.special.special_shifted_chebyshev_polynomial_t_out}
+pub special_shifted_chebyshev_polynomial_t_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_shifted_chebyshev_polynomial_u_out.
+ */
+@compiler.native {pytorch.special.special_shifted_chebyshev_polynomial_u_out}
+pub special_shifted_chebyshev_polynomial_u_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_shifted_chebyshev_polynomial_v_out.
+ */
+@compiler.native {pytorch.special.special_shifted_chebyshev_polynomial_v_out}
+pub special_shifted_chebyshev_polynomial_v_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_shifted_chebyshev_polynomial_w_out.
+ */
+@compiler.native {pytorch.special.special_shifted_chebyshev_polynomial_w_out}
+pub special_shifted_chebyshev_polynomial_w_out(output: Tensor, left: Tensor, right: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_chebyshev_polynomial_t_order_int.
+ */
+@compiler.native {pytorch.special.special_chebyshev_polynomial_t_order_int}
+pub special_chebyshev_polynomial_t_order_int(tensor: Tensor, order: Int): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_chebyshev_polynomial_t_order_float.
+ */
+@compiler.native {pytorch.special.special_chebyshev_polynomial_t_order_float}
+pub special_chebyshev_polynomial_t_order_float(tensor: Tensor, order: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_chebyshev_polynomial_t_order_int_out.
+ */
+@compiler.native {pytorch.special.special_chebyshev_polynomial_t_order_int_out}
+pub special_chebyshev_polynomial_t_order_int_out(output: Tensor, tensor: Tensor, order: Int): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_chebyshev_polynomial_t_order_float_out.
+ */
+@compiler.native {pytorch.special.special_chebyshev_polynomial_t_order_float_out}
+pub special_chebyshev_polynomial_t_order_float_out(
+    output: Tensor,
+    tensor: Tensor,
+    order: Float,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_chebyshev_polynomial_t_input_int.
+ */
+@compiler.native {pytorch.special.special_chebyshev_polynomial_t_input_int}
+pub special_chebyshev_polynomial_t_input_int(input: Int, orders: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_chebyshev_polynomial_t_input_float.
+ */
+@compiler.native {pytorch.special.special_chebyshev_polynomial_t_input_float}
+pub special_chebyshev_polynomial_t_input_float(input: Float, orders: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_chebyshev_polynomial_t_input_int_out.
+ */
+@compiler.native {pytorch.special.special_chebyshev_polynomial_t_input_int_out}
+pub special_chebyshev_polynomial_t_input_int_out(output: Tensor, input: Int, orders: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX special leaf for special_chebyshev_polynomial_t_input_float_out.
+ */
+@compiler.native {pytorch.special.special_chebyshev_polynomial_t_input_float_out}
+pub special_chebyshev_polynomial_t_input_float_out(
+    output: Tensor,
+    input: Float,
+    orders: Tensor,
+): Unit ->
+    native.

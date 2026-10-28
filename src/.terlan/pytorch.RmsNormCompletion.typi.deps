@@ -1,0 +1,9 @@
+module=pytorch.RmsNormCompletion
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=9727880434433399840
+interface_hash=7086471526486229672
+interface_doc_hash=12373980454263475558
+deps=1
+pytorch.Tensor=13489932768568026575

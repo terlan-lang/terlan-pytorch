@@ -1,0 +1,19 @@
+//! Generated exact CXX unique and consecutive-unique completion surface.
+
+module pytorch.UniqueCompletion.
+
+pub unique_consecutive(input: Tensor, return_inverse: Bool = false, return_counts: Bool = false): {Tensor, Tensor, Tensor}.
+
+pub unique_consecutive_out(out0: Tensor, out1: Tensor, out2: Tensor, input: Tensor, return_inverse: Bool, return_counts: Bool): Unit.
+
+pub unique_dim(input: Tensor, dim: Int, sorted: Bool = true, return_inverse: Bool = false, return_counts: Bool = false): {Tensor, Tensor, Tensor}.
+
+pub unique_dim_consecutive(input: Tensor, dim: Int, return_inverse: Bool = false, return_counts: Bool = false): {Tensor, Tensor, Tensor}.
+
+pub unique_dim_consecutive_out(out0: Tensor, out1: Tensor, out2: Tensor, input: Tensor, dim: Int, return_inverse: Bool, return_counts: Bool): Unit.
+
+pub unique_dim_out(out0: Tensor, out1: Tensor, out2: Tensor, input: Tensor, dim: Int, sorted: Bool, return_inverse: Bool, return_counts: Bool): Unit.
+
+/// Preserves the legacy Tensor.unique flatten and optional-dimension contract.
+
+pub unique_legacy(input: Tensor, dim: std.core.Option.Option[Int], sorted: Bool = true, return_inverse: Bool = false, return_counts: Bool = false): {Tensor, Tensor, Tensor}.

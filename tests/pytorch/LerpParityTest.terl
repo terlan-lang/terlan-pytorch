@@ -1,0 +1,57 @@
+module pytorch.LerpParityTest.
+
+import pytorch.Lerp.{lerp_float, lerp_float_out, lerp_int, lerp_int_out, lerp_scalar_in_place, lerp_tensor, lerp_tensor_out}.
+import pytorch.Scalar.{from_float as scalar_from_float}.
+import pytorch.Tensor.{dispose, from_float, item_float}.
+
+/**
+ * Proves integer and floating-point scalar weights preserve interpolation and source ownership.
+ */
+@test
+pub scalar_weights_match_libtorch(): Bool ->
+    let start = from_float(2.0);
+    let finish = from_float(10.0);
+    let integer = lerp_int(start, finish, 2);
+    let floating = lerp_float(start, finish, 0.25);
+    let integer_output = from_float(0.0);
+    let floating_output = from_float(0.0);
+    lerp_int_out(integer_output, start, finish, -1);
+    lerp_float_out(floating_output, start, finish, 0.5);
+    let valid =
+        item_float(integer) == 18.0
+            and item_float(floating) == 4.0
+            and item_float(integer_output) == -6.0
+            and item_float(floating_output) == 6.0
+            and item_float(start) == 2.0
+            and item_float(finish) == 10.0;
+    (dispose(floating_output); dispose(integer_output); dispose(floating); dispose(integer); dispose(finish); dispose(start); valid).
+
+/**
+ * Proves tensor weights execute both functional and retained-output schemas.
+ */
+@test
+pub tensor_weights_match_libtorch(): Bool ->
+    let start = from_float(2.0);
+    let finish = from_float(10.0);
+    let weight = from_float(0.25);
+    let value = lerp_tensor(start, finish, weight);
+    let output = from_float(0.0);
+    lerp_tensor_out(output, start, finish, weight);
+    let valid =
+        item_float(value) == 4.0
+            and item_float(output) == 4.0
+            and item_float(start) == 2.0
+            and item_float(finish) == 10.0
+            and item_float(weight) == 0.25;
+    (dispose(output); dispose(value); dispose(weight); dispose(finish); dispose(start); valid).
+
+/**
+ * Proves the Scalar-weight in-place overload mutates retained storage.
+ */
+@test
+pub scalar_in_place_matches_libtorch(): Bool ->
+    let start = from_float(2.0);
+    let finish = from_float(10.0);
+    lerp_scalar_in_place(start, finish, scalar_from_float(0.25));
+    let valid = item_float(start) == 4.0 and item_float(finish) == 10.0;
+    (dispose(finish); dispose(start); valid).

@@ -1,0 +1,116 @@
+/**
+ * Typed full-tensor, diagonal, and masked fill operations.
+ */
+module pytorch.Fill.
+
+import pytorch.FillNative.{fill_diagonal_in_place as native_fill_diagonal_in_place, fill_scalar as native_fill_scalar, fill_scalar_in_place as native_fill_scalar_in_place, fill_scalar_out as native_fill_scalar_out, fill_tensor_in_place as native_fill_tensor_in_place, fill_tensor_out as native_fill_tensor_out, masked_fill_scalar as native_masked_fill_scalar, masked_fill_scalar_in_place as native_masked_fill_scalar_in_place, masked_fill_scalar_out as native_masked_fill_scalar_out, masked_fill_tensor_in_place as native_masked_fill_tensor_in_place, masked_fill_tensor_out as native_masked_fill_tensor_out}.
+
+import type pytorch.Tensor.
+
+/**
+ * Returns a copy filled with an integer value.
+ */
+pub fill_int(input: Tensor, value: Int): Tensor ->
+    native_fill_scalar(input, true, value, 0.0).
+
+/**
+ * Writes an integer fill into retained output storage.
+ */
+pub fill_int_out(output: Tensor, input: Tensor, value: Int): Unit ->
+    native_fill_scalar_out(output, input, true, value, 0.0).
+
+/**
+ * Fills a tensor in place with an integer value.
+ */
+pub fill_int_in_place(input: Tensor, value: Int): Unit ->
+    native_fill_scalar_in_place(input, true, value, 0.0).
+
+/**
+ * Returns a copy filled with a floating-point value.
+ */
+pub fill_float(input: Tensor, value: Float): Tensor ->
+    native_fill_scalar(input, false, 0, value).
+
+/**
+ * Writes a floating-point fill into retained output storage.
+ */
+pub fill_float_out(output: Tensor, input: Tensor, value: Float): Unit ->
+    native_fill_scalar_out(output, input, false, 0, value).
+
+/**
+ * Fills a tensor in place with a floating-point value.
+ */
+pub fill_float_in_place(input: Tensor, value: Float): Unit ->
+    native_fill_scalar_in_place(input, false, 0, value).
+
+/**
+ * Writes a scalar-tensor fill into retained output storage.
+ */
+pub fill_tensor_out(output: Tensor, input: Tensor, value: Tensor): Unit ->
+    native_fill_tensor_out(output, input, value).
+
+/**
+ * Fills a tensor in place from a scalar tensor.
+ */
+pub fill_tensor_in_place(input: Tensor, value: Tensor): Unit ->
+    native_fill_tensor_in_place(input, value).
+
+/**
+ * Fills a tensor diagonal in place with an integer value.
+ */
+pub fill_diagonal_int_in_place(input: Tensor, value: Int, wrap: Bool = false): Unit ->
+    native_fill_diagonal_in_place(input, true, value, 0.0, wrap).
+
+/**
+ * Fills a tensor diagonal in place with a floating-point value.
+ */
+pub fill_diagonal_float_in_place(input: Tensor, value: Float, wrap: Bool = false): Unit ->
+    native_fill_diagonal_in_place(input, false, 0, value, wrap).
+
+/**
+ * Returns a copy with masked elements replaced by an integer value.
+ */
+pub masked_fill_int(input: Tensor, mask: Tensor, value: Int): Tensor ->
+    native_masked_fill_scalar(input, mask, true, value, 0.0).
+
+/**
+ * Writes an integer masked fill into retained output storage.
+ */
+pub masked_fill_int_out(output: Tensor, input: Tensor, mask: Tensor, value: Int): Unit ->
+    native_masked_fill_scalar_out(output, input, mask, true, value, 0.0).
+
+/**
+ * Replaces masked elements in place with an integer value.
+ */
+pub masked_fill_int_in_place(input: Tensor, mask: Tensor, value: Int): Unit ->
+    native_masked_fill_scalar_in_place(input, mask, true, value, 0.0).
+
+/**
+ * Returns a copy with masked elements replaced by a floating-point value.
+ */
+pub masked_fill_float(input: Tensor, mask: Tensor, value: Float): Tensor ->
+    native_masked_fill_scalar(input, mask, false, 0, value).
+
+/**
+ * Writes a floating-point masked fill into retained output storage.
+ */
+pub masked_fill_float_out(output: Tensor, input: Tensor, mask: Tensor, value: Float): Unit ->
+    native_masked_fill_scalar_out(output, input, mask, false, 0, value).
+
+/**
+ * Replaces masked elements in place with a floating-point value.
+ */
+pub masked_fill_float_in_place(input: Tensor, mask: Tensor, value: Float): Unit ->
+    native_masked_fill_scalar_in_place(input, mask, false, 0, value).
+
+/**
+ * Writes a scalar-tensor masked fill into retained output storage.
+ */
+pub masked_fill_tensor_out(output: Tensor, input: Tensor, mask: Tensor, value: Tensor): Unit ->
+    native_masked_fill_tensor_out(output, input, mask, value).
+
+/**
+ * Replaces masked elements in place from a scalar tensor.
+ */
+pub masked_fill_tensor_in_place(input: Tensor, mask: Tensor, value: Tensor): Unit ->
+    native_masked_fill_tensor_in_place(input, mask, value).

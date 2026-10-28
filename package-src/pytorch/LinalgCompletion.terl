@@ -1,0 +1,56 @@
+/**
+ * Typed completion wrappers for legacy linalg output schemas.
+ */
+module pytorch.LinalgCompletion.
+
+import pytorch.Linalg.{geqrf, linalg_qr_out, triangular_solve}.
+import pytorch.ResizeAsCompletion.resize_as_in_place.
+import pytorch.Tensor.{copy_in_place, dispose}.
+
+import type pytorch.Tensor.
+
+/**
+ * Computes legacy aten::geqrf and writes both results into retained outputs.
+ * The generated CXX geqrf leaf remains the sole native operation.
+ */
+pub geqrf_out(a: Tensor, tau: Tensor, input: Tensor): Unit ->
+    let {packed, values} = geqrf(input);
+    resize_as_in_place(a, packed, false, 0);
+    resize_as_in_place(tau, values, false, 0);
+    let _a_copied = copy_in_place(a, packed, false);
+    let _tau_copied = copy_in_place(tau, values, false);
+    (dispose(values); dispose(packed)).
+
+/**
+ * Writes legacy aten::qr.Q outputs, preserving the `some` mode selector.
+ */
+pub qr_out(q: Tensor, r: Tensor, input: Tensor, some: Bool = true): Unit ->
+    linalg_qr_out(
+        q,
+        r,
+        input,
+        if {
+            some -> "reduced";
+            true -> "complete"
+        },
+    ).
+
+/**
+ * Writes legacy triangular-solve tuple outputs into retained tensors.
+ */
+pub triangular_solve_out(
+    solution: Tensor,
+    cloned_coefficient: Tensor,
+    right: Tensor,
+    coefficient: Tensor,
+    upper: Bool = true,
+    transpose: Bool = false,
+    unitriangular: Bool = false,
+): Unit ->
+    let {computed_solution, computed_coefficient} = triangular_solve(right, coefficient, upper, transpose, unitriangular);
+    resize_as_in_place(solution, computed_solution, false, 0);
+    resize_as_in_place(cloned_coefficient, computed_coefficient, false, 0);
+    copy_in_place(solution, computed_solution, false);
+    copy_in_place(cloned_coefficient, computed_coefficient, false);
+    dispose(computed_coefficient);
+    dispose(computed_solution).

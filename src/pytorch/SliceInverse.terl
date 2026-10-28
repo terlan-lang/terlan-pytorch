@@ -1,0 +1,43 @@
+/**
+ * Typed slice-inverse mutation with independently optional bounds.
+ */
+module pytorch.SliceInverse.
+
+import pytorch.SliceInverseCompletion.{slice_inverse_all, slice_inverse_bounds, slice_inverse_from, slice_inverse_until}.
+
+import type pytorch.Tensor.
+
+has_no_bound(values: List[Int]): Bool ->
+    case values {
+        [] -> true;
+        [_head | _tail] -> false
+    }.
+
+/**
+ * Returns an absent slice endpoint.
+ */
+pub no_bound(): List[Int] -> [].
+
+/**
+ * Returns a present slice endpoint.
+ */
+pub bound(value: Int): List[Int] ->
+    [value].
+
+/**
+ * Writes source into input using independently optional bounds.
+ */
+pub slice_inverse(
+    input: Tensor,
+    source: Tensor,
+    dimension: Int,
+    start: List[Int],
+    end: List[Int],
+    step: Int,
+): Tensor ->
+    if {
+        has_no_bound(start) and has_no_bound(end) -> slice_inverse_all(input, source, dimension, step);
+        has_no_bound(start) -> slice_inverse_until(input, source, dimension, end[0], step);
+        has_no_bound(end) -> slice_inverse_from(input, source, dimension, start[0], step);
+        true -> slice_inverse_bounds(input, source, dimension, start[0], end[0], step)
+    }.

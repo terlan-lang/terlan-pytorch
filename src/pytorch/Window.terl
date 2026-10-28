@@ -1,0 +1,259 @@
+/**
+ * Bartlett, Blackman, Hamming, Hann, and Kaiser signal-processing windows.
+ */
+module pytorch.Window.
+
+import pytorch.Tensor.{cpu, device_index_for, device_kind, dtype_code}.
+import pytorch.WindowNative.{window_native, window_out_native}.
+
+import type pytorch.Tensor.{DType, Device, Tensor}.
+
+/**
+ * Constructs a periodic CPU float32 Bartlett window.
+ */
+pub bartlett_window(window_length: Int): Tensor ->
+    bartlett_window(window_length, true).
+
+/**
+ * Constructs a CPU float32 Bartlett window with explicit periodicity.
+ */
+pub bartlett_window(window_length: Int, periodic: Bool): Tensor ->
+    bartlett_window_on(window_length, periodic, DType.FLOAT32, cpu(), false).
+
+/**
+ * Constructs a Bartlett window with explicit tensor options.
+ */
+pub bartlett_window_on(
+    window_length: Int,
+    periodic: Bool,
+    dtype: DType,
+    device: Device,
+    pin_memory: Bool,
+): Tensor ->
+    create_window(0, window_length, periodic, 0.0, 0.0, dtype, device, pin_memory).
+
+/**
+ * Writes a periodic Bartlett window into retained tensor storage.
+ */
+pub bartlett_window_out(output: Tensor, window_length: Int): Unit ->
+    bartlett_window_out(output, window_length, true).
+
+/**
+ * Writes a Bartlett window with explicit periodicity into retained storage.
+ */
+pub bartlett_window_out(output: Tensor, window_length: Int, periodic: Bool): Unit ->
+    window_out_native(output, 0, window_length, periodic, 0.0, 0.0).
+
+/**
+ * Constructs a periodic CPU float32 Blackman window.
+ */
+pub blackman_window(window_length: Int): Tensor ->
+    blackman_window(window_length, true).
+
+/**
+ * Constructs a CPU float32 Blackman window with explicit periodicity.
+ */
+pub blackman_window(window_length: Int, periodic: Bool): Tensor ->
+    blackman_window_on(window_length, periodic, DType.FLOAT32, cpu(), false).
+
+/**
+ * Constructs a Blackman window with explicit tensor options.
+ */
+pub blackman_window_on(
+    window_length: Int,
+    periodic: Bool,
+    dtype: DType,
+    device: Device,
+    pin_memory: Bool,
+): Tensor ->
+    create_window(1, window_length, periodic, 0.0, 0.0, dtype, device, pin_memory).
+
+/**
+ * Writes a periodic Blackman window into retained tensor storage.
+ */
+pub blackman_window_out(output: Tensor, window_length: Int): Unit ->
+    blackman_window_out(output, window_length, true).
+
+/**
+ * Writes a Blackman window with explicit periodicity into retained storage.
+ */
+pub blackman_window_out(output: Tensor, window_length: Int, periodic: Bool): Unit ->
+    window_out_native(output, 1, window_length, periodic, 0.0, 0.0).
+
+/**
+ * Constructs a periodic CPU float32 Hamming window with PyTorch coefficients.
+ */
+pub hamming_window(window_length: Int): Tensor ->
+    hamming_window(window_length, true, 0.54, 0.46).
+
+/**
+ * Constructs a CPU float32 Hamming window with explicit periodicity.
+ */
+pub hamming_window(window_length: Int, periodic: Bool): Tensor ->
+    hamming_window(window_length, periodic, 0.54, 0.46).
+
+/**
+ * Constructs a Hamming window with explicit alpha and default beta.
+ */
+pub hamming_window(window_length: Int, periodic: Bool, alpha: Float): Tensor ->
+    hamming_window(window_length, periodic, alpha, 0.46).
+
+/**
+ * Constructs a CPU float32 Hamming window with explicit coefficients.
+ */
+pub hamming_window(window_length: Int, periodic: Bool, alpha: Float, beta: Float): Tensor ->
+    hamming_window_on(window_length, periodic, alpha, beta, DType.FLOAT32, cpu(), false).
+
+/**
+ * Constructs a Hamming window with explicit coefficients and tensor options.
+ */
+pub hamming_window_on(
+    window_length: Int,
+    periodic: Bool,
+    alpha: Float,
+    beta: Float,
+    dtype: DType,
+    device: Device,
+    pin_memory: Bool,
+): Tensor ->
+    create_window(2, window_length, periodic, alpha, beta, dtype, device, pin_memory).
+
+/**
+ * Writes a periodic default-coefficient Hamming window into retained storage.
+ */
+pub hamming_window_out(output: Tensor, window_length: Int): Unit ->
+    hamming_window_out(output, window_length, true, 0.54, 0.46).
+
+/**
+ * Writes a default-coefficient Hamming window with explicit periodicity.
+ */
+pub hamming_window_out(output: Tensor, window_length: Int, periodic: Bool): Unit ->
+    hamming_window_out(output, window_length, periodic, 0.54, 0.46).
+
+/**
+ * Writes a Hamming window with explicit alpha and default beta.
+ */
+pub hamming_window_out(output: Tensor, window_length: Int, periodic: Bool, alpha: Float): Unit ->
+    hamming_window_out(output, window_length, periodic, alpha, 0.46).
+
+/**
+ * Writes a Hamming window with explicit coefficients into retained storage.
+ */
+pub hamming_window_out(
+    output: Tensor,
+    window_length: Int,
+    periodic: Bool,
+    alpha: Float,
+    beta: Float,
+): Unit ->
+    window_out_native(output, 2, window_length, periodic, alpha, beta).
+
+/**
+ * Constructs a periodic CPU float32 Hann window.
+ */
+pub hann_window(window_length: Int): Tensor ->
+    hann_window(window_length, true).
+
+/**
+ * Constructs a CPU float32 Hann window with explicit periodicity.
+ */
+pub hann_window(window_length: Int, periodic: Bool): Tensor ->
+    hann_window_on(window_length, periodic, DType.FLOAT32, cpu(), false).
+
+/**
+ * Constructs a Hann window with explicit tensor options.
+ */
+pub hann_window_on(
+    window_length: Int,
+    periodic: Bool,
+    dtype: DType,
+    device: Device,
+    pin_memory: Bool,
+): Tensor ->
+    create_window(3, window_length, periodic, 0.0, 0.0, dtype, device, pin_memory).
+
+/**
+ * Writes a periodic Hann window into retained tensor storage.
+ */
+pub hann_window_out(output: Tensor, window_length: Int): Unit ->
+    hann_window_out(output, window_length, true).
+
+/**
+ * Writes a Hann window with explicit periodicity into retained storage.
+ */
+pub hann_window_out(output: Tensor, window_length: Int, periodic: Bool): Unit ->
+    window_out_native(output, 3, window_length, periodic, 0.0, 0.0).
+
+/**
+ * Constructs a periodic CPU float32 Kaiser window with PyTorch beta.
+ */
+pub kaiser_window(window_length: Int): Tensor ->
+    kaiser_window(window_length, true, 12.0).
+
+/**
+ * Constructs a default-beta CPU float32 Kaiser window.
+ */
+pub kaiser_window(window_length: Int, periodic: Bool): Tensor ->
+    kaiser_window(window_length, periodic, 12.0).
+
+/**
+ * Constructs a CPU float32 Kaiser window with explicit beta.
+ */
+pub kaiser_window(window_length: Int, periodic: Bool, beta: Float): Tensor ->
+    kaiser_window_on(window_length, periodic, beta, DType.FLOAT32, cpu(), false).
+
+/**
+ * Constructs a Kaiser window with explicit beta and tensor options.
+ */
+pub kaiser_window_on(
+    window_length: Int,
+    periodic: Bool,
+    beta: Float,
+    dtype: DType,
+    device: Device,
+    pin_memory: Bool,
+): Tensor ->
+    create_window(4, window_length, periodic, 0.0, beta, dtype, device, pin_memory).
+
+/**
+ * Writes a periodic default-beta Kaiser window into retained storage.
+ */
+pub kaiser_window_out(output: Tensor, window_length: Int): Unit ->
+    kaiser_window_out(output, window_length, true, 12.0).
+
+/**
+ * Writes a default-beta Kaiser window with explicit periodicity.
+ */
+pub kaiser_window_out(output: Tensor, window_length: Int, periodic: Bool): Unit ->
+    kaiser_window_out(output, window_length, periodic, 12.0).
+
+/**
+ * Writes a Kaiser window with explicit beta into retained storage.
+ */
+pub kaiser_window_out(output: Tensor, window_length: Int, periodic: Bool, beta: Float): Unit ->
+    window_out_native(output, 4, window_length, periodic, 0.0, beta).
+
+/**
+ * Lowers typed tensor options through the single native window primitive.
+ */
+create_window(
+    operation: Int,
+    window_length: Int,
+    periodic: Bool,
+    alpha: Float,
+    beta: Float,
+    dtype: DType,
+    device: Device,
+    pin_memory: Bool,
+): Tensor ->
+    window_native(
+        operation,
+        window_length,
+        periodic,
+        alpha,
+        beta,
+        dtype_code(dtype),
+        device_kind(device),
+        device_index_for(device),
+        pin_memory,
+    ).

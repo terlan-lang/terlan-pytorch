@@ -1,0 +1,294 @@
+module pytorch.UnaryStorageParityTest.
+
+import pytorch.Tensor.{Tensor, dispose, from_bool, from_float, from_int, item, item_bool, item_float}.
+import pytorch.UnaryStorage.{abs_in_place, abs_out, acos_in_place, acos_out, acosh_in_place, acosh_out, asin_in_place, asin_out, asinh_in_place, asinh_out, atan_in_place, atan_out, atanh_in_place, atanh_out, bitwise_not_in_place, bitwise_not_out, ceil_in_place, ceil_out, cos_in_place, cos_out, cosh_in_place, cosh_out, deg2rad_in_place, deg2rad_out, erf_in_place, erf_out, erfc_in_place, erfc_out, erfinv_in_place, erfinv_out, exp2_in_place, exp2_out, expm1_in_place, expm1_out, floor_in_place, floor_out, frac_in_place, frac_out, hardsigmoid_in_place, hardsigmoid_out, hardswish_in_place, hardswish_out, log10_in_place, log10_out, log1p_in_place, log1p_out, log2_in_place, log2_out, logical_not_in_place, logical_not_out, mish_in_place, mish_out, rad2deg_in_place, rad2deg_out, reciprocal_in_place, reciprocal_out, relu6_in_place, round_in_place, round_out, rsqrt_in_place, rsqrt_out, selu_in_place, sigmoid_in_place, sigmoid_out, sign_in_place, sign_out, silu_in_place, silu_out, sin_in_place, sin_out, sinc_in_place, sinc_out, sinh_in_place, sinh_out, square_in_place, square_out, tan_in_place, tan_out, tanh_in_place, tanh_out, trunc_in_place, trunc_out}.
+
+/**
+ * Returns whether a scalar tensor contains the expected floating value.
+ */
+equals(tensor: Tensor, expected: Float): Bool ->
+    item_float(tensor) == expected.
+
+/**
+ * Proves inverse trigonometric output and in-place storage contracts.
+ */
+@test
+pub inverse_storage_forms_match_libtorch(): Bool ->
+    let zero = from_float(0.0);
+    let one = from_float(1.0);
+    let acos_output = from_float(-1.0);
+    let acosh_output = from_float(-1.0);
+    let asin_output = from_float(-1.0);
+    let asinh_output = from_float(-1.0);
+    let atan_output = from_float(-1.0);
+    let atanh_output = from_float(-1.0);
+    acos_out(acos_output, one);
+    acosh_out(acosh_output, one);
+    asin_out(asin_output, zero);
+    asinh_out(asinh_output, zero);
+    atan_out(atan_output, zero);
+    atanh_out(atanh_output, zero);
+    let acos_mutation = from_float(1.0);
+    let acosh_mutation = from_float(1.0);
+    let asin_mutation = from_float(0.0);
+    let asinh_mutation = from_float(0.0);
+    let atan_mutation = from_float(0.0);
+    let atanh_mutation = from_float(0.0);
+    (acos_in_place(acos_mutation); acosh_in_place(acosh_mutation); asin_in_place(asin_mutation); asinh_in_place(asinh_mutation); atan_in_place(atan_mutation); atanh_in_place(atanh_mutation); let valid =
+    equals(acos_output, 0.0)
+        and equals(acosh_output, 0.0)
+        and equals(asin_output, 0.0)
+        and equals(asinh_output, 0.0)
+        and equals(atan_output, 0.0)
+        and equals(atanh_output, 0.0)
+        and equals(acos_mutation, 0.0)
+        and equals(acosh_mutation, 0.0)
+        and equals(asin_mutation, 0.0)
+        and equals(asinh_mutation, 0.0)
+        and equals(atan_mutation, 0.0)
+        and equals(atanh_mutation, 0.0)
+        and equals(zero, 0.0)
+        and equals(one, 1.0);
+(dispose(atanh_mutation); dispose(atan_mutation); dispose(asinh_mutation); dispose(asin_mutation); dispose(acosh_mutation); dispose(acos_mutation); dispose(atanh_output); dispose(atan_output); dispose(asinh_output); dispose(asin_output); dispose(acosh_output); dispose(acos_output); dispose(one); dispose(zero); valid)).
+
+/**
+ * Proves circular and hyperbolic output and in-place storage contracts.
+ */
+@test
+pub direct_storage_forms_match_libtorch(): Bool ->
+    let zero = from_float(0.0);
+    let cos_output = from_float(-1.0);
+    let cosh_output = from_float(-1.0);
+    let sin_output = from_float(-1.0);
+    let sinh_output = from_float(-1.0);
+    let tan_output = from_float(-1.0);
+    let tanh_output = from_float(-1.0);
+    cos_out(cos_output, zero);
+    cosh_out(cosh_output, zero);
+    sin_out(sin_output, zero);
+    sinh_out(sinh_output, zero);
+    tan_out(tan_output, zero);
+    tanh_out(tanh_output, zero);
+    let cos_mutation = from_float(0.0);
+    let cosh_mutation = from_float(0.0);
+    let sin_mutation = from_float(0.0);
+    let sinh_mutation = from_float(0.0);
+    let tan_mutation = from_float(0.0);
+    let tanh_mutation = from_float(0.0);
+    (cos_in_place(cos_mutation); cosh_in_place(cosh_mutation); sin_in_place(sin_mutation); sinh_in_place(sinh_mutation); tan_in_place(tan_mutation); tanh_in_place(tanh_mutation); let valid =
+    equals(cos_output, 1.0)
+        and equals(cosh_output, 1.0)
+        and equals(sin_output, 0.0)
+        and equals(sinh_output, 0.0)
+        and equals(tan_output, 0.0)
+        and equals(tanh_output, 0.0)
+        and equals(cos_mutation, 1.0)
+        and equals(cosh_mutation, 1.0)
+        and equals(sin_mutation, 0.0)
+        and equals(sinh_mutation, 0.0)
+        and equals(tan_mutation, 0.0)
+        and equals(tanh_mutation, 0.0)
+        and equals(zero, 0.0);
+(dispose(tanh_mutation); dispose(tan_mutation); dispose(sinh_mutation); dispose(sin_mutation); dispose(cosh_mutation); dispose(cos_mutation); dispose(tanh_output); dispose(tan_output); dispose(sinh_output); dispose(sin_output); dispose(cosh_output); dispose(cos_output); dispose(zero); valid)).
+
+/**
+ * Proves basic numeric and bitwise output, mutation, and source ownership.
+ */
+@test
+pub basic_storage_forms_match_libtorch(): Bool ->
+    let abs_source = from_float(-2.0);
+    let abs_output = from_float(-2.0);
+    let abs_mutation = from_float(-2.0);
+    abs_out(abs_output, abs_source);
+    abs_in_place(abs_mutation);
+    let bitwise_not_source = from_int(1);
+    let bitwise_not_output = from_int(1);
+    let bitwise_not_mutation = from_int(1);
+    (bitwise_not_out(bitwise_not_output, bitwise_not_source); bitwise_not_in_place(bitwise_not_mutation); let ceil_source = from_float(1.5);
+let ceil_output = from_float(1.5);
+let ceil_mutation = from_float(1.5);
+(ceil_out(ceil_output, ceil_source); ceil_in_place(ceil_mutation); let floor_source = from_float(1.5);
+let floor_output = from_float(1.5);
+let floor_mutation = from_float(1.5);
+(floor_out(floor_output, floor_source); floor_in_place(floor_mutation); let frac_source = from_float(1.5);
+let frac_output = from_float(1.5);
+let frac_mutation = from_float(1.5);
+(frac_out(frac_output, frac_source); frac_in_place(frac_mutation); let reciprocal_source = from_float(2.0);
+let reciprocal_output = from_float(2.0);
+let reciprocal_mutation = from_float(2.0);
+(reciprocal_out(reciprocal_output, reciprocal_source); reciprocal_in_place(reciprocal_mutation); let round_source = from_float(1.5);
+let round_output = from_float(1.5);
+let round_mutation = from_float(1.5);
+(round_out(round_output, round_source); round_in_place(round_mutation); let sign_source = from_float(-2.0);
+let sign_output = from_float(-2.0);
+let sign_mutation = from_float(-2.0);
+(sign_out(sign_output, sign_source); sign_in_place(sign_mutation); let square_source = from_float(3.0);
+let square_output = from_float(3.0);
+let square_mutation = from_float(3.0);
+(square_out(square_output, square_source); square_in_place(square_mutation); let trunc_source = from_float(1.5);
+let trunc_output = from_float(1.5);
+let trunc_mutation = from_float(1.5);
+(trunc_out(trunc_output, trunc_source); trunc_in_place(trunc_mutation); let valid =
+    equals(abs_output, 2.0)
+        and equals(abs_mutation, 2.0)
+        and equals(abs_source, -2.0)
+        and item(bitwise_not_output) == -2
+        and item(bitwise_not_mutation) == -2
+        and item(bitwise_not_source) == 1
+        and equals(ceil_output, 2.0)
+        and equals(ceil_mutation, 2.0)
+        and equals(ceil_source, 1.5)
+        and equals(floor_output, 1.0)
+        and equals(floor_mutation, 1.0)
+        and equals(floor_source, 1.5)
+        and equals(frac_output, 0.5)
+        and equals(frac_mutation, 0.5)
+        and equals(frac_source, 1.5)
+        and equals(reciprocal_output, 0.5)
+        and equals(reciprocal_mutation, 0.5)
+        and equals(reciprocal_source, 2.0)
+        and equals(round_output, 2.0)
+        and equals(round_mutation, 2.0)
+        and equals(round_source, 1.5)
+        and equals(sign_output, -1.0)
+        and equals(sign_mutation, -1.0)
+        and equals(sign_source, -2.0)
+        and equals(square_output, 9.0)
+        and equals(square_mutation, 9.0)
+        and equals(square_source, 3.0)
+        and equals(trunc_output, 1.0)
+        and equals(trunc_mutation, 1.0)
+        and equals(trunc_source, 1.5);
+(dispose(trunc_mutation); dispose(trunc_output); dispose(trunc_source); dispose(square_mutation); dispose(square_output); dispose(square_source); dispose(sign_mutation); dispose(sign_output); dispose(sign_source); dispose(round_mutation); dispose(round_output); dispose(round_source); dispose(reciprocal_mutation); dispose(reciprocal_output); dispose(reciprocal_source); dispose(frac_mutation); dispose(frac_output); dispose(frac_source); dispose(floor_mutation); dispose(floor_output); dispose(floor_source); dispose(ceil_mutation); dispose(ceil_output); dispose(ceil_source); dispose(bitwise_not_mutation); dispose(bitwise_not_output); dispose(bitwise_not_source); dispose(abs_mutation); dispose(abs_output); dispose(abs_source); valid)))))))))).
+
+/**
+ * Proves conversion, error, exponential, logarithmic, and sinc storage contracts.
+ */
+@test
+pub special_storage_forms_match_libtorch(): Bool ->
+    let deg2rad_source = from_float(0.0);
+    let deg2rad_output = from_float(0.0);
+    let deg2rad_mutation = from_float(0.0);
+    deg2rad_out(deg2rad_output, deg2rad_source);
+    deg2rad_in_place(deg2rad_mutation);
+    let erf_source = from_float(0.0);
+    let erf_output = from_float(0.0);
+    let erf_mutation = from_float(0.0);
+    (erf_out(erf_output, erf_source); erf_in_place(erf_mutation); let erfc_source = from_float(0.0);
+let erfc_output = from_float(0.0);
+let erfc_mutation = from_float(0.0);
+(erfc_out(erfc_output, erfc_source); erfc_in_place(erfc_mutation); let erfinv_source = from_float(0.0);
+let erfinv_output = from_float(0.0);
+let erfinv_mutation = from_float(0.0);
+(erfinv_out(erfinv_output, erfinv_source); erfinv_in_place(erfinv_mutation); let exp2_source = from_float(3.0);
+let exp2_output = from_float(3.0);
+let exp2_mutation = from_float(3.0);
+(exp2_out(exp2_output, exp2_source); exp2_in_place(exp2_mutation); let expm1_source = from_float(0.0);
+let expm1_output = from_float(0.0);
+let expm1_mutation = from_float(0.0);
+(expm1_out(expm1_output, expm1_source); expm1_in_place(expm1_mutation); let log10_source = from_float(100.0);
+let log10_output = from_float(100.0);
+let log10_mutation = from_float(100.0);
+(log10_out(log10_output, log10_source); log10_in_place(log10_mutation); let log1p_source = from_float(0.0);
+let log1p_output = from_float(0.0);
+let log1p_mutation = from_float(0.0);
+(log1p_out(log1p_output, log1p_source); log1p_in_place(log1p_mutation); let log2_source = from_float(8.0);
+let log2_output = from_float(8.0);
+let log2_mutation = from_float(8.0);
+(log2_out(log2_output, log2_source); log2_in_place(log2_mutation); let rad2deg_source = from_float(0.0);
+let rad2deg_output = from_float(0.0);
+let rad2deg_mutation = from_float(0.0);
+(rad2deg_out(rad2deg_output, rad2deg_source); rad2deg_in_place(rad2deg_mutation); let rsqrt_source = from_float(4.0);
+let rsqrt_output = from_float(4.0);
+let rsqrt_mutation = from_float(4.0);
+(rsqrt_out(rsqrt_output, rsqrt_source); rsqrt_in_place(rsqrt_mutation); let sinc_source = from_float(0.0);
+let sinc_output = from_float(0.0);
+let sinc_mutation = from_float(0.0);
+(sinc_out(sinc_output, sinc_source); sinc_in_place(sinc_mutation); let valid =
+    equals(deg2rad_output, 0.0)
+        and equals(deg2rad_mutation, 0.0)
+        and equals(deg2rad_source, 0.0)
+        and equals(erf_output, 0.0)
+        and equals(erf_mutation, 0.0)
+        and equals(erf_source, 0.0)
+        and equals(erfc_output, 1.0)
+        and equals(erfc_mutation, 1.0)
+        and equals(erfc_source, 0.0)
+        and equals(erfinv_output, 0.0)
+        and equals(erfinv_mutation, 0.0)
+        and equals(erfinv_source, 0.0)
+        and equals(exp2_output, 8.0)
+        and equals(exp2_mutation, 8.0)
+        and equals(exp2_source, 3.0)
+        and equals(expm1_output, 0.0)
+        and equals(expm1_mutation, 0.0)
+        and equals(expm1_source, 0.0)
+        and equals(log10_output, 2.0)
+        and equals(log10_mutation, 2.0)
+        and equals(log10_source, 100.0)
+        and equals(log1p_output, 0.0)
+        and equals(log1p_mutation, 0.0)
+        and equals(log1p_source, 0.0)
+        and equals(log2_output, 3.0)
+        and equals(log2_mutation, 3.0)
+        and equals(log2_source, 8.0)
+        and equals(rad2deg_output, 0.0)
+        and equals(rad2deg_mutation, 0.0)
+        and equals(rad2deg_source, 0.0)
+        and equals(rsqrt_output, 0.5)
+        and equals(rsqrt_mutation, 0.5)
+        and equals(rsqrt_source, 4.0)
+        and equals(sinc_output, 1.0)
+        and equals(sinc_mutation, 1.0)
+        and equals(sinc_source, 0.0);
+(dispose(sinc_mutation); dispose(sinc_output); dispose(sinc_source); dispose(rsqrt_mutation); dispose(rsqrt_output); dispose(rsqrt_source); dispose(rad2deg_mutation); dispose(rad2deg_output); dispose(rad2deg_source); dispose(log2_mutation); dispose(log2_output); dispose(log2_source); dispose(log1p_mutation); dispose(log1p_output); dispose(log1p_source); dispose(log10_mutation); dispose(log10_output); dispose(log10_source); dispose(expm1_mutation); dispose(expm1_output); dispose(expm1_source); dispose(exp2_mutation); dispose(exp2_output); dispose(exp2_source); dispose(erfinv_mutation); dispose(erfinv_output); dispose(erfinv_source); dispose(erfc_mutation); dispose(erfc_output); dispose(erfc_source); dispose(erf_mutation); dispose(erf_output); dispose(erf_source); dispose(deg2rad_mutation); dispose(deg2rad_output); dispose(deg2rad_source); valid)))))))))))).
+
+/**
+ * Proves activation and logical storage contracts.
+ */
+@test
+pub activation_storage_forms_match_libtorch(): Bool ->
+    let hardsigmoid_source = from_float(0.0);
+    let hardsigmoid_output = from_float(0.0);
+    let hardsigmoid_mutation = from_float(0.0);
+    hardsigmoid_out(hardsigmoid_output, hardsigmoid_source);
+    hardsigmoid_in_place(hardsigmoid_mutation);
+    let hardswish_source = from_float(0.0);
+    let hardswish_output = from_float(0.0);
+    let hardswish_mutation = from_float(0.0);
+    (hardswish_out(hardswish_output, hardswish_source); hardswish_in_place(hardswish_mutation); let logical_not_source = from_bool(false);
+let logical_not_output = from_bool(false);
+let logical_not_mutation = from_bool(false);
+(logical_not_out(logical_not_output, logical_not_source); logical_not_in_place(logical_not_mutation); let mish_source = from_float(0.0);
+let mish_output = from_float(0.0);
+let mish_mutation = from_float(0.0);
+(mish_out(mish_output, mish_source); mish_in_place(mish_mutation); let sigmoid_source = from_float(0.0);
+let sigmoid_output = from_float(0.0);
+let sigmoid_mutation = from_float(0.0);
+(sigmoid_out(sigmoid_output, sigmoid_source); sigmoid_in_place(sigmoid_mutation); let silu_source = from_float(0.0);
+let silu_output = from_float(0.0);
+let silu_mutation = from_float(0.0);
+(silu_out(silu_output, silu_source); silu_in_place(silu_mutation); let relu6_mutation = from_float(-2.0);
+(relu6_in_place(relu6_mutation); let selu_mutation = from_float(0.0);
+(selu_in_place(selu_mutation); let valid =
+    equals(hardsigmoid_output, 0.5)
+        and equals(hardsigmoid_mutation, 0.5)
+        and equals(hardsigmoid_source, 0.0)
+        and equals(hardswish_output, 0.0)
+        and equals(hardswish_mutation, 0.0)
+        and equals(hardswish_source, 0.0)
+        and item_bool(logical_not_output) == true
+        and item_bool(logical_not_mutation) == true
+        and item_bool(logical_not_source) == false
+        and equals(mish_output, 0.0)
+        and equals(mish_mutation, 0.0)
+        and equals(mish_source, 0.0)
+        and equals(sigmoid_output, 0.5)
+        and equals(sigmoid_mutation, 0.5)
+        and equals(sigmoid_source, 0.0)
+        and equals(silu_output, 0.0)
+        and equals(silu_mutation, 0.0)
+        and equals(silu_source, 0.0)
+        and equals(relu6_mutation, 0.0)
+        and equals(selu_mutation, 0.0);
+(dispose(selu_mutation); dispose(relu6_mutation); dispose(silu_mutation); dispose(silu_output); dispose(silu_source); dispose(sigmoid_mutation); dispose(sigmoid_output); dispose(sigmoid_source); dispose(mish_mutation); dispose(mish_output); dispose(mish_source); dispose(logical_not_mutation); dispose(logical_not_output); dispose(logical_not_source); dispose(hardswish_mutation); dispose(hardswish_output); dispose(hardswish_source); dispose(hardsigmoid_mutation); dispose(hardsigmoid_output); dispose(hardsigmoid_source); valid)))))))).

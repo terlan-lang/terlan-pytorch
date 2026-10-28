@@ -1,0 +1,131 @@
+/**
+ * Exact retained-output forms for established dense, shape, linalg, statistical, dropout, padding, and softmax kernels.
+ */
+module pytorch.OutputCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Writes exact aten::complex.out into retained complex storage.
+ */
+@compiler.native {pytorch.output_completion.complex_out}
+pub complex_out(output: Tensor, real: Tensor, imaginary: Tensor): Unit ->
+    native.
+
+/**
+ * Writes exact aten::dist.out into retained storage through the typed direct-ATen Scalar path.
+ */
+@compiler.native {pytorch.output_completion.dist_out}
+pub dist_out(output: Tensor, left: Tensor, right: Tensor, order: Float): Unit ->
+    native.
+
+/**
+ * Writes exact aten::expand_copy.out into retained storage.
+ */
+@compiler.native {pytorch.output_completion.expand_copy_out}
+pub expand_copy_out(output: Tensor, input: Tensor, size: List[Int], implicit: Bool): Unit ->
+    native.
+
+/**
+ * Writes exact aten::lu_solve.out into retained storage.
+ */
+@compiler.native {pytorch.output_completion.lu_solve_out}
+pub lu_solve_out(output: Tensor, right: Tensor, factor: Tensor, pivots: Tensor): Unit ->
+    native.
+
+/**
+ * Writes exact aten::native_dropout_backward.out into retained storage.
+ */
+@compiler.native {pytorch.output_completion.native_dropout_backward_out}
+pub native_dropout_backward_out(output: Tensor, gradient: Tensor, mask: Tensor, scale: Float): Unit ->
+    native.
+
+/**
+ * Writes exact aten::ormqr.out into retained storage.
+ */
+@compiler.native {pytorch.output_completion.ormqr_out}
+pub ormqr_out(
+    output: Tensor,
+    factor: Tensor,
+    tau: Tensor,
+    other: Tensor,
+    left: Bool,
+    transpose: Bool,
+): Unit ->
+    native.
+
+/**
+ * Writes exact aten::polar.out into retained complex storage.
+ */
+@compiler.native {pytorch.output_completion.polar_out}
+pub polar_out(output: Tensor, absolute: Tensor, angle: Tensor): Unit ->
+    native.
+
+/**
+ * Writes exact aten::reflection_pad1d.out.
+ */
+@compiler.native {pytorch.output_completion.reflection_pad1d_out}
+pub reflection_pad1d_out(output: Tensor, input: Tensor, padding: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes exact aten::reflection_pad2d.out.
+ */
+@compiler.native {pytorch.output_completion.reflection_pad2d_out}
+pub reflection_pad2d_out(output: Tensor, input: Tensor, padding: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes exact aten::reflection_pad3d.out.
+ */
+@compiler.native {pytorch.output_completion.reflection_pad3d_out}
+pub reflection_pad3d_out(output: Tensor, input: Tensor, padding: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes exact aten::replication_pad1d.out.
+ */
+@compiler.native {pytorch.output_completion.replication_pad1d_out}
+pub replication_pad1d_out(output: Tensor, input: Tensor, padding: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes exact aten::replication_pad2d.out.
+ */
+@compiler.native {pytorch.output_completion.replication_pad2d_out}
+pub replication_pad2d_out(output: Tensor, input: Tensor, padding: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes exact aten::replication_pad3d.out.
+ */
+@compiler.native {pytorch.output_completion.replication_pad3d_out}
+pub replication_pad3d_out(output: Tensor, input: Tensor, padding: List[Int]): Unit ->
+    native.
+
+/**
+ * Writes exact aten::renorm.out into retained storage through the typed direct-ATen Scalar path.
+ */
+@compiler.native {pytorch.output_completion.renorm_out}
+pub renorm_out(
+    output: Tensor,
+    input: Tensor,
+    order: Float,
+    dimension: Int,
+    maximum_norm: Float,
+): Unit ->
+    native.
+
+/**
+ * Writes exact aten::slogdet.out tuple into retained storage.
+ */
+@compiler.native {pytorch.output_completion.slogdet_out}
+pub slogdet_out(sign: Tensor, log_absolute_determinant: Tensor, input: Tensor): Unit ->
+    native.
+
+/**
+ * Writes exact aten::softmax.int_out with inferred dtype.
+ */
+@compiler.native {pytorch.output_completion.softmax_out}
+pub softmax_out(output: Tensor, input: Tensor, dimension: Int): Unit ->
+    native.

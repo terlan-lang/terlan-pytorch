@@ -1,0 +1,149 @@
+module pytorch.LossParityTest.
+
+import pytorch.Loss.{cosine_embedding_loss, hinge_embedding_loss, huber_loss, huber_loss_backward, l1_loss, margin_ranking_loss, poisson_nll_loss, smooth_l1_loss, smooth_l1_loss_backward, soft_margin_loss, triplet_margin_loss}.
+import pytorch.Tensor.{dispose, from_floats, item_float, narrow, shape}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads one floating-point vector element from an owned one-element view.
+ */
+vector_item(tensor: Tensor, index: Int): Float ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    value.
+
+/**
+ * Proves pointwise regression and likelihood losses with mean reduction.
+ */
+@test
+pub regression_and_likelihood_losses_match_libtorch(): Bool ->
+    let prediction = from_floats([0.0, 2.0], [2]);
+    let target = from_floats([0.0, 0.0], [2]);
+    let logistic_input = from_floats([0.0], [1]);
+    let positive_target = from_floats([1.0], [1]);
+    let absolute = l1_loss(prediction, target);
+    let smooth = smooth_l1_loss(prediction, target);
+    let huber = huber_loss(prediction, target);
+    let soft_margin = soft_margin_loss(logistic_input, positive_target);
+    let poisson = poisson_nll_loss(logistic_input, positive_target, true, false, 1e-8, 1);
+    let soft_margin_value = item_float(soft_margin);
+    let valid =
+        item_float(absolute) == 1.0
+            and item_float(smooth) == 0.75
+            and item_float(huber) == 0.75
+            and soft_margin_value > 0.693
+            and soft_margin_value < 0.694
+            and item_float(poisson) == 1.0
+            and shape(prediction) == [2]
+            and shape(target) == [2];
+    dispose(poisson);
+    dispose(soft_margin);
+    dispose(huber);
+    dispose(smooth);
+    dispose(absolute);
+    dispose(positive_target);
+    dispose(logistic_input);
+    dispose(target);
+    dispose(prediction);
+    valid.
+
+/**
+ * Proves pair-ranking, hinge, and cosine embedding losses.
+ */
+@test
+pub embedding_and_ranking_losses_match_libtorch(): Bool ->
+    let first = from_floats([2.0], [1]);
+    let second = from_floats([1.0], [1]);
+    let positive = from_floats([1.0], [1]);
+    let hinge_input = from_floats([0.5], [1]);
+    let cosine_first = from_floats([1.0, 0.0], [1, 2]);
+    let cosine_second = from_floats([1.0, 0.0], [1, 2]);
+    let ranking = margin_ranking_loss(first, second, positive);
+    let hinge = hinge_embedding_loss(hinge_input, positive);
+    let cosine = cosine_embedding_loss(cosine_first, cosine_second, positive);
+    let cosine_value = item_float(cosine);
+    let valid =
+        item_float(ranking) == 0.0
+            and item_float(hinge) == 0.5
+            and cosine_value > -0.000001
+            and cosine_value < 0.000001
+            and shape(first) == [1]
+            and shape(cosine_first) == [1, 2];
+    dispose(cosine);
+    dispose(hinge);
+    dispose(ranking);
+    dispose(cosine_second);
+    dispose(cosine_first);
+    dispose(hinge_input);
+    dispose(positive);
+    dispose(second);
+    dispose(first);
+    valid.
+
+/**
+ * Proves triplet distance ordering and source ownership.
+ */
+@test
+pub triplet_loss_matches_libtorch(): Bool ->
+    let anchor = from_floats([0.0, 0.0], [1, 2]);
+    let positive = from_floats([1.0, 0.0], [1, 2]);
+    let negative = from_floats([3.0, 0.0], [1, 2]);
+    let loss = triplet_margin_loss(anchor, positive, negative);
+    let value = item_float(loss);
+    let valid =
+        value >= 0.0
+            and value < 0.000001
+            and shape(anchor) == [1, 2]
+            and shape(positive) == [1, 2]
+            and shape(negative) == [1, 2];
+    dispose(loss);
+    dispose(negative);
+    dispose(positive);
+    dispose(anchor);
+    valid.
+
+/**
+ * Proves the exact elementwise Huber backward kernel and source ownership.
+ */
+@test
+pub huber_loss_backward_matches_libtorch(): Bool ->
+    let gradient_output = from_floats([2.0, 3.0], [2]);
+    let input = from_floats([-0.5, 2.0], [2]);
+    let target = from_floats([0.0, 0.0], [2]);
+    let gradient = huber_loss_backward(gradient_output, input, target, 0, 1.0);
+    let valid =
+        vector_item(gradient, 0) == -1.0
+            and vector_item(gradient, 1) == 3.0
+            and shape(gradient) == [2]
+            and shape(gradient_output) == [2]
+            and shape(input) == [2]
+            and shape(target) == [2];
+    dispose(gradient);
+    dispose(target);
+    dispose(input);
+    dispose(gradient_output);
+    valid.
+
+/**
+ * Proves the exact elementwise smooth-L1 backward kernel and source ownership.
+ */
+@test
+pub smooth_l1_loss_backward_matches_libtorch(): Bool ->
+    let gradient_output = from_floats([2.0, 3.0], [2]);
+    let input = from_floats([-0.5, 2.0], [2]);
+    let target = from_floats([0.0, 0.0], [2]);
+    let gradient = smooth_l1_loss_backward(gradient_output, input, target, 0, 1.0);
+    let valid =
+        vector_item(gradient, 0) == -1.0
+            and vector_item(gradient, 1) == 3.0
+            and shape(gradient) == [2]
+            and shape(gradient_output) == [2]
+            and shape(input) == [2]
+            and shape(target) == [2];
+    dispose(gradient);
+    dispose(target);
+    dispose(input);
+    dispose(gradient_output);
+    valid.

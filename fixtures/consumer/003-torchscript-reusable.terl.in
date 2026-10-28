@@ -1,0 +1,23 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{dispose, dispose_model, from_float, item_float, load_torchscript, torchscript_forward}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let model = load_torchscript("$model");
+    let first_input = from_float(3.0);
+    let first_output = torchscript_forward(model, first_input);
+    let first_observed = item_float(first_output);
+    let second_input = from_float(4.0);
+    let second_output = torchscript_forward(model, second_input);
+    let second_observed = item_float(second_output);
+    dispose(second_output);
+    dispose(second_input);
+    dispose(first_output);
+    dispose(first_input);
+    dispose_model(model);
+    if {
+        first_observed == 6.0 and second_observed == 8.0 ->
+            println("PYTORCH_REUSABLE_TORCHSCRIPT_MODEL_CONSUMER_OK");
+        true -> println("PYTORCH_REUSABLE_TORCHSCRIPT_MODEL_CONSUMER_FAILED")
+    }.

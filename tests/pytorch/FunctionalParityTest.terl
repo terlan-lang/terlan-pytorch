@@ -1,0 +1,133 @@
+module pytorch.FunctionalParityTest.
+
+import pytorch.Binary.{greater_tensor, isclose}.
+import pytorch.Distance.{cosine_similarity, pairwise_distance}.
+import pytorch.Regularization.{alpha_dropout, dropout, feature_dropout, native_dropout_backward}.
+import pytorch.Tensor.{dispose, from_float, from_floats, item_bool, item_float, narrow, shape, sum}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads one floating-point vector element from an owned one-element view.
+ */
+vector_float_item(tensor: Tensor, index: Int): Float ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    value.
+
+/**
+ * Reads one boolean vector element from an owned one-element view.
+ */
+vector_bool_item(tensor: Tensor, index: Int): Bool ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_bool(element);
+    dispose(element);
+    value.
+
+/**
+ * Proves cosine and pairwise distance values, shapes, and source ownership.
+ */
+@test
+pub distance_functions_match_libtorch(): Bool ->
+    let basis = from_floats([1.0, 0.0], [1, 2]);
+    let same = from_floats([1.0, 0.0], [1, 2]);
+    let origin = from_floats([0.0, 0.0], [1, 2]);
+    let point = from_floats([3.0, 4.0], [1, 2]);
+    let similarity = cosine_similarity(basis, same);
+    let distance = pairwise_distance(origin, point);
+    let distance_value = item_float(distance);
+    let valid =
+        item_float(similarity) == 1.0
+            and distance_value > 4.999
+            and distance_value < 5.001
+            and shape(similarity) == [1]
+            and shape(distance) == [1]
+            and shape(basis) == [1, 2]
+            and shape(point) == [1, 2];
+    dispose(distance);
+    dispose(similarity);
+    dispose(point);
+    dispose(origin);
+    dispose(same);
+    dispose(basis);
+    valid.
+
+/**
+ * Proves deterministic training and inference dropout branches preserve the
+ * caller-owned input.
+ */
+@test
+pub deterministic_dropout_branches_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0], [1, 2]);
+    let trained = dropout(input, 0.0, true);
+    let inferred = dropout(input, 0.75, false);
+    let alpha_inferred = alpha_dropout(input, 0.75, false);
+    let feature_inferred = feature_dropout(input, 0.75, false);
+    let trained_total = sum(trained);
+    let inferred_total = sum(inferred);
+    let alpha_total = sum(alpha_inferred);
+    let feature_total = sum(feature_inferred);
+    let valid =
+        item_float(trained_total) == 3.0
+            and item_float(inferred_total) == 3.0
+            and item_float(alpha_total) == 3.0
+            and item_float(feature_total) == 3.0
+            and shape(trained) == [1, 2]
+            and shape(inferred) == [1, 2]
+            and shape(alpha_inferred) == [1, 2]
+            and shape(feature_inferred) == [1, 2]
+            and shape(input) == [1, 2];
+    dispose(feature_total);
+    dispose(alpha_total);
+    dispose(inferred_total);
+    dispose(trained_total);
+    dispose(feature_inferred);
+    dispose(alpha_inferred);
+    dispose(inferred);
+    dispose(trained);
+    dispose(input);
+    valid.
+
+/**
+ * Proves native dropout backward applies a mixed boolean mask and explicit scale.
+ */
+@test
+pub native_dropout_backward_matches_libtorch(): Bool ->
+    let gradient_output = from_floats([2.0, 3.0, 4.0], [3]);
+    let mask_values = from_floats([1.0, 0.0, 1.0], [3]);
+    let zero = from_float(0.0);
+    let mask = greater_tensor(mask_values, zero);
+    let gradient = native_dropout_backward(gradient_output, mask, 2.0);
+    let valid =
+        vector_float_item(gradient, 0) == 4.0
+            and vector_float_item(gradient, 1) == 0.0
+            and vector_float_item(gradient, 2) == 8.0
+            and shape(gradient) == [3]
+            and shape(gradient_output) == [3]
+            and shape(mask) == [3];
+    dispose(gradient);
+    dispose(mask);
+    dispose(zero);
+    dispose(mask_values);
+    dispose(gradient_output);
+    valid.
+
+/**
+ * Proves elementwise relative tolerance and an exact rejected comparison.
+ */
+@test
+pub isclose_matches_libtorch(): Bool ->
+    let left = from_floats([1.0, 2.0], [2]);
+    let right = from_floats([1.0005, 2.01], [2]);
+    let close = isclose(left, right, 0.001, 0.0, false);
+    let valid =
+        vector_bool_item(close, 0)
+            and not vector_bool_item(close, 1)
+            and shape(close) == [2]
+            and shape(left) == [2]
+            and shape(right) == [2];
+    dispose(close);
+    dispose(right);
+    dispose(left);
+    valid.

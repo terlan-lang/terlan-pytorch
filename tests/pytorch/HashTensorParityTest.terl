@@ -1,0 +1,20 @@
+/**
+ * CPU value and retained-output evidence for aten::hash_tensor.
+ */
+module pytorch.HashTensorParityTest.
+
+import pytorch.HashCompletion.{hash_tensor, hash_tensor_out}.
+import pytorch.Tensor.{dispose, from_floats, from_ints, shape, to_dtype, zeros}.
+import pytorch.TypeRelations.equal.
+
+@test
+pub hash_tensor_matches_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0], [3]);
+    let actual = hash_tensor(input, [], false, 0);
+    let expected_source = from_ints([4609434218613702656], []);
+    let expected = to_dtype(expected_source, 29);
+    let value_valid = equal(actual, expected) and shape(actual) == [];
+    let output = zeros([0], 29);
+    hash_tensor_out(output, input, [], false, 0);
+    let output_valid = equal(output, expected);
+    (dispose(output); dispose(expected); dispose(expected_source); dispose(actual); dispose(input); value_valid and output_valid).

@@ -1,0 +1,84 @@
+module pytorch.SelectionBehaviorSupport.
+
+import pytorch.Selection.{cummax, cummax_out, cummin, cummin_out, kthvalue, kthvalue_out, max_dim, median_dim, median_dim_out, min_dim, mode, mode_out, nanmedian_dim, nanmedian_dim_out, sort, sort_out, topk, topk_out}.
+import pytorch.Tensor.{Float64, Int64, Strided, dispose, is_cuda, ones_device, shape}.
+
+/**
+ * Executes every Selection tuple and dual retained-output contract on one device.
+ */
+pub selection_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let input = ones_device([2, 4], Float64, Strided, device_name);
+    let {cummax_values, cummax_indices} = cummax(input, 1);
+    let {cummin_values, cummin_indices} = cummin(input, 1);
+    let {kth_values, kth_indices} = kthvalue(input, 2, 1);
+    let {maximum_values, maximum_indices} = max_dim(input, 1);
+    let {median_values, median_indices} = median_dim(input, 1);
+    let {minimum_values, minimum_indices} = min_dim(input, 1);
+    let {mode_values, mode_indices} = mode(input, 1);
+    let {nanmedian_values, nanmedian_indices} = nanmedian_dim(input, 1);
+    let {sorted_values, sorted_indices} = sort(input, 1);
+    let {top_values, top_indices} = topk(input, 2, 1);
+    let cummax_values_output = ones_device([0], Float64, Strided, device_name);
+    let cummax_indices_output = ones_device([0], Int64, Strided, device_name);
+    let cummin_values_output = ones_device([0], Float64, Strided, device_name);
+    let cummin_indices_output = ones_device([0], Int64, Strided, device_name);
+    let kth_values_output = ones_device([0], Float64, Strided, device_name);
+    let kth_indices_output = ones_device([0], Int64, Strided, device_name);
+    let median_values_output = ones_device([0], Float64, Strided, device_name);
+    let median_indices_output = ones_device([0], Int64, Strided, device_name);
+    let mode_values_output = ones_device([0], Float64, Strided, device_name);
+    let mode_indices_output = ones_device([0], Int64, Strided, device_name);
+    let nanmedian_values_output = ones_device([0], Float64, Strided, device_name);
+    let nanmedian_indices_output = ones_device([0], Int64, Strided, device_name);
+    let sorted_values_output = ones_device([0], Float64, Strided, device_name);
+    let sorted_indices_output = ones_device([0], Int64, Strided, device_name);
+    let top_values_output = ones_device([0], Float64, Strided, device_name);
+    let top_indices_output = ones_device([0], Int64, Strided, device_name);
+    cummax_out(cummax_values_output, cummax_indices_output, input, 1);
+    cummin_out(cummin_values_output, cummin_indices_output, input, 1);
+    kthvalue_out(kth_values_output, kth_indices_output, input, 2, 1);
+    median_dim_out(median_values_output, median_indices_output, input, 1);
+    mode_out(mode_values_output, mode_indices_output, input, 1);
+    nanmedian_dim_out(nanmedian_values_output, nanmedian_indices_output, input, 1);
+    sort_out(sorted_values_output, sorted_indices_output, input, 1);
+    topk_out(top_values_output, top_indices_output, input, 2, 1);
+    let valid =
+        shape(cummax_values) == [2, 4]
+            and shape(cummax_indices) == [2, 4]
+            and shape(cummin_values) == [2, 4]
+            and shape(cummin_indices) == [2, 4]
+            and shape(kth_values) == [2]
+            and shape(kth_indices) == [2]
+            and shape(maximum_values) == [2]
+            and shape(maximum_indices) == [2]
+            and shape(median_values) == [2]
+            and shape(median_indices) == [2]
+            and shape(minimum_values) == [2]
+            and shape(minimum_indices) == [2]
+            and shape(mode_values) == [2]
+            and shape(mode_indices) == [2]
+            and shape(nanmedian_values) == [2]
+            and shape(nanmedian_indices) == [2]
+            and shape(sorted_values) == [2, 4]
+            and shape(sorted_indices) == [2, 4]
+            and shape(top_values) == [2, 2]
+            and shape(top_indices) == [2, 2]
+            and shape(cummax_values_output) == [2, 4]
+            and shape(cummax_indices_output) == [2, 4]
+            and shape(cummin_values_output) == [2, 4]
+            and shape(cummin_indices_output) == [2, 4]
+            and shape(kth_values_output) == [2]
+            and shape(kth_indices_output) == [2]
+            and shape(median_values_output) == [2]
+            and shape(median_indices_output) == [2]
+            and shape(mode_values_output) == [2]
+            and shape(mode_indices_output) == [2]
+            and shape(nanmedian_values_output) == [2]
+            and shape(nanmedian_indices_output) == [2]
+            and shape(sorted_values_output) == [2, 4]
+            and shape(sorted_indices_output) == [2, 4]
+            and shape(top_values_output) == [2, 2]
+            and shape(top_indices_output) == [2, 2]
+            and is_cuda(cummax_values) == expected_cuda
+            and is_cuda(top_indices_output) == expected_cuda;
+    (dispose(top_indices_output); dispose(top_values_output); dispose(sorted_indices_output); dispose(sorted_values_output); dispose(nanmedian_indices_output); dispose(nanmedian_values_output); dispose(mode_indices_output); dispose(mode_values_output); dispose(median_indices_output); dispose(median_values_output); dispose(kth_indices_output); dispose(kth_values_output); dispose(cummin_indices_output); dispose(cummin_values_output); dispose(cummax_indices_output); dispose(cummax_values_output); dispose(top_indices); dispose(top_values); dispose(sorted_indices); dispose(sorted_values); dispose(nanmedian_indices); dispose(nanmedian_values); dispose(mode_indices); dispose(mode_values); dispose(minimum_indices); dispose(minimum_values); dispose(median_indices); dispose(median_values); dispose(maximum_indices); dispose(maximum_values); dispose(kth_indices); dispose(kth_values); dispose(cummin_indices); dispose(cummin_values); dispose(cummax_indices); dispose(cummax_values); dispose(input); valid).

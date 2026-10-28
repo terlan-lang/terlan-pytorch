@@ -1,0 +1,53 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{amax, batch_norm, dispose, dtype, full_float, item_float, mse_loss, shape}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = full_float([1, 2, 2, 2], 3.0);
+    let weight = full_float([2], 2.0);
+    let bias = full_float([2], 1.0);
+    let running_mean = full_float([2], 1.0);
+    let running_variance = full_float([2], 4.0);
+    let output = batch_norm(
+        input, weight, bias, running_mean, running_variance,
+        false, 0.1, 0.0, false
+    );
+    let expected = full_float([1, 2, 2, 2], 3.0);
+    let exact_loss = mse_loss(output, expected, 1);
+    let output0 = amax(output, [0], false);
+    let output1 = amax(output0, [0], false);
+    let output2 = amax(output1, [0], false);
+    let output3 = amax(output2, [0], false);
+    let input0 = amax(input, [0], false);
+    let input1 = amax(input0, [0], false);
+    let input2 = amax(input1, [0], false);
+    let input3 = amax(input2, [0], false);
+    let observed_shape = shape(output);
+    let observed_dtype = dtype(output);
+    let observed_output = item_float(output3);
+    let observed_input = item_float(input3);
+    let observed_exact_loss = item_float(exact_loss);
+    dispose(input3);
+    dispose(input2);
+    dispose(input1);
+    dispose(input0);
+    dispose(output3);
+    dispose(output2);
+    dispose(output1);
+    dispose(output0);
+    dispose(exact_loss);
+    dispose(expected);
+    dispose(output);
+    dispose(running_variance);
+    dispose(running_mean);
+    dispose(bias);
+    dispose(weight);
+    dispose(input);
+    if {
+        observed_shape.length() == 4 and observed_shape[0] == 1 and
+            observed_shape[1] == 2 and observed_shape[2] == 2 and observed_shape[3] == 2 and
+            observed_dtype == 7 and observed_output == 3.0 and observed_input == 3.0 and
+            observed_exact_loss == 0.0 -> println("PYTORCH_BATCH_NORM_CONSUMER_OK");
+        true -> println("PYTORCH_BATCH_NORM_CONSUMER_FAILED")
+    }.

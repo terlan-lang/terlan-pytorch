@@ -1,0 +1,51 @@
+//! Exact stable sorting output, distance, matrix-chain, clone, contiguity, and cross-product primitives.
+
+module pytorch.NumericalCompletionNative.
+
+/// Writes exact aten::argsort.stable_out indices into retained storage.
+
+pub argsort_stable_out(output: Tensor, tensor: Tensor, stable: Bool, dimension: Int, descending: Bool): Unit.
+
+/// Computes exact aten::cdist with an explicit compute mode.
+
+pub cdist_compute(left: Tensor, right: Tensor, p: Float, compute_mode: Int): Tensor.
+
+/// Computes exact aten::cdist with inferred compute mode.
+
+pub cdist_default_compute(left: Tensor, right: Tensor, p: Float): Tensor.
+
+/// Computes exact aten::chain_matmul over an owned tensor-handle list.
+
+pub chain_matmul_native(matrices: List[Tensor]): Tensor.
+
+/// Writes exact aten::chain_matmul.out into retained storage.
+
+pub chain_matmul_out_native(output: Tensor, matrices: List[Tensor]): Unit.
+
+/// Writes exact aten::clone.out with inferred memory format.
+
+pub clone_out_default_memory(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes exact aten::clone.out with an explicit memory format.
+
+pub clone_out_memory(output: Tensor, tensor: Tensor, memory_format: Int): Unit.
+
+/// Executes exact aten::contiguous with explicit memory format and alias-preserving semantics.
+
+pub contiguous_native(tensor: Tensor, memory_format: Int): Tensor.
+
+/// Computes exact aten::cross with inferred dimension.
+
+pub cross_default_dimension(tensor: Tensor, other: Tensor): Tensor.
+
+/// Computes exact aten::cross with explicit dimension.
+
+pub cross_dimension(tensor: Tensor, other: Tensor, dimension: Int): Tensor.
+
+/// Writes exact aten::cross.out with inferred dimension.
+
+pub cross_out_default_dimension(output: Tensor, tensor: Tensor, other: Tensor): Unit.
+
+/// Writes exact aten::cross.out with explicit dimension.
+
+pub cross_out_dimension(output: Tensor, tensor: Tensor, other: Tensor, dimension: Int): Unit.

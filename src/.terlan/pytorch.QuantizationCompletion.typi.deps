@@ -1,0 +1,9 @@
+module=pytorch.QuantizationCompletion
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=12318155037030098643
+interface_hash=9628384055197468425
+interface_doc_hash=8803333877095863259
+deps=1
+pytorch.Tensor=13489932768568026575

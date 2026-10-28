@@ -1,0 +1,21 @@
+module pytorch.ScalarTensorParityTest.
+
+import pytorch.Tensor.{copy_in_place, dispose, dtype, from_float, from_floats, from_int, item_float}.
+
+/**
+ * Proves scalar tensor construction preserves value and inferred dtype.
+ */
+@test
+pub scalar_tensor_inference_matches_libtorch(): Bool ->
+    let integer = from_int(7);
+    let floating = from_float(2.5);
+    let output = from_floats([0.0], [1]);
+    let written = from_float(4.25);
+    copy_in_place(output, written, false);
+    let valid =
+        item_float(integer) == 7.0
+            and item_float(floating) == 2.5
+            and dtype(integer) == 4
+            and dtype(floating) == 7
+            and item_float(output) == 4.25;
+    (dispose(written); dispose(output); dispose(floating); dispose(integer); valid).

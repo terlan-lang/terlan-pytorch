@@ -1,0 +1,50 @@
+module test.PytorchTraining.
+
+import pytorch.Tensor.{amax, dispose, from_floats, full_float, item_float, mse_loss, shape}.
+import pytorch.Training.{batch_norm_training}.
+
+@test
+pub training_batch_norm_returns_owned_statistics_without_mutating_sources(): Bool ->
+    let input = from_floats([1.0, 3.0, 5.0, 7.0], [2, 1, 1, 2]);
+    let weight = full_float([1], 1.0);
+    let bias = full_float([1], 0.0);
+    let running_mean = full_float([1], 0.0);
+    let running_variance = full_float([1], 1.0);
+    let result = batch_norm_training(input, weight, bias, running_mean, running_variance, 0.5, 0.0, false);
+    let expected =
+        from_floats(
+            [-1.3416407864998738, -0.4472135954999579, 0.4472135954999579, 1.3416407864998738],
+            [2, 1, 1, 2],
+        );
+    let loss = mse_loss(result.output, expected, 1);
+    let updated_mean = amax(result.running_mean, [0], false);
+    let updated_variance = amax(result.running_variance, [0], false);
+    let source_mean = amax(running_mean, [0], false);
+    let source_variance = amax(running_variance, [0], false);
+    let observed_shape = shape(result.output);
+    let observed_loss = item_float(loss);
+    let observed_updated_mean = item_float(updated_mean);
+    let observed_updated_variance = item_float(updated_variance);
+    let observed_source_mean = item_float(source_mean);
+    let observed_source_variance = item_float(source_variance);
+    dispose(source_variance);
+    dispose(source_mean);
+    dispose(updated_variance);
+    dispose(updated_mean);
+    dispose(loss);
+    dispose(expected);
+    dispose(result.running_variance);
+    dispose(result.running_mean);
+    dispose(result.output);
+    dispose(running_variance);
+    dispose(running_mean);
+    dispose(bias);
+    dispose(weight);
+    dispose(input);
+    observed_shape == [2, 1, 1, 2]
+        and observed_loss < 1e-24
+        and observed_updated_mean == 2.0
+        and observed_updated_variance > 3.833333333333
+        and observed_updated_variance < 3.833333333334
+        and observed_source_mean == 0.0
+        and observed_source_variance == 1.0.

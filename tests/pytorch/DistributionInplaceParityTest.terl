@@ -1,0 +1,20 @@
+/**
+ * CPU evidence for generated in-place random-distribution bindings.
+ */
+module pytorch.DistributionInplaceParityTest.
+
+import pytorch.DistributionCompletion.{cauchy_inplace, exponential_inplace, geometric_inplace, log_normal_inplace, normal_inplace, uniform_inplace}.
+import pytorch.Tensor.{dispose, dtype, from_floats, shape}.
+
+@test
+pub inplace_distributions_preserve_shape_and_dtype(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let source_dtype = dtype(source);
+    uniform_inplace(source, 0.0, 1.0);
+    exponential_inplace(source, 1.0);
+    cauchy_inplace(source, 0.0, 1.0);
+    geometric_inplace(source, 0.5);
+    log_normal_inplace(source, 1.0, 2.0);
+    normal_inplace(source, 0.0, 1.0);
+    let valid = shape(source) == [2, 2] and dtype(source) == source_dtype;
+    (dispose(source); valid).

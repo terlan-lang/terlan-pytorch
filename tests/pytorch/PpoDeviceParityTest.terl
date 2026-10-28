@@ -1,0 +1,42 @@
+module pytorch.PpoDeviceParityTest.
+
+import pytorch.Optimizer.{adam, add_parameter, dispose as dispose_optimizer, step_count}.
+import pytorch.Ppo.{minibatch_update}.
+import pytorch.Tensor.{amax, dispose, from_floats, item_float, require_grad}.
+
+@test
+pub public_minibatch_update_executes_on_cpu(): Bool ->
+    let initial_actor = from_floats([0.2, -0.2, -0.1, 0.1], [2, 2]);
+    let actor = require_grad(initial_actor);
+    let initial_critic = from_floats([0.5, -0.5], [2]);
+    let critic = require_grad(initial_critic);
+    let old_log_probabilities = from_floats([-0.6931471805599453, -0.6931471805599453], [2, 1]);
+    let advantages = from_floats([1.0, -1.0], [2, 1]);
+    let returns = from_floats([1.0, -1.0], [2]);
+    let optimizer = adam(0.05, 0.9, 0.999, 1e-8, 0.0);
+    add_parameter(optimizer, actor);
+    add_parameter(optimizer, critic);
+    let loss =
+        minibatch_update(
+            actor,
+            critic,
+            old_log_probabilities,
+            advantages,
+            returns,
+            optimizer,
+            73,
+            0.2,
+            0.5,
+            0.01,
+        );
+    let actor_maximum = amax(actor, [0, 1], false);
+    let critic_maximum = amax(critic, [0], false);
+    let observed_loss = item_float(loss);
+    let observed_actor = item_float(actor_maximum);
+    let observed_critic = item_float(critic_maximum);
+    let observed_steps = step_count(optimizer);
+    (dispose(critic_maximum); dispose(actor_maximum); dispose(loss); dispose_optimizer(optimizer); dispose(returns); dispose(advantages); dispose(old_log_probabilities); dispose(critic); dispose(initial_critic); dispose(actor); dispose(initial_actor); observed_loss > -10.0
+    and observed_loss < 10.0
+    and (observed_actor > 0.200001 or observed_actor < 0.199999)
+    and (observed_critic > 0.500001 or observed_critic < 0.499999)
+    and observed_steps == 1).

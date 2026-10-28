@@ -1,0 +1,11 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{full_float, matmul, transpose}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let decoder_queries = full_float([2, 2, 2], 0.0);
+    let wrong_batch_memory_keys = full_float([3, 3, 2], 0.0);
+    let transposed_keys = transpose(wrong_batch_memory_keys, 1, 2);
+    let scores = matmul(decoder_queries, transposed_keys);
+    println("PYTORCH_CROSS_ATTENTION_BATCH_NOT_REJECTED").

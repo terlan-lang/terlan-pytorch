@@ -1,0 +1,141 @@
+module pytorch.ScaledArithmeticNativeBehaviorSupport.
+
+import pytorch.ScaledArithmeticNative.{scaled_scalar_float, scaled_scalar_float_in_place, scaled_scalar_float_out, scaled_scalar_int, scaled_scalar_int_in_place, scaled_scalar_int_out, scaled_tensor, scaled_tensor_in_place, scaled_tensor_out}.
+import pytorch.Tensor.{Float64, Strided, clone, dispose, dtype, is_cuda, mul_float, ones_device, shape}.
+import pytorch.TypeRelationsNative.{allclose_native}.
+
+import type pytorch.Tensor.
+
+tensor_matches(tensor: Tensor, expected: Tensor, expected_cuda: Bool): Bool ->
+    shape(tensor) == [2]
+        and dtype(tensor) == Float64
+        and is_cuda(tensor) == expected_cuda
+        and allclose_native(tensor, expected, 0.0, 0.0, false).
+
+scaled_tensor_forms_match(
+    operation: Int,
+    left: Tensor,
+    right: Tensor,
+    expected_value: Float,
+    device_name: String,
+): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let functional = scaled_tensor(left, operation, right, false, 0, 0.5);
+    let output = ones_device([0], Float64, Strided, device_name);
+    scaled_tensor_out(output, left, operation, right, false, 0, 0.5);
+    let mutation = clone(left);
+    let mutation_valid =
+        if {
+            operation == 0 -> (scaled_tensor_in_place(mutation, operation, right, false, 0, 0.5); true);
+            operation == 1 -> (scaled_tensor_in_place(mutation, operation, right, false, 0, 0.5); true);
+            true -> allclose_native(mutation, left, 0.0, 0.0, false)
+        };
+    let expected_ones = ones_device([2], Float64, Strided, device_name);
+    let expected = mul_float(expected_ones, expected_value);
+    let valid =
+        tensor_matches(functional, expected, expected_cuda)
+            and tensor_matches(output, expected, expected_cuda)
+            and mutation_valid
+            and if {
+    operation < 2 -> tensor_matches(mutation, expected, expected_cuda);
+    true -> true
+};
+    (dispose(expected); dispose(expected_ones); dispose(mutation); dispose(output); dispose(functional); valid).
+
+scaled_int_forms_match(
+    operation: Int,
+    left: Tensor,
+    expected_value: Float,
+    device_name: String,
+): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let functional = scaled_scalar_int(left, operation, 3, true, 2, 0.0);
+    let output = ones_device([0], Float64, Strided, device_name);
+    scaled_scalar_int_out(output, left, operation, 3, true, 2, 0.0);
+    let mutation = clone(left);
+    let mutation_valid =
+        if {
+            operation == 0 -> (scaled_scalar_int_in_place(mutation, operation, 3, true, 2, 0.0); true);
+            operation == 1 -> (scaled_scalar_int_in_place(mutation, operation, 3, true, 2, 0.0); true);
+            true -> allclose_native(mutation, left, 0.0, 0.0, false)
+        };
+    let expected_ones = ones_device([2], Float64, Strided, device_name);
+    let expected = mul_float(expected_ones, expected_value);
+    let valid =
+        tensor_matches(functional, expected, expected_cuda)
+            and tensor_matches(output, expected, expected_cuda)
+            and mutation_valid
+            and if {
+    operation < 2 -> tensor_matches(mutation, expected, expected_cuda);
+    true -> true
+};
+    (dispose(expected); dispose(expected_ones); dispose(mutation); dispose(output); dispose(functional); valid).
+
+scaled_float_forms_match(
+    operation: Int,
+    left: Tensor,
+    expected_value: Float,
+    device_name: String,
+): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let functional = scaled_scalar_float(left, operation, 3.0, false, 0, 0.5);
+    let output = ones_device([0], Float64, Strided, device_name);
+    scaled_scalar_float_out(output, left, operation, 3.0, false, 0, 0.5);
+    let mutation = clone(left);
+    let mutation_valid =
+        if {
+            operation == 0 -> (scaled_scalar_float_in_place(mutation, operation, 3.0, false, 0, 0.5); true);
+            operation == 1 -> (scaled_scalar_float_in_place(mutation, operation, 3.0, false, 0, 0.5); true);
+            true -> allclose_native(mutation, left, 0.0, 0.0, false)
+        };
+    let expected_ones = ones_device([2], Float64, Strided, device_name);
+    let expected = mul_float(expected_ones, expected_value);
+    let valid =
+        tensor_matches(functional, expected, expected_cuda)
+            and tensor_matches(output, expected, expected_cuda)
+            and mutation_valid
+            and if {
+    operation < 2 -> tensor_matches(mutation, expected, expected_cuda);
+    true -> true
+};
+    (dispose(expected); dispose(expected_ones); dispose(mutation); dispose(output); dispose(functional); valid).
+
+/**
+ * Exercises tensor, integer-scalar, and floating-scalar add/sub/rsub across
+ * functional, retained-output, and every supported in-place form.
+ */
+pub scaled_arithmetic_contracts_on(device_name: String): Bool ->
+    let base_ones = ones_device([2], Float64, Strided, device_name);
+    let left = mul_float(base_ones, 10.0);
+    let right_ones = ones_device([2], Float64, Strided, device_name);
+    let right = mul_float(right_ones, 3.0);
+    let tensor_add = scaled_tensor_forms_match(0, left, right, 11.5, device_name);
+    let tensor_sub = scaled_tensor_forms_match(1, left, right, 8.5, device_name);
+    let tensor_rsub = scaled_tensor_forms_match(2, left, right, -2.0, device_name);
+    let int_add = scaled_int_forms_match(0, left, 16.0, device_name);
+    let int_sub = scaled_int_forms_match(1, left, 4.0, device_name);
+    let int_rsub = scaled_int_forms_match(2, left, -17.0, device_name);
+    let float_add = scaled_float_forms_match(0, left, 11.5, device_name);
+    let float_sub = scaled_float_forms_match(1, left, 8.5, device_name);
+    let float_rsub = scaled_float_forms_match(2, left, -2.0, device_name);
+    let expected_left = mul_float(base_ones, 10.0);
+    let expected_right = mul_float(right_ones, 3.0);
+    let sources_preserved =
+        allclose_native(left, expected_left, 0.0, 0.0, false)
+            and allclose_native(right, expected_right, 0.0, 0.0, false);
+    dispose(expected_right);
+    dispose(expected_left);
+    dispose(right);
+    dispose(right_ones);
+    dispose(left);
+    dispose(base_ones);
+    tensor_add
+        and tensor_sub
+        and tensor_rsub
+        and int_add
+        and int_sub
+        and int_rsub
+        and float_add
+        and float_sub
+        and float_rsub
+        and sources_preserved.

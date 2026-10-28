@@ -1,0 +1,40 @@
+module pytorch.TensorViewAliasParityTest.
+
+import pytorch.Tensor.{adjoint, conj, detach, dispose, from_floats, positive, ravel, resolve_conj, resolve_neg, shape, squeeze, t}.
+
+/**
+ * Proves Tensor view convenience aliases preserve the generated View contracts.
+ */
+@test
+pub tensor_view_aliases_match_pytorch(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let adjointed = adjoint(source);
+    let conjugated = conj(source);
+    let detached = detach(source);
+    let positive_value = positive(source);
+    let flattened = ravel(source);
+    let transposed = t(source);
+    let resolved_conj = resolve_conj(source);
+    let resolved_neg = resolve_neg(source);
+    let squeezed = squeeze(source);
+    let valid =
+        shape(adjointed) == [2, 2]
+            and shape(conjugated) == [2, 2]
+            and shape(detached) == [2, 2]
+            and shape(positive_value) == [2, 2]
+            and shape(flattened) == [4]
+            and shape(transposed) == [2, 2]
+            and shape(resolved_conj) == [2, 2]
+            and shape(resolved_neg) == [2, 2]
+            and shape(squeezed) == [2, 2];
+    dispose(squeezed);
+    dispose(resolved_neg);
+    dispose(resolved_conj);
+    dispose(transposed);
+    dispose(flattened);
+    dispose(positive_value);
+    dispose(detached);
+    dispose(conjugated);
+    dispose(adjointed);
+    dispose(source);
+    valid.

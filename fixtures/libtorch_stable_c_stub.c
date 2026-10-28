@@ -44,12 +44,48 @@ int32_t aoti_torch_device_type_cpu(void) {
   return 0;
 }
 
+int32_t aoti_torch_device_type_cuda(void) {
+  return 1;
+}
+
 int32_t aoti_torch_dtype_float64(void) {
   return 7;
 }
 
 int32_t aoti_torch_dtype_int64(void) {
   return 4;
+}
+
+int32_t aoti_torch_dtype_bool(void) {
+  return 11;
+}
+
+int32_t aoti_torch_dtype_uint8(void) {
+  return 0;
+}
+
+int32_t aoti_torch_dtype_int8(void) {
+  return 1;
+}
+
+int32_t aoti_torch_dtype_int16(void) {
+  return 2;
+}
+
+int32_t aoti_torch_dtype_int32(void) {
+  return 3;
+}
+
+int32_t aoti_torch_dtype_float16(void) {
+  return 5;
+}
+
+int32_t aoti_torch_dtype_float32(void) {
+  return 6;
+}
+
+int32_t aoti_torch_dtype_bfloat16(void) {
+  return 15;
 }
 
 int32_t aoti_torch_layout_strided(void) {
@@ -71,7 +107,9 @@ int32_t aoti_torch_create_tensor_from_blob_v2(
     int64_t opaque_metadata_size) {
   if (data == NULL || ndim < 0 || ndim > 4 ||
       (ndim > 0 && (sizes == NULL || strides == NULL)) ||
-      storage_offset != 0 || (dtype != 7 && dtype != 4) || device_type != 0 ||
+      storage_offset != 0 ||
+      (dtype < 0 || dtype > 15 || (dtype > 7 && dtype != 11 && dtype != 15)) ||
+      device_type != 0 ||
       device_index != -1 || out_tensor == NULL || layout != 0 ||
       opaque_metadata != NULL || opaque_metadata_size != 0) {
     return 1;
@@ -135,6 +173,61 @@ int32_t aoti_torch_clone(
   }
   *copy = *tensor;
   *out_tensor = copy;
+  return 0;
+}
+
+int32_t aoti_torch_empty_strided(
+    int64_t rank,
+    const int64_t* sizes,
+    const int64_t* strides,
+    int32_t dtype,
+    int32_t device_type,
+    int32_t device_index,
+    AtenTensorOpaque** out_tensor) {
+  if (rank < 0 || rank > 4 || (rank > 0 && (sizes == NULL || strides == NULL)) ||
+      (dtype < 0 || dtype > 15 || (dtype > 7 && dtype != 11 && dtype != 15)) ||
+      device_type != 0 ||
+      device_index != -1 || out_tensor == NULL) {
+    return 1;
+  }
+  AtenTensorOpaque* tensor = malloc(sizeof(AtenTensorOpaque));
+  if (tensor == NULL) {
+    return 2;
+  }
+  tensor->value = 0.0;
+  tensor->rank = rank;
+  for (int64_t dimension = 0; dimension < 4; ++dimension) {
+    tensor->sizes[dimension] = dimension < rank ? sizes[dimension] : 1;
+  }
+  tensor->dtype = dtype;
+  tensor->causal_mask = 0;
+  *out_tensor = tensor;
+  return 0;
+}
+
+int32_t aoti_torch_copy_(
+    AtenTensorOpaque* output,
+    AtenTensorOpaque* input,
+    int32_t non_blocking) {
+  if (output == NULL || input == NULL || non_blocking != 0 ||
+      output->rank != input->rank) {
+    return 1;
+  }
+  for (int64_t dimension = 0; dimension < input->rank; ++dimension) {
+    if (output->sizes[dimension] != input->sizes[dimension]) {
+      return 1;
+    }
+  }
+  if (output->dtype == 11) {
+    output->value = input->value == 0.0 ? 0.0 : 1.0;
+  } else if (output->dtype >= 0 && output->dtype <= 4) {
+    output->value = (double)((int64_t)input->value);
+  } else if (output->dtype == 6) {
+    output->value = (double)((float)input->value);
+  } else {
+    output->value = input->value;
+  }
+  output->causal_mask = input->causal_mask;
   return 0;
 }
 
@@ -208,8 +301,10 @@ int32_t aoti_torch_aten_full(
     int32_t device_index,
     int32_t* pin_memory,
     AtenTensorOpaque** out_tensor) {
-  if (shape == NULL || shape_length < 0 || shape_length > 4 || dtype == NULL ||
-      *dtype != 7 || layout != NULL || device == NULL || *device != 0 ||
+  if (shape_length < 0 || shape_length > 4 ||
+      (shape_length > 0 && shape == NULL) || dtype == NULL ||
+      (*dtype < 0 || *dtype > 15 || (*dtype > 7 && *dtype != 11 && *dtype != 15)) ||
+      layout != NULL || device == NULL || *device != 0 ||
       device_index != -1 || pin_memory != NULL || out_tensor == NULL) {
     return 1;
   }
@@ -227,9 +322,48 @@ int32_t aoti_torch_aten_full(
   for (int64_t dimension = 0; dimension < 4; ++dimension) {
     tensor->sizes[dimension] = dimension < shape_length ? shape[dimension] : 1;
   }
-  tensor->dtype = 7;
+  tensor->dtype = *dtype;
   tensor->causal_mask = 0;
   *out_tensor = tensor;
+  return 0;
+}
+
+int32_t aoti_torch_get_strides(
+    AtenTensorOpaque* tensor,
+    int64_t** out_strides) {
+  static _Thread_local int64_t strides[4];
+  int64_t stride = 1;
+  if (tensor == NULL || out_strides == NULL || tensor->rank < 0 ||
+      tensor->rank > 4) {
+    return 1;
+  }
+  for (int64_t dimension = tensor->rank; dimension > 0; --dimension) {
+    strides[dimension - 1] = stride;
+    stride *= tensor->sizes[dimension - 1] == 0
+        ? 1
+        : tensor->sizes[dimension - 1];
+  }
+  *out_strides = strides;
+  return 0;
+}
+
+int32_t aoti_torch_get_storage_offset(
+    AtenTensorOpaque* tensor,
+    int64_t* out_storage_offset) {
+  if (tensor == NULL || out_storage_offset == NULL) {
+    return 1;
+  }
+  *out_storage_offset = 0;
+  return 0;
+}
+
+int32_t aoti_torch_is_contiguous(
+    AtenTensorOpaque* tensor,
+    bool* out_is_contiguous) {
+  if (tensor == NULL || out_is_contiguous == NULL) {
+    return 1;
+  }
+  *out_is_contiguous = true;
   return 0;
 }
 

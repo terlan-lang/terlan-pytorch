@@ -1,0 +1,81 @@
+/**
+ * Broadcasting, mesh construction, and dense flatten/unflatten transforms over tensor lists.
+ */
+module pytorch.TensorListTransforms.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes exact aten::broadcast_tensors over one or more tensors.
+ */
+@compiler.native {pytorch.tensor_list_transforms.broadcast_tensors}
+pub broadcast_tensors(first: Tensor, tensors: List[Tensor]): List[Tensor] ->
+    native.
+
+/**
+ * Executes exact aten::meshgrid with pinned default indexing.
+ */
+@compiler.native {pytorch.tensor_list_transforms.meshgrid}
+pub meshgrid(first: Tensor, tensors: List[Tensor]): List[Tensor] ->
+    native.
+
+/**
+ * Executes exact aten::meshgrid with explicit ij or xy indexing.
+ */
+@compiler.native {pytorch.tensor_list_transforms.meshgrid_indexing}
+pub meshgrid_indexing(first: Tensor, tensors: List[Tensor], indexing: String): List[Tensor] ->
+    native.
+
+/**
+ * Executes exact aten::flatten_dense_tensors.
+ */
+@compiler.native {pytorch.tensor_list_transforms.flatten_dense_tensors}
+pub flatten_dense_tensors(tensors: List[Tensor]): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::unflatten_dense_tensors using one or more templates.
+ */
+@compiler.native {pytorch.tensor_list_transforms.unflatten_dense_tensors}
+pub unflatten_dense_tensors(
+    flat: Tensor,
+    first_template: Tensor,
+    templates: List[Tensor],
+): List[Tensor] ->
+    native.
+
+/**
+ * Private exact aten::pad_sequence leaf for the public pad_sequence composition.
+ */
+@compiler.native {pytorch.tensor_list_transforms.pad_sequence_native}
+pad_sequence_native(
+    sequences: List[Tensor],
+    batch_first: Bool = false,
+    padding_value: Float = 0.0,
+    padding_side: String = "right",
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::pad_sequence over a tensor list.
+ */
+pub pad_sequence(
+    sequences: List[Tensor],
+    batch_first: Bool = false,
+    padding_value: Float = 0.0,
+    padding_side: String = "right",
+): Tensor ->
+    pad_sequence_native(sequences, batch_first, padding_value, padding_side).
+
+/**
+ * Private exact aten::einsum leaf for the public composition.
+ */
+@compiler.native {pytorch.tensor_list_transforms.einsum_native}
+einsum_native(equation: String, tensors: List[Tensor]): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::einsum over a tensor list.
+ */
+pub einsum(equation: String, tensors: List[Tensor]): Tensor ->
+    einsum_native(equation, tensors).

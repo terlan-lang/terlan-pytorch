@@ -1,0 +1,47 @@
+/**
+ * Generated direct-CXX implementation of configured constant and mode-based padding operations.
+ */
+module pytorch.PaddingNative.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes exact aten::constant_pad_nd with an integer or floating Scalar value.
+ */
+@compiler.native {pytorch.padding.constant}
+pub constant_pad_configured(
+    input: Tensor,
+    padding: List[Int],
+    value_is_int: Bool,
+    integer_value: Int,
+    floating_value: Float,
+): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::constant_pad_nd.out with an integer or floating Scalar value.
+ */
+@compiler.native {pytorch.padding.constant_out}
+pub constant_pad_configured_out(
+    output: Tensor,
+    input: Tensor,
+    padding: List[Int],
+    value_is_int: Bool,
+    integer_value: Int,
+    floating_value: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::pad with no optional fill value.
+ */
+@compiler.native {pytorch.padding.mode_default_value}
+pub pad_without_value(input: Tensor, padding: List[Int], mode: String): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::pad with an explicit floating fill value.
+ */
+@compiler.native {pytorch.padding.mode_explicit_value}
+pub pad_with_value(input: Tensor, padding: List[Int], mode: String, value: Float): Tensor ->
+    native.

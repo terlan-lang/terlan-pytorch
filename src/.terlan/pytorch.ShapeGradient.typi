@@ -1,0 +1,43 @@
+//! Generated direct-CXX implementation of diagonal, selection, slice, and unfold gradient kernels.
+
+module pytorch.ShapeGradient.
+
+/// Executes exact aten::diagonal, preserving dimensions, offsets, strides, and storage ownership.
+
+pub diagonal(tensor: Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): Tensor.
+
+/// Executes exact aten::diagonal_backward, preserving dimensions, offsets, strides, and storage ownership.
+
+pub diagonal_backward(gradient: Tensor, input_sizes: List[Int], offset: Int, dimension1: Int, dimension2: Int): Tensor.
+
+/// Executes exact aten::diagonal_backward.out, preserving dimensions, offsets, strides, and storage ownership.
+
+pub diagonal_backward_out(output: Tensor, gradient: Tensor, input_sizes: List[Int], offset: Int, dimension1: Int, dimension2: Int): Unit.
+
+/// Executes exact aten::diagonal_scatter.out, preserving dimensions, offsets, strides, and storage ownership.
+
+pub diagonal_scatter_out(output: Tensor, tensor: Tensor, source: Tensor, offset: Int = 0, dimension1: Int = 0, dimension2: Int = 1): Unit.
+
+/// Executes exact aten::select_backward, preserving dimensions, offsets, strides, and storage ownership.
+
+pub select_backward(gradient: Tensor, input_sizes: List[Int], dimension: Int, index: Int): Tensor.
+
+/// Executes exact aten::select_backward.out, preserving dimensions, offsets, strides, and storage ownership.
+
+pub select_backward_out(output: Tensor, gradient: Tensor, input_sizes: List[Int], dimension: Int, index: Int): Unit.
+
+/// Executes exact aten::slice_backward, preserving dimensions, offsets, strides, and storage ownership.
+
+pub slice_backward(gradient: Tensor, input_sizes: List[Int], dimension: Int, start: Int, end: Int, step: Int): Tensor.
+
+/// Executes exact aten::slice_backward.out, preserving dimensions, offsets, strides, and storage ownership.
+
+pub slice_backward_out(output: Tensor, gradient: Tensor, input_sizes: List[Int], dimension: Int, start: Int, end: Int, step: Int): Unit.
+
+/// Executes exact aten::unfold_backward, preserving dimensions, offsets, strides, and storage ownership.
+
+pub unfold_backward(gradient: Tensor, input_sizes: List[Int], dimension: Int, size: Int, step: Int): Tensor.
+
+/// Executes exact aten::unfold_backward.out, preserving dimensions, offsets, strides, and storage ownership.
+
+pub unfold_backward_out(output: Tensor, gradient: Tensor, input_sizes: List[Int], dimension: Int, size: Int, step: Int): Unit.

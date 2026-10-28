@@ -1,0 +1,15 @@
+//! Fused pointwise, matrix, vector, and batched-matrix arithmetic composed in Terlan from exact generated CXX leaves.
+
+module pytorch.FusedArithmeticNative.
+
+/// Executes one exact fused arithmetic schema through private generated CXX leaves selected in Terlan.
+
+pub fused_arithmetic(accumulator: Tensor, first: Tensor, second: Tensor, operation: Int, beta_is_int: Bool, beta_int: Int, beta_float: Float, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float, has_dtype: Bool, dtype: Int): Tensor.
+
+/// Executes one exact fused arithmetic mutation through a private generated CXX leaf selected in Terlan.
+
+pub fused_arithmetic_in_place(accumulator: Tensor, first: Tensor, second: Tensor, operation: Int, beta_is_int: Bool, beta_int: Int, beta_float: Float, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float): Unit.
+
+/// Executes one exact fused arithmetic schema into retained output storage through private generated CXX leaves.
+
+pub fused_arithmetic_out(output: Tensor, accumulator: Tensor, first: Tensor, second: Tensor, operation: Int, beta_is_int: Bool, beta_int: Int, beta_float: Float, alpha_is_int: Bool, alpha_int: Int, alpha_float: Float, has_dtype: Bool, dtype: Int): Unit.

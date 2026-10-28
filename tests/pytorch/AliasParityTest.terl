@@ -1,0 +1,95 @@
+module pytorch.AliasParityTest.
+
+import pytorch.SelectionCompletion.{sort_stable, sort_values_stable, take_along_dim, take_along_dim_out}.
+import pytorch.ShapePartitionCompletion.{split_copy, split_with_sizes_copy, unbind_copy, unsafe_chunk, unsafe_split, unsafe_split_with_sizes}.
+import pytorch.Tensor.{dispose, from_floats, from_ints, ones}.
+import pytorch.TypeRelations.equal.
+
+import type pytorch.Tensor.
+
+dispose_pair(first: Tensor, second: Tensor): Unit ->
+    dispose(second);
+    dispose(first).
+
+validate_pair_values(
+    first: Tensor,
+    second: Tensor,
+    first_shape: List[Int],
+    second_shape: List[Int],
+): Bool ->
+    let valid = shape(first) == first_shape and shape(second) == second_shape;
+    dispose_pair(first, second);
+    valid.
+
+validate_pair(parts: List[Tensor], first_shape: List[Int], second_shape: List[Int]): Bool ->
+    case parts {
+        [first, second] -> validate_pair_values(first, second, first_shape, second_shape);
+        _ -> false
+    }.
+
+/**
+ * Proves stable-sort aliases preserve values, indices, and retained outputs.
+ */
+@test
+pub stable_sort_aliases_match_libtorch(): Bool ->
+    let input = from_floats([3.0, 1.0, 2.0], [3]);
+    let {values, indices} = sort_stable(input, true);
+    let retained_values = ones([0]);
+    let retained_indices = ones([0]);
+    sort_values_stable(retained_values, retained_indices, input, true);
+    let expected = from_floats([1.0, 2.0, 3.0], [3]);
+    let valid =
+        equal(values, expected)
+            and equal(retained_values, expected)
+            and shape(indices) == [3]
+            and shape(retained_indices) == [3];
+    (dispose(expected); dispose(retained_indices); dispose(retained_values); dispose(indices); dispose(values); dispose(input); valid).
+
+/**
+ * Proves unsafe partition aliases use the established CXX partition leaves.
+ */
+@test
+pub unsafe_partition_aliases_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [4]);
+    let chunks = unsafe_chunk(input, 2, 0);
+    let split = unsafe_split(input, 2, 0);
+    let sized = unsafe_split_with_sizes(input, [1, 3], 0);
+    let valid =
+        validate_pair(chunks, [2], [2])
+            and validate_pair(split, [2], [2])
+            and validate_pair(sized, [1], [3]);
+    dispose(input);
+    valid.
+
+/**
+ * Proves copy partition schemas return independently owned slices rather than
+ * the view handles used by the ordinary split/unbind families.
+ */
+@test
+pub copy_partition_aliases_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [4]);
+    let split = split_copy(input, 2, 0);
+    let sized = split_with_sizes_copy(input, [1, 3], 0);
+    let unbound_input = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let unbound = unbind_copy(unbound_input, 0);
+    let valid =
+        validate_pair(split, [2], [2])
+            and validate_pair(sized, [1], [3])
+            and validate_pair(unbound, [3], [3]);
+    dispose(unbound_input);
+    dispose(input);
+    valid.
+
+/**
+ * Proves take-along-dimension aliases preserve gather values and outputs.
+ */
+@test
+pub take_along_dimension_aliases_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let indices = from_ints([2, 0, 1, 1], [2, 2]);
+    let expected = from_floats([3.0, 1.0, 5.0, 5.0], [2, 2]);
+    let actual = take_along_dim(input, indices, 1);
+    let output = ones([0]);
+    take_along_dim_out(output, input, indices, 1);
+    let valid = equal(actual, expected) and equal(output, expected);
+    (dispose(output); dispose(actual); dispose(expected); dispose(indices); dispose(input); valid).

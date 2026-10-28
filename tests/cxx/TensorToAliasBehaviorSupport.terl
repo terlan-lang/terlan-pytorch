@@ -1,0 +1,39 @@
+module pytorch.TensorToAliasBehaviorSupport.
+
+import pytorch.Tensor.{add_in_place, clip, dispose, dtype, element_size, from_floats, is_cpu, multiply_in_place, shape, subtract_in_place, to, to_other}.
+import pytorch.TypeRelationsNative.equal_native.
+
+pub tensor_to_overloads_on(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let typed = to(source, 7);
+    let placed = to(source, 0, -1);
+    let copied = to_other(source, placed, false);
+    let valid =
+        dtype(typed) == 7
+            and is_cpu(placed)
+            and shape(copied) == [2, 2]
+            and equal_native(copied, placed);
+    dispose(copied);
+    dispose(placed);
+    dispose(typed);
+    dispose(source);
+    valid.
+
+pub tensor_in_place_aliases_on(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let right = from_floats([0.5, 0.5, 0.5, 0.5], [2, 2]);
+    add_in_place(source, right, 1.0);
+    let added = to_other(source, source, false);
+    let added_expected = from_floats([1.5, 2.5, 3.5, 4.5], [2, 2]);
+    let added_ok = equal_native(added, added_expected);
+    (subtract_in_place(source, right, 1.0); let restored = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]); let subtract_ok = equal_native(source, restored); (multiply_in_place(source, right); let multiplied = to_other(source, source, false); let multiplied_expected = from_floats([0.5, 1.0, 1.5, 2.0], [2, 2]); let multiply_ok = equal_native(multiplied, multiplied_expected); (dispose(multiplied_expected); dispose(multiplied); dispose(restored); dispose(added_expected); dispose(added); dispose(right); dispose(source); added_ok and subtract_ok and multiply_ok))).
+
+pub tensor_clip_and_element_size_on(): Bool ->
+    let source = from_floats([1.0, 2.5, 4.5], [3]);
+    let clipped = clip(source, 2.0, 4.0);
+    let expected = from_floats([2.0, 2.5, 4.0], [3]);
+    let valid = element_size(source) == 8 and equal_native(clipped, expected);
+    dispose(expected);
+    dispose(clipped);
+    dispose(source);
+    valid.

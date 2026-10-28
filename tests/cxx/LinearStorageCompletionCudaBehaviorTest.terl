@@ -1,0 +1,7 @@
+module pytorch_cxx.LinearStorageCompletionCudaBehaviorTest.
+
+import pytorch.LinearStorageCompletionBehaviorSupport.{linear_storage_completion_contracts_on}.
+
+@test
+pub generated_cxx_linear_storage_completion_cuda_contracts(): Bool ->
+    linear_storage_completion_contracts_on("cuda:0", true).

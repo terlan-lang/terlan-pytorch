@@ -1,0 +1,24 @@
+/**
+ * CPU value parity evidence for aten::multi_margin_loss forms.
+ */
+module pytorch.MultiMarginLossParityTest.
+
+import pytorch.MultiMarginLossCompletion.{multi_margin_loss_default, multi_margin_loss_out_default, multi_margin_loss_out_weight, multi_margin_loss_weight}.
+import pytorch.Tensor.{dispose, from_floats, from_ints, item_float}.
+
+@test
+pub multi_margin_loss_forms_match(): Bool ->
+    let input = from_floats([0.0, 1.0, 1.0, 0.0], [2, 2]);
+    let target = from_ints([0, 1], [2]);
+    let weight = from_floats([1.0, 2.0], [2]);
+    let actual = multi_margin_loss_default(input, target, 1.0, 1.0, 1);
+    let weighted = multi_margin_loss_weight(input, target, 1.0, 1.0, weight, 1);
+    let output = from_floats([], [0]);
+    multi_margin_loss_out_default(output, input, target, 1.0, 1.0, 1);
+    let weighted_output = from_floats([], [0]);
+    (multi_margin_loss_out_weight(weighted_output, input, target, 1.0, 1.0, weight, 1); let valid =
+    item_float(actual) == 1.0
+        and item_float(weighted) == 1.5
+        and item_float(output) == 1.0
+        and item_float(weighted_output) == 1.5;
+(dispose(weighted_output); dispose(output); dispose(weight); dispose(target); dispose(weighted); dispose(actual); dispose(input); valid)).

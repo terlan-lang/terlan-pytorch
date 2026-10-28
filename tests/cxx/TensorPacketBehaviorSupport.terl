@@ -1,0 +1,33 @@
+module pytorch.TensorPacketBehaviorSupport.
+
+import pytorch.Tensor.{Float64, Strided, dispose, dispose_scalar, dtype, from_array, from_packet, is_cpu, is_cuda, item, ones_device, scalar_to_float, shape, to_packet}.
+import std.vm.Bytes.{from_list}.
+
+/**
+ * Executes generated-CXX TNXP import, compatibility import, and export on one device.
+ */
+pub tensor_packet_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let fixture = from_list([84, 78, 88, 80, 1, 1, 2, 64, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 64]);
+    let imported = from_packet(fixture);
+    let compatibility = from_array(fixture);
+    let imported_scalar = item(imported);
+    let compatibility_scalar = item(compatibility);
+    let fixture_valid =
+        shape(imported) == []
+            and shape(compatibility) == []
+            and dtype(imported) == Float64
+            and scalar_to_float(imported_scalar) == 3.5
+            and scalar_to_float(compatibility_scalar) == 3.5;
+    let source = ones_device([1], Float64, Strided, device_name);
+    let source_device_valid = is_cuda(source) == expected_cuda;
+    let packet = to_packet(source);
+    dispose(source);
+    let restored = from_packet(packet);
+    let restored_scalar = item(restored);
+    let roundtrip_valid =
+        shape(restored) == [1]
+            and dtype(restored) == Float64
+            and is_cpu(restored)
+            and not is_cuda(restored)
+            and scalar_to_float(restored_scalar) == 1.0;
+    (dispose_scalar(restored_scalar); dispose(restored); dispose_scalar(compatibility_scalar); dispose_scalar(imported_scalar); dispose(compatibility); dispose(imported); fixture_valid and source_device_valid and roundtrip_valid).

@@ -1,0 +1,14 @@
+module=pytorch.Tensor
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=4206645750910260166
+interface_hash=13489932768568026575
+interface_doc_hash=2094353904289233984
+deps=6
+pytorch.CorrectionStatisticsPairNative=12223952951201689287
+std.collections.List=3908094428331843945
+std.core.Int=6981787512204747997
+std.core.Option=11539230284316612175
+std.core.String=12682104952716337512
+std.vm.Bytes=17172708358078158316

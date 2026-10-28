@@ -1,0 +1,77 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Verifies that generated CXX/Rust build inputs match the canonical tree.
+ *
+ * This is the active typed replacement for the historical Python checker;
+ * the latter remains only as a differential audit tool.
+ */
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.Console.{eprintln, println}.
+import std.io.File.
+import std.system.Arguments.
+
+child(parent: String, relative: String): String ->
+    if {
+        String.ends_with(parent, "/") -> String.append(parent, relative);
+        true -> String.concat([parent, "/", relative])
+    }.
+
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[cxx_source_ownership]: ", message));
+    false.
+
+canonical_files(): List[String] ->
+    [
+        "native/rust/build.rs",
+        "native/rust/src/lib.rs",
+        "native/rust/cpp/cuda_stream.cc",
+        "native/rust/cpp/libtorch_metadata.cc",
+        "native/rust/cpp/optimizer.cc",
+        "native/rust/cpp/tensor_advanced.cc",
+        "native/rust/cpp/tensor_compat.cc",
+        "native/rust/cpp/tensor_ops.cc",
+        "native/rust/cpp/terlan_tensor_packet.cc",
+        "native/rust/cpp/torchscript_compat.cc",
+        "native/rust/include/cuda_stream.hpp",
+        "native/rust/include/libtorch_bindings.hpp",
+        "native/rust/include/optimizer.hpp",
+        "native/rust/include/tensor_advanced.hpp",
+        "native/rust/include/tensor_compat.hpp",
+        "native/rust/include/tensor_ops.hpp",
+        "native/rust/include/terlan_tensor_packet.hpp",
+        "native/rust/include/torchscript_compat.hpp",
+    ].
+
+same_file(source: String, target: String, relative: String): Bool ->
+    case {File.read_text(source), File.read_text(target)} {
+        {Ok(left), Ok(right)} ->
+            if {
+                left == right -> true;
+                true -> failure(String.append("generated CXX source drift: ", relative))
+            };
+        _ -> failure(String.append("missing canonical/generated source: ", relative))
+    }.
+
+check_all(repository: String, generated: String, paths: List[String]): Bool ->
+    case paths {
+        [] -> true;
+        [relative | rest] ->
+            same_file(child(repository, relative), child(generated, relative), relative)
+                and check_all(repository, generated, rest)
+    }.
+
+entry(): Bool ->
+    case {Arguments.get(0), Arguments.get(1), Arguments.get(2)} {
+        {Some(repository), Some(generated), None} ->
+            if {
+                check_all(repository, generated, canonical_files()) -> let _printed = println("canonical CXX source ownership is synchronized");
+                true;
+                true -> false
+            };
+        _ -> failure("usage: CheckCxxSourceOwnership.terls <repository> <generated>")
+    }.
+
+assert(entry());
+Unit.

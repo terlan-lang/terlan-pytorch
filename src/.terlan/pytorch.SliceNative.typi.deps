@@ -1,0 +1,9 @@
+module=pytorch.SliceNative
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=10402949311366765445
+interface_hash=2927322970836334239
+interface_doc_hash=3842815891605016398
+deps=1
+pytorch.Tensor=13489932768568026575

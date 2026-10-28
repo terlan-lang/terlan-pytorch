@@ -1,0 +1,218 @@
+module pytorch.TypeRelationsParityTest.
+
+import pytorch.Dense.complex.
+import pytorch.Scalar.{from_float as scalar_float, from_int as scalar_int}.
+import pytorch.Tensor.{backward, dispose, dtype_code, from_bool, from_floats, from_ints, gradient, multiply_scalar, require_grad, shape, sum, to_device, to_dtype}.
+import pytorch.TypeRelations.{allclose, can_cast, equal, get_device, is_complex, is_conj, is_distributed, is_floating_point, is_inference, is_leaf, is_neg, is_nonzero, is_same_size, is_set_to, is_signed, output_nr, promote_types, result_type_scalar_scalar_values, result_type_scalar_tensor_values, result_type_tensor_scalar_values, result_type_tensor_tensor, retain_grad, retains_grad, size, stride}.
+import pytorch.View.{alias, conj}.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Proves every pinned scalar-type tag has its exact LibTorch integer identity.
+ */
+@test
+pub every_dtype_tag_matches_libtorch(): Bool ->
+    dtype_code(DType.UINT8) == 0
+        and dtype_code(DType.INT8) == 1
+        and dtype_code(DType.INT16) == 2
+        and dtype_code(DType.INT32) == 3
+        and dtype_code(DType.INT64) == 4
+        and dtype_code(DType.FLOAT16) == 5
+        and dtype_code(DType.FLOAT32) == 6
+        and dtype_code(DType.FLOAT64) == 7
+        and dtype_code(DType.COMPLEX32) == 8
+        and dtype_code(DType.COMPLEX64) == 9
+        and dtype_code(DType.COMPLEX128) == 10
+        and dtype_code(DType.BOOL) == 11
+        and dtype_code(DType.QINT8) == 12
+        and dtype_code(DType.QUINT8) == 13
+        and dtype_code(DType.QINT32) == 14
+        and dtype_code(DType.BFLOAT16) == 15
+        and dtype_code(DType.QUINT4X2) == 16
+        and dtype_code(DType.QUINT2X4) == 17
+        and dtype_code(DType.BITS1X8) == 18
+        and dtype_code(DType.BITS2X4) == 19
+        and dtype_code(DType.BITS4X2) == 20
+        and dtype_code(DType.BITS8) == 21
+        and dtype_code(DType.BITS16) == 22
+        and dtype_code(DType.FLOAT8_E5M2) == 23
+        and dtype_code(DType.FLOAT8_E4M3FN) == 24
+        and dtype_code(DType.FLOAT8_E5M2FNUZ) == 25
+        and dtype_code(DType.FLOAT8_E4M3FNUZ) == 26
+        and dtype_code(DType.UINT16) == 27
+        and dtype_code(DType.UINT32) == 28
+        and dtype_code(DType.UINT64) == 29
+        and dtype_code(DType.UINT1) == 30
+        and dtype_code(DType.UINT2) == 31
+        and dtype_code(DType.UINT3) == 32
+        and dtype_code(DType.UINT4) == 33
+        and dtype_code(DType.UINT5) == 34
+        and dtype_code(DType.UINT6) == 35
+        and dtype_code(DType.UINT7) == 36
+        and dtype_code(DType.INT1) == 37
+        and dtype_code(DType.INT2) == 38
+        and dtype_code(DType.INT3) == 39
+        and dtype_code(DType.INT4) == 40
+        and dtype_code(DType.INT5) == 41
+        and dtype_code(DType.INT6) == 42
+        and dtype_code(DType.INT7) == 43
+        and dtype_code(DType.FLOAT8_E8M0FNU) == 44
+        and dtype_code(DType.FLOAT4_E2M1FN_X2) == 45.
+
+/**
+ * Proves exact, shape-only, default-tolerance, and configured-tolerance behavior.
+ */
+@test
+pub tensor_comparisons_match_libtorch(): Bool ->
+    let left = from_floats([1.0, 2.0], [2]);
+    let exact = from_floats([1.0, 2.0], [2]);
+    let near = from_floats([1.0, 2.0001], [2]);
+    let matrix = from_floats([1.0, 2.0], [1, 2]);
+    let valid =
+        equal(left, exact)
+            and not equal(left, near)
+            and is_same_size(left, near)
+            and not is_same_size(left, matrix)
+            and not allclose(left, near)
+            and allclose(left, near, 0.001, 0.0, false);
+    dispose(matrix);
+    dispose(near);
+    dispose(exact);
+    dispose(left);
+    valid.
+
+/**
+ * Proves safe-casting and pairwise promotion rules over representative dtype categories.
+ */
+@test
+pub dtype_relations_match_libtorch(): Bool ->
+    can_cast(DType.INT32, DType.INT64)
+        and can_cast(DType.INT64, DType.FLOAT32)
+        and not can_cast(DType.FLOAT32, DType.INT64)
+        and not can_cast(DType.COMPLEX64, DType.FLOAT32)
+        and can_cast(DType.FLOAT32, DType.COMPLEX64)
+        and promote_types(DType.INT32, DType.FLOAT32) == DType.FLOAT32
+        and promote_types(DType.FLOAT16, DType.FLOAT32) == DType.FLOAT32
+        and promote_types(DType.COMPLEX64, DType.FLOAT64) == DType.COMPLEX128
+        and promote_types(DType.UINT8, DType.INT8) == DType.INT16.
+
+/**
+ * Proves the tensor-tensor result_type overload.
+ */
+@test
+pub tensor_tensor_result_type_matches_libtorch(): Bool ->
+    let integer = from_ints([1, 2], [2]);
+    let integer32 = to_dtype(integer, 3);
+    let floating = from_floats([1.0, 2.0], [2]);
+    let valid = result_type_tensor_tensor(integer32, floating) == DType.FLOAT64;
+    dispose(floating);
+    dispose(integer32);
+    dispose(integer);
+    valid.
+
+/**
+ * Proves the tensor-scalar result_type overload.
+ */
+@test
+pub tensor_scalar_result_type_matches_libtorch(): Bool ->
+    let integer = from_ints([1, 2], [2]);
+    let integer32 = to_dtype(integer, 3);
+    let valid = result_type_tensor_scalar_values(integer32, false, 0, 1.5) == DType.FLOAT32;
+    dispose(integer32);
+    dispose(integer);
+    valid.
+
+/**
+ * Proves the scalar-tensor result_type overload.
+ */
+@test
+pub scalar_tensor_result_type_matches_libtorch(): Bool ->
+    let floating = from_floats([1.0, 2.0], [2]);
+    let floating64 = to_dtype(floating, 7);
+    let valid = result_type_scalar_tensor_values(false, 0, 1.5, floating64) == DType.FLOAT64;
+    dispose(floating64);
+    dispose(floating);
+    valid.
+
+/**
+ * Proves the scalar-scalar result_type overload.
+ */
+@test
+pub scalar_scalar_result_type_matches_libtorch(): Bool ->
+    let valid = result_type_scalar_scalar_values(true, 1, 0.0, false, 0, 1.5) == DType.FLOAT32;
+    valid.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+verify_introspection(device: Int): Bool ->
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let vector = placed([1.0, 2.0], [2], device);
+    let same_view = alias(vector);
+    let separate = placed([1.0, 2.0], [2], device);
+    let matrix = placed([1.0, 2.0], [1, 2], device);
+    let truth_host = from_bool(true);
+    let truth = to_device(truth_host, device, index);
+    dispose(truth_host);
+    let false_host = from_bool(false);
+    let falsehood = to_device(false_host, device, index);
+    (dispose(false_host); let imaginary = placed([0.0, 0.0], [2], device);
+let complex_value = complex(vector, imaginary);
+let conjugated = conj(complex_value);
+let leaf = require_grad(placed([1.0, 2.0], [2], device));
+let retained = multiply_scalar(leaf, 2.0);
+let before =
+    not is_complex(vector)
+        and is_complex(complex_value)
+        and not is_conj(complex_value)
+        and is_conj(conjugated)
+        and not is_distributed(vector)
+        and is_floating_point(vector)
+        and not is_floating_point(truth)
+        and not is_inference(vector)
+        and is_leaf(vector)
+        and is_leaf(leaf)
+        and not is_leaf(retained)
+        and not is_neg(vector)
+        and is_nonzero(truth)
+        and not is_nonzero(falsehood)
+        and is_set_to(vector, same_view)
+        and not is_set_to(vector, separate)
+        and is_signed(vector)
+        and not is_signed(truth)
+        and get_device(vector) == index
+        and output_nr(vector) == 0
+        and size(matrix, -1) == 2
+        and size(matrix, 0) == 1
+        and stride(matrix, -1) == 1
+        and stride(matrix, 0) == 2
+        and not retains_grad(retained);
+(retain_grad(retained); let retained_enabled = retains_grad(retained); let total = sum(retained); (backward(total); let retained_gradient = gradient(retained); let wanted_gradient = placed([1.0, 1.0], [2], device); let gradient_valid = equal(retained_gradient, wanted_gradient) and shape(retained_gradient) == [2]; (dispose(wanted_gradient); dispose(retained_gradient); dispose(total); dispose(retained); dispose(leaf); dispose(conjugated); dispose(complex_value); dispose(imaginary); dispose(falsehood); dispose(truth); dispose(matrix); dispose(separate); dispose(same_view); dispose(vector); before and retained_enabled and gradient_valid)))).
+
+/**
+ * Proves exact tensor predicates and dimension queries on CPU and required CUDA.
+ */
+@test
+pub tensor_introspection_matches_libtorch_on_cpu_and_required_cuda(): Bool ->
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify_introspection(1)
+        };
+    let cpu_valid = verify_introspection(0);
+    cpu_valid and cuda_valid.

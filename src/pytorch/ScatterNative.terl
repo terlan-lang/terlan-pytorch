@@ -1,0 +1,899 @@
+/**
+ * Generated direct ATen scatter primitives with exact typed and reduced overload dispatch.
+ */
+module pytorch.ScatterNative.
+
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX scatter dispatcher.
+ */
+pub scatter_tensor(
+    input: Tensor,
+    mode: Int,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: Int,
+    include_self: Bool,
+): Tensor ->
+    if {
+        mode == 0 -> scatter_tensor_src(input, dimension, index, source);
+        mode == 1 and reduction == 0 -> scatter_tensor_legacy_add(input, dimension, index, source, "add");
+        mode == 1 and reduction == 1 -> scatter_tensor_legacy_multiply(input, dimension, index, source, "multiply");
+        mode == 2 -> scatter_tensor_add(input, dimension, index, source);
+        mode == 3 and reduction == 0 -> scatter_tensor_modern_sum(input, dimension, index, source, "sum", include_self);
+        mode == 3 and reduction == 1 -> scatter_tensor_modern_prod(input, dimension, index, source, "prod", include_self);
+        mode == 3 and reduction == 2 -> scatter_tensor_modern_mean(input, dimension, index, source, "mean", include_self);
+        mode == 3 and reduction == 3 -> scatter_tensor_modern_amax(input, dimension, index, source, "amax", include_self);
+        mode == 3 and reduction == 4 -> scatter_tensor_modern_amin(input, dimension, index, source, "amin", include_self);
+        true -> let _failed = fail(exit_reason(7280));
+        scatter_tensor_src(input, dimension, index, source)
+    }.
+
+/**
+ * Exact generated CXX scatter dispatcher.
+ */
+pub scatter_tensor_out(
+    output: Tensor,
+    input: Tensor,
+    mode: Int,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: Int,
+    include_self: Bool,
+): Unit ->
+    if {
+        mode == 0 -> scatter_tensor_out_src(output, input, dimension, index, source);
+        mode == 1 and reduction == 0 -> scatter_tensor_out_legacy_add(output, input, dimension, index, source, "add");
+        mode == 1 and reduction == 1 -> scatter_tensor_out_legacy_multiply(output, input, dimension, index, source, "multiply");
+        mode == 2 -> scatter_tensor_out_add(output, input, dimension, index, source);
+        mode == 3 and reduction == 0 -> scatter_tensor_out_modern_sum(output, input, dimension, index, source, "sum", include_self);
+        mode == 3 and reduction == 1 -> scatter_tensor_out_modern_prod(
+            output,
+            input,
+            dimension,
+            index,
+            source,
+            "prod",
+            include_self,
+        );
+        mode == 3 and reduction == 2 -> scatter_tensor_out_modern_mean(
+            output,
+            input,
+            dimension,
+            index,
+            source,
+            "mean",
+            include_self,
+        );
+        mode == 3 and reduction == 3 -> scatter_tensor_out_modern_amax(
+            output,
+            input,
+            dimension,
+            index,
+            source,
+            "amax",
+            include_self,
+        );
+        mode == 3 and reduction == 4 -> scatter_tensor_out_modern_amin(
+            output,
+            input,
+            dimension,
+            index,
+            source,
+            "amin",
+            include_self,
+        );
+        true -> fail(exit_reason(7280))
+    }.
+
+/**
+ * Exact generated CXX scatter dispatcher.
+ */
+pub scatter_tensor_in_place(
+    input: Tensor,
+    mode: Int,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: Int,
+    include_self: Bool,
+): Unit ->
+    if {
+        mode == 0 -> scatter_tensor_in_src(input, dimension, index, source);
+        mode == 1 and reduction == 0 -> scatter_tensor_in_legacy_add(input, dimension, index, source, "add");
+        mode == 1 and reduction == 1 -> scatter_tensor_in_legacy_multiply(input, dimension, index, source, "multiply");
+        mode == 2 -> scatter_tensor_in_add(input, dimension, index, source);
+        mode == 3 and reduction == 0 -> scatter_tensor_in_modern_sum(input, dimension, index, source, "sum", include_self);
+        mode == 3 and reduction == 1 -> scatter_tensor_in_modern_prod(input, dimension, index, source, "prod", include_self);
+        mode == 3 and reduction == 2 -> scatter_tensor_in_modern_mean(input, dimension, index, source, "mean", include_self);
+        mode == 3 and reduction == 3 -> scatter_tensor_in_modern_amax(input, dimension, index, source, "amax", include_self);
+        mode == 3 and reduction == 4 -> scatter_tensor_in_modern_amin(input, dimension, index, source, "amin", include_self);
+        true -> fail(exit_reason(7280))
+    }.
+
+/**
+ * Exact generated CXX scatter dispatcher.
+ */
+pub scatter_scalar(
+    input: Tensor,
+    mode: Int,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduction: Int,
+): Tensor ->
+    if {
+        mode == 0 and value_is_int -> scatter_scalar_int(input, dimension, index, true, value_int, value_float);
+        mode == 0 -> scatter_scalar_float(input, dimension, index, false, value_int, value_float);
+        mode == 1 and value_is_int and reduction == 0 -> scatter_scalar_reduce_int_add(input, dimension, index, true, value_int, value_float, "add");
+        mode == 1 and value_is_int and reduction == 1 -> scatter_scalar_reduce_int_multiply(
+            input,
+            dimension,
+            index,
+            true,
+            value_int,
+            value_float,
+            "multiply",
+        );
+        mode == 1 and reduction == 0 -> scatter_scalar_reduce_float_add(
+            input,
+            dimension,
+            index,
+            false,
+            value_int,
+            value_float,
+            "add",
+        );
+        mode == 1 and reduction == 1 -> scatter_scalar_reduce_float_multiply(
+            input,
+            dimension,
+            index,
+            false,
+            value_int,
+            value_float,
+            "multiply",
+        );
+        true -> let _failed = fail(exit_reason(7281));
+        scatter_scalar_int(input, dimension, index, true, value_int, value_float)
+    }.
+
+/**
+ * Exact generated CXX scatter dispatcher.
+ */
+pub scatter_scalar_out(
+    output: Tensor,
+    input: Tensor,
+    mode: Int,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduction: Int,
+): Unit ->
+    if {
+        mode == 0 and value_is_int -> scatter_scalar_out_int(output, input, dimension, index, true, value_int, value_float);
+        mode == 0 -> scatter_scalar_out_float(output, input, dimension, index, false, value_int, value_float);
+        mode == 1 and value_is_int and reduction == 0 -> scatter_scalar_out_reduce_int_add(
+            output,
+            input,
+            dimension,
+            index,
+            true,
+            value_int,
+            value_float,
+            "add",
+        );
+        mode == 1 and value_is_int and reduction == 1 -> scatter_scalar_out_reduce_int_multiply(
+            output,
+            input,
+            dimension,
+            index,
+            true,
+            value_int,
+            value_float,
+            "multiply",
+        );
+        mode == 1 and reduction == 0 -> scatter_scalar_out_reduce_float_add(
+            output,
+            input,
+            dimension,
+            index,
+            false,
+            value_int,
+            value_float,
+            "add",
+        );
+        mode == 1 and reduction == 1 -> scatter_scalar_out_reduce_float_multiply(
+            output,
+            input,
+            dimension,
+            index,
+            false,
+            value_int,
+            value_float,
+            "multiply",
+        );
+        true -> fail(exit_reason(7281))
+    }.
+
+/**
+ * Exact generated CXX scatter dispatcher.
+ */
+pub scatter_scalar_in_place(
+    input: Tensor,
+    mode: Int,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduction: Int,
+): Unit ->
+    if {
+        mode == 0 and value_is_int -> scatter_scalar_in_int(input, dimension, index, true, value_int, value_float);
+        mode == 0 -> scatter_scalar_in_float(input, dimension, index, false, value_int, value_float);
+        mode == 1 and value_is_int and reduction == 0 -> scatter_scalar_in_reduce_int_add(
+            input,
+            dimension,
+            index,
+            true,
+            value_int,
+            value_float,
+            "add",
+        );
+        mode == 1 and value_is_int and reduction == 1 -> scatter_scalar_in_reduce_int_multiply(
+            input,
+            dimension,
+            index,
+            true,
+            value_int,
+            value_float,
+            "multiply",
+        );
+        mode == 1 and reduction == 0 -> scatter_scalar_in_reduce_float_add(
+            input,
+            dimension,
+            index,
+            false,
+            value_int,
+            value_float,
+            "add",
+        );
+        mode == 1 and reduction == 1 -> scatter_scalar_in_reduce_float_multiply(
+            input,
+            dimension,
+            index,
+            false,
+            value_int,
+            value_float,
+            "multiply",
+        );
+        true -> fail(exit_reason(7281))
+    }.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_src}
+scatter_tensor_src(input: Tensor, dimension: Int, index: Tensor, source: Tensor): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_legacy_add}
+scatter_tensor_legacy_add(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_legacy_multiply}
+scatter_tensor_legacy_multiply(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_add}
+scatter_tensor_add(input: Tensor, dimension: Int, index: Tensor, source: Tensor): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_modern_sum}
+scatter_tensor_modern_sum(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_modern_prod}
+scatter_tensor_modern_prod(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_modern_mean}
+scatter_tensor_modern_mean(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_modern_amax}
+scatter_tensor_modern_amax(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_modern_amin}
+scatter_tensor_modern_amin(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_out_src}
+scatter_tensor_out_src(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_out_legacy_add}
+scatter_tensor_out_legacy_add(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_out_legacy_multiply}
+scatter_tensor_out_legacy_multiply(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_out_add}
+scatter_tensor_out_add(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_out_modern_sum}
+scatter_tensor_out_modern_sum(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_out_modern_prod}
+scatter_tensor_out_modern_prod(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_out_modern_mean}
+scatter_tensor_out_modern_mean(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_out_modern_amax}
+scatter_tensor_out_modern_amax(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_out_modern_amin}
+scatter_tensor_out_modern_amin(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_in_src}
+scatter_tensor_in_src(input: Tensor, dimension: Int, index: Tensor, source: Tensor): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_in_legacy_add}
+scatter_tensor_in_legacy_add(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_in_legacy_multiply}
+scatter_tensor_in_legacy_multiply(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_in_add}
+scatter_tensor_in_add(input: Tensor, dimension: Int, index: Tensor, source: Tensor): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_in_modern_sum}
+scatter_tensor_in_modern_sum(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_in_modern_prod}
+scatter_tensor_in_modern_prod(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_in_modern_mean}
+scatter_tensor_in_modern_mean(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_in_modern_amax}
+scatter_tensor_in_modern_amax(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_tensor_in_modern_amin}
+scatter_tensor_in_modern_amin(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduce: String,
+    include_self: Bool,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_int}
+scatter_scalar_int(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_float}
+scatter_scalar_float(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_reduce_int_add}
+scatter_scalar_reduce_int_add(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduce: String,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_reduce_int_multiply}
+scatter_scalar_reduce_int_multiply(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduce: String,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_reduce_float_add}
+scatter_scalar_reduce_float_add(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduce: String,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_reduce_float_multiply}
+scatter_scalar_reduce_float_multiply(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduce: String,
+): Tensor ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_out_int}
+scatter_scalar_out_int(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_out_float}
+scatter_scalar_out_float(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_out_reduce_int_add}
+scatter_scalar_out_reduce_int_add(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduce: String,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_out_reduce_int_multiply}
+scatter_scalar_out_reduce_int_multiply(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduce: String,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_out_reduce_float_add}
+scatter_scalar_out_reduce_float_add(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduce: String,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_out_reduce_float_multiply}
+scatter_scalar_out_reduce_float_multiply(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduce: String,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_in_int}
+scatter_scalar_in_int(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_in_float}
+scatter_scalar_in_float(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_in_reduce_int_add}
+scatter_scalar_in_reduce_int_add(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduce: String,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_in_reduce_int_multiply}
+scatter_scalar_in_reduce_int_multiply(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduce: String,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_in_reduce_float_add}
+scatter_scalar_in_reduce_float_add(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduce: String,
+): Unit ->
+    native.
+
+/**
+ * Private exact generated CXX leaf for scatter.
+ */
+@compiler.native {pytorch.scatter_native.cxx.scatter_scalar_in_reduce_float_multiply}
+scatter_scalar_in_reduce_float_multiply(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    value_is_int: Bool,
+    value_int: Int,
+    value_float: Float,
+    reduce: String,
+): Unit ->
+    native.

@@ -1,0 +1,46 @@
+module pytorch.RangeParityTest.
+
+import pytorch.Tensor.{arange_typed_native, dispose, dtype, eye_typed_native, from_floats, linspace_typed_native, logspace_typed_native, shape, to_dtype}.
+import pytorch.TypeRelations.allclose.
+
+@test
+pub typed_range_constructors_match_shapes_and_dtypes(): Bool ->
+    let integer_range = arange_typed_native(1.0, 6.0, 2.0, 4, 0, -1, false);
+    let float_range = arange_typed_native(0.5, 2.0, 0.5, 6, 0, -1, false);
+    let linear = linspace_typed_native(0.0, 1.0, 5, 6, 0, -1, false);
+    let logarithmic = logspace_typed_native(0.0, 3.0, 4, 2.0, 7, 0, -1, false);
+    let integer_wanted = to_dtype(from_floats([1.0, 3.0, 5.0], [3]), 4);
+    let float_wanted = to_dtype(from_floats([0.5, 1.0, 1.5], [3]), 6);
+    let linear_wanted = to_dtype(from_floats([0.0, 0.25, 0.5, 0.75, 1.0], [5]), 6);
+    let logarithmic_wanted = from_floats([1.0, 2.0, 4.0, 8.0], [4]);
+    let valid =
+        shape(integer_range) == [3]
+            and dtype(integer_range) == 4
+            and shape(float_range) == [3]
+            and dtype(float_range) == 6
+            and shape(linear) == [5]
+            and dtype(linear) == 6
+            and shape(logarithmic) == [4]
+            and dtype(logarithmic) == 7
+            and allclose(integer_range, integer_wanted)
+            and allclose(float_range, float_wanted)
+            and allclose(linear, linear_wanted)
+            and allclose(logarithmic, logarithmic_wanted);
+    dispose(logarithmic_wanted);
+    dispose(linear_wanted);
+    dispose(float_wanted);
+    dispose(integer_wanted);
+    dispose(logarithmic);
+    dispose(linear);
+    dispose(float_range);
+    dispose(integer_range);
+    valid.
+
+@test
+pub typed_identity_constructor_matches_reference(): Bool ->
+    let identity = eye_typed_native(2, 3, 7, 0, -1, false);
+    let wanted = from_floats([1.0, 0.0, 0.0, 0.0, 1.0, 0.0], [2, 3]);
+    let valid = shape(identity) == [2, 3] and dtype(identity) == 7 and allclose(identity, wanted);
+    dispose(wanted);
+    dispose(identity);
+    valid.

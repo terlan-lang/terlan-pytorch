@@ -1,0 +1,20 @@
+/**
+ * Generated exact CXX legacy SVD completion surface.
+ */
+module pytorch.SvdCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX legacy SVD leaf.
+ */
+@compiler.native {pytorch.svd.default}
+pub svd_default(input: Tensor, some: Bool = true, compute_uv: Bool = true): {Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX legacy SVD retained-output leaf.
+ */
+@compiler.native {pytorch.svd.out}
+pub svd_out(u: Tensor, s: Tensor, v: Tensor, input: Tensor, some: Bool, compute_uv: Bool): Unit ->
+    native.

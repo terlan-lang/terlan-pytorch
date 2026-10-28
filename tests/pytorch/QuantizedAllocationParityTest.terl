@@ -1,0 +1,22 @@
+/**
+ * CPU shape/dtype evidence for quantized allocation forms.
+ */
+module pytorch.QuantizedAllocationParityTest.
+
+import pytorch.QuantizationCompletion.{quantize_per_tensor}.
+import pytorch.QuantizedAllocationCompletion.{empty_quantized, empty_quantized_out}.
+import pytorch.Tensor.{dispose, dtype, from_floats, shape, to_dtype}.
+
+@test
+pub empty_quantized_forms_preserve_qtensor_metadata(): Bool ->
+    let input = to_dtype(from_floats([0.0, 1.0, 2.0, 3.0], [2, 2]), 6);
+    let quantized = quantize_per_tensor(input, 0.1, 0, 12);
+    let allocated = empty_quantized([2, 2], quantized);
+    let output = quantize_per_tensor(input, 0.1, 0, 12);
+    empty_quantized_out(output, [2, 2], quantized);
+    let valid =
+        shape(allocated) == [2, 2]
+            and shape(output) == [2, 2]
+            and dtype(allocated) == 12
+            and dtype(output) == 12;
+    (dispose(output); dispose(allocated); dispose(quantized); dispose(input); valid).

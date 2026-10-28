@@ -1,0 +1,10 @@
+module=pytorch.RepeatInterleave
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=17868694884255008133
+interface_hash=108961753630809027
+interface_doc_hash=621005903872142371
+deps=2
+pytorch.RepeatInterleaveNative=17917787796581128501
+pytorch.Tensor=13489932768568026575

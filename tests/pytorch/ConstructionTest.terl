@@ -1,0 +1,79 @@
+module pytorch.ConstructionTest.
+
+import pytorch.Tensor.{device_index, device_type, dispose, dtype, dtype_code, empty_typed_native, full_typed_native, is_contiguous, numel, ones, shape, storage_offset, strides, zeros, zeros_on}.
+
+import type pytorch.Tensor.{DType}.
+
+/**
+ * Creates and validates one typed scalar tensor, then releases it.
+ */
+typed_scalar_is(dtype_value: DType, expected_code: Int): Bool ->
+    let tensor = full_typed_native([], 1.0, dtype_code(dtype_value), 0, -1);
+    let valid =
+        dtype(tensor) == expected_code
+            and shape(tensor) == []
+            and strides(tensor) == []
+            and numel(tensor) == 1
+            and storage_offset(tensor) == 0
+            and is_contiguous(tensor);
+    dispose(tensor);
+    valid.
+
+@test
+pub default_constructors_are_float32_cpu_tensors(): Bool ->
+    let zero = zeros([2, 3]);
+    let one = ones([1]);
+    let valid =
+        dtype(zero) == 6
+            and dtype(one) == 6
+            and shape(zero) == [2, 3]
+            and shape(one) == [1]
+            and device_type(zero) == 0
+            and device_index(zero) == -1;
+    dispose(one);
+    dispose(zero);
+    valid.
+
+@test
+pub every_admitted_scalar_dtype_constructs(): Bool ->
+    typed_scalar_is(DType.UINT8, 0)
+        and typed_scalar_is(DType.INT8, 1)
+        and typed_scalar_is(DType.INT16, 2)
+        and typed_scalar_is(DType.INT32, 3)
+        and typed_scalar_is(DType.INT64, 4)
+        and typed_scalar_is(DType.FLOAT16, 5)
+        and typed_scalar_is(DType.FLOAT32, 6)
+        and typed_scalar_is(DType.FLOAT64, 7)
+        and typed_scalar_is(DType.BOOL, 11)
+        and typed_scalar_is(DType.BFLOAT16, 15).
+
+@test
+pub contiguous_metadata_and_zero_extent_are_exact(): Bool ->
+    let matrix = full_typed_native([2, 3], 2.5, dtype_code(DType.FLOAT64), 0, -1);
+    let empty = zeros_on([2, 0, 3], DType.INT64, "cpu");
+    let valid =
+        shape(matrix) == [2, 3]
+            and strides(matrix) == [3, 1]
+            and storage_offset(matrix) == 0
+            and is_contiguous(matrix)
+            and shape(empty) == [2, 0, 3]
+            and numel(empty) == 0
+            and is_contiguous(empty);
+    dispose(empty);
+    dispose(matrix);
+    valid.
+
+@test
+pub uninitialized_construction_preserves_typed_metadata(): Bool ->
+    let tensor = empty_typed_native([2, 0, 3], dtype_code(DType.FLOAT16), 0, -1);
+    let valid =
+        shape(tensor) == [2, 0, 3]
+            and strides(tensor) == [3, 3, 1]
+            and numel(tensor) == 0
+            and dtype(tensor) == 5
+            and device_type(tensor) == 0
+            and device_index(tensor) == -1
+            and storage_offset(tensor) == 0
+            and is_contiguous(tensor);
+    dispose(tensor);
+    valid.

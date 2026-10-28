@@ -1,0 +1,85 @@
+/**
+ * Exact integration and KL-divergence parity on CPU and CUDA.
+ */
+module pytorch.IntegrationCompletionParityTest.
+
+import pytorch.IntegrationCompletion.{cumulative_trapezoid_dx_float, cumulative_trapezoid_dx_int, cumulative_trapezoid_x, kl_div, trapezoid_dx_float, trapezoid_dx_int, trapezoid_x, trapz_dx, trapz_x}.
+import pytorch.Tensor.{backward, device_type, dispose, dtype, from_floats, gradient, require_grad, shape, to_device}.
+import pytorch.TypeRelations.allclose.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(tensor: Tensor, values: List[Float], dimensions: List[Int], device: Int): Bool ->
+    let expected = placed(values, dimensions, device);
+    let valid =
+        allclose(tensor, expected, 1e-12, 1e-12, false)
+            and shape(tensor) == dimensions
+            and dtype(tensor) == 7
+            and device_type(tensor) == device;
+    dispose(expected);
+    valid.
+
+verify(device: Int): Bool ->
+    let y = placed([1.0, 2.0, 4.0], [3], device);
+    let x = placed([0.0, 1.0, 3.0], [3], device);
+    let cumulative_int = cumulative_trapezoid_dx_int(y, 1, -1);
+    let cumulative_float = cumulative_trapezoid_dx_float(y, 0.5, 0);
+    let cumulative_x = cumulative_trapezoid_x(y, x, 0);
+    let trapezoid_int = trapezoid_dx_int(y, 2, 0);
+    let trapezoid_float = trapezoid_dx_float(y, 0.5, -1);
+    let trapezoid_coordinates = trapezoid_x(y, x, 0);
+    let trapz_spacing = trapz_dx(y, 1.0, -1);
+    let trapz_coordinates = trapz_x(y, x, 0);
+    let matrix = placed([1.0, 2.0, 4.0, 2.0, 3.0, 5.0], [2, 3], device);
+    let matrix_cumulative = cumulative_trapezoid_dx_int(matrix, 1, 1);
+    let input = placed([0.0, 0.0], [2], device);
+    let target = placed([0.5, 0.5], [2], device);
+    let target_log = placed([-0.6931471805599453, -0.6931471805599453], [2], device);
+    let probabilities = kl_div(input, target, 2, false);
+    let logarithms = kl_div(input, target_log, 2, true);
+    let leaf = require_grad(placed([1.0, 2.0, 4.0], [3], device));
+    let integrated = trapezoid_x(leaf, x, 0);
+    backward(integrated);
+    let derivative = gradient(leaf);
+    let valid =
+        matches(cumulative_int, [1.5, 4.5], [2], device)
+            and matches(cumulative_float, [0.75, 2.25], [2], device)
+            and matches(cumulative_x, [1.5, 7.5], [2], device)
+            and matches(trapezoid_int, [9.0], [], device)
+            and matches(trapezoid_float, [2.25], [], device)
+            and matches(trapezoid_coordinates, [7.5], [], device)
+            and matches(trapz_spacing, [4.5], [], device)
+            and matches(trapz_coordinates, [7.5], [], device)
+            and matches(matrix_cumulative, [1.5, 4.5, 2.5, 6.5], [2, 2], device)
+            and matches(probabilities, [-0.6931471805599453], [], device)
+            and allclose(probabilities, logarithms, 1e-12, 1e-12, false)
+            and matches(derivative, [0.5, 1.5, 1.0], [3], device)
+            and matches(y, [1.0, 2.0, 4.0], [3], device)
+            and matches(x, [0.0, 1.0, 3.0], [3], device);
+    (dispose(derivative); dispose(integrated); dispose(leaf); dispose(logarithms); dispose(probabilities); dispose(target_log); dispose(target); dispose(input); dispose(matrix_cumulative); dispose(matrix); dispose(trapz_coordinates); dispose(trapz_spacing); dispose(trapezoid_coordinates); dispose(trapezoid_float); dispose(trapezoid_int); dispose(cumulative_x); dispose(cumulative_float); dispose(cumulative_int); dispose(x); dispose(y); valid).
+
+/**
+ * Requires every exact integration operation on real CUDA when requested.
+ */
+@test
+pub integration_and_kl_div_on_cpu_and_required_cuda(): Bool ->
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    let cpu_valid = verify(0);
+    cpu_valid and cuda_valid.

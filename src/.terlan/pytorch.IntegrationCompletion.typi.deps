@@ -1,0 +1,9 @@
+module=pytorch.IntegrationCompletion
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=13586972404357138509
+interface_hash=2992958239806306678
+interface_doc_hash=4996482947833188787
+deps=1
+pytorch.Tensor=13489932768568026575

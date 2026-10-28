@@ -1,0 +1,52 @@
+module pytorch.NumericalCompletionNativeBehaviorSupport.
+
+import pytorch.NumericalCompletionNative.{argsort_stable_out, cdist_compute, cdist_default_compute, chain_matmul_native, chain_matmul_out_native, clone_out_default_memory, clone_out_memory, contiguous_native, cross_default_dimension, cross_dimension, cross_out_default_dimension, cross_out_dimension}.
+import pytorch.Tensor.{Float64, Int64, Strided, dispose, is_cuda, ones_device, shape}.
+
+/**
+ * Executes every NumericalCompletionNative contract on one device.
+ */
+pub numerical_completion_native_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
+    let matrix = ones_device([2, 3], Float64, Strided, device_name);
+    let right = ones_device([4, 3], Float64, Strided, device_name);
+    let chain_right = ones_device([3, 4], Float64, Strided, device_name);
+    let cross_other = ones_device([2, 3], Float64, Strided, device_name);
+    let argsort_output = ones_device([0], Int64, Strided, device_name);
+    argsort_stable_out(argsort_output, matrix, true, 1, false);
+    let default_distance = cdist_default_compute(matrix, right, 2.0);
+    let explicit_distance = cdist_compute(matrix, right, 2.0, 0);
+    let chained = chain_matmul_native([matrix, chain_right]);
+    let chain_output = ones_device([0], Float64, Strided, device_name);
+    (chain_matmul_out_native(chain_output, [matrix, chain_right]); let clone_default_output = ones_device([0], Float64, Strided, device_name);
+(clone_out_default_memory(clone_default_output, matrix); let clone_memory_output = ones_device([0], Float64, Strided, device_name);
+(clone_out_memory(clone_memory_output, matrix, 0); let contiguous = contiguous_native(matrix, 0);
+let default_cross = cross_default_dimension(matrix, cross_other);
+let explicit_cross = cross_dimension(matrix, cross_other, 1);
+let default_cross_output = ones_device([0], Float64, Strided, device_name);
+(cross_out_default_dimension(default_cross_output, matrix, cross_other); let explicit_cross_output = ones_device([0], Float64, Strided, device_name);
+(cross_out_dimension(explicit_cross_output, matrix, cross_other, 1); let valid =
+    shape(argsort_output) == [2, 3]
+        and shape(default_distance) == [2, 4]
+        and shape(explicit_distance) == [2, 4]
+        and shape(chained) == [2, 4]
+        and shape(chain_output) == [2, 4]
+        and shape(clone_default_output) == [2, 3]
+        and shape(clone_memory_output) == [2, 3]
+        and shape(contiguous) == [2, 3]
+        and shape(default_cross) == [2, 3]
+        and shape(explicit_cross) == [2, 3]
+        and shape(default_cross_output) == [2, 3]
+        and shape(explicit_cross_output) == [2, 3]
+        and is_cuda(argsort_output) == expected_cuda
+        and is_cuda(default_distance) == expected_cuda
+        and is_cuda(explicit_distance) == expected_cuda
+        and is_cuda(chained) == expected_cuda
+        and is_cuda(chain_output) == expected_cuda
+        and is_cuda(clone_default_output) == expected_cuda
+        and is_cuda(clone_memory_output) == expected_cuda
+        and is_cuda(contiguous) == expected_cuda
+        and is_cuda(default_cross) == expected_cuda
+        and is_cuda(explicit_cross) == expected_cuda
+        and is_cuda(default_cross_output) == expected_cuda
+        and is_cuda(explicit_cross_output) == expected_cuda;
+(dispose(explicit_cross_output); dispose(default_cross_output); dispose(explicit_cross); dispose(default_cross); dispose(contiguous); dispose(clone_memory_output); dispose(clone_default_output); dispose(chain_output); dispose(chained); dispose(explicit_distance); dispose(default_distance); dispose(argsort_output); dispose(cross_other); dispose(chain_right); dispose(right); dispose(matrix); valid)))))).

@@ -1,0 +1,74 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Runs repository formatting and lint policy through typed process calls.
+ *
+ * This keeps Make as a thin launcher while making the validation orchestration
+ * itself reviewable Terlan code.
+ */
+import std.core.Option.{Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.Console.{eprintln, println}.
+import std.system.{Arguments, Process}.
+
+import type std.system.Process.Output.
+
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[terlan_pytorch_lint]: ", message));
+    false.
+
+run_check(compiler: String, arguments: List[String], repository: String): Bool ->
+    let request =
+        Process.with_output_limit_bytes(
+            Process.with_timeout_ms(
+                Process.with_working_directory(
+                    Process.with_arguments(Process.command(compiler), arguments),
+                    repository,
+                ),
+                600000,
+            ),
+            16777216,
+        );
+    case Process.run(request) {
+        Err(reason) -> failure(reason.message);
+        Ok(output) ->
+            if {
+                output.status == 0 -> true;
+                true -> failure(String.append(output.stderr, output.stdout))
+            }
+    }.
+
+check_roots(compiler: String, repository: String, rule: String, roots: List[String]): Bool ->
+    case roots {
+        [] -> true;
+        [root | rest] ->
+            run_check(compiler, ["lint", "--only", rule, root], repository)
+                and check_roots(compiler, repository, rule, rest)
+    }.
+
+check(mode: String, compiler: String, repository: String): Bool ->
+    if {
+        mode == "format" -> run_check(
+            compiler,
+            ["fmt", "--check", "src", "package-src", "tests/pytorch", "tests/native", "scripts"],
+            repository,
+        );
+        mode == "grouped" -> check_roots(compiler, repository, "TL0009", ["src", "package-src", "tests", "scripts"]);
+        mode == "references" -> check_roots(compiler, repository, "TL0010", ["src", "package-src", "tests", "scripts"]);
+        mode == "all" -> check("format", compiler, repository)
+            and check("grouped", compiler, repository)
+            and check("references", compiler, repository);
+        true -> failure("mode must be format, grouped, references, or all")
+    }.
+
+entry(): Bool ->
+    case {Arguments.count(), Arguments.get(0), Arguments.get(1), Arguments.get(2)} {
+        {3, Some(mode), Some(compiler), Some(repository)} -> check(mode, compiler, repository);
+        _ ->
+            failure(
+                "usage: CheckTerlanLint.terls <format|grouped|references|all> <terlc> <repository-root>",
+            )
+    }.
+
+assert(entry());
+Unit.

@@ -1,0 +1,24 @@
+/**
+ * Public evidence for selected-value reduction backward scattering.
+ */
+module pytorch.ValueSelectingReductionBackwardParityTest.
+
+import pytorch.Selection.value_selecting_reduction_backward_exact.
+import pytorch.Tensor.{dispose, from_floats, from_ints, shape}.
+import pytorch.TypeRelations.equal.
+
+/**
+ * Validates the exact CPU scatter gradient and reconstructed input shape.
+ */
+@test
+pub value_selecting_reduction_backward_matches_cpu(): Bool ->
+    let gradient = from_floats([10.0, 20.0], [2]);
+    let indices = from_ints([1, 0], [2]);
+    let result = value_selecting_reduction_backward_exact(gradient, 1, indices, [2, 2], false);
+    let expected = from_floats([0.0, 10.0, 20.0, 0.0], [2, 2]);
+    let valid = shape(result) == [2, 2] and equal(result, expected);
+    dispose(expected);
+    dispose(result);
+    dispose(indices);
+    dispose(gradient);
+    valid.

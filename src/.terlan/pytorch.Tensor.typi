@@ -1,0 +1,1208 @@
+//! Generated CXX-owned LibTorch tensor resources and migration support.
+
+module pytorch.Tensor.
+
+/// Brain floating-point 16-bit dtype.
+
+pub type BFloat16 =
+    Atom["bfloat16"].
+
+/// Opaque 16-bit dtype.
+
+pub type Bits16 =
+    Atom["bits16"].
+
+/// Packed one-bit dtype.
+
+pub type Bits1x8 =
+    Atom["bits1x8"].
+
+/// Packed two-bit dtype.
+
+pub type Bits2x4 =
+    Atom["bits2x4"].
+
+/// Packed four-bit dtype.
+
+pub type Bits4x2 =
+    Atom["bits4x2"].
+
+/// Opaque 8-bit dtype.
+
+pub type Bits8 =
+    Atom["bits8"].
+
+/// Boolean dtype.
+
+pub type Bool =
+    Atom["bool"].
+
+/// Complex double-precision dtype.
+
+pub type Complex128 =
+    Atom["complex128"].
+
+/// Complex half-precision dtype.
+
+pub type Complex32 =
+    Atom["complex32"].
+
+/// Complex single-precision dtype.
+
+pub type Complex64 =
+    Atom["complex64"].
+
+/// Finite public dtype values generated from c10::ScalarType.
+
+pub type DType: Int =
+    UINT8 = 0
+  | INT8 = 1
+  | INT16 = 2
+  | INT32 = 3
+  | INT64 = 4
+  | FLOAT16 = 5
+  | FLOAT32 = 6
+  | FLOAT64 = 7
+  | COMPLEX32 = 8
+  | COMPLEX64 = 9
+  | COMPLEX128 = 10
+  | BOOL = 11
+  | QINT8 = 12
+  | QUINT8 = 13
+  | QINT32 = 14
+  | BFLOAT16 = 15
+  | QUINT4X2 = 16
+  | QUINT2X4 = 17
+  | BITS1X8 = 18
+  | BITS2X4 = 19
+  | BITS4X2 = 20
+  | BITS8 = 21
+  | BITS16 = 22
+  | FLOAT8_E5M2 = 23
+  | FLOAT8_E4M3FN = 24
+  | FLOAT8_E5M2FNUZ = 25
+  | FLOAT8_E4M3FNUZ = 26
+  | UINT16 = 27
+  | UINT32 = 28
+  | UINT64 = 29
+  | UINT1 = 30
+  | UINT2 = 31
+  | UINT3 = 32
+  | UINT4 = 33
+  | UINT5 = 34
+  | UINT6 = 35
+  | UINT7 = 36
+  | INT1 = 37
+  | INT2 = 38
+  | INT3 = 39
+  | INT4 = 40
+  | INT5 = 41
+  | INT6 = 42
+  | INT7 = 43
+  | FLOAT8_E8M0FNU = 44
+  | FLOAT4_E2M1FN_X2 = 45.
+
+/// Validated LibTorch device spelling such as cpu or cuda:0.
+
+pub type Device =
+    String.
+
+/// IEEE half-precision floating dtype.
+
+pub type Float16 =
+    Atom["float16"].
+
+/// IEEE single-precision floating dtype.
+
+pub type Float32 =
+    Atom["float32"].
+
+/// Packed 4-bit E2M1 floating dtype.
+
+pub type Float4E2M1FnX2 =
+    Atom["float4_e2m1fn_x2"].
+
+/// IEEE double-precision floating dtype.
+
+pub type Float64 =
+    Atom["float64"].
+
+/// 8-bit E4M3 finite floating dtype.
+
+pub type Float8E4M3Fn =
+    Atom["float8_e4m3fn"].
+
+/// 8-bit E4M3 FNUZ floating dtype.
+
+pub type Float8E4M3Fnuz =
+    Atom["float8_e4m3fnuz"].
+
+/// 8-bit E5M2 floating dtype.
+
+pub type Float8E5M2 =
+    Atom["float8_e5m2"].
+
+/// 8-bit E5M2 FNUZ floating dtype.
+
+pub type Float8E5M2Fnuz =
+    Atom["float8_e5m2fnuz"].
+
+/// 8-bit E8M0 finite floating dtype.
+
+pub type Float8E8M0Fnu =
+    Atom["float8_e8m0fnu"].
+
+/// Signed 1-bit integer dtype.
+
+pub type Int1 =
+    Atom["int1"].
+
+/// Signed 16-bit integer dtype.
+
+pub type Int16 =
+    Atom["int16"].
+
+/// Signed 2-bit integer dtype.
+
+pub type Int2 =
+    Atom["int2"].
+
+/// Signed 3-bit integer dtype.
+
+pub type Int3 =
+    Atom["int3"].
+
+/// Signed 32-bit integer dtype.
+
+pub type Int32 =
+    Atom["int32"].
+
+/// Signed 4-bit integer dtype.
+
+pub type Int4 =
+    Atom["int4"].
+
+/// Signed 5-bit integer dtype.
+
+pub type Int5 =
+    Atom["int5"].
+
+/// Signed 6-bit integer dtype.
+
+pub type Int6 =
+    Atom["int6"].
+
+/// Signed 64-bit integer dtype.
+
+pub type Int64 =
+    Atom["int64"].
+
+/// Signed 7-bit integer dtype.
+
+pub type Int7 =
+    Atom["int7"].
+
+/// Signed 8-bit integer dtype.
+
+pub type Int8 =
+    Atom["int8"].
+
+/// Jagged tensor layout.
+
+pub type Jagged =
+    Atom["jagged"].
+
+/// Finite public layouts generated from c10::Layout.
+
+pub type Layout =
+    Atom["strided"]
+  | Atom["sparse_coo"]
+  | Atom["sparse_csr"]
+  | Atom["mkldnn"]
+  | Atom["sparse_csc"]
+  | Atom["sparse_bsr"]
+  | Atom["sparse_bsc"]
+  | Atom["jagged"].
+
+/// oneDNN tensor layout.
+
+pub type Mkldnn =
+    Atom["mkldnn"].
+
+/// Quantized signed 32-bit dtype.
+
+pub type QInt32 =
+    Atom["qint32"].
+
+/// Quantized signed 8-bit dtype.
+
+pub type QInt8 =
+    Atom["qint8"].
+
+/// Packed quantized unsigned 2-bit dtype.
+
+pub type QUInt2x4 =
+    Atom["quint2x4"].
+
+/// Packed quantized unsigned 4-bit dtype.
+
+pub type QUInt4x2 =
+    Atom["quint4x2"].
+
+/// Quantized unsigned 8-bit dtype.
+
+pub type QUInt8 =
+    Atom["quint8"].
+
+/// Opaque uniquely owned LibTorch scalar.
+
+pub opaque type Scalar.
+
+/// Sparse block-column tensor layout.
+
+pub type SparseBsc =
+    Atom["sparse_bsc"].
+
+/// Sparse block-row tensor layout.
+
+pub type SparseBsr =
+    Atom["sparse_bsr"].
+
+/// Sparse coordinate tensor layout.
+
+pub type SparseCoo =
+    Atom["sparse_coo"].
+
+/// Sparse compressed-column tensor layout.
+
+pub type SparseCsc =
+    Atom["sparse_csc"].
+
+/// Sparse compressed-row tensor layout.
+
+pub type SparseCsr =
+    Atom["sparse_csr"].
+
+/// Dense strided tensor layout.
+
+pub type Strided =
+    Atom["strided"].
+
+/// Opaque uniquely owned LibTorch tensor.
+
+pub opaque type Tensor.
+
+/// Owned TorchScript module.
+
+pub opaque type TorchScriptModel.
+
+/// Unsigned 1-bit integer dtype.
+
+pub type UInt1 =
+    Atom["uint1"].
+
+/// Unsigned 16-bit integer dtype.
+
+pub type UInt16 =
+    Atom["uint16"].
+
+/// Unsigned 2-bit integer dtype.
+
+pub type UInt2 =
+    Atom["uint2"].
+
+/// Unsigned 3-bit integer dtype.
+
+pub type UInt3 =
+    Atom["uint3"].
+
+/// Unsigned 32-bit integer dtype.
+
+pub type UInt32 =
+    Atom["uint32"].
+
+/// Unsigned 4-bit integer dtype.
+
+pub type UInt4 =
+    Atom["uint4"].
+
+/// Unsigned 5-bit integer dtype.
+
+pub type UInt5 =
+    Atom["uint5"].
+
+/// Unsigned 6-bit integer dtype.
+
+pub type UInt6 =
+    Atom["uint6"].
+
+/// Unsigned 64-bit integer dtype.
+
+pub type UInt64 =
+    Atom["uint64"].
+
+/// Unsigned 7-bit integer dtype.
+
+pub type UInt7 =
+    Atom["uint7"].
+
+/// Unsigned 8-bit integer dtype.
+
+pub type UInt8 =
+    Atom["uint8"].
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub abi_version(): Int.
+
+/// Returns the elementwise absolute-value tensor.
+
+pub abs(tensor: Tensor): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub adaptive_avg_pool2d(input: Tensor, output_size: List[Int]): Tensor.
+
+/// Generated CXX Tensor operation adapter.
+
+pub add(left: Tensor, right: Tensor, alpha: Float): Tensor.
+
+/// Tensor in-place addition alias matching torch.Tensor.add_.
+
+pub add_in_place(left: Tensor, right: Tensor, alpha: Float): Unit.
+
+/// Generated CXX Tensor operation adapter.
+
+pub add_scalar(tensor: Tensor, value: Float, alpha: Float): Tensor.
+
+/// Tensor view convenience aliases matching PyTorch Tensor methods.
+
+pub adjoint(tensor: Tensor): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub amax(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool): Tensor.
+
+/// Typed range constructor with the reviewed CXX range leaf.
+
+pub arange(start: Float, end: Float, step: Float, dtype: DType): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub arange_typed_native(start: Float, end: Float, step: Float, dtype: Int, device_type: Int, device_index: Int, pin_memory: Bool): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub argmax(tensor: Tensor, dimension: Int, keep_dimension: Bool): Tensor.
+
+/// Generated CXX Tensor operation adapter.
+
+pub autograd_grad(output: Tensor, input: Tensor, grad_output: Tensor, retain_graph: Bool = false, create_graph: Bool = false): Tensor.
+
+/// Generated CXX Tensor operation adapter.
+
+pub autograd_grad_many(outputs: List[Tensor], inputs: List[Tensor], grad_outputs: List[Tensor], retain_graph: Bool = false, create_graph: Bool = false): List[Tensor].
+
+/// Generated CXX Tensor operation adapter.
+
+pub backward(loss: Tensor): Unit.
+
+/// Explicit-gradient overload matching torch.Tensor.backward(gradient).
+
+pub backward(loss: Tensor, gradient: Tensor): Unit.
+
+/// Explicit-gradient overload with graph-retention controls.
+
+pub backward(loss: Tensor, gradient: Tensor, retain_graph: Bool, create_graph: Bool): Unit.
+
+/// Multiple-root backward alias with the public Unit-shaped contract.
+
+pub backward_many(outputs: List[Tensor], grad_outputs: List[Tensor], retain_graph: Bool = false, create_graph: Bool = false): Unit.
+
+/// Generated CXX Tensor operation adapter.
+
+pub backward_many_token(outputs: List[Tensor], grad_outputs: List[Tensor], retain_graph: Bool = false, create_graph: Bool = false): Tensor.
+
+/// Generated CXX Tensor operation adapter.
+
+pub backward_with_gradient(loss: Tensor, gradient: Tensor, retain_graph: Bool = false, create_graph: Bool = false): Unit.
+
+/// Generated direct ATen Tensor adapter.
+
+pub batch_norm(input: Tensor, weight: Tensor, bias: Tensor, running_mean: Tensor, running_variance: Tensor, training: Bool, momentum: Float, epsilon: Float, cudnn_enabled: Bool): Tensor.
+
+pub bfloat16(tensor: Tensor): Tensor.
+
+pub bool(tensor: Tensor): Tensor.
+
+/// Broadcasts tensors to a common shape with generated list-input and list-output ownership.
+
+pub broadcast_tensors(tensors: List[Tensor]): List[Tensor].
+
+pub byte(tensor: Tensor): Tensor.
+
+/// Generated CXX Tensor operation adapter.
+
+pub categorical_sample(probabilities: Tensor, seed: Int): Tensor.
+
+pub cdouble(tensor: Tensor): Tensor.
+
+/// Returns the elementwise ceiling.
+
+pub ceil(tensor: Tensor): Tensor.
+
+pub cfloat(tensor: Tensor): Tensor.
+
+/// Complex-half conversion matching torch.chalf's default policy.
+
+pub chalf(tensor: Tensor): Tensor.
+
+pub char(tensor: Tensor): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub clamp(tensor: Tensor, minimum: Float, maximum: Float): Tensor.
+
+/// Tensor clip alias matching the common floating-point torch.Tensor.clip overload.
+
+pub clip(tensor: Tensor, minimum: Float, maximum: Float): Tensor.
+
+/// Returns a copy using the default memory-format policy.
+
+pub clone(tensor: Tensor): Tensor.
+
+pub conj(tensor: Tensor): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub conv2d(input: Tensor, weight: Tensor, bias: Tensor, stride: List[Int], padding: List[Int], dilation: List[Int], groups: Int): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub copy(tensor: Tensor, source: Tensor, non_blocking: Bool = false): Tensor.
+
+/// Generated CXX Tensor operation adapter.
+
+pub copy_in_place(tensor: Tensor, source: Tensor, non_blocking: Bool = false): Unit.
+
+/// Generated direct ATen Tensor adapter.
+
+pub copy_out(output: Tensor, tensor: Tensor, source: Tensor, non_blocking: Bool = false): Unit.
+
+/// Returns the canonical CPU device spelling.
+
+@pure
+pub cpu(): Device.
+
+/// Tensor CPU placement convenience alias matching torch.Tensor.cpu().
+
+pub cpu(tensor: Tensor): Tensor.
+
+/// Generated CXX Tensor operation adapter.
+
+pub cross_entropy_loss(logits: Tensor, target: Tensor, reduction: Int, ignore_index: Int, label_smoothing: Float): Tensor.
+
+/// Returns a canonical CUDA device spelling.
+
+pub cuda(index: Int): Device.
+
+/// Tensor CUDA placement convenience alias matching torch.Tensor.cuda().
+
+pub cuda(tensor: Tensor): Tensor.
+
+/// Tensor CUDA placement convenience alias with an explicit ordinal.
+
+pub cuda(tensor: Tensor, index: Int): Tensor.
+
+pub detach(tensor: Tensor): Tensor.
+
+/// Returns the tensor device as its canonical LibTorch spelling.
+
+pub device(tensor: Tensor): Device.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub device_index(tensor: Tensor): Int.
+
+/// Returns the CUDA ordinal, or -1 for CPU.
+
+pub device_index_for(device: Device): Int.
+
+/// Returns the numeric backend kind for a canonical device spelling.
+
+pub device_kind(device: Device): Int.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub device_type(tensor: Tensor): Int.
+
+/// Returns the tensor rank through generated exception containment.
+
+pub dim(tensor: Tensor): Int.
+
+/// Drops the uniquely owned LibTorch tensor.
+
+pub dispose(tensor: Tensor): Unit.
+
+/// Drops a TorchScript module.
+
+pub dispose_model(model: TorchScriptModel): Unit.
+
+/// Drops the uniquely owned LibTorch scalar.
+
+pub dispose_scalar(scalar: Scalar): Unit.
+
+/// Drops a tensor pair.
+
+pub dispose_tensor_pair(pair: TensorPair): Unit.
+
+/// Generated CXX Tensor operation adapter.
+
+pub divide(left: Tensor, right: Tensor): Tensor.
+
+pub double(tensor: Tensor): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub dtype(tensor: Tensor): Int.
+
+/// Returns the stable c10 scalar-type code used by native adapters.
+
+@pure
+pub dtype_code(dtype: DType): Int.
+
+/// Compatibility alias for the tensor element-count projection.
+
+pub element_count(tensor: Tensor): Int.
+
+/// Returns the storage width in bytes for the tensor's scalar dtype.
+
+pub element_size(tensor: Tensor): Int.
+
+/// Generated direct ATen Tensor adapter.
+
+pub embedding(weight: Tensor, indices: Tensor, padding_index: Int, scale_gradient_by_frequency: Bool, sparse: Bool): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub embedding_bag(weight: Tensor, indices: Tensor, offsets: Tensor, scale_gradient_by_frequency: Bool = false, mode: Int = 0, sparse: Bool = false, include_last_offset: Bool = false): {Tensor, Tensor, Tensor, Tensor}.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub embedding_bag_padding(weight: Tensor, indices: Tensor, offsets: Tensor, scale_gradient_by_frequency: Bool, mode: Int, sparse: Bool, include_last_offset: Bool, padding_index: Int): {Tensor, Tensor, Tensor, Tensor}.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub embedding_bag_padding_weighted(weight: Tensor, indices: Tensor, offsets: Tensor, scale_gradient_by_frequency: Bool, mode: Int, sparse: Bool, per_sample_weights: Tensor, include_last_offset: Bool, padding_index: Int): {Tensor, Tensor, Tensor, Tensor}.
+
+/// Public-compatible embedding_bag form returning only the embedding output while releasing LibTorch auxiliary tensors.
+
+pub embedding_bag_public(weight: Tensor, indices: Tensor, offsets: Tensor, scale_gradient_by_frequency: Bool = false, mode: Int = 0, sparse: Bool = false, include_last_offset: Bool = false): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub embedding_bag_weighted(weight: Tensor, indices: Tensor, offsets: Tensor, scale_gradient_by_frequency: Bool, mode: Int, sparse: Bool, per_sample_weights: Tensor, include_last_offset: Bool): {Tensor, Tensor, Tensor, Tensor}.
+
+/// Generated direct ATen Tensor adapter.
+
+pub embedding_out(output: Tensor, weight: Tensor, indices: Tensor, padding_index: Int = - 1, scale_gradient_by_frequency: Bool = false, sparse: Bool = false): Unit.
+
+/// Generated direct ATen Tensor adapter.
+
+pub embedding_renorm(weight: Tensor, indices: Tensor, max_norm: Float, norm_type: Float): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub embedding_renorm_in_place(weight: Tensor, indices: Tensor, max_norm: Float, norm_type: Float): Unit.
+
+/// Generated direct ATen Tensor adapter.
+
+pub embedding_renorm_out(output: Tensor, weight: Tensor, indices: Tensor, max_norm: Float, norm_type: Float): Unit.
+
+/// Creates a tensor with explicit physical dimension order.
+
+pub empty_permuted(size: List[Int], physical_layout: List[Int], has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device: Device, has_pin_memory: Bool, pin_memory: Bool): Tensor.
+
+/// Writes explicit physical dimension order into retained output.
+
+pub empty_permuted_out(out: Tensor, size: List[Int], physical_layout: List[Int]): Unit.
+
+/// Creates an uninitialized tensor with explicit shape and strides.
+
+pub empty_strided(size: List[Int], stride: List[Int], has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device: Device, has_pin_memory: Bool, pin_memory: Bool): Tensor.
+
+/// Reshapes retained output storage with explicit strides.
+
+pub empty_strided_out(out: Tensor, size: List[Int], stride: List[Int]): Unit.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub empty_typed_native(shape: List[Int], dtype: Int, device_type: Int, device_index: Int): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub exp(tensor: Tensor): Tensor.
+
+/// Typed rectangular identity constructor with the reviewed CXX range leaf.
+
+pub eye(rows: Int, columns: Int, dtype: DType): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub eye_typed_native(rows: Int, columns: Int, dtype: Int, device_type: Int, device_index: Int, pin_memory: Bool): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub flatten(tensor: Tensor, start_dimension: Int, end_dimension: Int): Tensor.
+
+/// Tensor dtype convenience aliases matching PyTorch's no-argument methods.
+
+pub float(tensor: Tensor): Tensor.
+
+/// Returns the elementwise floor.
+
+pub floor(tensor: Tensor): Tensor.
+
+/// Compatibility alias that validates and copies a package-neutral TNXP value into independently owned LibTorch storage.
+
+pub from_array(packet: Bytes): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub from_bool(value: Bool): Tensor.
+
+/// Maps file-backed storage into a tensor.
+
+pub from_file(filename: String, has_shared: Bool, shared: Bool, has_size: Bool, size: Int, has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Int, device_type: Int, device_index: Int, has_pin_memory: Bool, pin_memory: Bool): Tensor.
+
+/// Maps file-backed storage into retained output.
+
+pub from_file_out(output: Tensor, filename: String, has_shared: Bool, shared: Bool, has_size: Bool, size: Int): Unit.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub from_float(value: Float): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub from_floats(values: List[Float], shape: List[Int]): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub from_int(value: Int): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub from_ints(values: List[Int], shape: List[Int]): Tensor.
+
+/// Validates and copies a package-neutral TNXP value into independently owned LibTorch storage.
+
+pub from_packet(packet: Bytes): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub full_float(shape: List[Int], value: Float): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub full_typed_native(shape: List[Int], value: Float, dtype: Int, device_type: Int, device_index: Int): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub gather(input: Tensor, dimension: Int, index: Tensor, sparse_gradient: Bool): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub gather_out(output: Tensor, input: Tensor, dimension: Int, index: Tensor, sparse_gradient: Bool): Unit.
+
+/// Generated direct ATen Tensor adapter.
+
+pub gelu(tensor: Tensor, approximation: String = "none"): Tensor.
+
+/// Generated CXX Tensor operation adapter.
+
+pub gelu_in_place(tensor: Tensor, approximation: String = "none"): Unit.
+
+/// Generated CXX Tensor operation adapter.
+
+pub gelu_out(output: Tensor, tensor: Tensor, approximation: String = "none"): Unit.
+
+/// Device-index convenience alias matching torch.Tensor.get_device().
+
+pub get_device(tensor: Tensor): Int.
+
+/// Generated CXX Tensor operation adapter.
+
+pub gradient(parameter: Tensor): Tensor.
+
+/// Generated CXX Tensor operation adapter.
+
+pub gradient_with_graph(parameter: Tensor): Tensor.
+
+pub half(tensor: Tensor): Tensor.
+
+/// Returns whether the tensor has storage.
+
+pub has_storage(tensor: Tensor): Bool.
+
+pub int(tensor: Tensor): Tensor.
+
+/// Returns whether the tensor has a complex dtype.
+
+pub is_complex(tensor: Tensor): Bool.
+
+/// Returns whether the tensor is contiguous in LibTorch's default memory format.
+
+pub is_contiguous(tensor: Tensor): Bool.
+
+/// Returns whether the tensor is contiguous in the requested LibTorch memory format.
+
+pub is_contiguous_memory_format(tensor: Tensor, memory_format: Int): Bool.
+
+/// Returns whether the tensor uses the CPU backend.
+
+pub is_cpu(tensor: Tensor): Bool.
+
+/// Returns whether the tensor uses the CUDA backend.
+
+pub is_cuda(tensor: Tensor): Bool.
+
+/// Returns whether the tensor has a defined LibTorch implementation.
+
+pub is_defined(tensor: Tensor): Bool.
+
+/// Returns whether the tensor has a floating-point dtype.
+
+pub is_floating_point(tensor: Tensor): Bool.
+
+/// Returns whether the tensor is an autograd leaf.
+
+pub is_leaf(tensor: Tensor): Bool.
+
+/// Default pinned-state convenience alias matching torch.Tensor.is_pinned().
+
+pub is_pinned(tensor: Tensor): Bool.
+
+/// Public option-normalizing composition for aten::is_pinned.
+
+pub is_pinned(tensor: Tensor, has_device: Bool, device: Device): Bool.
+
+/// Returns whether the tensor uses a quantized backend.
+
+pub is_quantized(tensor: Tensor): Bool.
+
+/// Returns whether the tensor has a signed dtype.
+
+pub is_signed(tensor: Tensor): Bool.
+
+/// Returns whether the tensor uses a sparse backend.
+
+pub is_sparse(tensor: Tensor): Bool.
+
+/// Returns the single tensor element as a scalar.
+
+pub item(tensor: Tensor): Scalar.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub item_bool(tensor: Tensor): Bool.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub item_float(tensor: Tensor): Float.
+
+/// Generated direct ATen Tensor adapter.
+
+pub layer_norm(input: Tensor, normalized_shape: List[Int], weight: Tensor, bias: Tensor, epsilon: Float, cudnn_enabled: Bool): Tensor.
+
+/// Returns the tensor dtype as a reviewed symbolic value.
+/// Returns the tensor layout as a reviewed symbolic value.
+
+pub layout(tensor: Tensor): Int.
+
+/// Typed evenly-spaced constructor with the reviewed CXX range leaf.
+
+pub linspace(start: Float, end: Float, steps: Int, dtype: DType): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub linspace_typed_native(start: Float, end: Float, steps: Int, dtype: Int, device_type: Int, device_index: Int, pin_memory: Bool): Tensor.
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub load_torchscript(path: String): TorchScriptModel.
+
+/// Generated direct ATen Tensor adapter.
+
+pub log(tensor: Tensor): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub logspace_typed_native(start: Float, end: Float, steps: Int, base: Float, dtype: Int, device_type: Int, device_index: Int, pin_memory: Bool): Tensor.
+
+pub long(tensor: Tensor): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub matmul(left: Tensor, right: Tensor): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub mean(tensor: Tensor): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub mean_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool): Tensor.
+
+/// Creates coordinate grids using LibTorch's default indexing.
+
+pub meshgrid(tensors: List[Tensor]): List[Tensor].
+
+/// Creates coordinate grids using explicit xy or ij indexing.
+
+pub meshgrid_indexing(tensors: List[Tensor], indexing: String): List[Tensor].
+
+/// Generated direct ATen Tensor adapter.
+
+pub minimum(left: Tensor, right: Tensor): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub mse_loss(predicted: Tensor, target: Tensor, reduction: Int): Tensor.
+
+/// Generated CXX Tensor operation adapter.
+
+pub mse_loss_gradient(grad_output: Tensor, predicted: Tensor, target: Tensor, reduction: Int): Tensor.
+
+/// Compatibility alias for the floating-point scalar multiplication leaf.
+
+pub mul_float(tensor: Tensor, value: Float): Tensor.
+
+/// Returns the elementwise product with an integer scalar.
+
+pub mul_int(tensor: Tensor, scalar: Int): Tensor.
+
+/// Returns the elementwise product with another tensor.
+
+pub multiply(left: Tensor, right: Tensor): Tensor.
+
+/// Tensor in-place multiplication alias matching torch.Tensor.multiply_.
+
+pub multiply_in_place(left: Tensor, right: Tensor): Unit.
+
+/// Returns the elementwise product with a floating-point scalar.
+
+pub multiply_scalar(tensor: Tensor, value: Float): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub narrow(tensor: Tensor, dimension: Int, start: Int, length: Int): Tensor.
+
+/// Rank compatibility alias matching torch.Tensor.ndimension().
+
+pub ndimension(tensor: Tensor): Int.
+
+/// Returns the elementwise negated tensor.
+
+pub negate(tensor: Tensor): Tensor.
+
+/// Element-count compatibility alias matching torch.Tensor.nelement().
+
+pub nelement(tensor: Tensor): Int.
+
+/// Constructs a nested tensor from component tensors.
+
+pub nested_from_tensor_list(tensors: List[Tensor]): Tensor.
+
+/// Exact generated CXX adapter for aten::nested_to_padded_tensor.
+
+pub nested_to_padded_tensor(tensor: Tensor, padding: Float, has_output_size: Bool, output_size: List[Int]): Tensor.
+
+/// Returns the tensor element count through generated exception containment.
+
+pub numel(tensor: Tensor): Int.
+
+/// Creates a CPU tensor filled with ones.
+
+pub ones(size: List[Int]): Tensor.
+
+/// Creates a tensor with reviewed dtype, layout, and parsed device values.
+
+pub ones_device(size: List[Int], dtype: Int, layout: Int, device: Device): Tensor.
+
+/// Creates a CPU tensor of a reviewed LibTorch dtype filled with ones.
+
+pub ones_dtype(size: List[Int], dtype: Int): Tensor.
+
+/// Creates a tensor with reviewed dtype and layout values.
+
+pub ones_layout(size: List[Int], dtype: Int, layout: Int): Tensor.
+
+/// Creates a tensor with all optional LibTorch factory controls supplied.
+
+pub ones_options(size: List[Int], dtype: Int, layout: Int, device: Device, pin_memory: Bool): Tensor.
+
+pub positive(tensor: Tensor): Tensor.
+
+/// Compatibility alias for the tensor rank projection.
+
+pub rank(tensor: Tensor): Int.
+
+pub ravel(tensor: Tensor): Tensor.
+
+/// Returns the elementwise reciprocal.
+
+pub reciprocal(tensor: Tensor): Tensor.
+
+/// Returns the elementwise rectified tensor.
+
+pub relu(tensor: Tensor): Tensor.
+
+/// Generated CXX Tensor operation adapter.
+
+pub require_grad(tensor: Tensor): Tensor.
+
+/// Returns whether autograd records operations on the tensor.
+
+pub requires_grad(tensor: Tensor): Bool.
+
+/// Updates leaf autograd participation through exact aten::requires_grad_.
+
+pub requires_grad_in_place(tensor: Tensor, requires_grad: Bool = true): Unit.
+
+/// Resizes a tensor to the requested shape and optional memory format.
+
+pub resize(tensor: Tensor, size: List[Int], has_memory_format: Bool, memory_format: Int): Tensor.
+
+/// Resizes the retained tensor in place.
+
+pub resize_in_place(tensor: Tensor, size: List[Int], has_memory_format: Bool, memory_format: Int): Unit.
+
+/// Resizes the retained output tensor to the requested shape.
+
+pub resize_out(out: Tensor, tensor: Tensor, size: List[Int], has_memory_format: Bool, memory_format: Int): Unit.
+
+pub resolve_conj(tensor: Tensor): Tensor.
+
+pub resolve_neg(tensor: Tensor): Tensor.
+
+/// Returns the elementwise rounded value.
+
+pub round(tensor: Tensor): Tensor.
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub run_torchscript(input: Tensor, path: String): Tensor.
+
+/// Converts a scalar to a double-precision Float through generated exception containment.
+
+pub scalar_to_float(scalar: Scalar): Float.
+
+/// Converts a scalar to an integer with contained errors.
+
+pub scalar_to_int(scalar: Scalar): Result[Int, std.core.Error].
+
+/// Generated CXX Tensor operation adapter.
+
+pub sgd_step(parameter: Tensor, learning_rate: Float): Tensor.
+
+/// Copies the tensor shape from LibTorch's borrowed size view.
+
+pub shape(tensor: Tensor): List[Int].
+
+pub short(tensor: Tensor): Tensor.
+
+/// Returns the elementwise sign.
+
+pub sign(tensor: Tensor): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub softmax(tensor: Tensor, dimension: Int): Tensor.
+
+/// Computes softmin by applying softmax to the negated input.
+
+pub softmin(tensor: Tensor, dimension: Int): Tensor.
+
+/// Computes softsign as input divided by one plus its absolute value.
+
+pub softsign(tensor: Tensor): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub sqrt(tensor: Tensor): Tensor.
+
+/// Returns the elementwise square.
+
+pub square(tensor: Tensor): Tensor.
+
+pub squeeze(tensor: Tensor): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub storage_offset(tensor: Tensor): Int.
+
+/// Copies the tensor strides from LibTorch's borrowed stride view.
+
+pub strides(tensor: Tensor): List[Int].
+
+/// Generated CXX Tensor operation adapter.
+
+pub subtract(left: Tensor, right: Tensor, alpha: Float): Tensor.
+
+/// Tensor in-place subtraction alias matching torch.Tensor.sub_ / subtract_.
+
+pub subtract_in_place(left: Tensor, right: Tensor, alpha: Float): Unit.
+
+/// Generated direct ATen Tensor adapter.
+
+pub sum(tensor: Tensor): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub sum_dimensions(tensor: Tensor, dimensions: List[Int], keep_dimension: Bool): Tensor.
+
+pub t(tensor: Tensor): Tensor.
+
+/// Computes tanhshrink as input minus its hyperbolic tangent.
+
+pub tanhshrink(tensor: Tensor): Tensor.
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub tensor_pair_first(pair: TensorPair): Tensor.
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub tensor_pair_second(pair: TensorPair): Tensor.
+
+/// Common dtype overload of torch.Tensor.to().  PyTorch exposes additional
+/// Python-only overloads (including memory-format and copy controls); these
+/// reviewed CXX overloads preserve the ownership and conversion semantics
+/// available in the generated manifest without reintroducing ABI glue.
+
+pub to(tensor: Tensor, dtype: Int): Tensor.
+
+/// Device overload of torch.Tensor.to().
+
+pub to(tensor: Tensor, device_type: Int, device_index: Int): Tensor.
+
+/// Sparse-to-dense convenience alias matching torch.Tensor.to_dense().
+
+pub to_dense(tensor: Tensor): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub to_device(tensor: Tensor, device_type: Int, device_index: Int): Tensor.
+
+/// Generated CXX tensor device/dtype conversion adapter.
+
+pub to_device_dtype(tensor: Tensor, device_type: Int, device_index: Int, dtype: Int, non_blocking: Bool = false, copy: Bool = false): Tensor.
+
+/// Generated CXX Tensor compatibility adapter.
+
+pub to_dtype(tensor: Tensor, dtype: Int): Tensor.
+
+/// Generated CXX tensor dtype/layout conversion adapter.
+
+pub to_dtype_layout(tensor: Tensor, has_dtype: Bool, dtype: Int, has_layout: Bool, layout: Int, has_device: Bool, device_type: Int, device_index: Int, has_pin_memory: Bool, pin_memory: Bool, non_blocking: Bool, copy: Bool, has_memory_format: Bool, memory_format: Int): Tensor.
+
+/// Generated CXX tensor-to-other conversion adapter.
+
+pub to_other(tensor: Tensor, other: Tensor, non_blocking: Bool = false): Tensor.
+
+/// Copies a contiguous CPU snapshot into a package-neutral TNXP value.
+
+pub to_packet(tensor: Tensor): Bytes.
+
+/// Converts a nested tensor to padded dense storage.
+
+pub to_padded_tensor(tensor: Tensor, padding: Float, has_output_size: Bool, output_size: List[Int]): Tensor.
+
+/// Writes a nested tensor's padded dense representation.
+
+pub to_padded_tensor_out(output: Tensor, tensor: Tensor, padding: Float, has_output_size: Bool, output_size: List[Int]): Unit.
+
+/// Dense-to-COO convenience alias matching torch.Tensor.to_sparse_coo().
+
+pub to_sparse_coo(tensor: Tensor): Tensor.
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub torchscript_forward(model: TorchScriptModel, input: Tensor): Tensor.
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub torchscript_forward2(model: TorchScriptModel, first: Tensor, second: Tensor): Tensor.
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub torchscript_forward_bool(model: TorchScriptModel, input: Tensor): Bool.
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub torchscript_forward_bool_list(model: TorchScriptModel, input: Tensor): List[Bool].
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub torchscript_forward_float(model: TorchScriptModel, input: Tensor): Float.
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub torchscript_forward_float_list(model: TorchScriptModel, input: Tensor): List[Float].
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub torchscript_forward_int(model: TorchScriptModel, input: Tensor): Int.
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub torchscript_forward_int_list(model: TorchScriptModel, input: Tensor): List[Int].
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub torchscript_forward_optional_tensor(model: TorchScriptModel, input: Tensor): Option[Tensor].
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub torchscript_forward_pair(model: TorchScriptModel, input: Tensor): TensorPair.
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub torchscript_forward_string(model: TorchScriptModel, input: Tensor): String.
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub torchscript_forward_string_list(model: TorchScriptModel, input: Tensor): List[String].
+
+/// Generated CXX TorchScript compatibility adapter.
+
+pub torchscript_forward_tensor_list(model: TorchScriptModel, input: Tensor): List[Tensor].
+
+/// Generated direct ATen Tensor adapter.
+
+pub transpose(tensor: Tensor, dimension0: Int, dimension1: Int): Tensor.
+
+/// Returns the elementwise truncation.
+
+pub trunc(tensor: Tensor): Tensor.
+
+/// Dtype-copy convenience alias matching torch.Tensor.type_as().
+
+pub type_as(tensor: Tensor, other: Tensor): Tensor.
+
+/// Generated direct ATen Tensor adapter.
+
+pub unsqueeze(tensor: Tensor, dimension: Int): Tensor.
+
+/// Zero-filled tensor compatibility constructor for legacy Tensor imports.
+
+pub zeros(size: List[Int]): Tensor.
+
+/// Typed zero-filled tensor compatibility constructor.
+
+pub zeros(size: List[Int], dtype: Int): Tensor.
+
+/// Creates a zero-filled tensor on an explicit CPU or CUDA device.
+
+pub zeros_on(size: List[Int], dtype: DType, device: Device): Tensor.

@@ -1,0 +1,415 @@
+module pytorch.LinalgTupleParityTest.
+
+import pytorch.Linalg.{geqrf, linalg_cholesky_ex, linalg_cholesky_ex_out, linalg_eig, linalg_eig_out, linalg_eigh, linalg_eigh_out, linalg_inv_ex, linalg_inv_ex_out, linalg_ldl_factor, linalg_ldl_factor_ex, linalg_ldl_factor_ex_out, linalg_ldl_factor_out, linalg_lstsq, linalg_lstsq_configured, linalg_lstsq_out, linalg_lstsq_out_configured, linalg_lu, linalg_lu_factor, linalg_lu_factor_ex, linalg_lu_factor_ex_out, linalg_lu_factor_out, linalg_lu_out, linalg_qr, linalg_qr_out, linalg_slogdet, linalg_slogdet_out, linalg_solve_ex, linalg_solve_ex_out, linalg_svd, linalg_svd_out, qr, slogdet, triangular_solve}.
+import pytorch.LinalgCompletion.geqrf_out.
+import pytorch.Tensor.{dispose, dtype, from_floats, item, item_bool, item_float, shape, sum, zeros}.
+import pytorch.Unary.{abs, all, isfinite}.
+
+import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Reduces a floating-point tensor and releases its scalar result.
+ */
+float_sum(tensor: Tensor): Float ->
+    let total = sum(tensor);
+    let value = item_float(total);
+    dispose(total);
+    value.
+
+/**
+ * Classifies every tensor element as finite and releases both intermediates.
+ */
+all_finite(tensor: Tensor): Bool ->
+    let classifications = isfinite(tensor);
+    let reduced = all(classifications);
+    let value = item_bool(reduced);
+    dispose(reduced);
+    dispose(classifications);
+    value.
+
+/**
+ * Proves the remaining fixed-arity linalg tuple outputs populate owned storage.
+ */
+@test
+pub fixed_tuple_out_overloads_populate_all_outputs(): Bool ->
+    let matrix = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
+    let right = from_floats([1.0, 0.0], [2]);
+    let ldl = zeros([0], DType.FLOAT64);
+    let ldl_pivots = zeros([0], DType.INT32);
+    linalg_ldl_factor_out(ldl, ldl_pivots, matrix);
+    let ldl_ex = zeros([0], DType.FLOAT64);
+    let ldl_pivots_ex = zeros([0], DType.INT32);
+    let ldl_info = zeros([0], DType.INT32);
+    (linalg_ldl_factor_ex_out(ldl_ex, ldl_pivots_ex, ldl_info, matrix); let q = zeros([0], DType.FLOAT64);
+let r = zeros([0], DType.FLOAT64);
+(linalg_qr_out(q, r, matrix); let sign = zeros([0], DType.FLOAT64);
+let log_absolute = zeros([0], DType.FLOAT64);
+(linalg_slogdet_out(sign, log_absolute, matrix); let solution = zeros([0], DType.FLOAT64);
+let solve_info = zeros([0], DType.INT32);
+(linalg_solve_ex_out(solution, solve_info, matrix, right); let valid =
+    shape(ldl) == [2, 2]
+        and shape(ldl_pivots) == [2]
+        and shape(ldl_ex) == [2, 2]
+        and shape(ldl_pivots_ex) == [2]
+        and item(ldl_info) == 0
+        and shape(q) == [2, 2]
+        and shape(r) == [2, 2]
+        and item_float(sign) == 1.0
+        and item_float(log_absolute) > 2.39
+        and item_float(log_absolute) < 2.4
+        and shape(solution) == [2]
+        and item(solve_info) == 0
+        and all_finite(ldl)
+        and all_finite(ldl_ex)
+        and all_finite(q)
+        and all_finite(r)
+        and all_finite(solution)
+        and shape(matrix) == [2, 2];
+(dispose(solve_info); dispose(solution); dispose(log_absolute); dispose(sign); dispose(r); dispose(q); dispose(ldl_info); dispose(ldl_pivots_ex); dispose(ldl_ex); dispose(ldl_pivots); dispose(ldl); dispose(right); dispose(matrix); valid))))).
+
+/**
+ * Proves a multi-output dispatcher overload populates both caller-owned tensors.
+ */
+@test
+pub cholesky_ex_out_populates_both_outputs(): Bool ->
+    let matrix = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
+    let factor = zeros([0], DType.FLOAT64);
+    let info = zeros([0], DType.INT32);
+    linalg_cholesky_ex_out(factor, info, matrix);
+    let factor_total = float_sum(factor);
+    let valid =
+        shape(factor) == [2, 2]
+            and factor_total > 4.15
+            and factor_total < 4.17
+            and item(info) == 0
+            and shape(matrix) == [2, 2];
+    (dispose(info); dispose(factor); dispose(matrix); valid).
+
+/**
+ * Proves QR, eigenvalue, and LU tuple outputs including three-result decompositions.
+ */
+@test
+pub qr_eigenvalue_and_lu_decompositions_execute(): Bool ->
+    let matrix = from_floats([4.0, 7.0, 2.0, 6.0], [2, 2]);
+    let {packed_qr, tau} = geqrf(matrix);
+    let {eigenvalues, eigenvectors} = linalg_eig(matrix);
+    let {permutation, lower, upper} = linalg_lu(matrix);
+    let {compact_lu, pivots} = linalg_lu_factor(matrix);
+    let {compact_lu_ex, pivots_ex, lu_info} = linalg_lu_factor_ex(matrix);
+    let {complete_q, complete_r} = linalg_qr(matrix, "complete");
+    let {legacy_q, legacy_r} = qr(matrix);
+    let valid =
+        shape(packed_qr) == [2, 2]
+            and shape(tau) == [2]
+            and all_finite(packed_qr)
+            and all_finite(tau)
+            and shape(eigenvalues) == [2]
+            and shape(eigenvectors) == [2, 2]
+            and shape(permutation) == [2, 2]
+            and shape(lower) == [2, 2]
+            and shape(upper) == [2, 2]
+            and all_finite(permutation)
+            and all_finite(lower)
+            and all_finite(upper)
+            and shape(compact_lu) == [2, 2]
+            and shape(pivots) == [2]
+            and shape(compact_lu_ex) == [2, 2]
+            and shape(pivots_ex) == [2]
+            and item(lu_info) == 0
+            and shape(complete_q) == [2, 2]
+            and shape(complete_r) == [2, 2]
+            and all_finite(complete_q)
+            and all_finite(complete_r)
+            and shape(legacy_q) == [2, 2]
+            and shape(legacy_r) == [2, 2]
+            and all_finite(legacy_q)
+            and all_finite(legacy_r);
+    dispose(legacy_r);
+    dispose(legacy_q);
+    dispose(complete_r);
+    dispose(complete_q);
+    dispose(lu_info);
+    dispose(pivots_ex);
+    dispose(compact_lu_ex);
+    dispose(pivots);
+    dispose(compact_lu);
+    dispose(upper);
+    dispose(lower);
+    dispose(permutation);
+    dispose(eigenvectors);
+    dispose(eigenvalues);
+    dispose(tau);
+    dispose(packed_qr);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves two- and three-result decomposition overloads retain every output handle.
+ */
+@test
+pub decomposition_out_overloads_populate_all_outputs(): Bool ->
+    let matrix = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
+    let eigenvalues = zeros([0], DType.FLOAT64);
+    let eigenvectors = zeros([0], DType.FLOAT64);
+    linalg_eigh_out(eigenvalues, eigenvectors, matrix);
+    let inverse = zeros([0], DType.FLOAT64);
+    let inverse_info = zeros([0], DType.INT32);
+    (linalg_inv_ex_out(inverse, inverse_info, matrix); let left_vectors = zeros([0], DType.FLOAT64);
+let decomposition_values = zeros([0], DType.FLOAT64);
+let right_vectors = zeros([0], DType.FLOAT64);
+(linalg_svd_out(left_vectors, decomposition_values, right_vectors, matrix, false); let valid =
+    shape(eigenvalues) == [2]
+        and shape(eigenvectors) == [2, 2]
+        and float_sum(eigenvalues) == 7.0
+        and all_finite(eigenvectors)
+        and shape(inverse) == [2, 2]
+        and item(inverse_info) == 0
+        and all_finite(inverse)
+        and shape(left_vectors) == [2, 2]
+        and shape(decomposition_values) == [2]
+        and shape(right_vectors) == [2, 2]
+        and all_finite(left_vectors)
+        and all_finite(decomposition_values)
+        and all_finite(right_vectors)
+        and shape(matrix) == [2, 2];
+(dispose(right_vectors); dispose(decomposition_values); dispose(left_vectors); dispose(inverse_info); dispose(inverse); dispose(eigenvectors); dispose(eigenvalues); dispose(matrix); valid))).
+
+/**
+ * Proves every LU output overload populates caller-owned mixed-dtype storage.
+ */
+@test
+pub lu_out_overloads_populate_all_outputs(): Bool ->
+    let matrix = from_floats([4.0, 7.0, 2.0, 6.0], [2, 2]);
+    let permutation = zeros([0], DType.FLOAT64);
+    let lower = zeros([0], DType.FLOAT64);
+    let upper = zeros([0], DType.FLOAT64);
+    linalg_lu_out(permutation, lower, upper, matrix);
+    let factor = zeros([0], DType.FLOAT64);
+    let pivots = zeros([0], DType.INT32);
+    (linalg_lu_factor_out(factor, pivots, matrix); let factor_ex = zeros([0], DType.FLOAT64);
+let pivots_ex = zeros([0], DType.INT32);
+let info = zeros([0], DType.INT32);
+(linalg_lu_factor_ex_out(factor_ex, pivots_ex, info, matrix); let valid =
+    shape(permutation) == [2, 2]
+        and shape(lower) == [2, 2]
+        and shape(upper) == [2, 2]
+        and shape(factor) == [2, 2]
+        and shape(pivots) == [2]
+        and shape(factor_ex) == [2, 2]
+        and shape(pivots_ex) == [2]
+        and item(info) == 0
+        and all_finite(permutation)
+        and all_finite(lower)
+        and all_finite(upper)
+        and all_finite(factor)
+        and all_finite(factor_ex)
+        and shape(matrix) == [2, 2];
+(dispose(info); dispose(pivots_ex); dispose(factor_ex); dispose(pivots); dispose(factor); dispose(upper); dispose(lower); dispose(permutation); dispose(matrix); valid))).
+
+/**
+ * Proves Cholesky and LDL factorization outputs and information tensors.
+ */
+@test
+pub symmetric_factorizations_match_libtorch(): Bool ->
+    let matrix = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
+    let {cholesky, cholesky_info} = linalg_cholesky_ex(matrix);
+    let {eigenvalues, eigenvectors} = linalg_eigh(matrix);
+    let {compact_ldl, ldl_pivots} = linalg_ldl_factor(matrix);
+    let {compact_ldl_ex, ldl_pivots_ex, ldl_info} = linalg_ldl_factor_ex(matrix);
+    let valid =
+        shape(cholesky) == [2, 2]
+            and item(cholesky_info) == 0
+            and all_finite(cholesky)
+            and shape(eigenvalues) == [2]
+            and shape(eigenvectors) == [2, 2]
+            and all_finite(eigenvalues)
+            and all_finite(eigenvectors)
+            and shape(compact_ldl) == [2, 2]
+            and shape(ldl_pivots) == [2]
+            and all_finite(compact_ldl)
+            and shape(compact_ldl_ex) == [2, 2]
+            and shape(ldl_pivots_ex) == [2]
+            and item(ldl_info) == 0
+            and all_finite(compact_ldl_ex);
+    dispose(ldl_info);
+    dispose(ldl_pivots_ex);
+    dispose(compact_ldl_ex);
+    dispose(ldl_pivots);
+    dispose(compact_ldl);
+    dispose(eigenvectors);
+    dispose(eigenvalues);
+    dispose(cholesky_info);
+    dispose(cholesky);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves inverse, solve, determinant, and triangular-system tuple behavior.
+ */
+@test
+pub inverse_solve_and_determinant_operations_match_libtorch(): Bool ->
+    let matrix = from_floats([4.0, 7.0, 2.0, 6.0], [2, 2]);
+    let right = from_floats([1.0, 0.0], [2]);
+    let triangular = from_floats([2.0, 1.0, 0.0, 4.0], [2, 2]);
+    let triangular_right = from_floats([1.0, 1.0], [2, 1]);
+    let {inverse, inverse_info} = linalg_inv_ex(matrix);
+    let {solution, solve_info} = linalg_solve_ex(matrix, right);
+    let {sign, log_absolute_determinant} = linalg_slogdet(matrix);
+    let {legacy_sign, legacy_log_absolute_determinant} = slogdet(matrix);
+    let {triangular_solution, cloned_coefficient} = triangular_solve(triangular_right, triangular);
+    let inverse_total = float_sum(inverse);
+    let solution_total = float_sum(solution);
+    let triangular_total = float_sum(triangular_solution);
+    let logarithm = item_float(log_absolute_determinant);
+    let legacy_logarithm = item_float(legacy_log_absolute_determinant);
+    let valid =
+        shape(inverse) == [2, 2]
+            and inverse_total > 0.09
+            and inverse_total < 0.11
+            and item(inverse_info) == 0
+            and shape(solution) == [2]
+            and solution_total > 0.39
+            and solution_total < 0.41
+            and item(solve_info) == 0
+            and item_float(sign) == 1.0
+            and logarithm > 2.3
+            and logarithm < 2.31
+            and item_float(legacy_sign) == 1.0
+            and legacy_logarithm > 2.3
+            and legacy_logarithm < 2.31
+            and shape(triangular_solution) == [2, 1]
+            and triangular_total > 0.62
+            and triangular_total < 0.63
+            and shape(cloned_coefficient) == [2, 2];
+    dispose(cloned_coefficient);
+    dispose(triangular_solution);
+    dispose(legacy_log_absolute_determinant);
+    dispose(legacy_sign);
+    dispose(log_absolute_determinant);
+    dispose(sign);
+    dispose(solve_info);
+    dispose(solution);
+    dispose(inverse_info);
+    dispose(inverse);
+    dispose(triangular_right);
+    dispose(triangular);
+    dispose(right);
+    dispose(matrix);
+    valid.
+
+/**
+ * Proves four-result least-squares ownership and singular-value decomposition behavior.
+ */
+@test
+pub least_squares_and_svd_match_libtorch(): Bool ->
+    let coefficient = from_floats([1.0, 0.0, 0.0, 1.0, 1.0, 1.0], [3, 2]);
+    let right = from_floats([1.0, 2.0, 3.0], [3]);
+    let matrix = from_floats([3.0, 0.0, 0.0, 2.0], [2, 2]);
+    let {solution, residuals, rank, singular_values} = linalg_lstsq(coefficient, right);
+    let {configured_solution, configured_residuals, configured_rank, configured_singular_values} = linalg_lstsq_configured(coefficient, right, -1.0, "gelsd");
+    let {left_vectors, decomposition_values, right_vectors} = linalg_svd(matrix, false);
+    let solution_total = float_sum(solution);
+    let configured_solution_total = float_sum(configured_solution);
+    let decomposition_total = float_sum(decomposition_values);
+    let valid =
+        shape(solution) == [2]
+            and solution_total > 2.99
+            and solution_total < 3.01
+            and all_finite(residuals)
+            and item(rank) == 2
+            and all_finite(singular_values)
+            and shape(configured_solution) == [2]
+            and configured_solution_total > 2.99
+            and configured_solution_total < 3.01
+            and shape(configured_residuals) == [1]
+            and all_finite(configured_residuals)
+            and item(configured_rank) == 2
+            and shape(configured_singular_values) == [2]
+            and all_finite(configured_singular_values)
+            and shape(left_vectors) == [2, 2]
+            and shape(decomposition_values) == [2]
+            and decomposition_total > 4.99
+            and decomposition_total < 5.01
+            and shape(right_vectors) == [2, 2]
+            and all_finite(left_vectors)
+            and all_finite(right_vectors)
+            and shape(coefficient) == [3, 2]
+            and shape(right) == [3]
+            and shape(matrix) == [2, 2];
+    dispose(right_vectors);
+    dispose(decomposition_values);
+    dispose(left_vectors);
+    dispose(configured_singular_values);
+    dispose(configured_rank);
+    dispose(configured_residuals);
+    dispose(configured_solution);
+    dispose(singular_values);
+    dispose(rank);
+    dispose(residuals);
+    dispose(solution);
+    dispose(matrix);
+    dispose(right);
+    dispose(coefficient);
+    valid.
+
+/**
+ * Proves complex eigen decomposition and four-result least-squares outputs.
+ */
+@test
+pub eig_and_least_squares_out_overloads_populate_all_outputs(): Bool ->
+    let matrix = from_floats([2.0, 0.0, 0.0, 3.0], [2, 2]);
+    let zero_matrix = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    let {eigenvalues, eigenvectors} = linalg_eig(zero_matrix);
+    linalg_eig_out(eigenvalues, eigenvectors, matrix);
+    let eigenvalue_magnitudes = abs(eigenvalues);
+    let eigenvector_magnitudes = abs(eigenvectors);
+    let coefficient = from_floats([1.0, 0.0, 0.0, 1.0, 1.0, 1.0], [3, 2]);
+    let right = from_floats([1.0, 2.0, 3.0], [3]);
+    let solution = zeros([0], DType.FLOAT64);
+    let residuals = zeros([0], DType.FLOAT64);
+    let rank = zeros([0], DType.INT64);
+    let singular_values = zeros([0], DType.FLOAT64);
+    (linalg_lstsq_out(solution, residuals, rank, singular_values, coefficient, right); let default_solution_total = float_sum(solution);
+let default_rank = item(rank);
+(linalg_lstsq_out_configured(
+    solution,
+    residuals,
+    rank,
+    singular_values,
+    coefficient,
+    right,
+    -1.0,
+    "gelsd",
+); let configured_solution_total = float_sum(solution);
+let valid =
+    dtype(eigenvalues) == 10
+        and dtype(eigenvectors) == 10
+        and shape(eigenvalues) == [2]
+        and shape(eigenvectors) == [2, 2]
+        and float_sum(eigenvalue_magnitudes) == 5.0
+        and float_sum(eigenvector_magnitudes) == 2.0
+        and default_solution_total > 2.99
+        and default_solution_total < 3.01
+        and default_rank == 2
+        and configured_solution_total > 2.99
+        and configured_solution_total < 3.01
+        and shape(residuals) == [1]
+        and item(rank) == 2
+        and shape(singular_values) == [2]
+        and all_finite(residuals)
+        and all_finite(singular_values)
+        and shape(coefficient) == [3, 2]
+        and shape(right) == [3];
+(dispose(singular_values); dispose(rank); dispose(residuals); dispose(solution); dispose(right); dispose(coefficient); dispose(eigenvector_magnitudes); dispose(eigenvalue_magnitudes); dispose(eigenvectors); dispose(eigenvalues); dispose(zero_matrix); dispose(matrix); valid))).
+
+/**
+ * Proves the legacy geqrf out overload populates caller-owned outputs.
+ */
+@test
+pub geqrf_out_populates_both_outputs(): Bool ->
+    let matrix = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
+    let a = zeros([0], DType.FLOAT64);
+    let tau = zeros([0], DType.FLOAT64);
+    geqrf_out(a, tau, matrix);
+    let valid = shape(a) == [2, 2] and shape(tau) == [2] and all_finite(a) and all_finite(tau);
+    (dispose(tau); dispose(a); dispose(matrix); valid).

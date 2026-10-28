@@ -1,0 +1,99 @@
+//! Exact non-finite replacement operations with explicit optional-state entry points.
+
+module pytorch.NanToNum.
+
+/// Replaces NaN with zero and infinities with the finite dtype limits.
+
+pub nan_to_num(input: Tensor): Tensor.
+
+/// Replaces NaN and both infinity signs explicitly.
+
+pub nan_to_num_all(input: Tensor, nan: Float, posinf: Float, neginf: Float): Tensor.
+
+/// Mutates storage with explicit replacements for every non-finite class.
+
+pub nan_to_num_all_in_place(input: Tensor, nan: Float, posinf: Float, neginf: Float): Unit.
+
+/// Writes explicit replacements for NaN and both infinity signs.
+
+pub nan_to_num_all_out(output: Tensor, input: Tensor, nan: Float, posinf: Float, neginf: Float): Unit.
+
+/// Mutates storage using default replacements.
+
+pub nan_to_num_in_place(input: Tensor): Unit.
+
+/// Replaces NaN explicitly and uses default infinity replacements.
+
+pub nan_to_num_nan(input: Tensor, nan: Float): Tensor.
+
+/// Mutates storage with an explicit NaN replacement.
+
+pub nan_to_num_nan_in_place(input: Tensor, nan: Float): Unit.
+
+/// Replaces NaN and negative infinity explicitly.
+
+pub nan_to_num_nan_neginf(input: Tensor, nan: Float, neginf: Float): Tensor.
+
+/// Mutates storage with explicit NaN and negative-infinity replacements.
+
+pub nan_to_num_nan_neginf_in_place(input: Tensor, nan: Float, neginf: Float): Unit.
+
+/// Writes explicit NaN and negative-infinity replacements.
+
+pub nan_to_num_nan_neginf_out(output: Tensor, input: Tensor, nan: Float, neginf: Float): Unit.
+
+/// Writes an explicit NaN replacement and default infinity replacements.
+
+pub nan_to_num_nan_out(output: Tensor, input: Tensor, nan: Float): Unit.
+
+/// Replaces NaN and positive infinity explicitly.
+
+pub nan_to_num_nan_posinf(input: Tensor, nan: Float, posinf: Float): Tensor.
+
+/// Mutates storage with explicit NaN and positive-infinity replacements.
+
+pub nan_to_num_nan_posinf_in_place(input: Tensor, nan: Float, posinf: Float): Unit.
+
+/// Writes explicit NaN and positive-infinity replacements.
+
+pub nan_to_num_nan_posinf_out(output: Tensor, input: Tensor, nan: Float, posinf: Float): Unit.
+
+/// Replaces negative infinity explicitly and uses other defaults.
+
+pub nan_to_num_neginf(input: Tensor, neginf: Float): Tensor.
+
+/// Mutates storage with an explicit negative-infinity replacement.
+
+pub nan_to_num_neginf_in_place(input: Tensor, neginf: Float): Unit.
+
+/// Writes an explicit negative-infinity replacement and other defaults.
+
+pub nan_to_num_neginf_out(output: Tensor, input: Tensor, neginf: Float): Unit.
+
+/// Writes default replacements into retained output storage.
+
+pub nan_to_num_out(output: Tensor, input: Tensor): Unit.
+
+/// Replaces positive infinity explicitly and uses other defaults.
+
+pub nan_to_num_posinf(input: Tensor, posinf: Float): Tensor.
+
+/// Mutates storage with an explicit positive-infinity replacement.
+
+pub nan_to_num_posinf_in_place(input: Tensor, posinf: Float): Unit.
+
+/// Replaces positive and negative infinity explicitly.
+
+pub nan_to_num_posinf_neginf(input: Tensor, posinf: Float, neginf: Float): Tensor.
+
+/// Mutates storage with explicit positive- and negative-infinity replacements.
+
+pub nan_to_num_posinf_neginf_in_place(input: Tensor, posinf: Float, neginf: Float): Unit.
+
+/// Writes explicit positive- and negative-infinity replacements.
+
+pub nan_to_num_posinf_neginf_out(output: Tensor, input: Tensor, posinf: Float, neginf: Float): Unit.
+
+/// Writes an explicit positive-infinity replacement and other defaults.
+
+pub nan_to_num_posinf_out(output: Tensor, input: Tensor, posinf: Float): Unit.

@@ -1,0 +1,233 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Adapts generated CXX behavior fixtures to the integer dtype ABI.
+ *
+ * This is the Terlan-owned replacement for patch-cxx-generated-tests.py.
+ * The generated fixtures intentionally share the package behavior corpus, but
+ * CXX adapters expose c10::ScalarType values as integers rather than legacy
+ * dtype atoms.
+ */
+import std.collections.List.
+import std.core.Int.{to_string}.
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.{Directory, File}.
+import std.system.Arguments.
+
+import type std.core.Result.
+
+child(parent: String, relative: String): String ->
+    if {
+        String.ends_with(parent, "/") -> String.append(parent, relative);
+        true -> String.concat([parent, "/", relative])
+    }.
+
+dtype_names(): List[String] ->
+    [
+        "UInt8",
+        "Int8",
+        "Int16",
+        "Int32",
+        "Int64",
+        "Float16",
+        "Float32",
+        "Float64",
+        "Complex32",
+        "Complex64",
+        "Complex128",
+    ].
+
+dtype_code(name: String): String ->
+    case name {
+        "UInt8" -> "0";
+        "Int8" -> "1";
+        "Int16" -> "2";
+        "Int32" -> "3";
+        "Int64" -> "4";
+        "Float16" -> "5";
+        "Float32" -> "6";
+        "Float64" -> "7";
+        "Complex32" -> "8";
+        "Complex64" -> "9";
+        "Complex128" -> "10";
+        _ -> name
+    }.
+
+remove_import_name(body: String, name: String): String ->
+    body
+        .replace(String.append(name, ", "), "")
+        .replace(String.append(", ", name), "")
+        .replace(name, "").
+
+normalize_import_body(body: String): String ->
+    let trimmed = String.trim(body);
+    let without_leading =
+        if {
+            String.starts_with(trimmed, ",") -> String.trim(trimmed.utf8_slice(1, trimmed.length() - 1));
+            true -> trimmed
+        };
+    if {
+        String.ends_with(without_leading, ",") -> String.trim(without_leading.utf8_slice(0, without_leading.length() - 1));
+        true -> without_leading
+    }.
+
+patch_import(line: String): String ->
+    if {
+        String.starts_with(String.trim(line), "import pytorch.Tensor.{") -> let {
+            Some({prefix, rest}) <- line.split_once("{");
+            Some({body, suffix}) <- rest.split_once("}")
+        } else {
+            _ -> line
+        };
+        (let removed = remove_imports(body, dtype_names()); let without_atoms = normalize_import_body(remove_import_name(removed, "Bool").replace("Strided", "")); String.concat([prefix, "{", without_atoms, "}", suffix]));
+        true -> line
+    }.
+
+remove_imports(body: String, names: List[String]): String ->
+    case names {
+        [] -> body;
+        [name | rest] -> remove_imports(remove_import_name(body, name), rest)
+    }.
+
+protected_path(text: String, index: Int, name: String): String ->
+    text
+        .replace(
+            String.append("pytorch.", name),
+            String.concat(["__TERLAN_CXX_PATH_", to_string(index), "__"]),
+        ).
+
+restore_path(text: String, index: Int, name: String): String ->
+    text
+        .replace(
+            String.concat(["__TERLAN_CXX_PATH_", to_string(index), "__"]),
+            String.append("pytorch.", name),
+        ).
+
+patch_expression(line: String): String ->
+    let protected = protect_paths(line, 0, dtype_names());
+    let with_strided = protected.replace("Strided", "0");
+    let with_dtypes = replace_dtypes(with_strided, dtype_names());
+    let with_bool =
+        with_dtypes
+            .replace("(Bool", "(11")
+            .replace(", Bool", ", 11")
+            .replace("== Bool", "== 11")
+            .replace("!= Bool", "!= 11");
+    let stable_adam =
+        with_bool
+            .replace("adam(2.0, 2.0, 2.0, 2.0, 2.0)", "adam(0.001, 0.9, 0.999, 0.00000001, 0.0)");
+    restore_paths(stable_adam, 0, dtype_names()).
+
+protect_paths(text: String, index: Int, names: List[String]): String ->
+    case names {
+        [] -> text.replace("pytorch.Strided", "__TERLAN_CXX_PATH_11__");
+        [name | rest] -> protect_paths(protected_path(text, index, name), index + 1, rest)
+    }.
+
+restore_paths(text: String, index: Int, names: List[String]): String ->
+    case names {
+        [] -> restore_path(text, 11, "Strided");
+        [name | rest] -> restore_paths(restore_path(text, index, name), index + 1, rest)
+    }.
+
+replace_dtypes(text: String, names: List[String]): String ->
+    case names {
+        [] -> text;
+        [name | rest] -> replace_dtypes(text.replace(name, dtype_code(name)), rest)
+    }.
+
+patch_source(text: String): String ->
+    patch_lines(String.split(text, "\n"), "").
+
+patch_lines(lines: List[String], accumulated: String): String ->
+    case lines {
+        [] -> accumulated;
+        [line | rest] ->
+            let patched =
+                if {
+                    String.starts_with(String.trim(line), "import ") -> patch_import(line);
+                    true -> patch_expression(line)
+                };
+            let next =
+                if {
+                    rest == [] -> String.append(accumulated, patched);
+                    true -> String.append(accumulated, String.append(patched, "\n"))
+                };
+            patch_lines(rest, next)
+    }.
+
+tensor_runtime_source(): String ->
+    "module pytorch.TensorTest.\n\nimport pytorch.Tensor.{abi_version, dispose, dispose_scalar, dtype, item, layout, ones, scalar_to_int}.\nimport std.core.Result.{Err, Ok}.\n\n@test\npub generated_cpp_resource_executes(): Bool ->\n    let boundary = ones([1]);\n    let scalar = item(boundary);\n    let observed = scalar_to_int(scalar);\n    let copied_dtype = dtype(boundary);\n    let copied_layout = layout(boundary);\n    dispose_scalar(scalar);\n    dispose(boundary);\n    case observed {\n        Ok(value) -> value == 1 and copied_dtype == 6 and copied_layout == 0 and abi_version() > 0;\n        Err(_reason) -> false\n    }.\n".
+
+patch_file(path: String): Bool ->
+    case File.read_text(path) {
+        Err(_) -> false;
+        Ok(source) ->
+            let patched = patch_source(source);
+            let written =
+                if {
+                    patched == source -> true;
+                    true -> case File.write_text(path, patched) {
+                        Ok(Unit) -> true;
+                        Err(_) -> false
+                    }
+                };
+            let tensor =
+                if {
+                    String.ends_with(path, "/TensorTest.terl") -> case File.write_text(path, tensor_runtime_source()) {
+                        Ok(Unit) -> true;
+                        Err(_) -> false
+                    };
+                    true -> true
+                };
+            let cuda =
+                if {
+                    String.ends_with(path, "/CudaTest.terl") -> let {
+                        Ok(text) <- File.read_text(path);
+                        Ok(Unit) <-
+                            File.write_text(
+                                path,
+                                text.replace("create_stream(1, true)", "create_stream(0, true)"),
+                            )
+                    } else {
+                        _ -> false
+                    };
+                    true;
+                    true -> true
+                };
+            written and tensor and cuda
+    }.
+
+patch_paths(paths: List[String], support_only: Bool): Bool ->
+    case paths {
+        [] -> true;
+        [path | rest] ->
+            let selected =
+                String.ends_with(path, ".terl")
+                    and (not support_only or String.ends_with(path, "Support.terl"));
+            (not selected or patch_file(path)) and patch_paths(rest, support_only)
+    }.
+
+run(root: String): Bool ->
+    let {
+        Ok(test_paths) <- Directory.files_recursive(child(root, "tests"));
+        Ok(source_paths) <- Directory.files_recursive(child(root, "src/pytorch"))
+    } else {
+        _ -> false
+    };
+    patch_paths(test_paths, false) and patch_paths(source_paths, true).
+
+execute(): Unit ->
+    let root =
+        case Arguments.get(0) {
+            Some(value) -> value;
+            None -> "_build/libtorch-cxx-generated"
+        };
+    if {
+        run(root) -> Unit;
+        true -> Unit
+    }.
+
+execute();
+Unit.

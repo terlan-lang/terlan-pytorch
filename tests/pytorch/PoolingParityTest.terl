@@ -1,0 +1,402 @@
+module pytorch.PoolingParityTest.
+
+import pytorch.Pooling.{adaptive_avg_pool1d, adaptive_max_pool1d, adaptive_max_pool2d, adaptive_max_pool2d_backward, adaptive_max_pool3d, adaptive_max_pool3d_backward, avg_pool1d, avg_pool2d, avg_pool2d_backward, avg_pool3d, avg_pool3d_backward, fractional_max_pool2d, fractional_max_pool2d_backward, fractional_max_pool3d, fractional_max_pool3d_backward, max_pool1d, max_pool1d_with_indices, max_pool2d, max_pool2d_with_indices, max_pool2d_with_indices_backward, max_pool3d, max_pool3d_with_indices, max_pool3d_with_indices_backward, max_unpool2d, max_unpool3d}.
+import pytorch.Shape.{reshape}.
+import pytorch.Tensor.{adaptive_avg_pool2d, arange, dispose, from_floats, item, item_float, narrow, shape, sum}.
+
+import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Reads one floating-point vector element through an owned view.
+ */
+vector_float(tensor: Tensor, index: Int): Float ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item_float(element);
+    dispose(element);
+    value.
+
+/**
+ * Reads one integer vector element through an owned view.
+ */
+vector_int(tensor: Tensor, index: Int): Int ->
+    let element = narrow(tensor, 0, index, 1);
+    let value = item(element);
+    dispose(element);
+    value.
+
+/**
+ * Proves adaptive and ordinary one-dimensional average pooling.
+ */
+@test
+pub average_pooling_matches_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 4]);
+    let adaptive = adaptive_avg_pool1d(input, [2]);
+    let ordinary = avg_pool1d(input, [2]);
+    let adaptive_values = reshape(adaptive, [2]);
+    let ordinary_values = reshape(ordinary, [2]);
+    let valid =
+        shape(adaptive) == [1, 1, 2]
+            and vector_float(adaptive_values, 0) == 1.5
+            and vector_float(adaptive_values, 1) == 3.5
+            and shape(ordinary) == [1, 1, 2]
+            and vector_float(ordinary_values, 0) == 1.5
+            and vector_float(ordinary_values, 1) == 3.5
+            and shape(input) == [1, 1, 4];
+    dispose(ordinary_values);
+    dispose(adaptive_values);
+    dispose(ordinary);
+    dispose(adaptive);
+    dispose(input);
+    valid.
+
+/**
+ * Proves two- and three-dimensional average pooling and exact backward routing.
+ */
+@test
+pub multidimensional_average_pooling_matches_libtorch(): Bool ->
+    let plane = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2]);
+    let volume = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [1, 1, 2, 2, 2]);
+    let pooled_plane = avg_pool2d(plane, [2, 2]);
+    let pooled_volume = avg_pool3d(volume, [2, 2, 2]);
+    let plane_output_gradient = from_floats([2.0], [1, 1, 1, 1]);
+    let volume_output_gradient = from_floats([4.0], [1, 1, 1, 1, 1]);
+    let plane_gradient = avg_pool2d_backward(plane_output_gradient, plane, [2, 2], [2, 2], [0, 0], false, true);
+    let volume_gradient =
+        avg_pool3d_backward(
+            volume_output_gradient,
+            volume,
+            [2, 2, 2],
+            [2, 2, 2],
+            [0, 0, 0],
+            false,
+            true,
+        );
+    let plane_gradient_total = sum(plane_gradient);
+    let volume_gradient_total = sum(volume_gradient);
+    let valid =
+        shape(pooled_plane) == [1, 1, 1, 1]
+            and item_float(pooled_plane) == 2.5
+            and shape(pooled_volume) == [1, 1, 1, 1, 1]
+            and item_float(pooled_volume) == 4.5
+            and shape(plane_gradient) == [1, 1, 2, 2]
+            and item_float(plane_gradient_total) == 2.0
+            and shape(volume_gradient) == [1, 1, 2, 2, 2]
+            and item_float(volume_gradient_total) == 4.0
+            and shape(plane) == [1, 1, 2, 2]
+            and shape(volume) == [1, 1, 2, 2, 2];
+    dispose(volume_gradient_total);
+    dispose(plane_gradient_total);
+    dispose(volume_gradient);
+    dispose(plane_gradient);
+    dispose(volume_output_gradient);
+    dispose(plane_output_gradient);
+    dispose(pooled_volume);
+    dispose(pooled_plane);
+    dispose(volume);
+    dispose(plane);
+    valid.
+
+/**
+ * Proves default-stride maximum pooling in one, two, and three dimensions.
+ */
+@test
+pub maximum_pooling_dimensions_match_libtorch(): Bool ->
+    let line = from_floats([1.0, 3.0, 2.0, 4.0], [1, 1, 4]);
+    let plane = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2]);
+    let volume = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [1, 1, 2, 2, 2]);
+    let pooled_line = max_pool1d(line, [2]);
+    let pooled_plane = max_pool2d(plane, [2, 2]);
+    let pooled_volume = max_pool3d(volume, [2, 2, 2]);
+    let line_values = reshape(pooled_line, [2]);
+    let valid =
+        shape(pooled_line) == [1, 1, 2]
+            and vector_float(line_values, 0) == 3.0
+            and vector_float(line_values, 1) == 4.0
+            and shape(pooled_plane) == [1, 1, 1, 1]
+            and item_float(pooled_plane) == 4.0
+            and shape(pooled_volume) == [1, 1, 1, 1, 1]
+            and item_float(pooled_volume) == 8.0
+            and shape(line) == [1, 1, 4]
+            and shape(plane) == [1, 1, 2, 2]
+            and shape(volume) == [1, 1, 2, 2, 2];
+    dispose(line_values);
+    dispose(pooled_volume);
+    dispose(pooled_plane);
+    dispose(pooled_line);
+    dispose(volume);
+    dispose(plane);
+    dispose(line);
+    valid.
+
+/**
+ * Proves indexed maximum pooling values and flattened source indices.
+ */
+@test
+pub indexed_maximum_pooling_matches_libtorch(): Bool ->
+    let line = from_floats([1.0, 3.0, 2.0, 4.0], [1, 1, 4]);
+    let plane = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2]);
+    let volume = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [1, 1, 2, 2, 2]);
+    let {line_values, line_indices} = max_pool1d_with_indices(line, [2]);
+    let {plane_values, plane_indices} = max_pool2d_with_indices(plane, [2, 2]);
+    let {volume_values, volume_indices} = max_pool3d_with_indices(volume, [2, 2, 2]);
+    let flat_line_values = reshape(line_values, [2]);
+    let flat_line_indices = reshape(line_indices, [2]);
+    let valid =
+        shape(line_values) == [1, 1, 2]
+            and vector_float(flat_line_values, 0) == 3.0
+            and vector_float(flat_line_values, 1) == 4.0
+            and vector_int(flat_line_indices, 0) == 1
+            and vector_int(flat_line_indices, 1) == 3
+            and shape(plane_values) == [1, 1, 1, 1]
+            and item_float(plane_values) == 4.0
+            and item(plane_indices) == 3
+            and shape(volume_values) == [1, 1, 1, 1, 1]
+            and item_float(volume_values) == 8.0
+            and item(volume_indices) == 7;
+    dispose(flat_line_indices);
+    dispose(flat_line_values);
+    dispose(volume_indices);
+    dispose(volume_values);
+    dispose(plane_indices);
+    dispose(plane_values);
+    dispose(line_indices);
+    dispose(line_values);
+    dispose(volume);
+    dispose(plane);
+    dispose(line);
+    valid.
+
+/**
+ * Proves adaptive maximum pooling values and source indices in every spatial rank.
+ */
+@test
+pub adaptive_maximum_pooling_matches_libtorch(): Bool ->
+    let line = from_floats([1.0, 3.0, 2.0, 4.0], [1, 1, 4]);
+    let plane = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2]);
+    let volume = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [1, 1, 2, 2, 2]);
+    let {line_values, line_indices} = adaptive_max_pool1d(line, [2]);
+    let {plane_values, plane_indices} = adaptive_max_pool2d(plane, [1, 1]);
+    let {volume_values, volume_indices} = adaptive_max_pool3d(volume, [1, 1, 1]);
+    let flat_line_values = reshape(line_values, [2]);
+    let flat_line_indices = reshape(line_indices, [2]);
+    let valid =
+        shape(line_values) == [1, 1, 2]
+            and vector_float(flat_line_values, 0) == 3.0
+            and vector_float(flat_line_values, 1) == 4.0
+            and vector_int(flat_line_indices, 0) == 1
+            and vector_int(flat_line_indices, 1) == 3
+            and shape(plane_values) == [1, 1, 1, 1]
+            and item_float(plane_values) == 4.0
+            and item(plane_indices) == 3
+            and shape(volume_values) == [1, 1, 1, 1, 1]
+            and item_float(volume_values) == 8.0
+            and item(volume_indices) == 7;
+    dispose(flat_line_indices);
+    dispose(flat_line_values);
+    dispose(volume_indices);
+    dispose(volume_values);
+    dispose(plane_indices);
+    dispose(plane_values);
+    dispose(line_indices);
+    dispose(line_values);
+    dispose(volume);
+    dispose(plane);
+    dispose(line);
+    valid.
+
+/**
+ * Proves deterministic fractional pooling values, indices, and caller ownership.
+ */
+@test
+pub fractional_maximum_pooling_matches_libtorch(): Bool ->
+    let plane = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0], [1, 1, 3, 3]);
+    let plane_samples = from_floats([0.5, 0.5], [1, 1, 2]);
+    let volume_source = arange(1.0, 65.0, 1.0, DType.FLOAT64);
+    let volume = reshape(volume_source, [1, 1, 4, 4, 4]);
+    let volume_samples = from_floats([0.5, 0.5, 0.5], [1, 1, 3]);
+    let {plane_values, plane_indices} = fractional_max_pool2d(plane, [2, 2], [2, 2], plane_samples);
+    let {volume_values, volume_indices} = fractional_max_pool3d(volume, [2, 2, 2], [2, 2, 2], volume_samples);
+    let flat_plane_values = reshape(plane_values, [4]);
+    let flat_plane_indices = reshape(plane_indices, [4]);
+    let flat_volume_values = reshape(volume_values, [8]);
+    let flat_volume_indices = reshape(volume_indices, [8]);
+    let valid =
+        shape(plane_values) == [1, 1, 2, 2]
+            and vector_float(flat_plane_values, 0) == 5.0
+            and vector_float(flat_plane_values, 3) == 9.0
+            and vector_int(flat_plane_indices, 0) == 4
+            and vector_int(flat_plane_indices, 3) == 8
+            and shape(volume_values) == [1, 1, 2, 2, 2]
+            and vector_float(flat_volume_values, 0) == 22.0
+            and vector_float(flat_volume_values, 7) == 64.0
+            and vector_int(flat_volume_indices, 0) == 21
+            and vector_int(flat_volume_indices, 7) == 63
+            and shape(plane) == [1, 1, 3, 3]
+            and shape(plane_samples) == [1, 1, 2]
+            and shape(volume) == [1, 1, 4, 4, 4]
+            and shape(volume_samples) == [1, 1, 3];
+    dispose(flat_volume_indices);
+    dispose(flat_volume_values);
+    dispose(flat_plane_indices);
+    dispose(flat_plane_values);
+    dispose(volume_indices);
+    dispose(volume_values);
+    dispose(plane_indices);
+    dispose(plane_values);
+    dispose(volume_samples);
+    dispose(volume);
+    dispose(volume_source);
+    dispose(plane_samples);
+    dispose(plane);
+    valid.
+
+/**
+ * Proves adaptive maximum-pool gradients return to indexed source positions.
+ */
+@test
+pub adaptive_maximum_pooling_backward_matches_libtorch(): Bool ->
+    let plane = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2]);
+    let volume = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [1, 1, 2, 2, 2]);
+    let {plane_values, plane_indices} = adaptive_max_pool2d(plane, [1, 1]);
+    let {volume_values, volume_indices} = adaptive_max_pool3d(volume, [1, 1, 1]);
+    let plane_output_gradient = from_floats([2.0], [1, 1, 1, 1]);
+    let volume_output_gradient = from_floats([3.0], [1, 1, 1, 1, 1]);
+    let plane_gradient = adaptive_max_pool2d_backward(plane_output_gradient, plane, plane_indices);
+    let volume_gradient = adaptive_max_pool3d_backward(volume_output_gradient, volume, volume_indices);
+    let plane_gradient_total = sum(plane_gradient);
+    let volume_gradient_total = sum(volume_gradient);
+    let valid =
+        shape(plane_gradient) == [1, 1, 2, 2]
+            and item_float(plane_gradient_total) == 2.0
+            and shape(volume_gradient) == [1, 1, 2, 2, 2]
+            and item_float(volume_gradient_total) == 3.0
+            and shape(plane) == [1, 1, 2, 2]
+            and shape(volume) == [1, 1, 2, 2, 2];
+    dispose(volume_gradient_total);
+    dispose(plane_gradient_total);
+    dispose(volume_gradient);
+    dispose(plane_gradient);
+    dispose(volume_output_gradient);
+    dispose(plane_output_gradient);
+    dispose(volume_indices);
+    dispose(volume_values);
+    dispose(plane_indices);
+    dispose(plane_values);
+    dispose(volume);
+    dispose(plane);
+    valid.
+
+/**
+ * Proves indexed maximum-pool backward routing and sparse unpool reconstruction.
+ */
+@test
+pub indexed_backward_and_unpool_match_libtorch(): Bool ->
+    let plane = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2]);
+    let volume = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], [1, 1, 2, 2, 2]);
+    let {plane_values, plane_indices} = max_pool2d_with_indices(plane, [2, 2]);
+    let {volume_values, volume_indices} = max_pool3d_with_indices(volume, [2, 2, 2]);
+    let plane_output_gradient = from_floats([1.0], [1, 1, 1, 1]);
+    let volume_output_gradient = from_floats([1.0], [1, 1, 1, 1, 1]);
+    let plane_gradient =
+        max_pool2d_with_indices_backward(
+            plane_output_gradient,
+            plane,
+            [2, 2],
+            [2, 2],
+            [0, 0],
+            [1, 1],
+            false,
+            plane_indices,
+        );
+    let volume_gradient =
+        max_pool3d_with_indices_backward(
+            volume_output_gradient,
+            volume,
+            [2, 2, 2],
+            [2, 2, 2],
+            [0, 0, 0],
+            [1, 1, 1],
+            false,
+            volume_indices,
+        );
+    let unpooled_plane = max_unpool2d(plane_values, plane_indices, [2, 2]);
+    let unpooled_volume = max_unpool3d(volume_values, volume_indices, [2, 2, 2], [2, 2, 2], [0, 0, 0]);
+    let plane_gradient_total = sum(plane_gradient);
+    let volume_gradient_total = sum(volume_gradient);
+    let unpooled_plane_total = sum(unpooled_plane);
+    let unpooled_volume_total = sum(unpooled_volume);
+    let valid =
+        shape(plane_gradient) == [1, 1, 2, 2]
+            and item_float(plane_gradient_total) == 1.0
+            and shape(volume_gradient) == [1, 1, 2, 2, 2]
+            and item_float(volume_gradient_total) == 1.0
+            and shape(unpooled_plane) == [1, 1, 2, 2]
+            and item_float(unpooled_plane_total) == 4.0
+            and shape(unpooled_volume) == [1, 1, 2, 2, 2]
+            and item_float(unpooled_volume_total) == 8.0;
+    dispose(unpooled_volume_total);
+    dispose(unpooled_plane_total);
+    dispose(volume_gradient_total);
+    dispose(plane_gradient_total);
+    dispose(unpooled_volume);
+    dispose(unpooled_plane);
+    dispose(volume_gradient);
+    dispose(plane_gradient);
+    dispose(volume_output_gradient);
+    dispose(plane_output_gradient);
+    dispose(volume_indices);
+    dispose(volume_values);
+    dispose(plane_indices);
+    dispose(plane_values);
+    dispose(volume);
+    dispose(plane);
+    valid.
+
+/**
+ * Proves deterministic fractional-pool gradients in two and three dimensions.
+ */
+@test
+pub fractional_maximum_pooling_backward_matches_libtorch(): Bool ->
+    let plane = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0], [1, 1, 3, 3]);
+    let plane_samples = from_floats([0.5, 0.5], [1, 1, 2]);
+    let volume_source = arange(1.0, 65.0, 1.0, DType.FLOAT64);
+    let volume = reshape(volume_source, [1, 1, 4, 4, 4]);
+    let volume_samples = from_floats([0.5, 0.5, 0.5], [1, 1, 3]);
+    let {plane_values, plane_indices} = fractional_max_pool2d(plane, [2, 2], [2, 2], plane_samples);
+    let {volume_values, volume_indices} = fractional_max_pool3d(volume, [2, 2, 2], [2, 2, 2], volume_samples);
+    let plane_output_gradient = from_floats([1.0, 1.0, 1.0, 1.0], [1, 1, 2, 2]);
+    let volume_output_gradient = from_floats([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], [1, 1, 2, 2, 2]);
+    let plane_gradient = fractional_max_pool2d_backward(plane_output_gradient, plane, [2, 2], [2, 2], plane_indices);
+    let volume_gradient =
+        fractional_max_pool3d_backward(
+            volume_output_gradient,
+            volume,
+            [2, 2, 2],
+            [2, 2, 2],
+            volume_indices,
+        );
+    let plane_gradient_total = sum(plane_gradient);
+    let volume_gradient_total = sum(volume_gradient);
+    let valid =
+        shape(plane_gradient) == [1, 1, 3, 3]
+            and item_float(plane_gradient_total) == 4.0
+            and shape(volume_gradient) == [1, 1, 4, 4, 4]
+            and item_float(volume_gradient_total) == 8.0
+            and shape(plane) == [1, 1, 3, 3]
+            and shape(volume) == [1, 1, 4, 4, 4];
+    dispose(volume_gradient_total);
+    dispose(plane_gradient_total);
+    dispose(volume_gradient);
+    dispose(plane_gradient);
+    dispose(volume_output_gradient);
+    dispose(plane_output_gradient);
+    dispose(volume_indices);
+    dispose(volume_values);
+    dispose(plane_indices);
+    dispose(plane_values);
+    dispose(volume_samples);
+    dispose(volume);
+    dispose(volume_source);
+    dispose(plane_samples);
+    dispose(plane);
+    valid.

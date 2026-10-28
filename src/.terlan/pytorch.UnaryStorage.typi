@@ -1,0 +1,627 @@
+//! Retained-output and in-place unary tensor operations.
+
+module pytorch.UnaryStorage.
+
+/// Mutates retained tensor storage with elementwise abs.
+
+pub abs_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise abs result into retained output storage.
+
+pub abs_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through the exact absolute alias.
+
+pub absolute_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact absolute alias result into retained output storage.
+
+pub absolute_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise acos.
+
+pub acos_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise acos result into retained output storage.
+
+pub acos_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise acosh.
+
+pub acosh_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise acosh result into retained output storage.
+
+pub acosh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes an explicit alias copy into retained output storage.
+
+pub alias_copy_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact all all out result into retained output storage.
+
+pub all_all_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes elementwise phase angles into retained output storage.
+
+pub angle_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact any all out result into retained output storage.
+
+pub any_all_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through the exact arccos alias.
+
+pub arccos_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact arccos alias result into retained output storage.
+
+pub arccos_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through the exact arccosh alias.
+
+pub arccosh_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact arccosh alias result into retained output storage.
+
+pub arccosh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through the exact arcsin alias.
+
+pub arcsin_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact arcsin alias result into retained output storage.
+
+pub arcsin_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through the exact arcsinh alias.
+
+pub arcsinh_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact arcsinh alias result into retained output storage.
+
+pub arcsinh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through the exact arctan alias.
+
+pub arctan_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact arctan alias result into retained output storage.
+
+pub arctan_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage through the exact arctanh alias.
+
+pub arctanh_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact arctanh alias result into retained output storage.
+
+pub arctanh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise asin.
+
+pub asin_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise asin result into retained output storage.
+
+pub asin_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise asinh.
+
+pub asinh_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise asinh result into retained output storage.
+
+pub asinh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise atan.
+
+pub atan_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise atan result into retained output storage.
+
+pub atan_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise atanh.
+
+pub atanh_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise atanh result into retained output storage.
+
+pub atanh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise bitwise_not.
+
+pub bitwise_not_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise bitwise_not result into retained output storage.
+
+pub bitwise_not_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise ceil.
+
+pub ceil_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise ceil result into retained output storage.
+
+pub ceil_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Computes physical conjugates in place.
+
+pub conj_physical_in_place(tensor: Tensor): Unit.
+
+/// Writes physical conjugates into retained output storage.
+
+pub conj_physical_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise cos.
+
+pub cos_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise cos result into retained output storage.
+
+pub cos_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise cosh.
+
+pub cosh_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise cosh result into retained output storage.
+
+pub cosh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise deg2rad.
+
+pub deg2rad_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise deg2rad result into retained output storage.
+
+pub deg2rad_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes a detached copy into retained output storage.
+
+pub detach_copy_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Detaches retained tensor storage from its autograd graph in place.
+
+pub detach_in_place(tensor: Tensor): Unit.
+
+/// Computes elementwise digamma values in place.
+
+pub digamma_in_place(tensor: Tensor): Unit.
+
+/// Writes elementwise digamma values into retained output storage.
+
+pub digamma_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise erf.
+
+pub erf_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise erf result into retained output storage.
+
+pub erf_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise erfc.
+
+pub erfc_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise erfc result into retained output storage.
+
+pub erfc_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise erfinv.
+
+pub erfinv_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise erfinv result into retained output storage.
+
+pub erfinv_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise exp2.
+
+pub exp2_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise exp2 result into retained output storage.
+
+pub exp2_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Computes elementwise exponentials in place.
+
+pub exp_in_place(tensor: Tensor): Unit.
+
+/// Writes elementwise exponentials into retained output storage.
+
+pub exp_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise expm1.
+
+pub expm1_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise expm1 result into retained output storage.
+
+pub expm1_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Truncates values toward zero in place.
+
+pub fix_in_place(tensor: Tensor): Unit.
+
+/// Writes elementwise truncation toward zero into retained output storage.
+
+pub fix_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise floor.
+
+pub floor_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise floor result into retained output storage.
+
+pub floor_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise frac.
+
+pub frac_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise frac result into retained output storage.
+
+pub frac_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes mantissa and exponent decomposition into retained output storage.
+
+pub frexp_out(mantissa: Tensor, exponent: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact hardsigmoid_backward result into retained gradient storage.
+
+pub hardsigmoid_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise hardsigmoid.
+
+pub hardsigmoid_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise hardsigmoid result into retained output storage.
+
+pub hardsigmoid_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact hardswish_backward result into retained gradient storage.
+
+pub hardswish_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise hardswish.
+
+pub hardswish_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise hardswish result into retained output storage.
+
+pub hardswish_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Computes the modified Bessel function I0 in place.
+
+pub i0_in_place(tensor: Tensor): Unit.
+
+/// Writes the modified Bessel function I0 into retained output storage.
+
+pub i0_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes a matrix inverse into retained output storage.
+
+pub inverse_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact isinf out result into retained output storage.
+
+pub isinf_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact isnan out result into retained output storage.
+
+pub isnan_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact isneginf out result into retained output storage.
+
+pub isneginf_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact isposinf out result into retained output storage.
+
+pub isposinf_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Computes elementwise log-gamma values in place.
+
+pub lgamma_in_place(tensor: Tensor): Unit.
+
+/// Writes elementwise log-gamma values into retained output storage.
+
+pub lgamma_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes a fresh lifted copy into retained output storage.
+
+pub lift_fresh_copy_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes a lifted tensor into retained output storage.
+
+pub lift_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise log10.
+
+pub log10_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise log10 result into retained output storage.
+
+pub log10_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise log1p.
+
+pub log1p_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise log1p result into retained output storage.
+
+pub log1p_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise log2.
+
+pub log2_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise log2 result into retained output storage.
+
+pub log2_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Computes elementwise natural logarithms in place.
+
+pub log_in_place(tensor: Tensor): Unit.
+
+/// Writes elementwise natural logarithms into retained output storage.
+
+pub log_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes elementwise log-sigmoid values into retained output storage.
+
+pub log_sigmoid_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise logical_not.
+
+pub logical_not_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise logical_not result into retained output storage.
+
+pub logical_not_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact max unary out result into retained output storage.
+
+pub max_unary_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact median out result into retained output storage.
+
+pub median_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact min unary out result into retained output storage.
+
+pub min_unary_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise mish.
+
+pub mish_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise mish result into retained output storage.
+
+pub mish_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the ascending last-dimension sort into retained output storage.
+
+pub msort_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Negates every element in place through the exact negation operation.
+
+pub neg_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact negation result into retained output storage.
+
+pub neg_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Negates every element in place through the exact negative alias.
+
+pub negative_in_place(tensor: Tensor): Unit.
+
+/// Writes the exact negative alias result into retained output storage.
+
+pub negative_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact nonzero out result into retained output storage.
+
+pub nonzero_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise rad2deg.
+
+pub rad2deg_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise rad2deg result into retained output storage.
+
+pub rad2deg_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise reciprocal.
+
+pub reciprocal_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise reciprocal result into retained output storage.
+
+pub reciprocal_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise relu6.
+
+pub relu6_in_place(tensor: Tensor): Unit.
+
+/// Applies rectified linear activation in place.
+
+pub relu_in_place(tensor: Tensor): Unit.
+
+/// Writes rectified linear values into retained output storage.
+
+pub relu_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Rounds tensor values to the requested decimal precision.
+
+pub round_decimals(tensor: Tensor, decimals: Int): Tensor.
+
+/// Rounds retained tensor storage to the requested decimal precision.
+
+pub round_decimals_in_place(tensor: Tensor, decimals: Int): Unit.
+
+/// Writes decimal rounding into retained output storage.
+
+pub round_decimals_out(output: Tensor, tensor: Tensor, decimals: Int): Unit.
+
+/// Mutates retained tensor storage with elementwise round.
+
+pub round_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise round result into retained output storage.
+
+pub round_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise rsqrt.
+
+pub rsqrt_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise rsqrt result into retained output storage.
+
+pub rsqrt_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise selu.
+
+pub selu_in_place(tensor: Tensor): Unit.
+
+/// Computes complex-aware signs in place.
+
+pub sgn_in_place(tensor: Tensor): Unit.
+
+/// Writes elementwise complex-aware signs into retained output storage.
+
+pub sgn_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact sigmoid_backward result into retained gradient storage.
+
+pub sigmoid_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise sigmoid.
+
+pub sigmoid_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise sigmoid result into retained output storage.
+
+pub sigmoid_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise sign.
+
+pub sign_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise sign result into retained output storage.
+
+pub sign_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact signbit out result into retained output storage.
+
+pub signbit_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact silu_backward result into retained gradient storage.
+
+pub silu_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise silu.
+
+pub silu_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise silu result into retained output storage.
+
+pub silu_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise sin.
+
+pub sin_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise sin result into retained output storage.
+
+pub sin_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise sinc.
+
+pub sinc_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise sinc result into retained output storage.
+
+pub sinc_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise sinh.
+
+pub sinh_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise sinh result into retained output storage.
+
+pub sinh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Computes elementwise square roots in place.
+
+pub sqrt_in_place(tensor: Tensor): Unit.
+
+/// Writes elementwise square roots into retained output storage.
+
+pub sqrt_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise square.
+
+pub square_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise square result into retained output storage.
+
+pub square_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Removes every singleton dimension from retained tensor storage in place.
+
+pub squeeze_in_place(tensor: Tensor): Unit.
+
+/// Writes a copied matrix transpose into retained output storage.
+
+pub t_copy_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Transposes a tensor with at most two dimensions in place.
+
+pub t_in_place(tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise tan.
+
+pub tan_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise tan result into retained output storage.
+
+pub tan_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact tanh_backward result into retained gradient storage.
+
+pub tanh_backward_out(output: Tensor, gradient: Tensor, input: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise tanh.
+
+pub tanh_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise tanh result into retained output storage.
+
+pub tanh_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes the exact trace out result into retained output storage.
+
+pub trace_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Mutates retained tensor storage with elementwise trunc.
+
+pub trunc_in_place(tensor: Tensor): Unit.
+
+/// Writes the elementwise trunc result into retained output storage.
+
+pub trunc_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes a copied complex view into retained output storage.
+
+pub view_as_complex_copy_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Writes a copied real view into retained output storage.
+
+pub view_as_real_copy_out(output: Tensor, tensor: Tensor): Unit.
+
+/// Fills retained tensor storage with zeros in place.
+
+pub zero_in_place(tensor: Tensor): Unit.

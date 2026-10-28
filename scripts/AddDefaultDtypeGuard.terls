@@ -1,0 +1,506 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Extends the generated CXX manifest with the owned default-dtype guard.
+ *
+ * This is intentionally a Terlan-native manifest transformation: the JSON
+ * contract is parsed, mutated, and rendered through std.data.Json rather than
+ * through a host-language helper.
+ */
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{Int, String, Unit}.
+import std.data.Json.
+import std.io.Console.eprintln.
+import std.io.File.
+import std.system.Arguments.
+
+import type std.core.Option.
+
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[terlan_pytorch_manifest]: ", message));
+    false.
+
+bool_type(): Json ->
+    Json.object()
+        .put("spelling", Json.string("bool"))
+        .put("canonical", Json.string("bool"))
+        .put("is_const", Json.bool(false))
+        .put("pointer_depth", Json.int(0))
+        .put("reference", Json.string("none"))
+        .put("function_pointer", Json.bool(false))
+        .put("template_dependent", Json.bool(false))
+        .put("enum_type", Json.bool(false))
+        .put("default", Json.null()).
+
+long_type(): Json ->
+    Json.object()
+        .put("spelling", Json.string("int64_t"))
+        .put("canonical", Json.string("long"))
+        .put("is_const", Json.bool(false))
+        .put("pointer_depth", Json.int(0))
+        .put("reference", Json.string("none"))
+        .put("function_pointer", Json.bool(false))
+        .put("template_dependent", Json.bool(false))
+        .put("enum_type", Json.bool(false)).
+
+empty_array(): Json ->
+    Json.array().
+
+record_symbol(): Json ->
+    Json.object()
+        .put("id", Json.string("record:at::native::DefaultDtypeGuard"))
+        .put("cpp_name", Json.string("DefaultDtypeGuard"))
+        .put(
+            "source",
+            Json.object()
+                .put("path", Json.string("bindings/cxx/libtorch_bindings.hpp"))
+                .put("line", Json.int(1870))
+                .put("column", Json.int(8)),
+        )
+        .put("kind", Json.string("record"))
+        .put("documentation", Json.string("Owned default-dtype scope guard."))
+        .put("annotations", empty_array())
+        .put("overload_set", Json.string("at::native::DefaultDtypeGuard"))
+        .put("receiver", Json.null())
+        .put("receiver_mutable", Json.bool(false))
+        .put("returns", Json.null())
+        .put("parameters", empty_array())
+        .put("noexcept", Json.bool(false))
+        .put("template_parameters", empty_array())
+        .put("template_arguments", empty_array())
+        .put("overload_candidates", Json.int(0))
+        .put("variadic", Json.bool(false))
+        .put("inheritance", empty_array())
+        .put("public_inheritance", empty_array())
+        .put("fields", empty_array())
+        .put("enum_values", empty_array())
+        .put("direct_calls", empty_array()).
+
+function_symbol(): Json ->
+    let parameter =
+        Json.object()
+            .put("name", Json.string("dtype"))
+            .put("ty", long_type())
+            .put("direction", Json.string("input"))
+            .put("default", Json.null());
+    Json.object()
+        .put("id", Json.string("function:at::native::default_dtype_enter_exact(long)"))
+        .put("cpp_name", Json.string("default_dtype_enter_exact"))
+        .put(
+            "source",
+            Json.object()
+                .put("path", Json.string("bindings/cxx/libtorch_bindings.hpp"))
+                .put("line", Json.int(1877))
+                .put("column", Json.int(1)),
+        )
+        .put("kind", Json.string("function"))
+        .put("documentation", Json.string("Package-owned exact default-dtype scope constructor."))
+        .put("annotations", empty_array())
+        .put("overload_set", Json.string("at::native::default_dtype_enter_exact"))
+        .put("receiver", Json.null())
+        .put("receiver_mutable", Json.bool(false))
+        .put(
+            "returns",
+            Json.object()
+                .put("spelling", Json.string("std::unique_ptr<DefaultDtypeGuard>"))
+                .put("canonical", Json.string("std::unique_ptr<at::native::DefaultDtypeGuard>"))
+                .put("is_const", Json.bool(false))
+                .put("pointer_depth", Json.int(0))
+                .put("reference", Json.string("none"))
+                .put("function_pointer", Json.bool(false))
+                .put("template_dependent", Json.bool(false))
+                .put("enum_type", Json.bool(false)),
+        )
+        .put("parameters", Json.array().push(parameter))
+        .put("noexcept", Json.bool(false))
+        .put("template_parameters", empty_array())
+        .put("template_arguments", empty_array())
+        .put("overload_candidates", Json.int(1))
+        .put("variadic", Json.bool(false))
+        .put("inheritance", empty_array())
+        .put("public_inheritance", empty_array())
+        .put("fields", empty_array())
+        .put("enum_values", empty_array())
+        .put("direct_calls", empty_array()).
+
+mapping_record(): Json ->
+    Json.object()
+        .put("symbol", Json.string("record:at::native::DefaultDtypeGuard"))
+        .put("disposition", Json.string("bind"))
+        .put("ownership", Json.string("unique"))
+        .put("thread_safety", Json.string("thread_confined"))
+        .put("rejection", Json.null())
+        .put("exception", Json.null()).
+
+mapping_function(): Json ->
+    Json.object()
+        .put("symbol", Json.string("function:at::native::default_dtype_enter_exact(long)"))
+        .put("disposition", Json.string("bind"))
+        .put("ownership", Json.string("unique"))
+        .put("thread_safety", Json.string("thread_confined"))
+        .put("rejection", Json.null())
+        .put(
+            "exception",
+            Json.object()
+                .put("error_code", Json.string("pytorch_operation_failed"))
+                .put("message", Json.string("LibTorch default-dtype scope construction failed.")),
+        ).
+
+module_type(): Json ->
+    Json.object()
+        .put("name", Json.string("DefaultDtypeGuard"))
+        .put("cpp_symbol", Json.string("record:at::native::DefaultDtypeGuard"))
+        .put("kind", Json.string("opaque_resource"))
+        .put("fields", empty_array())
+        .put("variants", empty_array())
+        .put("stringifier", Json.null())
+        .put("documentation", Json.string("Owned default-dtype scope guard.")).
+
+module_enter(): Json ->
+    Json.object()
+        .put("name", Json.string("enter_default_dtype"))
+        .put("operation", Json.string("pytorch.backend_availability.default_dtype_enter"))
+        .put("cpp_symbol", Json.string("function:at::native::default_dtype_enter_exact(long)"))
+        .put("role", Json.string("constructor"))
+        .put(
+            "args",
+            Json.array()
+                .push(
+                    Json.object()
+                        .put("name", Json.string("dtype"))
+                        .put("ty", Json.string("Int"))
+                        .put("fields", empty_array()),
+                ),
+        )
+        .put("projections", empty_array())
+        .put("fallible", Json.null())
+        .put("returns", Json.string("DefaultDtypeGuard"))
+        .put("blocking", Json.string("blocking"))
+        .put("resource", Json.string("opaque_handle"))
+        .put("documentation", Json.string("Enters the default dtype for the guard lifetime.")).
+
+module_dispose(): Json ->
+    Json.object()
+        .put("name", Json.string("dispose_default_dtype"))
+        .put("operation", Json.string("pytorch.backend_availability.default_dtype_dispose"))
+        .put("cpp_symbol", Json.null())
+        .put("role", Json.string("dispose"))
+        .put(
+            "args",
+            Json.array()
+                .push(
+                    Json.object()
+                        .put("name", Json.string("guard"))
+                        .put("ty", Json.string("DefaultDtypeGuard"))
+                        .put("fields", empty_array()),
+                ),
+        )
+        .put("projections", empty_array())
+        .put("fallible", Json.null())
+        .put("returns", Json.string("Unit"))
+        .put("blocking", Json.string("fast"))
+        .put("resource", Json.string("dispose_handle"))
+        .put("documentation", Json.string("Restores default dtype and releases the guard.")).
+
+append_if_missing(array: Json, item: Json, marker: String): Json ->
+    let count =
+        case array.length() {
+            Ok(value) -> value;
+            Err(_reason) -> 0
+        };
+    if {
+        find_marker(array, marker, 0, count) -> array;
+        true -> array.push(item)
+    }.
+
+find_marker(array: Json, marker: String, index: Int, count: Int): Bool ->
+    if {
+        index == count -> false;
+        true -> let {
+            Ok(item) <- array.at(index);
+            Ok(id) <- item.get("id");
+            Ok(value) <- id.as_string()
+        } else {
+            _ -> find_marker(array, marker, index + 1, count)
+        };
+        value == marker or find_marker(array, marker, index + 1, count)
+    }.
+
+function_name_present(functions: Json, name: String, index: Int, count: Int): Bool ->
+    if {
+        index == count -> false;
+        true -> let {
+            Ok(function_value) <- functions.at(index);
+            Ok(function_name) <- function_value.get("name");
+            Ok(value) <- function_name.as_string()
+        } else {
+            _ -> function_name_present(functions, name, index + 1, count)
+        };
+        value == name or function_name_present(functions, name, index + 1, count)
+    }.
+
+append_mapping_if_missing(array: Json, item: Json, marker: String): Json ->
+    let count =
+        case array.length() {
+            Ok(value) -> value;
+            Err(_reason) -> 0
+        };
+    if {
+        find_mapping_marker(array, marker, 0, count) -> array;
+        true -> array.push(item)
+    }.
+
+find_mapping_marker(array: Json, marker: String, index: Int, count: Int): Bool ->
+    if {
+        index == count -> false;
+        true -> let {
+            Ok(item) <- array.at(index);
+            Ok(symbol) <- item.get("symbol");
+            Ok(value) <- symbol.as_string()
+        } else {
+            _ -> find_mapping_marker(array, marker, index + 1, count)
+        };
+        value == marker or find_mapping_marker(array, marker, index + 1, count)
+    }.
+
+dedupe_marker(
+    array: Json,
+    field: String,
+    marker: String,
+    index: Int,
+    count: Int,
+    seen: Bool,
+    output: Json,
+): Json ->
+    if {
+        index == count -> output;
+        true -> case array.at(index) {
+            Err(_reason) -> dedupe_marker(array, field, marker, index + 1, count, seen, output);
+            Ok(item) ->
+                let {
+                    Ok(value) <- item.get(field);
+                    Ok(text) <- value.as_string()
+                } else {
+                    _ ->
+                        dedupe_marker(
+                            array,
+                            field,
+                            marker,
+                            index + 1,
+                            count,
+                            seen,
+                            output.push(item),
+                        )
+                };
+                if {
+                    text != marker -> dedupe_marker(array, field, marker, index + 1, count, seen, output.push(item));
+                    seen -> dedupe_marker(array, field, marker, index + 1, count, seen, output);
+                    true -> dedupe_marker(array, field, marker, index + 1, count, true, output.push(item))
+                }
+        }
+    }.
+
+locate_backend(modules: Json, index: Int, count: Int): Option[Int] ->
+    if {
+        index == count -> None;
+        true -> let {
+            Ok(module_value) <- modules.at(index);
+            Ok(name) <- module_value.get("module");
+            Ok(value) <- name.as_string()
+        } else {
+            _ -> locate_backend(modules, index + 1, count)
+        };
+        if {
+            value == "pytorch.BackendAvailability" -> Some(index);
+            true -> locate_backend(modules, index + 1, count)
+        }
+    }.
+
+update_module(modules: Json, index: Int): Json ->
+    let backend_module =
+        case modules.at(index) {
+            Ok(value) -> value;
+            Err(_reason) -> Json.object()
+        };
+    let types =
+        case backend_module.get("types") {
+            Ok(value) -> value;
+            Err(_reason) -> Json.array()
+        };
+    let functions =
+        case backend_module.get("functions") {
+            Ok(value) -> value;
+            Err(_reason) -> Json.array()
+        };
+    let types_count =
+        case types.length() {
+            Ok(value) -> value;
+            Err(_reason) -> 0
+        };
+    let clean_types = dedupe_marker(types, "name", "DefaultDtypeGuard", 0, types_count, false, Json.array());
+    let function_count =
+        case functions.length() {
+            Ok(value) -> value;
+            Err(_reason) -> 0
+        };
+    let updated_functions =
+        if {
+            function_name_present(functions, "enter_default_dtype", 0, function_count) -> functions;
+            true -> functions.push(module_enter())
+        };
+    let updated_functions_count =
+        case updated_functions.length() {
+            Ok(value) -> value;
+            Err(_reason) -> 0
+        };
+    let final_functions =
+        if {
+            function_name_present(
+                updated_functions,
+                "dispose_default_dtype",
+                0,
+                updated_functions_count,
+            ) -> updated_functions;
+            true -> updated_functions.push(module_dispose())
+        };
+    let updated =
+        backend_module
+            .put("types", append_if_missing(clean_types, module_type(), "DefaultDtypeGuard"))
+            .put("functions", final_functions);
+    modules.set(index, updated).
+
+execute(path: String): Bool ->
+    case File.read_text(path) {
+        Err(_reason) -> failure("could not read libtorch-cxx.json");
+        Ok(source) ->
+            case Json.parse(source) {
+                Err(_reason) -> failure("could not parse libtorch-cxx.json");
+                Ok(document) ->
+                    let metadata =
+                        case document.get("cpp_metadata") {
+                            Ok(value) -> value;
+                            Err(_reason) -> Json.object()
+                        };
+                    let symbols =
+                        case metadata.get("symbols") {
+                            Ok(value) -> value;
+                            Err(_reason) -> Json.array()
+                        };
+                    let mapping =
+                        case document.get("mapping") {
+                            Ok(value) -> value;
+                            Err(_reason) -> Json.object()
+                        };
+                    let mapping_symbols =
+                        case mapping.get("symbols") {
+                            Ok(value) -> value;
+                            Err(_reason) -> Json.array()
+                        };
+                    let modules =
+                        case document.get("modules") {
+                            Ok(value) -> value;
+                            Err(_reason) -> Json.array()
+                        };
+                    let symbol_count =
+                        case symbols.length() {
+                            Ok(value) -> value;
+                            Err(_reason) -> 0
+                        };
+                    let clean_symbols =
+                        dedupe_marker(
+                            dedupe_marker(
+                                symbols,
+                                "id",
+                                "record:at::native::DefaultDtypeGuard",
+                                0,
+                                symbol_count,
+                                false,
+                                Json.array(),
+                            ),
+                            "id",
+                            "function:at::native::default_dtype_enter_exact(long)",
+                            0,
+                            symbol_count,
+                            false,
+                            Json.array(),
+                        );
+                    let updated_symbols =
+                        append_if_missing(
+                            append_if_missing(
+                                clean_symbols,
+                                record_symbol(),
+                                "record:at::native::DefaultDtypeGuard",
+                            ),
+                            function_symbol(),
+                            "function:at::native::default_dtype_enter_exact(long)",
+                        );
+                    let updated_metadata = metadata.put("symbols", updated_symbols);
+                    let mapping_count =
+                        case mapping_symbols.length() {
+                            Ok(value) -> value;
+                            Err(_reason) -> 0
+                        };
+                    let clean_mapping_symbols =
+                        dedupe_marker(
+                            dedupe_marker(
+                                mapping_symbols,
+                                "symbol",
+                                "record:at::native::DefaultDtypeGuard",
+                                0,
+                                mapping_count,
+                                false,
+                                Json.array(),
+                            ),
+                            "symbol",
+                            "function:at::native::default_dtype_enter_exact(long)",
+                            0,
+                            mapping_count,
+                            false,
+                            Json.array(),
+                        );
+                    let updated_mapping_symbols =
+                        append_mapping_if_missing(
+                            append_mapping_if_missing(
+                                clean_mapping_symbols,
+                                mapping_record(),
+                                "record:at::native::DefaultDtypeGuard",
+                            ),
+                            mapping_function(),
+                            "function:at::native::default_dtype_enter_exact(long)",
+                        );
+                    let updated_mapping = mapping.put("symbols", updated_mapping_symbols);
+                    let module_count =
+                        case modules.length() {
+                            Ok(value) -> value;
+                            Err(_reason) -> 0
+                        };
+                    case locate_backend(modules, 0, module_count) {
+                        None -> failure("BackendAvailability module is missing");
+                        Some(index) ->
+                            case Json.stringify_pretty(
+                                document
+                                    .put("cpp_metadata", updated_metadata)
+                                    .put("mapping", updated_mapping)
+                                    .put("modules", update_module(modules, index)),
+                            ) {
+                                Err(_reason) -> failure("could not render libtorch-cxx.json");
+                                Ok(rendered) ->
+                                    case File.write_text(path, String.append(rendered, "\n")) {
+                                        Ok(Unit) -> true;
+                                        Err(_reason) ->
+                                            failure("could not write libtorch-cxx.json")
+                                    }
+                            }
+                    }
+            }
+    }.
+
+entry(): Bool ->
+    case {Arguments.count(), Arguments.get(0)} {
+        {0, None} -> execute("libtorch-cxx.json");
+        {1, Some(path)} -> execute(path);
+        _ -> failure("usage: AddDefaultDtypeGuard.terls [manifest]")
+    }.
+
+assert(entry());
+Unit.

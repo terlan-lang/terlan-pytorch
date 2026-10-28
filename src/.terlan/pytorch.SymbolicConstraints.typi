@@ -1,0 +1,11 @@
+//! Generated CXX symbolic range constraints.
+
+module pytorch.SymbolicConstraints.
+
+/// Executes the exact frozen ATen symbolic range constraint entry point with explicit optional-bound presence.
+
+pub sym_constrain_range(scalar_is_integer: Bool, scalar_integer: Int, scalar_floating: Float, has_min: Bool, min: Int, has_max: Bool, max: Int): Unit.
+
+/// Executes the exact frozen ATen symbolic range constraint entry point with explicit optional-bound presence.
+
+pub sym_constrain_range_for_size(scalar_is_integer: Bool, scalar_integer: Int, scalar_floating: Float, has_min: Bool, min: Int, has_max: Bool, max: Int): Unit.

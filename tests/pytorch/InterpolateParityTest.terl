@@ -1,0 +1,42 @@
+/**
+ * Public interpolate parity for nearest size and bilinear scale forms.
+ */
+module pytorch.InterpolateParityTest.
+
+import pytorch.FunctionalCompletion.{interpolate, upsample, upsample_bilinear, upsample_nearest}.
+import pytorch.Tensor.{dispose, from_floats, shape}.
+
+@test
+pub interpolate_matches_size_and_scale_forms(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2]);
+    let nearest = interpolate(input, true, [4, 4], false, [], "nearest", false, false, false, false, false);
+    let bilinear =
+        interpolate(
+            input,
+            false,
+            [],
+            true,
+            [2.0, 2.0],
+            "bilinear",
+            true,
+            false,
+            false,
+            false,
+            false,
+        );
+    let legacy = upsample(input, true, [4, 4], false, [], "nearest", false, false, false, false, false);
+    let legacy_bilinear = upsample_bilinear(input, false, [], true, [2.0, 2.0]);
+    let legacy_nearest = upsample_nearest(input, true, [4, 4], false, []);
+    let valid =
+        shape(nearest) == [1, 1, 4, 4]
+            and shape(bilinear) == [1, 1, 4, 4]
+            and shape(legacy) == [1, 1, 4, 4]
+            and shape(legacy_bilinear) == [1, 1, 4, 4]
+            and shape(legacy_nearest) == [1, 1, 4, 4];
+    dispose(legacy_nearest);
+    dispose(legacy_bilinear);
+    dispose(legacy);
+    dispose(bilinear);
+    dispose(nearest);
+    dispose(input);
+    valid.

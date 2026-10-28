@@ -1,0 +1,28 @@
+/**
+ * Public Gaussian NLL parity for tensor/scalar variance and reductions.
+ */
+module pytorch.GaussianNllLossParityTest.
+
+import pytorch.FunctionalCompletion.gaussian_nll_loss.
+import pytorch.Tensor.{dispose, from_floats}.
+import pytorch.TypeRelationsNative.allclose_native.
+
+@test
+pub gaussian_nll_loss_matches_tensor_and_scalar_variance(): Bool ->
+    let input = from_floats([1.0, 2.0, 4.0, 8.0], [4]);
+    let target = from_floats([0.0, 1.0, 5.0, 7.0], [4]);
+    let variance = from_floats([1.0, 2.0, 4.0, 8.0], [4]);
+    let tensor_expected = from_floats([0.5, 0.5965735912322998, 0.8181471824645996, 1.1022207736968994], [4]);
+    let scalar_expected = from_floats([1.5155121088027954], [1]);
+    let tensor_result = gaussian_nll_loss(input, target, variance, false, 0.000001, "none".to_string());
+    let scalar_result = gaussian_nll_loss(input, target, 2.0, true, 0.000001, "mean".to_string());
+    let tensor_valid = allclose_native(tensor_result, tensor_expected, 0.000001, 0.000001, false);
+    let scalar_valid = allclose_native(scalar_result, scalar_expected, 0.000001, 0.000001, false);
+    dispose(scalar_result);
+    dispose(scalar_expected);
+    dispose(tensor_result);
+    dispose(tensor_expected);
+    dispose(variance);
+    dispose(target);
+    dispose(input);
+    tensor_valid and scalar_valid.

@@ -1,0 +1,351 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Validates a pinned CPU or CUDA LibTorch distribution.
+ */
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.Console.{eprintln, println}.
+import std.io.{File, Path}.
+import std.system.{Arguments, Environment, Process}.
+
+import type std.core.Option.
+import type std.system.Process.{EnvironmentEntry, Output}.
+
+/**
+ * Joins a parent path and one relative child.
+ */
+child(parent: String, relative: String): String ->
+    if {
+        String.ends_with(parent, "/") -> String.append(parent, relative);
+        true -> String.concat([parent, "/", relative])
+    }.
+
+/**
+ * Reports one stable LibTorch admission error.
+ */
+failure(code: String, message: String): Bool ->
+    let _printed = eprintln(String.concat(["error[", code, "]: ", message]));
+    false.
+
+/**
+ * Reads and trims one required UTF-8 file.
+ */
+read_required(path: String, code: String): Option[String] ->
+    case File.read_text(path) {
+        Ok(contents) -> Some(String.trim(contents));
+        Err(_reason) ->
+            let _reported = failure(code, String.append("missing LibTorch file: ", path));
+            None
+    }.
+
+/**
+ * Requires one regular file to exist.
+ */
+require_file(path: String, code: String, description: String): Bool ->
+    if {
+        File.exists(path) -> true;
+        code.is_empty() -> false;
+        true -> failure(code, String.append(description, path))
+    }.
+
+/**
+ * Executes one bounded host inspection command.
+ */
+run(
+    program: String,
+    arguments: List[String],
+    environment: List[EnvironmentEntry],
+): Option[Output] ->
+    let base =
+        Process.with_output_limit_bytes(
+            Process.with_timeout_ms(
+                Process.with_arguments(Process.command(program), arguments),
+                120000,
+            ),
+            16777216,
+        );
+    let request =
+        if {
+            environment == [] -> base;
+            true -> Process.with_environment(base, environment)
+        };
+    case Process.run(request) {
+        Err(reason) ->
+            let _reported = failure("terlan_pytorch_libtorch_inspection_failed", reason.message);
+            None;
+        Ok(output) ->
+            if {
+                output.status == 0 -> Some(output);
+                true -> let _reported =
+                    failure(
+                        "terlan_pytorch_libtorch_inspection_failed",
+                        String.append(output.stderr, output.stdout),
+                    );
+                None
+            }
+    }.
+
+/**
+ * Reports whether `nm` output contains one exact final symbol token.
+ */
+contains_symbol(lines: List[String], symbol: String): Bool ->
+    case lines {
+        [] -> false;
+        [line | rest] ->
+            let trimmed = String.trim(line);
+            trimmed == symbol
+                or String.ends_with(trimmed, String.append(" ", symbol))
+                or contains_symbol(rest, symbol)
+    }.
+
+/**
+ * Requires every symbol in an ordered list.
+ */
+require_symbols(output: Output, symbols: List[String], code: String, description: String): Bool ->
+    let lines = String.split(output.stdout, "\n");
+    case symbols {
+        [] -> true;
+        [symbol | rest] ->
+            if {
+                contains_symbol(lines, symbol) -> require_symbols(output, rest, code, description);
+                true -> failure(code, String.append(description, symbol))
+            }
+    }.
+
+/**
+ * Returns a parent path without depending on the caller's working directory.
+ */
+parent_path(path: String): Option[String] ->
+    let {
+        Ok(parsed) <- Path.from_string(path);
+        Some(parent) <- parsed.parent()
+    } else {
+        _ -> None
+    };
+    Some(parent.to_string()).
+
+/**
+ * Adds the repository's bundled CUDA runtime directories to ldd's search path.
+ * LibTorch's CUDA SONAMEs are intentionally resolved exactly as they are by
+ * the generated CXX build, including when the check is launched elsewhere.
+ */
+cuda_ld_library_path(root: String): String ->
+    let bundled =
+        (let {
+    Some(libtorch_parent) <- parent_path(root);
+    Some(vendor_parent) <- parent_path(libtorch_parent)
+} else {
+    _ -> ""
+};
+String.concat(
+    [
+        child(vendor_parent, "cuda-runtime/usr/lib/x86_64-linux-gnu/libcusparseLt/12"),
+        ":",
+        child(vendor_parent, "cuda-runtime/usr/lib/x86_64-linux-gnu/nvshmem/12"),
+    ],
+));
+    let libtorch = child(root, "lib");
+    let base =
+        if {
+            bundled == "" -> libtorch;
+            true -> String.concat([bundled, ":", libtorch])
+        };
+    case Environment.get("LD_LIBRARY_PATH") {
+        None -> base;
+        Some(existing) -> String.concat([base, ":", existing])
+    }.
+
+/**
+ * The active package is CXX-only.  Stable-C/AOTI exports are intentionally
+ * not part of admission: they belong to the retired compatibility target and
+ * must not constrain an otherwise valid C++ LibTorch distribution.
+ */
+required_cpu_symbols(): List[String] -> [].
+
+/**
+ * Returns CUDA stream exports required by this package.
+ */
+required_cuda_symbols(): List[String] -> [].
+
+/**
+ * Validates the selected distribution version.
+ */
+valid_version(actual: String, flavor: String): Bool ->
+    if {
+        flavor == "cpu" and actual == "2.13.0+cpu" -> true;
+        flavor == "cuda" and actual == "2.13.0+cu129" -> true;
+        flavor == "cpu" -> failure(
+            "terlan_pytorch_libtorch_version_incompatible",
+            String.concat(["unsupported LibTorch version: ", actual, "; expected 2.13.0+cpu"]),
+        );
+        flavor == "cuda" -> failure(
+            "terlan_pytorch_libtorch_version_incompatible",
+            String.concat(
+                ["unsupported CUDA LibTorch version: ", actual, "; expected 2.13.0+cu129"],
+            ),
+        );
+        true -> failure(
+            "terlan_pytorch_libtorch_flavor",
+            String.append("unsupported LibTorch flavor: ", flavor),
+        )
+    }.
+
+/**
+ * Validates the pinned upstream source/build identity used by the generated
+ * CXX metadata.  The CPU and CUDA packages intentionally share this source
+ * revision.
+ */
+valid_hash(actual: String): Bool ->
+    if {
+        actual == "cf30153c4c131c8164ee7798e5022d810682e2cb" -> true;
+        true -> failure(
+            "terlan_pytorch_libtorch_build_hash_incompatible",
+            String.concat(["unsupported LibTorch build hash: ", actual]),
+        )
+    }.
+
+/**
+ * Validates CUDA-specific exports and dynamic runtime dependencies.
+ */
+cuda_headers_available(root: String): Bool ->
+    let bundled = child(root, "include");
+    let system = "/usr/local/cuda/include";
+    let system_target = "/usr/local/cuda/targets/x86_64-linux/include";
+    require_file(child(bundled, "cuda_runtime_api.h"), "", "")
+    and require_file(child(bundled, "cuda.h"), "", "")
+        or require_file(child(system, "cuda_runtime_api.h"), "", "")
+    and require_file(child(system, "cuda.h"), "", "")
+        or require_file(child(system_target, "cuda_runtime_api.h"), "", "")
+    and require_file(child(system_target, "cuda.h"), "", "").
+
+check_cuda(root: String, cuda_library: String): Bool ->
+    let {
+        true <-
+            require_file(
+                cuda_library,
+                "terlan_pytorch_libtorch_cuda_library_missing",
+                "missing CUDA LibTorch library: ",
+            );
+        true <-
+            if {
+                cuda_headers_available(root) -> true;
+                true -> failure(
+                    "terlan_pytorch_libtorch_cuda_headers_missing",
+                    "CUDA LibTorch is present but cuda.h and cuda_runtime_api.h are unavailable",
+                )
+            };
+        Some(symbols) <- run("nm", ["-D", "--defined-only", cuda_library], []);
+        true <-
+            require_symbols(
+                symbols,
+                required_cuda_symbols(),
+                "terlan_pytorch_libtorch_cuda_symbol_missing",
+                "CUDA LibTorch does not export required symbol: ",
+            );
+        Some(dependencies) <-
+            run(
+                "ldd",
+                [cuda_library],
+                [
+                    Process.environment_entry("LC_ALL", "C"),
+                    Process.environment_entry("LD_LIBRARY_PATH", cuda_ld_library_path(root)),
+                ],
+            )
+    } else {
+        _ -> false
+    };
+    (let dependency_output = String.append(dependencies.stdout, dependencies.stderr);
+if {
+    String.contains(dependency_output, "not found") -> failure(
+        "terlan_pytorch_libtorch_cuda_runtime_dependency_missing",
+        String.append("unresolved CUDA runtime dependencies: ", dependency_output),
+    );
+    true -> true
+}).
+
+/**
+ * Validates one CPU or CUDA LibTorch distribution.
+ */
+check(root: String, flavor: String): Bool ->
+    let version_file = child(root, "build-version");
+    let hash_file = child(root, "build-hash");
+    let library = child(root, "lib/libtorch_cpu.so");
+    let cuda_library = child(root, "lib/libtorch_cuda.so");
+    let {
+        Some(actual_version) <- read_required(version_file, "terlan_pytorch_libtorch_build_version_missing");
+        true <- valid_version(actual_version, flavor);
+        Some(actual_hash) <- read_required(hash_file, "terlan_pytorch_libtorch_build_hash_missing");
+        true <- valid_hash(actual_hash);
+        true <-
+            require_file(
+                child(root, "include/ATen/ATen.h"),
+                "terlan_pytorch_libtorch_aten_header_missing",
+                "missing ATen C++ header: ",
+            );
+        true <-
+            require_file(
+                child(root, "include/torch/script.h"),
+                "terlan_pytorch_libtorch_torchscript_header_missing",
+                "missing TorchScript C++ header: ",
+            );
+        true <-
+            require_file(
+                library,
+                "terlan_pytorch_libtorch_cpu_library_missing",
+                "missing LibTorch CPU library: ",
+            );
+        true <-
+            if {
+                flavor == "cuda" -> check_cuda(root, cuda_library);
+                true -> true
+            };
+        Some(demangled) <- run("nm", ["-D", "-C", "--defined-only", library], [])
+    } else {
+        _ -> false
+    };
+    if {
+        not String.contains(demangled.stdout, "torch::jit::load(") -> failure(
+            "terlan_pytorch_libtorch_torchscript_load_missing",
+            "LibTorch does not export torch::jit::load",
+        );
+        flavor == "cuda" -> let _printed =
+            println(
+                String.concat(
+                    [
+                        "LibTorch ",
+                        actual_version,
+                        " exposes the CXX, TorchScript, and CUDA runtime prerequisites.",
+                    ],
+                ),
+            );
+        true;
+        true -> let _printed =
+            println(
+                String.concat(
+                    [
+                        "LibTorch ",
+                        actual_version,
+                        " exposes the CXX and copied TorchScript prerequisites.",
+                    ],
+                ),
+            );
+        true
+    }.
+
+/**
+ * Parses the distribution root and optional flavor.
+ */
+entry(): Bool ->
+    case {Arguments.get(0), Arguments.get(1), Arguments.get(2)} {
+        {Some(root), None, None} -> check(root, "cpu");
+        {Some(root), Some(flavor), None} -> check(root, flavor);
+        _ ->
+            failure(
+                "terlan_pytorch_libtorch_arguments",
+                "usage: CheckLibTorch.terls <libtorch-root> [cpu|cuda]",
+            )
+    }.
+
+assert(entry());
+Unit.

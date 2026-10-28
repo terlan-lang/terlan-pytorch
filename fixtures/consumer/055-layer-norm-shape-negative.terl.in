@@ -1,0 +1,11 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{from_floats, full_float, layer_norm}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = from_floats([1.0, 3.0, 2.0, 4.0], [2, 2]);
+    let weight = full_float([3], 1.0);
+    let bias = full_float([3], 0.0);
+    let output = layer_norm(input, [3], weight, bias, 0.0, false);
+    println("PYTORCH_LAYER_NORM_SHAPE_NOT_REJECTED").

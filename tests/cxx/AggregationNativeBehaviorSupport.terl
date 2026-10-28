@@ -1,0 +1,184 @@
+module pytorch.AggregationNativeBehaviorSupport.
+
+import pytorch.AggregationNative.{bincount_configured, bincount_configured_out, histc_configured, histc_configured_out, index_reduce_configured, index_reduce_configured_in_place, index_reduce_configured_out}.
+import pytorch.IndexFillNative.{index_fill_scalar_in_place}.
+import pytorch.Tensor.{Float64, Int64, Strided, clone, dispose, dtype, is_cuda, mul_float, mul_int, ones_device, shape}.
+import pytorch.TypeRelationsNative.{allclose_native, equal_native}.
+
+import type pytorch.Tensor.
+
+integer_count_expected(device_name: String): Tensor ->
+    let base = ones_device([3], Int64, Strided, device_name);
+    let expected = mul_int(base, 0);
+    let index = ones_device([1], Int64, Strided, device_name);
+    index_fill_scalar_in_place(expected, 0, index, true, 4, 0.0);
+    dispose(index);
+    dispose(base);
+    expected.
+
+weighted_count_expected(device_name: String): Tensor ->
+    let base = ones_device([3], Float64, Strided, device_name);
+    let expected = mul_float(base, 0.0);
+    let index = ones_device([1], Int64, Strided, device_name);
+    index_fill_scalar_in_place(expected, 0, index, false, 0, 2.0);
+    dispose(index);
+    dispose(base);
+    expected.
+
+histogram_expected(device_name: String): Tensor ->
+    let base = ones_device([2], Float64, Strided, device_name);
+    let expected = mul_float(base, 0.0);
+    let index = ones_device([1], Int64, Strided, device_name);
+    index_fill_scalar_in_place(expected, 0, index, false, 0, 4.0);
+    dispose(index);
+    dispose(base);
+    expected.
+
+/**
+ * Executes weighted/unweighted functional and retained-output bincount routes.
+ */
+bincount_contracts_on(device_name: String): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let values = ones_device([4], Int64, Strided, device_name);
+    let values_reference = ones_device([4], Int64, Strided, device_name);
+    let weight_base = ones_device([4], Float64, Strided, device_name);
+    let weights = mul_float(weight_base, 0.5);
+    let weights_reference = mul_float(weight_base, 0.5);
+    let ignored_weights = ones_device([1], Float64, Strided, device_name);
+    let unweighted = bincount_configured(values, ignored_weights, false, 3);
+    let weighted = bincount_configured(values, weights, true, 3);
+    let unweighted_output = ones_device([0], Int64, Strided, device_name);
+    let weighted_output = ones_device([0], Float64, Strided, device_name);
+    bincount_configured_out(unweighted_output, values, ignored_weights, false, 3);
+    bincount_configured_out(weighted_output, values, weights, true, 3);
+    let expected_unweighted = integer_count_expected(device_name);
+    let expected_weighted = weighted_count_expected(device_name);
+    let valid =
+        shape(unweighted) == [3]
+            and shape(weighted) == [3]
+            and shape(unweighted_output) == [3]
+            and shape(weighted_output) == [3]
+            and dtype(unweighted) == Int64
+            and dtype(weighted) == Float64
+            and dtype(unweighted_output) == Int64
+            and dtype(weighted_output) == Float64
+            and is_cuda(unweighted) == expected_cuda
+            and is_cuda(weighted_output) == expected_cuda
+            and equal_native(unweighted, expected_unweighted)
+            and equal_native(unweighted_output, expected_unweighted)
+            and allclose_native(weighted, expected_weighted, 0.0, 0.0, false)
+            and allclose_native(weighted_output, expected_weighted, 0.0, 0.0, false)
+            and equal_native(values, values_reference)
+            and allclose_native(weights, weights_reference, 0.0, 0.0, false)
+            and shape(ignored_weights) == [1];
+    (dispose(expected_weighted); dispose(expected_unweighted); dispose(weighted_output); dispose(unweighted_output); dispose(weighted); dispose(unweighted); dispose(ignored_weights); dispose(weights_reference); dispose(weights); dispose(weight_base); dispose(values_reference); dispose(values); valid).
+
+/**
+ * Executes integer and floating Scalar bounds through functional and output histograms.
+ */
+histogram_contracts_on(device_name: String): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let input = ones_device([4], Float64, Strided, device_name);
+    let input_reference = ones_device([4], Float64, Strided, device_name);
+    let integer_bounds = histc_configured(input, 2, true, 0, 2, -19.0, -23.0);
+    let floating_bounds = histc_configured(input, 2, false, -17, -29, 0.0, 2.0);
+    let integer_output = ones_device([0], Float64, Strided, device_name);
+    let floating_output = ones_device([0], Float64, Strided, device_name);
+    histc_configured_out(integer_output, input, 2, true, 0, 2, -31.0, -37.0);
+    histc_configured_out(floating_output, input, 2, false, -41, -43, 0.0, 2.0);
+    let expected = histogram_expected(device_name);
+    let valid =
+        shape(integer_bounds) == [2]
+            and shape(floating_bounds) == [2]
+            and shape(integer_output) == [2]
+            and shape(floating_output) == [2]
+            and dtype(integer_bounds) == Float64
+            and dtype(floating_output) == Float64
+            and is_cuda(integer_bounds) == expected_cuda
+            and is_cuda(floating_output) == expected_cuda
+            and allclose_native(integer_bounds, expected, 0.0, 0.0, false)
+            and allclose_native(floating_bounds, expected, 0.0, 0.0, false)
+            and allclose_native(integer_output, expected, 0.0, 0.0, false)
+            and allclose_native(floating_output, expected, 0.0, 0.0, false)
+            and allclose_native(input, input_reference, 0.0, 0.0, false);
+    (dispose(expected); dispose(floating_output); dispose(integer_output); dispose(floating_bounds); dispose(integer_bounds); dispose(input_reference); dispose(input); valid).
+
+index_expected(index: Tensor, destination_value: Float, device_name: String): Tensor ->
+    let base = ones_device([2, 2], Float64, Strided, device_name);
+    let expected = mul_float(base, 2.0);
+    index_fill_scalar_in_place(expected, 0, index, false, 0, destination_value);
+    dispose(base);
+    expected.
+
+index_reduce_forms_match(
+    input: Tensor,
+    index: Tensor,
+    source: Tensor,
+    reduction: Int,
+    include_self: Bool,
+    destination_value: Float,
+    device_name: String,
+): Bool ->
+    let expected_cuda = device_name == "cuda:0";
+    let functional = index_reduce_configured(input, 0, index, source, reduction, include_self);
+    let output = ones_device([0], Float64, Strided, device_name);
+    index_reduce_configured_out(output, input, 0, index, source, reduction, include_self);
+    let mutation = clone(input);
+    (index_reduce_configured_in_place(mutation, 0, index, source, reduction, include_self); let expected = index_expected(index, destination_value, device_name);
+let valid =
+    shape(functional) == [2, 2]
+        and shape(output) == [2, 2]
+        and shape(mutation) == [2, 2]
+        and dtype(functional) == Float64
+        and dtype(output) == Float64
+        and dtype(mutation) == Float64
+        and is_cuda(functional) == expected_cuda
+        and is_cuda(output) == expected_cuda
+        and is_cuda(mutation) == expected_cuda
+        and allclose_native(functional, expected, 0.0, 0.0, false)
+        and allclose_native(output, expected, 0.0, 0.0, false)
+        and allclose_native(mutation, expected, 0.0, 0.0, false);
+(dispose(expected); dispose(mutation); dispose(output); dispose(functional); valid)).
+
+/**
+ * Executes every reduction selector, both include-self states, and all three storage forms.
+ */
+index_reduce_contracts_on(device_name: String): Bool ->
+    let input_base = ones_device([2, 2], Float64, Strided, device_name);
+    let input = mul_float(input_base, 2.0);
+    let input_reference = mul_float(input_base, 2.0);
+    let index = ones_device([1], Int64, Strided, device_name);
+    let index_reference = ones_device([1], Int64, Strided, device_name);
+    let source_base = ones_device([1, 2], Float64, Strided, device_name);
+    let source = mul_float(source_base, 3.0);
+    let source_reference = mul_float(source_base, 3.0);
+    let forms_valid =
+        index_reduce_forms_match(input, index, source, 0, true, 6.0, device_name)
+            and index_reduce_forms_match(input, index, source, 1, true, 2.5, device_name)
+            and index_reduce_forms_match(input, index, source, 2, true, 3.0, device_name)
+            and index_reduce_forms_match(input, index, source, 3, true, 2.0, device_name)
+            and index_reduce_forms_match(input, index, source, 0, false, 3.0, device_name)
+            and index_reduce_forms_match(input, index, source, 1, false, 3.0, device_name)
+            and index_reduce_forms_match(input, index, source, 2, false, 3.0, device_name)
+            and index_reduce_forms_match(input, index, source, 3, false, 3.0, device_name);
+    let sources_preserved =
+        allclose_native(input, input_reference, 0.0, 0.0, false)
+            and equal_native(index, index_reference)
+            and allclose_native(source, source_reference, 0.0, 0.0, false);
+    dispose(source_reference);
+    dispose(source);
+    dispose(source_base);
+    dispose(index_reference);
+    dispose(index);
+    dispose(input_reference);
+    dispose(input);
+    dispose(input_base);
+    forms_valid and sources_preserved.
+
+/**
+ * Executes all seven AggregationNative public contracts on one backend.
+ */
+pub aggregation_contracts_on(device_name: String): Bool ->
+    bincount_contracts_on(device_name)
+        and histogram_contracts_on(device_name)
+        and index_reduce_contracts_on(device_name).

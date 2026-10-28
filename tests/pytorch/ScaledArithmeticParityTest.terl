@@ -1,0 +1,109 @@
+module pytorch.ScaledArithmeticParityTest.
+
+import pytorch.ScaledArithmetic.{add_right_int_alpha_float, add_right_int_alpha_float_in_place, add_right_int_alpha_float_out, add_tensor_alpha_int, add_tensor_alpha_int_in_place, add_tensor_alpha_int_out, rsub, rsub_right_float_alpha_int, rsub_right_float_alpha_int_out, rsub_tensor_alpha_float, rsub_tensor_alpha_float_out, sub_right_float_alpha_int, sub_right_float_alpha_int_in_place, sub_right_float_alpha_int_out, sub_tensor_alpha_float, sub_tensor_alpha_float_in_place, sub_tensor_alpha_float_out, subtract_right_int_alpha_int, subtract_right_int_alpha_int_in_place, subtract_tensor_alpha_float, subtract_tensor_alpha_float_in_place, subtract_tensor_alpha_float_out}.
+import pytorch.Tensor.{dispose, from_float, item_float}.
+
+/**
+ * Proves every add storage shape with scalar and tensor operands.
+ */
+@test
+pub add_overloads_match_libtorch(): Bool ->
+    let left = from_float(10.0);
+    let right = from_float(3.0);
+    let scalar_value = add_right_int_alpha_float(left, 3, 0.5);
+    let tensor_value = add_tensor_alpha_int(left, right, 2);
+    let scalar_output = from_float(0.0);
+    let tensor_output = from_float(0.0);
+    let scalar_mutation = from_float(10.0);
+    let tensor_mutation = from_float(10.0);
+    add_right_int_alpha_float_out(scalar_output, left, 3, 0.5);
+    add_tensor_alpha_int_out(tensor_output, left, right, 2);
+    add_right_int_alpha_float_in_place(scalar_mutation, 3, 0.5);
+    add_tensor_alpha_int_in_place(tensor_mutation, right, 2);
+    let valid =
+        item_float(scalar_value) == 11.5
+            and item_float(tensor_value) == 16.0
+            and item_float(scalar_output) == 11.5
+            and item_float(tensor_output) == 16.0
+            and item_float(scalar_mutation) == 11.5
+            and item_float(tensor_mutation) == 16.0
+            and item_float(left) == 10.0
+            and item_float(right) == 3.0;
+    (dispose(tensor_mutation); dispose(scalar_mutation); dispose(tensor_output); dispose(scalar_output); dispose(tensor_value); dispose(scalar_value); dispose(right); dispose(left); valid).
+
+/**
+ * Proves every sub storage shape with scalar and tensor operands.
+ */
+@test
+pub sub_overloads_match_libtorch(): Bool ->
+    let left = from_float(10.0);
+    let right = from_float(3.0);
+    let scalar_value = sub_right_float_alpha_int(left, 3.0, 2);
+    let tensor_value = sub_tensor_alpha_float(left, right, 0.5);
+    let scalar_output = from_float(0.0);
+    let tensor_output = from_float(0.0);
+    let scalar_mutation = from_float(10.0);
+    let tensor_mutation = from_float(10.0);
+    sub_right_float_alpha_int_out(scalar_output, left, 3.0, 2);
+    sub_tensor_alpha_float_out(tensor_output, left, right, 0.5);
+    sub_right_float_alpha_int_in_place(scalar_mutation, 3.0, 2);
+    sub_tensor_alpha_float_in_place(tensor_mutation, right, 0.5);
+    let valid =
+        item_float(scalar_value) == 4.0
+            and item_float(tensor_value) == 8.5
+            and item_float(scalar_output) == 4.0
+            and item_float(tensor_output) == 8.5
+            and item_float(scalar_mutation) == 4.0
+            and item_float(tensor_mutation) == 8.5
+            and item_float(left) == 10.0
+            and item_float(right) == 3.0;
+    (dispose(tensor_mutation); dispose(scalar_mutation); dispose(tensor_output); dispose(scalar_output); dispose(tensor_value); dispose(scalar_value); dispose(right); dispose(left); valid).
+
+/**
+ * Proves the subtract alias uses the same scalar, tensor, output, and mutation semantics.
+ */
+@test
+pub subtract_aliases_match_libtorch(): Bool ->
+    let left = from_float(10.0);
+    let right = from_float(3.0);
+    let scalar_value = subtract_right_int_alpha_int(left, 3, 2);
+    let tensor_value = subtract_tensor_alpha_float(left, right, 0.5);
+    let tensor_output = from_float(0.0);
+    let scalar_mutation = from_float(10.0);
+    let tensor_mutation = from_float(10.0);
+    subtract_tensor_alpha_float_out(tensor_output, left, right, 0.5);
+    subtract_right_int_alpha_int_in_place(scalar_mutation, 3, 2);
+    subtract_tensor_alpha_float_in_place(tensor_mutation, right, 0.5);
+    let valid =
+        item_float(scalar_value) == 4.0
+            and item_float(tensor_value) == 8.5
+            and item_float(tensor_output) == 8.5
+            and item_float(scalar_mutation) == 4.0
+            and item_float(tensor_mutation) == 8.5
+            and item_float(left) == 10.0
+            and item_float(right) == 3.0;
+    (dispose(tensor_mutation); dispose(scalar_mutation); dispose(tensor_output); dispose(tensor_value); dispose(scalar_value); dispose(right); dispose(left); valid).
+
+/**
+ * Proves reverse subtraction operand order for scalar and tensor outputs.
+ */
+@test
+pub rsub_overloads_match_libtorch(): Bool ->
+    let left = from_float(10.0);
+    let right = from_float(3.0);
+    let scalar_value = rsub_right_float_alpha_int(left, 3.0, 2);
+    let public_value = rsub(left, 3.0, 2.0);
+    let tensor_value = rsub_tensor_alpha_float(left, right, 0.5);
+    let scalar_output = from_float(0.0);
+    let tensor_output = from_float(0.0);
+    rsub_right_float_alpha_int_out(scalar_output, left, 3.0, 2);
+    rsub_tensor_alpha_float_out(tensor_output, left, right, 0.5);
+    let valid =
+        item_float(scalar_value) == -17.0
+            and item_float(tensor_value) == -2.0
+            and item_float(public_value) == -17.0
+            and item_float(scalar_output) == -17.0
+            and item_float(tensor_output) == -2.0
+            and item_float(left) == 10.0
+            and item_float(right) == 3.0;
+    (dispose(tensor_output); dispose(scalar_output); dispose(tensor_value); dispose(public_value); dispose(scalar_value); dispose(right); dispose(left); valid).

@@ -1,0 +1,95 @@
+module pytorch.RangeBehaviorSupport.
+
+import pytorch.RangeNative.{arange_exact_native, eye_exact_native, range_exact_native, spacing_scalar_exact_native}.
+import pytorch.Tensor.{Float64, Tensor, dispose, dtype, is_cuda, shape}.
+
+/**
+ * Exercises packed optional enum/device lowering through generated Range leaves.
+ */
+pub range_contracts_on(expected_cuda: Bool): Bool ->
+    let device_type = if { expected_cuda -> 1; true -> 0 };
+    let device_index = if { expected_cuda -> 0; true -> -1 };
+    let sequence =
+        arange_exact_native(
+            2,
+            true,
+            1,
+            0.0,
+            true,
+            7,
+            0.0,
+            true,
+            2,
+            0.0,
+            7,
+            true,
+            0,
+            true,
+            device_type,
+            device_index,
+            true,
+            false,
+            true,
+        );
+    let spacing =
+        spacing_scalar_exact_native(
+            0,
+            true,
+            0,
+            0.0,
+            true,
+            1,
+            0.0,
+            5,
+            10.0,
+            7,
+            true,
+            0,
+            true,
+            device_type,
+            device_index,
+            true,
+            false,
+            true,
+        );
+    let inclusive =
+        range_exact_native(
+            true,
+            true,
+            2,
+            0.0,
+            true,
+            6,
+            0.0,
+            true,
+            2,
+            0.0,
+            7,
+            true,
+            0,
+            true,
+            device_type,
+            device_index,
+            true,
+            false,
+            true,
+        );
+    let identity = eye_exact_native(2, 3, true, 7, true, 0, true, device_type, device_index, true, false, true);
+    let valid =
+        shape(sequence) == [3]
+            and shape(spacing) == [5]
+            and shape(inclusive) == [3]
+            and shape(identity) == [2, 3]
+            and dtype(sequence) == Float64
+            and dtype(spacing) == Float64
+            and dtype(inclusive) == Float64
+            and dtype(identity) == Float64
+            and is_cuda(sequence) == expected_cuda
+            and is_cuda(spacing) == expected_cuda
+            and is_cuda(inclusive) == expected_cuda
+            and is_cuda(identity) == expected_cuda;
+    dispose(identity);
+    dispose(inclusive);
+    dispose(spacing);
+    dispose(sequence);
+    valid.

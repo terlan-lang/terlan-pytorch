@@ -1,0 +1,373 @@
+/**
+ * Generated direct-CXX implementation of immutable LibTorch dropout functions.
+ */
+module pytorch.Regularization.
+
+import type pytorch.Tensor.
+
+/**
+ * Applies functional alpha dropout without mutating the caller-owned tensor.
+ */
+@compiler.native {pytorch.regularization.alpha_dropout}
+pub alpha_dropout(input: Tensor, probability: Float, training: Bool): Tensor ->
+    native.
+
+/**
+ * Applies functional element dropout without mutating the caller-owned tensor.
+ */
+@compiler.native {pytorch.regularization.dropout}
+pub dropout(input: Tensor, probability: Float, training: Bool): Tensor ->
+    native.
+
+/**
+ * Applies functional feature-map dropout without mutating the caller-owned tensor.
+ */
+@compiler.native {pytorch.regularization.feature_dropout}
+pub feature_dropout(input: Tensor, probability: Float, training: Bool): Tensor ->
+    native.
+
+/**
+ * Applies a native dropout mask and scale to an output gradient without mutating either input.
+ */
+@compiler.native {pytorch.regularization.native_dropout_backward}
+pub native_dropout_backward(gradient_output: Tensor, mask: Tensor, scale: Float): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX tuple leaf for aten::native_dropout.
+ */
+@compiler.native {pytorch.regularization.native_dropout}
+pub native_dropout(input: Tensor, probability: Float, train: Bool): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::native_dropout.out.
+ */
+@compiler.native {pytorch.regularization.native_dropout_out}
+pub native_dropout_out(
+    output: Tensor,
+    mask: Tensor,
+    input: Tensor,
+    probability: Float,
+    train: Bool,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX tuple leaf for aten::native_layer_norm.
+ */
+@compiler.native {pytorch.regularization.native_layer_norm}
+pub native_layer_norm(
+    input: Tensor,
+    normalized_shape: List[Int],
+    has_weight: Bool,
+    weight: Tensor,
+    has_bias: Bool,
+    bias: Tensor,
+    eps: Float,
+): {Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::native_layer_norm.out.
+ */
+@compiler.native {pytorch.regularization.native_layer_norm_out}
+pub native_layer_norm_out(
+    output: Tensor,
+    mean: Tensor,
+    rstd: Tensor,
+    input: Tensor,
+    normalized_shape: List[Int],
+    has_weight: Bool,
+    weight: Tensor,
+    has_bias: Bool,
+    bias: Tensor,
+    eps: Float,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX tuple leaf for aten::native_group_norm.
+ */
+@compiler.native {pytorch.regularization.native_group_norm}
+pub native_group_norm(
+    input: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    has_bias: Bool,
+    bias: Tensor,
+    n: Int,
+    c: Int,
+    hxw: Int,
+    group: Int,
+    eps: Float,
+): {Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::native_group_norm.out.
+ */
+@compiler.native {pytorch.regularization.native_group_norm_out}
+pub native_group_norm_out(
+    output: Tensor,
+    mean: Tensor,
+    rstd: Tensor,
+    input: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    has_bias: Bool,
+    bias: Tensor,
+    n: Int,
+    c: Int,
+    hxw: Int,
+    group: Int,
+    eps: Float,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX tuple leaf for aten::native_group_norm_backward.
+ */
+@compiler.native {pytorch.regularization.native_group_norm_backward}
+pub native_group_norm_backward(
+    grad_out: Tensor,
+    input: Tensor,
+    mean: Tensor,
+    rstd: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    n: Int,
+    c: Int,
+    hxw: Int,
+    group: Int,
+    output_mask_input: Bool,
+    output_mask_weight: Bool,
+    output_mask_bias: Bool,
+): {Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::native_group_norm_backward.out.
+ */
+@compiler.native {pytorch.regularization.native_group_norm_backward_out}
+pub native_group_norm_backward_out(
+    grad_input: Tensor,
+    grad_weight: Tensor,
+    grad_bias: Tensor,
+    grad_out: Tensor,
+    input: Tensor,
+    mean: Tensor,
+    rstd: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    n: Int,
+    c: Int,
+    hxw: Int,
+    group: Int,
+    output_mask_input: Bool,
+    output_mask_weight: Bool,
+    output_mask_bias: Bool,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX tuple leaf for aten::native_layer_norm_backward.
+ */
+@compiler.native {pytorch.regularization.native_layer_norm_backward}
+pub native_layer_norm_backward(
+    grad_out: Tensor,
+    input: Tensor,
+    normalized_shape: List[Int],
+    mean: Tensor,
+    rstd: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    has_bias: Bool,
+    bias: Tensor,
+    output_mask_input: Bool,
+    output_mask_weight: Bool,
+    output_mask_bias: Bool,
+): {Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::native_layer_norm_backward.out.
+ */
+@compiler.native {pytorch.regularization.native_layer_norm_backward_out}
+pub native_layer_norm_backward_out(
+    grad_input: Tensor,
+    grad_weight: Tensor,
+    grad_bias: Tensor,
+    grad_out: Tensor,
+    input: Tensor,
+    normalized_shape: List[Int],
+    mean: Tensor,
+    rstd: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    has_bias: Bool,
+    bias: Tensor,
+    output_mask_input: Bool,
+    output_mask_weight: Bool,
+    output_mask_bias: Bool,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX tuple leaf for aten::native_batch_norm.
+ */
+@compiler.native {pytorch.regularization.native_batch_norm}
+pub native_batch_norm(
+    input: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    has_bias: Bool,
+    bias: Tensor,
+    has_running_mean: Bool,
+    running_mean: Tensor,
+    has_running_var: Bool,
+    running_var: Tensor,
+    training: Bool,
+    momentum: Float,
+    eps: Float,
+): {Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::native_batch_norm.out.
+ */
+@compiler.native {pytorch.regularization.native_batch_norm_out}
+pub native_batch_norm_out(
+    output: Tensor,
+    save_mean: Tensor,
+    save_invstd: Tensor,
+    input: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    has_bias: Bool,
+    bias: Tensor,
+    has_running_mean: Bool,
+    running_mean: Tensor,
+    has_running_var: Bool,
+    running_var: Tensor,
+    training: Bool,
+    momentum: Float,
+    eps: Float,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX tuple leaf for aten::native_batch_norm_backward.
+ */
+@compiler.native {pytorch.regularization.native_batch_norm_backward}
+pub native_batch_norm_backward(
+    grad_out: Tensor,
+    input: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    has_running_mean: Bool,
+    running_mean: Tensor,
+    has_running_var: Bool,
+    running_var: Tensor,
+    has_save_mean: Bool,
+    save_mean: Tensor,
+    has_save_invstd: Bool,
+    save_invstd: Tensor,
+    train: Bool,
+    eps: Float,
+    output_mask_input: Bool,
+    output_mask_weight: Bool,
+    output_mask_bias: Bool,
+): {Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::native_batch_norm_backward.out.
+ */
+@compiler.native {pytorch.regularization.native_batch_norm_backward_out}
+pub native_batch_norm_backward_out(
+    grad_input: Tensor,
+    grad_weight: Tensor,
+    grad_bias: Tensor,
+    grad_out: Tensor,
+    input: Tensor,
+    has_weight: Bool,
+    weight: Tensor,
+    has_running_mean: Bool,
+    running_mean: Tensor,
+    has_running_var: Bool,
+    running_var: Tensor,
+    has_save_mean: Bool,
+    save_mean: Tensor,
+    has_save_invstd: Bool,
+    save_invstd: Tensor,
+    train: Bool,
+    eps: Float,
+    output_mask_input: Bool,
+    output_mask_weight: Bool,
+    output_mask_bias: Bool,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX tuple leaf for aten::log_sigmoid_forward.
+ */
+@compiler.native {pytorch.regularization.log_sigmoid_forward}
+pub log_sigmoid_forward(input: Tensor): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::log_sigmoid_forward.output.
+ */
+@compiler.native {pytorch.regularization.log_sigmoid_forward_out}
+pub log_sigmoid_forward_out(output: Tensor, buffer: Tensor, input: Tensor): Unit ->
+    native.
+
+/**
+ * Exact generated CXX leaf for aten::log_sigmoid_backward.
+ */
+@compiler.native {pytorch.regularization.log_sigmoid_backward}
+pub log_sigmoid_backward(grad_output: Tensor, input: Tensor, buffer: Tensor): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::log_sigmoid_backward.grad_input.
+ */
+@compiler.native {pytorch.regularization.log_sigmoid_backward_out}
+pub log_sigmoid_backward_out(
+    grad_input: Tensor,
+    grad_output: Tensor,
+    input: Tensor,
+    buffer: Tensor,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX tuple leaf for aten::batch_norm_update_stats.
+ */
+@compiler.native {pytorch.regularization.batch_norm_update_stats}
+pub batch_norm_update_stats(
+    input: Tensor,
+    has_running_mean: Bool,
+    running_mean: Tensor,
+    has_running_var: Bool,
+    running_var: Tensor,
+    momentum: Float,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::batch_norm_update_stats.out.
+ */
+@compiler.native {pytorch.regularization.batch_norm_update_stats_out}
+pub batch_norm_update_stats_out(
+    out_mean: Tensor,
+    out_var: Tensor,
+    input: Tensor,
+    has_running_mean: Bool,
+    running_mean: Tensor,
+    has_running_var: Bool,
+    running_var: Tensor,
+    momentum: Float,
+): Unit ->
+    native.

@@ -1,0 +1,39 @@
+module pytorch.NewCreationParityTest.
+
+import pytorch.CreationAliasCompletion.{new_empty, new_empty_out, new_full, new_full_scalar_out, new_ones, new_ones_out, new_zeros, new_zeros_out}.
+import pytorch.Scalar.{from_float as scalar_from_float, from_int}.
+import pytorch.Tensor.{dispose, dtype, from_float, from_floats, shape}.
+import pytorch.TypeRelations.equal.
+
+/**
+ * Proves inherited dtype/device Tensor.new_* creation and retained outputs.
+ */
+@test
+pub new_creation_forms_match_libtorch(): Bool ->
+    let input = from_float(2.0);
+    let empty = new_empty(input, [2, 3]);
+    let ones = new_ones(input, [2, 3]);
+    let zeros = new_zeros(input, [2, 3]);
+    let full = new_full(input, [2, 3], from_int(4));
+    let empty_out = from_floats([], [0]);
+    let ones_out = from_floats([], [0]);
+    let zeros_out = from_floats([], [0]);
+    let full_out = from_floats([], [0]);
+    new_empty_out(empty_out, input, [2, 3]);
+    new_ones_out(ones_out, input, [2, 3]);
+    new_zeros_out(zeros_out, input, [2, 3]);
+    new_full_scalar_out(full_out, input, [2, 3], scalar_from_float(4.0));
+    let expected_ones = from_floats([1.0, 1.0, 1.0, 1.0, 1.0, 1.0], [2, 3]);
+    let expected_zeros = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]);
+    let expected_full = from_floats([4.0, 4.0, 4.0, 4.0, 4.0, 4.0], [2, 3]);
+    let valid =
+        shape(empty) == [2, 3]
+            and dtype(empty) == dtype(input)
+            and equal(ones, expected_ones)
+            and equal(zeros, expected_zeros)
+            and equal(full, expected_full)
+            and equal(ones_out, expected_ones)
+            and equal(zeros_out, expected_zeros)
+            and equal(full_out, expected_full)
+            and shape(empty_out) == [2, 3];
+    (dispose(expected_full); dispose(expected_zeros); dispose(expected_ones); dispose(full_out); dispose(zeros_out); dispose(ones_out); dispose(empty_out); dispose(full); dispose(zeros); dispose(ones); dispose(empty); dispose(input); valid).

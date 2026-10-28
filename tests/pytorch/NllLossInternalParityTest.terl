@@ -1,0 +1,76 @@
+/**
+ * CPU runtime evidence for the internal nll_loss forward/backward forms.
+ */
+module pytorch.NllLossInternalParityTest.
+
+import pytorch.Loss.{nll_loss_backward, nll_loss_backward_out, nll_loss_forward, nll_loss_forward_out}.
+import pytorch.NllLossCompletion.{nll_loss_default}.
+import pytorch.Tensor.{backward, clone, dispose, from_floats, from_ints, gradient, item_float, mse_loss, require_grad, shape}.
+
+import type pytorch.Tensor.
+
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let error = mse_loss(actual, expected, 1);
+    let distance = item_float(error);
+    dispose(error);
+    distance == 0.0.
+
+@test
+pub nll_loss_internal_forms_match_autograd(): Bool ->
+    let expected_source = from_floats([-1.0, -2.0, -3.0, -1.0, -2.0, -3.0], [2, 3]);
+    let expected_input = require_grad(expected_source);
+    let target = from_ints([1, 2], [2]);
+    let expected_loss = nll_loss_default(expected_input, target, 1, -100);
+    backward(expected_loss);
+    let expected_gradient = gradient(expected_input);
+    let native_input = from_floats([-1.0, -2.0, -3.0, -1.0, -2.0, -3.0], [2, 3]);
+    let ignored_weight = from_floats([1.0, 2.0, 3.0], [3]);
+    let {native_output, native_total_weight} = nll_loss_forward(native_input, target, false, ignored_weight, 1, -100);
+    let native_grad_output = from_floats([1.0], []);
+    let native_gradient =
+        nll_loss_backward(
+            native_grad_output,
+            native_input,
+            target,
+            false,
+            ignored_weight,
+            1,
+            -100,
+            native_total_weight,
+        );
+    let output_slot = clone(native_output);
+    let total_weight_slot = clone(native_total_weight);
+    (nll_loss_forward_out(
+    output_slot,
+    total_weight_slot,
+    native_input,
+    target,
+    false,
+    ignored_weight,
+    1,
+    -100,
+); let gradient_slot = clone(native_input);
+(nll_loss_backward_out(
+    gradient_slot,
+    native_grad_output,
+    native_input,
+    target,
+    false,
+    ignored_weight,
+    1,
+    -100,
+    total_weight_slot,
+); let valid =
+    shape(native_output) == []
+        and shape(native_total_weight) == []
+        and shape(native_gradient) == [2, 3]
+        and shape(output_slot) == []
+        and shape(total_weight_slot) == []
+        and shape(gradient_slot) == [2, 3]
+        and item_float(native_total_weight) == 2.0
+        and item_float(total_weight_slot) == 2.0
+        and matches(native_output, expected_loss)
+        and matches(output_slot, expected_loss)
+        and matches(native_gradient, expected_gradient)
+        and matches(gradient_slot, expected_gradient);
+(dispose(gradient_slot); dispose(total_weight_slot); dispose(output_slot); dispose(native_gradient); dispose(native_grad_output); dispose(native_total_weight); dispose(native_output); dispose(ignored_weight); dispose(native_input); dispose(expected_gradient); dispose(expected_loss); dispose(target); dispose(expected_input); dispose(expected_source); valid))).

@@ -1,0 +1,49 @@
+/**
+ * Typed completion wrappers for legacy statistical output schemas.
+ */
+module pytorch.StatisticsCompletion.
+
+import pytorch.Linalg.{linalg_norm_float, linalg_norm_int}.
+import pytorch.ResizeAsCompletion.resize_as_in_place.
+import pytorch.Tensor.{copy_in_place, dispose, to_dtype}.
+
+import type pytorch.{Scalar, Tensor}.
+
+/**
+ * Writes the scalar-order norm into retained output storage.
+ *
+ * The generated Linalg norm leaves preserve the scalar's integer/float
+ * dispatch while keeping the retained output ownership explicit.
+ */
+pub norm_scalar_out(output: Tensor, input: Tensor, order: Scalar): Unit ->
+    let value =
+        if {
+            order.is_integer -> linalg_norm_int(input, order.integer_value);
+            true -> linalg_norm_float(input, order.floating_value)
+        };
+    resize_as_in_place(output, value, false, 0);
+    copy_in_place(output, value, false);
+    dispose(value).
+
+/**
+ * Computes a scalar-order norm and converts the result to the requested
+ * output dtype, matching the dtype-only ATen overload.
+ */
+pub norm_scalar_dtype(input: Tensor, order: Scalar, output_dtype: Int): Tensor ->
+    let value =
+        if {
+            order.is_integer -> linalg_norm_int(input, order.integer_value);
+            true -> linalg_norm_float(input, order.floating_value)
+        };
+    let converted = to_dtype(value, output_dtype);
+    dispose(value);
+    converted.
+
+/**
+ * Writes the dtype-configured scalar-order norm into retained output storage.
+ */
+pub norm_scalar_dtype_out(output: Tensor, input: Tensor, order: Scalar, output_dtype: Int): Unit ->
+    let value = norm_scalar_dtype(input, order, output_dtype);
+    resize_as_in_place(output, value, false, 0);
+    copy_in_place(output, value, false);
+    dispose(value).

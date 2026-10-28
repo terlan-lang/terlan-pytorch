@@ -1,0 +1,93 @@
+/**
+ * Public tensor-list joining and retained-output parity on CPU and CUDA.
+ */
+module pytorch.TensorJoiningParityTest.
+
+import pytorch.Tensor.{device_type, dispose, dtype, from_floats, to_device}.
+import pytorch.TensorJoining.{block_diag, block_diag_out, cartesian_prod, cat, cat_out, column_stack, column_stack_out, concat, concat_out, concatenate, concatenate_out, dstack, dstack_out, hstack, hstack_out, row_stack, row_stack_out, stack, stack_out, vstack, vstack_out}.
+import pytorch.TypeRelations.equal.
+import pytorch.UnaryStorage.zero_in_place.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], shape: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, shape);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+matches(tensor: Tensor, values: List[Float], shape: List[Int], device: Int): Bool ->
+    let expected = placed(values, shape, device);
+    let valid = equal(tensor, expected) and dtype(tensor) == 7 and device_type(tensor) == device;
+    dispose(expected);
+    valid.
+
+verify(device: Int): Bool ->
+    let left = placed([1.0, 2.0], [2], device);
+    let right = placed([3.0, 4.0], [2], device);
+    let inputs = [left, right];
+    let output = placed([], [0], device);
+    let cat_result = cat(inputs, 0);
+    cat_out(output, inputs, 0);
+    let cats = matches(cat_result, [1.0, 2.0, 3.0, 4.0], [4], device) and equal(cat_result, output);
+    let concat_result = concat(inputs, 0);
+    (concat_out(output, inputs, 0); let aliases = equal(concat_result, cat_result) and equal(output, cat_result);
+let concatenate_result = concatenate(inputs, 0);
+(concatenate_out(output, inputs, 0); let aliases2 = equal(concatenate_result, cat_result) and equal(output, cat_result);
+let stack_rows = stack(inputs, 0);
+(stack_out(output, inputs, 0); let stacked = matches(stack_rows, [1.0, 2.0, 3.0, 4.0], [2, 2], device) and equal(stack_rows, output);
+let stack_columns = stack(inputs, 1);
+let columns = matches(stack_columns, [1.0, 3.0, 2.0, 4.0], [2, 2], device);
+let vertical = vstack(inputs);
+(vstack_out(output, inputs); let vertical_valid = equal(vertical, stack_rows) and equal(output, stack_rows);
+let rows = row_stack(inputs);
+(row_stack_out(output, inputs); let rows_valid = equal(rows, stack_rows) and equal(output, stack_rows);
+let horizontal = hstack(inputs);
+(hstack_out(output, inputs); let horizontal_valid = equal(horizontal, cat_result) and equal(output, cat_result);
+let column_result = column_stack(inputs);
+(column_stack_out(output, inputs); let column_valid = equal(column_result, stack_columns) and equal(output, stack_columns);
+let depth = dstack(inputs);
+(dstack_out(output, inputs); let depth_valid = matches(depth, [1.0, 3.0, 2.0, 4.0], [1, 2, 2], device) and equal(depth, output);
+let blocks = block_diag(inputs);
+(block_diag_out(output, inputs); let blocks_valid =
+    matches(blocks, [1.0, 2.0, 0.0, 0.0, 0.0, 0.0, 3.0, 4.0], [2, 4], device)
+        and equal(blocks, output);
+let product = cartesian_prod(inputs);
+let product_valid = matches(product, [1.0, 3.0, 1.0, 4.0, 2.0, 3.0, 2.0, 4.0], [4, 2], device);
+(zero_in_place(output); let ownership =
+    matches(blocks, [1.0, 2.0, 0.0, 0.0, 0.0, 0.0, 3.0, 4.0], [2, 4], device)
+        and matches(left, [1.0, 2.0], [2], device)
+        and matches(right, [3.0, 4.0], [2], device);
+(dispose(product); dispose(blocks); dispose(depth); dispose(column_result); dispose(horizontal); dispose(rows); dispose(vertical); dispose(stack_columns); dispose(stack_rows); dispose(concatenate_result); dispose(concat_result); dispose(cat_result); dispose(output); dispose(right); dispose(left); cats
+    and aliases
+    and aliases2
+    and stacked
+    and columns
+    and vertical_valid
+    and rows_valid
+    and horizontal_valid
+    and column_valid
+    and depth_valid
+    and blocks_valid
+    and product_valid
+    and ownership))))))))))).
+
+/**
+ * Requires the same public operations to execute on the real CUDA backend.
+ */
+@test
+pub tensor_joining_on_cpu_and_required_cuda(): Bool ->
+    let cpu_valid = verify(0);
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    cpu_valid and cuda_valid.

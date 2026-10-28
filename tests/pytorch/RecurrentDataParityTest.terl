@@ -1,0 +1,95 @@
+/**
+ * CPU runtime evidence for exact generated CXX packed-sequence recurrent leaves.
+ */
+module pytorch.RecurrentDataParityTest.
+
+import pytorch.RecurrentData.{gru_data, lstm_data, rnn_relu_data, rnn_tanh_data}.
+import pytorch.Tensor.{dispose, from_floats, shape, to_dtype}.
+
+@test
+pub packed_recurrent_cpu_forms_match_libtorch(): Bool ->
+    let data_double = from_floats([0.1, 0.2, 0.3], [3, 1]);
+    let data = to_dtype(data_double, 6);
+    let batch_sizes = to_dtype(from_floats([2.0, 1.0], [2]), 4);
+    let hx = to_dtype(from_floats([0.3, 0.4, 0.5, 0.6], [1, 2, 2]), 6);
+    let w_ih = to_dtype(from_floats([0.1, 0.2], [2, 1]), 6);
+    let w_hh = to_dtype(from_floats([0.2, 0.1, 0.4, 0.3], [2, 2]), 6);
+    let bias = to_dtype(from_floats([0.01, 0.02], [2]), 6);
+    let gru_w_ih = to_dtype(from_floats([0.1, 0.2, 0.3, 0.4, 0.5, 0.6], [6, 1]), 6);
+    let gru_w_hh =
+        to_dtype(
+            from_floats([0.2, 0.1, 0.4, 0.3, 0.6, 0.5, 0.8, 0.7, 1.0, 0.9, 1.2, 1.1], [6, 2]),
+            6,
+        );
+    let gru_bias = to_dtype(from_floats([0.01, 0.02, 0.03, 0.04, 0.05, 0.06], [6]), 6);
+    let lstm_w_ih = to_dtype(from_floats([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8], [8, 1]), 6);
+    let lstm_w_hh =
+        to_dtype(
+            from_floats(
+                [0.2, 0.1, 0.4, 0.3, 0.6, 0.5, 0.8, 0.7, 1.0, 0.9, 1.2, 1.1, 1.4, 1.3, 1.6, 1.5],
+                [8, 2],
+            ),
+            6,
+        );
+    let lstm_bias = to_dtype(from_floats([0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08], [8]), 6);
+    let cx = to_dtype(from_floats([0.3, 0.4, 0.5, 0.6], [1, 2, 2]), 6);
+    let {tanh_output, tanh_h} = rnn_tanh_data(data, batch_sizes, hx, [w_ih, w_hh, bias, bias], true, 1, 0.0, false, false);
+    let {relu_output, relu_h} = rnn_relu_data(data, batch_sizes, hx, [w_ih, w_hh, bias, bias], true, 1, 0.0, false, false);
+    let {gru_output, gru_h} =
+        gru_data(
+            data,
+            batch_sizes,
+            hx,
+            [gru_w_ih, gru_w_hh, gru_bias, gru_bias],
+            true,
+            1,
+            0.0,
+            false,
+            false,
+        );
+    let {lstm_output, lstm_h, lstm_c} =
+        lstm_data(
+            data,
+            batch_sizes,
+            [hx, cx],
+            [lstm_w_ih, lstm_w_hh, lstm_bias, lstm_bias],
+            true,
+            1,
+            0.0,
+            false,
+            false,
+        );
+    let valid =
+        shape(tanh_output) == [3, 2]
+            and shape(tanh_h) == [1, 2, 2]
+            and shape(relu_output) == [3, 2]
+            and shape(relu_h) == [1, 2, 2]
+            and shape(gru_output) == [3, 2]
+            and shape(gru_h) == [1, 2, 2]
+            and shape(lstm_output) == [3, 2]
+            and shape(lstm_h) == [1, 2, 2]
+            and shape(lstm_c) == [1, 2, 2];
+    dispose(lstm_c);
+    dispose(lstm_h);
+    dispose(lstm_output);
+    dispose(gru_h);
+    dispose(gru_output);
+    dispose(relu_h);
+    dispose(relu_output);
+    dispose(tanh_h);
+    dispose(tanh_output);
+    dispose(cx);
+    dispose(lstm_bias);
+    dispose(lstm_w_hh);
+    dispose(lstm_w_ih);
+    dispose(gru_bias);
+    dispose(gru_w_hh);
+    dispose(gru_w_ih);
+    dispose(bias);
+    dispose(w_hh);
+    dispose(w_ih);
+    dispose(hx);
+    dispose(batch_sizes);
+    dispose(data);
+    dispose(data_double);
+    valid.

@@ -1,0 +1,191 @@
+/**
+ * Generated direct-CXX implementation of affine grids and spatial sampling.
+ */
+module pytorch.Spatial.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes exact aten::affine_grid_generator spatial transformation with explicit shape, interpolation, padding, and alignment arguments.
+ */
+@compiler.native {pytorch.spatial.affine_grid_generator}
+pub affine_grid_generator(tensor: Tensor, size: List[Int], align_corners: Bool): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::affine_grid_generator.out spatial transformation with explicit shape, interpolation, padding, and alignment arguments.
+ */
+@compiler.native {pytorch.spatial.affine_grid_generator_out}
+pub affine_grid_generator_out(
+    output: Tensor,
+    tensor: Tensor,
+    size: List[Int],
+    align_corners: Bool,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::affine_grid_generator_backward spatial transformation with explicit shape, interpolation, padding, and alignment arguments.
+ */
+@compiler.native {pytorch.spatial.affine_grid_generator_backward}
+pub affine_grid_generator_backward(tensor: Tensor, size: List[Int], align_corners: Bool): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::grid_sampler spatial transformation with explicit shape, interpolation, padding, and alignment arguments.
+ */
+@compiler.native {pytorch.spatial.grid_sampler}
+pub grid_sampler(
+    tensor: Tensor,
+    grid: Tensor,
+    interpolation_mode: Int,
+    padding_mode: Int,
+    align_corners: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::grid_sampler_2d spatial transformation with explicit shape, interpolation, padding, and alignment arguments.
+ */
+@compiler.native {pytorch.spatial.grid_sampler_2d}
+pub grid_sampler_2d(
+    tensor: Tensor,
+    grid: Tensor,
+    interpolation_mode: Int,
+    padding_mode: Int,
+    align_corners: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::grid_sampler_2d.out spatial transformation with explicit shape, interpolation, padding, and alignment arguments.
+ */
+@compiler.native {pytorch.spatial.grid_sampler_2d_out}
+pub grid_sampler_2d_out(
+    output: Tensor,
+    tensor: Tensor,
+    grid: Tensor,
+    interpolation_mode: Int,
+    padding_mode: Int,
+    align_corners: Bool,
+): Unit ->
+    native.
+
+/**
+ * Executes exact aten::grid_sampler_3d spatial transformation with explicit shape, interpolation, padding, and alignment arguments.
+ */
+@compiler.native {pytorch.spatial.grid_sampler_3d}
+pub grid_sampler_3d(
+    tensor: Tensor,
+    grid: Tensor,
+    interpolation_mode: Int,
+    padding_mode: Int,
+    align_corners: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::grid_sampler_3d.out spatial transformation with explicit shape, interpolation, padding, and alignment arguments.
+ */
+@compiler.native {pytorch.spatial.grid_sampler_3d_out}
+pub grid_sampler_3d_out(
+    output: Tensor,
+    tensor: Tensor,
+    grid: Tensor,
+    interpolation_mode: Int,
+    padding_mode: Int,
+    align_corners: Bool,
+): Unit ->
+    native.
+
+/**
+ * Composes the public string-selected grid_sample contract over generated grid_sampler leaves.
+ */
+pub grid_sample(
+    input: Tensor,
+    grid: Tensor,
+    mode: String = "bilinear",
+    padding_mode: String = "zeros",
+    align_corners: Bool = false,
+): Tensor ->
+    let interpolation =
+        if {
+            mode == "bilinear" -> 0;
+            mode == "nearest" -> 1;
+            true -> 2
+        };
+    let padding =
+        if {
+            padding_mode == "zeros" -> 0;
+            padding_mode == "border" -> 1;
+            true -> 2
+        };
+    grid_sampler(input, grid, interpolation, padding, align_corners).
+
+/**
+ * Exact generated CXX tuple leaf for aten::grid_sampler_2d_backward.
+ */
+@compiler.native {pytorch.spatial.grid_sampler_2d_backward}
+pub grid_sampler_2d_backward(
+    grad_output: Tensor,
+    tensor: Tensor,
+    grid: Tensor,
+    interpolation_mode: Int,
+    padding_mode: Int,
+    align_corners: Bool,
+    output_mask_input: Bool,
+    output_mask_grid: Bool,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::grid_sampler_2d_backward.out.
+ */
+@compiler.native {pytorch.spatial.grid_sampler_2d_backward_out}
+pub grid_sampler_2d_backward_out(
+    grad_input: Tensor,
+    grad_grid: Tensor,
+    grad_output: Tensor,
+    tensor: Tensor,
+    grid: Tensor,
+    interpolation_mode: Int,
+    padding_mode: Int,
+    align_corners: Bool,
+    output_mask_input: Bool,
+    output_mask_grid: Bool,
+): Unit ->
+    native.
+
+/**
+ * Exact generated CXX tuple leaf for aten::grid_sampler_3d_backward.
+ */
+@compiler.native {pytorch.spatial.grid_sampler_3d_backward}
+pub grid_sampler_3d_backward(
+    grad_output: Tensor,
+    tensor: Tensor,
+    grid: Tensor,
+    interpolation_mode: Int,
+    padding_mode: Int,
+    align_corners: Bool,
+    output_mask_input: Bool,
+    output_mask_grid: Bool,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX retained-output leaf for aten::grid_sampler_3d_backward.out.
+ */
+@compiler.native {pytorch.spatial.grid_sampler_3d_backward_out}
+pub grid_sampler_3d_backward_out(
+    grad_input: Tensor,
+    grad_grid: Tensor,
+    grad_output: Tensor,
+    tensor: Tensor,
+    grid: Tensor,
+    interpolation_mode: Int,
+    padding_mode: Int,
+    align_corners: Bool,
+    output_mask_input: Bool,
+    output_mask_grid: Bool,
+): Unit ->
+    native.

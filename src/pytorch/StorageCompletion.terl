@@ -1,0 +1,16 @@
+/**
+ * Public storage mutation completions layered over generated CXX leaves.
+ */
+module pytorch.StorageCompletion.
+
+import pytorch.StorageNative.storage_share_memory.
+
+import type pytorch.Tensor.
+
+/**
+ * Moves the tensor storage into shared memory and preserves PyTorch's
+ * return-self contract.
+ */
+pub share_memory(tensor: Tensor): Tensor ->
+    storage_share_memory(tensor);
+    tensor.

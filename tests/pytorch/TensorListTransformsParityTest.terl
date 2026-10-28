@@ -1,0 +1,104 @@
+/**
+ * Public CPU and required-CUDA evidence for tensor-list transforms.
+ */
+module pytorch.TensorListTransformsParityTest.
+
+import pytorch.Tensor.{dispose, from_floats, item_float, shape, sum, to_device}.
+import pytorch.TensorListTransforms.{broadcast_tensors, flatten_dense_tensors, meshgrid, meshgrid_indexing, pad_sequence, unflatten_dense_tensors}.
+import std.core.Option.{None, Some}.
+import std.system.Environment.
+
+import type pytorch.Tensor.
+
+placed(values: List[Float], dimensions: List[Int], device: Int): Tensor ->
+    let host = from_floats(values, dimensions);
+    let index =
+        if {
+            device == 0 -> -1;
+            true -> 0
+        };
+    let result = to_device(host, device, index);
+    dispose(host);
+    result.
+
+total(tensor: Tensor): Float ->
+    let reduced = sum(tensor);
+    let value = item_float(reduced);
+    dispose(reduced);
+    value.
+
+validate_pair(
+    tensors: List[Tensor],
+    first_shape: List[Int],
+    first_total: Float,
+    second_shape: List[Int],
+    second_total: Float,
+): Bool ->
+    case tensors {
+        [first, second] ->
+            validate_pair_values(
+                first,
+                first_shape,
+                first_total,
+                second,
+                second_shape,
+                second_total,
+            );
+        _ -> false
+    }.
+
+validate_pair_values(
+    first: Tensor,
+    first_shape: List[Int],
+    first_total: Float,
+    second: Tensor,
+    second_shape: List[Int],
+    second_total: Float,
+): Bool ->
+    let valid =
+        shape(first) == first_shape
+            and total(first) == first_total
+            and shape(second) == second_shape
+            and total(second) == second_total;
+    dispose(second);
+    dispose(first);
+    valid.
+
+verify(device: Int): Bool ->
+    let column = placed([1.0, 2.0, 3.0], [3, 1], device);
+    let row = placed([10.0, 20.0], [1, 2], device);
+    let broadcast_valid = validate_pair(broadcast_tensors(column, [row]), [3, 2], 12.0, [3, 2], 90.0);
+    dispose(row);
+    dispose(column);
+    let x = placed([1.0, 2.0], [2], device);
+    let y = placed([10.0, 20.0, 30.0], [3], device);
+    let default_grid_valid = validate_pair(meshgrid(x, [y]), [2, 3], 9.0, [2, 3], 120.0);
+    let ij_grid_valid = validate_pair(meshgrid_indexing(x, [y], "ij"), [2, 3], 9.0, [2, 3], 120.0);
+    let xy_grid_valid = validate_pair(meshgrid_indexing(x, [y], "xy"), [3, 2], 9.0, [3, 2], 120.0);
+    (dispose(y); dispose(x); let matrix = placed([1.0, 2.0, 3.0, 4.0], [2, 2], device);
+let vector = placed([5.0, 6.0], [2], device);
+let flat = flatten_dense_tensors([matrix, vector]);
+let flat_valid = shape(flat) == [6] and total(flat) == 21.0;
+let pieces = unflatten_dense_tensors(flat, matrix, [vector]);
+(dispose(vector); dispose(matrix); dispose(flat); let unflatten_valid = validate_pair(pieces, [2, 2], 10.0, [2], 11.0);
+let sequence_a = placed([1.0, 2.0, 3.0], [3], device);
+let sequence_b = placed([4.0, 5.0], [2], device);
+let padded = pad_sequence([sequence_a, sequence_b], false, 0.0, "right");
+let padded_valid = shape(padded) == [3, 2] and total(padded) == 15.0;
+(dispose(padded); dispose(sequence_b); dispose(sequence_a); broadcast_valid
+    and default_grid_valid
+    and ij_grid_valid
+    and xy_grid_valid
+    and flat_valid
+    and unflatten_valid
+    and padded_valid))).
+
+@test
+pub tensor_list_transforms_on_cpu_and_required_cuda(): Bool ->
+    let cpu_valid = verify(0);
+    let cuda_valid =
+        case Environment.get("TERLAN_PYTORCH_REQUIRE_CUDA") {
+            None -> true;
+            Some(_value) -> verify(1)
+        };
+    cpu_valid and cuda_valid.

@@ -1,0 +1,11 @@
+//! Generated CXX 2-D NLL-loss completion surface.
+
+module pytorch.NllLoss2dCompletion.
+
+pub nll_loss2d_default(input: Tensor, target: Tensor, reduction: Int, ignore_index: Int): Tensor.
+
+pub nll_loss2d_out_default(output: Tensor, input: Tensor, target: Tensor, reduction: Int, ignore_index: Int): Unit.
+
+pub nll_loss2d_out_weight(output: Tensor, input: Tensor, target: Tensor, weight: Tensor, reduction: Int, ignore_index: Int): Unit.
+
+pub nll_loss2d_weight(input: Tensor, target: Tensor, weight: Tensor, reduction: Int, ignore_index: Int): Tensor.

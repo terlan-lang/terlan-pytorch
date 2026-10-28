@@ -1,0 +1,22 @@
+/**
+ * CPU evidence for the normal functional and output overloads.
+ */
+module pytorch.NormalParityTest.
+
+import pytorch.DistributionCompletion.{normal_float_float, normal_float_float_out, normal_functional, normal_out}.
+import pytorch.Tensor.{dispose, dtype, from_floats, shape}.
+
+@test
+pub normal_functional_and_output_preserve_shape_and_dtype(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let actual = normal_functional(source, 0.0, 1.0);
+    let output = from_floats([0.0, 0.0, 0.0, 0.0], [2, 2]);
+    normal_out(output, source, 0.0, 1.0);
+    let valid =
+        shape(actual) == [2, 2]
+            and dtype(actual) == dtype(source)
+            and shape(output) == [2, 2]
+            and dtype(output) == dtype(source);
+    let sized = normal_float_float(0.0, 1.0, [2, 3]);
+    let sized_output = from_floats([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [2, 3]);
+    (normal_float_float_out(sized_output, 0.0, 1.0, [2, 3]); let sized_valid = shape(sized) == [2, 3] and shape(sized_output) == [2, 3]; (dispose(sized_output); dispose(sized); dispose(output); dispose(actual); dispose(source); sized_valid and valid)).

@@ -1,0 +1,139 @@
+//! Dense aliases, detached handles, rank normalization, transpose views/copies, and real/complex storage views.
+
+module pytorch.View.
+
+/// Executes the exact aten::adjoint dense view, alias, or explicit copy schema.
+
+pub adjoint(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::alias dense view, alias, or explicit copy schema.
+
+pub alias(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::alias_copy dense view, alias, or explicit copy schema.
+
+pub alias_copy(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::atleast_1d dense view, alias, or explicit copy schema.
+
+pub atleast_1d(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::atleast_1d dense view, alias, or explicit copy schema.
+
+pub atleast_1d_sequence(first: Tensor, tensors: List[Tensor]): List[Tensor].
+
+/// Executes the exact aten::atleast_2d dense view, alias, or explicit copy schema.
+
+pub atleast_2d(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::atleast_2d dense view, alias, or explicit copy schema.
+
+pub atleast_2d_sequence(first: Tensor, tensors: List[Tensor]): List[Tensor].
+
+/// Executes the exact aten::atleast_3d dense view, alias, or explicit copy schema.
+
+pub atleast_3d(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::atleast_3d dense view, alias, or explicit copy schema.
+
+pub atleast_3d_sequence(first: Tensor, tensors: List[Tensor]): List[Tensor].
+
+/// Executes the exact aten::conj dense view, alias, or explicit copy schema.
+
+pub conj(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::data dense view, alias, or explicit copy schema.
+
+pub data(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::detach dense view, alias, or explicit copy schema.
+
+pub detach(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::detach_copy dense view, alias, or explicit copy schema.
+
+pub detach_copy(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::imag dense view, alias, or explicit copy schema.
+
+pub imag(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::lift dense view, alias, or explicit copy schema.
+
+pub lift(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::lift_fresh dense view, alias, or explicit copy schema.
+
+pub lift_fresh(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::lift_fresh_copy dense view, alias, or explicit copy schema.
+
+pub lift_fresh_copy(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::mH dense view, alias, or explicit copy schema.
+
+pub mH(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::mT dense view, alias, or explicit copy schema.
+
+pub mT(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::matrix_H dense view, alias, or explicit copy schema.
+
+pub matrix_H(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::numpy_T dense view, alias, or explicit copy schema.
+
+pub numpy_T(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::positive dense view, alias, or explicit copy schema.
+
+pub positive(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::ravel dense view, alias, or explicit copy schema.
+
+pub ravel(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::real dense view, alias, or explicit copy schema.
+
+pub real(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::resolve_conj dense view, alias, or explicit copy schema.
+
+pub resolve_conj(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::resolve_neg dense view, alias, or explicit copy schema.
+
+pub resolve_neg(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::squeeze dense view, alias, or explicit copy schema.
+
+pub squeeze(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::squeeze_copy dense view, alias, or explicit copy schema.
+
+pub squeeze_copy(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::t dense view, alias, or explicit copy schema.
+
+pub t(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::t_copy dense view, alias, or explicit copy schema.
+
+pub t_copy(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::view_as_complex dense view, alias, or explicit copy schema.
+
+pub view_as_complex(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::view_as_complex_copy dense view, alias, or explicit copy schema.
+
+pub view_as_complex_copy(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::view_as_real dense view, alias, or explicit copy schema.
+
+pub view_as_real(tensor: Tensor): Tensor.
+
+/// Executes the exact aten::view_as_real_copy dense view, alias, or explicit copy schema.
+
+pub view_as_real_copy(tensor: Tensor): Tensor.

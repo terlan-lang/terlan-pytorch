@@ -1,0 +1,35 @@
+//! Generated exact CXX special-scalar dispatchers.
+
+module pytorch.SpecialScalarNative.
+
+/// Exact generated CXX special-scalar dispatcher.
+
+pub scalar_left_float(operation: Int, scalar: Float, tensor: Tensor): Tensor.
+
+/// Exact generated CXX special-scalar dispatcher.
+
+pub scalar_left_float_out(output: Tensor, operation: Int, scalar: Float, tensor: Tensor): Unit.
+
+/// Exact generated CXX special-scalar dispatcher.
+
+pub scalar_left_int(operation: Int, scalar: Int, tensor: Tensor): Tensor.
+
+/// Exact generated CXX special-scalar dispatcher.
+
+pub scalar_left_int_out(output: Tensor, operation: Int, scalar: Int, tensor: Tensor): Unit.
+
+/// Exact generated CXX special-scalar dispatcher.
+
+pub scalar_right_float(tensor: Tensor, operation: Int, scalar: Float): Tensor.
+
+/// Exact generated CXX special-scalar dispatcher.
+
+pub scalar_right_float_out(output: Tensor, tensor: Tensor, operation: Int, scalar: Float): Unit.
+
+/// Exact generated CXX special-scalar dispatcher.
+
+pub scalar_right_int(tensor: Tensor, operation: Int, scalar: Int): Tensor.
+
+/// Exact generated CXX special-scalar dispatcher.
+
+pub scalar_right_int_out(output: Tensor, tensor: Tensor, operation: Int, scalar: Int): Unit.

@@ -1,0 +1,104 @@
+/**
+ * Behavioral evidence for optional numerical overloads and retained storage.
+ */
+module pytorch.OptionalNumericsParityTest.
+
+import pytorch.Gradients.{gelu_backward, gelu_backward_out, logit_backward, logit_backward_epsilon, logit_backward_epsilon_out, logit_backward_out}.
+import pytorch.Special.{logit, logit_epsilon, logit_epsilon_in_place, logit_epsilon_out, logit_in_place, logit_out, polygamma, polygamma_in_place, polygamma_out}.
+import pytorch.Statistics.{cumprod, cumprod_dtype, cumprod_in_place, cumprod_in_place_dtype, cumprod_out, cumprod_out_dtype, cumsum, cumsum_dtype, cumsum_in_place, cumsum_in_place_dtype, cumsum_out, cumsum_out_dtype}.
+import pytorch.Tensor.{Tensor, clone, dispose, from_floats, gelu, gelu_in_place, gelu_out, item_float, mse_loss, to_dtype}.
+
+/**
+ * Returns whether two tensors contain equal values after numeric normalization.
+ */
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let actual_float = to_dtype(actual, 7);
+    let expected_float = to_dtype(expected, 7);
+    let loss = mse_loss(actual_float, expected_float, 1);
+    let valid = item_float(loss) == 0.0;
+    dispose(loss);
+    dispose(expected_float);
+    dispose(actual_float);
+    valid.
+
+/**
+ * Proves cumulative operations preserve omitted and explicit dtype paths.
+ */
+@test
+pub cumulative_optional_dtype_paths_match_libtorch(): Bool ->
+    let input = from_floats([1.0, 2.0, 3.0, 4.0], [2, 2]);
+    let sum_expected = cumsum(input, 1);
+    let sum_output = clone(input);
+    cumsum_out(sum_output, input, 1);
+    let sum_mutation = clone(input);
+    (cumsum_in_place(sum_mutation, 1); let typed_sum_expected = cumsum_dtype(input, 1, 7);
+let typed_sum_output = clone(input);
+(cumsum_out_dtype(typed_sum_output, input, 1, 7); let typed_sum_mutation = clone(input);
+(cumsum_in_place_dtype(typed_sum_mutation, 1, 7); let product_expected = cumprod(input, 1);
+let product_output = clone(input);
+(cumprod_out(product_output, input, 1); let product_mutation = clone(input);
+(cumprod_in_place(product_mutation, 1); let typed_product_expected = cumprod_dtype(input, 1, 7);
+let typed_product_output = clone(input);
+(cumprod_out_dtype(typed_product_output, input, 1, 7); let typed_product_mutation = clone(input);
+(cumprod_in_place_dtype(typed_product_mutation, 1, 7); let valid =
+    matches(sum_output, sum_expected)
+        and matches(sum_mutation, sum_expected)
+        and matches(typed_sum_output, typed_sum_expected)
+        and matches(typed_sum_mutation, typed_sum_expected)
+        and matches(product_output, product_expected)
+        and matches(product_mutation, product_expected)
+        and matches(typed_product_output, typed_product_expected)
+        and matches(typed_product_mutation, typed_product_expected);
+(dispose(typed_product_mutation); dispose(typed_product_output); dispose(typed_product_expected); dispose(product_mutation); dispose(product_output); dispose(product_expected); dispose(typed_sum_mutation); dispose(typed_sum_output); dispose(typed_sum_expected); dispose(sum_mutation); dispose(sum_output); dispose(sum_expected); dispose(input); valid)))))))).
+
+/**
+ * Proves GELU approximation and polygamma order propagate through all storage forms.
+ */
+@test
+pub approximation_and_order_paths_match_libtorch(): Bool ->
+    let input = from_floats([-1.0, 0.0, 1.0], [3]);
+    let gelu_expected = gelu(input, "tanh");
+    let gelu_output = clone(input);
+    gelu_out(gelu_output, input, "tanh");
+    let gelu_mutation = clone(input);
+    (gelu_in_place(gelu_mutation, "tanh"); let gradient = from_floats([1.0, 1.0, 1.0], [3]);
+let gradient_expected = gelu_backward(gradient, input, "tanh");
+let gradient_output = clone(input);
+(gelu_backward_out(gradient_output, gradient, input, "tanh"); let positive = from_floats([1.0, 2.0, 3.0], [3]);
+let polygamma_expected = polygamma(positive, 1);
+let polygamma_output = clone(positive);
+(polygamma_out(polygamma_output, positive, 1); let polygamma_mutation = clone(positive);
+(polygamma_in_place(polygamma_mutation, 1); let valid =
+    matches(gelu_output, gelu_expected)
+        and matches(gelu_mutation, gelu_expected)
+        and matches(gradient_output, gradient_expected)
+        and matches(polygamma_output, polygamma_expected)
+        and matches(polygamma_mutation, polygamma_expected);
+(dispose(polygamma_mutation); dispose(polygamma_output); dispose(polygamma_expected); dispose(positive); dispose(gradient_output); dispose(gradient_expected); dispose(gradient); dispose(gelu_mutation); dispose(gelu_output); dispose(gelu_expected); dispose(input); valid))))).
+
+/**
+ * Proves logit epsilon omission and presence across forward and backward storage forms.
+ */
+@test
+pub logit_optional_epsilon_paths_match_libtorch(): Bool ->
+    let input = from_floats([0.2, 0.5, 0.8], [3]);
+    let expected = logit(input);
+    let output = clone(input);
+    logit_out(output, input);
+    let mutation = clone(input);
+    (logit_in_place(mutation); let epsilon_expected = logit_epsilon(input, 0.1);
+let epsilon_output = clone(input);
+(logit_epsilon_out(epsilon_output, input, 0.1); let epsilon_mutation = clone(input);
+(logit_epsilon_in_place(epsilon_mutation, 0.1); let gradient = from_floats([1.0, 2.0, 3.0], [3]);
+let backward_expected = logit_backward(gradient, input);
+let backward_output = clone(input);
+(logit_backward_out(backward_output, gradient, input); let epsilon_backward_expected = logit_backward_epsilon(gradient, input, 0.1);
+let epsilon_backward_output = clone(input);
+(logit_backward_epsilon_out(epsilon_backward_output, gradient, input, 0.1); let valid =
+    matches(output, expected)
+        and matches(mutation, expected)
+        and matches(epsilon_output, epsilon_expected)
+        and matches(epsilon_mutation, epsilon_expected)
+        and matches(backward_output, backward_expected)
+        and matches(epsilon_backward_output, epsilon_backward_expected);
+(dispose(epsilon_backward_output); dispose(epsilon_backward_expected); dispose(backward_output); dispose(backward_expected); dispose(gradient); dispose(epsilon_mutation); dispose(epsilon_output); dispose(epsilon_expected); dispose(mutation); dispose(output); dispose(expected); dispose(input); valid)))))).

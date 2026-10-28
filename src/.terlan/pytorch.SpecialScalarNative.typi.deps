@@ -1,0 +1,10 @@
+module=pytorch.SpecialScalarNative
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=659914745754397198
+interface_hash=9346686476639744287
+interface_doc_hash=7355992339347143525
+deps=2
+pytorch.Tensor=13489932768568026575
+std.vm.Process=4559445320576606900

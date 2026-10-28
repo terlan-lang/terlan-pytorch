@@ -1,0 +1,13 @@
+/**
+ * Generated CXX retained-output new-empty-strided surface.
+ */
+module pytorch.NewEmptyStridedCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Creates a strided tensor in retained output storage using input options.
+ */
+@compiler.native {pytorch.new_empty_strided.new_empty_strided_out}
+pub new_empty_strided_out(output: Tensor, input: Tensor, size: List[Int], stride: List[Int]): Unit ->
+    native.

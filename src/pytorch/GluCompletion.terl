@@ -1,0 +1,69 @@
+/**
+ * Generated direct-CXX implementation of the complete GLU derivative and retained-output surface.
+ */
+module pytorch.GluCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Writes exact aten::glu.out into retained storage.
+ */
+@compiler.native {pytorch.glu_completion.glu_out}
+pub glu_out(output: Tensor, input: Tensor, dimension: Int): Unit ->
+    native.
+
+/**
+ * Writes exact aten::glu_backward.grad_input into retained storage.
+ */
+@compiler.native {pytorch.glu_completion.glu_backward_out}
+pub glu_backward_out(output: Tensor, gradient_output: Tensor, input: Tensor, dimension: Int): Unit ->
+    native.
+
+/**
+ * Computes exact aten::glu_jvp.
+ */
+@compiler.native {pytorch.glu_completion.glu_jvp}
+pub glu_jvp(glu: Tensor, input: Tensor, input_tangent: Tensor, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::glu_jvp.out into retained storage.
+ */
+@compiler.native {pytorch.glu_completion.glu_jvp_out}
+pub glu_jvp_out(
+    output: Tensor,
+    glu: Tensor,
+    input: Tensor,
+    input_tangent: Tensor,
+    dimension: Int,
+): Unit ->
+    native.
+
+/**
+ * Computes exact aten::glu_backward_jvp.
+ */
+@compiler.native {pytorch.glu_completion.glu_backward_jvp}
+pub glu_backward_jvp(
+    gradient_input: Tensor,
+    gradient_glu: Tensor,
+    input: Tensor,
+    gradient_glu_tangent: Tensor,
+    input_tangent: Tensor,
+    dimension: Int,
+): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::glu_backward_jvp.out into retained storage.
+ */
+@compiler.native {pytorch.glu_completion.glu_backward_jvp_out}
+pub glu_backward_jvp_out(
+    output: Tensor,
+    gradient_input: Tensor,
+    gradient_glu: Tensor,
+    input: Tensor,
+    gradient_glu_tangent: Tensor,
+    input_tangent: Tensor,
+    dimension: Int,
+): Unit ->
+    native.

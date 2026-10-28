@@ -1,0 +1,22 @@
+/**
+ * CPU value and dtype evidence for aten::view.dtype.
+ */
+module pytorch.ViewDtypeParityTest.
+
+import pytorch.Tensor.{dispose, dtype, from_floats, shape, to_dtype}.
+import pytorch.TypeRelations.allclose.
+import pytorch.ViewDtypeCompletion.view_dtype.
+
+@test
+pub view_dtype_forms_match(): Bool ->
+    let input = from_floats([1.5, -2.25], [2]);
+    let actual = view_dtype(input, 6);
+    let expected = to_dtype(from_floats([0.0, 1.9375, 0.0, -2.03125], [4]), 6);
+    let valid =
+        dtype(actual) == 6
+            and shape(actual) == [4]
+            and allclose(actual, expected, 0.00001, 0.00001, false);
+    dispose(expected);
+    dispose(actual);
+    dispose(input);
+    valid.

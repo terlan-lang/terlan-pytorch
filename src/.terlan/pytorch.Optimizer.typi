@@ -1,0 +1,51 @@
+//! Generated CXX-owned Adam and SGD optimizer surface.
+
+module pytorch.Optimizer.
+
+/// Owned optimizer resource.
+
+pub opaque type Adam.
+
+/// Generated CXX optimizer adapter.
+
+pub adam(learning_rate: Float, beta1: Float, beta2: Float, epsilon: Float, weight_decay: Float): Adam.
+
+/// Generated CXX optimizer adapter.
+
+pub add_parameter(optimizer: Adam, parameter: Tensor): Unit.
+
+/// Generated CXX optimizer adapter.
+
+pub cancel(optimizer: Adam): Unit.
+
+/// Generated CXX optimizer adapter.
+
+pub checkpoint(optimizer: Adam): Bytes.
+
+/// Generated CXX optimizer adapter.
+
+pub dispose(optimizer: Adam): Unit.
+
+/// Generated CXX optimizer adapter.
+
+pub parameter_count(optimizer: Adam): Int.
+
+/// Generated CXX optimizer adapter.
+
+pub restore(optimizer: Adam, checkpoint: Bytes): Unit.
+
+/// Generated CXX optimizer adapter.
+
+pub sgd(learning_rate: Float, momentum: Float, dampening: Float, weight_decay: Float, nesterov: Bool): Adam.
+
+/// Generated CXX optimizer adapter.
+
+pub step(optimizer: Adam): Unit.
+
+/// Generated CXX optimizer adapter.
+
+pub step_count(optimizer: Adam): Int.
+
+/// Generated CXX optimizer adapter.
+
+pub zero_grad(optimizer: Adam): Unit.

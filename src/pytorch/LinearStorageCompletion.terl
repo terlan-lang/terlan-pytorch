@@ -1,0 +1,89 @@
+/**
+ * Exact bilinear, temporal convolution, cumulative-extrema gradient, and storage-rebinding primitives.
+ */
+module pytorch.LinearStorageCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes exact aten::bilinear without a bias tensor.
+ */
+@compiler.native {pytorch.linear_storage.bilinear_no_bias}
+pub bilinear_no_bias(input1: Tensor, input2: Tensor, weight: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::bilinear with a bias tensor.
+ */
+@compiler.native {pytorch.linear_storage.bilinear_with_bias}
+pub bilinear_with_bias(input1: Tensor, input2: Tensor, weight: Tensor, bias: Tensor): Tensor ->
+    native.
+
+/**
+ * Executes exact aten::conv_tbc.
+ */
+@compiler.native {pytorch.linear_storage.conv_tbc}
+pub conv_tbc(input: Tensor, weight: Tensor, bias: Tensor, padding: Int): Tensor ->
+    native.
+
+/**
+ * Writes exact aten::conv_tbc.out into retained storage.
+ */
+@compiler.native {pytorch.linear_storage.conv_tbc_out}
+pub conv_tbc_out(output: Tensor, input: Tensor, weight: Tensor, bias: Tensor, padding: Int): Unit ->
+    native.
+
+/**
+ * Executes exact aten::conv_tbc_backward and owns all three gradient tensors.
+ */
+@compiler.native {pytorch.linear_storage.conv_tbc_backward}
+pub conv_tbc_backward(
+    gradient: Tensor,
+    input: Tensor,
+    weight: Tensor,
+    bias: Tensor,
+    padding: Int,
+): {Tensor, Tensor, Tensor} ->
+    native.
+
+/**
+ * Executes exact aten::cummaxmin_backward.
+ */
+@compiler.native {pytorch.linear_storage.cummaxmin_backward}
+pub cummaxmin_backward(gradient: Tensor, input: Tensor, indices: Tensor, dimension: Int): Tensor ->
+    native.
+
+/**
+ * Returns an exact storage-reset tensor without mutating the source.
+ */
+@compiler.native {pytorch.linear_storage.set_empty}
+pub set_empty(tensor: Tensor): Tensor ->
+    native.
+
+/**
+ * Writes an exact storage-reset tensor into retained storage.
+ */
+@compiler.native {pytorch.linear_storage.set_empty_out}
+pub set_empty_out(output: Tensor, tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Executes exact aten::set_ in place.
+ */
+@compiler.native {pytorch.linear_storage.set_empty_in_place}
+pub set_empty_in_place(tensor: Tensor): Unit ->
+    native.
+
+/**
+ * Returns a tensor rebound to exact source tensor storage.
+ */
+@compiler.native {pytorch.linear_storage.set_source_tensor}
+pub set_source_tensor(tensor: Tensor, source: Tensor): Tensor ->
+    native.
+
+/**
+ * Writes an exact source-storage rebound tensor into retained storage.
+ */
+@compiler.native {pytorch.linear_storage.set_source_tensor_out}
+pub set_source_tensor_out(output: Tensor, tensor: Tensor, source: Tensor): Unit ->
+    native.

@@ -1,0 +1,31 @@
+/**
+ * CPU runtime evidence for fixed-size nonzero coordinates and its output form.
+ */
+module pytorch.NonzeroStaticParityTest.
+
+import pytorch.Selection.{nonzero_static, nonzero_static_out}.
+import pytorch.Tensor.{dispose, dtype_code, from_floats, item_float, mse_loss, shape, to_dtype, zeros}.
+
+import type pytorch.Tensor.{DType, Tensor}.
+
+matches(actual: Tensor, expected: Tensor): Bool ->
+    let error = mse_loss(actual, expected, 1);
+    let value = item_float(error);
+    dispose(error);
+    value == 0.0.
+
+@test
+pub fixed_nonzero_coordinates_match_libtorch(): Bool ->
+    let input = from_floats([0.0, 1.0, 0.0, 2.0], [2, 2]);
+    let expected = from_floats([0.0, 1.0, 1.0, 1.0, -7.0, -7.0], [3, 2]);
+    let actual = nonzero_static(input, 3, -7);
+    let output = zeros([3, 2], dtype_code(DType.INT64));
+    nonzero_static_out(output, input, 3, -7);
+    let actual_float = to_dtype(actual, dtype_code(DType.FLOAT64));
+    let output_float = to_dtype(output, dtype_code(DType.FLOAT64));
+    let valid =
+        shape(actual) == [3, 2]
+            and shape(output) == [3, 2]
+            and matches(actual_float, expected)
+            and matches(output_float, expected);
+    (dispose(output); dispose(actual); dispose(expected); dispose(input); valid).

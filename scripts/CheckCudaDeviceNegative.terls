@@ -1,0 +1,65 @@
+#!/usr/bin/env -S terlc run
+/**
+ * Proves that CUDA device discovery rejects unavailable and empty commands.
+ */
+import std.core.Option.{None, Some}.
+import std.core.Result.{Err, Ok}.
+import std.core.{String, Unit}.
+import std.io.Console.{eprintln, println}.
+import std.system.{Arguments, Environment, Process}.
+
+/**
+ * Reports one stable negative-gate failure.
+ */
+failure(message: String): Bool ->
+    let _printed = eprintln(String.append("error[terlan_pytorch_cuda_device_negative]: ", message));
+    false.
+
+/**
+ * Runs the positive gate with one substituted discovery command.
+ */
+rejects(compiler: String, repository: String, discovery: String): Bool ->
+    let request =
+        Process.with_environment(
+            Process.with_working_directory(
+                Process.with_arguments(
+                    Process.command(compiler),
+                    ["run", "scripts/CheckCudaDevice.terls"],
+                ),
+                repository,
+            ),
+            [Process.environment_entry("NVIDIA_SMI", discovery)],
+        );
+    case Process.run(request) {
+        Err(reason) -> failure(reason.message);
+        Ok(output) ->
+            if {
+                output.status == 0 -> failure(String.append("command unexpectedly passed: ", discovery));
+                not String.contains(output.stderr, "error[terlan_pytorch_cuda_device]") -> failure(String.append("diagnostic missing for: ", discovery));
+                true -> true
+            }
+    }.
+
+/**
+ * Executes every adversarial CUDA discovery case.
+ */
+entry(): Bool ->
+    let compiler = Arguments.get(0);
+    let repository = Environment.current_directory();
+    case compiler {
+        None -> failure("usage: CheckCudaDeviceNegative.terls <terlc>");
+        Some(path) ->
+            if {
+                not rejects(path, repository, "/terlan/missing/nvidia-smi") -> false;
+                not rejects(path, repository, "/bin/true") -> false;
+                not rejects(path, repository, "/bin/false") -> false;
+                true -> let _printed =
+                    println(
+                        "[terlan-pytorch-cuda-device-negative] missing-command=passed no-device=passed driver-failure=passed",
+                    );
+                true
+            }
+    }.
+
+assert(entry());
+Unit.

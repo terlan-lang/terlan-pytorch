@@ -1,0 +1,22 @@
+module pytorch.NonContiguousTest.
+
+import pytorch.Tensor.{dispose, from_floats, is_contiguous, is_contiguous_memory_format, shape, storage_offset, strides, transpose}.
+
+@test
+pub transpose_preserves_view_metadata(): Bool ->
+    let source = from_floats([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3]);
+    let transposed = transpose(source, 0, 1);
+    let valid =
+        shape(source) == [2, 3]
+            and strides(source) == [3, 1]
+            and is_contiguous(source)
+            and is_contiguous_memory_format(source, 0)
+            and storage_offset(source) == 0
+            and shape(transposed) == [3, 2]
+            and strides(transposed) == [1, 3]
+            and not is_contiguous(transposed)
+            and not is_contiguous_memory_format(transposed, 0)
+            and storage_offset(transposed) == 0;
+    dispose(transposed);
+    dispose(source);
+    valid.

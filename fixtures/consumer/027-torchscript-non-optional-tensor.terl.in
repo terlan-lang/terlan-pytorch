@@ -1,0 +1,10 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{from_float, load_torchscript, torchscript_forward_optional_tensor}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let tensor_model = load_torchscript("$model");
+    let input = from_float(3.0);
+    let output = torchscript_forward_optional_tensor(tensor_model, input);
+    println("PYTORCH_TORCHSCRIPT_NON_OPTIONAL_TENSOR_UNEXPECTED_SUCCESS").

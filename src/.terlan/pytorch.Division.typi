@@ -1,0 +1,147 @@
+//! Generated direct-CXX implementation of div, divide, and true-divide Scalar/Tensor, rounding-mode, retained-output, and in-place operations.
+
+module pytorch.Division.
+
+/// Divides a tensor by a floating-point scalar through exact aten::div.Scalar.
+
+pub div_right_float(tensor: Tensor, scalar: Float): Tensor.
+
+/// Divides a tensor by a floating-point scalar in place.
+
+pub div_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+
+/// Divides a tensor by a floating-point scalar with explicit floor or trunc rounding.
+
+pub div_right_float_mode(tensor: Tensor, scalar: Float, rounding_mode: String): Tensor.
+
+/// Divides a tensor by a floating-point scalar in place with explicit rounding.
+
+pub div_right_float_mode_in_place(tensor: Tensor, scalar: Float, rounding_mode: String): Unit.
+
+/// Writes rounded tensor division by a floating-point scalar into retained output storage.
+
+pub div_right_float_mode_out(output: Tensor, tensor: Tensor, scalar: Float, rounding_mode: String): Unit.
+
+/// Writes tensor division by a floating-point scalar into retained output storage.
+
+pub div_right_float_out(output: Tensor, tensor: Tensor, scalar: Float): Unit.
+
+/// Divides a tensor by a integer scalar through exact aten::div.Scalar.
+
+pub div_right_int(tensor: Tensor, scalar: Int): Tensor.
+
+/// Divides a tensor by a integer scalar in place.
+
+pub div_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+
+/// Divides a tensor by a integer scalar with explicit floor or trunc rounding.
+
+pub div_right_int_mode(tensor: Tensor, scalar: Int, rounding_mode: String): Tensor.
+
+/// Divides a tensor by a integer scalar in place with explicit rounding.
+
+pub div_right_int_mode_in_place(tensor: Tensor, scalar: Int, rounding_mode: String): Unit.
+
+/// Writes rounded tensor division by a integer scalar into retained output storage.
+
+pub div_right_int_mode_out(output: Tensor, tensor: Tensor, scalar: Int, rounding_mode: String): Unit.
+
+/// Writes tensor division by a integer scalar into retained output storage.
+
+pub div_right_int_out(output: Tensor, tensor: Tensor, scalar: Int): Unit.
+
+/// Divides the left tensor by the right tensor in place.
+
+pub div_tensor_in_place(left: Tensor, right: Tensor): Unit.
+
+/// Divides two tensors with explicit floor or trunc rounding through exact aten::div.Tensor_mode.
+
+pub div_tensor_mode(left: Tensor, right: Tensor, rounding_mode: String): Tensor.
+
+/// Divides the left tensor by the right tensor in place with explicit rounding.
+
+pub div_tensor_mode_in_place(left: Tensor, right: Tensor, rounding_mode: String): Unit.
+
+/// Writes rounded two-tensor division into retained output storage.
+
+pub div_tensor_mode_out(output: Tensor, left: Tensor, right: Tensor, rounding_mode: String): Unit.
+
+/// Writes two-tensor division into retained output storage through exact aten::div.out.
+
+pub div_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+
+/// Divides a tensor by a floating-point scalar through exact aten::divide.Scalar.
+
+pub divide_right_float(tensor: Tensor, scalar: Float): Tensor.
+
+/// Divides a tensor by a floating-point scalar in place.
+
+pub divide_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+
+/// Divides a tensor by a floating-point scalar with explicit floor or trunc rounding.
+
+pub divide_right_float_mode(tensor: Tensor, scalar: Float, rounding_mode: String): Tensor.
+
+/// Divides a tensor by a floating-point scalar in place with explicit rounding.
+
+pub divide_right_float_mode_in_place(tensor: Tensor, scalar: Float, rounding_mode: String): Unit.
+
+/// Divides a tensor by a integer scalar through exact aten::divide.Scalar.
+
+pub divide_right_int(tensor: Tensor, scalar: Int): Tensor.
+
+/// Divides a tensor by a integer scalar in place.
+
+pub divide_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+
+/// Divides a tensor by a integer scalar with explicit floor or trunc rounding.
+
+pub divide_right_int_mode(tensor: Tensor, scalar: Int, rounding_mode: String): Tensor.
+
+/// Divides a tensor by a integer scalar in place with explicit rounding.
+
+pub divide_right_int_mode_in_place(tensor: Tensor, scalar: Int, rounding_mode: String): Unit.
+
+/// Divides the left tensor by the right tensor in place.
+
+pub divide_tensor_in_place(left: Tensor, right: Tensor): Unit.
+
+/// Divides two tensors with explicit floor or trunc rounding through exact aten::divide.Tensor_mode.
+
+pub divide_tensor_mode(left: Tensor, right: Tensor, rounding_mode: String): Tensor.
+
+/// Divides the left tensor by the right tensor in place with explicit rounding.
+
+pub divide_tensor_mode_in_place(left: Tensor, right: Tensor, rounding_mode: String): Unit.
+
+/// Writes rounded two-tensor division into retained output storage.
+
+pub divide_tensor_mode_out(output: Tensor, left: Tensor, right: Tensor, rounding_mode: String): Unit.
+
+/// Writes two-tensor division into retained output storage through exact aten::divide.out.
+
+pub divide_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.
+
+/// Performs true division by a floating-point scalar.
+
+pub true_divide_right_float(tensor: Tensor, scalar: Float): Tensor.
+
+/// Performs true division by a floating-point scalar in place.
+
+pub true_divide_right_float_in_place(tensor: Tensor, scalar: Float): Unit.
+
+/// Performs true division by a integer scalar.
+
+pub true_divide_right_int(tensor: Tensor, scalar: Int): Tensor.
+
+/// Performs true division by a integer scalar in place.
+
+pub true_divide_right_int_in_place(tensor: Tensor, scalar: Int): Unit.
+
+/// Performs true division by a tensor in place.
+
+pub true_divide_tensor_in_place(left: Tensor, right: Tensor): Unit.
+
+/// Writes two-tensor true division into retained output storage.
+
+pub true_divide_tensor_out(output: Tensor, left: Tensor, right: Tensor): Unit.

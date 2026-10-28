@@ -1,0 +1,41 @@
+module pytorch.FloorDivisionParityTest.
+
+import pytorch.Binary.{floor_divide}.
+import pytorch.BinaryScalar.{floor_divide_right_float, floor_divide_right_float_in_place, floor_divide_right_float_out, floor_divide_right_int, floor_divide_right_int_in_place, floor_divide_right_int_out, floor_divide_tensor_in_place, floor_divide_tensor_out}.
+import pytorch.Tensor.{dispose, from_float, item_float}.
+
+/**
+ * Proves every frozen floor_divide schema and both typed scalar representations.
+ */
+@test
+pub floor_divide_overloads_match_libtorch(): Bool ->
+    let source = from_float(-7.5);
+    let right = from_float(2.0);
+    let tensor_value = floor_divide(source, right);
+    let int_value = floor_divide_right_int(source, 2);
+    let float_value = floor_divide_right_float(source, -2.0);
+    let tensor_output = from_float(0.0);
+    let int_output = from_float(0.0);
+    let float_output = from_float(0.0);
+    let tensor_mutation = from_float(-7.5);
+    let int_mutation = from_float(-7.5);
+    let float_mutation = from_float(-7.5);
+    floor_divide_tensor_out(tensor_output, source, right);
+    floor_divide_right_int_out(int_output, source, 2);
+    floor_divide_right_float_out(float_output, source, -2.0);
+    floor_divide_tensor_in_place(tensor_mutation, right);
+    floor_divide_right_int_in_place(int_mutation, 2);
+    floor_divide_right_float_in_place(float_mutation, -2.0);
+    let valid =
+        item_float(tensor_value) == -4.0
+            and item_float(int_value) == -4.0
+            and item_float(float_value) == 3.0
+            and item_float(tensor_output) == -4.0
+            and item_float(int_output) == -4.0
+            and item_float(float_output) == 3.0
+            and item_float(tensor_mutation) == -4.0
+            and item_float(int_mutation) == -4.0
+            and item_float(float_mutation) == 3.0
+            and item_float(source) == -7.5
+            and item_float(right) == 2.0;
+    (dispose(float_mutation); dispose(int_mutation); dispose(tensor_mutation); dispose(float_output); dispose(int_output); dispose(tensor_output); dispose(float_value); dispose(int_value); dispose(tensor_value); dispose(right); dispose(source); valid).

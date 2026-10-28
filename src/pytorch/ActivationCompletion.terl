@@ -1,0 +1,262 @@
+/**
+ * Compiler-generated exact hardshrink, softshrink, softplus, and threshold forward/backward primitives.
+ */
+module pytorch.ActivationCompletion.
+
+import type pytorch.Tensor.
+
+/**
+ * Executes exact hardshrink with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.hardshrink_int}
+pub hardshrink_int(input: Tensor, lambd: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact hardshrink with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.hardshrink_float}
+pub hardshrink_float(input: Tensor, lambd: Float): Tensor ->
+    native.
+
+/**
+ * Executes exact hardshrink out with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.hardshrink_out_int}
+pub hardshrink_out_int(output: Tensor, input: Tensor, lambd: Int): Unit ->
+    native.
+
+/**
+ * Executes exact hardshrink out with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.hardshrink_out_float}
+pub hardshrink_out_float(output: Tensor, input: Tensor, lambd: Float): Unit ->
+    native.
+
+/**
+ * Executes exact hardshrink backward with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.hardshrink_backward_int}
+pub hardshrink_backward_int(gradient: Tensor, input: Tensor, lambd: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact hardshrink backward with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.hardshrink_backward_float}
+pub hardshrink_backward_float(gradient: Tensor, input: Tensor, lambd: Float): Tensor ->
+    native.
+
+/**
+ * Executes exact hardshrink backward out with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.hardshrink_backward_out_int}
+pub hardshrink_backward_out_int(output: Tensor, gradient: Tensor, input: Tensor, lambd: Int): Unit ->
+    native.
+
+/**
+ * Executes exact hardshrink backward out with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.hardshrink_backward_out_float}
+pub hardshrink_backward_out_float(
+    output: Tensor,
+    gradient: Tensor,
+    input: Tensor,
+    lambd: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes exact softshrink with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softshrink_int}
+pub softshrink_int(input: Tensor, lambd: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact softshrink with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softshrink_float}
+pub softshrink_float(input: Tensor, lambd: Float): Tensor ->
+    native.
+
+/**
+ * Executes exact softshrink out with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softshrink_out_int}
+pub softshrink_out_int(output: Tensor, input: Tensor, lambd: Int): Unit ->
+    native.
+
+/**
+ * Executes exact softshrink out with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softshrink_out_float}
+pub softshrink_out_float(output: Tensor, input: Tensor, lambd: Float): Unit ->
+    native.
+
+/**
+ * Executes exact softshrink backward with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softshrink_backward_int}
+pub softshrink_backward_int(gradient: Tensor, input: Tensor, lambd: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact softshrink backward with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softshrink_backward_float}
+pub softshrink_backward_float(gradient: Tensor, input: Tensor, lambd: Float): Tensor ->
+    native.
+
+/**
+ * Executes exact softshrink backward out with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softshrink_backward_out_int}
+pub softshrink_backward_out_int(output: Tensor, gradient: Tensor, input: Tensor, lambd: Int): Unit ->
+    native.
+
+/**
+ * Executes exact softshrink backward out with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softshrink_backward_out_float}
+pub softshrink_backward_out_float(
+    output: Tensor,
+    gradient: Tensor,
+    input: Tensor,
+    lambd: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes exact softplus with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softplus_int}
+pub softplus_int(input: Tensor, beta: Int, threshold: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact softplus with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softplus_float}
+pub softplus_float(input: Tensor, beta: Float, threshold: Float): Tensor ->
+    native.
+
+/**
+ * Executes exact softplus out with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softplus_out_int}
+pub softplus_out_int(output: Tensor, input: Tensor, beta: Int, threshold: Int): Unit ->
+    native.
+
+/**
+ * Executes exact softplus out with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softplus_out_float}
+pub softplus_out_float(output: Tensor, input: Tensor, beta: Float, threshold: Float): Unit ->
+    native.
+
+/**
+ * Executes exact softplus backward with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softplus_backward_int}
+pub softplus_backward_int(gradient: Tensor, input: Tensor, beta: Int, threshold: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact softplus backward with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softplus_backward_float}
+pub softplus_backward_float(gradient: Tensor, input: Tensor, beta: Float, threshold: Float): Tensor ->
+    native.
+
+/**
+ * Executes exact softplus backward out with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softplus_backward_out_int}
+pub softplus_backward_out_int(
+    output: Tensor,
+    gradient: Tensor,
+    input: Tensor,
+    beta: Int,
+    threshold: Int,
+): Unit ->
+    native.
+
+/**
+ * Executes exact softplus backward out with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.softplus_backward_out_float}
+pub softplus_backward_out_float(
+    output: Tensor,
+    gradient: Tensor,
+    input: Tensor,
+    beta: Float,
+    threshold: Float,
+): Unit ->
+    native.
+
+/**
+ * Executes exact threshold with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.threshold_int}
+pub threshold_int(input: Tensor, threshold: Int, value: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact threshold with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.threshold_float}
+pub threshold_float(input: Tensor, threshold: Float, value: Float): Tensor ->
+    native.
+
+/**
+ * Executes exact threshold out with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.threshold_out_int}
+pub threshold_out_int(output: Tensor, input: Tensor, threshold: Int, value: Int): Unit ->
+    native.
+
+/**
+ * Executes exact threshold out with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.threshold_out_float}
+pub threshold_out_float(output: Tensor, input: Tensor, threshold: Float, value: Float): Unit ->
+    native.
+
+/**
+ * Executes exact threshold backward with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.threshold_backward_int}
+pub threshold_backward_int(gradient: Tensor, input: Tensor, threshold: Int): Tensor ->
+    native.
+
+/**
+ * Executes exact threshold backward with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.threshold_backward_float}
+pub threshold_backward_float(gradient: Tensor, input: Tensor, threshold: Float): Tensor ->
+    native.
+
+/**
+ * Executes exact threshold backward out with the public integer Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.threshold_backward_out_int}
+pub threshold_backward_out_int(
+    output: Tensor,
+    gradient: Tensor,
+    input: Tensor,
+    threshold: Int,
+): Unit ->
+    native.
+
+/**
+ * Executes exact threshold backward out with the public floating-point Scalar form.
+ */
+@compiler.native {pytorch.activation_completion.threshold_backward_out_float}
+pub threshold_backward_out_float(
+    output: Tensor,
+    gradient: Tensor,
+    input: Tensor,
+    threshold: Float,
+): Unit ->
+    native.

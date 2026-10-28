@@ -1,0 +1,138 @@
+/**
+ * Generated exact CXX recurrent-operation completion surface.
+ */
+module pytorch.Recurrent.
+
+import type pytorch.Tensor.
+
+/**
+ * Exact generated CXX LSTM cell leaf.
+ */
+@compiler.native {pytorch.recurrent.lstm_cell}
+pub lstm_cell(
+    input: Tensor,
+    hx: List[Tensor],
+    w_ih: Tensor,
+    w_hh: Tensor,
+    has_b_ih: Bool,
+    b_ih: Tensor,
+    has_b_hh: Bool,
+    b_hh: Tensor,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX tanh RNN cell leaf.
+ */
+@compiler.native {pytorch.recurrent.rnn_tanh_cell}
+pub rnn_tanh_cell(
+    input: Tensor,
+    hx: Tensor,
+    w_ih: Tensor,
+    w_hh: Tensor,
+    has_b_ih: Bool,
+    b_ih: Tensor,
+    has_b_hh: Bool,
+    b_hh: Tensor,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX ReLU RNN cell leaf.
+ */
+@compiler.native {pytorch.recurrent.rnn_relu_cell}
+pub rnn_relu_cell(
+    input: Tensor,
+    hx: Tensor,
+    w_ih: Tensor,
+    w_hh: Tensor,
+    has_b_ih: Bool,
+    b_ih: Tensor,
+    has_b_hh: Bool,
+    b_hh: Tensor,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX gated RNN cell leaf.
+ */
+@compiler.native {pytorch.recurrent.gru_cell}
+pub gru_cell(
+    input: Tensor,
+    hx: Tensor,
+    w_ih: Tensor,
+    w_hh: Tensor,
+    has_b_ih: Bool,
+    b_ih: Tensor,
+    has_b_hh: Bool,
+    b_hh: Tensor,
+): Tensor ->
+    native.
+
+/**
+ * Exact generated CXX tanh RNN sequence leaf.
+ */
+@compiler.native {pytorch.recurrent.rnn_tanh}
+pub rnn_tanh(
+    input: Tensor,
+    hx: Tensor,
+    params: List[Tensor],
+    has_biases: Bool,
+    num_layers: Int,
+    dropout: Float,
+    train: Bool,
+    bidirectional: Bool,
+    batch_first: Bool,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX ReLU RNN sequence leaf.
+ */
+@compiler.native {pytorch.recurrent.rnn_relu}
+pub rnn_relu(
+    input: Tensor,
+    hx: Tensor,
+    params: List[Tensor],
+    has_biases: Bool,
+    num_layers: Int,
+    dropout: Float,
+    train: Bool,
+    bidirectional: Bool,
+    batch_first: Bool,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX gated RNN sequence leaf.
+ */
+@compiler.native {pytorch.recurrent.gru}
+pub gru(
+    input: Tensor,
+    hx: Tensor,
+    params: List[Tensor],
+    has_biases: Bool,
+    num_layers: Int,
+    dropout: Float,
+    train: Bool,
+    bidirectional: Bool,
+    batch_first: Bool,
+): {Tensor, Tensor} ->
+    native.
+
+/**
+ * Exact generated CXX LSTM sequence leaf.
+ */
+@compiler.native {pytorch.recurrent.lstm}
+pub lstm(
+    input: Tensor,
+    hx: List[Tensor],
+    params: List[Tensor],
+    has_biases: Bool,
+    num_layers: Int,
+    dropout: Float,
+    train: Bool,
+    bidirectional: Bool,
+    batch_first: Bool,
+): {Tensor, Tensor, Tensor} ->
+    native.

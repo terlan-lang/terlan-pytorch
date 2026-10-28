@@ -1,0 +1,18 @@
+/**
+ * CPU evidence for deterministic multinomial sampling and output mutation.
+ */
+module pytorch.MultinomialParityTest.
+
+import pytorch.DistributionCompletion.{multinomial, multinomial_out}.
+import pytorch.Tensor.{dispose, empty_typed_native, from_floats, from_ints}.
+import pytorch.TypeRelations.allclose.
+
+@test
+pub multinomial_forms_match(): Bool ->
+    let probabilities = from_floats([1.0, 0.0, 0.0], [3]);
+    let expected = from_ints([0], [1]);
+    let sampled = multinomial(probabilities, 1, false);
+    let output = empty_typed_native([1], 4, 0, -1);
+    multinomial_out(output, probabilities, 1, false);
+    let valid = allclose(sampled, expected, 0.0, 0.0, false) and allclose(output, expected, 0.0, 0.0, false);
+    (dispose(output); dispose(sampled); dispose(expected); dispose(probabilities); valid).

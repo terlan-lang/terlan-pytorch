@@ -1,0 +1,85 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{add, amax, dispose, from_floats, full_float, item_float, layer_norm, matmul, mse_loss, multiply, shape, softmax, transpose}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let input = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
+    let normalization_weight = full_float([2], 1.0);
+    let normalization_bias = full_float([2], 0.0);
+    let normalized = layer_norm(
+        input, [2], normalization_weight, normalization_bias, 0.0, false
+    );
+    let query_weight = full_float([2, 2], 0.0);
+    let key_weight = full_float([2, 2], 0.0);
+    let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
+    let queries = matmul(normalized, query_weight);
+    let keys = matmul(normalized, key_weight);
+    let projected_values = matmul(normalized, value_weight);
+    let value_bias = full_float([2], 1.0);
+    let values = add(projected_values, value_bias, 1.0);
+    let transposed_keys = transpose(keys, 0, 1);
+    let scores = matmul(queries, transposed_keys);
+    let scale = full_float([1], 0.7071067811865476);
+    let scaled_scores = multiply(scores, scale);
+    let attention = softmax(scaled_scores, 1);
+    let context = matmul(attention, values);
+    let residual = add(input, context, 1.0);
+    let expected_attention = full_float([2, 2], 0.5);
+    let expected_context = full_float([2, 2], 1.0);
+    let expected_residual = from_floats([2.0, 4.0, 5.0, 3.0], [2, 2]);
+    let attention_loss = mse_loss(attention, expected_attention, 1);
+    let context_loss = mse_loss(context, expected_context, 1);
+    let residual_loss = mse_loss(residual, expected_residual, 1);
+    let attention_columns = amax(attention, [0], false);
+    let attention_maximum = amax(attention_columns, [0], false);
+    let residual_columns = amax(residual, [0], false);
+    let residual_maximum = amax(residual_columns, [0], false);
+    let observed_attention_shape = shape(attention);
+    let observed_context_shape = shape(context);
+    let observed_residual_shape = shape(residual);
+    let observed_attention = item_float(attention_maximum);
+    let observed_residual = item_float(residual_maximum);
+    let observed_attention_loss = item_float(attention_loss);
+    let observed_context_loss = item_float(context_loss);
+    let observed_residual_loss = item_float(residual_loss);
+    dispose(residual_maximum);
+    dispose(residual_columns);
+    dispose(attention_maximum);
+    dispose(attention_columns);
+    dispose(residual_loss);
+    dispose(context_loss);
+    dispose(attention_loss);
+    dispose(expected_residual);
+    dispose(expected_context);
+    dispose(expected_attention);
+    dispose(residual);
+    dispose(context);
+    dispose(attention);
+    dispose(scaled_scores);
+    dispose(scale);
+    dispose(scores);
+    dispose(transposed_keys);
+    dispose(values);
+    dispose(value_bias);
+    dispose(projected_values);
+    dispose(keys);
+    dispose(queries);
+    dispose(value_weight);
+    dispose(key_weight);
+    dispose(query_weight);
+    dispose(normalized);
+    dispose(normalization_bias);
+    dispose(normalization_weight);
+    dispose(input);
+    if {
+        observed_attention_shape.length() == 2 and observed_attention_shape[0] == 2 and
+            observed_attention_shape[1] == 2 and observed_context_shape.length() == 2 and
+            observed_context_shape[0] == 2 and observed_context_shape[1] == 2 and
+            observed_residual_shape.length() == 2 and observed_residual_shape[0] == 2 and
+            observed_residual_shape[1] == 2 and observed_attention == 0.5 and
+            observed_residual == 5.0 and observed_attention_loss == 0.0 and
+            observed_context_loss == 0.0 and observed_residual_loss == 0.0 ->
+                println("PYTORCH_SELF_ATTENTION_CONSUMER_OK");
+        true -> println("PYTORCH_SELF_ATTENTION_CONSUMER_FAILED")
+    }.

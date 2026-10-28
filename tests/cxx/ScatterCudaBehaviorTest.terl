@@ -1,0 +1,7 @@
+module pytorch_cxx.ScatterCudaBehaviorTest.
+
+import pytorch.ScatterBehaviorSupport.{scatter_contracts_on}.
+
+@test
+pub scatter_cuda_contracts(): Bool ->
+    scatter_contracts_on("cuda:0", true).

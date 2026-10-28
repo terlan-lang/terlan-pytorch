@@ -1,0 +1,242 @@
+/**
+ * Exact native counting and indexed-reduction operations composed in Terlan from generated CXX leaves.
+ */
+module pytorch.AggregationNative.
+
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+
+/**
+ * Counts nonnegative integer values with optional weights and a minimum output length.
+ */
+pub bincount_configured(input: Tensor, weights: Tensor, has_weights: Bool, minlength: Int): Tensor ->
+    if {
+        has_weights -> aggregation_bincount_weighted(input, weights, minlength);
+        true -> aggregation_bincount_unweighted(input, minlength)
+    }.
+
+/**
+ * Writes weighted or unweighted counts into retained output storage.
+ */
+pub bincount_configured_out(
+    output: Tensor,
+    input: Tensor,
+    weights: Tensor,
+    has_weights: Bool,
+    minlength: Int,
+): Unit ->
+    if {
+        has_weights -> aggregation_bincount_weighted_out(output, input, weights, minlength);
+        true -> aggregation_bincount_unweighted_out(output, input, minlength)
+    }.
+
+/**
+ * Counts values into equal-width histogram bins using integer or floating scalar bounds.
+ */
+pub histc_configured(
+    input: Tensor,
+    bins: Int,
+    bounds_are_int: Bool,
+    minimum_int: Int,
+    maximum_int: Int,
+    minimum_float: Float,
+    maximum_float: Float,
+): Tensor ->
+    if {
+        bounds_are_int -> aggregation_histc_int(input, bins, minimum_int, maximum_int);
+        true -> aggregation_histc_float(input, bins, minimum_float, maximum_float)
+    }.
+
+/**
+ * Writes equal-width histogram counts into retained output storage.
+ */
+pub histc_configured_out(
+    output: Tensor,
+    input: Tensor,
+    bins: Int,
+    bounds_are_int: Bool,
+    minimum_int: Int,
+    maximum_int: Int,
+    minimum_float: Float,
+    maximum_float: Float,
+): Unit ->
+    if {
+        bounds_are_int -> aggregation_histc_int_out(output, input, bins, minimum_int, maximum_int);
+        true -> aggregation_histc_float_out(output, input, bins, minimum_float, maximum_float)
+    }.
+
+/**
+ * Reduces source slices into indexed destinations with a typed reduction identifier.
+ */
+pub index_reduce_configured(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: Int,
+    include_self: Bool,
+): Tensor ->
+    if {
+        reduction == 0 -> aggregation_index_reduce(input, dimension, index, source, "prod", include_self);
+        reduction == 1 -> aggregation_index_reduce(input, dimension, index, source, "mean", include_self);
+        reduction == 2 -> aggregation_index_reduce(input, dimension, index, source, "amax", include_self);
+        reduction == 3 -> aggregation_index_reduce(input, dimension, index, source, "amin", include_self);
+        true -> let _failed = fail(exit_reason(7270));
+        aggregation_index_reduce(input, dimension, index, source, "prod", include_self)
+    }.
+
+/**
+ * Writes an indexed reduction into retained output storage.
+ */
+pub index_reduce_configured_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: Int,
+    include_self: Bool,
+): Unit ->
+    if {
+        reduction == 0 -> aggregation_index_reduce_out(output, input, dimension, index, source, "prod", include_self);
+        reduction == 1 -> aggregation_index_reduce_out(output, input, dimension, index, source, "mean", include_self);
+        reduction == 2 -> aggregation_index_reduce_out(output, input, dimension, index, source, "amax", include_self);
+        reduction == 3 -> aggregation_index_reduce_out(output, input, dimension, index, source, "amin", include_self);
+        true -> fail(exit_reason(7270))
+    }.
+
+/**
+ * Reduces source slices into indexed input storage in place.
+ */
+pub index_reduce_configured_in_place(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: Int,
+    include_self: Bool,
+): Unit ->
+    if {
+        reduction == 0 -> aggregation_index_reduce_in_place(input, dimension, index, source, "prod", include_self);
+        reduction == 1 -> aggregation_index_reduce_in_place(input, dimension, index, source, "mean", include_self);
+        reduction == 2 -> aggregation_index_reduce_in_place(input, dimension, index, source, "amax", include_self);
+        reduction == 3 -> aggregation_index_reduce_in_place(input, dimension, index, source, "amin", include_self);
+        true -> fail(exit_reason(7270))
+    }.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.aggregation.cxx.aggregation_bincount_weighted}
+aggregation_bincount_weighted(input: Tensor, weights: Tensor, minlength: Int): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.aggregation.cxx.aggregation_bincount_unweighted}
+aggregation_bincount_unweighted(input: Tensor, minlength: Int): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.aggregation.cxx.aggregation_bincount_weighted_out}
+aggregation_bincount_weighted_out(
+    output: Tensor,
+    input: Tensor,
+    weights: Tensor,
+    minlength: Int,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.aggregation.cxx.aggregation_bincount_unweighted_out}
+aggregation_bincount_unweighted_out(output: Tensor, input: Tensor, minlength: Int): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.aggregation.cxx.aggregation_histc_int}
+aggregation_histc_int(input: Tensor, bins: Int, minimum: Int, maximum: Int): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.aggregation.cxx.aggregation_histc_float}
+aggregation_histc_float(input: Tensor, bins: Int, minimum: Float, maximum: Float): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.aggregation.cxx.aggregation_histc_int_out}
+aggregation_histc_int_out(
+    output: Tensor,
+    input: Tensor,
+    bins: Int,
+    minimum: Int,
+    maximum: Int,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.aggregation.cxx.aggregation_histc_float_out}
+aggregation_histc_float_out(
+    output: Tensor,
+    input: Tensor,
+    bins: Int,
+    minimum: Float,
+    maximum: Float,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.aggregation.cxx.aggregation_index_reduce}
+aggregation_index_reduce(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: String,
+    include_self: Bool,
+): Tensor ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.aggregation.cxx.aggregation_index_reduce_out}
+aggregation_index_reduce_out(
+    output: Tensor,
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: String,
+    include_self: Bool,
+): Unit ->
+    native.
+
+/**
+ * Undocumented upstream declaration.
+ */
+@compiler.native {pytorch.aggregation.cxx.aggregation_index_reduce_in_place}
+aggregation_index_reduce_in_place(
+    input: Tensor,
+    dimension: Int,
+    index: Tensor,
+    source: Tensor,
+    reduction: String,
+    include_self: Bool,
+): Unit ->
+    native.

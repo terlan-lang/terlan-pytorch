@@ -1,0 +1,8 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{full_float}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let tensor = full_float([-1, 3], 1.25);
+    println("PYTORCH_FULL_SHAPE_NOT_REJECTED").

@@ -1,0 +1,9 @@
+module=pytorch.CorrectionStatisticsPairNative
+syntax_contract_schema=terlan-syntax-contract-v1
+syntax_contract_fingerprint_algorithm=fnv1a64
+syntax_contract_fingerprint=fnv1a64:c53208b17dfb657b
+source_hash=7435718542467860413
+interface_hash=12223952951201689287
+interface_doc_hash=196269562881472883
+deps=1
+pytorch.Tensor=13489932768568026575

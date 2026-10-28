@@ -1,0 +1,89 @@
+module pytorch.ClampNativeBehaviorSupport.
+
+import pytorch.ClampNative.{clamp_scalar, clamp_scalar_in_place, clamp_scalar_out, clamp_tensor, clamp_tensor_in_place, clamp_tensor_out}.
+import pytorch.Tensor.{Float64, Strided, clone, dispose, dtype, is_cuda, mul_float, ones_device, shape}.
+import pytorch.TypeRelationsNative.{allclose_native}.
+
+import type pytorch.Tensor.
+
+matches_value(tensor: Tensor, value: Float, device_name: String): Bool ->
+    let base = ones_device([2], Float64, Strided, device_name);
+    let expected = mul_float(base, value);
+    let valid =
+        shape(tensor) == [2]
+            and dtype(tensor) == Float64
+            and is_cuda(tensor) == (device_name == "cuda:0")
+            and allclose_native(tensor, expected, 0.0, 0.0, false);
+    dispose(expected);
+    dispose(base);
+    valid.
+
+scalar_forms_match(device_name: String): Bool ->
+    let base = ones_device([2], Float64, Strided, device_name);
+    let high = mul_float(base, 10.0);
+    let low = mul_float(base, -10.0);
+    let minimum = clamp_scalar(low, true, false, 0, -4.5, false, true, 0, 0.0);
+    let maximum = clamp_scalar(high, false, true, 0, 0.0, true, true, 4, 0.0);
+    let paired = clamp_scalar(high, true, true, -2, 0.0, true, false, 0, 3.5);
+    let minimum_out = ones_device([0], Float64, Strided, device_name);
+    let maximum_out = ones_device([0], Float64, Strided, device_name);
+    let paired_out = ones_device([0], Float64, Strided, device_name);
+    clamp_scalar_out(minimum_out, low, true, false, 0, -4.5, false, true, 0, 0.0);
+    clamp_scalar_out(maximum_out, high, false, true, 0, 0.0, true, true, 4, 0.0);
+    clamp_scalar_out(paired_out, high, true, true, -2, 0.0, true, false, 0, 3.5);
+    let minimum_mutation = clone(low);
+    let maximum_mutation = clone(high);
+    let paired_mutation = clone(high);
+    (clamp_scalar_in_place(minimum_mutation, true, false, 0, -4.5, false, true, 0, 0.0); clamp_scalar_in_place(maximum_mutation, false, true, 0, 0.0, true, true, 4, 0.0); clamp_scalar_in_place(paired_mutation, true, true, -2, 0.0, true, false, 0, 3.5); let valid =
+    matches_value(minimum, -4.5, device_name)
+        and matches_value(maximum, 4.0, device_name)
+        and matches_value(paired, 3.5, device_name)
+        and matches_value(minimum_out, -4.5, device_name)
+        and matches_value(maximum_out, 4.0, device_name)
+        and matches_value(paired_out, 3.5, device_name)
+        and matches_value(minimum_mutation, -4.5, device_name)
+        and matches_value(maximum_mutation, 4.0, device_name)
+        and matches_value(paired_mutation, 3.5, device_name)
+        and matches_value(high, 10.0, device_name)
+        and matches_value(low, -10.0, device_name);
+(dispose(paired_mutation); dispose(maximum_mutation); dispose(minimum_mutation); dispose(paired_out); dispose(maximum_out); dispose(minimum_out); dispose(paired); dispose(maximum); dispose(minimum); dispose(low); dispose(high); dispose(base); valid)).
+
+tensor_forms_match(device_name: String): Bool ->
+    let base = ones_device([2], Float64, Strided, device_name);
+    let high = mul_float(base, 10.0);
+    let low = mul_float(base, -10.0);
+    let minimum_bound = mul_float(base, -3.0);
+    let maximum_bound = mul_float(base, 4.0);
+    let minimum = clamp_tensor(low, 0, minimum_bound, maximum_bound);
+    let maximum = clamp_tensor(high, 1, maximum_bound, minimum_bound);
+    let paired = clamp_tensor(high, 2, minimum_bound, maximum_bound);
+    let minimum_out = ones_device([0], Float64, Strided, device_name);
+    let maximum_out = ones_device([0], Float64, Strided, device_name);
+    let paired_out = ones_device([0], Float64, Strided, device_name);
+    clamp_tensor_out(minimum_out, low, 0, minimum_bound, maximum_bound);
+    clamp_tensor_out(maximum_out, high, 1, maximum_bound, minimum_bound);
+    clamp_tensor_out(paired_out, high, 2, minimum_bound, maximum_bound);
+    let minimum_mutation = clone(low);
+    let maximum_mutation = clone(high);
+    let paired_mutation = clone(high);
+    (clamp_tensor_in_place(minimum_mutation, 0, minimum_bound, maximum_bound); clamp_tensor_in_place(maximum_mutation, 1, maximum_bound, minimum_bound); clamp_tensor_in_place(paired_mutation, 2, minimum_bound, maximum_bound); let valid =
+    matches_value(minimum, -3.0, device_name)
+        and matches_value(maximum, 4.0, device_name)
+        and matches_value(paired, 4.0, device_name)
+        and matches_value(minimum_out, -3.0, device_name)
+        and matches_value(maximum_out, 4.0, device_name)
+        and matches_value(paired_out, 4.0, device_name)
+        and matches_value(minimum_mutation, -3.0, device_name)
+        and matches_value(maximum_mutation, 4.0, device_name)
+        and matches_value(paired_mutation, 4.0, device_name)
+        and matches_value(high, 10.0, device_name)
+        and matches_value(low, -10.0, device_name)
+        and matches_value(minimum_bound, -3.0, device_name)
+        and matches_value(maximum_bound, 4.0, device_name);
+(dispose(paired_mutation); dispose(maximum_mutation); dispose(minimum_mutation); dispose(paired_out); dispose(maximum_out); dispose(minimum_out); dispose(paired); dispose(maximum); dispose(minimum); dispose(maximum_bound); dispose(minimum_bound); dispose(low); dispose(high); dispose(base); valid)).
+
+/**
+ * Exercises all scalar-presence and tensor-mode selectors through functional, retained-output, and in-place forms.
+ */
+pub clamp_contracts_on(device_name: String): Bool ->
+    scalar_forms_match(device_name) and tensor_forms_match(device_name).

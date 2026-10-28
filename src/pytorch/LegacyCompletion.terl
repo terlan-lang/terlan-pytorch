@@ -1,0 +1,22 @@
+/**
+ * Exact fixed-arity compatibility wrappers for deprecated Tensor APIs.
+ */
+module pytorch.LegacyCompletion.
+
+import pytorch.Linalg.{linalg_eigh, linalg_eigvalsh}.
+import pytorch.Tensor.{device_index, device_type, dtype, empty_typed_native}.
+
+import type pytorch.Tensor.
+
+/**
+ * Preserves Tensor.symeig's upper-triangle default and always-pair return.
+ * When eigenvectors are disabled, PyTorch returns an empty tensor as the
+ * second tuple element.
+ */
+pub symeig_legacy(input: Tensor, eigenvectors: Bool = false): {Tensor, Tensor} ->
+    if {
+        eigenvectors -> linalg_eigh(input, "U");
+        true -> let values = linalg_eigvalsh(input, "U");
+        let empty = empty_typed_native([0], dtype(input), device_type(input), device_index(input));
+        {values, empty}
+    }.

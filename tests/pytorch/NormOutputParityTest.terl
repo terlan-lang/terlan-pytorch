@@ -1,0 +1,28 @@
+module pytorch.NormOutputParityTest.
+
+import pytorch.Scalar.{from_float, from_int}.
+import pytorch.StatisticsCompletion.{norm_scalar_dtype, norm_scalar_dtype_out, norm_scalar_out}.
+import pytorch.Tensor.{dispose, from_floats, item_float, zeros}.
+
+/**
+ * Proves retained output parity for integer and floating Scalar orders.
+ */
+@test
+pub norm_scalar_output_matches_libtorch(): Bool ->
+    let input = from_floats([3.0, 4.0], [2]);
+    let output = zeros([0], 7);
+    norm_scalar_out(output, input, from_int(2));
+    let integer_value = item_float(output);
+    (norm_scalar_out(output, input, from_float(1.0)); let floating_value = item_float(output); let valid = integer_value == 5.0 and floating_value == 7.0; (dispose(output); dispose(input); valid)).
+
+/**
+ * Proves dtype-configured functional and retained-output norm forms.
+ */
+@test
+pub norm_scalar_dtype_outputs_match_libtorch(): Bool ->
+    let input = from_floats([3.0, 4.0], [2]);
+    let converted = norm_scalar_dtype(input, from_int(2), 6);
+    let output = zeros([0], 7);
+    norm_scalar_dtype_out(output, input, from_float(1.0), 6);
+    let valid = item_float(converted) == 5.0 and item_float(output) == 7.0;
+    (dispose(output); dispose(converted); dispose(input); valid).

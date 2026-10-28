@@ -1,0 +1,23 @@
+module pytorch_consumer.Main.
+
+import pytorch.Tensor.{dispose, dispose_model, from_float, item_float, load_torchscript, torchscript_forward2}.
+import std.io.Console.{println}.
+
+pub main(): Unit ->
+    let model = load_torchscript("$two_input_model");
+    let first_input = from_float(3.0);
+    let second_input = from_float(4.0);
+    let output = torchscript_forward2(model, first_input, second_input);
+    let observed_first = item_float(first_input);
+    let observed_second = item_float(second_input);
+    let observed_output = item_float(output);
+    dispose(output);
+    dispose(second_input);
+    dispose(first_input);
+    dispose_model(model);
+    if {
+        observed_first == 3.0 and observed_second == 4.0 and
+            observed_output == -5.0 ->
+            println("PYTORCH_TWO_INPUT_TORCHSCRIPT_MODEL_CONSUMER_OK");
+        true -> println("PYTORCH_TWO_INPUT_TORCHSCRIPT_MODEL_CONSUMER_FAILED")
+    }.
