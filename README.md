@@ -115,6 +115,9 @@ exposed through the Terlan API.
 
 The self-hosted CI lane reads the distribution from `LIBTORCH_CUDA_ROOT` and
 its colon-separated runtime library directories from `CUDA_LIBRARY_PATH`.
+Each run builds the current `terlan-lang/terlan` `main` branch so the scheduled
+gate detects compiler/package compatibility regressions instead of testing a
+stale compiler snapshot.
 The CUDA gate rejects missing devices, incompatible distributions, missing
 stream exports, and unresolved runtime libraries before executing Terlan code.
 
