@@ -324,7 +324,7 @@ cuda_suite(mode: String): Option[AdversarialSuite] ->
                 cases = [
                     adversarial(
                         "invalid_device",
-                        "c_abi_status_7074",
+                        "native_cpp_exception",
                         "    let stream = create_stream(2147483647, false);\n    dispose(stream).",
                     ),
                     adversarial(

@@ -11,6 +11,23 @@ fn assert_ok(value: UniquePtr<ffi::TerlanExceptionEnvelope>) {
 }
 
 #[test]
+fn cuda_stream_rejects_out_of_range_device() {
+    if std::env::var("TERLAN_PYTORCH_TEST_DEVICE").as_deref() != Ok("cuda") {
+        return;
+    }
+
+    let error = match ffi::cuda_stream_create(i64::MAX, false) {
+        Ok(_) => panic!("out-of-range CUDA device unexpectedly created a stream"),
+        Err(error) => error,
+    };
+    assert!(
+        error.what().contains("invalid CUDA device index"),
+        "unexpected CUDA device rejection: {}",
+        error.what()
+    );
+}
+
+#[test]
 fn cuda_record_stream_uses_libtorch_stream_identity() {
     if std::env::var("TERLAN_PYTORCH_TEST_DEVICE").as_deref() != Ok("cuda") {
         return;
@@ -30,7 +47,8 @@ fn cuda_record_stream_uses_libtorch_stream_identity() {
         0
     );
 
-    let stream = ffi::cuda_stream_create(0, false).expect("CUDA stream construction must not throw");
+    let stream =
+        ffi::cuda_stream_create(0, false).expect("CUDA stream construction must not throw");
     assert!(!stream.is_null(), "CUDA stream construction returned null");
     assert_ok(ffi::terlan_mutation_pytorch_cuda_record_stream(
         device.pin_mut(),

@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #if defined(TERLAN_LIBTORCH_CUDA)
+#include <c10/cuda/CUDAFunctions.h>
 #include <c10/cuda/CUDAStream.h>
 #endif
 
@@ -17,6 +18,9 @@ std::unique_ptr<CudaStream> cuda_stream_create(std::int64_t device_index,
   (void)high_priority;
   return nullptr;
 #else
+  if (device_index >= static_cast<std::int64_t>(c10::cuda::device_count())) {
+    throw std::invalid_argument("invalid CUDA device index");
+  }
   try {
     const auto stream = c10::cuda::getStreamFromPool(
         high_priority, static_cast<c10::DeviceIndex>(device_index));
