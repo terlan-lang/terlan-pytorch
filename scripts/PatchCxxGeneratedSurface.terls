@@ -23,6 +23,7 @@ child(parent: String, relative: String): String ->
 canonical_files(): List[String] ->
     [
         "src/pytorch/Tensor.terl",
+        "src/pytorch/Optimizer.terl",
         "src/pytorch/CreationCompletionNative.terl",
         "src/pytorch/RangeNative.terl",
         "src/pytorch/WindowNative.terl",
