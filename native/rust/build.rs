@@ -37,6 +37,7 @@ fn main() {
     });
     if cuda_library {
         println!("cargo:rustc-link-lib=dylib=torch_cuda");
+        println!("cargo:rustc-link-lib=dylib=c10_cuda");
         if let Some(include) = cuda_include {
             build.define("TERLAN_LIBTORCH_CUDA", None);
             build.include(include);
