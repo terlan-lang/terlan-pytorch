@@ -33,6 +33,11 @@ jobs:
           path: terlan-ndarray
       - name: Require configured CUDA LibTorch
         run: test -n "$LIBTORCH" && test -f "$LIBTORCH/lib/libtorch_cuda.so"
+      - name: Stage package-relative LibTorch headers
+        run: |
+          install -d terlan-pytorch/vendor/libtorch-2.13.0+cpu/libtorch
+          cp -a --reflink=auto "$LIBTORCH/include" \
+            terlan-pytorch/vendor/libtorch-2.13.0+cpu/libtorch/
       - name: Require a CUDA device
         run: nvidia-smi --query-gpu=index,name --format=csv
       - name: Configure CUDA runtime libraries

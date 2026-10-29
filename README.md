@@ -118,7 +118,9 @@ its colon-separated runtime library directories from `CUDA_LIBRARY_PATH`.
 Each run builds the current `terlan-lang/terlan` `main` branch so the scheduled
 gate detects compiler/package compatibility regressions instead of testing a
 stale compiler snapshot. It also checks out `terlan-lang/terlan-ndarray` from
-`main`, which supplies the ABI helper required by the CUDA package gate.
+`main`, which supplies the ABI helper required by the CUDA package gate. The
+validated LibTorch headers are staged inside the checkout before generation so
+the manifest's package-relative provenance boundary remains enforced.
 The CUDA gate rejects missing devices, incompatible distributions, missing
 stream exports, and unresolved runtime libraries before executing Terlan code.
 
