@@ -25,6 +25,12 @@ jobs:
           repository: terlan-lang/terlan
           ref: main
           path: terlan
+      - name: Check out ndarray dependency
+        uses: actions/checkout@v4
+        with:
+          repository: terlan-lang/terlan-ndarray
+          ref: main
+          path: terlan-ndarray
       - name: Require configured CUDA LibTorch
         run: test -n "$LIBTORCH" && test -f "$LIBTORCH/lib/libtorch_cuda.so"
       - name: Require a CUDA device
