@@ -23,12 +23,17 @@ same_and_dispose(actual: Tensor, expected: Tensor): Bool ->
 @test
 pub unravel_index_matches_libtorch_for_matrix_indices(): Bool ->
     let indices = from_ints([0, 1, 2, 3, 4, 5], [6]);
-    let [rows, columns] = unravel_index(indices, [2, 3]);
-    let expected_rows = from_ints([0, 0, 0, 1, 1, 1], [6]);
-    let expected_columns = from_ints([0, 1, 2, 0, 1, 2], [6]);
-    let valid = same_and_dispose(rows, expected_rows) and same_and_dispose(columns, expected_columns);
-    let [flat] = unravel_index(indices, 6);
-    let expected_flat = from_ints([0, 1, 2, 3, 4, 5], [6]);
-    let scalar_valid = same_and_dispose(flat, expected_flat);
-    dispose(indices);
-    valid and scalar_valid.
+    when {
+        [rows, columns] <- unravel_index(indices, [2, 3])
+    } else {
+        _ -> false
+    };
+    (let expected_rows = from_ints([0, 0, 0, 1, 1, 1], [6]);
+let expected_columns = from_ints([0, 1, 2, 0, 1, 2], [6]);
+let valid = same_and_dispose(rows, expected_rows) and same_and_dispose(columns, expected_columns);
+(when {
+    [flat] <- unravel_index(indices, 6)
+} else {
+    _ -> false
+};
+(let expected_flat = from_ints([0, 1, 2, 3, 4, 5], [6]); let scalar_valid = same_and_dispose(flat, expected_flat); (dispose(indices); valid and scalar_valid)))).

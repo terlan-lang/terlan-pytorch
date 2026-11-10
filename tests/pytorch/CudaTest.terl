@@ -62,28 +62,23 @@ pub unravel_index_preserves_cuda_device(): Bool ->
     let host_indices = from_floats([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], [6]);
     let integer_indices = to_dtype(host_indices, 4);
     let device_indices = cuda(integer_indices);
-    let [rows, columns] = unravel_index(device_indices, [2, 3]);
-    let host_rows = to_device(rows, 0, -1);
-    let host_columns = to_device(columns, 0, -1);
-    let expected_rows = from_ints([0, 0, 0, 1, 1, 1], [6]);
-    let expected_columns = from_ints([0, 1, 2, 0, 1, 2], [6]);
-    let valid =
-        device_type(rows) == 1
-            and device_index(rows) == 0
-            and device_type(columns) == 1
-            and device_index(columns) == 0
-            and equal(host_rows, expected_rows)
-            and equal(host_columns, expected_columns);
-    dispose(expected_columns);
-    dispose(expected_rows);
-    dispose(host_columns);
-    dispose(host_rows);
-    dispose(columns);
-    dispose(rows);
-    dispose(device_indices);
-    dispose(integer_indices);
-    dispose(host_indices);
-    valid.
+    when {
+        [rows, columns] <- unravel_index(device_indices, [2, 3])
+    } else {
+        _ -> false
+    };
+    (let host_rows = to_device(rows, 0, -1);
+let host_columns = to_device(columns, 0, -1);
+let expected_rows = from_ints([0, 0, 0, 1, 1, 1], [6]);
+let expected_columns = from_ints([0, 1, 2, 0, 1, 2], [6]);
+let valid =
+    device_type(rows) == 1
+        and device_index(rows) == 0
+        and device_type(columns) == 1
+        and device_index(columns) == 0
+        and equal(host_rows, expected_rows)
+        and equal(host_columns, expected_columns);
+(dispose(expected_columns); dispose(expected_rows); dispose(host_columns); dispose(host_rows); dispose(columns); dispose(rows); dispose(device_indices); dispose(integer_indices); dispose(host_indices); valid)).
 
 @test
 pub explicit_gradient_backward_preserves_cuda_autograd(): Bool ->
@@ -165,31 +160,12 @@ pub functional_autograd_grad_supports_multiple_cuda_roots(): Bool ->
     let host_cotangent_y = from_floats([0.5, 2.0], [2]);
     let cotangent_x = cuda(host_cotangent_x);
     let cotangent_y = cuda(host_cotangent_y);
-    let [actual_x, actual_y] = autograd_grad_many([output_x, output_y], [input_x, input_y], [cotangent_x, cotangent_y]);
-    let host_actual_x = to_device(actual_x, 0, -1);
-    let host_actual_y = to_device(actual_y, 0, -1);
-    let expected_x = from_floats([2.0, 12.0], [2]);
-    let expected_y = from_floats([4.0, 20.0], [2]);
-    let valid = equal(host_actual_x, expected_x) and equal(host_actual_y, expected_y);
-    dispose(expected_y);
-    dispose(expected_x);
-    dispose(host_actual_y);
-    dispose(host_actual_x);
-    dispose(actual_y);
-    dispose(actual_x);
-    dispose(cotangent_y);
-    dispose(cotangent_x);
-    dispose(host_cotangent_y);
-    dispose(host_cotangent_x);
-    dispose(output_y);
-    dispose(output_x);
-    dispose(input_y);
-    dispose(input_x);
-    dispose(device_source_y);
-    dispose(device_source_x);
-    dispose(host_source_y);
-    dispose(host_source_x);
-    valid.
+    when {
+        [actual_x, actual_y] <- autograd_grad_many([output_x, output_y], [input_x, input_y], [cotangent_x, cotangent_y])
+    } else {
+        _ -> false
+    };
+    (let host_actual_x = to_device(actual_x, 0, -1); let host_actual_y = to_device(actual_y, 0, -1); let expected_x = from_floats([2.0, 12.0], [2]); let expected_y = from_floats([4.0, 20.0], [2]); let valid = equal(host_actual_x, expected_x) and equal(host_actual_y, expected_y); (dispose(expected_y); dispose(expected_x); dispose(host_actual_y); dispose(host_actual_x); dispose(actual_y); dispose(actual_x); dispose(cotangent_y); dispose(cotangent_x); dispose(host_cotangent_y); dispose(host_cotangent_x); dispose(output_y); dispose(output_x); dispose(input_y); dispose(input_x); dispose(device_source_y); dispose(device_source_x); dispose(host_source_y); dispose(host_source_x); valid)).
 
 @test
 pub backward_many_accumulates_multiple_cuda_roots(): Bool ->

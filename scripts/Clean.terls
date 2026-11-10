@@ -14,7 +14,7 @@ failure(message: String): Bool ->
     false.
 
 remove_tree(path: String): Bool ->
-    let {
+    when {
         Ok(_) <- Directory.entries(path);
         Err(reason) <- Directory.remove_all(path)
     } else {

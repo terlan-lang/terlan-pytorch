@@ -36,9 +36,9 @@ run(program: String, arguments: List[String], working_directory: Option[String])
         Process.with_output_limit_bytes(
             Process.with_timeout_ms(
                 Process.with_arguments(Process.command(program), arguments),
-                600000,
+                600_000,
             ),
-            16777216,
+            16_777_216,
         );
     let request =
         case working_directory {
@@ -94,7 +94,7 @@ rejects(
 make_cuda_candidate(candidate: String, valid_cpu_root: String): Bool ->
     let library_directory = child(candidate, "lib");
     let include_directory = child(candidate, "include");
-    let {
+    when {
         Ok(Unit) <- Directory.create_all(library_directory);
         Ok(Unit) <- Directory.create_all(include_directory);
         Ok(Unit) <-
@@ -137,7 +137,7 @@ make_missing_runtime_library(workspace: String, candidate: String): Bool ->
     let symbols_source = child(workspace, "cuda-symbols.c");
     let missing_library = child(workspace, "libterlan_pytorch_missing_cuda_runtime.so");
     let cuda_library = child(candidate, "lib/libtorch_cuda.so");
-    let {
+    when {
         Ok(Unit) <- File.write_text(missing_source, "void terlan_pytorch_missing_cuda_runtime(void) {}\n");
         Ok(Unit) <-
             File.write_text(
@@ -190,7 +190,7 @@ run_negative_cases(
     missing_cuda: String,
     missing_runtime: String,
 ): Bool ->
-    let {
+    when {
         true <-
             rejects(
                 compiler,

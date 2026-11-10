@@ -61,9 +61,9 @@ run(
         Process.with_output_limit_bytes(
             Process.with_timeout_ms(
                 Process.with_arguments(Process.command(program), arguments),
-                120000,
+                120_000,
             ),
-            16777216,
+            16_777_216,
         );
     let request =
         if {
@@ -117,7 +117,7 @@ require_symbols(output: Output, symbols: List[String], code: String, description
  * Returns a parent path without depending on the caller's working directory.
  */
 parent_path(path: String): Option[String] ->
-    let {
+    when {
         Ok(parsed) <- Path.from_string(path);
         Some(parent) <- parsed.parent()
     } else {
@@ -132,7 +132,7 @@ parent_path(path: String): Option[String] ->
  */
 cuda_ld_library_path(root: String): String ->
     let bundled =
-        (let {
+        (when {
     Some(libtorch_parent) <- parent_path(root);
     Some(vendor_parent) <- parent_path(libtorch_parent)
 } else {
@@ -220,7 +220,7 @@ cuda_headers_available(root: String): Bool ->
     and require_file(child(system_target, "cuda.h"), "", "").
 
 check_cuda(root: String, cuda_library: String): Bool ->
-    let {
+    when {
         true <-
             require_file(
                 cuda_library,
@@ -272,7 +272,7 @@ check(root: String, flavor: String): Bool ->
     let hash_file = child(root, "build-hash");
     let library = child(root, "lib/libtorch_cpu.so");
     let cuda_library = child(root, "lib/libtorch_cuda.so");
-    let {
+    when {
         Some(actual_version) <- read_required(version_file, "terlan_pytorch_libtorch_build_version_missing");
         true <- valid_version(actual_version, flavor);
         Some(actual_hash) <- read_required(hash_file, "terlan_pytorch_libtorch_build_hash_missing");

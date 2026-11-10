@@ -54,7 +54,7 @@ record_symbol(): Json ->
             "source",
             Json.object()
                 .put("path", Json.string("bindings/cxx/libtorch_bindings.hpp"))
-                .put("line", Json.int(1870))
+                .put("line", Json.int(1_870))
                 .put("column", Json.int(8)),
         )
         .put("kind", Json.string("record"))
@@ -90,7 +90,7 @@ function_symbol(): Json ->
             "source",
             Json.object()
                 .put("path", Json.string("bindings/cxx/libtorch_bindings.hpp"))
-                .put("line", Json.int(1877))
+                .put("line", Json.int(1_877))
                 .put("column", Json.int(1)),
         )
         .put("kind", Json.string("function"))
@@ -216,7 +216,7 @@ append_if_missing(array: Json, item: Json, marker: String): Json ->
 find_marker(array: Json, marker: String, index: Int, count: Int): Bool ->
     if {
         index == count -> false;
-        true -> let {
+        true -> when {
             Ok(item) <- array.at(index);
             Ok(id) <- item.get("id");
             Ok(value) <- id.as_string()
@@ -229,7 +229,7 @@ find_marker(array: Json, marker: String, index: Int, count: Int): Bool ->
 function_name_present(functions: Json, name: String, index: Int, count: Int): Bool ->
     if {
         index == count -> false;
-        true -> let {
+        true -> when {
             Ok(function_value) <- functions.at(index);
             Ok(function_name) <- function_value.get("name");
             Ok(value) <- function_name.as_string()
@@ -253,7 +253,7 @@ append_mapping_if_missing(array: Json, item: Json, marker: String): Json ->
 find_mapping_marker(array: Json, marker: String, index: Int, count: Int): Bool ->
     if {
         index == count -> false;
-        true -> let {
+        true -> when {
             Ok(item) <- array.at(index);
             Ok(symbol) <- item.get("symbol");
             Ok(value) <- symbol.as_string()
@@ -277,7 +277,7 @@ dedupe_marker(
         true -> case array.at(index) {
             Err(_reason) -> dedupe_marker(array, field, marker, index + 1, count, seen, output);
             Ok(item) ->
-                let {
+                when {
                     Ok(value) <- item.get(field);
                     Ok(text) <- value.as_string()
                 } else {
@@ -303,7 +303,7 @@ dedupe_marker(
 locate_backend(modules: Json, index: Int, count: Int): Option[Int] ->
     if {
         index == count -> None;
-        true -> let {
+        true -> when {
             Ok(module_value) <- modules.at(index);
             Ok(name) <- module_value.get("module");
             Ok(value) <- name.as_string()

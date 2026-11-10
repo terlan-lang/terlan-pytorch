@@ -16,7 +16,7 @@ import type pytorch.Tensor.
  * 3-D convolution with one group per input channel.
  */
 depthwise_groups(input: Tensor): Int ->
-    let {
+    when {
         [_batch | rest] <- shape(input);
         [channels | _tail] <- rest
     } else {

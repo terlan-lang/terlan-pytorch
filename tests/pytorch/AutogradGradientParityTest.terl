@@ -72,23 +72,12 @@ pub functional_autograd_grad_supports_multiple_roots_and_inputs(): Bool ->
     let output_y = multiply(input_y, input_y);
     let cotangent_x = from_floats([0.5, 2.0], [2]);
     let cotangent_y = from_floats([0.5, 2.0], [2]);
-    let [actual_x, actual_y] = autograd_grad_many([output_x, output_y], [input_x, input_y], [cotangent_x, cotangent_y]);
-    let expected_x = from_floats([2.0, 12.0], [2]);
-    let expected_y = from_floats([4.0, 20.0], [2]);
-    let valid = equal(actual_x, expected_x) and equal(actual_y, expected_y);
-    dispose(expected_y);
-    dispose(expected_x);
-    dispose(actual_y);
-    dispose(actual_x);
-    dispose(cotangent_y);
-    dispose(cotangent_x);
-    dispose(output_y);
-    dispose(output_x);
-    dispose(input_y);
-    dispose(input_x);
-    dispose(source_y);
-    dispose(source_x);
-    valid.
+    when {
+        [actual_x, actual_y] <- autograd_grad_many([output_x, output_y], [input_x, input_y], [cotangent_x, cotangent_y])
+    } else {
+        _ -> false
+    };
+    (let expected_x = from_floats([2.0, 12.0], [2]); let expected_y = from_floats([4.0, 20.0], [2]); let valid = equal(actual_x, expected_x) and equal(actual_y, expected_y); (dispose(expected_y); dispose(expected_x); dispose(actual_y); dispose(actual_x); dispose(cotangent_y); dispose(cotangent_x); dispose(output_y); dispose(output_x); dispose(input_y); dispose(input_x); dispose(source_y); dispose(source_x); valid)).
 
 @test
 pub backward_many_accumulates_multiple_root_gradients(): Bool ->

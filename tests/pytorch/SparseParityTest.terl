@@ -319,12 +319,8 @@ pub sparse_constructor_families_match_libtorch(): Bool ->
     let sized_coo_dense = to_dense(sized_coo);
     let compressed = from_ints([0, 1, 2], [3]);
     let plain = from_ints([0, 1], [2]);
-    let scalar_values =
-        from_floats([1.0, 2.0], [2])
-        |> to_dtype(6);
-    let block_values =
-        from_floats([1.0, 2.0], [2, 1, 1])
-        |> to_dtype(6);
+    let scalar_values = from_floats([1.0, 2.0], [2]).to_dtype(6);
+    let block_values = from_floats([1.0, 2.0], [2, 1, 1]).to_dtype(6);
     let valid =
         shape(empty) == [2, 3]
             and dtype(empty) == 7

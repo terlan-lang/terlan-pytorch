@@ -39,7 +39,7 @@ invalid(reason: String): Inventory ->
     ).
 
 read_json(path: String): Option[Json] ->
-    let {
+    when {
         Ok(source) <- File.read_text(path);
         Ok(document) <- Json.parse(source)
     } else {
@@ -67,7 +67,7 @@ json_strings_at(
 ): Option[List[String]] ->
     if {
         index == length -> Some(reverse_strings(output, List.new[String]()));
-        true -> let {
+        true -> when {
             Ok(item) <- value.at(index);
             Ok(text) <- item.as_string()
         } else {
@@ -84,7 +84,7 @@ collect_manifest_modules(
 ): Option[Map[String, Bool]] ->
     if {
         index == module_count -> Some(available);
-        true -> let {
+        true -> when {
             Ok(module_value) <- modules.at(index);
             Ok(module_name_value) <- module_value.get("module");
             Ok(module_name) <- module_name_value.as_string();
@@ -107,7 +107,7 @@ collect_manifest_functions(
 ): Option[Map[String, Bool]] ->
     if {
         index == function_count -> Some(available);
-        true -> let {
+        true -> when {
             Ok(function_value) <- functions.at(index);
             Ok(name_value) <- function_value.get("name");
             Ok(name) <- name_value.as_string()
@@ -147,7 +147,7 @@ collect_manifest_families(
 ): Option[Map[String, Bool]] ->
     if {
         index == family_count -> Some(available);
-        true -> let {
+        true -> when {
             Ok(family) <- families.at(index);
             Ok(members) <- family.get("members");
             Ok(member_count) <- members.length();
@@ -170,7 +170,7 @@ collect_manifest_family_members(
 ): Option[Map[String, Bool]] ->
     if {
         index == member_count -> Some(available);
-        true -> let {
+        true -> when {
             Ok(member) <- members.at(index);
             Ok(name_value) <- member.get("name");
             Ok(name) <- name_value.as_string()
@@ -181,7 +181,7 @@ collect_manifest_family_members(
     }.
 
 available_functions(manifest: Json): Option[Map[String, Bool]] ->
-    let {
+    when {
         Ok(modules) <- manifest.get("modules");
         Ok(module_count) <- modules.length()
     } else {
@@ -190,7 +190,7 @@ available_functions(manifest: Json): Option[Map[String, Bool]] ->
     collect_manifest_modules(modules, 0, module_count, Map.new[String, Bool]()).
 
 mapping(policy: Json, signature: String): Option[{String, String}] ->
-    let {
+    when {
         Ok(value) <- policy.get(signature);
         Ok(fields) <- value.required_fields(["target", "evidence"], [], []);
         [target, evidence] <- fields.strings
@@ -200,7 +200,7 @@ mapping(policy: Json, signature: String): Option[{String, String}] ->
     Some({target, evidence}).
 
 exclusion(policy: Json, signature: String): Option[String] ->
-    let {
+    when {
         Ok(value) <- policy.get(signature);
         Ok(reason) <- value.as_string()
     } else {
@@ -408,7 +408,7 @@ classify(
     expected_reference_hash: String,
     expected_schema_count: Int,
 ): Inventory ->
-    let {
+    when {
         Ok(reference_header) <-
             reference
                 .required_fields(
@@ -511,7 +511,7 @@ execute(
     label: String,
     allow: Bool,
 ): Bool ->
-    let {
+    when {
         Some(reference) <- read_json(reference_path);
         Some(policy) <- read_json(policy_path);
         Some(manifest) <- read_json("libtorch-cxx.json")
@@ -528,7 +528,9 @@ execute(
         expected_reference_hash,
         expected_schema_count,
     );
-(let Some(report) <- render(reference, inventory, report_schema, reference_hash_field) else {
+(when {
+    Some(report) <- render(reference, inventory, report_schema, reference_hash_field)
+} else {
     _ -> failure("cannot render the API report")
 };
 if {
@@ -568,7 +570,7 @@ entry(): Bool ->
                 "terlan.pytorch.api-report.v1",
                 "header_sha256",
                 "93baae67e8130a6adbaa820c43ea42a004cf653d5a772a5e7b4af8244c179515",
-                2261,
+                2_261,
                 "terlan-pytorch ATen API inventory: ",
                 false,
             );
@@ -581,7 +583,7 @@ entry(): Bool ->
                 "terlan.pytorch.api-report.v1",
                 "header_sha256",
                 "93baae67e8130a6adbaa820c43ea42a004cf653d5a772a5e7b4af8244c179515",
-                2261,
+                2_261,
                 "terlan-pytorch ATen API inventory: ",
                 true,
             );
@@ -594,7 +596,7 @@ entry(): Bool ->
                 "terlan.pytorch.public-api-report.v1",
                 "inventory_sha256",
                 "c7ccb9322ac8202810f345f425143574f495b6e03ef260b316414dfe9134051f",
-                3425,
+                3_425,
                 "terlan-pytorch public API inventory: ",
                 false,
             );
@@ -607,7 +609,7 @@ entry(): Bool ->
                 "terlan.pytorch.public-api-report.v1",
                 "inventory_sha256",
                 "c7ccb9322ac8202810f345f425143574f495b6e03ef260b316414dfe9134051f",
-                3425,
+                3_425,
                 "terlan-pytorch public API inventory: ",
                 true,
             );

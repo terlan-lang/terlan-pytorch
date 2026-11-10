@@ -74,7 +74,7 @@ normalize_import_body(body: String): String ->
 
 patch_import(line: String): String ->
     if {
-        String.starts_with(String.trim(line), "import pytorch.Tensor.{") -> let {
+        String.starts_with(String.trim(line), "import pytorch.Tensor.{") -> when {
             Some({prefix, rest}) <- line.split_once("{");
             Some({body, suffix}) <- rest.split_once("}")
         } else {
@@ -183,7 +183,7 @@ patch_file(path: String): Bool ->
                 };
             let cuda =
                 if {
-                    String.ends_with(path, "/CudaTest.terl") -> let {
+                    String.ends_with(path, "/CudaTest.terl") -> when {
                         Ok(text) <- File.read_text(path);
                         Ok(Unit) <-
                             File.write_text(
@@ -210,7 +210,7 @@ patch_paths(paths: List[String], support_only: Bool): Bool ->
     }.
 
 run(root: String): Bool ->
-    let {
+    when {
         Ok(test_paths) <- Directory.files_recursive(child(root, "tests"));
         Ok(source_paths) <- Directory.files_recursive(child(root, "src/pytorch"))
     } else {

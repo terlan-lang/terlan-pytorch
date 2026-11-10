@@ -40,7 +40,7 @@ has_field(array: Json, field: String, needle: String, index: Int, count: Int): B
         true -> case array.at(index) {
             Err(_) -> false;
             Ok(item) ->
-                let {
+                when {
                     Ok(value) <- item.get(field);
                     Ok(actual) <- value.as_string()
                 } else {
@@ -60,7 +60,7 @@ array_has(array: Json, field: String, needle: String): Bool ->
     }.
 
 metadata_symbol(metadata: Json): Option[Json] ->
-    let {
+    when {
         Ok(symbols) <- metadata.get("symbols");
         Ok(count) <- symbols.length()
     } else {
@@ -77,7 +77,7 @@ json_length(value: Json): Int ->
 find_symbol(array: Json, field: String, needle: String, index: Int, count: Int): Option[Json] ->
     if {
         index == count -> None;
-        true -> let {
+        true -> when {
             Ok(item) <- array.at(index);
             Ok(value) <- item.get(field);
             Ok(actual) <- value.as_string()
@@ -148,7 +148,7 @@ replace_mapping(mapping: Json, symbol: Json): Json ->
 locate_backend(modules: Json, index: Int, count: Int): Option[Int] ->
     if {
         index == count -> None;
-        true -> let {
+        true -> when {
             Ok(module_value) <- modules.at(index);
             Ok(name) <- module_value.get("module");
             Ok(value) <- name.as_string()
@@ -177,7 +177,7 @@ execute(root: String): Bool ->
             case Json.parse(source) {
                 Err(_) -> failure("could not parse libtorch-cxx.json");
                 Ok(document) ->
-                    let {
+                    when {
                         {Ok(metadata), Ok(mapping), Ok(modules)} <-
                             {
                                 document.get("cpp_metadata"),
@@ -213,7 +213,7 @@ execute(root: String): Bool ->
                     };
                     if {
                         array_has(functions, "name", "set_flush_denormal") -> true;
-                        true -> let {
+                        true -> when {
                             Ok(rendered) <-
                                 Json.stringify_pretty(
                                     document

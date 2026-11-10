@@ -31,7 +31,7 @@ announce(message: String): Bool ->
     true.
 
 basename(path: String): String ->
-    let {
+    when {
         Ok(parsed) <- Path.from_string(path);
         Some(name) <- parsed.file_name()
     } else {
@@ -52,9 +52,9 @@ run_command(
                     Process.with_arguments(Process.command(program), arguments),
                     working_directory,
                 ),
-                3600000,
+                3_600_000,
             ),
-            16777216,
+            16_777_216,
         );
     let request =
         if {
@@ -343,7 +343,7 @@ copy_fixtures(repository: String, generated: String, cuda: Bool): Bool ->
 }.
 
 remove_tree(path: String): Bool ->
-    let {
+    when {
         Ok(_entries) <- Directory.entries(path);
         Err(reason) <- Directory.remove_all(path)
     } else {
