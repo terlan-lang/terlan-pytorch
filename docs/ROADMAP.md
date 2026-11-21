@@ -1497,8 +1497,10 @@ direct Rust CUDA package.
   bias leaves through `matmul`, autograd-aware `add`, and MSE before updating
   both leaves functionally.
 - [x] Reject integer leaves, non-scalar backward roots, missing gradients,
-  updates before backward, and invalid learning rates with stable C ABI status
-  diagnostics.
+  updates before backward, and invalid learning rates. The current generated
+  CXX boundary reports `native_null_handle` for rejected owned Tensor results
+  and `native_cpp_exception` with exception text for fallible calls; the
+  adversarial consumers check these diagnostics rather than legacy C ABI codes.
 - [x] Add an owned multi-parameter optimizer resource with explicit zeroing,
   Adam state, checkpointing, and process-owner/cancellation semantics after the
   functional training path is stable.

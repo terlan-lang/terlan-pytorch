@@ -18,7 +18,13 @@ std::unique_ptr<CudaStream> cuda_stream_create(std::int64_t device_index,
   (void)high_priority;
   return nullptr;
 #else
-  if (device_index >= static_cast<std::int64_t>(c10::cuda::device_count())) {
+  const auto device_count = static_cast<std::int64_t>(c10::cuda::device_count());
+  // CUDA-enabled SDKs can run without visible devices. Preserve the same
+  // unavailable result as a CPU-only build in that case.
+  if (device_count == 0) {
+    return nullptr;
+  }
+  if (device_index >= device_count) {
     throw std::invalid_argument("invalid CUDA device index");
   }
   try {

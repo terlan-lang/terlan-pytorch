@@ -11,6 +11,39 @@ fn assert_ok(value: UniquePtr<ffi::TerlanExceptionEnvelope>) {
 }
 
 #[test]
+fn cuda_stream_reports_unavailable_without_visible_devices() {
+    const CHILD: &str = "TERLAN_PYTORCH_TEST_NO_CUDA_CHILD";
+    if std::env::var_os(CHILD).is_some() {
+        assert_eq!(std::env::var("CUDA_VISIBLE_DEVICES").unwrap(), "");
+        for high_priority in [false, true] {
+            let stream = ffi::cuda_stream_create(0, high_priority)
+                .expect("no visible devices should report unavailable, not an invalid index");
+            assert!(stream.is_null());
+        }
+        assert!(ffi::cuda_stream_create(-1, false).is_err());
+        return;
+    }
+
+    // CUDA caches device discovery, so exercise the unavailable backend in a
+    // fresh process without changing the environment of concurrent tests.
+    let output = std::process::Command::new(std::env::current_exe().unwrap())
+        .args([
+            "--exact",
+            "cuda_stream_reports_unavailable_without_visible_devices",
+        ])
+        .env(CHILD, "1")
+        .env("CUDA_VISIBLE_DEVICES", "")
+        .output()
+        .expect("run isolated CUDA visibility regression");
+    assert!(
+        output.status.success(),
+        "{}\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+}
+
+#[test]
 fn cuda_stream_rejects_out_of_range_device() {
     if std::env::var("TERLAN_PYTORCH_TEST_DEVICE").as_deref() != Ok("cuda") {
         return;

@@ -62,6 +62,8 @@ cuda_unavailable(name: String, expected: String, body: String): AdversarialCase 
 
 /**
  * Returns Adam optimizer rejection cases.
+ * Constructors preserve CXX exception text; mutations use the configured
+ * pytorch_optimizer_operation_failed error envelope.
  */
 adam_suite(): AdversarialSuite ->
     AdversarialSuite(
@@ -71,32 +73,32 @@ adam_suite(): AdversarialSuite ->
         cases = [
             adversarial(
                 "invalid_configuration",
-                "c_abi_status_7070",
+                "error[native_cpp_exception]: invalid Adam hyperparameters",
                 "    let optimizer = adam(0.0, 0.9, 0.999, 0.00000001, 0.0);\n    step(optimizer).",
             ),
             adversarial(
                 "empty_step",
-                "c_abi_status_7072",
+                "error[pytorch_optimizer_operation_failed]: LibTorch optimizer operation failed.",
                 "    let optimizer = adam(0.1, 0.9, 0.999, 0.00000001, 0.0);\n    step(optimizer).",
             ),
             adversarial(
                 "duplicate_parameter",
-                "c_abi_status_7071",
+                "error[pytorch_optimizer_operation_failed]: LibTorch optimizer operation failed.",
                 "    let source = from_floats([1.0], [1]);\n    let parameter = require_grad(source);\n    let optimizer = adam(0.1, 0.9, 0.999, 0.00000001, 0.0);\n    add_parameter(optimizer, parameter);\n    add_parameter(optimizer, parameter).",
             ),
             adversarial(
                 "missing_gradient",
-                "c_abi_status_7073",
+                "error[pytorch_optimizer_operation_failed]: LibTorch optimizer operation failed.",
                 "    let source = from_floats([1.0], [1]);\n    let parameter = require_grad(source);\n    let optimizer = adam(0.1, 0.9, 0.999, 0.00000001, 0.0);\n    add_parameter(optimizer, parameter);\n    step(optimizer).",
             ),
             adversarial(
                 "corrupt_checkpoint",
-                "c_abi_status_7075",
+                "error[pytorch_optimizer_operation_failed]: LibTorch optimizer operation failed.",
                 "    let source = from_floats([1.0], [1]);\n    let parameter = require_grad(source);\n    let optimizer = adam(0.1, 0.9, 0.999, 0.00000001, 0.0);\n    add_parameter(optimizer, parameter);\n    restore(optimizer, from_list([1, 2, 3, 4])).",
             ),
             adversarial(
                 "cancelled",
-                "c_abi_status_7074",
+                "error[pytorch_optimizer_operation_failed]: LibTorch optimizer operation failed.",
                 "    let source = from_floats([1.0], [1]);\n    let parameter = require_grad(source);\n    let target = from_floats([0.0], [1]);\n    let loss = mse_loss(parameter, target, 1);\n    let optimizer = adam(0.1, 0.9, 0.999, 0.00000001, 0.0);\n    add_parameter(optimizer, parameter);\n    backward(loss);\n    cancel(optimizer);\n    step(optimizer).",
             ),
         ],
@@ -105,57 +107,59 @@ adam_suite(): AdversarialSuite ->
 
 /**
  * Returns autograd rejection cases.
+ * Owned Tensor result adapters report native_null_handle on rejection;
+ * fallible CXX calls preserve their exception message instead.
  */
 autograd_suite(): AdversarialSuite ->
     AdversarialSuite(
         name = "autograd",
         namespace = "autograd_adversarial",
-        imports = "import pytorch.Tensor.{backward, categorical_sample, clamp, from_ints, full_float, gradient, mse_loss, multiply, require_grad, sgd_step}.",
+        imports = "import pytorch.Tensor.{backward, categorical_sample, clamp, dispose, from_ints, full_float, gradient, mse_loss, multiply, require_grad, sgd_step}.",
         cases = [
             adversarial(
                 "integer_leaf",
-                "c_abi_status_7061",
-                "    let integers = from_ints([1, 2], [2]);\n    let trainable = require_grad(integers);\n    backward(trainable).",
+                "error[native_null_handle]: native operation returned null",
+                "    let integers = from_ints([1, 2], [2]);\n    let trainable = require_grad(integers);\n    dispose(trainable).",
             ),
             adversarial(
                 "non_scalar_loss",
-                "c_abi_status_7062",
+                "error[native_cpp_exception]: backward requires a scalar requiring-grad tensor",
                 "    let source = full_float([2], 2.0);\n    let parameter = require_grad(source);\n    let squared = multiply(parameter, parameter);\n    backward(squared).",
             ),
             adversarial(
                 "missing_gradient",
-                "c_abi_status_7063",
-                "    let source = full_float([1], 2.0);\n    let parameter = require_grad(source);\n    let accumulated = gradient(parameter);\n    backward(accumulated).",
+                "error[native_null_handle]: native operation returned null",
+                "    let source = full_float([1], 2.0);\n    let parameter = require_grad(source);\n    let accumulated = gradient(parameter);\n    dispose(accumulated).",
             ),
             adversarial(
                 "step_before_backward",
-                "c_abi_status_7063",
-                "    let source = full_float([1], 2.0);\n    let parameter = require_grad(source);\n    let updated = sgd_step(parameter, 0.1);\n    backward(updated).",
+                "error[native_null_handle]: native operation returned null",
+                "    let source = full_float([1], 2.0);\n    let parameter = require_grad(source);\n    let updated = sgd_step(parameter, 0.1);\n    dispose(updated).",
             ),
             adversarial(
                 "negative_learning_rate",
-                "c_abi_status_7060",
-                "    let source = full_float([1], 2.0);\n    let parameter = require_grad(source);\n    let target = full_float([1], 1.0);\n    let loss = mse_loss(parameter, target, 1);\n    backward(loss);\n    let updated = sgd_step(parameter, -0.1);\n    backward(updated).",
+                "error[native_null_handle]: native operation returned null",
+                "    let source = full_float([1], 2.0);\n    let parameter = require_grad(source);\n    let target = full_float([1], 1.0);\n    let loss = mse_loss(parameter, target, 1);\n    backward(loss);\n    let updated = sgd_step(parameter, -0.1);\n    dispose(updated).",
             ),
             adversarial(
                 "inverted_clamp_bounds",
-                "c_abi_status_7060",
-                "    let source = full_float([1], 1.0);\n    let result = clamp(source, 2.0, -2.0);\n    backward(result).",
+                "error[native_null_handle]: native operation returned null",
+                "    let source = full_float([1], 1.0);\n    let result = clamp(source, 2.0, -2.0);\n    dispose(result).",
             ),
             adversarial(
                 "negative_sampling_seed",
-                "c_abi_status_7060",
-                "    let probabilities = full_float([1, 2], 0.5);\n    let result = categorical_sample(probabilities, -1);\n    backward(result).",
+                "error[native_null_handle]: native operation returned null",
+                "    let probabilities = full_float([1, 2], 0.5);\n    let result = categorical_sample(probabilities, -1);\n    dispose(result).",
             ),
             adversarial(
                 "integer_probabilities",
-                "c_abi_status_7061",
-                "    let probabilities = from_ints([1, 1], [1, 2]);\n    let result = categorical_sample(probabilities, 1);\n    backward(result).",
+                "error[native_null_handle]: native operation returned null",
+                "    let probabilities = from_ints([1, 1], [1, 2]);\n    let result = categorical_sample(probabilities, 1);\n    dispose(result).",
             ),
             adversarial(
                 "zero_probability_mass",
-                "c_abi_status_7068",
-                "    let probabilities = full_float([1, 2], 0.0);\n    let result = categorical_sample(probabilities, 1);\n    backward(result).",
+                "error[native_null_handle]: native operation returned null",
+                "    let probabilities = full_float([1, 2], 0.0);\n    let result = categorical_sample(probabilities, 1);\n    dispose(result).",
             ),
         ],
         summary = "[terlan-pytorch-autograd-adversarial] integer-leaf=passed non-scalar=passed missing-gradient=passed step-before-backward=passed invalid-rate=passed clamp-bounds=passed sampling-seed=passed sampling-dtype=passed sampling-mass=passed",
@@ -246,7 +250,7 @@ sgd_suite(): AdversarialSuite ->
         cases = [
             adversarial(
                 "invalid_nesterov",
-                "c_abi_status_7070",
+                "error[native_cpp_exception]: invalid SGD hyperparameters",
                 "    let optimizer = sgd(0.1, 0.0, 0.0, 0.0, true);\n    step(optimizer).",
             ),
         ],
@@ -279,17 +283,17 @@ ndarray_suite(): AdversarialSuite ->
             ),
             adversarial(
                 "malformed_layout",
-                "c_abi_status_7013",
+                "error[native_null_handle]: constructor returned null",
                 "    let tensor = from_packet(Bytes.from_list([84, 78, 88, 80]));\n    dispose_tensor(tensor).",
             ),
             adversarial(
                 "unsupported_device",
-                "c_abi_status_7011",
+                "error[native_null_handle]: constructor returned null",
                 "    let tensor = from_packet(Bytes.from_list([84, 78, 88, 80, 1, 1, 0, 64, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0]));\n    dispose_tensor(tensor).",
             ),
             adversarial(
                 "unsupported_dtype",
-                "c_abi_status_7012",
+                "error[native_null_handle]: constructor returned null",
                 "    let tensor = from_packet(Bytes.from_list([84, 78, 88, 80, 1, 1, 99, 8, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1]));\n    dispose_tensor(tensor).",
             ),
         ],
@@ -310,7 +314,7 @@ cuda_suite(mode: String): Option[AdversarialSuite] ->
                     cuda_unavailable(
                         "backend_unavailable",
                         "c_abi_status_7071",
-                        "    let stream = create_stream(2147483647, false);\n    dispose(stream).",
+                        "    let stream = create_stream(0, false);\n    dispose(stream).",
                     ),
                 ],
                 summary = "[terlan-pytorch-cuda-adversarial] backend-unavailable=passed",
@@ -428,7 +432,7 @@ run_case(
                 if {
                     current.disable_cuda -> Process.with_environment(
                         base,
-                        [Process.environment_entry("TERLAN_PYTORCH_DISABLE_CUDA", "1")],
+                        [Process.environment_entry("CUDA_VISIBLE_DEVICES", "")],
                     );
                     true -> base
                 };
@@ -474,10 +478,9 @@ run_cases(
     case cases {
         [] -> true;
         [current | rest] ->
-            if {
-                run_case(compiler, workspace, consumer, main_path, selected, current) -> run_cases(compiler, workspace, consumer, main_path, selected, rest);
-                true -> false
-            }
+            let current_valid = run_case(compiler, workspace, consumer, main_path, selected, current);
+            let remaining_valid = run_cases(compiler, workspace, consumer, main_path, selected, rest);
+            current_valid and remaining_valid
     }.
 
 /**
