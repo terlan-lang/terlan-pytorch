@@ -40,6 +40,7 @@
 #include <ATen/ops/to_dense.h>
 #include <ATen/ops/coalesce.h>
 #include <ATen/ops/sparse_mask.h>
+#include <ATen/ops/sparse_mask_native.h>
 #include <ATen/ops/to_sparse_csr.h>
 #include <ATen/ops/to_sparse_csc.h>
 #include <ATen/ops/to_sparse_bsr.h>
@@ -147,7 +148,6 @@ inline at::Tensor sparse_ccol_indices_copy(const at::Tensor& self) { return self
 inline at::Tensor& sparse_ccol_indices_copy_out(at::Tensor& output, const at::Tensor& self) { output = self.ccol_indices().clone(); return output; }
 inline at::Tensor sparse_row_indices_copy(const at::Tensor& self) { return self.row_indices().clone(); }
 inline at::Tensor& sparse_row_indices_copy_out(at::Tensor& output, const at::Tensor& self) { output = self.row_indices().clone(); return output; }
-inline at::Tensor sparse_mask(const at::Tensor& self, const at::Tensor& mask) { return self.sparse_mask(mask); }
 inline at::Tensor& sparse_resize_as_out(at::Tensor& output, const at::Tensor& self, const at::Tensor& shape) {
   output = at::resize_as_sparse(self.clone(), shape); return output;
 }
