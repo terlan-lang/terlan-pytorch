@@ -1,13 +1,13 @@
 module pytorch.ShapeBehaviorSupport.
 
 import pytorch.Shape.{diag, expand, permute, reshape, roll, view}.
-import pytorch.Tensor.{Float64, Strided, dispose, dtype, is_cuda, ones_device, shape}.
+import pytorch.Tensor.{DType, dispose, dtype, dtype_code, is_cuda, ones_device, shape}.
 
 /**
  * Exercises representative generated shape, view, permutation, and indexing leaves.
  */
 pub shape_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
-    let values = ones_device([2, 2], Float64, Strided, device_name);
+    let values = ones_device([2, 2], dtype_code(DType.FLOAT64), 0, device_name);
     let diagonal = diag(values, 0);
     let expanded = expand(values, [2, 2], false);
     let permuted = permute(values, [1, 0]);
@@ -21,7 +21,7 @@ pub shape_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
             and shape(reshaped) == [4]
             and shape(rolled) == [2, 2]
             and shape(viewed) == [4]
-            and dtype(reshaped) == Float64
+            and dtype(reshaped) == dtype_code(DType.FLOAT64)
             and is_cuda(values) == expected_cuda;
     dispose(viewed);
     dispose(rolled);

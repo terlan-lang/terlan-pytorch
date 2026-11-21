@@ -1,13 +1,13 @@
 module pytorch.SelectionBehaviorSupport.
 
 import pytorch.Selection.{cummax, cummax_out, cummin, cummin_out, kthvalue, kthvalue_out, max_dim, median_dim, median_dim_out, min_dim, mode, mode_out, nanmedian_dim, nanmedian_dim_out, sort, sort_out, topk, topk_out}.
-import pytorch.Tensor.{Float64, Int64, Strided, dispose, is_cuda, ones_device, shape}.
+import pytorch.Tensor.{DType, dispose, dtype_code, is_cuda, ones_device, shape}.
 
 /**
  * Executes every Selection tuple and dual retained-output contract on one device.
  */
 pub selection_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
-    let input = ones_device([2, 4], Float64, Strided, device_name);
+    let input = ones_device([2, 4], dtype_code(DType.FLOAT64), 0, device_name);
     let {cummax_values, cummax_indices} = cummax(input, 1);
     let {cummin_values, cummin_indices} = cummin(input, 1);
     let {kth_values, kth_indices} = kthvalue(input, 2, 1);
@@ -18,22 +18,22 @@ pub selection_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
     let {nanmedian_values, nanmedian_indices} = nanmedian_dim(input, 1);
     let {sorted_values, sorted_indices} = sort(input, 1);
     let {top_values, top_indices} = topk(input, 2, 1);
-    let cummax_values_output = ones_device([0], Float64, Strided, device_name);
-    let cummax_indices_output = ones_device([0], Int64, Strided, device_name);
-    let cummin_values_output = ones_device([0], Float64, Strided, device_name);
-    let cummin_indices_output = ones_device([0], Int64, Strided, device_name);
-    let kth_values_output = ones_device([0], Float64, Strided, device_name);
-    let kth_indices_output = ones_device([0], Int64, Strided, device_name);
-    let median_values_output = ones_device([0], Float64, Strided, device_name);
-    let median_indices_output = ones_device([0], Int64, Strided, device_name);
-    let mode_values_output = ones_device([0], Float64, Strided, device_name);
-    let mode_indices_output = ones_device([0], Int64, Strided, device_name);
-    let nanmedian_values_output = ones_device([0], Float64, Strided, device_name);
-    let nanmedian_indices_output = ones_device([0], Int64, Strided, device_name);
-    let sorted_values_output = ones_device([0], Float64, Strided, device_name);
-    let sorted_indices_output = ones_device([0], Int64, Strided, device_name);
-    let top_values_output = ones_device([0], Float64, Strided, device_name);
-    let top_indices_output = ones_device([0], Int64, Strided, device_name);
+    let cummax_values_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    let cummax_indices_output = ones_device([0], dtype_code(DType.INT64), 0, device_name);
+    let cummin_values_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    let cummin_indices_output = ones_device([0], dtype_code(DType.INT64), 0, device_name);
+    let kth_values_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    let kth_indices_output = ones_device([0], dtype_code(DType.INT64), 0, device_name);
+    let median_values_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    let median_indices_output = ones_device([0], dtype_code(DType.INT64), 0, device_name);
+    let mode_values_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    let mode_indices_output = ones_device([0], dtype_code(DType.INT64), 0, device_name);
+    let nanmedian_values_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    let nanmedian_indices_output = ones_device([0], dtype_code(DType.INT64), 0, device_name);
+    let sorted_values_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    let sorted_indices_output = ones_device([0], dtype_code(DType.INT64), 0, device_name);
+    let top_values_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    let top_indices_output = ones_device([0], dtype_code(DType.INT64), 0, device_name);
     cummax_out(cummax_values_output, cummax_indices_output, input, 1);
     cummin_out(cummin_values_output, cummin_indices_output, input, 1);
     kthvalue_out(kth_values_output, kth_indices_output, input, 2, 1);

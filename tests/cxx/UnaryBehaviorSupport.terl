@@ -1,13 +1,13 @@
 module pytorch.UnaryBehaviorSupport.
 
-import pytorch.Tensor.{Float64, Strided, dispose, dtype, is_cuda, ones_device, shape}.
+import pytorch.Tensor.{DType, dispose, dtype, dtype_code, is_cuda, ones_device, shape}.
 import pytorch.Unary.{abs, acos, all, any, argwhere, isfinite, max, median, min, round}.
 
 /**
  * Exercises representative immutable unary, predicate, reduction, and coordinate leaves.
  */
 pub unary_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
-    let values = ones_device([2, 2], Float64, Strided, device_name);
+    let values = ones_device([2, 2], dtype_code(DType.FLOAT64), 0, device_name);
     let absolute = abs(values);
     let cosine = acos(values);
     let rounded = round(values);
@@ -29,7 +29,7 @@ pub unary_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
             and shape(maximum) == []
             and shape(median_value) == []
             and shape(minimum) == []
-            and dtype(rounded) == Float64
+            and dtype(rounded) == dtype_code(DType.FLOAT64)
             and is_cuda(absolute) == expected_cuda;
     dispose(minimum);
     dispose(median_value);

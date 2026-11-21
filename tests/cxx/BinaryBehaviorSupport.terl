@@ -1,7 +1,7 @@
 module pytorch.BinaryBehaviorSupport.
 
 import pytorch.Binary.{arctan2, arctan2_out, fmod_tensor, gcd_in_place, isclose, logical_and, max_dim_out, maximum}.
-import pytorch.Tensor.{Float64, Int64, Strided, clone, dispose, is_cuda, ones_device, shape}.
+import pytorch.Tensor.{DType, clone, dispose, dtype_code, is_cuda, ones_device, shape}.
 
 import type pytorch.Tensor.
 
@@ -9,22 +9,22 @@ import type pytorch.Tensor.
  * Exercises functional, retained-output, in-place, and multi-output Binary leaves.
  */
 pub binary_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
-    let left = ones_device([2], Float64, Strided, device_name);
-    let right = ones_device([2], Float64, Strided, device_name);
+    let left = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
+    let right = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let functional = arctan2(left, right);
-    let retained = ones_device([0], Float64, Strided, device_name);
+    let retained = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
     arctan2_out(retained, left, right);
-    let logical_left = ones_device([2], Float64, Strided, device_name);
-    let logical_right = ones_device([2], Float64, Strided, device_name);
+    let logical_left = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
+    let logical_right = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let logical = logical_and(logical_left, logical_right);
     let remainder = fmod_tensor(left, right);
     let close = isclose(left, right);
     let mutation = clone(left);
-    let integer_left = ones_device([2], Int64, Strided, device_name);
-    let integer_right = ones_device([2], Int64, Strided, device_name);
-    (gcd_in_place(integer_left, integer_right); let matrix = ones_device([2, 2], Float64, Strided, device_name);
-let values = ones_device([0], Float64, Strided, device_name);
-let indices = ones_device([0], Int64, Strided, device_name);
+    let integer_left = ones_device([2], dtype_code(DType.INT64), 0, device_name);
+    let integer_right = ones_device([2], dtype_code(DType.INT64), 0, device_name);
+    (gcd_in_place(integer_left, integer_right); let matrix = ones_device([2, 2], dtype_code(DType.FLOAT64), 0, device_name);
+let values = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+let indices = ones_device([0], dtype_code(DType.INT64), 0, device_name);
 (max_dim_out(values, indices, matrix, 1, false); let maximum_value = maximum(left, right);
 let valid =
     shape(functional) == [2]

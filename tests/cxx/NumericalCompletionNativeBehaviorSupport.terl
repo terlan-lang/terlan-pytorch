@@ -1,29 +1,29 @@
 module pytorch.NumericalCompletionNativeBehaviorSupport.
 
 import pytorch.NumericalCompletionNative.{argsort_stable_out, cdist_compute, cdist_default_compute, chain_matmul_native, chain_matmul_out_native, clone_out_default_memory, clone_out_memory, contiguous_native, cross_default_dimension, cross_dimension, cross_out_default_dimension, cross_out_dimension}.
-import pytorch.Tensor.{Float64, Int64, Strided, dispose, is_cuda, ones_device, shape}.
+import pytorch.Tensor.{DType, dispose, dtype_code, is_cuda, ones_device, shape}.
 
 /**
  * Executes every NumericalCompletionNative contract on one device.
  */
 pub numerical_completion_native_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
-    let matrix = ones_device([2, 3], Float64, Strided, device_name);
-    let right = ones_device([4, 3], Float64, Strided, device_name);
-    let chain_right = ones_device([3, 4], Float64, Strided, device_name);
-    let cross_other = ones_device([2, 3], Float64, Strided, device_name);
-    let argsort_output = ones_device([0], Int64, Strided, device_name);
+    let matrix = ones_device([2, 3], dtype_code(DType.FLOAT64), 0, device_name);
+    let right = ones_device([4, 3], dtype_code(DType.FLOAT64), 0, device_name);
+    let chain_right = ones_device([3, 4], dtype_code(DType.FLOAT64), 0, device_name);
+    let cross_other = ones_device([2, 3], dtype_code(DType.FLOAT64), 0, device_name);
+    let argsort_output = ones_device([0], dtype_code(DType.INT64), 0, device_name);
     argsort_stable_out(argsort_output, matrix, true, 1, false);
     let default_distance = cdist_default_compute(matrix, right, 2.0);
     let explicit_distance = cdist_compute(matrix, right, 2.0, 0);
     let chained = chain_matmul_native([matrix, chain_right]);
-    let chain_output = ones_device([0], Float64, Strided, device_name);
-    (chain_matmul_out_native(chain_output, [matrix, chain_right]); let clone_default_output = ones_device([0], Float64, Strided, device_name);
-(clone_out_default_memory(clone_default_output, matrix); let clone_memory_output = ones_device([0], Float64, Strided, device_name);
+    let chain_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    (chain_matmul_out_native(chain_output, [matrix, chain_right]); let clone_default_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+(clone_out_default_memory(clone_default_output, matrix); let clone_memory_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
 (clone_out_memory(clone_memory_output, matrix, 0); let contiguous = contiguous_native(matrix, 0);
 let default_cross = cross_default_dimension(matrix, cross_other);
 let explicit_cross = cross_dimension(matrix, cross_other, 1);
-let default_cross_output = ones_device([0], Float64, Strided, device_name);
-(cross_out_default_dimension(default_cross_output, matrix, cross_other); let explicit_cross_output = ones_device([0], Float64, Strided, device_name);
+let default_cross_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+(cross_out_default_dimension(default_cross_output, matrix, cross_other); let explicit_cross_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
 (cross_out_dimension(explicit_cross_output, matrix, cross_other, 1); let valid =
     shape(argsort_output) == [2, 3]
         and shape(default_distance) == [2, 4]

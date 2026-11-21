@@ -28,7 +28,7 @@ import pytorch.ShapePartition.{chunk, dsplit_indices, dsplit_sections, hsplit_in
 import pytorch.SliceNative.{slice_all, slice_bounds, slice_copy_all, slice_copy_bounds, slice_copy_from, slice_copy_out_all, slice_copy_out_bounds, slice_copy_out_from, slice_copy_out_until, slice_copy_until, slice_from, slice_scatter_all, slice_scatter_bounds, slice_scatter_from, slice_scatter_out_all, slice_scatter_out_bounds, slice_scatter_out_from, slice_scatter_out_until, slice_scatter_until, slice_until}.
 import pytorch.Spatial.{affine_grid_generator, affine_grid_generator_backward, affine_grid_generator_out, grid_sampler, grid_sampler_2d, grid_sampler_2d_out, grid_sampler_3d, grid_sampler_3d_out}.
 import pytorch.Strided.{as_strided, as_strided_copy, as_strided_copy_offset, as_strided_copy_out, as_strided_copy_out_offset, as_strided_in_place, as_strided_in_place_offset, as_strided_offset, as_strided_scatter, as_strided_scatter_offset, as_strided_scatter_out, as_strided_scatter_out_offset}.
-import pytorch.Tensor.{Bool, Float64, Int64, Strided, Tensor, broadcast_tensors, ceil, clone, device, dispose, dispose_scalar, dtype, element_count, floor, from_ints, has_storage, is_complex, is_contiguous, is_cpu, is_cuda, is_defined, is_floating_point, is_leaf, is_quantized, is_signed, is_sparse, item, layout, meshgrid, meshgrid_indexing, mul_float, mul_int, ones, ones_device, ones_dtype, ones_layout, ones_options, rank, reciprocal, requires_grad, round, scalar_to_float, scalar_to_int, shape, sign, square, strides, trunc}.
+import pytorch.Tensor.{DType, Tensor, broadcast_tensors, ceil, clone, device, dispose, dispose_scalar, dtype, dtype_code, element_count, floor, from_ints, has_storage, is_complex, is_contiguous, is_cpu, is_cuda, is_defined, is_floating_point, is_leaf, is_quantized, is_signed, is_sparse, item, layout, meshgrid, meshgrid_indexing, mul_float, mul_int, ones, ones_device, ones_dtype, ones_layout, ones_options, rank, reciprocal, requires_grad, round, scalar_to_float, scalar_to_int, shape, sign, square, strides, trunc}.
 import pytorch.TensorJoining.{block_diag, block_diag_out, cartesian_prod, cat, cat_out, column_stack, column_stack_out, concat, concat_out, concatenate, concatenate_out, dstack, dstack_out, hstack, hstack_out, row_stack, row_stack_out, stack, stack_out, vstack, vstack_out}.
 import pytorch.WhereNative.{where_indices, where_scalar, where_scalar_other, where_scalar_self, where_tensor_out}.
 import std.core.Result.{Err, Ok}.
@@ -49,7 +49,7 @@ pub generated_cxx_scalar_behavior(): Bool ->
 
 @test
 pub generated_cxx_optional_dtype_behavior(): Bool ->
-    let tensor = ones_dtype([1], Float64);
+    let tensor = ones_dtype([1], dtype_code(DType.FLOAT64));
     let selected_dtype = dtype(tensor);
     let scaled = mul_float(tensor, 3.5);
     let scalar = item(scaled);
@@ -57,11 +57,11 @@ pub generated_cxx_optional_dtype_behavior(): Bool ->
     dispose_scalar(scalar);
     dispose(scaled);
     dispose(tensor);
-    observed == 3.5 and selected_dtype == Float64.
+    observed == 3.5 and selected_dtype == dtype_code(DType.FLOAT64).
 
 @test
 pub generated_cxx_optional_layout_behavior(): Bool ->
-    let tensor = ones_layout([2, 2], Float64, Strided);
+    let tensor = ones_layout([2, 2], dtype_code(DType.FLOAT64), 0);
     let selected_dtype = dtype(tensor);
     let selected_layout = layout(tensor);
     let selected_rank = rank(tensor);
@@ -82,8 +82,8 @@ pub generated_cxx_optional_layout_behavior(): Bool ->
             and not requires_grad(tensor)
             and is_leaf(tensor);
     dispose(tensor);
-    selected_dtype == Float64
-        and selected_layout == Strided
+    selected_dtype == dtype_code(DType.FLOAT64)
+        and selected_layout == 0
         and selected_rank == 2
         and selected_element_count == 4
         and selected_shape == [2, 2]
@@ -92,15 +92,15 @@ pub generated_cxx_optional_layout_behavior(): Bool ->
 
 @test
 pub generated_cxx_optional_device_and_bool_behavior(): Bool ->
-    let device_tensor = ones_device([2], Float64, Strided, "cpu");
-    let options_tensor = ones_options([2], Float64, Strided, "cpu", false);
+    let device_tensor = ones_device([2], dtype_code(DType.FLOAT64), 0, "cpu");
+    let options_tensor = ones_options([2], dtype_code(DType.FLOAT64), 0, "cpu", false);
     let device_ok =
-        dtype(device_tensor) == Float64
-            and layout(device_tensor) == Strided
+        dtype(device_tensor) == dtype_code(DType.FLOAT64)
+            and layout(device_tensor) == 0
             and device(device_tensor) == "cpu";
     let options_ok =
-        dtype(options_tensor) == Float64
-            and layout(options_tensor) == Strided
+        dtype(options_tensor) == dtype_code(DType.FLOAT64)
+            and layout(options_tensor) == 0
             and device(options_tensor) == "cpu";
     dispose(options_tensor);
     dispose(device_tensor);
@@ -142,7 +142,7 @@ pub generated_cxx_distance_behavior(): Bool ->
 @test
 pub generated_cxx_regularization_behavior(): Bool ->
     let input = ones([1, 1, 1, 1]);
-    let mask = ones_dtype([1, 1, 1, 1], Bool);
+    let mask = ones_dtype([1, 1, 1, 1], dtype_code(DType.BOOL));
     let alpha = alpha_dropout(input, 0.5, false);
     let element = dropout(input, 0.5, false);
     let feature = feature_dropout(input, 0.5, false);
@@ -183,17 +183,17 @@ pub generated_cxx_dropout_completion_behavior(): Bool ->
 
 @test
 pub generated_cxx_glu_completion_behavior(): Bool ->
-    let input = ones_dtype([1, 2], Float64);
-    let gradient_glu = ones_dtype([1, 1], Float64);
-    let input_tangent = ones_dtype([1, 2], Float64);
-    let gradient_glu_tangent = ones_dtype([1, 1], Float64);
-    let forward = ones_dtype([0], Float64);
+    let input = ones_dtype([1, 2], dtype_code(DType.FLOAT64));
+    let gradient_glu = ones_dtype([1, 1], dtype_code(DType.FLOAT64));
+    let input_tangent = ones_dtype([1, 2], dtype_code(DType.FLOAT64));
+    let gradient_glu_tangent = ones_dtype([1, 1], dtype_code(DType.FLOAT64));
+    let forward = ones_dtype([0], dtype_code(DType.FLOAT64));
     glu_out(forward, input, 1);
-    let gradient_input = ones_dtype([0], Float64);
+    let gradient_input = ones_dtype([0], dtype_code(DType.FLOAT64));
     (glu_backward_out(gradient_input, gradient_glu, input, 1); let forward_jvp = glu_jvp(forward, input, input_tangent, 1);
-let forward_jvp_output = ones_dtype([0], Float64);
+let forward_jvp_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (glu_jvp_out(forward_jvp_output, forward, input, input_tangent, 1); let backward_jvp = glu_backward_jvp(gradient_input, gradient_glu, input, gradient_glu_tangent, input_tangent, 1);
-let backward_jvp_output = ones_dtype([0], Float64);
+let backward_jvp_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (glu_backward_jvp_out(
     backward_jvp_output,
     gradient_input,
@@ -220,22 +220,22 @@ let shapes_valid =
 
 @test
 pub generated_cxx_shape_gradient_behavior(): Bool ->
-    let matrix = ones_dtype([2, 2], Float64);
+    let matrix = ones_dtype([2, 2], dtype_code(DType.FLOAT64));
     let diagonal_result = diagonal(matrix, 0, 0, 1);
-    let source = ones_dtype([2], Float64);
-    let diagonal_scatter_output = ones_dtype([0], Float64);
+    let source = ones_dtype([2], dtype_code(DType.FLOAT64));
+    let diagonal_scatter_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     diagonal_scatter_out(diagonal_scatter_output, matrix, source, 0, 0, 1);
-    let gradient = ones_dtype([2], Float64);
+    let gradient = ones_dtype([2], dtype_code(DType.FLOAT64));
     let diagonal_gradient = diagonal_backward(gradient, [2, 2], 0, 0, 1);
-    let diagonal_gradient_output = ones_dtype([0], Float64);
+    let diagonal_gradient_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     (diagonal_backward_out(diagonal_gradient_output, gradient, [2, 2], 0, 0, 1); let selected_gradient = select_backward(gradient, [2, 2], 0, 0);
-let selected_gradient_output = ones_dtype([0], Float64);
-(select_backward_out(selected_gradient_output, gradient, [2, 2], 0, 0); let slice_gradient_input = ones_dtype([1, 2], Float64);
+let selected_gradient_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(select_backward_out(selected_gradient_output, gradient, [2, 2], 0, 0); let slice_gradient_input = ones_dtype([1, 2], dtype_code(DType.FLOAT64));
 let sliced_gradient = slice_backward(slice_gradient_input, [2, 2], 0, 0, 1, 1);
-let sliced_gradient_output = ones_dtype([0], Float64);
-(slice_backward_out(sliced_gradient_output, slice_gradient_input, [2, 2], 0, 0, 1, 1); let unfold_gradient_input = ones_dtype([2, 2], Float64);
+let sliced_gradient_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(slice_backward_out(sliced_gradient_output, slice_gradient_input, [2, 2], 0, 0, 1, 1); let unfold_gradient_input = ones_dtype([2, 2], dtype_code(DType.FLOAT64));
 let unfolded_gradient = unfold_backward(unfold_gradient_input, [3], 0, 2, 1);
-let unfolded_gradient_output = ones_dtype([0], Float64);
+let unfolded_gradient_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (unfold_backward_out(unfolded_gradient_output, unfold_gradient_input, [3], 0, 2, 1); let diagonal_values = glu_scalar_pair_between(tensor_split_sections(diagonal_result, 2, 0), 0.99, 1.01, 0.99, 1.01);
 let shapes_valid =
     shape(diagonal_result) == [2]
@@ -263,26 +263,26 @@ let placement_valid =
 
 @test
 pub generated_cxx_padding_backward_completion_behavior(): Bool ->
-    let input1 = ones_dtype([1, 1, 2], Float64);
-    let gradient1 = ones_dtype([1, 1, 4], Float64);
+    let input1 = ones_dtype([1, 1, 2], dtype_code(DType.FLOAT64));
+    let gradient1 = ones_dtype([1, 1, 4], dtype_code(DType.FLOAT64));
     let reflection1 = reflection_pad1d_backward(gradient1, input1, [1, 1]);
     let replication1 = replication_pad1d_backward(gradient1, input1, [1, 1]);
-    let reflection1_output = ones_dtype([0], Float64);
-    let replication1_output = ones_dtype([0], Float64);
+    let reflection1_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+    let replication1_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     reflection_pad1d_backward_out(reflection1_output, gradient1, input1, [1, 1]);
     replication_pad1d_backward_out(replication1_output, gradient1, input1, [1, 1]);
-    let input2 = ones_dtype([1, 1, 2, 2], Float64);
-    let gradient2 = ones_dtype([1, 1, 4, 4], Float64);
+    let input2 = ones_dtype([1, 1, 2, 2], dtype_code(DType.FLOAT64));
+    let gradient2 = ones_dtype([1, 1, 4, 4], dtype_code(DType.FLOAT64));
     let reflection2 = reflection_pad2d_backward(gradient2, input2, [1, 1, 1, 1]);
     let replication2 = replication_pad2d_backward(gradient2, input2, [1, 1, 1, 1]);
-    let reflection2_output = ones_dtype([0], Float64);
-    let replication2_output = ones_dtype([0], Float64);
-    (reflection_pad2d_backward_out(reflection2_output, gradient2, input2, [1, 1, 1, 1]); replication_pad2d_backward_out(replication2_output, gradient2, input2, [1, 1, 1, 1]); let input3 = ones_dtype([1, 1, 2, 2, 2], Float64);
-let gradient3 = ones_dtype([1, 1, 4, 4, 4], Float64);
+    let reflection2_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+    let replication2_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+    (reflection_pad2d_backward_out(reflection2_output, gradient2, input2, [1, 1, 1, 1]); replication_pad2d_backward_out(replication2_output, gradient2, input2, [1, 1, 1, 1]); let input3 = ones_dtype([1, 1, 2, 2, 2], dtype_code(DType.FLOAT64));
+let gradient3 = ones_dtype([1, 1, 4, 4, 4], dtype_code(DType.FLOAT64));
 let reflection3 = reflection_pad3d_backward(gradient3, input3, [1, 1, 1, 1, 1, 1]);
 let replication3 = replication_pad3d_backward(gradient3, input3, [1, 1, 1, 1, 1, 1]);
-let reflection3_output = ones_dtype([0], Float64);
-let replication3_output = ones_dtype([0], Float64);
+let reflection3_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+let replication3_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (reflection_pad3d_backward_out(reflection3_output, gradient3, input3, [1, 1, 1, 1, 1, 1]); replication_pad3d_backward_out(replication3_output, gradient3, input3, [1, 1, 1, 1, 1, 1]); let shapes_valid =
     shape(reflection1) == [1, 1, 2]
         and shape(replication1) == [1, 1, 2]
@@ -313,8 +313,8 @@ let placement_valid =
 
 @test
 pub generated_cxx_integration_completion_behavior(): Bool ->
-    let y = ones_dtype([3], Float64);
-    let x = ones_dtype([3], Float64);
+    let y = ones_dtype([3], dtype_code(DType.FLOAT64));
+    let x = ones_dtype([3], dtype_code(DType.FLOAT64));
     let cumulative_int = cumulative_trapezoid_dx_int(y, 1, 0);
     let cumulative_float = cumulative_trapezoid_dx_float(y, 0.5, 0);
     let cumulative_x = cumulative_trapezoid_x(y, x, 0);
@@ -364,9 +364,9 @@ pub generated_cxx_integration_completion_behavior(): Bool ->
 
 @test
 pub generated_cxx_nan_to_num_native_behavior(): Bool ->
-    let input = ones_dtype([2], Float64);
+    let input = ones_dtype([2], dtype_code(DType.FLOAT64));
     let replaced = nan_to_num_configured(input, false, 0.0, false, 0.0, false, 0.0);
-    let output = ones_dtype([0], Float64);
+    let output = ones_dtype([0], dtype_code(DType.FLOAT64));
     nan_to_num_configured_out(output, input, true, 7.0, true, 8.0, true, -9.0);
     nan_to_num_configured_in_place(input, true, 3.0, false, 0.0, true, -4.0);
     let values_valid =
@@ -385,21 +385,21 @@ pub generated_cxx_nan_to_num_native_behavior(): Bool ->
 
 @test
 pub generated_cxx_strided_behavior(): Bool ->
-    let base = ones_dtype([8], Float64);
+    let base = ones_dtype([8], dtype_code(DType.FLOAT64));
     let view = as_strided(base, [2, 2], [3, 1]);
     let offset_view = as_strided_offset(base, [2, 2], [3, 1], 1);
     let copied = as_strided_copy(base, [2, 2], [3, 1]);
     let offset_copy = as_strided_copy_offset(base, [2, 2], [3, 1], 1);
-    let copy_output = ones_dtype([0], Float64);
-    let offset_copy_output = ones_dtype([0], Float64);
+    let copy_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+    let offset_copy_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     as_strided_copy_out(copy_output, base, [2, 2], [3, 1]);
     as_strided_copy_out_offset(offset_copy_output, base, [2, 2], [3, 1], 1);
-    let mutated = ones_dtype([8], Float64);
-    (as_strided_in_place(mutated, [2, 2], [3, 1]); as_strided_in_place_offset(mutated, [2, 2], [3, 1], 1); let source = ones_dtype([2, 2], Float64);
+    let mutated = ones_dtype([8], dtype_code(DType.FLOAT64));
+    (as_strided_in_place(mutated, [2, 2], [3, 1]); as_strided_in_place_offset(mutated, [2, 2], [3, 1], 1); let source = ones_dtype([2, 2], dtype_code(DType.FLOAT64));
 let scattered = as_strided_scatter(base, source, [2, 2], [3, 1]);
 let offset_scattered = as_strided_scatter_offset(base, source, [2, 2], [3, 1], 1);
-let scatter_output = ones_dtype([0], Float64);
-let offset_scatter_output = ones_dtype([0], Float64);
+let scatter_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+let offset_scatter_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (as_strided_scatter_out(scatter_output, base, source, [2, 2], [3, 1]); as_strided_scatter_out_offset(offset_scatter_output, base, source, [2, 2], [3, 1], 1); let metadata_valid =
     shape(view) == [2, 2]
         and strides(view) == [3, 1]
@@ -454,20 +454,20 @@ glu_scalar_pair_between(
 
 @test
 pub generated_cxx_spatial_behavior(): Bool ->
-    let theta = ones_dtype([1, 2, 3], Float64);
+    let theta = ones_dtype([1, 2, 3], dtype_code(DType.FLOAT64));
     let affine = affine_grid_generator(theta, [1, 1, 2, 2], false);
-    let affine_output = ones_dtype([0], Float64);
+    let affine_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     affine_grid_generator_out(affine_output, theta, [1, 1, 2, 2], false);
     let affine_backward = affine_grid_generator_backward(affine, [1, 1, 2, 2], false);
-    let input_2d = ones_dtype([1, 1, 2, 2], Float64);
-    let grid_2d = ones_dtype([1, 1, 1, 2], Float64);
+    let input_2d = ones_dtype([1, 1, 2, 2], dtype_code(DType.FLOAT64));
+    let grid_2d = ones_dtype([1, 1, 1, 2], dtype_code(DType.FLOAT64));
     let generic = grid_sampler(input_2d, grid_2d, 0, 0, true);
     let sampled_2d = grid_sampler_2d(input_2d, grid_2d, 0, 0, true);
-    let sampled_2d_output = ones_dtype([0], Float64);
-    (grid_sampler_2d_out(sampled_2d_output, input_2d, grid_2d, 0, 0, true); let input_3d = ones_dtype([1, 1, 2, 2, 2], Float64);
-let grid_3d = ones_dtype([1, 1, 1, 1, 3], Float64);
+    let sampled_2d_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+    (grid_sampler_2d_out(sampled_2d_output, input_2d, grid_2d, 0, 0, true); let input_3d = ones_dtype([1, 1, 2, 2, 2], dtype_code(DType.FLOAT64));
+let grid_3d = ones_dtype([1, 1, 1, 1, 3], dtype_code(DType.FLOAT64));
 let sampled_3d = grid_sampler_3d(input_3d, grid_3d, 0, 0, true);
-let sampled_3d_output = ones_dtype([0], Float64);
+let sampled_3d_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (grid_sampler_3d_out(sampled_3d_output, input_3d, grid_3d, 0, 0, true); let affine_valid =
     shape(affine) == [1, 2, 2, 2]
         and shape(affine_output) == [1, 2, 2, 2]
@@ -555,7 +555,7 @@ pub generated_cxx_tensor_partition_family_behavior(): Bool ->
     let split_by_sizes = split_sizes(tensor, [1, 3]);
     let split_by_sections = tensor_split_sections(tensor, 2);
     let split_by_indices = tensor_split_indices(tensor, [1, 3]);
-    let tensor_indices = ones_dtype([1], Int64);
+    let tensor_indices = ones_dtype([1], dtype_code(DType.INT64));
     let split_by_tensor = tensor_split_tensor(tensor, tensor_indices);
     dispose(tensor_indices);
     dispose(tensor);
@@ -754,16 +754,16 @@ pub generated_cxx_meshgrid_behavior(): Bool ->
 
 @test
 pub generated_cxx_index_fill_behavior(): Bool ->
-    let input = ones_dtype([2, 2], Float64);
-    let index = ones_dtype([1], Int64);
+    let input = ones_dtype([2, 2], dtype_code(DType.FLOAT64));
+    let index = ones_dtype([1], dtype_code(DType.INT64));
     let scalar_result = index_fill_scalar(input, 0, index, true, 3, 0.0);
-    let scalar_output = ones_dtype([0], Float64);
+    let scalar_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     index_fill_scalar_out(scalar_output, input, 0, index, false, 0, 4.0);
-    let scalar_mutated = ones_dtype([2, 2], Float64);
-    (index_fill_scalar_in_place(scalar_mutated, 0, index, true, 5, 0.0); let tensor_value = ones_dtype([], Float64);
+    let scalar_mutated = ones_dtype([2, 2], dtype_code(DType.FLOAT64));
+    (index_fill_scalar_in_place(scalar_mutated, 0, index, true, 5, 0.0); let tensor_value = ones_dtype([], dtype_code(DType.FLOAT64));
 let tensor_result = index_fill_tensor(input, 0, index, tensor_value);
-let tensor_output = ones_dtype([0], Float64);
-(index_fill_tensor_out(tensor_output, input, 0, index, tensor_value); let tensor_mutated = ones_dtype([2, 2], Float64);
+let tensor_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(index_fill_tensor_out(tensor_output, input, 0, index, tensor_value); let tensor_mutated = ones_dtype([2, 2], dtype_code(DType.FLOAT64));
 (index_fill_tensor_in_place(tensor_mutated, 0, index, tensor_value); let valid =
     shape(tensor_value) == []
         and shape(scalar_result) == [2, 2]
@@ -782,15 +782,15 @@ let tensor_output = ones_dtype([0], Float64);
 
 @test
 pub generated_cxx_lerp_behavior(): Bool ->
-    let input = ones_dtype([1], Float64);
+    let input = ones_dtype([1], dtype_code(DType.FLOAT64));
     let end = mul_float(input, 3.0);
     let scalar_result = lerp_scalar(input, end, false, 0, 0.5);
-    let scalar_output = ones_dtype([0], Float64);
+    let scalar_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     lerp_scalar_out(scalar_output, input, end, true, 1, 0.0);
-    let weight = ones_dtype([1], Float64);
+    let weight = ones_dtype([1], dtype_code(DType.FLOAT64));
     let tensor_result = lerp_tensor(input, end, weight);
-    let tensor_output = ones_dtype([0], Float64);
-    (lerp_tensor_out(tensor_output, input, end, weight); let tensor_mutated = ones_dtype([1], Float64);
+    let tensor_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+    (lerp_tensor_out(tensor_output, input, end, weight); let tensor_mutated = ones_dtype([1], dtype_code(DType.FLOAT64));
 (lerp_tensor_in_place(tensor_mutated, end, weight); let scalar_result_value = item(scalar_result);
 let scalar_output_value = item(scalar_output);
 let tensor_result_value = item(tensor_result);
@@ -806,15 +806,15 @@ let valid =
 
 @test
 pub generated_cxx_where_native_behavior(): Bool ->
-    let condition = ones_dtype([1], Bool);
-    let base = ones_dtype([1], Float64);
+    let condition = ones_dtype([1], dtype_code(DType.BOOL));
+    let base = ones_dtype([1], dtype_code(DType.FLOAT64));
     let when_true = mul_float(base, 4.0);
     let when_false = mul_float(base, 5.0);
     let indices = where_indices(condition);
     let scalar_result = where_scalar(condition, true, 2, 0.0, false, 0, 3.0);
     let scalar_other_result = where_scalar_other(condition, when_true, false, 0, 5.0);
     let scalar_self_result = where_scalar_self(condition, false, 0, 6.0, when_false);
-    let tensor_output = ones_dtype([0], Float64);
+    let tensor_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     where_tensor_out(tensor_output, condition, when_true, when_false);
     let scalar_value = item(scalar_result);
     let scalar_other_value = item(scalar_other_result);
@@ -835,24 +835,24 @@ pub generated_cxx_where_native_behavior(): Bool ->
 
 @test
 pub generated_cxx_index_mutation_native_behavior(): Bool ->
-    let input = ones_dtype([2], Float64);
-    let index = ones_dtype([1], Int64);
-    let source_base = ones_dtype([1], Float64);
+    let input = ones_dtype([2], dtype_code(DType.FLOAT64));
+    let index = ones_dtype([1], dtype_code(DType.INT64));
+    let source_base = ones_dtype([1], dtype_code(DType.FLOAT64));
     let source = mul_float(source_base, 2.0);
     let added = index_add(input, 0, index, source, true, 2, 0.0);
-    let added_output = ones_dtype([0], Float64);
+    let added_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     index_add_out(added_output, input, 0, index, source, true, 3, 0.0);
-    let added_mutated = ones_dtype([2], Float64);
-    (index_add_in_place(added_mutated, 0, index, source, false, 0, 0.5); let copied_output = ones_dtype([0], Float64);
-(index_copy_out(copied_output, input, 0, index, source); let copied_mutated = ones_dtype([2], Float64);
+    let added_mutated = ones_dtype([2], dtype_code(DType.FLOAT64));
+    (index_add_in_place(added_mutated, 0, index, source, false, 0, 0.5); let copied_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(index_copy_out(copied_output, input, 0, index, source); let copied_mutated = ones_dtype([2], dtype_code(DType.FLOAT64));
 (index_copy_in_place(copied_mutated, 0, index, source); let backward = index_select_backward(source, [2], 0, index);
-let added_selected = ones_dtype([0], Float64);
-let added_output_selected = ones_dtype([0], Float64);
-let added_mutated_selected = ones_dtype([0], Float64);
-let copied_output_selected = ones_dtype([0], Float64);
-let copied_mutated_selected = ones_dtype([0], Float64);
-let input_selected = ones_dtype([0], Float64);
-let backward_selected = ones_dtype([0], Float64);
+let added_selected = ones_dtype([0], dtype_code(DType.FLOAT64));
+let added_output_selected = ones_dtype([0], dtype_code(DType.FLOAT64));
+let added_mutated_selected = ones_dtype([0], dtype_code(DType.FLOAT64));
+let copied_output_selected = ones_dtype([0], dtype_code(DType.FLOAT64));
+let copied_mutated_selected = ones_dtype([0], dtype_code(DType.FLOAT64));
+let input_selected = ones_dtype([0], dtype_code(DType.FLOAT64));
+let backward_selected = ones_dtype([0], dtype_code(DType.FLOAT64));
 (index_select_out(added_selected, added, 0, index); index_select_out(added_output_selected, added_output, 0, index); index_select_out(added_mutated_selected, added_mutated, 0, index); index_select_out(copied_output_selected, copied_output, 0, index); index_select_out(copied_mutated_selected, copied_mutated, 0, index); index_select_out(input_selected, input, 0, index); index_select_out(backward_selected, backward, 0, index); let added_value = item(added_selected);
 let added_output_value = item(added_output_selected);
 let added_mutated_value = item(added_mutated_selected);
@@ -884,22 +884,22 @@ let valid =
 
 @test
 pub generated_cxx_fill_native_behavior(): Bool ->
-    let input = ones_dtype([1], Float64);
-    let mask = ones_dtype([1], Bool);
-    let tensor_value_base = ones_dtype([], Float64);
+    let input = ones_dtype([1], dtype_code(DType.FLOAT64));
+    let mask = ones_dtype([1], dtype_code(DType.BOOL));
+    let tensor_value_base = ones_dtype([], dtype_code(DType.FLOAT64));
     let tensor_value = mul_float(tensor_value_base, 7.0);
     let scalar_result = fill_scalar(input, true, 2, 0.0);
-    let scalar_output = ones_dtype([0], Float64);
+    let scalar_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     fill_scalar_out(scalar_output, input, false, 0, 3.0);
-    let scalar_mutated = ones_dtype([1], Float64);
-    (fill_scalar_in_place(scalar_mutated, true, 4, 0.0); let tensor_output = ones_dtype([0], Float64);
-(fill_tensor_out(tensor_output, input, tensor_value); let tensor_mutated = ones_dtype([1], Float64);
-(fill_tensor_in_place(tensor_mutated, tensor_value); let diagonal_mutated = ones_dtype([1, 1], Float64);
+    let scalar_mutated = ones_dtype([1], dtype_code(DType.FLOAT64));
+    (fill_scalar_in_place(scalar_mutated, true, 4, 0.0); let tensor_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(fill_tensor_out(tensor_output, input, tensor_value); let tensor_mutated = ones_dtype([1], dtype_code(DType.FLOAT64));
+(fill_tensor_in_place(tensor_mutated, tensor_value); let diagonal_mutated = ones_dtype([1, 1], dtype_code(DType.FLOAT64));
 (fill_diagonal_in_place(diagonal_mutated, false, 0, 8.0, false); let masked_scalar_result = masked_fill_scalar(input, mask, true, 9, 0.0);
-let masked_scalar_output = ones_dtype([0], Float64);
-(masked_fill_scalar_out(masked_scalar_output, input, mask, false, 0, 10.0); let masked_scalar_mutated = ones_dtype([1], Float64);
-(masked_fill_scalar_in_place(masked_scalar_mutated, mask, true, 11, 0.0); let masked_tensor_output = ones_dtype([0], Float64);
-(masked_fill_tensor_out(masked_tensor_output, input, mask, tensor_value); let masked_tensor_mutated = ones_dtype([1], Float64);
+let masked_scalar_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(masked_fill_scalar_out(masked_scalar_output, input, mask, false, 0, 10.0); let masked_scalar_mutated = ones_dtype([1], dtype_code(DType.FLOAT64));
+(masked_fill_scalar_in_place(masked_scalar_mutated, mask, true, 11, 0.0); let masked_tensor_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(masked_fill_tensor_out(masked_tensor_output, input, mask, tensor_value); let masked_tensor_mutated = ones_dtype([1], dtype_code(DType.FLOAT64));
 (masked_fill_tensor_in_place(masked_tensor_mutated, mask, tensor_value); let valid =
     tensor_scalar_between(scalar_result, 1.99, 2.01)
         and tensor_scalar_between(scalar_output, 2.99, 3.01)
@@ -918,8 +918,8 @@ let masked_scalar_output = ones_dtype([0], Float64);
 
 @test
 pub generated_cxx_activation_completion_behavior(): Bool ->
-    let input = ones_dtype([1], Float64);
-    let gradient = ones_dtype([1], Float64);
+    let input = ones_dtype([1], dtype_code(DType.FLOAT64));
+    let gradient = ones_dtype([1], dtype_code(DType.FLOAT64));
     let hard_forward =
         activation_pair(
             hardshrink_int(input, 2),
@@ -929,8 +929,8 @@ pub generated_cxx_activation_completion_behavior(): Bool ->
             0.99,
             1.01,
         );
-    let hard_out_int = ones_dtype([0], Float64);
-    let hard_out_float = ones_dtype([0], Float64);
+    let hard_out_int = ones_dtype([0], dtype_code(DType.FLOAT64));
+    let hard_out_float = ones_dtype([0], dtype_code(DType.FLOAT64));
     hardshrink_out_int(hard_out_int, input, 2);
     hardshrink_out_float(hard_out_float, input, 0.5);
     let hard_out = activation_pair(hard_out_int, hard_out_float, -0.01, 0.01, 0.99, 1.01);
@@ -943,8 +943,8 @@ pub generated_cxx_activation_completion_behavior(): Bool ->
             0.99,
             1.01,
         );
-    let hard_backward_out_int_value = ones_dtype([0], Float64);
-    let hard_backward_out_float_value = ones_dtype([0], Float64);
+    let hard_backward_out_int_value = ones_dtype([0], dtype_code(DType.FLOAT64));
+    let hard_backward_out_float_value = ones_dtype([0], dtype_code(DType.FLOAT64));
     (hardshrink_backward_out_int(hard_backward_out_int_value, gradient, input, 2); hardshrink_backward_out_float(hard_backward_out_float_value, gradient, input, 0.5); let hard_backward_out =
     activation_pair(
         hard_backward_out_int_value,
@@ -955,8 +955,8 @@ pub generated_cxx_activation_completion_behavior(): Bool ->
         1.01,
     );
 let soft_forward = activation_pair(softshrink_int(input, 2), softshrink_float(input, 0.5), -0.01, 0.01, 0.49, 0.51);
-let soft_out_int = ones_dtype([0], Float64);
-let soft_out_float = ones_dtype([0], Float64);
+let soft_out_int = ones_dtype([0], dtype_code(DType.FLOAT64));
+let soft_out_float = ones_dtype([0], dtype_code(DType.FLOAT64));
 (softshrink_out_int(soft_out_int, input, 2); softshrink_out_float(soft_out_float, input, 0.5); let soft_out = activation_pair(soft_out_int, soft_out_float, -0.01, 0.01, 0.49, 0.51);
 let soft_backward =
     activation_pair(
@@ -967,8 +967,8 @@ let soft_backward =
         0.99,
         1.01,
     );
-let soft_backward_out_int_value = ones_dtype([0], Float64);
-let soft_backward_out_float_value = ones_dtype([0], Float64);
+let soft_backward_out_int_value = ones_dtype([0], dtype_code(DType.FLOAT64));
+let soft_backward_out_float_value = ones_dtype([0], dtype_code(DType.FLOAT64));
 (softshrink_backward_out_int(soft_backward_out_int_value, gradient, input, 2); softshrink_backward_out_float(soft_backward_out_float_value, gradient, input, 0.5); let soft_backward_out =
     activation_pair(
         soft_backward_out_int_value,
@@ -987,8 +987,8 @@ let plus_forward =
         1.31,
         1.32,
     );
-let plus_out_int = ones_dtype([0], Float64);
-let plus_out_float = ones_dtype([0], Float64);
+let plus_out_int = ones_dtype([0], dtype_code(DType.FLOAT64));
+let plus_out_float = ones_dtype([0], dtype_code(DType.FLOAT64));
 (softplus_out_int(plus_out_int, input, 1, 20); softplus_out_float(plus_out_float, input, 1.0, 20.0); let plus_out = activation_pair(plus_out_int, plus_out_float, 1.31, 1.32, 1.31, 1.32);
 let plus_backward =
     activation_pair(
@@ -999,8 +999,8 @@ let plus_backward =
         0.73,
         0.74,
     );
-let plus_backward_out_int_value = ones_dtype([0], Float64);
-let plus_backward_out_float_value = ones_dtype([0], Float64);
+let plus_backward_out_int_value = ones_dtype([0], dtype_code(DType.FLOAT64));
+let plus_backward_out_float_value = ones_dtype([0], dtype_code(DType.FLOAT64));
 (softplus_backward_out_int(plus_backward_out_int_value, gradient, input, 1, 20); softplus_backward_out_float(plus_backward_out_float_value, gradient, input, 1.0, 20.0); let plus_backward_out =
     activation_pair(
         plus_backward_out_int_value,
@@ -1019,8 +1019,8 @@ let threshold_forward =
         0.99,
         1.01,
     );
-let threshold_out_int_value = ones_dtype([0], Float64);
-let threshold_out_float_value = ones_dtype([0], Float64);
+let threshold_out_int_value = ones_dtype([0], dtype_code(DType.FLOAT64));
+let threshold_out_float_value = ones_dtype([0], dtype_code(DType.FLOAT64));
 (threshold_out_int(threshold_out_int_value, input, 2, 3); threshold_out_float(threshold_out_float_value, input, 0.5, 4.0); let threshold_out = activation_pair(threshold_out_int_value, threshold_out_float_value, 2.99, 3.01, 0.99, 1.01);
 let threshold_backward =
     activation_pair(
@@ -1031,8 +1031,8 @@ let threshold_backward =
         0.99,
         1.01,
     );
-let threshold_backward_out_int_value = ones_dtype([0], Float64);
-let threshold_backward_out_float_value = ones_dtype([0], Float64);
+let threshold_backward_out_int_value = ones_dtype([0], dtype_code(DType.FLOAT64));
+let threshold_backward_out_float_value = ones_dtype([0], dtype_code(DType.FLOAT64));
 (threshold_backward_out_int(threshold_backward_out_int_value, gradient, input, 2); threshold_backward_out_float(threshold_backward_out_float_value, gradient, input, 0.5); let threshold_backward_out =
     activation_pair(
         threshold_backward_out_int_value,
@@ -1061,11 +1061,11 @@ let threshold_backward_out_float_value = ones_dtype([0], Float64);
 
 @test
 pub generated_cxx_extended_activation_completion_behavior(): Bool ->
-    let input = ones_dtype([1], Float64);
-    let gradient = ones_dtype([1], Float64);
+    let input = ones_dtype([1], dtype_code(DType.FLOAT64));
+    let gradient = ones_dtype([1], dtype_code(DType.FLOAT64));
     let celu_forward = activation_pair(celu_int(input, 1), celu_float(input, 0.5), 0.99, 1.01, 0.99, 1.01);
-    let celu_out_int_value = ones_dtype([0], Float64);
-    let celu_out_float_value = ones_dtype([0], Float64);
+    let celu_out_int_value = ones_dtype([0], dtype_code(DType.FLOAT64));
+    let celu_out_float_value = ones_dtype([0], dtype_code(DType.FLOAT64));
     celu_out_int(celu_out_int_value, input, 1);
     celu_out_float(celu_out_float_value, input, 0.5);
     let celu_output = activation_pair(celu_out_int_value, celu_out_float_value, 0.99, 1.01, 0.99, 1.01);
@@ -1081,8 +1081,8 @@ let elu_forward =
         1.99,
         2.01,
     );
-let elu_out_int_value = ones_dtype([0], Float64);
-let elu_out_float_value = ones_dtype([0], Float64);
+let elu_out_int_value = ones_dtype([0], dtype_code(DType.FLOAT64));
+let elu_out_float_value = ones_dtype([0], dtype_code(DType.FLOAT64));
 (elu_out_int(elu_out_int_value, input, 1, 1, 1); elu_out_float(elu_out_float_value, input, 0.5, 2.0, 0.5); let elu_output = activation_pair(elu_out_int_value, elu_out_float_value, 0.99, 1.01, 1.99, 2.01);
 let elu_mutated_int = clone(input);
 let elu_mutated_float = clone(input);
@@ -1096,8 +1096,8 @@ let elu_backward =
         1.99,
         2.01,
     );
-let elu_backward_out_int_value = ones_dtype([0], Float64);
-let elu_backward_out_float_value = ones_dtype([0], Float64);
+let elu_backward_out_int_value = ones_dtype([0], dtype_code(DType.FLOAT64));
+let elu_backward_out_float_value = ones_dtype([0], dtype_code(DType.FLOAT64));
 (elu_backward_out_int(elu_backward_out_int_value, gradient, 1, 1, 1, false, input); elu_backward_out_float(elu_backward_out_float_value, gradient, 0.5, 2.0, 0.5, false, input); let elu_backward_output =
     activation_pair(
         elu_backward_out_int_value,
@@ -1116,8 +1116,8 @@ let hardtanh_forward =
         0.49,
         0.51,
     );
-let hardtanh_out_int_value = ones_dtype([0], Float64);
-let hardtanh_out_float_value = ones_dtype([0], Float64);
+let hardtanh_out_int_value = ones_dtype([0], dtype_code(DType.FLOAT64));
+let hardtanh_out_float_value = ones_dtype([0], dtype_code(DType.FLOAT64));
 (hardtanh_out_int(hardtanh_out_int_value, input, -2, 2); hardtanh_out_float(hardtanh_out_float_value, input, -0.5, 0.5); let hardtanh_output = activation_pair(hardtanh_out_int_value, hardtanh_out_float_value, 0.99, 1.01, 0.49, 0.51);
 let hardtanh_mutated_int = clone(input);
 let hardtanh_mutated_float = clone(input);
@@ -1131,8 +1131,8 @@ let hardtanh_backward =
         -0.01,
         0.01,
     );
-let hardtanh_backward_out_int_value = ones_dtype([0], Float64);
-let hardtanh_backward_out_float_value = ones_dtype([0], Float64);
+let hardtanh_backward_out_int_value = ones_dtype([0], dtype_code(DType.FLOAT64));
+let hardtanh_backward_out_float_value = ones_dtype([0], dtype_code(DType.FLOAT64));
 (hardtanh_backward_out_int(hardtanh_backward_out_int_value, gradient, input, -2, 2); hardtanh_backward_out_float(hardtanh_backward_out_float_value, gradient, input, -0.5, 0.5); let hardtanh_backward_output =
     activation_pair(
         hardtanh_backward_out_int_value,
@@ -1143,8 +1143,8 @@ let hardtanh_backward_out_float_value = ones_dtype([0], Float64);
         0.01,
     );
 let leaky_forward = activation_pair(leaky_relu_int(input, 1), leaky_relu_float(input, 0.25), 0.99, 1.01, 0.99, 1.01);
-let leaky_out_int_value = ones_dtype([0], Float64);
-let leaky_out_float_value = ones_dtype([0], Float64);
+let leaky_out_int_value = ones_dtype([0], dtype_code(DType.FLOAT64));
+let leaky_out_float_value = ones_dtype([0], dtype_code(DType.FLOAT64));
 (leaky_relu_out_int(leaky_out_int_value, input, 1); leaky_relu_out_float(leaky_out_float_value, input, 0.25); let leaky_output = activation_pair(leaky_out_int_value, leaky_out_float_value, 0.99, 1.01, 0.99, 1.01);
 let leaky_mutated_int = clone(input);
 let leaky_mutated_float = clone(input);
@@ -1158,8 +1158,8 @@ let leaky_backward =
         0.99,
         1.01,
     );
-let leaky_backward_out_int_value = ones_dtype([0], Float64);
-let leaky_backward_out_float_value = ones_dtype([0], Float64);
+let leaky_backward_out_int_value = ones_dtype([0], dtype_code(DType.FLOAT64));
+let leaky_backward_out_float_value = ones_dtype([0], dtype_code(DType.FLOAT64));
 (leaky_relu_backward_out_int(leaky_backward_out_int_value, gradient, input, 1, false); leaky_relu_backward_out_float(leaky_backward_out_float_value, gradient, input, 0.25, false); let leaky_backward_output =
     activation_pair(
         leaky_backward_out_int_value,
@@ -1190,10 +1190,10 @@ let leaky_backward_out_float_value = ones_dtype([0], Float64);
 
 @test
 pub generated_cxx_loss_behavior(): Bool ->
-    let input = ones_dtype([1, 1], Float64);
-    let target = ones_dtype([1, 1], Float64);
-    let label = ones_dtype([1], Float64);
-    let gradient = ones_dtype([1, 1], Float64);
+    let input = ones_dtype([1, 1], dtype_code(DType.FLOAT64));
+    let target = ones_dtype([1, 1], dtype_code(DType.FLOAT64));
+    let label = ones_dtype([1], dtype_code(DType.FLOAT64));
+    let gradient = ones_dtype([1, 1], dtype_code(DType.FLOAT64));
     let zero_losses =
         activation_pair(
             cosine_embedding_loss(input, target, label, 0.0, 1),
@@ -1242,17 +1242,17 @@ pub generated_cxx_loss_behavior(): Bool ->
     let smooth_loss = smooth_l1_loss(input, target, 1, 1.0);
     let smooth_valid = tensor_scalar_between(smooth_loss, -0.01, 0.01);
     dispose(smooth_loss);
-    let huber_output = ones_dtype([0], Float64);
-    let huber_backward_output = ones_dtype([0], Float64);
+    let huber_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+    let huber_backward_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     (huber_loss_out(huber_output, input, target, 1, 1.0); huber_loss_backward_out(huber_backward_output, gradient, input, target, 1, 1.0); let huber_outputs = activation_pair(huber_output, huber_backward_output, -0.01, 0.01, -0.01, 0.01);
-let mse_output = ones_dtype([0], Float64);
-let mse_backward_output = ones_dtype([0], Float64);
+let mse_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+let mse_backward_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (mse_loss_out(mse_output, input, target, 1); mse_loss_backward_out(mse_backward_output, gradient, input, target, 1); let mse_outputs = activation_pair(mse_output, mse_backward_output, -0.01, 0.01, -0.01, 0.01);
-let smooth_output = ones_dtype([0], Float64);
-let smooth_backward_output = ones_dtype([0], Float64);
+let smooth_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+let smooth_backward_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (smooth_l1_loss_out(smooth_output, input, target, 1, 1.0); smooth_l1_loss_backward_out(smooth_backward_output, gradient, input, target, 1, 1.0); let smooth_outputs = activation_pair(smooth_output, smooth_backward_output, -0.01, 0.01, -0.01, 0.01);
-let soft_output = ones_dtype([0], Float64);
-let soft_backward_output = ones_dtype([0], Float64);
+let soft_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+let soft_backward_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (soft_margin_loss_out(soft_output, input, target, 1); soft_margin_loss_backward_out(soft_backward_output, gradient, input, target, 1); let soft_outputs = activation_pair(soft_output, soft_backward_output, 0.31, 0.32, -0.28, -0.26);
 (dispose(gradient); dispose(label); dispose(target); dispose(input); zero_losses
     and unit_losses
@@ -1267,48 +1267,48 @@ let soft_backward_output = ones_dtype([0], Float64);
 
 @test
 pub generated_cxx_shape_completion_behavior(): Bool ->
-    let vector = ones_dtype([1], Float64);
-    let matrix = ones_dtype([1, 1], Float64);
-    let image = ones_dtype([1, 1, 1, 1], Float64);
-    let start_base = ones_dtype([], Int64);
+    let vector = ones_dtype([1], dtype_code(DType.FLOAT64));
+    let matrix = ones_dtype([1, 1], dtype_code(DType.FLOAT64));
+    let image = ones_dtype([1, 1, 1, 1], dtype_code(DType.FLOAT64));
+    let start_base = ones_dtype([], dtype_code(DType.INT64));
     let start = fill_scalar(start_base, true, 0, 0.0);
-    let trace_gradient = ones_dtype([], Float64);
-    let channel_output = ones_dtype([0], Float64);
-    let transpose_output = ones_dtype([0], Float64);
+    let trace_gradient = ones_dtype([], dtype_code(DType.FLOAT64));
+    let channel_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+    let transpose_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     channel_shuffle_out(channel_output, image, 1);
     transpose_copy_out(transpose_output, matrix, 0, 1);
     let channel_shape = shape(channel_output) == [1, 1, 1, 1] and shape(transpose_output) == [1, 1];
     let channel_values = activation_pair(channel_output, transpose_output, 0.99, 1.01, 0.99, 1.01);
-    let select_output = ones_dtype([0], Float64);
-    let scatter_output = ones_dtype([0], Float64);
+    let select_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+    let scatter_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     (select_copy_out(select_output, matrix, 0, 0); select_scatter_out(scatter_output, matrix, vector, 0, 0); let select_shape = shape(select_output) == [1] and shape(scatter_output) == [1, 1];
 let select_values = activation_pair(select_output, scatter_output, 0.99, 1.01, 0.99, 1.01);
 let narrow_first = narrow_view(vector, 0, 0, 1);
 let narrow_second = narrow_tensor(vector, 0, start, 1);
 let narrow_shape = shape(narrow_first) == [1] and shape(narrow_second) == [1];
 let narrow_values = activation_pair(narrow_first, narrow_second, 0.99, 1.01, 0.99, 1.01);
-let narrow_output = ones_dtype([0], Float64);
+let narrow_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (narrow_copy_out(narrow_output, vector, 0, 0, 1); let unfolded = unfold(vector, 0, 1, 1);
 let narrow_unfold_shape = shape(narrow_output) == [1] and shape(unfolded) == [1, 1];
 let narrow_unfold_values = activation_pair(narrow_output, unfolded, 0.99, 1.01, 0.99, 1.01);
-let unfold_output = ones_dtype([0], Float64);
+let unfold_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (unfold_copy_out(unfold_output, vector, 0, 1, 1); let trace = trace_backward(trace_gradient, [1, 1]);
 let unfold_trace_shape = shape(unfold_output) == [1, 1] and shape(trace) == [1, 1];
 let unfold_trace_values = activation_pair(unfold_output, trace, 0.99, 1.01, 0.99, 1.01);
 let zero_value = zero(vector);
-let zero_output = ones_dtype([0], Float64);
+let zero_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (zero_out(zero_output, vector); let zero_shape = shape(zero_value) == [1] and shape(zero_output) == [1];
 let zero_values = activation_pair(zero_value, zero_output, -0.01, 0.01, -0.01, 0.01);
 let columns = im2col(image, [1, 1], [1, 1], [0, 0], [1, 1]);
-let columns_output = ones_dtype([0], Float64);
+let columns_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (im2col_out(columns_output, image, [1, 1], [1, 1], [0, 0], [1, 1]); let columns_shape = shape(columns) == [1, 1, 1] and shape(columns_output) == [1, 1, 1];
 let column_values = activation_pair(columns, columns_output, 0.99, 1.01, 0.99, 1.01);
 let rebuilt = col2im(matrix, [1, 1], [1, 1], [1, 1], [0, 0], [1, 1]);
-let rebuilt_output = ones_dtype([0], Float64);
+let rebuilt_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (col2im_out(rebuilt_output, matrix, [1, 1], [1, 1], [1, 1], [0, 0], [1, 1]); let rebuilt_shape = shape(rebuilt) == [1, 1, 1] and shape(rebuilt_output) == [1, 1, 1];
 let rebuilt_values = activation_pair(rebuilt, rebuilt_output, 0.99, 1.01, 0.99, 1.01);
 let contracted = tensordot(vector, vector, [0], [0]);
-let contracted_output = ones_dtype([0], Float64);
+let contracted_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (tensordot_out(contracted_output, vector, vector, [0], [0]); let contracted_shape = shape(contracted) == [] and shape(contracted_output) == [];
 let contracted_values = activation_pair(contracted, contracted_output, 0.99, 1.01, 0.99, 1.01);
 (dispose(start); dispose(start_base); dispose(trace_gradient); dispose(image); dispose(matrix); dispose(vector); channel_shape
@@ -1354,7 +1354,7 @@ validate_cpu_where_indices(values: List[Tensor]): Bool ->
     }.
 
 validate_cpu_where_index(indices: Tensor): Bool ->
-    let valid = shape(indices) == [1] and dtype(indices) == Int64 and is_cpu(indices);
+    let valid = shape(indices) == [1] and dtype(indices) == dtype_code(DType.INT64) and is_cpu(indices);
     dispose(indices);
     valid.
 
@@ -1456,10 +1456,6 @@ validate_owned_partition_shape_pair(
 
 @test
 pub generated_cxx_indexing_behavior(): Bool ->
-    // Keep this smoke test on the generated CXX scalar path.  The full
-    // indexing overload matrix is covered by the public parity fixtures;
-    // this fixture only needs to prove owned index tensors cross the CXX
-    // boundary without relying on dtype atoms in a generated test module.
     let input = ones([1]);
     let index_seed = from_ints([0], [1]);
     let ordered = argsort_stable(input, true, 0, false);
@@ -1467,45 +1463,50 @@ pub generated_cxx_indexing_behavior(): Bool ->
     let copied = index_copy(input, 0, index_seed, input);
     let shapes_valid =
         shape(ordered) == [1]
-        and shape(selected) == [1]
-        and shape(copied) == [1]
-        and is_cpu(ordered)
-        and is_cpu(selected)
-        and is_cpu(copied);
-(dispose(copied); dispose(selected); dispose(ordered); dispose(index_seed); dispose(input); shapes_valid).
+            and shape(selected) == [1]
+            and shape(copied) == [1]
+            and is_cpu(ordered)
+            and is_cpu(selected)
+            and is_cpu(copied);
+    dispose(copied);
+    dispose(selected);
+    dispose(ordered);
+    dispose(index_seed);
+    dispose(input);
+    shapes_valid.
 
 @test
 pub generated_cxx_gradients_behavior(): Bool ->
-    let input = ones_dtype([1], Float64);
-    let gradient = ones_dtype([1], Float64);
-    let matrix_gradient = ones_dtype([1, 1], Float64);
-    let index_seed = ones_dtype([1], Int64);
+    let input = ones_dtype([1], dtype_code(DType.FLOAT64));
+    let gradient = ones_dtype([1], dtype_code(DType.FLOAT64));
+    let matrix_gradient = ones_dtype([1, 1], dtype_code(DType.FLOAT64));
+    let index_seed = ones_dtype([1], dtype_code(DType.INT64));
     let indices = mul_int(index_seed, 0);
-    let mask = ones_dtype([1], Bool);
+    let mask = ones_dtype([1], dtype_code(DType.BOOL));
     let cumulative = cumprod_backward(gradient, input, 0, input);
     let embedding = embedding_backward(matrix_gradient, indices, 1, -1, false, false);
     let embedding_dispatch_sparse = embedding_backward(matrix_gradient, indices, 1, -1, false, true);
     let dense_embedding = embedding_dense_backward(matrix_gradient, indices, 1, -1, false);
-    let dense_embedding_output = ones_dtype([0], Float64);
+    let dense_embedding_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     embedding_dense_backward_out(dense_embedding_output, matrix_gradient, indices, 1, -1, false);
     let sparse_embedding = embedding_sparse_backward(matrix_gradient, indices, 1, -1, false);
     let channel_quantized = fake_quantize_per_channel_affine_cachemask_backward(gradient, mask);
     let tensor_quantized = fake_quantize_per_tensor_affine_cachemask_backward(gradient, mask);
     let gathered = gather_backward(gradient, input, 0, indices, false);
     let gelu = gelu_backward(gradient, input, "none");
-    let gelu_output = ones_dtype([0], Float64);
+    let gelu_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     (gelu_backward_out(gelu_output, gradient, input, "none"); let logit_input = mul_float(input, 0.5);
 let logit = logit_backward(gradient, logit_input);
 let logit_epsilon = logit_backward_epsilon(gradient, logit_input, 0.1);
-let logit_output = ones_dtype([0], Float64);
-(logit_backward_out(logit_output, gradient, logit_input); let logit_epsilon_output = ones_dtype([0], Float64);
-(logit_backward_epsilon_out(logit_epsilon_output, gradient, logit_input, 0.1); let glu_input = ones_dtype([1, 2], Float64);
-let glu_gradient = ones_dtype([1, 1], Float64);
+let logit_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(logit_backward_out(logit_output, gradient, logit_input); let logit_epsilon_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(logit_backward_epsilon_out(logit_epsilon_output, gradient, logit_input, 0.1); let glu_input = ones_dtype([1, 2], dtype_code(DType.FLOAT64));
+let glu_gradient = ones_dtype([1, 1], dtype_code(DType.FLOAT64));
 let glu = glu_backward(glu_gradient, glu_input, 1);
 let selected = masked_select_backward(gradient, input, mask);
-let scalar_gradient = ones_dtype([], Float64);
-let scalar_input = ones_dtype([], Float64);
-let scalar_target = ones_dtype([], Float64);
+let scalar_gradient = ones_dtype([], dtype_code(DType.FLOAT64));
+let scalar_input = ones_dtype([], dtype_code(DType.FLOAT64));
+let scalar_target = ones_dtype([], dtype_code(DType.FLOAT64));
 let margin = soft_margin_loss_backward(scalar_gradient, scalar_input, scalar_target, 1);
 let shapes_valid =
     shape(cumulative) == [1]
@@ -1527,11 +1528,11 @@ let shapes_valid =
         and shape(selected) == [1]
         and shape(margin) == [];
 let types_valid =
-    dtype(cumulative) == Float64
-        and dtype(dense_embedding_output) == Float64
-        and dtype(channel_quantized) == Float64
-        and dtype(logit_epsilon_output) == Float64
-        and dtype(margin) == Float64;
+    dtype(cumulative) == dtype_code(DType.FLOAT64)
+        and dtype(dense_embedding_output) == dtype_code(DType.FLOAT64)
+        and dtype(channel_quantized) == dtype_code(DType.FLOAT64)
+        and dtype(logit_epsilon_output) == dtype_code(DType.FLOAT64)
+        and dtype(margin) == dtype_code(DType.FLOAT64);
 let placement_valid =
     is_cpu(cumulative)
         and is_cpu(embedding)
@@ -1555,14 +1556,14 @@ let placement_valid =
 
 @test
 pub generated_cxx_dense_behavior(): Bool ->
-    let scalar = ones_dtype([], Float64);
+    let scalar = ones_dtype([], dtype_code(DType.FLOAT64));
     let order = mul_float(scalar, 2.0);
-    let vector = ones_dtype([2], Float64);
-    let integer_vector = ones_dtype([2], Int64);
-    let matrix = ones_dtype([2, 2], Float64);
-    let flat = ones_dtype([4], Float64);
-    let batch = ones_dtype([1, 2, 2], Float64);
-    let tau = ones_dtype([2], Float64);
+    let vector = ones_dtype([2], dtype_code(DType.FLOAT64));
+    let integer_vector = ones_dtype([2], dtype_code(DType.INT64));
+    let matrix = ones_dtype([2, 2], dtype_code(DType.FLOAT64));
+    let flat = ones_dtype([4], dtype_code(DType.FLOAT64));
+    let batch = ones_dtype([1, 2, 2], dtype_code(DType.FLOAT64));
+    let tau = ones_dtype([2], dtype_code(DType.FLOAT64));
     let bmm_result = bmm(batch, batch);
     let complex_result = complex(scalar, scalar);
     let divided = divide_tensor(vector, vector);
@@ -1603,14 +1604,14 @@ pub generated_cxx_dense_behavior(): Bool ->
     let tanh = tanh_backward(scalar, scalar);
     let typed = type_as(vector, integer_vector);
     let viewed = view_as(flat, matrix);
-    let bmm_output = ones_dtype([0], Float64);
+    let bmm_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     bmm_out(bmm_output, batch, batch);
-    let ger_output = ones_dtype([0], Float64);
-    (ger_out(ger_output, vector, vector); let matmul_output = ones_dtype([0], Float64);
-(matmul_out(matmul_output, matrix, matrix); let mm_output = ones_dtype([0], Float64);
-(mm_out(mm_output, matrix, matrix); let mv_output = ones_dtype([0], Float64);
-(mv_out(mv_output, matrix, vector); let qr_output = ones_dtype([0], Float64);
-(orgqr_out(qr_output, matrix, tau); let outer_output = ones_dtype([0], Float64);
+    let ger_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+    (ger_out(ger_output, vector, vector); let matmul_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(matmul_out(matmul_output, matrix, matrix); let mm_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(mm_out(mm_output, matrix, matrix); let mv_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(mv_out(mv_output, matrix, vector); let qr_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(orgqr_out(qr_output, matrix, tau); let outer_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (outer_out(outer_output, vector, vector); let shapes_valid =
     shape(bmm_result) == [1, 2, 2]
         and shape(complex_result) == []
@@ -1659,7 +1660,10 @@ pub generated_cxx_dense_behavior(): Bool ->
         and shape(mv_output) == [2]
         and shape(qr_output) == [2, 2]
         and shape(outer_output) == [2, 2];
-let types_valid = dtype(typed) == Int64 and dtype(mm_result) == Float64 and dtype(mm_output) == Float64;
+let types_valid =
+    dtype(typed) == dtype_code(DType.INT64)
+        and dtype(mm_result) == dtype_code(DType.FLOAT64)
+        and dtype(mm_output) == dtype_code(DType.FLOAT64);
 let placement_valid =
     is_cpu(bmm_result)
         and is_cpu(complex_result)
@@ -1712,36 +1716,36 @@ let placement_valid =
 
 @test
 pub generated_cxx_functional_completion_behavior(): Bool ->
-    let input = ones_dtype([1, 2], Float64);
-    let weight = ones_dtype([1, 2], Float64);
-    let bias = ones_dtype([1], Float64);
+    let input = ones_dtype([1, 2], dtype_code(DType.FLOAT64));
+    let weight = ones_dtype([1, 2], dtype_code(DType.FLOAT64));
+    let bias = ones_dtype([1], dtype_code(DType.FLOAT64));
     let linear_plain = linear_no_bias(input, weight);
     let linear_biased = linear_with_bias(input, weight, bias);
-    let linear_plain_output = ones_dtype([0], Float64);
+    let linear_plain_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     linear_out_no_bias(linear_plain_output, input, weight);
-    let linear_biased_output = ones_dtype([0], Float64);
+    let linear_biased_output = ones_dtype([0], dtype_code(DType.FLOAT64));
     (linear_out_with_bias(linear_biased_output, input, weight, bias); let log_default = log_softmax_default_dtype(input, 1);
 let log_typed = log_softmax_dtype(input, 1, 7);
-let log_default_output = ones_dtype([0], Float64);
-(log_softmax_out_default_dtype(log_default_output, input, 1); let log_typed_output = ones_dtype([0], Float64);
-(log_softmax_out_dtype(log_typed_output, input, 1, 7); let normalization_input = ones_dtype([1, 2, 2], Float64);
-let affine_weight = ones_dtype([2], Float64);
-let affine_bias = ones_dtype([2], Float64);
+let log_default_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(log_softmax_out_default_dtype(log_default_output, input, 1); let log_typed_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(log_softmax_out_dtype(log_typed_output, input, 1, 7); let normalization_input = ones_dtype([1, 2, 2], dtype_code(DType.FLOAT64));
+let affine_weight = ones_dtype([2], dtype_code(DType.FLOAT64));
+let affine_bias = ones_dtype([2], dtype_code(DType.FLOAT64));
 let normalized_plain = group_norm_no_affine(normalization_input, 1, 0.00001, true);
 let normalized_weight = group_norm_weight(normalization_input, 1, affine_weight, 0.00001, true);
 let normalized_bias = group_norm_bias(normalization_input, 1, affine_bias, 0.00001, true);
 let normalized_affine = group_norm_affine(normalization_input, 1, affine_weight, affine_bias, 0.00001, true);
-let vector = ones_dtype([2], Float64);
-let edge = ones_dtype([1], Float64);
+let vector = ones_dtype([2], dtype_code(DType.FLOAT64));
+let edge = ones_dtype([1], dtype_code(DType.FLOAT64));
 let difference = diff_basic(vector, 1, 0);
 let difference_prepend = diff_prepend(vector, 1, 0, edge);
 let difference_append = diff_append(vector, 1, 0, edge);
 let difference_both = diff_both(vector, 1, 0, edge, edge);
-let difference_output = ones_dtype([0], Float64);
-(diff_out_basic(difference_output, vector, 1, 0); let difference_prepend_output = ones_dtype([0], Float64);
-(diff_out_prepend(difference_prepend_output, vector, 1, 0, edge); let difference_append_output = ones_dtype([0], Float64);
-(diff_out_append(difference_append_output, vector, 1, 0, edge); let difference_both_output = ones_dtype([0], Float64);
-(diff_out_both(difference_both_output, vector, 1, 0, edge, edge); let mask = ones_dtype([2], Bool);
+let difference_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(diff_out_basic(difference_output, vector, 1, 0); let difference_prepend_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(diff_out_prepend(difference_prepend_output, vector, 1, 0, edge); let difference_append_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(diff_out_append(difference_append_output, vector, 1, 0, edge); let difference_both_output = ones_dtype([0], dtype_code(DType.FLOAT64));
+(diff_out_both(difference_both_output, vector, 1, 0, edge, edge); let mask = ones_dtype([2], dtype_code(DType.BOOL));
 let scattered_gradient = masked_scatter_backward(vector, mask, [2]);
 let linear_plain_scalar = item(linear_plain);
 let linear_biased_scalar = item(linear_biased);
@@ -1769,9 +1773,9 @@ let shapes_valid =
         and shape(difference_both_output) == [3]
         and shape(scattered_gradient) == [2];
 let types_valid =
-    dtype(log_typed) == Float64
-        and dtype(log_typed_output) == Float64
-        and dtype(scattered_gradient) == Float64;
+    dtype(log_typed) == dtype_code(DType.FLOAT64)
+        and dtype(log_typed_output) == dtype_code(DType.FLOAT64)
+        and dtype(scattered_gradient) == dtype_code(DType.FLOAT64);
 let placement_valid =
     is_cpu(linear_plain)
         and is_cpu(log_default)
@@ -1782,10 +1786,10 @@ let placement_valid =
 
 @test
 pub generated_cxx_padding_native_behavior(): Bool ->
-    let input = ones_dtype([1], Float64);
+    let input = ones_dtype([1], dtype_code(DType.FLOAT64));
     let integer_padded = constant_pad_configured(input, [1, 1], true, 2, 0.0);
     let floating_padded = constant_pad_configured(input, [1, 1], false, 0, 0.5);
-    let output = ones_dtype([0], Float64);
+    let output = ones_dtype([0], dtype_code(DType.FLOAT64));
     constant_pad_configured_out(output, input, [1, 1], false, 0, 0.25);
     let default_value = pad_without_value(input, [1, 1], "constant");
     let explicit_value = pad_with_value(input, [1, 1], "constant", 0.75);
@@ -1795,8 +1799,8 @@ pub generated_cxx_padding_native_behavior(): Bool ->
             and shape(output) == [3]
             and shape(default_value) == [3]
             and shape(explicit_value) == [3]
-            and dtype(integer_padded) == Float64
-            and dtype(output) == Float64
+            and dtype(integer_padded) == dtype_code(DType.FLOAT64)
+            and dtype(output) == dtype_code(DType.FLOAT64)
             and is_cpu(integer_padded)
             and is_cpu(floating_padded)
             and is_cpu(output)
@@ -1806,21 +1810,21 @@ pub generated_cxx_padding_native_behavior(): Bool ->
 
 @test
 pub generated_cxx_binary_cross_entropy_completion_behavior(): Bool ->
-    let seed = ones_dtype([], Float64);
+    let seed = ones_dtype([], dtype_code(DType.FLOAT64));
     let input = mul_float(seed, 0.5);
-    let target = ones_dtype([], Float64);
+    let target = ones_dtype([], dtype_code(DType.FLOAT64));
     let weight = mul_float(target, 2.0);
     let positive_weight = mul_float(target, 3.0);
-    let gradient = ones_dtype([], Float64);
+    let gradient = ones_dtype([], dtype_code(DType.FLOAT64));
     let loss = binary_cross_entropy(input, target, 0);
     let weighted_loss = binary_cross_entropy_weight(input, target, weight, 0);
-    let loss_output = ones_dtype([], Float64);
+    let loss_output = ones_dtype([], dtype_code(DType.FLOAT64));
     binary_cross_entropy_out(loss_output, input, target, 0);
-    let weighted_loss_output = ones_dtype([], Float64);
+    let weighted_loss_output = ones_dtype([], dtype_code(DType.FLOAT64));
     (binary_cross_entropy_weight_out(weighted_loss_output, input, target, weight, 0); let input_gradient = binary_cross_entropy_backward(gradient, input, target, 0);
 let weighted_input_gradient = binary_cross_entropy_backward_weight(gradient, input, target, weight, 0);
-let input_gradient_output = ones_dtype([], Float64);
-(binary_cross_entropy_backward_out(input_gradient_output, gradient, input, target, 0); let weighted_input_gradient_output = ones_dtype([], Float64);
+let input_gradient_output = ones_dtype([], dtype_code(DType.FLOAT64));
+(binary_cross_entropy_backward_out(input_gradient_output, gradient, input, target, 0); let weighted_input_gradient_output = ones_dtype([], dtype_code(DType.FLOAT64));
 (binary_cross_entropy_backward_weight_out(
     weighted_input_gradient_output,
     gradient,
@@ -1833,16 +1837,16 @@ let plain_logits = binary_cross_entropy_with_logits(logits, target, 0);
 let weighted_logits = binary_cross_entropy_with_logits_weight(logits, target, weight, 0);
 let positive_logits = binary_cross_entropy_with_logits_positive_weight(logits, target, positive_weight, 0);
 let both_logits = binary_cross_entropy_with_logits_both_weights(logits, target, weight, positive_weight, 0);
-let plain_logits_output = ones_dtype([], Float64);
-(binary_cross_entropy_with_logits_out(plain_logits_output, logits, target, 0); let weighted_logits_output = ones_dtype([], Float64);
-(binary_cross_entropy_with_logits_weight_out(weighted_logits_output, logits, target, weight, 0); let positive_logits_output = ones_dtype([], Float64);
+let plain_logits_output = ones_dtype([], dtype_code(DType.FLOAT64));
+(binary_cross_entropy_with_logits_out(plain_logits_output, logits, target, 0); let weighted_logits_output = ones_dtype([], dtype_code(DType.FLOAT64));
+(binary_cross_entropy_with_logits_weight_out(weighted_logits_output, logits, target, weight, 0); let positive_logits_output = ones_dtype([], dtype_code(DType.FLOAT64));
 (binary_cross_entropy_with_logits_positive_weight_out(
     positive_logits_output,
     logits,
     target,
     positive_weight,
     0,
-); let both_logits_output = ones_dtype([], Float64);
+); let both_logits_output = ones_dtype([], dtype_code(DType.FLOAT64));
 (binary_cross_entropy_with_logits_both_weights_out(
     both_logits_output,
     logits,
@@ -1873,7 +1877,7 @@ let logits_valid =
 
 @test
 pub generated_cxx_division_behavior(): Bool ->
-    let base = ones_dtype([1], Float64);
+    let base = ones_dtype([1], dtype_code(DType.FLOAT64));
     let divisor = mul_float(base, 2.0);
     let div_int = div_right_int(base, 2);
     let div_int_mode = div_right_int_mode(base, 2, "floor");
@@ -1953,8 +1957,8 @@ pub generated_cxx_division_behavior(): Bool ->
 
 @test
 pub generated_cxx_slice_native_behavior(): Bool ->
-    let input = ones_dtype([4], Float64);
-    let source = ones_dtype([2], Float64);
+    let input = ones_dtype([4], dtype_code(DType.FLOAT64));
+    let source = ones_dtype([2], dtype_code(DType.FLOAT64));
     let zeros = mul_float(input, 0.0);
     let view_all = slice_all(input, 0, 2);
     let view_from = slice_from(input, 0, 1, 2);
@@ -1968,15 +1972,15 @@ pub generated_cxx_slice_native_behavior(): Bool ->
     let scatter_from = slice_scatter_from(zeros, source, 0, 1, 2);
     let scatter_until = slice_scatter_until(zeros, source, 0, 3, 2);
     let scatter_bounds = slice_scatter_bounds(zeros, source, 0, 1, 3, 1);
-    let copy_out_all = ones_dtype([0], Float64);
+    let copy_out_all = ones_dtype([0], dtype_code(DType.FLOAT64));
     slice_copy_out_all(copy_out_all, input, 0, 2);
-    let copy_out_from = ones_dtype([0], Float64);
-    (slice_copy_out_from(copy_out_from, input, 0, 1, 2); let copy_out_until = ones_dtype([0], Float64);
-(slice_copy_out_until(copy_out_until, input, 0, 3, 2); let copy_out_bounds = ones_dtype([0], Float64);
-(slice_copy_out_bounds(copy_out_bounds, input, 0, 1, 3, 1); let scatter_out_all = ones_dtype([0], Float64);
-(slice_scatter_out_all(scatter_out_all, zeros, source, 0, 2); let scatter_out_from = ones_dtype([0], Float64);
-(slice_scatter_out_from(scatter_out_from, zeros, source, 0, 1, 2); let scatter_out_until = ones_dtype([0], Float64);
-(slice_scatter_out_until(scatter_out_until, zeros, source, 0, 3, 2); let scatter_out_bounds = ones_dtype([0], Float64);
+    let copy_out_from = ones_dtype([0], dtype_code(DType.FLOAT64));
+    (slice_copy_out_from(copy_out_from, input, 0, 1, 2); let copy_out_until = ones_dtype([0], dtype_code(DType.FLOAT64));
+(slice_copy_out_until(copy_out_until, input, 0, 3, 2); let copy_out_bounds = ones_dtype([0], dtype_code(DType.FLOAT64));
+(slice_copy_out_bounds(copy_out_bounds, input, 0, 1, 3, 1); let scatter_out_all = ones_dtype([0], dtype_code(DType.FLOAT64));
+(slice_scatter_out_all(scatter_out_all, zeros, source, 0, 2); let scatter_out_from = ones_dtype([0], dtype_code(DType.FLOAT64));
+(slice_scatter_out_from(scatter_out_from, zeros, source, 0, 1, 2); let scatter_out_until = ones_dtype([0], dtype_code(DType.FLOAT64));
+(slice_scatter_out_until(scatter_out_until, zeros, source, 0, 3, 2); let scatter_out_bounds = ones_dtype([0], dtype_code(DType.FLOAT64));
 (slice_scatter_out_bounds(scatter_out_bounds, zeros, source, 0, 1, 3, 1); let shapes_valid =
     shape(view_all) == [2]
         and shape(view_from) == [2]
@@ -2025,7 +2029,7 @@ let placement_valid =
 
 @test
 pub generated_cxx_fft_behavior(): Bool ->
-    let real = ones_dtype([2, 2], Float64);
+    let real = ones_dtype([2, 2], dtype_code(DType.FLOAT64));
     let zero = mul_float(real, 0.0);
     let complex_input = complex(real, zero);
     let fft_value = fft(complex_input, 1, "backward");
@@ -2066,9 +2070,9 @@ pub generated_cxx_fft_behavior(): Bool ->
 (ihfftn_out(ihfftn_output, real, [0, 1], "backward"); let irfftn_output = clone(real);
 (irfftn_out(irfftn_output, rfftn_value, [0, 1], "backward"); let rfftn_output = clone(complex_input);
 (rfftn_out(rfftn_output, real, [0, 1], "backward"); let frequency = fftfreq(4, 1.0);
-let frequency_output = ones_dtype([0], Float64);
+let frequency_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (fftfreq_out(frequency_output, 4, 1.0); let real_frequency = rfftfreq(4, 1.0);
-let real_frequency_output = ones_dtype([0], Float64);
+let real_frequency_output = ones_dtype([0], dtype_code(DType.FLOAT64));
 (rfftfreq_out(real_frequency_output, 4, 1.0); let shifted = fftshift(frequency, [0]);
 let shifted_all = fftshift_all(frequency);
 let unshifted = ifftshift(shifted, [0]);

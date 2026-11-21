@@ -1,7 +1,7 @@
 module pytorch.TypeRelationsNativeBehaviorSupport.
 
 import pytorch.ShapeCompletion.{zero}.
-import pytorch.Tensor.{Complex128, Float64, Int32, Strided, UInt8, dispose, is_cuda, mul_float, ones_device, requires_grad_in_place}.
+import pytorch.Tensor.{DType, dispose, dtype_code, is_cuda, mul_float, ones_device, requires_grad_in_place}.
 import pytorch.TypeRelationsNative.{allclose_native, can_cast_native, equal_native, get_device_native, is_complex_native, is_conj_native, is_distributed_native, is_floating_point_native, is_inference_native, is_leaf_native, is_neg_native, is_nonzero_native, is_same_size_native, is_set_to_native, is_signed_native, output_nr_native, promote_types_native, result_type_scalar_native, result_type_scalar_scalar_native, result_type_scalar_tensor_native, result_type_tensor_native, retain_grad_native, retains_grad_native, size_dimension_native, stride_dimension_native}.
 import pytorch.View.{alias, conj}.
 
@@ -10,10 +10,10 @@ import pytorch.View.{alias, conj}.
  */
 pub type_relation_comparisons_on(device_name: String): Bool ->
     let expected_cuda = device_name == "cuda:0";
-    let left = ones_device([2], Float64, Strided, device_name);
-    let exact = ones_device([2], Float64, Strided, device_name);
+    let left = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
+    let exact = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let near = mul_float(left, 1.0001);
-    let matrix = ones_device([1, 2], Float64, Strided, device_name);
+    let matrix = ones_device([1, 2], dtype_code(DType.FLOAT64), 0, device_name);
     let valid =
         equal_native(left, exact)
             and not equal_native(left, near)
@@ -33,9 +33,9 @@ pub type_relation_comparisons_on(device_name: String): Bool ->
  */
 pub type_relation_properties_on(device_name: String): Bool ->
     let expected_cuda = device_name == "cuda:0";
-    let vector = ones_device([2], Float64, Strided, device_name);
-    let unsigned_value = ones_device([2], UInt8, Strided, device_name);
-    let complex_value = ones_device([2], Complex128, Strided, device_name);
+    let vector = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
+    let unsigned_value = ones_device([2], dtype_code(DType.UINT8), 0, device_name);
+    let complex_value = ones_device([2], dtype_code(DType.COMPLEX128), 0, device_name);
     let conjugated = conj(complex_value);
     let valid =
         not is_complex_native(vector)
@@ -61,7 +61,7 @@ pub type_relation_properties_on(device_name: String): Bool ->
  * Executes scalar truth-value extraction for nonzero and zero tensors.
  */
 pub type_relation_nonzero_on(device_name: String): Bool ->
-    let truth = ones_device([], Float64, Strided, device_name);
+    let truth = ones_device([], dtype_code(DType.FLOAT64), 0, device_name);
     let falsehood = zero(truth);
     let valid = is_nonzero_native(truth) and not is_nonzero_native(falsehood);
     dispose(falsehood);
@@ -72,9 +72,9 @@ pub type_relation_nonzero_on(device_name: String): Bool ->
  * Executes exact shared-storage-view identity checks.
  */
 pub type_relation_storage_identity_on(device_name: String): Bool ->
-    let vector = ones_device([2], Float64, Strided, device_name);
+    let vector = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let same_view = alias(vector);
-    let separate = ones_device([2], Float64, Strided, device_name);
+    let separate = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let valid = is_set_to_native(vector, same_view) and not is_set_to_native(vector, separate);
     dispose(separate);
     dispose(same_view);
@@ -91,7 +91,7 @@ pub type_relation_geometry_on(device_name: String): Bool ->
             expected_cuda -> 0;
             true -> -1
         };
-    let matrix = ones_device([1, 2], Float64, Strided, device_name);
+    let matrix = ones_device([1, 2], dtype_code(DType.FLOAT64), 0, device_name);
     let valid =
         get_device_native(matrix) == expected_device_index
             and output_nr_native(matrix) == 0
@@ -121,8 +121,8 @@ pub type_relation_dtype_rules(): Bool ->
  */
 pub type_relation_result_types_on(device_name: String): Bool ->
     let expected_cuda = device_name == "cuda:0";
-    let integer32 = ones_device([2], Int32, Strided, device_name);
-    let floating64 = ones_device([2], Float64, Strided, device_name);
+    let integer32 = ones_device([2], dtype_code(DType.INT32), 0, device_name);
+    let floating64 = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let valid =
         result_type_tensor_native(integer32, floating64) == 7
             and result_type_scalar_native(integer32, false, 0, 1.5) == 6
@@ -138,7 +138,7 @@ pub type_relation_result_types_on(device_name: String): Bool ->
  */
 pub type_relation_retain_grad_on(device_name: String): Bool ->
     let expected_cuda = device_name == "cuda:0";
-    let leaf = ones_device([2], Float64, Strided, device_name);
+    let leaf = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     requires_grad_in_place(leaf, true);
     let retained = mul_float(leaf, 2.0);
     let before = is_leaf_native(leaf) and not is_leaf_native(retained) and not retains_grad_native(retained);

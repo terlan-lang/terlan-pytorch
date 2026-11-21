@@ -1,6 +1,6 @@
 module pytorch.OutputCompletionDTypeSupport.
 
-import pytorch.Tensor.{Bool, Strided, ones_device}.
+import pytorch.Tensor.{DType, dtype_code, ones_device}.
 
 import type pytorch.Tensor.
 
@@ -8,4 +8,4 @@ import type pytorch.Tensor.
  * Constructs the Boolean mask without shadowing the language Bool type.
  */
 pub bool_mask_on(device_name: String): Tensor ->
-    ones_device([1], Bool, Strided, device_name).
+    ones_device([1], dtype_code(DType.BOOL), 0, device_name).

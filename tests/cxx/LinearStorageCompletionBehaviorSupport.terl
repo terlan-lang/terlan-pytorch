@@ -1,38 +1,38 @@
 module pytorch.LinearStorageCompletionBehaviorSupport.
 
 import pytorch.LinearStorageCompletion.{bilinear_no_bias, bilinear_with_bias, conv_tbc, conv_tbc_backward, conv_tbc_out, cummaxmin_backward, set_empty, set_empty_in_place, set_empty_out, set_source_tensor, set_source_tensor_out}.
-import pytorch.Tensor.{Float64, Int64, Strided, dispose, is_cuda, ones_device, shape}.
+import pytorch.Tensor.{DType, dispose, dtype_code, is_cuda, ones_device, shape}.
 
 /**
  * Executes every LinearStorageCompletion contract on one device.
  */
 pub linear_storage_completion_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
-    let input1 = ones_device([1, 2], Float64, Strided, device_name);
-    let input2 = ones_device([1, 2], Float64, Strided, device_name);
-    let weight = ones_device([2, 2, 2], Float64, Strided, device_name);
-    let bias = ones_device([2], Float64, Strided, device_name);
+    let input1 = ones_device([1, 2], dtype_code(DType.FLOAT64), 0, device_name);
+    let input2 = ones_device([1, 2], dtype_code(DType.FLOAT64), 0, device_name);
+    let weight = ones_device([2, 2, 2], dtype_code(DType.FLOAT64), 0, device_name);
+    let bias = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let bilinear_plain = bilinear_no_bias(input1, input2, weight);
     let bilinear_biased = bilinear_with_bias(input1, input2, weight, bias);
-    let temporal_input = ones_device([3, 1, 1], Float64, Strided, device_name);
-    let temporal_weight = ones_device([2, 1, 1], Float64, Strided, device_name);
-    let temporal_bias = ones_device([1], Float64, Strided, device_name);
+    let temporal_input = ones_device([3, 1, 1], dtype_code(DType.FLOAT64), 0, device_name);
+    let temporal_weight = ones_device([2, 1, 1], dtype_code(DType.FLOAT64), 0, device_name);
+    let temporal_bias = ones_device([1], dtype_code(DType.FLOAT64), 0, device_name);
     let temporal = conv_tbc(temporal_input, temporal_weight, temporal_bias, 0);
-    let temporal_output = ones_device([0], Float64, Strided, device_name);
+    let temporal_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
     conv_tbc_out(temporal_output, temporal_input, temporal_weight, temporal_bias, 0);
-    let temporal_gradient = ones_device([2, 1, 1], Float64, Strided, device_name);
+    let temporal_gradient = ones_device([2, 1, 1], dtype_code(DType.FLOAT64), 0, device_name);
     let {input_gradient, weight_gradient, bias_gradient} = conv_tbc_backward(temporal_gradient, temporal_input, temporal_weight, temporal_bias, 0);
-    let cumulative_gradient = ones_device([3], Float64, Strided, device_name);
-    let cumulative_input = ones_device([3], Float64, Strided, device_name);
-    let cumulative_indices = ones_device([3], Int64, Strided, device_name);
+    let cumulative_gradient = ones_device([3], dtype_code(DType.FLOAT64), 0, device_name);
+    let cumulative_input = ones_device([3], dtype_code(DType.FLOAT64), 0, device_name);
+    let cumulative_indices = ones_device([3], dtype_code(DType.INT64), 0, device_name);
     let cumulative = cummaxmin_backward(cumulative_gradient, cumulative_input, cumulative_indices, 0);
-    let reset_source = ones_device([2], Float64, Strided, device_name);
+    let reset_source = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let reset = set_empty(reset_source);
-    let reset_output = ones_device([0], Float64, Strided, device_name);
-    (set_empty_out(reset_output, reset_source); let reset_mutation = ones_device([2], Float64, Strided, device_name);
-(set_empty_in_place(reset_mutation); let rebinding_input = ones_device([2], Float64, Strided, device_name);
-let rebinding_source = ones_device([3], Float64, Strided, device_name);
+    let reset_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    (set_empty_out(reset_output, reset_source); let reset_mutation = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
+(set_empty_in_place(reset_mutation); let rebinding_input = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
+let rebinding_source = ones_device([3], dtype_code(DType.FLOAT64), 0, device_name);
 let rebound = set_source_tensor(rebinding_input, rebinding_source);
-let rebound_output = ones_device([0], Float64, Strided, device_name);
+let rebound_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
 (set_source_tensor_out(rebound_output, rebinding_input, rebinding_source); let valid =
     shape(bilinear_plain) == [1, 2]
         and shape(bilinear_biased) == [1, 2]

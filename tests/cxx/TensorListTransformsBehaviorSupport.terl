@@ -1,6 +1,6 @@
 module pytorch.TensorListTransformsBehaviorSupport.
 
-import pytorch.Tensor.{Float64, Strided, dispose, is_cuda, ones_device, shape}.
+import pytorch.Tensor.{DType, dispose, dtype_code, is_cuda, ones_device, shape}.
 import pytorch.TensorListTransforms.{broadcast_tensors, flatten_dense_tensors, meshgrid, meshgrid_indexing, unflatten_dense_tensors}.
 
 import type pytorch.Tensor.
@@ -37,16 +37,16 @@ pair_has_shape_values(
  * Executes every TensorListTransforms contract on one device.
  */
 pub tensor_list_transform_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
-    let column = ones_device([3, 1], Float64, Strided, device_name);
-    let row = ones_device([1, 2], Float64, Strided, device_name);
+    let column = ones_device([3, 1], dtype_code(DType.FLOAT64), 0, device_name);
+    let row = ones_device([1, 2], dtype_code(DType.FLOAT64), 0, device_name);
     let broadcast_valid = pair_has_shapes(broadcast_tensors(column, [row]), [3, 2], [3, 2], expected_cuda);
-    let x = ones_device([2], Float64, Strided, device_name);
-    let y = ones_device([3], Float64, Strided, device_name);
+    let x = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
+    let y = ones_device([3], dtype_code(DType.FLOAT64), 0, device_name);
     let default_grid_valid = pair_has_shapes(meshgrid(x, [y]), [2, 3], [2, 3], expected_cuda);
     let ij_grid_valid = pair_has_shapes(meshgrid_indexing(x, [y], "ij"), [2, 3], [2, 3], expected_cuda);
     let xy_grid_valid = pair_has_shapes(meshgrid_indexing(x, [y], "xy"), [3, 2], [3, 2], expected_cuda);
-    let matrix = ones_device([2, 2], Float64, Strided, device_name);
-    let vector = ones_device([2], Float64, Strided, device_name);
+    let matrix = ones_device([2, 2], dtype_code(DType.FLOAT64), 0, device_name);
+    let vector = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let flat = flatten_dense_tensors([matrix, vector]);
     let flat_valid = shape(flat) == [6] and is_cuda(flat) == expected_cuda;
     let unflatten_valid = pair_has_shapes(unflatten_dense_tensors(flat, matrix, [vector]), [2, 2], [2], expected_cuda);

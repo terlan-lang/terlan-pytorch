@@ -1,26 +1,26 @@
 module pytorch.UnaryStorageBehaviorSupport.
 
-import pytorch.Tensor.{Float64, Int32, Int64, Strided, clone, dispose, dtype, is_cuda, ones_device, shape}.
+import pytorch.Tensor.{DType, clone, dispose, dtype, dtype_code, is_cuda, ones_device, shape}.
 import pytorch.UnaryStorageNative.{acos_in_place, acos_out, alias_copy_out, digamma_in_place, frexp_out, hardsigmoid_backward_out, max_unary_out, median_out, nonzero_out, round_decimals, round_decimals_in_place, round_decimals_out, trace_out, zero_in_place}.
 
 /**
  * Exercises representative generated retained-output and in-place unary leaves.
  */
 pub unary_storage_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
-    let values = ones_device([2, 2], Float64, Strided, device_name);
-    let acos_output = ones_device([0], Float64, Strided, device_name);
+    let values = ones_device([2, 2], dtype_code(DType.FLOAT64), 0, device_name);
+    let acos_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
     let acos_in = clone(values);
     let rounded = round_decimals(values, 1);
-    let rounded_output = ones_device([0], Float64, Strided, device_name);
+    let rounded_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
     let rounded_in = clone(values);
-    let mantissa = ones_device([0], Float64, Strided, device_name);
-    let exponent = ones_device([0], Int32, Strided, device_name);
-    let backward = ones_device([0], Float64, Strided, device_name);
-    let max_output = ones_device([0], Float64, Strided, device_name);
-    let median_output = ones_device([0], Float64, Strided, device_name);
-    let nonzero_output = ones_device([0, 2], Int64, Strided, device_name);
-    let alias_output = ones_device([0], Float64, Strided, device_name);
-    let trace_output = ones_device([0], Float64, Strided, device_name);
+    let mantissa = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    let exponent = ones_device([0], dtype_code(DType.INT32), 0, device_name);
+    let backward = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    let max_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    let median_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    let nonzero_output = ones_device([0, 2], dtype_code(DType.INT64), 0, device_name);
+    let alias_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
+    let trace_output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
     let digamma_in = clone(values);
     let zero_in = clone(values);
     acos_out(acos_output, values);
@@ -48,8 +48,8 @@ pub unary_storage_contracts_on(device_name: String, expected_cuda: Bool): Bool -
             and shape(nonzero_output) == [4, 2]
             and shape(alias_output) == [2, 2]
             and shape(trace_output) == []
-            and dtype(rounded) == Float64
-            and dtype(exponent) == Int32
+            and dtype(rounded) == dtype_code(DType.FLOAT64)
+            and dtype(exponent) == dtype_code(DType.INT32)
             and is_cuda(rounded) == expected_cuda
             and is_cuda(zero_in) == expected_cuda;
     (dispose(zero_in); dispose(digamma_in); dispose(trace_output); dispose(alias_output); dispose(nonzero_output); dispose(median_output); dispose(max_output); dispose(backward); dispose(exponent); dispose(mantissa); dispose(rounded_in); dispose(rounded_output); dispose(rounded); dispose(acos_in); dispose(acos_output); dispose(values); valid).

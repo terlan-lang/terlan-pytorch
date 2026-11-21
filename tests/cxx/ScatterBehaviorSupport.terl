@@ -1,22 +1,22 @@
 module pytorch.ScatterBehaviorSupport.
 
 import pytorch.Scatter.{LegacyReduction, Reduction, scatter_add_in_place, scatter_add_out, scatter_reduce, scatter_tensor_in_place, scatter_tensor_out, scatter_tensor_reduce, scatter_value_int, scatter_value_int_in_place, scatter_value_int_out}.
-import pytorch.Tensor.{Float64, Int64, Strided, clone, dispose, is_cuda, ones_device, shape}.
+import pytorch.Tensor.{DType, clone, dispose, dtype_code, is_cuda, ones_device, shape}.
 
 import type pytorch.Tensor.
 
 pub scatter_contracts_on(device_name: String, expected_cuda: Bool): Bool ->
-    let input = ones_device([2, 3], Float64, Strided, device_name);
-    let index = ones_device([2, 3], Int64, Strided, device_name);
-    let source = ones_device([2, 3], Float64, Strided, device_name);
+    let input = ones_device([2, 3], dtype_code(DType.FLOAT64), 0, device_name);
+    let index = ones_device([2, 3], dtype_code(DType.INT64), 0, device_name);
+    let source = ones_device([2, 3], dtype_code(DType.FLOAT64), 0, device_name);
     let replaced = scatter_value_int(input, 1, index, 4);
-    let replaced_out = ones_device([0], Float64, Strided, device_name);
+    let replaced_out = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
     scatter_value_int_out(replaced_out, input, 1, index, 4);
     let replaced_mutation = clone(input);
-    (scatter_value_int_in_place(replaced_mutation, 1, index, 4); let copied_out = ones_device([0], Float64, Strided, device_name);
+    (scatter_value_int_in_place(replaced_mutation, 1, index, 4); let copied_out = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
 (scatter_tensor_out(copied_out, input, 1, index, source); let copied_mutation = clone(input);
 (scatter_tensor_in_place(copied_mutation, 1, index, source); let legacy = scatter_tensor_reduce(input, 1, index, source, LegacyReduction.ADD);
-let added_out = ones_device([0], Float64, Strided, device_name);
+let added_out = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
 (scatter_add_out(added_out, input, 1, index, source); let added_mutation = clone(input);
 (scatter_add_in_place(added_mutation, 1, index, source); let modern = scatter_reduce(input, 1, index, source, Reduction.SUM, true);
 let valid =

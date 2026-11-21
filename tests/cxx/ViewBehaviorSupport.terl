@@ -2,7 +2,7 @@ module pytorch.ViewBehaviorSupport.
 
 import pytorch.Dense.{complex}.
 import pytorch.ShapeCompletion.{zero}.
-import pytorch.Tensor.{Complex128, Float64, Strided, abs, dispose, dtype, is_cuda, ones_device, shape}.
+import pytorch.Tensor.{DType, abs, dispose, dtype, dtype_code, is_cuda, ones_device, shape}.
 import pytorch.View.{adjoint, alias, alias_copy, atleast_1d, atleast_1d_sequence, atleast_2d, atleast_2d_sequence, atleast_3d, atleast_3d_sequence, conj, data, detach, detach_copy, imag, lift, lift_fresh, lift_fresh_copy, mH, mT, matrix_H, numpy_T, positive, ravel, real, resolve_conj, resolve_neg, squeeze, squeeze_copy, t, t_copy, view_as_complex, view_as_complex_copy, view_as_real, view_as_real_copy}.
 
 import type pytorch.Tensor.
@@ -40,10 +40,10 @@ pair_has_shape_values(
  */
 pub view_contracts_on(device_name: String): Bool ->
     let expected_cuda = device_name == "cuda:0";
-    let scalar = ones_device([], Float64, Strided, device_name);
-    let vector = ones_device([2], Float64, Strided, device_name);
-    let singleton_matrix = ones_device([1, 2, 1], Float64, Strided, device_name);
-    let matrix = ones_device([2, 3], Float64, Strided, device_name);
+    let scalar = ones_device([], dtype_code(DType.FLOAT64), 0, device_name);
+    let vector = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
+    let singleton_matrix = ones_device([1, 2, 1], dtype_code(DType.FLOAT64), 0, device_name);
+    let matrix = ones_device([2, 3], dtype_code(DType.FLOAT64), 0, device_name);
     let rank_one = atleast_1d(scalar);
     let rank_two = atleast_2d(scalar);
     let rank_three = atleast_3d(scalar);
@@ -70,7 +70,7 @@ pub view_contracts_on(device_name: String): Bool ->
     let numpy_transpose = numpy_T(matrix);
     let ordinary_transpose = t(matrix);
     let copied_transpose = t_copy(matrix);
-    let real_source = ones_device([1], Float64, Strided, device_name);
+    let real_source = ones_device([1], dtype_code(DType.FLOAT64), 0, device_name);
     let zero_source = zero(real_source);
     let complex_source = complex(real_source, zero_source);
     let conjugated = conj(complex_source);
@@ -79,7 +79,7 @@ pub view_contracts_on(device_name: String): Bool ->
     let imaginary_part = imag(complex_source);
     let real_view = view_as_real(complex_source);
     let copied_real_view = view_as_real_copy(complex_source);
-    let packed = ones_device([1, 2], Float64, Strided, device_name);
+    let packed = ones_device([1, 2], dtype_code(DType.FLOAT64), 0, device_name);
     let complex_view = view_as_complex(packed);
     let copied_complex_view = view_as_complex_copy(packed);
     let resolved_magnitude = abs(resolved_conjugate);
@@ -112,15 +112,15 @@ pub view_contracts_on(device_name: String): Bool ->
             and shape(copied_transpose) == [3, 2]
             and shape(conjugated) == [1]
             and shape(resolved_conjugate) == [1]
-            and dtype(resolved_conjugate) == Complex128
+            and dtype(resolved_conjugate) == dtype_code(DType.COMPLEX128)
             and shape(real_part) == [1]
             and shape(imaginary_part) == [1]
             and shape(real_view) == [1, 2]
             and shape(copied_real_view) == [1, 2]
             and shape(complex_view) == [1]
             and shape(copied_complex_view) == [1]
-            and dtype(complex_view) == Complex128
-            and dtype(copied_complex_view) == Complex128
+            and dtype(complex_view) == dtype_code(DType.COMPLEX128)
+            and dtype(copied_complex_view) == dtype_code(DType.COMPLEX128)
             and shape(resolved_magnitude) == [1]
             and is_cuda(rank_three) == expected_cuda
             and is_cuda(copied_alias) == expected_cuda

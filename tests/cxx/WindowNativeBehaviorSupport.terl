@@ -1,6 +1,6 @@
 module pytorch.WindowNativeBehaviorSupport.
 
-import pytorch.Tensor.{Float64, Strided, dispose, dtype, is_cuda, ones_device, shape}.
+import pytorch.Tensor.{DType, dispose, dtype, dtype_code, is_cuda, ones_device, shape}.
 import pytorch.TypeRelationsNative.{allclose_native}.
 import pytorch.WindowNative.{window_native, window_out_native}.
 
@@ -29,13 +29,13 @@ window_forms_match(
             },
             false,
         );
-    let output = ones_device([0], Float64, Strided, device_name);
+    let output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
     window_out_native(output, operation, 8, true, alpha, beta);
     let valid =
         shape(functional) == [8]
             and shape(output) == [8]
-            and dtype(functional) == Float64
-            and dtype(output) == Float64
+            and dtype(functional) == dtype_code(DType.FLOAT64)
+            and dtype(output) == dtype_code(DType.FLOAT64)
             and is_cuda(functional) == expected_cuda
             and is_cuda(output) == expected_cuda
             and allclose_native(functional, output, 0.0, 0.0, false);

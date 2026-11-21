@@ -3,7 +3,7 @@ module pytorch.CorrectionStatisticsCompletionBehaviorSupport.
 import pytorch.CorrectionStatisticsCompletion.{std_correction_default, std_correction_dimensions, std_correction_dimensions_float, std_correction_dimensions_int, std_correction_float, std_correction_int, std_correction_out_default, std_correction_out_dimensions, std_correction_out_dimensions_float, std_correction_out_dimensions_int, std_correction_out_float, std_correction_out_int, std_mean_correction_default, std_mean_correction_dimensions, std_mean_correction_out_default, std_mean_correction_out_dimensions, var_correction_default, var_correction_dimensions, var_correction_dimensions_float, var_correction_dimensions_int, var_correction_float, var_correction_int, var_correction_out_default, var_correction_out_dimensions, var_correction_out_dimensions_float, var_correction_out_dimensions_int, var_correction_out_float, var_correction_out_int, var_mean_correction_default, var_mean_correction_dimensions, var_mean_correction_out_default, var_mean_correction_out_dimensions}.
 import pytorch.FillNative.{fill_diagonal_in_place}.
 import pytorch.ShapeCompletion.{narrow_view}.
-import pytorch.Tensor.{Float64, Strided, dispose, dispose_scalar, is_cuda, item, ones_device, scalar_to_float, shape}.
+import pytorch.Tensor.{DType, dispose, dispose_scalar, dtype_code, is_cuda, item, ones_device, scalar_to_float, shape}.
 
 import type pytorch.Tensor.
 
@@ -18,20 +18,19 @@ first_value(tensor: Tensor): Float ->
         shape(tensor) == [] -> value(tensor);
         true -> let first = narrow_view(tensor, 0, 0, 1);
         let observed = value(first);
-        dispose(first);
-        observed
+        (dispose(first); observed)
     }.
 
 near(observed: Float, expected: Float): Bool ->
     observed > expected - 0.000001 and observed < expected + 0.000001.
 
 input_on(device_name: String): Tensor ->
-    let input = ones_device([2, 2], Float64, Strided, device_name);
+    let input = ones_device([2, 2], dtype_code(DType.FLOAT64), 0, device_name);
     fill_diagonal_in_place(input, true, 0, 0.0, false);
     input.
 
 empty_on(device_name: String): Tensor ->
-    ones_device([0], Float64, Strided, device_name).
+    ones_device([0], dtype_code(DType.FLOAT64), 0, device_name).
 
 /**
  * Executes every scalar standard-deviation correction contract.

@@ -1,14 +1,14 @@
 module pytorch.ScaledArithmeticNativeBehaviorSupport.
 
 import pytorch.ScaledArithmeticNative.{scaled_scalar_float, scaled_scalar_float_in_place, scaled_scalar_float_out, scaled_scalar_int, scaled_scalar_int_in_place, scaled_scalar_int_out, scaled_tensor, scaled_tensor_in_place, scaled_tensor_out}.
-import pytorch.Tensor.{Float64, Strided, clone, dispose, dtype, is_cuda, mul_float, ones_device, shape}.
+import pytorch.Tensor.{DType, clone, dispose, dtype, dtype_code, is_cuda, mul_float, ones_device, shape}.
 import pytorch.TypeRelationsNative.{allclose_native}.
 
 import type pytorch.Tensor.
 
 tensor_matches(tensor: Tensor, expected: Tensor, expected_cuda: Bool): Bool ->
     shape(tensor) == [2]
-        and dtype(tensor) == Float64
+        and dtype(tensor) == dtype_code(DType.FLOAT64)
         and is_cuda(tensor) == expected_cuda
         and allclose_native(tensor, expected, 0.0, 0.0, false).
 
@@ -21,7 +21,7 @@ scaled_tensor_forms_match(
 ): Bool ->
     let expected_cuda = device_name == "cuda:0";
     let functional = scaled_tensor(left, operation, right, false, 0, 0.5);
-    let output = ones_device([0], Float64, Strided, device_name);
+    let output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
     scaled_tensor_out(output, left, operation, right, false, 0, 0.5);
     let mutation = clone(left);
     let mutation_valid =
@@ -30,7 +30,7 @@ scaled_tensor_forms_match(
             operation == 1 -> (scaled_tensor_in_place(mutation, operation, right, false, 0, 0.5); true);
             true -> allclose_native(mutation, left, 0.0, 0.0, false)
         };
-    let expected_ones = ones_device([2], Float64, Strided, device_name);
+    let expected_ones = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let expected = mul_float(expected_ones, expected_value);
     let valid =
         tensor_matches(functional, expected, expected_cuda)
@@ -50,7 +50,7 @@ scaled_int_forms_match(
 ): Bool ->
     let expected_cuda = device_name == "cuda:0";
     let functional = scaled_scalar_int(left, operation, 3, true, 2, 0.0);
-    let output = ones_device([0], Float64, Strided, device_name);
+    let output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
     scaled_scalar_int_out(output, left, operation, 3, true, 2, 0.0);
     let mutation = clone(left);
     let mutation_valid =
@@ -59,7 +59,7 @@ scaled_int_forms_match(
             operation == 1 -> (scaled_scalar_int_in_place(mutation, operation, 3, true, 2, 0.0); true);
             true -> allclose_native(mutation, left, 0.0, 0.0, false)
         };
-    let expected_ones = ones_device([2], Float64, Strided, device_name);
+    let expected_ones = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let expected = mul_float(expected_ones, expected_value);
     let valid =
         tensor_matches(functional, expected, expected_cuda)
@@ -79,7 +79,7 @@ scaled_float_forms_match(
 ): Bool ->
     let expected_cuda = device_name == "cuda:0";
     let functional = scaled_scalar_float(left, operation, 3.0, false, 0, 0.5);
-    let output = ones_device([0], Float64, Strided, device_name);
+    let output = ones_device([0], dtype_code(DType.FLOAT64), 0, device_name);
     scaled_scalar_float_out(output, left, operation, 3.0, false, 0, 0.5);
     let mutation = clone(left);
     let mutation_valid =
@@ -88,7 +88,7 @@ scaled_float_forms_match(
             operation == 1 -> (scaled_scalar_float_in_place(mutation, operation, 3.0, false, 0, 0.5); true);
             true -> allclose_native(mutation, left, 0.0, 0.0, false)
         };
-    let expected_ones = ones_device([2], Float64, Strided, device_name);
+    let expected_ones = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let expected = mul_float(expected_ones, expected_value);
     let valid =
         tensor_matches(functional, expected, expected_cuda)
@@ -105,9 +105,9 @@ scaled_float_forms_match(
  * functional, retained-output, and every supported in-place form.
  */
 pub scaled_arithmetic_contracts_on(device_name: String): Bool ->
-    let base_ones = ones_device([2], Float64, Strided, device_name);
+    let base_ones = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let left = mul_float(base_ones, 10.0);
-    let right_ones = ones_device([2], Float64, Strided, device_name);
+    let right_ones = ones_device([2], dtype_code(DType.FLOAT64), 0, device_name);
     let right = mul_float(right_ones, 3.0);
     let tensor_add = scaled_tensor_forms_match(0, left, right, 11.5, device_name);
     let tensor_sub = scaled_tensor_forms_match(1, left, right, 8.5, device_name);

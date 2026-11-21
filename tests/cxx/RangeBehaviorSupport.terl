@@ -1,14 +1,22 @@
 module pytorch.RangeBehaviorSupport.
 
 import pytorch.RangeNative.{arange_exact_native, eye_exact_native, range_exact_native, spacing_scalar_exact_native}.
-import pytorch.Tensor.{Float64, Tensor, dispose, dtype, is_cuda, shape}.
+import pytorch.Tensor.{DType, Tensor, dispose, dtype, dtype_code, is_cuda, shape}.
 
 /**
  * Exercises packed optional enum/device lowering through generated Range leaves.
  */
 pub range_contracts_on(expected_cuda: Bool): Bool ->
-    let device_type = if { expected_cuda -> 1; true -> 0 };
-    let device_index = if { expected_cuda -> 0; true -> -1 };
+    let device_type =
+        if {
+            expected_cuda -> 1;
+            true -> 0
+        };
+    let device_index =
+        if {
+            expected_cuda -> 0;
+            true -> -1
+        };
     let sequence =
         arange_exact_native(
             2,
@@ -80,10 +88,10 @@ pub range_contracts_on(expected_cuda: Bool): Bool ->
             and shape(spacing) == [5]
             and shape(inclusive) == [3]
             and shape(identity) == [2, 3]
-            and dtype(sequence) == Float64
-            and dtype(spacing) == Float64
-            and dtype(inclusive) == Float64
-            and dtype(identity) == Float64
+            and dtype(sequence) == dtype_code(DType.FLOAT64)
+            and dtype(spacing) == dtype_code(DType.FLOAT64)
+            and dtype(inclusive) == dtype_code(DType.FLOAT64)
+            and dtype(identity) == dtype_code(DType.FLOAT64)
             and is_cuda(sequence) == expected_cuda
             and is_cuda(spacing) == expected_cuda
             and is_cuda(inclusive) == expected_cuda
