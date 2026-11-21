@@ -80,9 +80,9 @@ run_command(
                     Process.with_arguments(Process.command(program), arguments),
                     working_directory,
                 ),
-                600000,
+                600_000,
             ),
-            16777216,
+            16_777_216,
         );
     let request =
         if {

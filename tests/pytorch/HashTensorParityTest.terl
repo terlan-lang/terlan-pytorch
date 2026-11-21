@@ -11,7 +11,7 @@ import pytorch.TypeRelations.equal.
 pub hash_tensor_matches_libtorch(): Bool ->
     let input = from_floats([1.0, 2.0, 3.0], [3]);
     let actual = hash_tensor(input, [], false, 0);
-    let expected_source = from_ints([4609434218613702656], []);
+    let expected_source = from_ints([4_609_434_218_613_702_656], []);
     let expected = to_dtype(expected_source, 29);
     let value_valid = equal(actual, expected) and shape(actual) == [];
     let output = zeros([0], 29);

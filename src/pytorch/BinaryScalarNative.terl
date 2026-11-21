@@ -30,7 +30,7 @@ pub binary_tensor_out(output: Tensor, left: Tensor, operation: Int, right: Tenso
         operation == 14 -> binary_tensor_out_le(output, left, right);
         operation == 15 -> binary_tensor_out_gt(output, left, right);
         operation == 16 -> binary_tensor_out_ge(output, left, right);
-        true -> let _failed = fail(exit_reason(7120));
+        true -> let _failed = fail(exit_reason(7_120));
         binary_tensor_out_bitwise_and(output, left, right)
     }.
 
@@ -56,7 +56,7 @@ pub binary_tensor_in_place(left: Tensor, operation: Int, right: Tensor): Unit ->
         operation == 14 -> binary_tensor_in_le(left, right);
         operation == 15 -> binary_tensor_in_gt(left, right);
         operation == 16 -> binary_tensor_in_ge(left, right);
-        true -> let _failed = fail(exit_reason(7120));
+        true -> let _failed = fail(exit_reason(7_120));
         binary_tensor_in_bitwise_and(left, right)
     }.
 
@@ -83,7 +83,7 @@ pub binary_scalar_right_int(tensor: Tensor, operation: Int, scalar: Int): Tensor
         operation == 15 -> binary_scalar_right_gt_int(tensor, scalar);
         operation == 16 -> binary_scalar_right_ge_int(tensor, scalar);
         operation == 18 -> binary_scalar_right_copysign_int(tensor, scalar);
-        true -> let _failed = fail(exit_reason(7120));
+        true -> let _failed = fail(exit_reason(7_120));
         binary_scalar_right_bitwise_and_int(tensor, scalar)
     }.
 
@@ -106,7 +106,7 @@ pub binary_scalar_right_float(tensor: Tensor, operation: Int, scalar: Float): Te
         operation == 16 -> binary_scalar_right_ge_float(tensor, scalar);
         operation == 17 -> binary_scalar_right_fmod_float(tensor, scalar);
         operation == 18 -> binary_scalar_right_copysign_float(tensor, scalar);
-        true -> let _failed = fail(exit_reason(7120));
+        true -> let _failed = fail(exit_reason(7_120));
         binary_scalar_right_remainder_float(tensor, scalar)
     }.
 
@@ -124,7 +124,7 @@ pub binary_scalar_left_int(operation: Int, scalar: Int, tensor: Tensor): Tensor 
         operation == 6 -> binary_scalar_left_pow_int(scalar, tensor);
         operation == 7 -> binary_scalar_left_float_power_int(scalar, tensor);
         operation == 10 -> binary_scalar_left_xlogy_int(scalar, tensor);
-        true -> let _failed = fail(exit_reason(7120));
+        true -> let _failed = fail(exit_reason(7_120));
         binary_scalar_left_bitwise_and_int(scalar, tensor)
     }.
 
@@ -137,7 +137,7 @@ pub binary_scalar_left_float(operation: Int, scalar: Float, tensor: Tensor): Ten
         operation == 6 -> binary_scalar_left_pow_float(scalar, tensor);
         operation == 7 -> binary_scalar_left_float_power_float(scalar, tensor);
         operation == 10 -> binary_scalar_left_xlogy_float(scalar, tensor);
-        true -> let _failed = fail(exit_reason(7120));
+        true -> let _failed = fail(exit_reason(7_120));
         binary_scalar_left_remainder_float(scalar, tensor)
     }.
 
@@ -164,7 +164,7 @@ pub binary_scalar_right_int_out(output: Tensor, tensor: Tensor, operation: Int, 
         operation == 15 -> binary_scalar_right_gt_int_out(output, tensor, scalar);
         operation == 16 -> binary_scalar_right_ge_int_out(output, tensor, scalar);
         operation == 18 -> binary_scalar_right_copysign_int_out(output, tensor, scalar);
-        true -> let _failed = fail(exit_reason(7120));
+        true -> let _failed = fail(exit_reason(7_120));
         binary_scalar_right_bitwise_and_int_out(output, tensor, scalar)
     }.
 
@@ -192,7 +192,7 @@ pub binary_scalar_right_float_out(
         operation == 16 -> binary_scalar_right_ge_float_out(output, tensor, scalar);
         operation == 17 -> binary_scalar_right_fmod_float_out(output, tensor, scalar);
         operation == 18 -> binary_scalar_right_copysign_float_out(output, tensor, scalar);
-        true -> let _failed = fail(exit_reason(7120));
+        true -> let _failed = fail(exit_reason(7_120));
         binary_scalar_right_remainder_float_out(output, tensor, scalar)
     }.
 
@@ -210,7 +210,7 @@ pub binary_scalar_left_int_out(output: Tensor, operation: Int, scalar: Int, tens
         operation == 6 -> binary_scalar_left_pow_int_out(output, scalar, tensor);
         operation == 7 -> binary_scalar_left_float_power_int_out(output, scalar, tensor);
         operation == 10 -> binary_scalar_left_xlogy_int_out(output, scalar, tensor);
-        true -> let _failed = fail(exit_reason(7120));
+        true -> let _failed = fail(exit_reason(7_120));
         binary_scalar_left_bitwise_and_int_out(output, scalar, tensor)
     }.
 
@@ -228,7 +228,7 @@ pub binary_scalar_left_float_out(
         operation == 6 -> binary_scalar_left_pow_float_out(output, scalar, tensor);
         operation == 7 -> binary_scalar_left_float_power_float_out(output, scalar, tensor);
         operation == 10 -> binary_scalar_left_xlogy_float_out(output, scalar, tensor);
-        true -> let _failed = fail(exit_reason(7120));
+        true -> let _failed = fail(exit_reason(7_120));
         binary_scalar_left_remainder_float_out(output, scalar, tensor)
     }.
 
@@ -255,7 +255,7 @@ pub binary_scalar_right_int_in_place(tensor: Tensor, operation: Int, scalar: Int
         operation == 15 -> binary_scalar_right_gt_int_in_place(tensor, scalar);
         operation == 16 -> binary_scalar_right_ge_int_in_place(tensor, scalar);
         operation == 18 -> binary_scalar_right_copysign_int_in_place(tensor, scalar);
-        true -> let _failed = fail(exit_reason(7120));
+        true -> let _failed = fail(exit_reason(7_120));
         binary_scalar_right_bitwise_and_int_in_place(tensor, scalar)
     }.
 
@@ -278,7 +278,7 @@ pub binary_scalar_right_float_in_place(tensor: Tensor, operation: Int, scalar: F
         operation == 16 -> binary_scalar_right_ge_float_in_place(tensor, scalar);
         operation == 17 -> binary_scalar_right_fmod_float_in_place(tensor, scalar);
         operation == 18 -> binary_scalar_right_copysign_float_in_place(tensor, scalar);
-        true -> let _failed = fail(exit_reason(7120));
+        true -> let _failed = fail(exit_reason(7_120));
         binary_scalar_right_remainder_float_in_place(tensor, scalar)
     }.
 

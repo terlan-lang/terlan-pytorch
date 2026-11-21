@@ -2,10 +2,28 @@ module pytorch.UnaryResidualParityTest.
 
 import pytorch.Dense.{hardsigmoid_backward, hardswish_backward, sigmoid_backward, silu_backward, tanh_backward}.
 import pytorch.Special.{absolute, angle, arccos, arccosh, arcsin, arcsinh, arctan, arctanh, conj_physical, fix, i0, lgamma}.
-import pytorch.Tensor.{clone, dispose, divide, exp, from_bool, from_float, from_floats, item, item_bool, item_float, log, negate, sum}.
+import pytorch.Tensor.{clone, dispose, dispose_scalar, divide, exp, from_bool, from_float, from_floats, item as item_scalar, item_bool, item_float, log, negate, scalar_to_int, sum}.
 import pytorch.Unary.{all, any, frexp, isinf, isnan, isneginf, isposinf, max, median, min, nonzero, sigmoid, signbit, tanh, trace}.
 import pytorch.UnaryStorage.{absolute_in_place, absolute_out, alias_copy_out, all_all_out, angle_out, any_all_out, arccos_in_place, arccos_out, arccosh_in_place, arccosh_out, arcsin_in_place, arcsin_out, arcsinh_in_place, arcsinh_out, arctan_in_place, arctan_out, arctanh_in_place, arctanh_out, conj_physical_in_place, conj_physical_out, detach_copy_out, exp_in_place, exp_out, fix_in_place, fix_out, frexp_out, hardsigmoid_backward_out, hardswish_backward_out, i0_in_place, i0_out, isinf_out, isnan_out, isneginf_out, isposinf_out, lgamma_in_place, lgamma_out, lift_fresh_copy_out, lift_out, log_in_place, log_out, max_unary_out, median_out, min_unary_out, nonzero_out, round_decimals, round_decimals_in_place, round_decimals_out, sigmoid_backward_out, signbit_out, silu_backward_out, tanh_backward_out, trace_out}.
 import pytorch.View.{alias_copy, detach_copy, lift, lift_fresh_copy}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 /**
  * Proves exact alias output and in-place contracts.

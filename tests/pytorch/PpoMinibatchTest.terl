@@ -2,7 +2,25 @@ module pytorch.PpoMinibatchTest.
 
 import pytorch.Optimizer.{adam, add_parameter, dispose as dispose_optimizer, parameter_count, step, step_count, zero_grad}.
 import pytorch.Ppo.{categorical_entropy, clipped_policy_loss, combined_loss, normalize_advantages, value_loss}.
-import pytorch.Tensor.{amax, backward, categorical_sample, dispose, from_floats, gather, gradient, item, item_float, log, require_grad, softmax, sum}.
+import pytorch.Tensor.{amax, backward, categorical_sample, dispose, dispose_scalar, from_floats, gather, gradient, item as item_scalar, item_float, log, require_grad, scalar_to_int, softmax, sum}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 @test
 pub deterministic_ppo_minibatch_updates_actor_and_critic(): Bool ->

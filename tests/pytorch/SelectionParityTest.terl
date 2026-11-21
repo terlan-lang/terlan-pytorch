@@ -3,10 +3,28 @@ module pytorch.SelectionParityTest.
 import pytorch.Binary.{eq_tensor}.
 import pytorch.Selection.{cummax, cummax_out, cummin, cummin_out, kthvalue, kthvalue_out, max_dim, median_dim, median_dim_out, min_dim, mode, mode_out, nanmedian_dim, nanmedian_dim_out, sort, sort_out, topk, topk_out}.
 import pytorch.Shape.{reshape}.
-import pytorch.Tensor.{clone, dispose, from_floats, item, item_bool, item_float, narrow, shape}.
+import pytorch.Tensor.{clone, dispose, dispose_scalar, from_floats, item as item_scalar, item_bool, item_float, narrow, scalar_to_int, shape}.
 import pytorch.Unary.{all}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
 
 import type pytorch.Tensor.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 /**
  * Reads one floating-point vector element through an owned view.

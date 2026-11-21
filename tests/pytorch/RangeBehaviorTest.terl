@@ -1,6 +1,6 @@
 module pytorch.RangeBehaviorTest.
 
-import pytorch.Tensor.{arange, dispose, eye, item_float, linspace, logspace, narrow, shape}.
+import pytorch.Tensor.{arange, dispose, dtype_code, eye, item_float, linspace, logspace_typed_native, narrow, shape}.
 
 import type pytorch.Tensor.{DType, Tensor}.
 
@@ -44,7 +44,7 @@ pub arange_matches_exclusive_bounds_in_both_directions(): Bool ->
 @test
 pub linear_and_logarithmic_spacing_match_libtorch(): Bool ->
     let linear = linspace(0.0, 1.0, 5, DType.FLOAT64);
-    let logarithmic = logspace(0.0, 3.0, 4, 2.0, DType.FLOAT64);
+    let logarithmic = logspace_typed_native(0.0, 3.0, 4, 2.0, dtype_code(DType.FLOAT64), 0, -1, false);
     let valid =
         vector_item(linear, 0) == 0.0
             and vector_item(linear, 1) == 0.25

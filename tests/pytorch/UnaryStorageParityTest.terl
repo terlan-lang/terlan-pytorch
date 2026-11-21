@@ -1,7 +1,25 @@
 module pytorch.UnaryStorageParityTest.
 
-import pytorch.Tensor.{Tensor, dispose, from_bool, from_float, from_int, item, item_bool, item_float}.
+import pytorch.Tensor.{Tensor, dispose, dispose_scalar, from_bool, from_float, from_int, item as item_scalar, item_bool, item_float, scalar_to_int}.
 import pytorch.UnaryStorage.{abs_in_place, abs_out, acos_in_place, acos_out, acosh_in_place, acosh_out, asin_in_place, asin_out, asinh_in_place, asinh_out, atan_in_place, atan_out, atanh_in_place, atanh_out, bitwise_not_in_place, bitwise_not_out, ceil_in_place, ceil_out, cos_in_place, cos_out, cosh_in_place, cosh_out, deg2rad_in_place, deg2rad_out, erf_in_place, erf_out, erfc_in_place, erfc_out, erfinv_in_place, erfinv_out, exp2_in_place, exp2_out, expm1_in_place, expm1_out, floor_in_place, floor_out, frac_in_place, frac_out, hardsigmoid_in_place, hardsigmoid_out, hardswish_in_place, hardswish_out, log10_in_place, log10_out, log1p_in_place, log1p_out, log2_in_place, log2_out, logical_not_in_place, logical_not_out, mish_in_place, mish_out, rad2deg_in_place, rad2deg_out, reciprocal_in_place, reciprocal_out, relu6_in_place, round_in_place, round_out, rsqrt_in_place, rsqrt_out, selu_in_place, sigmoid_in_place, sigmoid_out, sign_in_place, sign_out, silu_in_place, silu_out, sin_in_place, sin_out, sinc_in_place, sinc_out, sinh_in_place, sinh_out, square_in_place, square_out, tan_in_place, tan_out, tanh_in_place, tanh_out, trunc_in_place, trunc_out}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 /**
  * Returns whether a scalar tensor contains the expected floating value.

@@ -2,9 +2,27 @@ module pytorch.IndexingParityTest.
 
 import pytorch.Binary.greater_tensor.
 import pytorch.Indexing.{argsort_stable, bucketize, diag_embed, diagonal_copy, diagonal_scatter, index_copy, index_select, isin, masked_fill_tensor, masked_scatter, put, scatter, scatter_add, select_scatter, unfold_copy, where_tensor}.
-import pytorch.Tensor.{dispose, flatten, from_float, from_floats, from_ints, item, item_bool, item_float, narrow, shape, zeros}.
+import pytorch.Tensor.{dispose, dispose_scalar, flatten, from_float, from_floats, from_ints, item as item_scalar, item_bool, item_float, narrow, scalar_to_int, shape, zeros}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
 
 import type pytorch.Tensor.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 /**
  * Creates an independently owned flat view for one element read.

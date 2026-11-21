@@ -29,7 +29,7 @@ pub scatter_tensor(
         mode == 3 and reduction == 2 -> scatter_tensor_modern_mean(input, dimension, index, source, "mean", include_self);
         mode == 3 and reduction == 3 -> scatter_tensor_modern_amax(input, dimension, index, source, "amax", include_self);
         mode == 3 and reduction == 4 -> scatter_tensor_modern_amin(input, dimension, index, source, "amin", include_self);
-        true -> let _failed = fail(exit_reason(7280));
+        true -> let _failed = fail(exit_reason(7_280));
         scatter_tensor_src(input, dimension, index, source)
     }.
 
@@ -88,7 +88,7 @@ pub scatter_tensor_out(
             "amin",
             include_self,
         );
-        true -> fail(exit_reason(7280))
+        true -> fail(exit_reason(7_280))
     }.
 
 /**
@@ -113,7 +113,7 @@ pub scatter_tensor_in_place(
         mode == 3 and reduction == 2 -> scatter_tensor_in_modern_mean(input, dimension, index, source, "mean", include_self);
         mode == 3 and reduction == 3 -> scatter_tensor_in_modern_amax(input, dimension, index, source, "amax", include_self);
         mode == 3 and reduction == 4 -> scatter_tensor_in_modern_amin(input, dimension, index, source, "amin", include_self);
-        true -> fail(exit_reason(7280))
+        true -> fail(exit_reason(7_280))
     }.
 
 /**
@@ -160,7 +160,7 @@ pub scatter_scalar(
             value_float,
             "multiply",
         );
-        true -> let _failed = fail(exit_reason(7281));
+        true -> let _failed = fail(exit_reason(7_281));
         scatter_scalar_int(input, dimension, index, true, value_int, value_float)
     }.
 
@@ -221,7 +221,7 @@ pub scatter_scalar_out(
             value_float,
             "multiply",
         );
-        true -> fail(exit_reason(7281))
+        true -> fail(exit_reason(7_281))
     }.
 
 /**
@@ -276,7 +276,7 @@ pub scatter_scalar_in_place(
             value_float,
             "multiply",
         );
-        true -> fail(exit_reason(7281))
+        true -> fail(exit_reason(7_281))
     }.
 
 /**

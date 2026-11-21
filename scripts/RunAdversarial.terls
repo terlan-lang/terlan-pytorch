@@ -420,9 +420,9 @@ run_case(
                                 child(workspace, String.append("build-", current.name)),
                             ],
                         ),
-                        600000,
+                        600_000,
                     ),
-                    16777216,
+                    16_777_216,
                 );
             let request =
                 if {

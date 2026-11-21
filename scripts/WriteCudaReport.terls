@@ -45,9 +45,9 @@ device_description(): Option[String] ->
                     Process.command("nvidia-smi"),
                     ["--query-gpu=index,name,compute_cap", "--format=csv,noheader"],
                 ),
-                120000,
+                120_000,
             ),
-            1048576,
+            1_048_576,
         );
     case Process.run(request) {
         Ok(output) ->

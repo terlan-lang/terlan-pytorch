@@ -127,7 +127,7 @@ pub searchsorted_tensor(
             has_sorter,
             sorter,
         );
-        true -> let _failed = fail(exit_reason(7290));
+        true -> let _failed = fail(exit_reason(7_290));
         lookup_searchsorted_tensor(
             sorted_sequence,
             values,
@@ -187,7 +187,7 @@ pub searchsorted_tensor_out(
             has_sorter,
             sorter,
         );
-        true -> let _failed = fail(exit_reason(7290));
+        true -> let _failed = fail(exit_reason(7_290));
         lookup_searchsorted_tensor_out(
             output,
             sorted_sequence,
@@ -252,7 +252,7 @@ pub searchsorted_scalar(
             has_sorter,
             sorter,
         );
-        true -> let _failed = fail(exit_reason(7290));
+        true -> let _failed = fail(exit_reason(7_290));
         lookup_searchsorted_scalar(
             sorted_sequence,
             value_is_int,
@@ -322,7 +322,7 @@ pub searchsorted_scalar_out(
             has_sorter,
             sorter,
         );
-        true -> let _failed = fail(exit_reason(7290));
+        true -> let _failed = fail(exit_reason(7_290));
         lookup_searchsorted_scalar_out(
             output,
             sorted_sequence,

@@ -661,7 +661,7 @@ range_dtype(code: Int): Int ->
         code == 43 -> 43;
         code == 44 -> 44;
         code == 45 -> 45;
-        true -> let _failed = fail(exit_reason(7260));
+        true -> let _failed = fail(exit_reason(7_260));
         6
     }.
 
@@ -672,7 +672,7 @@ range_device(kind: Int, index: Int): Device ->
     if {
         kind == 0 -> "cpu";
         kind == 1 -> "cuda:" + std.core.Int.to_string(index);
-        true -> let _failed = fail(exit_reason(7260));
+        true -> let _failed = fail(exit_reason(7_260));
         "cpu"
     }.
 

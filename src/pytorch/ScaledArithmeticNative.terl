@@ -22,7 +22,7 @@ pub scaled_tensor(
         operation == 0 -> scaled_add_tensor_cxx(left, right, alpha_is_int, alpha_int, alpha_float);
         operation == 1 -> scaled_sub_tensor_cxx(left, right, alpha_is_int, alpha_int, alpha_float);
         operation == 2 -> scaled_rsub_tensor_cxx(left, right, alpha_is_int, alpha_int, alpha_float);
-        true -> let _failed = fail(exit_reason(7140));
+        true -> let _failed = fail(exit_reason(7_140));
         scaled_add_tensor_cxx(left, right, alpha_is_int, alpha_int, alpha_float)
     }.
 
@@ -42,7 +42,7 @@ pub scaled_tensor_out(
         operation == 0 -> scaled_add_tensor_out_cxx(output, left, right, alpha_is_int, alpha_int, alpha_float);
         operation == 1 -> scaled_sub_tensor_out_cxx(output, left, right, alpha_is_int, alpha_int, alpha_float);
         operation == 2 -> scaled_rsub_tensor_out_cxx(output, left, right, alpha_is_int, alpha_int, alpha_float);
-        true -> let _failed = fail(exit_reason(7140));
+        true -> let _failed = fail(exit_reason(7_140));
         scaled_add_tensor_out_cxx(output, left, right, alpha_is_int, alpha_int, alpha_float)
     }.
 
@@ -60,7 +60,7 @@ pub scaled_tensor_in_place(
     if {
         operation == 0 -> scaled_add_tensor_in_place_cxx(left, right, alpha_is_int, alpha_int, alpha_float);
         operation == 1 -> scaled_sub_tensor_in_place_cxx(left, right, alpha_is_int, alpha_int, alpha_float);
-        true -> fail(exit_reason(7140))
+        true -> fail(exit_reason(7_140))
     }.
 
 /**
@@ -78,7 +78,7 @@ pub scaled_scalar_int(
         operation == 0 -> scaled_add_scalar_cxx(left, true, right, 0.0, alpha_is_int, alpha_int, alpha_float);
         operation == 1 -> scaled_sub_scalar_cxx(left, true, right, 0.0, alpha_is_int, alpha_int, alpha_float);
         operation == 2 -> scaled_rsub_scalar_cxx(left, true, right, 0.0, alpha_is_int, alpha_int, alpha_float);
-        true -> let _failed = fail(exit_reason(7140));
+        true -> let _failed = fail(exit_reason(7_140));
         scaled_add_scalar_cxx(left, true, right, 0.0, alpha_is_int, alpha_int, alpha_float)
     }.
 
@@ -125,7 +125,7 @@ pub scaled_scalar_int_out(
             alpha_int,
             alpha_float,
         );
-        true -> let _failed = fail(exit_reason(7140));
+        true -> let _failed = fail(exit_reason(7_140));
         scaled_add_scalar_out_cxx(
             output,
             left,
@@ -152,7 +152,7 @@ pub scaled_scalar_int_in_place(
     if {
         operation == 0 -> scaled_add_scalar_in_place_cxx(left, true, right, 0.0, alpha_is_int, alpha_int, alpha_float);
         operation == 1 -> scaled_sub_scalar_in_place_cxx(left, true, right, 0.0, alpha_is_int, alpha_int, alpha_float);
-        true -> fail(exit_reason(7140))
+        true -> fail(exit_reason(7_140))
     }.
 
 /**
@@ -170,7 +170,7 @@ pub scaled_scalar_float(
         operation == 0 -> scaled_add_scalar_cxx(left, false, 0, right, alpha_is_int, alpha_int, alpha_float);
         operation == 1 -> scaled_sub_scalar_cxx(left, false, 0, right, alpha_is_int, alpha_int, alpha_float);
         operation == 2 -> scaled_rsub_scalar_cxx(left, false, 0, right, alpha_is_int, alpha_int, alpha_float);
-        true -> let _failed = fail(exit_reason(7140));
+        true -> let _failed = fail(exit_reason(7_140));
         scaled_add_scalar_cxx(left, false, 0, right, alpha_is_int, alpha_int, alpha_float)
     }.
 
@@ -217,7 +217,7 @@ pub scaled_scalar_float_out(
             alpha_int,
             alpha_float,
         );
-        true -> let _failed = fail(exit_reason(7140));
+        true -> let _failed = fail(exit_reason(7_140));
         scaled_add_scalar_out_cxx(
             output,
             left,
@@ -244,7 +244,7 @@ pub scaled_scalar_float_in_place(
     if {
         operation == 0 -> scaled_add_scalar_in_place_cxx(left, false, 0, right, alpha_is_int, alpha_int, alpha_float);
         operation == 1 -> scaled_sub_scalar_in_place_cxx(left, false, 0, right, alpha_is_int, alpha_int, alpha_float);
-        true -> fail(exit_reason(7140))
+        true -> fail(exit_reason(7_140))
     }.
 
 /**

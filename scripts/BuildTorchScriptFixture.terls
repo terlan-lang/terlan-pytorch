@@ -108,9 +108,9 @@ run_command(program: String, arguments: List[String], working_directory: String)
                     Process.with_arguments(Process.command(program), arguments),
                     working_directory,
                 ),
-                600000,
+                600_000,
             ),
-            16777216,
+            16_777_216,
         );
     case Process.run(request) {
         Err(reason) -> failure(reason.message);

@@ -108,7 +108,7 @@ pub create_configured(
             has_pin_memory,
             pin_memory,
         );
-        true -> let _failed = fail(exit_reason(7250));
+        true -> let _failed = fail(exit_reason(7_250));
         creation_empty(
             shape,
             has_dtype,
@@ -142,7 +142,7 @@ pub create_out(
         operation == 1 -> creation_full_out(output, shape, fill_is_integer, fill_integer, fill_floating);
         operation == 2 -> creation_ones_out(output, shape);
         operation == 3 -> creation_zeros_out(output, shape);
-        true -> fail(exit_reason(7250))
+        true -> fail(exit_reason(7_250))
     }.
 
 /**
@@ -222,7 +222,7 @@ pub like_configured(
             has_memory_format,
             creation_memory_format(memory_format),
         );
-        true -> let _failed = fail(exit_reason(7250));
+        true -> let _failed = fail(exit_reason(7_250));
         creation_empty_like(
             input,
             has_dtype,
@@ -279,7 +279,7 @@ pub like_out(
             has_memory_format,
             creation_memory_format(memory_format),
         );
-        true -> fail(exit_reason(7250))
+        true -> fail(exit_reason(7_250))
     }.
 
 /**
@@ -333,7 +333,7 @@ creation_dtype(code: Int): Int ->
         code == 43 -> 43;
         code == 44 -> 44;
         code == 45 -> 45;
-        true -> let _failed = fail(exit_reason(7250));
+        true -> let _failed = fail(exit_reason(7_250));
         6
     }.
 
@@ -350,7 +350,7 @@ creation_layout(code: Int): Int ->
         code == 5 -> 5;
         code == 6 -> 6;
         code == 7 -> 7;
-        true -> let _failed = fail(exit_reason(7250));
+        true -> let _failed = fail(exit_reason(7_250));
         0
     }.
 
@@ -361,7 +361,7 @@ creation_device(kind: Int, index: Int): Device ->
     if {
         kind == 0 -> "cpu";
         kind == 1 -> "cuda:" + std.core.Int.to_string(index);
-        true -> let _failed = fail(exit_reason(7250));
+        true -> let _failed = fail(exit_reason(7_250));
         "cpu"
     }.
 
@@ -374,7 +374,7 @@ creation_memory_format(code: Int): Int ->
         code == 1 -> 1;
         code == 2 -> 2;
         code == 3 -> 3;
-        true -> let _failed = fail(exit_reason(7250));
+        true -> let _failed = fail(exit_reason(7_250));
         0
     }.
 

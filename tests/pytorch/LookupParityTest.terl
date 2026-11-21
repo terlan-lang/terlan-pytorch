@@ -1,7 +1,25 @@
 module pytorch.LookupParityTest.
 
 import pytorch.Lookup.{Side, bucketize_float, bucketize_float_out, bucketize_int, bucketize_int_out, bucketize_tensor_out, isin_element_float, isin_element_float_out, isin_element_int, isin_element_int_out, isin_tensor_float, isin_tensor_float_out, isin_tensor_int, isin_tensor_int_out, isin_tensor_out, searchsorted_float, searchsorted_float_out, searchsorted_float_with_sorter, searchsorted_float_with_sorter_out, searchsorted_int, searchsorted_int_out, searchsorted_int_with_sorter, searchsorted_int_with_sorter_out, searchsorted_tensor, searchsorted_tensor_out, searchsorted_tensor_with_sorter, searchsorted_tensor_with_sorter_out}.
-import pytorch.Tensor.{DType, Tensor, dispose, dtype, empty, from_int, from_ints, item, item_bool, sum}.
+import pytorch.Tensor.{DType, Tensor, dispose, dispose_scalar, dtype, dtype_code, empty_typed_native, from_int, from_ints, item as item_scalar, item_bool, scalar_to_int, sum}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 /**
  * Reads and disposes the integer sum of a tensor.
@@ -21,15 +39,15 @@ pub membership_forms_match_libtorch(): Bool ->
     let elements = from_ints([1, 2, 1], [3]);
     let scalar_int = isin_element_int(3, tests);
     let scalar_float = isin_element_float(2.5, tests, false, true);
-    let scalar_int_output = empty([0], DType.BOOL);
-    let scalar_float_output = empty([0], DType.BOOL);
+    let scalar_int_output = empty_typed_native([0], dtype_code(DType.BOOL), 0, -1);
+    let scalar_float_output = empty_typed_native([0], dtype_code(DType.BOOL), 0, -1);
     isin_element_int_out(scalar_int_output, 3, tests);
     isin_element_float_out(scalar_float_output, 2.5, tests, false, true);
     let tensor_int = isin_tensor_int(elements, 1);
     let tensor_float = isin_tensor_float(elements, 1.0);
-    let tensor_int_output = empty([3], DType.BOOL);
-    let tensor_float_output = empty([3], DType.BOOL);
-    let tensor_output = empty([3], DType.BOOL);
+    let tensor_int_output = empty_typed_native([3], dtype_code(DType.BOOL), 0, -1);
+    let tensor_float_output = empty_typed_native([3], dtype_code(DType.BOOL), 0, -1);
+    let tensor_output = empty_typed_native([3], dtype_code(DType.BOOL), 0, -1);
     (isin_tensor_int_out(tensor_int_output, elements, 1); isin_tensor_float_out(tensor_float_output, elements, 1.0); isin_tensor_out(tensor_output, elements, tests); let valid =
     item_bool(scalar_int)
         and item_bool(scalar_float)
@@ -56,8 +74,8 @@ pub searchsorted_forms_match_libtorch(): Bool ->
     let sorter_values = from_ints([3, 6], [2]);
     let tensor = searchsorted_tensor(sorted, values);
     let tensor_sorted = searchsorted_tensor_with_sorter(unsorted, sorter_values, sorter);
-    let tensor_output = empty([3], DType.INT64);
-    let tensor_sorted_output = empty([2], DType.INT64);
+    let tensor_output = empty_typed_native([3], dtype_code(DType.INT64), 0, -1);
+    let tensor_sorted_output = empty_typed_native([2], dtype_code(DType.INT64), 0, -1);
     searchsorted_tensor_out(tensor_output, sorted, values);
     searchsorted_tensor_with_sorter_out(tensor_sorted_output, unsorted, sorter_values, sorter);
     let integer = searchsorted_int(sorted, 3);
@@ -99,7 +117,7 @@ let sorted_float_output = from_int(0);
 pub bucketize_forms_match_libtorch(): Bool ->
     let boundaries = from_ints([1, 3, 5, 7], [4]);
     let values = from_ints([0, 3, 8], [3]);
-    let tensor_output = empty([3], DType.INT64);
+    let tensor_output = empty_typed_native([3], dtype_code(DType.INT64), 0, -1);
     bucketize_tensor_out(tensor_output, values, boundaries);
     let integer = bucketize_int(3, boundaries);
     let floating = bucketize_float(3.0, boundaries, true, true);

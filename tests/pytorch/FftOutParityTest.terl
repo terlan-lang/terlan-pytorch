@@ -1,7 +1,7 @@
 module pytorch.FftOutParityTest.
 
 import pytorch.Fft.{fft, fft2, fft2_out, fft_out, fftfreq, fftfreq_out, fftn, fftn_out, hfft, hfft2, hfft2_out, hfft_out, hfftn, hfftn_out, ifft, ifft2, ifft2_out, ifft_out, ifftn, ifftn_out, ihfft, ihfft2, ihfft2_out, ihfft_out, ihfftn, ihfftn_out, irfft, irfft2, irfft2_out, irfft_out, irfftn, irfftn_out, rfft, rfft2, rfft2_out, rfft_out, rfftfreq, rfftfreq_out, rfftn, rfftn_out}.
-import pytorch.Tensor.{dispose, from_floats, item_float, mse_loss, shape, sum, zeros}.
+import pytorch.Tensor.{dispose, dtype_code, from_floats, item_float, mse_loss, shape, sum, zeros}.
 import pytorch.View.real.
 
 import type pytorch.Tensor.{DType, Tensor}.
@@ -111,8 +111,8 @@ let rfft_output = rfftn(zero, dimensions);
 pub frequency_grids_match_libtorch(): Bool ->
     let full = fftfreq(4);
     let real = rfftfreq(4);
-    let full_output = zeros([0], DType.FLOAT64);
-    let real_output = zeros([0], DType.FLOAT64);
+    let full_output = zeros([0], dtype_code(DType.FLOAT64));
+    let real_output = zeros([0], dtype_code(DType.FLOAT64));
     fftfreq_out(full_output, 4, 0.5);
     rfftfreq_out(real_output, 4, 0.5);
     let valid =

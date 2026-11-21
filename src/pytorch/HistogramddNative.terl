@@ -73,7 +73,7 @@ pub histogramdd_result_bin_edges(result: HistogramddResult): List[Tensor] ->
  * Drops a histogramdd result carrier.
  */
 @compiler.native {pytorch.histogramdd.result_dispose}
-histogramdd_result_dispose(result: HistogramddResult): Unit ->
+pub histogramdd_result_dispose(result: HistogramddResult): Unit ->
     native.
 
 /**

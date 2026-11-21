@@ -2,7 +2,7 @@ module pytorch.SpecialScalarParityTest.
 
 import pytorch.Dense.special_chebyshev_polynomial_t.
 import pytorch.Special.{special_chebyshev_polynomial_t_input_float, special_chebyshev_polynomial_t_input_float_out, special_chebyshev_polynomial_t_input_int, special_chebyshev_polynomial_t_input_int_out, special_chebyshev_polynomial_t_order_float, special_chebyshev_polynomial_t_order_float_out, special_chebyshev_polynomial_t_order_int, special_chebyshev_polynomial_t_order_int_out}.
-import pytorch.Tensor.{dispose, from_floats, item_float, mse_loss, shape, zeros}.
+import pytorch.Tensor.{dispose, dtype_code, from_floats, item_float, mse_loss, shape, zeros}.
 
 import type pytorch.Tensor.{DType, Tensor}.
 
@@ -25,8 +25,8 @@ pub scalar_orders_match_tensor_orders(): Bool ->
     let expected = special_chebyshev_polynomial_t(input, orders);
     let integer_result = special_chebyshev_polynomial_t_order_int(input, 2);
     let float_result = special_chebyshev_polynomial_t_order_float(input, 2.0);
-    let integer_output = zeros([0], DType.FLOAT64);
-    let float_output = zeros([0], DType.FLOAT64);
+    let integer_output = zeros([0], dtype_code(DType.FLOAT64));
+    let float_output = zeros([0], dtype_code(DType.FLOAT64));
     special_chebyshev_polynomial_t_order_int_out(integer_output, input, 2);
     special_chebyshev_polynomial_t_order_float_out(float_output, input, 2.0);
     let valid =
@@ -50,8 +50,8 @@ pub scalar_inputs_match_tensor_inputs(): Bool ->
     let integer_expected_inputs = from_floats([0.0, 0.0], [2]);
     let integer_expected = special_chebyshev_polynomial_t(integer_expected_inputs, orders);
     let float_result = special_chebyshev_polynomial_t_input_float(0.5, orders);
-    let integer_output = zeros([0], DType.FLOAT64);
-    let float_output = zeros([0], DType.FLOAT64);
+    let integer_output = zeros([0], dtype_code(DType.FLOAT64));
+    let float_output = zeros([0], dtype_code(DType.FLOAT64));
     special_chebyshev_polynomial_t_input_int_out(integer_output, 0, orders);
     special_chebyshev_polynomial_t_input_float_out(float_output, 0.5, orders);
     let valid =

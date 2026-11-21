@@ -2,9 +2,27 @@ module pytorch.PoolingParityTest.
 
 import pytorch.Pooling.{adaptive_avg_pool1d, adaptive_max_pool1d, adaptive_max_pool2d, adaptive_max_pool2d_backward, adaptive_max_pool3d, adaptive_max_pool3d_backward, avg_pool1d, avg_pool2d, avg_pool2d_backward, avg_pool3d, avg_pool3d_backward, fractional_max_pool2d, fractional_max_pool2d_backward, fractional_max_pool3d, fractional_max_pool3d_backward, max_pool1d, max_pool1d_with_indices, max_pool2d, max_pool2d_with_indices, max_pool2d_with_indices_backward, max_pool3d, max_pool3d_with_indices, max_pool3d_with_indices_backward, max_unpool2d, max_unpool3d}.
 import pytorch.Shape.{reshape}.
-import pytorch.Tensor.{adaptive_avg_pool2d, arange, dispose, from_floats, item, item_float, narrow, shape, sum}.
+import pytorch.Tensor.{adaptive_avg_pool2d, arange, dispose, dispose_scalar, from_floats, item as item_scalar, item_float, narrow, scalar_to_int, shape, sum}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
 
 import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 /**
  * Reads one floating-point vector element through an owned view.

@@ -82,7 +82,7 @@ pub index_reduce_configured(
         reduction == 1 -> aggregation_index_reduce(input, dimension, index, source, "mean", include_self);
         reduction == 2 -> aggregation_index_reduce(input, dimension, index, source, "amax", include_self);
         reduction == 3 -> aggregation_index_reduce(input, dimension, index, source, "amin", include_self);
-        true -> let _failed = fail(exit_reason(7270));
+        true -> let _failed = fail(exit_reason(7_270));
         aggregation_index_reduce(input, dimension, index, source, "prod", include_self)
     }.
 
@@ -103,7 +103,7 @@ pub index_reduce_configured_out(
         reduction == 1 -> aggregation_index_reduce_out(output, input, dimension, index, source, "mean", include_self);
         reduction == 2 -> aggregation_index_reduce_out(output, input, dimension, index, source, "amax", include_self);
         reduction == 3 -> aggregation_index_reduce_out(output, input, dimension, index, source, "amin", include_self);
-        true -> fail(exit_reason(7270))
+        true -> fail(exit_reason(7_270))
     }.
 
 /**
@@ -122,7 +122,7 @@ pub index_reduce_configured_in_place(
         reduction == 1 -> aggregation_index_reduce_in_place(input, dimension, index, source, "mean", include_self);
         reduction == 2 -> aggregation_index_reduce_in_place(input, dimension, index, source, "amax", include_self);
         reduction == 3 -> aggregation_index_reduce_in_place(input, dimension, index, source, "amin", include_self);
-        true -> fail(exit_reason(7270))
+        true -> fail(exit_reason(7_270))
     }.
 
 /**

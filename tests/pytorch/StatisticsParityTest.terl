@@ -5,10 +5,28 @@ import pytorch.Linalg.{cholesky_solve}.
 import pytorch.Shape.{logcumsumexp, reshape}.
 import pytorch.Special.{nanmedian}.
 import pytorch.Statistics.{all_dim, all_dimension_out, all_dimensions, all_dimensions_out, amax_out, amin, amin_out, aminmax, aminmax_all_out, aminmax_dim, aminmax_dim_out, any_dim, any_dimension_out, any_dimensions, any_dimensions_out, argmax_all, argmax_all_out, argmax_out, argmin, argmin_all, argmin_all_out, argmin_out, argsort, cholesky, cholesky_inverse, cholesky_inverse_out, cholesky_out, cholesky_solve_out, combinations, count_nonzero, count_nonzero_all, count_nonzero_all_out, count_nonzero_dimensions_out, count_nonzero_out, cumprod, cumprod_out, cumsum, cumsum_out, dist, frobenius_norm_dimensions, frobenius_norm_dimensions_out, linalg_matrix_rank, linalg_pinv, logcumsumexp_out, logsumexp, logsumexp_out, mean_all_dimensions_out, mean_dimensions_out, mean_out, nanmedian_out, norm, norm_dimensions, norm_except_dimension, nuclear_norm, nuclear_norm_dimensions, nuclear_norm_dimensions_out, nuclear_norm_out, pdist, pinverse, prod, prod_dim, prod_dimension_out, prod_out, renorm, std, std_all_dimensions_out, std_dimensions, std_dimensions_out, std_mean, std_mean_dimensions, sum_all_dimensions_out, sum_dimensions_out, sum_out, var, var_all_dimensions_out, var_dimensions, var_dimensions_out, var_mean, var_mean_dimensions}.
-import pytorch.Tensor.{amax, argmax, clone, dispose, flatten, from_floats, from_ints, item, item_bool, item_float, mean, mean_dimensions, narrow, shape, sum, sum_dimensions}.
+import pytorch.Tensor.{amax, argmax, clone, dispose, dispose_scalar, flatten, from_floats, from_ints, item as item_scalar, item_bool, item_float, mean, mean_dimensions, narrow, scalar_to_int, shape, sum, sum_dimensions}.
 import pytorch.Unary.{all}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
 
 import type pytorch.Tensor.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 /**
  * Reduces a floating-point tensor and releases its scalar result.

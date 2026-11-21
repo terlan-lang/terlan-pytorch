@@ -106,7 +106,7 @@ pub fused_arithmetic(
             alpha_int,
             alpha_float,
         );
-        true -> let _failed = fail(exit_reason(7230));
+        true -> let _failed = fail(exit_reason(7_230));
         fused_addbmm(
             accumulator,
             first,
@@ -227,7 +227,7 @@ pub fused_arithmetic_out(
             alpha_int,
             alpha_float,
         );
-        true -> let _failed = fail(exit_reason(7230));
+        true -> let _failed = fail(exit_reason(7_230));
         fused_addbmm_out(
             output,
             accumulator,
@@ -315,7 +315,7 @@ pub fused_arithmetic_in_place(
             alpha_int,
             alpha_float,
         );
-        true -> fail(exit_reason(7230))
+        true -> fail(exit_reason(7_230))
     }.
 
 /**

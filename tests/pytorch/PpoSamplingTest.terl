@@ -1,6 +1,24 @@
 module pytorch.PpoSamplingTest.
 
-import pytorch.Tensor.{amax, backward, categorical_sample, dispose, from_floats, from_ints, gather, gradient, item, item_float, require_grad, shape, sum}.
+import pytorch.Tensor.{amax, backward, categorical_sample, dispose, dispose_scalar, from_floats, from_ints, gather, gradient, item as item_scalar, item_float, require_grad, scalar_to_int, shape, sum}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 @test
 pub categorical_sampling_replays_from_an_isolated_seed(): Bool ->

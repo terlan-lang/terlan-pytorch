@@ -1,9 +1,27 @@
 module pytorch.UnaryFamilyParityTest.
 
-import pytorch.Tensor.{dispose, from_bool, from_float, from_floats, from_int, item, item_bool, item_float, narrow, negate, shape, sqrt}.
+import pytorch.Tensor.{dispose, dispose_scalar, from_bool, from_float, from_floats, from_int, item as item_scalar, item_bool, item_float, narrow, negate, scalar_to_int, shape, sqrt}.
 import pytorch.Unary.{acos, acosh, all, any, argwhere, asin, asinh, atan, atanh, bitwise_not, cos, cosh, deg2rad, erf, erfc, erfinv, exp2, expm1, frexp, hardsigmoid, hardswish, isfinite, isinf, isnan, isneginf, isposinf, log10, log1p, log2, logical_not, max, median, min, mish, nonzero, rad2deg, reciprocal, relu6, rsqrt, selu, sigmoid, signbit, silu, sin, sinc, sinh, tan, tanh, trace}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
 
 import type pytorch.Tensor.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 /**
  * Reads one coordinate from a two-dimensional integer tensor.

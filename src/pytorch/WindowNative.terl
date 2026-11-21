@@ -39,7 +39,7 @@ pub window_native(
         );
         operation == 3 -> window_hann(window_length, periodic, selected_dtype, 0, selected_device, pin_memory);
         operation == 4 -> window_kaiser(window_length, periodic, beta, selected_dtype, 0, selected_device, pin_memory);
-        true -> let _failed = fail(exit_reason(7250));
+        true -> let _failed = fail(exit_reason(7_250));
         window_bartlett(window_length, periodic, selected_dtype, 0, selected_device, pin_memory)
     }.
 
@@ -60,7 +60,7 @@ pub window_out_native(
         operation == 2 -> window_hamming_out(output, window_length, periodic, alpha, beta);
         operation == 3 -> window_hann_out(output, window_length, periodic);
         operation == 4 -> window_kaiser_out(output, window_length, periodic, beta);
-        true -> fail(exit_reason(7250))
+        true -> fail(exit_reason(7_250))
     }.
 
 /**
@@ -114,7 +114,7 @@ window_dtype(code: Int): Int ->
         code == 43 -> 43;
         code == 44 -> 44;
         code == 45 -> 45;
-        true -> let _failed = fail(exit_reason(7250));
+        true -> let _failed = fail(exit_reason(7_250));
         6
     }.
 
@@ -125,7 +125,7 @@ window_device(kind: Int, index: Int): Device ->
     if {
         kind == 0 -> "cpu";
         kind == 1 -> "cuda:" + std.core.Int.to_string(index);
-        true -> let _failed = fail(exit_reason(7250));
+        true -> let _failed = fail(exit_reason(7_250));
         "cpu"
     }.
 

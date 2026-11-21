@@ -334589,7 +334589,7 @@
           "name": "histogramdd_result_dispose",
           "operation": "pytorch.histogramdd.result_dispose",
           "cpp_symbol": null,
-          "visibility": "private",
+          "visibility": "public",
           "role": "dispose",
           "args": [
             {

@@ -2,10 +2,28 @@ module pytorch.LinalgSingleParityTest.
 
 import pytorch.Linalg.{cholesky_solve, geqrf, linalg_cholesky, linalg_cholesky_out, linalg_cond_default, linalg_cond_float, linalg_cond_int, linalg_cond_string, linalg_cross, linalg_cross_out, linalg_det, linalg_det_out, linalg_diagonal, linalg_eigvals_out, linalg_eigvalsh, linalg_eigvalsh_out, linalg_householder_product_out, linalg_inv, linalg_inv_out, linalg_ldl_factor, linalg_ldl_solve, linalg_ldl_solve_out, linalg_lu_factor, linalg_lu_solve, linalg_lu_solve_out, linalg_matmul_out, linalg_matrix_exp_out, linalg_matrix_norm_float, linalg_matrix_norm_float_configured, linalg_matrix_norm_int, linalg_matrix_norm_int_configured, linalg_matrix_norm_string, linalg_matrix_norm_string_dtype, linalg_matrix_power_out, linalg_matrix_rank_default, linalg_matrix_rank_tensor_absolute, linalg_matrix_rank_tensor_default, linalg_matrix_rank_tensor_relative, linalg_matrix_rank_tensor_tolerances, linalg_matrix_rank_tolerance, linalg_matrix_rank_tolerances, linalg_multi_dot, linalg_multi_dot_out, linalg_norm_default, linalg_norm_float, linalg_norm_float_configured, linalg_norm_int, linalg_norm_int_configured, linalg_norm_string, linalg_norm_string_dimensions, linalg_pinv_default, linalg_pinv_rcond, linalg_pinv_tensor_absolute, linalg_pinv_tensor_default, linalg_pinv_tensor_relative, linalg_pinv_tensor_tolerances, linalg_pinv_tolerances, linalg_powsum_float, linalg_powsum_float_configured, linalg_powsum_int, linalg_powsum_int_configured, linalg_solve, linalg_solve_out, linalg_solve_triangular, linalg_solve_triangular_out, linalg_svdvals, linalg_svdvals_out, linalg_tensorinv_out, linalg_tensorsolve, linalg_tensorsolve_dimensions, linalg_tensorsolve_out, linalg_vander, linalg_vander_columns, linalg_vecdot, linalg_vecdot_out, linalg_vector_norm_float, linalg_vector_norm_float_configured, linalg_vector_norm_int, linalg_vector_norm_int_configured, lu_solve, ormqr}.
 import pytorch.Special.{linalg_eigvals}.
-import pytorch.Tensor.{dispose, dtype, from_float, from_floats, item, item_bool, item_float, shape, sum, zeros}.
+import pytorch.Tensor.{dispose, dispose_scalar, dtype, dtype_code, from_float, from_floats, item as item_scalar, item_bool, item_float, scalar_to_int, shape, sum, zeros}.
 import pytorch.Unary.{all, isfinite}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
 
 import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 /**
  * Proves remaining non-scalar linalg outputs, including complex and list inputs.
@@ -19,14 +37,14 @@ pub extended_single_out_overloads_populate_storage(): Bool ->
     let tau = from_floats([0.0, 0.0], [2]);
     let eigenvalues = linalg_eigvals(zero_matrix);
     linalg_eigvals_out(eigenvalues, matrix);
-    let hermitian_values = zeros([0], DType.FLOAT64);
-    (linalg_eigvalsh_out(hermitian_values, matrix); let householder = zeros([0], DType.FLOAT64);
-(linalg_householder_product_out(householder, reflector, tau); let exponential = zeros([0], DType.FLOAT64);
-(linalg_matrix_exp_out(exponential, zero_matrix); let powered = zeros([0], DType.FLOAT64);
-(linalg_matrix_power_out(powered, matrix, 2); let singular_values = zeros([0], DType.FLOAT64);
-(linalg_svdvals_out(singular_values, matrix); let tensor_inverse = zeros([0], DType.FLOAT64);
-(linalg_tensorinv_out(tensor_inverse, matrix, 1); let tensor_solution = zeros([0], DType.FLOAT64);
-(linalg_tensorsolve_out(tensor_solution, matrix, right); let chain = zeros([0], DType.FLOAT64);
+    let hermitian_values = zeros([0], dtype_code(DType.FLOAT64));
+    (linalg_eigvalsh_out(hermitian_values, matrix); let householder = zeros([0], dtype_code(DType.FLOAT64));
+(linalg_householder_product_out(householder, reflector, tau); let exponential = zeros([0], dtype_code(DType.FLOAT64));
+(linalg_matrix_exp_out(exponential, zero_matrix); let powered = zeros([0], dtype_code(DType.FLOAT64));
+(linalg_matrix_power_out(powered, matrix, 2); let singular_values = zeros([0], dtype_code(DType.FLOAT64));
+(linalg_svdvals_out(singular_values, matrix); let tensor_inverse = zeros([0], dtype_code(DType.FLOAT64));
+(linalg_tensorinv_out(tensor_inverse, matrix, 1); let tensor_solution = zeros([0], dtype_code(DType.FLOAT64));
+(linalg_tensorsolve_out(tensor_solution, matrix, right); let chain = zeros([0], dtype_code(DType.FLOAT64));
 (linalg_multi_dot_out(chain, [matrix, matrix]); let valid =
     shape(eigenvalues) == [2]
         and dtype(eigenvalues) == 10
@@ -56,18 +74,18 @@ pub core_single_out_overloads_populate_storage(): Bool ->
     let right = from_floats([1.0, 0.0], [2, 1]);
     let x = from_floats([1.0, 0.0, 0.0], [3]);
     let y = from_floats([0.0, 1.0, 0.0], [3]);
-    let cholesky = zeros([0], DType.FLOAT64);
+    let cholesky = zeros([0], dtype_code(DType.FLOAT64));
     linalg_cholesky_out(cholesky, matrix);
-    let cross = zeros([0], DType.FLOAT64);
-    (linalg_cross_out(cross, x, y); let inverse = zeros([0], DType.FLOAT64);
+    let cross = zeros([0], dtype_code(DType.FLOAT64));
+    (linalg_cross_out(cross, x, y); let inverse = zeros([0], dtype_code(DType.FLOAT64));
 (linalg_inv_out(inverse, matrix); let {ldl, ldl_pivots} = linalg_ldl_factor(matrix);
-let ldl_solution = zeros([0], DType.FLOAT64);
+let ldl_solution = zeros([0], dtype_code(DType.FLOAT64));
 (linalg_ldl_solve_out(ldl_solution, ldl, ldl_pivots, right); let {lu, lu_pivots} = linalg_lu_factor(matrix);
-let lu_solution = zeros([0], DType.FLOAT64);
-(linalg_lu_solve_out(lu_solution, lu, lu_pivots, right); let product = zeros([0], DType.FLOAT64);
-(linalg_matmul_out(product, matrix, matrix); let solution = zeros([0], DType.FLOAT64);
-(linalg_solve_out(solution, matrix, right); let triangular = zeros([0], DType.FLOAT64);
-(linalg_solve_triangular_out(triangular, cholesky, right, false); let dot = zeros([0], DType.FLOAT64);
+let lu_solution = zeros([0], dtype_code(DType.FLOAT64));
+(linalg_lu_solve_out(lu_solution, lu, lu_pivots, right); let product = zeros([0], dtype_code(DType.FLOAT64));
+(linalg_matmul_out(product, matrix, matrix); let solution = zeros([0], dtype_code(DType.FLOAT64));
+(linalg_solve_out(solution, matrix, right); let triangular = zeros([0], dtype_code(DType.FLOAT64));
+(linalg_solve_triangular_out(triangular, cholesky, right, false); let dot = zeros([0], dtype_code(DType.FLOAT64));
 (linalg_vecdot_out(dot, x, y); let valid =
     shape(cholesky) == [2, 2]
         and shape(cross) == [3]

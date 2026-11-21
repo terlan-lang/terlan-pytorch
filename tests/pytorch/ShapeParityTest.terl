@@ -1,9 +1,27 @@
 module pytorch.ShapeParityTest.
 
 import pytorch.Shape.{adaptive_avg_pool3d, broadcast_to, channel_shuffle, count_nonzero_dim, diag, diagflat, flip, glu, linalg_matrix_power, linalg_tensorinv, logcumsumexp, matrix_power, moveaxis_int, movedim_int, mvlgamma, native_channel_shuffle, one_hot, permute, permute_copy, pixel_shuffle, pixel_unshuffle, reflection_pad1d, reflection_pad2d, reflection_pad3d, repeat, replication_pad1d, replication_pad2d, replication_pad3d, reshape, select_copy_int, select_int, special_multigammaln, squeeze_copy_dim, squeeze_copy_dims, squeeze_dim, squeeze_dims, sum_to_size, swapaxes, swapdims, tile, transpose_copy_int, tril, triu, unsqueeze_copy, view, view_copy}.
-import pytorch.Tensor.{dispose, from_float, from_floats, from_ints, item, item_float, narrow, shape, strides, sum}.
+import pytorch.Tensor.{dispose, dispose_scalar, from_float, from_floats, from_ints, item as item_scalar, item_float, narrow, scalar_to_int, shape, strides, sum}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
 
 import type pytorch.Tensor.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 /**
  * Reads one floating-point vector element through an owned view.

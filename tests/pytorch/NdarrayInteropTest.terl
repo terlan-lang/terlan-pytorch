@@ -1,7 +1,25 @@
 module pytorch.NdarrayInteropTest.
 
 import ndarray.Array.{dispose as dispose_array, export_tensor_packet, from_bools as array_from_bools, from_floats as array_from_floats, from_ints as array_from_ints, live_count, matmul as array_matmul, shape as array_shape}.
-import pytorch.Tensor.{dispose as dispose_tensor, dtype, from_array, from_floats as tensor_from_floats, from_packet, item, item_bool, item_float, mse_loss, narrow, numel, shape}.
+import pytorch.Tensor.{dispose as dispose_tensor, dispose_scalar, dtype, from_array, from_floats as tensor_from_floats, from_packet, item as item_scalar, item_bool, item_float, mse_loss, narrow, numel, scalar_to_int, shape}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 @test
 pub ndarray_packet_becomes_an_owned_pytorch_tensor(): Bool ->

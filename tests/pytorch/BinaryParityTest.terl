@@ -1,9 +1,27 @@
 module pytorch.BinaryParityTest.
 
 import pytorch.Binary.{arctan2, atan2, bitwise_and_tensor, bitwise_left_shift_tensor, bitwise_or_tensor, bitwise_right_shift_tensor, bitwise_xor_tensor, clamp_max_tensor, clamp_min_tensor, copysign_tensor, dot, eq_tensor, float_power_tensor, floor_divide, fmax, fmin, fmod_tensor, gcd, ge_tensor, greater_equal_tensor, greater_tensor, gt_tensor, heaviside, hypot, igamma, igammac, inner, kron, lcm, ldexp_tensor, le_tensor, less_equal_tensor, less_tensor, logaddexp, logaddexp2, logical_and, logical_or, logical_xor, lt_tensor, masked_select, max_other, maximum, min_other, ne_tensor, nextafter, not_equal_tensor, pow_tensor, remainder_tensor, special_xlog1py, special_xlogy, special_zeta, take, true_divide_tensor, vdot, xlogy_tensor}.
-import pytorch.Tensor.{dispose, from_bool, from_float, from_floats, from_int, from_ints, item, item_bool, item_float, narrow, shape, sum}.
+import pytorch.Tensor.{dispose, dispose_scalar, from_bool, from_float, from_floats, from_int, from_ints, item as item_scalar, item_bool, item_float, narrow, scalar_to_int, shape, sum}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
 
 import type pytorch.Tensor.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 /**
  * Reads one floating-point vector element from an owned one-element view.

@@ -25,7 +25,7 @@ pub clamp_scalar(
         has_min and has_max -> clamp_scalar_min_max(input, min_is_int, min_int, min_float, max_is_int, max_int, max_float);
         has_min -> clamp_scalar_min(input, min_is_int, min_int, min_float);
         has_max -> clamp_scalar_max(input, max_is_int, max_int, max_float);
-        true -> let _failed = fail(exit_reason(7150));
+        true -> let _failed = fail(exit_reason(7_150));
         clamp_scalar_min(input, min_is_int, min_int, min_float)
     }.
 
@@ -57,7 +57,7 @@ pub clamp_scalar_out(
         );
         has_min -> clamp_scalar_min_out(output, input, min_is_int, min_int, min_float);
         has_max -> clamp_scalar_max_out(output, input, max_is_int, max_int, max_float);
-        true -> fail(exit_reason(7150))
+        true -> fail(exit_reason(7_150))
     }.
 
 /**
@@ -86,7 +86,7 @@ pub clamp_scalar_in_place(
         );
         has_min -> clamp_scalar_min_in_place(input, min_is_int, min_int, min_float);
         has_max -> clamp_scalar_max_in_place(input, max_is_int, max_int, max_float);
-        true -> fail(exit_reason(7150))
+        true -> fail(exit_reason(7_150))
     }.
 
 /**
@@ -97,7 +97,7 @@ pub clamp_tensor(input: Tensor, mode: Int, first: Tensor, second: Tensor): Tenso
         mode == 0 -> clamp_tensor_min(input, first);
         mode == 1 -> clamp_tensor_max(input, first);
         mode == 2 -> clamp_tensor_min_max(input, first, second);
-        true -> let _failed = fail(exit_reason(7150));
+        true -> let _failed = fail(exit_reason(7_150));
         clamp_tensor_min(input, first)
     }.
 
@@ -109,7 +109,7 @@ pub clamp_tensor_out(output: Tensor, input: Tensor, mode: Int, first: Tensor, se
         mode == 0 -> clamp_tensor_min_out(output, input, first);
         mode == 1 -> clamp_tensor_max_out(output, input, first);
         mode == 2 -> clamp_tensor_min_max_out(output, input, first, second);
-        true -> fail(exit_reason(7150))
+        true -> fail(exit_reason(7_150))
     }.
 
 /**
@@ -120,7 +120,7 @@ pub clamp_tensor_in_place(input: Tensor, mode: Int, first: Tensor, second: Tenso
         mode == 0 -> clamp_tensor_min_in_place(input, first);
         mode == 1 -> clamp_tensor_max_in_place(input, first);
         mode == 2 -> clamp_tensor_min_max_in_place(input, first, second);
-        true -> fail(exit_reason(7150))
+        true -> fail(exit_reason(7_150))
     }.
 
 /**

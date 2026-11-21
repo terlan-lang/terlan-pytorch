@@ -1,7 +1,7 @@
 module pytorch.LinalgScalarOutParityTest.
 
 import pytorch.Linalg.{linalg_cond_default_out, linalg_cond_float_out, linalg_cond_int_out, linalg_matrix_norm_float_configured_out, linalg_matrix_norm_float_out, linalg_matrix_norm_int_configured_out, linalg_matrix_norm_int_out, linalg_norm_default_out, linalg_norm_float_configured_out, linalg_norm_float_out, linalg_norm_int_configured_out, linalg_norm_int_out, linalg_vector_norm_float_configured_out, linalg_vector_norm_float_out, linalg_vector_norm_int_configured_out, linalg_vector_norm_int_out}.
-import pytorch.Tensor.{dispose, dtype, from_float, from_floats, item_float, shape, zeros}.
+import pytorch.Tensor.{dispose, dtype, dtype_code, from_float, from_floats, item_float, shape, zeros}.
 
 import type pytorch.Tensor.DType.
 
@@ -33,10 +33,10 @@ let valid =
 @test
 pub scalar_matrix_and_general_norm_outputs_match_libtorch(): Bool ->
     let matrix = from_floats([3.0, 4.0, 0.0, 0.0], [2, 2]);
-    let matrix_default = zeros([0], DType.FLOAT64);
-    let matrix_configured = zeros([0], DType.FLOAT64);
-    let norm_default = zeros([0], DType.FLOAT64);
-    let norm_configured = zeros([0], DType.FLOAT64);
+    let matrix_default = zeros([0], dtype_code(DType.FLOAT64));
+    let matrix_configured = zeros([0], dtype_code(DType.FLOAT64));
+    let norm_default = zeros([0], dtype_code(DType.FLOAT64));
+    let norm_configured = zeros([0], dtype_code(DType.FLOAT64));
     let scalar_type = dtype(matrix);
     linalg_matrix_norm_int_out(matrix_default, matrix, 1);
     let matrix_int = item_float(matrix_default);
@@ -71,8 +71,8 @@ let valid =
 @test
 pub scalar_vector_norm_outputs_match_libtorch(): Bool ->
     let matrix = from_floats([3.0, 4.0, 0.0, 0.0], [2, 2]);
-    let vector_default = zeros([0], DType.FLOAT64);
-    let vector_configured = zeros([0], DType.FLOAT64);
+    let vector_default = zeros([0], dtype_code(DType.FLOAT64));
+    let vector_configured = zeros([0], dtype_code(DType.FLOAT64));
     let scalar_type = dtype(matrix);
     linalg_vector_norm_int_out(vector_default, matrix);
     let vector_int = item_float(vector_default);

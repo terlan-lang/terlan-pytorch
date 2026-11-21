@@ -99,7 +99,13 @@ write_manifest(generated: String, repository: String): Bool ->
     case File.read_text(source) {
         Err(_reason) ->
             failure("terlan_pytorch_materialize_read", "could not read generated manifest");
-        Ok(contents) ->
+        Ok(generated_contents) ->
+            let contents =
+                String.replace(
+                    generated_contents,
+                    "[package]\n",
+                    "[package]\ncompiler = \">= 0.0.10\"\n",
+                );
             if {
                 String.contains(contents, generated_dependency) -> case File.write_text(
                     destination,

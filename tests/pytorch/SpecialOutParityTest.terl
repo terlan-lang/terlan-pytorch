@@ -1,7 +1,7 @@
 module pytorch.SpecialOutParityTest.
 
 import pytorch.Special.{special_airy_ai, special_airy_ai_out, special_bessel_j0, special_bessel_j0_out, special_bessel_j1, special_bessel_j1_out, special_bessel_y0, special_bessel_y0_out, special_bessel_y1, special_bessel_y1_out, special_digamma, special_digamma_out, special_entr, special_entr_out, special_erf, special_erf_out, special_erfc, special_erfc_out, special_erfcx, special_erfcx_out, special_erfinv, special_erfinv_out, special_exp2, special_exp2_out, special_expit, special_expit_out, special_expm1, special_expm1_out, special_gammaln, special_gammaln_out, special_i0, special_i0_out, special_i0e, special_i0e_out, special_i1, special_i1_out, special_i1e, special_i1e_out, special_log1p, special_log1p_out, special_log_ndtr, special_log_ndtr_out, special_modified_bessel_i0, special_modified_bessel_i0_out, special_modified_bessel_i1, special_modified_bessel_i1_out, special_modified_bessel_k0, special_modified_bessel_k0_out, special_modified_bessel_k1, special_modified_bessel_k1_out, special_ndtr, special_ndtr_out, special_ndtri, special_ndtri_out, special_psi, special_psi_out, special_scaled_modified_bessel_k0, special_scaled_modified_bessel_k0_out, special_scaled_modified_bessel_k1, special_scaled_modified_bessel_k1_out, special_sinc, special_sinc_out, special_spherical_bessel_j0, special_spherical_bessel_j0_out}.
-import pytorch.Tensor.{dispose, from_floats, item_float, mse_loss, shape, zeros}.
+import pytorch.Tensor.{dispose, dtype_code, from_floats, item_float, mse_loss, shape, zeros}.
 
 import type pytorch.Tensor.{DType, Tensor}.
 
@@ -28,14 +28,14 @@ pub airy_bessel_and_entropy_outputs_match_libtorch(): Bool ->
     let digamma_expected = special_digamma(input);
     let entr_expected = special_entr(input);
     let erf_expected = special_erf(input);
-    let airy_output = zeros([0], DType.FLOAT64);
-    let j0_output = zeros([0], DType.FLOAT64);
-    let j1_output = zeros([0], DType.FLOAT64);
-    let y0_output = zeros([0], DType.FLOAT64);
-    let y1_output = zeros([0], DType.FLOAT64);
-    let digamma_output = zeros([0], DType.FLOAT64);
-    let entr_output = zeros([0], DType.FLOAT64);
-    let erf_output = zeros([0], DType.FLOAT64);
+    let airy_output = zeros([0], dtype_code(DType.FLOAT64));
+    let j0_output = zeros([0], dtype_code(DType.FLOAT64));
+    let j1_output = zeros([0], dtype_code(DType.FLOAT64));
+    let y0_output = zeros([0], dtype_code(DType.FLOAT64));
+    let y1_output = zeros([0], dtype_code(DType.FLOAT64));
+    let digamma_output = zeros([0], dtype_code(DType.FLOAT64));
+    let entr_output = zeros([0], dtype_code(DType.FLOAT64));
+    let erf_output = zeros([0], dtype_code(DType.FLOAT64));
     special_airy_ai_out(airy_output, input);
     special_bessel_j0_out(j0_output, input);
     special_bessel_j1_out(j1_output, input);
@@ -70,14 +70,14 @@ pub error_exponential_and_gamma_outputs_match_libtorch(): Bool ->
     let expm1_expected = special_expm1(input);
     let gammaln_expected = special_gammaln(input);
     let i0_expected = special_i0(input);
-    let erfc_output = zeros([0], DType.FLOAT64);
-    let erfcx_output = zeros([0], DType.FLOAT64);
-    let erfinv_output = zeros([0], DType.FLOAT64);
-    let exp2_output = zeros([0], DType.FLOAT64);
-    let expit_output = zeros([0], DType.FLOAT64);
-    let expm1_output = zeros([0], DType.FLOAT64);
-    let gammaln_output = zeros([0], DType.FLOAT64);
-    let i0_output = zeros([0], DType.FLOAT64);
+    let erfc_output = zeros([0], dtype_code(DType.FLOAT64));
+    let erfcx_output = zeros([0], dtype_code(DType.FLOAT64));
+    let erfinv_output = zeros([0], dtype_code(DType.FLOAT64));
+    let exp2_output = zeros([0], dtype_code(DType.FLOAT64));
+    let expit_output = zeros([0], dtype_code(DType.FLOAT64));
+    let expm1_output = zeros([0], dtype_code(DType.FLOAT64));
+    let gammaln_output = zeros([0], dtype_code(DType.FLOAT64));
+    let i0_output = zeros([0], dtype_code(DType.FLOAT64));
     special_erfc_out(erfc_output, input);
     special_erfcx_out(erfcx_output, input);
     special_erfinv_out(erfinv_output, input);
@@ -112,14 +112,14 @@ pub scaled_bessel_and_logarithm_outputs_match_libtorch(): Bool ->
     let modified_i0_expected = special_modified_bessel_i0(input);
     let modified_i1_expected = special_modified_bessel_i1(input);
     let modified_k0_expected = special_modified_bessel_k0(input);
-    let i0e_output = zeros([0], DType.FLOAT64);
-    let i1_output = zeros([0], DType.FLOAT64);
-    let i1e_output = zeros([0], DType.FLOAT64);
-    let log1p_output = zeros([0], DType.FLOAT64);
-    let log_ndtr_output = zeros([0], DType.FLOAT64);
-    let modified_i0_output = zeros([0], DType.FLOAT64);
-    let modified_i1_output = zeros([0], DType.FLOAT64);
-    let modified_k0_output = zeros([0], DType.FLOAT64);
+    let i0e_output = zeros([0], dtype_code(DType.FLOAT64));
+    let i1_output = zeros([0], dtype_code(DType.FLOAT64));
+    let i1e_output = zeros([0], dtype_code(DType.FLOAT64));
+    let log1p_output = zeros([0], dtype_code(DType.FLOAT64));
+    let log_ndtr_output = zeros([0], dtype_code(DType.FLOAT64));
+    let modified_i0_output = zeros([0], dtype_code(DType.FLOAT64));
+    let modified_i1_output = zeros([0], dtype_code(DType.FLOAT64));
+    let modified_k0_output = zeros([0], dtype_code(DType.FLOAT64));
     special_i0e_out(i0e_output, input);
     special_i1_out(i1_output, input);
     special_i1e_out(i1e_output, input);
@@ -154,14 +154,14 @@ pub normal_psi_and_sinc_outputs_match_libtorch(): Bool ->
     let scaled_k1_expected = special_scaled_modified_bessel_k1(input);
     let sinc_expected = special_sinc(input);
     let spherical_j0_expected = special_spherical_bessel_j0(input);
-    let modified_k1_output = zeros([0], DType.FLOAT64);
-    let ndtr_output = zeros([0], DType.FLOAT64);
-    let ndtri_output = zeros([0], DType.FLOAT64);
-    let psi_output = zeros([0], DType.FLOAT64);
-    let scaled_k0_output = zeros([0], DType.FLOAT64);
-    let scaled_k1_output = zeros([0], DType.FLOAT64);
-    let sinc_output = zeros([0], DType.FLOAT64);
-    let spherical_j0_output = zeros([0], DType.FLOAT64);
+    let modified_k1_output = zeros([0], dtype_code(DType.FLOAT64));
+    let ndtr_output = zeros([0], dtype_code(DType.FLOAT64));
+    let ndtri_output = zeros([0], dtype_code(DType.FLOAT64));
+    let psi_output = zeros([0], dtype_code(DType.FLOAT64));
+    let scaled_k0_output = zeros([0], dtype_code(DType.FLOAT64));
+    let scaled_k1_output = zeros([0], dtype_code(DType.FLOAT64));
+    let sinc_output = zeros([0], dtype_code(DType.FLOAT64));
+    let spherical_j0_output = zeros([0], dtype_code(DType.FLOAT64));
     special_modified_bessel_k1_out(modified_k1_output, input);
     special_ndtr_out(ndtr_output, input);
     special_ndtri_out(ndtri_output, input);

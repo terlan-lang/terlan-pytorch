@@ -25,9 +25,9 @@ run_check(compiler: String, arguments: List[String], repository: String): Bool -
                     Process.with_arguments(Process.command(compiler), arguments),
                     repository,
                 ),
-                600000,
+                600_000,
             ),
-            16777216,
+            16_777_216,
         );
     case Process.run(request) {
         Err(reason) -> failure(reason.message);

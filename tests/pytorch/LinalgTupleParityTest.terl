@@ -2,10 +2,28 @@ module pytorch.LinalgTupleParityTest.
 
 import pytorch.Linalg.{geqrf, linalg_cholesky_ex, linalg_cholesky_ex_out, linalg_eig, linalg_eig_out, linalg_eigh, linalg_eigh_out, linalg_inv_ex, linalg_inv_ex_out, linalg_ldl_factor, linalg_ldl_factor_ex, linalg_ldl_factor_ex_out, linalg_ldl_factor_out, linalg_lstsq, linalg_lstsq_configured, linalg_lstsq_out, linalg_lstsq_out_configured, linalg_lu, linalg_lu_factor, linalg_lu_factor_ex, linalg_lu_factor_ex_out, linalg_lu_factor_out, linalg_lu_out, linalg_qr, linalg_qr_out, linalg_slogdet, linalg_slogdet_out, linalg_solve_ex, linalg_solve_ex_out, linalg_svd, linalg_svd_out, qr, slogdet, triangular_solve}.
 import pytorch.LinalgCompletion.geqrf_out.
-import pytorch.Tensor.{dispose, dtype, from_floats, item, item_bool, item_float, shape, sum, zeros}.
+import pytorch.Tensor.{dispose, dispose_scalar, dtype, dtype_code, from_floats, item as item_scalar, item_bool, item_float, scalar_to_int, shape, sum, zeros}.
 import pytorch.Unary.{abs, all, isfinite}.
+import std.core.Result.{Err, Ok}.
+import std.vm.Process.{exit_reason, fail}.
 
 import type pytorch.Tensor.{DType, Tensor}.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 /**
  * Reduces a floating-point tensor and releases its scalar result.
@@ -34,18 +52,18 @@ all_finite(tensor: Tensor): Bool ->
 pub fixed_tuple_out_overloads_populate_all_outputs(): Bool ->
     let matrix = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
     let right = from_floats([1.0, 0.0], [2]);
-    let ldl = zeros([0], DType.FLOAT64);
-    let ldl_pivots = zeros([0], DType.INT32);
+    let ldl = zeros([0], dtype_code(DType.FLOAT64));
+    let ldl_pivots = zeros([0], dtype_code(DType.INT32));
     linalg_ldl_factor_out(ldl, ldl_pivots, matrix);
-    let ldl_ex = zeros([0], DType.FLOAT64);
-    let ldl_pivots_ex = zeros([0], DType.INT32);
-    let ldl_info = zeros([0], DType.INT32);
-    (linalg_ldl_factor_ex_out(ldl_ex, ldl_pivots_ex, ldl_info, matrix); let q = zeros([0], DType.FLOAT64);
-let r = zeros([0], DType.FLOAT64);
-(linalg_qr_out(q, r, matrix); let sign = zeros([0], DType.FLOAT64);
-let log_absolute = zeros([0], DType.FLOAT64);
-(linalg_slogdet_out(sign, log_absolute, matrix); let solution = zeros([0], DType.FLOAT64);
-let solve_info = zeros([0], DType.INT32);
+    let ldl_ex = zeros([0], dtype_code(DType.FLOAT64));
+    let ldl_pivots_ex = zeros([0], dtype_code(DType.INT32));
+    let ldl_info = zeros([0], dtype_code(DType.INT32));
+    (linalg_ldl_factor_ex_out(ldl_ex, ldl_pivots_ex, ldl_info, matrix); let q = zeros([0], dtype_code(DType.FLOAT64));
+let r = zeros([0], dtype_code(DType.FLOAT64));
+(linalg_qr_out(q, r, matrix); let sign = zeros([0], dtype_code(DType.FLOAT64));
+let log_absolute = zeros([0], dtype_code(DType.FLOAT64));
+(linalg_slogdet_out(sign, log_absolute, matrix); let solution = zeros([0], dtype_code(DType.FLOAT64));
+let solve_info = zeros([0], dtype_code(DType.INT32));
 (linalg_solve_ex_out(solution, solve_info, matrix, right); let valid =
     shape(ldl) == [2, 2]
         and shape(ldl_pivots) == [2]
@@ -73,8 +91,8 @@ let solve_info = zeros([0], DType.INT32);
 @test
 pub cholesky_ex_out_populates_both_outputs(): Bool ->
     let matrix = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
-    let factor = zeros([0], DType.FLOAT64);
-    let info = zeros([0], DType.INT32);
+    let factor = zeros([0], dtype_code(DType.FLOAT64));
+    let info = zeros([0], dtype_code(DType.INT32));
     linalg_cholesky_ex_out(factor, info, matrix);
     let factor_total = float_sum(factor);
     let valid =
@@ -149,14 +167,14 @@ pub qr_eigenvalue_and_lu_decompositions_execute(): Bool ->
 @test
 pub decomposition_out_overloads_populate_all_outputs(): Bool ->
     let matrix = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
-    let eigenvalues = zeros([0], DType.FLOAT64);
-    let eigenvectors = zeros([0], DType.FLOAT64);
+    let eigenvalues = zeros([0], dtype_code(DType.FLOAT64));
+    let eigenvectors = zeros([0], dtype_code(DType.FLOAT64));
     linalg_eigh_out(eigenvalues, eigenvectors, matrix);
-    let inverse = zeros([0], DType.FLOAT64);
-    let inverse_info = zeros([0], DType.INT32);
-    (linalg_inv_ex_out(inverse, inverse_info, matrix); let left_vectors = zeros([0], DType.FLOAT64);
-let decomposition_values = zeros([0], DType.FLOAT64);
-let right_vectors = zeros([0], DType.FLOAT64);
+    let inverse = zeros([0], dtype_code(DType.FLOAT64));
+    let inverse_info = zeros([0], dtype_code(DType.INT32));
+    (linalg_inv_ex_out(inverse, inverse_info, matrix); let left_vectors = zeros([0], dtype_code(DType.FLOAT64));
+let decomposition_values = zeros([0], dtype_code(DType.FLOAT64));
+let right_vectors = zeros([0], dtype_code(DType.FLOAT64));
 (linalg_svd_out(left_vectors, decomposition_values, right_vectors, matrix, false); let valid =
     shape(eigenvalues) == [2]
         and shape(eigenvectors) == [2, 2]
@@ -180,15 +198,15 @@ let right_vectors = zeros([0], DType.FLOAT64);
 @test
 pub lu_out_overloads_populate_all_outputs(): Bool ->
     let matrix = from_floats([4.0, 7.0, 2.0, 6.0], [2, 2]);
-    let permutation = zeros([0], DType.FLOAT64);
-    let lower = zeros([0], DType.FLOAT64);
-    let upper = zeros([0], DType.FLOAT64);
+    let permutation = zeros([0], dtype_code(DType.FLOAT64));
+    let lower = zeros([0], dtype_code(DType.FLOAT64));
+    let upper = zeros([0], dtype_code(DType.FLOAT64));
     linalg_lu_out(permutation, lower, upper, matrix);
-    let factor = zeros([0], DType.FLOAT64);
-    let pivots = zeros([0], DType.INT32);
-    (linalg_lu_factor_out(factor, pivots, matrix); let factor_ex = zeros([0], DType.FLOAT64);
-let pivots_ex = zeros([0], DType.INT32);
-let info = zeros([0], DType.INT32);
+    let factor = zeros([0], dtype_code(DType.FLOAT64));
+    let pivots = zeros([0], dtype_code(DType.INT32));
+    (linalg_lu_factor_out(factor, pivots, matrix); let factor_ex = zeros([0], dtype_code(DType.FLOAT64));
+let pivots_ex = zeros([0], dtype_code(DType.INT32));
+let info = zeros([0], dtype_code(DType.INT32));
 (linalg_lu_factor_ex_out(factor_ex, pivots_ex, info, matrix); let valid =
     shape(permutation) == [2, 2]
         and shape(lower) == [2, 2]
@@ -365,10 +383,10 @@ pub eig_and_least_squares_out_overloads_populate_all_outputs(): Bool ->
     let eigenvector_magnitudes = abs(eigenvectors);
     let coefficient = from_floats([1.0, 0.0, 0.0, 1.0, 1.0, 1.0], [3, 2]);
     let right = from_floats([1.0, 2.0, 3.0], [3]);
-    let solution = zeros([0], DType.FLOAT64);
-    let residuals = zeros([0], DType.FLOAT64);
-    let rank = zeros([0], DType.INT64);
-    let singular_values = zeros([0], DType.FLOAT64);
+    let solution = zeros([0], dtype_code(DType.FLOAT64));
+    let residuals = zeros([0], dtype_code(DType.FLOAT64));
+    let rank = zeros([0], dtype_code(DType.INT64));
+    let singular_values = zeros([0], dtype_code(DType.FLOAT64));
     (linalg_lstsq_out(solution, residuals, rank, singular_values, coefficient, right); let default_solution_total = float_sum(solution);
 let default_rank = item(rank);
 (linalg_lstsq_out_configured(
@@ -408,8 +426,8 @@ let valid =
 @test
 pub geqrf_out_populates_both_outputs(): Bool ->
     let matrix = from_floats([4.0, 1.0, 1.0, 3.0], [2, 2]);
-    let a = zeros([0], DType.FLOAT64);
-    let tau = zeros([0], DType.FLOAT64);
+    let a = zeros([0], dtype_code(DType.FLOAT64));
+    let tau = zeros([0], dtype_code(DType.FLOAT64));
     geqrf_out(a, tau, matrix);
     let valid = shape(a) == [2, 2] and shape(tau) == [2] and all_finite(a) and all_finite(tau);
     (dispose(tau); dispose(a); dispose(matrix); valid).
