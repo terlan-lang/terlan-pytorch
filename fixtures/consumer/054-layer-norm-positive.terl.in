@@ -1,6 +1,7 @@
 module pytorch_consumer.Main.
 
 import pytorch.Tensor.{add, amax, dispose, dtype, from_floats, full_float, item_float, layer_norm, matmul, mse_loss, shape}.
+import std.collections.List.
 import std.io.Console.{println}.
 
 pub main(): Unit ->
@@ -47,12 +48,17 @@ pub main(): Unit ->
     dispose(weight);
     dispose(input);
     if {
-        observed_normalized_shape.length() == 2 and observed_normalized_shape[0] == 2 and
-            observed_normalized_shape[1] == 2 and observed_residual_shape.length() == 2 and
-            observed_residual_shape[0] == 2 and observed_residual_shape[1] == 2 and
-            observed_dtype == 7 and observed_normalized == 1.0 and
-            observed_residual == 5.0 and observed_input == 4.0 and
-            observed_normalized_loss == 0.0 and observed_residual_loss == 0.0 ->
-                println("PYTORCH_LAYER_NORM_RESIDUAL_CONSUMER_OK");
+        observed_normalized_shape.length() == 2
+            and observed_normalized_shape[0] == 2
+            and observed_normalized_shape[1] == 2
+            and observed_residual_shape.length() == 2
+            and observed_residual_shape[0] == 2
+            and observed_residual_shape[1] == 2
+            and observed_dtype == 7
+            and observed_normalized == 1.0
+            and observed_residual == 5.0
+            and observed_input == 4.0
+            and observed_normalized_loss == 0.0
+            and observed_residual_loss == 0.0 -> println("PYTORCH_LAYER_NORM_RESIDUAL_CONSUMER_OK");
         true -> println("PYTORCH_LAYER_NORM_RESIDUAL_CONSUMER_FAILED")
     }.

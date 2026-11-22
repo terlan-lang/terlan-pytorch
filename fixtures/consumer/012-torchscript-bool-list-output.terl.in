@@ -1,7 +1,28 @@
 module pytorch_consumer.Main.
 
-import pytorch.Tensor.{dispose, dispose_model, from_int, item, load_torchscript, torchscript_forward_bool_list}.
+import pytorch.Tensor.{dispose, dispose_model, dispose_scalar, from_int, item as item_scalar, load_torchscript, scalar_to_int, torchscript_forward_bool_list}.
+import std.collections.List.
+import std.core.Result.{Err, Ok}.
 import std.io.Console.{println}.
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 pub main(): Unit ->
     let model = load_torchscript("$bool_list_model");
@@ -11,8 +32,10 @@ pub main(): Unit ->
     dispose(input);
     dispose_model(model);
     if {
-        observed_input == 2 and output.length() == 3 and
-            output[0] and not output[1] and not output[2] ->
-            println("PYTORCH_BOOL_LIST_OUTPUT_CONSUMER_OK");
+        observed_input == 2
+            and output.length() == 3
+            and output[0]
+            and not output[1]
+            and not output[2] -> println("PYTORCH_BOOL_LIST_OUTPUT_CONSUMER_OK");
         true -> println("PYTORCH_BOOL_LIST_OUTPUT_CONSUMER_FAILED")
     }.

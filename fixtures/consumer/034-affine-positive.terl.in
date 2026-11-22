@@ -1,6 +1,7 @@
 module pytorch_consumer.Main.
 
 import pytorch.Tensor.{add, amax, dispose, dtype, from_floats, item_float, matmul, numel, shape}.
+import std.collections.List.
 import std.io.Console.{println}.
 
 pub main(): Unit ->
@@ -29,8 +30,13 @@ pub main(): Unit ->
     dispose(weights);
     dispose(input);
     if {
-        observed_shape.length() == 2 and observed_shape[0] == 2 and observed_shape[1] == 1 and
-            observed_numel == 2 and observed_dtype == 7 and observed == 7.0 and
-            observed_input == 6.0 and observed_bias == 1.0 -> println("PYTORCH_AFFINE_CONSUMER_OK");
+        observed_shape.length() == 2
+            and observed_shape[0] == 2
+            and observed_shape[1] == 1
+            and observed_numel == 2
+            and observed_dtype == 7
+            and observed == 7.0
+            and observed_input == 6.0
+            and observed_bias == 1.0 -> println("PYTORCH_AFFINE_CONSUMER_OK");
         true -> println("PYTORCH_AFFINE_CONSUMER_FAILED")
     }.

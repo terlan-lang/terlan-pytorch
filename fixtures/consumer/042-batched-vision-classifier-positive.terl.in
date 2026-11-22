@@ -1,16 +1,54 @@
 module pytorch_consumer.Main.
 
-import pytorch.Tensor.{adaptive_avg_pool2d, add, amax, argmax, conv2d, cross_entropy_loss, dispose, dtype, flatten, from_floats, from_ints, full_float, item, item_float, matmul, mse_loss, relu, shape, softmax}.
+import pytorch.Tensor.{adaptive_avg_pool2d, add, amax, argmax, conv2d, cross_entropy_loss, dispose, dispose_scalar, dtype, flatten, from_floats, from_ints, full_float, item as item_scalar, item_float, matmul, mse_loss, relu, scalar_to_int, shape, softmax}.
+import std.collections.List.
+import std.core.Result.{Err, Ok}.
 import std.io.Console.{println}.
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 pub main(): Unit ->
-    let input = from_floats(
-        [
-            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-            2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0
-        ],
-        [2, 1, 3, 3]
-    );
+    let input =
+        from_floats(
+            [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+            ],
+            [2, 1, 3, 3],
+        );
     let kernel = full_float([1, 1, 2, 2], 1.0);
     let convolution_bias = full_float([1], 0.0);
     let convolved = conv2d(input, kernel, convolution_bias, [1, 1], [0, 0], [1, 1], 1);
@@ -56,18 +94,28 @@ pub main(): Unit ->
     dispose(kernel);
     dispose(input);
     if {
-        observed_convolution_shape.length() == 4 and observed_convolution_shape[0] == 2 and
-            observed_convolution_shape[1] == 1 and observed_convolution_shape[2] == 2 and
-            observed_convolution_shape[3] == 2 and observed_pool_shape.length() == 4 and
-            observed_pool_shape[0] == 2 and observed_pool_shape[1] == 1 and
-            observed_pool_shape[2] == 1 and observed_pool_shape[3] == 1 and
-            observed_feature_shape.length() == 2 and observed_feature_shape[0] == 2 and
-            observed_feature_shape[1] == 1 and observed_probability_shape.length() == 2 and
-            observed_probability_shape[0] == 2 and observed_probability_shape[1] == 2 and
-            observed_prediction_shape.length() == 1 and observed_prediction_shape[0] == 2 and
-            observed_prediction_dtype == 4 and observed_prediction == 0 and
-            observed_probability_loss == 0.0 and observed_classification_loss > 0.69 and
-            observed_classification_loss < 0.70 ->
-                println("PYTORCH_BATCHED_VISION_CLASSIFIER_CONSUMER_OK");
+        observed_convolution_shape.length() == 4
+            and observed_convolution_shape[0] == 2
+            and observed_convolution_shape[1] == 1
+            and observed_convolution_shape[2] == 2
+            and observed_convolution_shape[3] == 2
+            and observed_pool_shape.length() == 4
+            and observed_pool_shape[0] == 2
+            and observed_pool_shape[1] == 1
+            and observed_pool_shape[2] == 1
+            and observed_pool_shape[3] == 1
+            and observed_feature_shape.length() == 2
+            and observed_feature_shape[0] == 2
+            and observed_feature_shape[1] == 1
+            and observed_probability_shape.length() == 2
+            and observed_probability_shape[0] == 2
+            and observed_probability_shape[1] == 2
+            and observed_prediction_shape.length() == 1
+            and observed_prediction_shape[0] == 2
+            and observed_prediction_dtype == 4
+            and observed_prediction == 0
+            and observed_probability_loss == 0.0
+            and observed_classification_loss > 0.69
+            and observed_classification_loss < 0.7 -> println("PYTORCH_BATCHED_VISION_CLASSIFIER_CONSUMER_OK");
         true -> println("PYTORCH_BATCHED_VISION_CLASSIFIER_CONSUMER_FAILED")
     }.

@@ -1,7 +1,28 @@
 module pytorch_consumer.Main.
 
-import pytorch.Tensor.{adaptive_avg_pool2d, add, amax, argmax, conv2d, dispose, dtype, flatten, full_float, item, item_float, matmul, mse_loss, relu, shape, softmax}.
+import pytorch.Tensor.{adaptive_avg_pool2d, add, amax, argmax, conv2d, dispose, dispose_scalar, dtype, flatten, full_float, item as item_scalar, item_float, matmul, mse_loss, relu, scalar_to_int, shape, softmax}.
+import std.collections.List.
+import std.core.Result.{Err, Ok}.
 import std.io.Console.{println}.
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 pub main(): Unit ->
     let input = full_float([1, 1, 3, 3], 1.0);
@@ -46,11 +67,17 @@ pub main(): Unit ->
     dispose(kernel);
     dispose(input);
     if {
-        observed_feature_shape.length() == 2 and observed_feature_shape[0] == 1 and
-            observed_feature_shape[1] == 1 and observed_probability_shape.length() == 2 and
-            observed_probability_shape[0] == 1 and observed_probability_shape[1] == 2 and
-            observed_probability == 0.5 and observed_exact_loss == 0.0 and
-            observed_prediction_shape.length() == 1 and observed_prediction_shape[0] == 1 and
-            observed_prediction_dtype == 4 and observed_prediction == 0 -> println("PYTORCH_VISION_CLASSIFIER_CONSUMER_OK");
+        observed_feature_shape.length() == 2
+            and observed_feature_shape[0] == 1
+            and observed_feature_shape[1] == 1
+            and observed_probability_shape.length() == 2
+            and observed_probability_shape[0] == 1
+            and observed_probability_shape[1] == 2
+            and observed_probability == 0.5
+            and observed_exact_loss == 0.0
+            and observed_prediction_shape.length() == 1
+            and observed_prediction_shape[0] == 1
+            and observed_prediction_dtype == 4
+            and observed_prediction == 0 -> println("PYTORCH_VISION_CLASSIFIER_CONSUMER_OK");
         true -> println("PYTORCH_VISION_CLASSIFIER_CONSUMER_FAILED")
     }.

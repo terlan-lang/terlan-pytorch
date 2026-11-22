@@ -1,15 +1,14 @@
 module pytorch_consumer.Main.
 
 import pytorch.Tensor.{add, amax, dispose, from_floats, full_float, item_float, layer_norm, matmul, mse_loss, multiply, shape, softmax, transpose}.
+import std.collections.List.
 import std.io.Console.{println}.
 
 pub main(): Unit ->
     let input = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let normalized = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let normalized = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
     let query_weight = full_float([2, 2], 0.0);
     let key_weight = full_float([2, 2], 0.0);
     let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
@@ -73,13 +72,19 @@ pub main(): Unit ->
     dispose(normalization_weight);
     dispose(input);
     if {
-        observed_attention_shape.length() == 2 and observed_attention_shape[0] == 2 and
-            observed_attention_shape[1] == 2 and observed_context_shape.length() == 2 and
-            observed_context_shape[0] == 2 and observed_context_shape[1] == 2 and
-            observed_residual_shape.length() == 2 and observed_residual_shape[0] == 2 and
-            observed_residual_shape[1] == 2 and observed_attention == 0.5 and
-            observed_residual == 5.0 and observed_attention_loss == 0.0 and
-            observed_context_loss == 0.0 and observed_residual_loss == 0.0 ->
-                println("PYTORCH_SELF_ATTENTION_CONSUMER_OK");
+        observed_attention_shape.length() == 2
+            and observed_attention_shape[0] == 2
+            and observed_attention_shape[1] == 2
+            and observed_context_shape.length() == 2
+            and observed_context_shape[0] == 2
+            and observed_context_shape[1] == 2
+            and observed_residual_shape.length() == 2
+            and observed_residual_shape[0] == 2
+            and observed_residual_shape[1] == 2
+            and observed_attention == 0.5
+            and observed_residual == 5.0
+            and observed_attention_loss == 0.0
+            and observed_context_loss == 0.0
+            and observed_residual_loss == 0.0 -> println("PYTORCH_SELF_ATTENTION_CONSUMER_OK");
         true -> println("PYTORCH_SELF_ATTENTION_CONSUMER_FAILED")
     }.

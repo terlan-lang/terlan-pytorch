@@ -1,15 +1,15 @@
 module pytorch_consumer.Main.
 
 import pytorch.Tensor.{adaptive_avg_pool2d, amax, dispose, dtype, from_floats, item_float, mse_loss, numel, shape}.
+import std.collections.List.
 import std.io.Console.{println}.
 
 pub main(): Unit ->
-    let input = from_floats([
-        1.0, 1.0, 2.0, 2.0,
-        1.0, 1.0, 2.0, 2.0,
-        3.0, 3.0, 4.0, 4.0,
-        3.0, 3.0, 4.0, 4.0
-    ], [1, 1, 4, 4]);
+    let input =
+        from_floats(
+            [1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 2.0, 2.0, 3.0, 3.0, 4.0, 4.0, 3.0, 3.0, 4.0, 4.0],
+            [1, 1, 4, 4],
+        );
     let output = adaptive_avg_pool2d(input, [2, 2]);
     let expected = from_floats([1.0, 2.0, 3.0, 4.0], [1, 1, 2, 2]);
     let exact_loss = mse_loss(output, expected, 1);
@@ -40,9 +40,15 @@ pub main(): Unit ->
     dispose(output);
     dispose(input);
     if {
-        observed_shape.length() == 4 and observed_shape[0] == 1 and
-            observed_shape[1] == 1 and observed_shape[2] == 2 and observed_shape[3] == 2 and
-            observed_numel == 4 and observed_dtype == 7 and observed_maximum == 4.0 and
-            observed_input_maximum == 4.0 and observed_exact_loss == 0.0 -> println("PYTORCH_ADAPTIVE_AVG_POOL2D_CONSUMER_OK");
+        observed_shape.length() == 4
+            and observed_shape[0] == 1
+            and observed_shape[1] == 1
+            and observed_shape[2] == 2
+            and observed_shape[3] == 2
+            and observed_numel == 4
+            and observed_dtype == 7
+            and observed_maximum == 4.0
+            and observed_input_maximum == 4.0
+            and observed_exact_loss == 0.0 -> println("PYTORCH_ADAPTIVE_AVG_POOL2D_CONSUMER_OK");
         true -> println("PYTORCH_ADAPTIVE_AVG_POOL2D_CONSUMER_FAILED")
     }.

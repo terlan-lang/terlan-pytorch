@@ -1,15 +1,14 @@
 module pytorch_consumer.Main.
 
 import pytorch.Tensor.{add, amax, dispose, dtype, from_floats, full_float, gelu, item_float, layer_norm, matmul, mse_loss, multiply, shape, softmax, transpose}.
+import std.collections.List.
 import std.io.Console.{println}.
 
 pub main(): Unit ->
     let input = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let attention_normalized = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let attention_normalized = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
     let query_weight = full_float([2, 2], 0.0);
     let key_weight = full_float([2, 2], 0.0);
     let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
@@ -25,26 +24,18 @@ pub main(): Unit ->
     let attention = softmax(scaled_scores, 1);
     let context = matmul(attention, values);
     let attention_residual = add(input, context, 1.0);
-    let feed_forward_normalized = layer_norm(
-        attention_residual, [2], normalization_weight, normalization_bias, 0.0, false
-    );
-    let expansion_weight = from_floats(
-        [1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]
-    );
+    let feed_forward_normalized = layer_norm(attention_residual, [2], normalization_weight, normalization_bias, 0.0, false);
+    let expansion_weight = from_floats([1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]);
     let expansion_bias = full_float([4], 0.0);
     let expanded = matmul(feed_forward_normalized, expansion_weight);
     let biased_expansion = add(expanded, expansion_bias, 1.0);
     let activated = gelu(biased_expansion);
-    let projection_weight = from_floats(
-        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]
-    );
+    let projection_weight = from_floats([1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]);
     let projection_bias = full_float([2], 0.0);
     let projected = matmul(activated, projection_weight);
     let biased_projection = add(projected, projection_bias, 1.0);
     let encoder_output = add(attention_residual, biased_projection, 1.0);
-    let expected = from_floats(
-        [1.8413447461, 4.8413447461, 5.8413447461, 2.8413447461], [2, 2]
-    );
+    let expected = from_floats([1.8413447461, 4.8413447461, 5.8413447461, 2.8413447461], [2, 2]);
     let loss = mse_loss(encoder_output, expected, 1);
     let output_columns = amax(encoder_output, [0], false);
     let output_maximum = amax(output_columns, [0], false);
@@ -92,10 +83,13 @@ pub main(): Unit ->
     dispose(normalization_weight);
     dispose(input);
     if {
-        observed_shape.length() == 2 and observed_shape[0] == 2 and
-            observed_shape[1] == 2 and observed_dtype == 7 and
-            observed_input == 4.0 and observed_loss < 0.0000001 and
-            observed_output > 5.84 and observed_output < 5.85 ->
-                println("PYTORCH_ENCODER_BLOCK_CONSUMER_OK");
+        observed_shape.length() == 2
+            and observed_shape[0] == 2
+            and observed_shape[1] == 2
+            and observed_dtype == 7
+            and observed_input == 4.0
+            and observed_loss < 1e-7
+            and observed_output > 5.84
+            and observed_output < 5.85 -> println("PYTORCH_ENCODER_BLOCK_CONSUMER_OK");
         true -> println("PYTORCH_ENCODER_BLOCK_CONSUMER_FAILED")
     }.

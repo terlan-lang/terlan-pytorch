@@ -89,7 +89,15 @@ run_command(
             environment == [] -> base;
             true -> Process.with_environment(base, environment)
         };
-    case Process.run(request) {
+    let isolated =
+        Process.without_environment(
+            request,
+            [
+                "TERLAN_PYTORCH_NATIVE_BOUNDARY_HELPER_PATH",
+                "TERLAN_NDARRAY_NATIVE_BOUNDARY_HELPER_PATH",
+            ],
+        );
+    case Process.run(isolated) {
         Err(reason) ->
             let _reported = failure("terlan_pytorch_consumer_process", reason.message);
             None;
@@ -431,15 +439,6 @@ output_contract(current: Scenario, output: Output): Bool ->
     }.
 
 /**
- * Removes one disposable compiler output tree.
- */
-remove_build(path: String): Bool ->
-    case Directory.remove_all(path) {
-        Ok(Unit) -> true;
-        Err(_reason) -> true
-    }.
-
-/**
  * Executes and validates one external consumer scenario.
  */
 validate_execution(current: Scenario, context: ConsumerContext): Bool ->
@@ -452,7 +451,7 @@ validate_execution(current: Scenario, context: ConsumerContext): Bool ->
             let written = write_fixture(main_path, source);
             if {
                 not written -> false;
-                true -> let output_directory = child(context.workspace, current.build_directory);
+                true -> let output_directory = child(context.workspace, "consumer-build");
                 let environment =
                     [
                         Process.environment_entry("CARGO_NET_OFFLINE", "true"),
@@ -461,6 +460,7 @@ validate_execution(current: Scenario, context: ConsumerContext): Bool ->
                 case run_command(
                     context.compiler,
                     [
+                        "--incremental",
                         "run",
                         context.consumer,
                         "--target",
@@ -474,8 +474,11 @@ validate_execution(current: Scenario, context: ConsumerContext): Bool ->
                     None -> false;
                     Some(output) ->
                         let valid = output_contract(current, output);
-                        let removed = remove_build(output_directory);
-                        valid and removed
+                        let _reported =
+                            println(
+                                String.concat(["[pytorch-consumer] ", current.fixture, " checked"]),
+                            );
+                        valid
                 }
             }
     }.
@@ -501,7 +504,9 @@ run_scenarios(lines: List[String], context: ConsumerContext): Bool ->
                             );
                         if {
                             context.selector != "" and context.selector != fixture -> run_scenarios(rest, context);
-                            true -> validate_execution(current, context) and run_scenarios(rest, context)
+                            true -> let valid = validate_execution(current, context);
+                            let remaining = run_scenarios(rest, context);
+                            valid and remaining
                         };
                     _ ->
                         failure(

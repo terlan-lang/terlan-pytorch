@@ -1,22 +1,51 @@
 module pytorch_consumer.Main.
 
-import pytorch.Tensor.{Tensor, adaptive_avg_pool2d, add, amax, argmax, batch_norm, conv2d, cross_entropy_loss, dispose, dtype, flatten, from_floats, from_ints, full_float, item, item_float, matmul, mse_loss, relu, shape, softmax}.
+import pytorch.Tensor.{Tensor, adaptive_avg_pool2d, add, amax, argmax, batch_norm, conv2d, cross_entropy_loss, dispose, dispose_scalar, dtype, flatten, from_floats, from_ints, full_float, item as item_scalar, item_float, matmul, mse_loss, relu, scalar_to_int, shape, softmax}.
+import std.collections.List.
+import std.core.Result.{Err, Ok}.
 import std.io.Console.{println}.
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 pub normalized_depthwise_stage(
     input: Tensor,
     normalization_weight: Tensor,
     normalization_bias: Tensor,
     running_mean: Tensor,
-    running_variance: Tensor
+    running_variance: Tensor,
 ): Tensor ->
     let kernel = full_float([2, 1, 1, 1], 1.0);
     let bias = full_float([2], 0.0);
     let convolved = conv2d(input, kernel, bias, [1, 1], [0, 0], [1, 1], 2);
-    let normalized = batch_norm(
-        convolved, normalization_weight, normalization_bias, running_mean,
-        running_variance, false, 0.1, 0.0, false
-    );
+    let normalized =
+        batch_norm(
+            convolved,
+            normalization_weight,
+            normalization_bias,
+            running_mean,
+            running_variance,
+            false,
+            0.1,
+            0.0,
+            false,
+        );
     let activated = relu(normalized);
     dispose(normalized);
     dispose(convolved);
@@ -29,15 +58,23 @@ pub normalized_pointwise_stage(
     normalization_weight: Tensor,
     normalization_bias: Tensor,
     running_mean: Tensor,
-    running_variance: Tensor
+    running_variance: Tensor,
 ): Tensor ->
     let kernel = full_float([2, 2, 1, 1], 1.0);
     let bias = full_float([2], 0.0);
     let convolved = conv2d(input, kernel, bias, [1, 1], [0, 0], [1, 1], 1);
-    let normalized = batch_norm(
-        convolved, normalization_weight, normalization_bias, running_mean,
-        running_variance, false, 0.1, 0.0, false
-    );
+    let normalized =
+        batch_norm(
+            convolved,
+            normalization_weight,
+            normalization_bias,
+            running_mean,
+            running_variance,
+            false,
+            0.1,
+            0.0,
+            false,
+        );
     dispose(convolved);
     dispose(bias);
     dispose(kernel);
@@ -72,39 +109,50 @@ pub residual_cnn_classifier_is_correct(features: Tensor): Bool ->
     dispose(projected);
     dispose(classifier_bias);
     dispose(classifier_weight);
-    observed_probability_shape.length() == 2 and observed_probability_shape[0] == 2 and
-        observed_probability_shape[1] == 2 and observed_prediction_shape.length() == 1 and
-        observed_prediction_shape[0] == 2 and observed_prediction_dtype == 4 and
-        observed_prediction == 0 and observed_probability_loss == 0.0 and
-        observed_classification_loss > 0.69 and observed_classification_loss < 0.70.
+    observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 2
+        and observed_probability_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 2
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7.
 
 pub main(): Unit ->
-    let input = from_floats(
-        [
-            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-            2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0
-        ],
-        [2, 2, 2, 2]
-    );
+    let input =
+        from_floats(
+            [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0],
+            [2, 2, 2, 2],
+        );
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
     let running_mean = full_float([2], 0.0);
     let running_variance = full_float([2], 1.0);
-    let depthwise = normalized_depthwise_stage(
-        input, normalization_weight, normalization_bias, running_mean, running_variance
-    );
-    let pointwise = normalized_pointwise_stage(
-        depthwise, normalization_weight, normalization_bias, running_mean, running_variance
-    );
+    let depthwise =
+        normalized_depthwise_stage(
+            input,
+            normalization_weight,
+            normalization_bias,
+            running_mean,
+            running_variance,
+        );
+    let pointwise =
+        normalized_pointwise_stage(
+            depthwise,
+            normalization_weight,
+            normalization_bias,
+            running_mean,
+            running_variance,
+        );
     let residual = add(input, pointwise, 1.0);
     let activated = relu(residual);
-    let expected_residual = from_floats(
-        [
-            3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0,
-            6.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0
-        ],
-        [2, 2, 2, 2]
-    );
+    let expected_residual =
+        from_floats(
+            [3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0],
+            [2, 2, 2, 2],
+        );
     let residual_loss = mse_loss(activated, expected_residual, 1);
     let pooled = adaptive_avg_pool2d(activated, [1, 1]);
     let expected_pool = from_floats([3.0, 3.0, 6.0, 6.0], [2, 2, 1, 1]);
@@ -134,19 +182,31 @@ pub main(): Unit ->
     dispose(normalization_weight);
     dispose(input);
     if {
-        observed_depthwise_shape.length() == 4 and observed_depthwise_shape[0] == 2 and
-            observed_depthwise_shape[1] == 2 and observed_depthwise_shape[2] == 2 and
-            observed_depthwise_shape[3] == 2 and observed_pointwise_shape.length() == 4 and
-            observed_pointwise_shape[0] == 2 and observed_pointwise_shape[1] == 2 and
-            observed_pointwise_shape[2] == 2 and observed_pointwise_shape[3] == 2 and
-            observed_residual_shape.length() == 4 and observed_residual_shape[0] == 2 and
-            observed_residual_shape[1] == 2 and observed_residual_shape[2] == 2 and
-            observed_residual_shape[3] == 2 and observed_pool_shape.length() == 4 and
-            observed_pool_shape[0] == 2 and observed_pool_shape[1] == 2 and
-            observed_pool_shape[2] == 1 and observed_pool_shape[3] == 1 and
-            observed_feature_shape.length() == 2 and observed_feature_shape[0] == 2 and
-            observed_feature_shape[1] == 2 and observed_residual_loss == 0.0 and
-            observed_pool_loss == 0.0 and classifier_verified ->
-                println("PYTORCH_NORMALIZED_RESIDUAL_CNN_CONSUMER_OK");
+        observed_depthwise_shape.length() == 4
+            and observed_depthwise_shape[0] == 2
+            and observed_depthwise_shape[1] == 2
+            and observed_depthwise_shape[2] == 2
+            and observed_depthwise_shape[3] == 2
+            and observed_pointwise_shape.length() == 4
+            and observed_pointwise_shape[0] == 2
+            and observed_pointwise_shape[1] == 2
+            and observed_pointwise_shape[2] == 2
+            and observed_pointwise_shape[3] == 2
+            and observed_residual_shape.length() == 4
+            and observed_residual_shape[0] == 2
+            and observed_residual_shape[1] == 2
+            and observed_residual_shape[2] == 2
+            and observed_residual_shape[3] == 2
+            and observed_pool_shape.length() == 4
+            and observed_pool_shape[0] == 2
+            and observed_pool_shape[1] == 2
+            and observed_pool_shape[2] == 1
+            and observed_pool_shape[3] == 1
+            and observed_feature_shape.length() == 2
+            and observed_feature_shape[0] == 2
+            and observed_feature_shape[1] == 2
+            and observed_residual_loss == 0.0
+            and observed_pool_loss == 0.0
+            and classifier_verified -> println("PYTORCH_NORMALIZED_RESIDUAL_CNN_CONSUMER_OK");
         true -> println("PYTORCH_NORMALIZED_RESIDUAL_CNN_CONSUMER_FAILED")
     }.

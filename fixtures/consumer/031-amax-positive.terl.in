@@ -1,6 +1,7 @@
 module pytorch_consumer.Main.
 
 import pytorch.Tensor.{amax, dim, dispose, from_float, item_float, shape, unsqueeze}.
+import std.collections.List.
 import std.io.Console.{println}.
 
 pub main(): Unit ->
@@ -17,7 +18,10 @@ pub main(): Unit ->
     dispose(vector);
     dispose(scalar);
     if {
-        source_rank == 2 and result_rank == 1 and result_shape.length() == 1 and
-            result_shape[0] == 1 and observed == 6.5 -> println("PYTORCH_AMAX_CONSUMER_OK");
+        source_rank == 2
+            and result_rank == 1
+            and result_shape.length() == 1
+            and result_shape[0] == 1
+            and observed == 6.5 -> println("PYTORCH_AMAX_CONSUMER_OK");
         true -> println("PYTORCH_AMAX_CONSUMER_FAILED")
     }.

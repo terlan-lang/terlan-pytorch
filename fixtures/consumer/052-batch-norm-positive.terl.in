@@ -1,6 +1,7 @@
 module pytorch_consumer.Main.
 
 import pytorch.Tensor.{amax, batch_norm, dispose, dtype, full_float, item_float, mse_loss, shape}.
+import std.collections.List.
 import std.io.Console.{println}.
 
 pub main(): Unit ->
@@ -9,10 +10,7 @@ pub main(): Unit ->
     let bias = full_float([2], 1.0);
     let running_mean = full_float([2], 1.0);
     let running_variance = full_float([2], 4.0);
-    let output = batch_norm(
-        input, weight, bias, running_mean, running_variance,
-        false, 0.1, 0.0, false
-    );
+    let output = batch_norm(input, weight, bias, running_mean, running_variance, false, 0.1, 0.0, false);
     let expected = full_float([1, 2, 2, 2], 3.0);
     let exact_loss = mse_loss(output, expected, 1);
     let output0 = amax(output, [0], false);
@@ -45,9 +43,14 @@ pub main(): Unit ->
     dispose(weight);
     dispose(input);
     if {
-        observed_shape.length() == 4 and observed_shape[0] == 1 and
-            observed_shape[1] == 2 and observed_shape[2] == 2 and observed_shape[3] == 2 and
-            observed_dtype == 7 and observed_output == 3.0 and observed_input == 3.0 and
-            observed_exact_loss == 0.0 -> println("PYTORCH_BATCH_NORM_CONSUMER_OK");
+        observed_shape.length() == 4
+            and observed_shape[0] == 1
+            and observed_shape[1] == 2
+            and observed_shape[2] == 2
+            and observed_shape[3] == 2
+            and observed_dtype == 7
+            and observed_output == 3.0
+            and observed_input == 3.0
+            and observed_exact_loss == 0.0 -> println("PYTORCH_BATCH_NORM_CONSUMER_OK");
         true -> println("PYTORCH_BATCH_NORM_CONSUMER_FAILED")
     }.

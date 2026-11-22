@@ -217,9 +217,13 @@ make ndarray-interop-check \
 
 The package manifest declares `terlan-ndarray` as an ordinary Terlan
 dependency, and the immutable-consumer gate resolves and locks that dependency
-without either source checkout remaining available. The release gate also
-builds the current ndarray helper and proves that an ndarray matrix
-multiplication result can be imported and consumed as an independently owned
+without either source checkout remaining available. The consumer runner clears
+PyTorch and ndarray helper overrides so cached packages must provide their own
+native helpers. Scenarios share incremental compiler output within the
+temporary workspace, run in separate processes, and check their own output
+contracts. All scenario failures are collected before the gate fails.
+The release gate also builds the current ndarray helper and proves that an
+ndarray matrix multiplication result can be imported and consumed as an independently owned
 PyTorch tensor. PyTorch does not depend on Polars; its runtime ndarray boundary
 remains the versioned, pointer-free TNXP value contract.
 

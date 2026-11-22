@@ -1,7 +1,28 @@
 module pytorch_consumer.Main.
 
-import pytorch.Tensor.{amax, dispose, dtype, embedding, from_ints, full_float, item, item_float, mse_loss, numel, shape}.
+import pytorch.Tensor.{amax, dispose, dispose_scalar, dtype, embedding, from_ints, full_float, item as item_scalar, item_float, mse_loss, numel, scalar_to_int, shape}.
+import std.collections.List.
+import std.core.Result.{Err, Ok}.
 import std.io.Console.{println}.
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 pub main(): Unit ->
     let weight = full_float([3, 2], 2.0);
@@ -32,8 +53,14 @@ pub main(): Unit ->
     dispose(indices);
     dispose(weight);
     if {
-        observed_shape.length() == 2 and observed_shape[0] == 2 and observed_shape[1] == 2 and
-            observed_numel == 4 and observed_dtype == 7 and observed_output == 2.0 and
-            observed_weight == 2.0 and observed_index == 2 and observed_exact_loss == 0.0 -> println("PYTORCH_EMBEDDING_CONSUMER_OK");
+        observed_shape.length() == 2
+            and observed_shape[0] == 2
+            and observed_shape[1] == 2
+            and observed_numel == 4
+            and observed_dtype == 7
+            and observed_output == 2.0
+            and observed_weight == 2.0
+            and observed_index == 2
+            and observed_exact_loss == 0.0 -> println("PYTORCH_EMBEDDING_CONSUMER_OK");
         true -> println("PYTORCH_EMBEDDING_CONSUMER_FAILED")
     }.

@@ -1,7 +1,28 @@
 module pytorch_consumer.Main.
 
-import pytorch.Tensor.{Tensor, add, amax, argmax, cross_entropy_loss, dispose, dtype, embedding, from_floats, from_ints, full_float, gelu, item, item_float, layer_norm, matmul, mse_loss, multiply, shape, softmax, transpose, unsqueeze}.
+import pytorch.Tensor.{Tensor, add, amax, argmax, cross_entropy_loss, dispose, dispose_scalar, dtype, embedding, from_floats, from_ints, full_float, gelu, item as item_scalar, item_float, layer_norm, matmul, mse_loss, multiply, scalar_to_int, shape, softmax, transpose, unsqueeze}.
+import std.collections.List.
+import std.core.Result.{Err, Ok}.
 import std.io.Console.{println}.
+import std.vm.Process.{exit_reason, fail}.
+
+import type pytorch.Tensor.
+
+/**
+ * Reads an exact integer and releases the owned Scalar before returning.
+ */
+item(tensor: pytorch.Tensor.Tensor): Int ->
+    let scalar = item_scalar(tensor);
+    let converted = scalar_to_int(scalar);
+    let _disposed = dispose_scalar(scalar);
+    when {
+        Ok(value) <- converted
+    } else {
+        Err(_reason) ->
+            let _failed = fail(exit_reason(1));
+            0
+    };
+    value.
 
 pub encoder_attention(
     input: Tensor,
@@ -9,11 +30,9 @@ pub encoder_attention(
     normalization_bias: Tensor,
     key_dimension0: Int,
     key_dimension1: Int,
-    probability_dimension: Int
+    probability_dimension: Int,
 ): Tensor ->
-    let normalized = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let normalized = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
     let query_weight = full_float([2, 2], 0.0);
     let key_weight = full_float([2, 2], 0.0);
     let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
@@ -50,11 +69,9 @@ pub causal_encoder_attention(
     input: Tensor,
     normalization_weight: Tensor,
     normalization_bias: Tensor,
-    attention_mask: Tensor
+    attention_mask: Tensor,
 ): Tensor ->
-    let normalized = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let normalized = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
     let query_weight = full_float([2, 2], 0.0);
     let key_weight = full_float([2, 2], 0.0);
     let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
@@ -93,14 +110,10 @@ pub decoder_cross_attention(
     input: Tensor,
     memory: Tensor,
     normalization_weight: Tensor,
-    normalization_bias: Tensor
+    normalization_bias: Tensor,
 ): Tensor ->
-    let normalized_input = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
-    let normalized_memory = layer_norm(
-        memory, [2], normalization_weight, normalization_bias, 0.0, false
-    );
+    let normalized_input = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
+    let normalized_memory = layer_norm(memory, [2], normalization_weight, normalization_bias, 0.0, false);
     let query_weight = full_float([2, 2], 0.0);
     let key_weight = full_float([2, 2], 0.0);
     let value_weight = from_floats([1.0, 0.0, 0.0, 1.0], [2, 2]);
@@ -130,20 +143,18 @@ pub decoder_cross_attention(
     dispose(normalized_input);
     output.
 
-pub encoder_feed_forward(input: Tensor, normalization_weight: Tensor, normalization_bias: Tensor): Tensor ->
-    let normalized = layer_norm(
-        input, [2], normalization_weight, normalization_bias, 0.0, false
-    );
-    let expansion_weight = from_floats(
-        [1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]
-    );
+pub encoder_feed_forward(
+    input: Tensor,
+    normalization_weight: Tensor,
+    normalization_bias: Tensor,
+): Tensor ->
+    let normalized = layer_norm(input, [2], normalization_weight, normalization_bias, 0.0, false);
+    let expansion_weight = from_floats([1.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, -1.0], [2, 4]);
     let expansion_bias = full_float([4], 0.0);
     let expanded = matmul(normalized, expansion_weight);
     let biased_expansion = add(expanded, expansion_bias, 1.0);
     let activated = gelu(biased_expansion);
-    let projection_weight = from_floats(
-        [1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]
-    );
+    let projection_weight = from_floats([1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0], [4, 2]);
     let projection_bias = full_float([2], 0.0);
     let projected = matmul(activated, projection_weight);
     let biased_projection = add(projected, projection_bias, 1.0);
@@ -175,8 +186,10 @@ pub embedding_is_exact(input: Tensor): Bool ->
     let observed_loss = item_float(loss);
     dispose(loss);
     dispose(expected);
-    observed_shape.length() == 2 and observed_shape[0] == 2 and
-        observed_shape[1] == 2 and observed_loss == 0.0.
+    observed_shape.length() == 2
+        and observed_shape[0] == 2
+        and observed_shape[1] == 2
+        and observed_loss == 0.0.
 
 pub report_token_transformer_success(): Unit ->
     println("PYTORCH_ENCODER_CLASSIFIER_CONSUMER_OK");
@@ -193,12 +206,8 @@ pub unbatched_token_transformer_is_correct(): Bool ->
     let embedding_verified = embedding_is_exact(input);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let attention_residual = encoder_attention(
-        input, normalization_weight, normalization_bias, 0, 1, 1
-    );
-    let encoder_output = encoder_feed_forward(
-        attention_residual, normalization_weight, normalization_bias
-    );
+    let attention_residual = encoder_attention(input, normalization_weight, normalization_bias, 0, 1, 1);
+    let encoder_output = encoder_feed_forward(attention_residual, normalization_weight, normalization_bias);
     let pooled = amax(encoder_output, [0], false);
     let batched = unsqueeze(pooled, 0);
     let classifier_weight = full_float([2, 2], 1.0);
@@ -244,16 +253,25 @@ pub unbatched_token_transformer_is_correct(): Bool ->
     dispose(normalization_bias);
     dispose(normalization_weight);
     dispose(input);
-    embedding_verified and observed_encoder_shape.length() == 2 and
-        observed_encoder_shape[0] == 2 and observed_encoder_shape[1] == 2 and
-        observed_pooled_shape.length() == 1 and observed_pooled_shape[0] == 2 and
-        observed_probability_shape.length() == 2 and
-        observed_probability_shape[0] == 1 and observed_probability_shape[1] == 2 and
-        observed_prediction_shape.length() == 1 and observed_prediction_shape[0] == 1 and
-        observed_prediction_dtype == 4 and observed_prediction == 0 and
-        observed_probability == 0.5 and observed_probability_loss == 0.0 and
-        observed_classification_loss > 0.69 and observed_classification_loss < 0.70 and
-        observed_pooled > 5.84 and observed_pooled < 5.85.
+    embedding_verified
+        and observed_encoder_shape.length() == 2
+        and observed_encoder_shape[0] == 2
+        and observed_encoder_shape[1] == 2
+        and observed_pooled_shape.length() == 1
+        and observed_pooled_shape[0] == 2
+        and observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 1
+        and observed_probability_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 1
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_probability == 0.5
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7
+        and observed_pooled > 5.84
+        and observed_pooled < 5.85.
 
 pub embed_batched_tokens(): Tensor ->
     let embedding_weight = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
@@ -264,17 +282,17 @@ pub embed_batched_tokens(): Tensor ->
     output.
 
 pub batched_embedding_is_exact(input: Tensor): Bool ->
-    let expected = from_floats(
-        [1.0, 3.0, 4.0, 2.0, 4.0, 2.0, 1.0, 3.0], [2, 2, 2]
-    );
+    let expected = from_floats([1.0, 3.0, 4.0, 2.0, 4.0, 2.0, 1.0, 3.0], [2, 2, 2]);
     let loss = mse_loss(input, expected, 1);
     let observed_shape = shape(input);
     let observed_loss = item_float(loss);
     dispose(loss);
     dispose(expected);
-    observed_shape.length() == 3 and observed_shape[0] == 2 and
-        observed_shape[1] == 2 and observed_shape[2] == 2 and
-        observed_loss == 0.0.
+    observed_shape.length() == 3
+        and observed_shape[0] == 2
+        and observed_shape[1] == 2
+        and observed_shape[2] == 2
+        and observed_loss == 0.0.
 
 pub batched_classifier_is_correct(encoder_output: Tensor): Bool ->
     let pooled = amax(encoder_output, [1], false);
@@ -308,32 +326,41 @@ pub batched_classifier_is_correct(encoder_output: Tensor): Bool ->
     dispose(classifier_bias);
     dispose(classifier_weight);
     dispose(pooled);
-    observed_pooled_shape.length() == 2 and observed_pooled_shape[0] == 2 and
-        observed_pooled_shape[1] == 2 and observed_probability_shape.length() == 2 and
-        observed_probability_shape[0] == 2 and observed_probability_shape[1] == 2 and
-        observed_prediction_shape.length() == 1 and observed_prediction_shape[0] == 2 and
-        observed_prediction_dtype == 4 and observed_prediction == 0 and
-        observed_probability_loss == 0.0 and observed_classification_loss > 0.69 and
-        observed_classification_loss < 0.70.
+    observed_pooled_shape.length() == 2
+        and observed_pooled_shape[0] == 2
+        and observed_pooled_shape[1] == 2
+        and observed_probability_shape.length() == 2
+        and observed_probability_shape[0] == 2
+        and observed_probability_shape[1] == 2
+        and observed_prediction_shape.length() == 1
+        and observed_prediction_shape[0] == 2
+        and observed_prediction_dtype == 4
+        and observed_prediction == 0
+        and observed_probability_loss == 0.0
+        and observed_classification_loss > 0.69
+        and observed_classification_loss < 0.7.
 
 pub batched_token_transformer_is_correct(): Bool ->
     let input = embed_batched_tokens();
     let embedding_verified = batched_embedding_is_exact(input);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let attention_residual = encoder_attention(
-        input, normalization_weight, normalization_bias, 1, 2, 2
-    );
-    let encoder_output = encoder_feed_forward(
-        attention_residual, normalization_weight, normalization_bias
-    );
-    let expected_encoder = from_floats(
-        [
-            1.8413447461, 4.8413447461, 5.8413447461, 2.8413447461,
-            5.8413447461, 2.8413447461, 1.8413447461, 4.8413447461
-        ],
-        [2, 2, 2]
-    );
+    let attention_residual = encoder_attention(input, normalization_weight, normalization_bias, 1, 2, 2);
+    let encoder_output = encoder_feed_forward(attention_residual, normalization_weight, normalization_bias);
+    let expected_encoder =
+        from_floats(
+            [
+                1.8413447461,
+                4.8413447461,
+                5.8413447461,
+                2.8413447461,
+                5.8413447461,
+                2.8413447461,
+                1.8413447461,
+                4.8413447461,
+            ],
+            [2, 2, 2],
+        );
     let encoder_loss = mse_loss(encoder_output, expected_encoder, 1);
     let observed_encoder_shape = shape(encoder_output);
     let observed_encoder_loss = item_float(encoder_loss);
@@ -345,34 +372,36 @@ pub batched_token_transformer_is_correct(): Bool ->
     dispose(normalization_bias);
     dispose(normalization_weight);
     dispose(input);
-    embedding_verified and observed_encoder_shape.length() == 3 and
-        observed_encoder_shape[0] == 2 and observed_encoder_shape[1] == 2 and
-        observed_encoder_shape[2] == 2 and observed_encoder_loss < 0.0000001 and
-        classifier_verified.
+    embedding_verified
+        and observed_encoder_shape.length() == 3
+        and observed_encoder_shape[0] == 2
+        and observed_encoder_shape[1] == 2
+        and observed_encoder_shape[2] == 2
+        and observed_encoder_loss < 1e-7
+        and classifier_verified.
 
 pub stacked_batched_transformer_is_correct(): Bool ->
     let input = embed_batched_tokens();
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let first_attention = encoder_attention(
-        input, normalization_weight, normalization_bias, 1, 2, 2
-    );
-    let first_encoder = encoder_feed_forward(
-        first_attention, normalization_weight, normalization_bias
-    );
-    let second_attention = encoder_attention(
-        first_encoder, normalization_weight, normalization_bias, 1, 2, 2
-    );
-    let second_encoder = encoder_feed_forward(
-        second_attention, normalization_weight, normalization_bias
-    );
-    let expected_encoder = from_floats(
-        [
-            2.6826894921, 6.6826894921, 7.6826894921, 3.6826894921,
-            7.6826894921, 3.6826894921, 2.6826894921, 6.6826894921
-        ],
-        [2, 2, 2]
-    );
+    let first_attention = encoder_attention(input, normalization_weight, normalization_bias, 1, 2, 2);
+    let first_encoder = encoder_feed_forward(first_attention, normalization_weight, normalization_bias);
+    let second_attention = encoder_attention(first_encoder, normalization_weight, normalization_bias, 1, 2, 2);
+    let second_encoder = encoder_feed_forward(second_attention, normalization_weight, normalization_bias);
+    let expected_encoder =
+        from_floats(
+            [
+                2.6826894921,
+                6.6826894921,
+                7.6826894921,
+                3.6826894921,
+                7.6826894921,
+                3.6826894921,
+                2.6826894921,
+                6.6826894921,
+            ],
+            [2, 2, 2],
+        );
     let encoder_loss = mse_loss(second_encoder, expected_encoder, 1);
     let observed_first_shape = shape(first_encoder);
     let observed_second_shape = shape(second_encoder);
@@ -387,34 +416,40 @@ pub stacked_batched_transformer_is_correct(): Bool ->
     dispose(normalization_bias);
     dispose(normalization_weight);
     dispose(input);
-    observed_first_shape.length() == 3 and observed_first_shape[0] == 2 and
-        observed_first_shape[1] == 2 and observed_first_shape[2] == 2 and
-        observed_second_shape.length() == 3 and observed_second_shape[0] == 2 and
-        observed_second_shape[1] == 2 and observed_second_shape[2] == 2 and
-        observed_encoder_loss < 0.0000001 and classifier_verified.
+    observed_first_shape.length() == 3
+        and observed_first_shape[0] == 2
+        and observed_first_shape[1] == 2
+        and observed_first_shape[2] == 2
+        and observed_second_shape.length() == 3
+        and observed_second_shape[0] == 2
+        and observed_second_shape[1] == 2
+        and observed_second_shape[2] == 2
+        and observed_encoder_loss < 1e-7
+        and classifier_verified.
 
 pub causal_batched_transformer_is_correct(): Bool ->
     let input = embed_batched_tokens();
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
     let attention_mask = from_floats([0.0, -1000.0, 0.0, 0.0], [2, 2]);
-    let attention_residual = causal_encoder_attention(
-        input, normalization_weight, normalization_bias, attention_mask
-    );
-    let expected_residual = from_floats(
-        [1.0, 5.0, 5.0, 3.0, 6.0, 2.0, 2.0, 4.0], [2, 2, 2]
-    );
+    let attention_residual = causal_encoder_attention(input, normalization_weight, normalization_bias, attention_mask);
+    let expected_residual = from_floats([1.0, 5.0, 5.0, 3.0, 6.0, 2.0, 2.0, 4.0], [2, 2, 2]);
     let residual_loss = mse_loss(attention_residual, expected_residual, 1);
-    let encoder_output = encoder_feed_forward(
-        attention_residual, normalization_weight, normalization_bias
-    );
-    let expected_encoder = from_floats(
-        [
-            0.8413447461, 5.8413447461, 5.8413447461, 2.8413447461,
-            6.8413447461, 1.8413447461, 1.8413447461, 4.8413447461
-        ],
-        [2, 2, 2]
-    );
+    let encoder_output = encoder_feed_forward(attention_residual, normalization_weight, normalization_bias);
+    let expected_encoder =
+        from_floats(
+            [
+                0.8413447461,
+                5.8413447461,
+                5.8413447461,
+                2.8413447461,
+                6.8413447461,
+                1.8413447461,
+                1.8413447461,
+                4.8413447461,
+            ],
+            [2, 2, 2],
+        );
     let encoder_loss = mse_loss(encoder_output, expected_encoder, 1);
     let observed_residual_shape = shape(attention_residual);
     let observed_encoder_shape = shape(encoder_output);
@@ -431,46 +466,54 @@ pub causal_batched_transformer_is_correct(): Bool ->
     dispose(normalization_bias);
     dispose(normalization_weight);
     dispose(input);
-    observed_residual_shape.length() == 3 and observed_residual_shape[0] == 2 and
-        observed_residual_shape[1] == 2 and observed_residual_shape[2] == 2 and
-        observed_encoder_shape.length() == 3 and observed_encoder_shape[0] == 2 and
-        observed_encoder_shape[1] == 2 and observed_encoder_shape[2] == 2 and
-        observed_residual_loss == 0.0 and observed_encoder_loss < 0.0000001 and
-        classifier_verified.
+    observed_residual_shape.length() == 3
+        and observed_residual_shape[0] == 2
+        and observed_residual_shape[1] == 2
+        and observed_residual_shape[2] == 2
+        and observed_encoder_shape.length() == 3
+        and observed_encoder_shape[0] == 2
+        and observed_encoder_shape[1] == 2
+        and observed_encoder_shape[2] == 2
+        and observed_residual_loss == 0.0
+        and observed_encoder_loss < 1e-7
+        and classifier_verified.
 
 pub cross_attention_transformer_is_correct(): Bool ->
-    let decoder_input = from_floats(
-        [1.0, 3.0, 2.0, 5.0, 3.0, 1.0, 5.0, 2.0], [2, 2, 2]
-    );
-    let memory = from_floats(
-        [0.0, 2.0, 0.0, 2.0, 2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 2.0],
-        [2, 3, 2]
-    );
+    let decoder_input = from_floats([1.0, 3.0, 2.0, 5.0, 3.0, 1.0, 5.0, 2.0], [2, 2, 2]);
+    let memory = from_floats([0.0, 2.0, 0.0, 2.0, 2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 2.0], [2, 3, 2]);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
-    let attention_residual = decoder_cross_attention(
-        decoder_input, memory, normalization_weight, normalization_bias
-    );
-    let expected_residual = from_floats(
-        [
-            0.6666666666666667, 3.3333333333333335,
-            1.6666666666666667, 5.333333333333333,
-            3.3333333333333335, 0.6666666666666667,
-            5.333333333333333, 1.6666666666666667
-        ],
-        [2, 2, 2]
-    );
+    let attention_residual = decoder_cross_attention(decoder_input, memory, normalization_weight, normalization_bias);
+    let expected_residual =
+        from_floats(
+            [
+                0.6666666666666667,
+                3.3333333333333335,
+                1.6666666666666667,
+                5.333333333333333,
+                3.3333333333333335,
+                0.6666666666666667,
+                5.333333333333333,
+                1.6666666666666667,
+            ],
+            [2, 2, 2],
+        );
     let residual_loss = mse_loss(attention_residual, expected_residual, 1);
-    let encoder_output = encoder_feed_forward(
-        attention_residual, normalization_weight, normalization_bias
-    );
-    let expected_encoder = from_floats(
-        [
-            0.5080114128, 4.1746780794, 1.5080114128, 6.1746780794,
-            4.1746780794, 0.5080114128, 6.1746780794, 1.5080114128
-        ],
-        [2, 2, 2]
-    );
+    let encoder_output = encoder_feed_forward(attention_residual, normalization_weight, normalization_bias);
+    let expected_encoder =
+        from_floats(
+            [
+                0.5080114128,
+                4.1746780794,
+                1.5080114128,
+                6.1746780794,
+                4.1746780794,
+                0.5080114128,
+                6.1746780794,
+                1.5080114128,
+            ],
+            [2, 2, 2],
+        );
     let encoder_loss = mse_loss(encoder_output, expected_encoder, 1);
     let observed_residual_shape = shape(attention_residual);
     let observed_encoder_shape = shape(encoder_output);
@@ -487,56 +530,70 @@ pub cross_attention_transformer_is_correct(): Bool ->
     dispose(normalization_weight);
     dispose(memory);
     dispose(decoder_input);
-    observed_residual_shape.length() == 3 and observed_residual_shape[0] == 2 and
-        observed_residual_shape[1] == 2 and observed_residual_shape[2] == 2 and
-        observed_encoder_shape.length() == 3 and observed_encoder_shape[0] == 2 and
-        observed_encoder_shape[1] == 2 and observed_encoder_shape[2] == 2 and
-        observed_residual_loss < 0.0000001 and observed_encoder_loss < 0.0000001 and
-        classifier_verified.
+    observed_residual_shape.length() == 3
+        and observed_residual_shape[0] == 2
+        and observed_residual_shape[1] == 2
+        and observed_residual_shape[2] == 2
+        and observed_encoder_shape.length() == 3
+        and observed_encoder_shape[0] == 2
+        and observed_encoder_shape[1] == 2
+        and observed_encoder_shape[2] == 2
+        and observed_residual_loss < 1e-7
+        and observed_encoder_loss < 1e-7
+        and classifier_verified.
 
 pub causal_cross_attention_decoder_is_correct(): Bool ->
     let decoder_input = embed_batched_tokens();
-    let memory = from_floats(
-        [0.0, 2.0, 0.0, 2.0, 2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 2.0],
-        [2, 3, 2]
-    );
+    let memory = from_floats([0.0, 2.0, 0.0, 2.0, 2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 2.0], [2, 3, 2]);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
     let causal_mask = from_floats([0.0, -1000.0, 0.0, 0.0], [2, 2]);
-    let self_attention_residual = causal_encoder_attention(
-        decoder_input, normalization_weight, normalization_bias, causal_mask
-    );
-    let expected_self_attention_residual = from_floats(
-        [1.0, 5.0, 5.0, 3.0, 6.0, 2.0, 2.0, 4.0], [2, 2, 2]
-    );
-    let self_attention_loss = mse_loss(
-        self_attention_residual, expected_self_attention_residual, 1
-    );
-    let cross_attention_residual = decoder_cross_attention(
-        self_attention_residual, memory, normalization_weight, normalization_bias
-    );
-    let expected_cross_attention_residual = from_floats(
-        [
-            0.6666666666666667, 5.333333333333333,
-            4.666666666666667, 3.3333333333333335,
-            6.333333333333333, 1.6666666666666667,
-            2.3333333333333335, 3.6666666666666665
-        ],
-        [2, 2, 2]
-    );
-    let cross_attention_loss = mse_loss(
-        cross_attention_residual, expected_cross_attention_residual, 1
-    );
-    let decoder_output = encoder_feed_forward(
-        cross_attention_residual, normalization_weight, normalization_bias
-    );
-    let expected_decoder_output = from_floats(
-        [
-            0.5080114128, 6.1746780794, 5.5080114128, 3.1746780794,
-            7.1746780794, 1.5080114128, 2.1746780794, 4.5080114128
-        ],
-        [2, 2, 2]
-    );
+    let self_attention_residual =
+        causal_encoder_attention(
+            decoder_input,
+            normalization_weight,
+            normalization_bias,
+            causal_mask,
+        );
+    let expected_self_attention_residual = from_floats([1.0, 5.0, 5.0, 3.0, 6.0, 2.0, 2.0, 4.0], [2, 2, 2]);
+    let self_attention_loss = mse_loss(self_attention_residual, expected_self_attention_residual, 1);
+    let cross_attention_residual =
+        decoder_cross_attention(
+            self_attention_residual,
+            memory,
+            normalization_weight,
+            normalization_bias,
+        );
+    let expected_cross_attention_residual =
+        from_floats(
+            [
+                0.6666666666666667,
+                5.333333333333333,
+                4.666666666666667,
+                3.3333333333333335,
+                6.333333333333333,
+                1.6666666666666667,
+                2.3333333333333335,
+                3.6666666666666665,
+            ],
+            [2, 2, 2],
+        );
+    let cross_attention_loss = mse_loss(cross_attention_residual, expected_cross_attention_residual, 1);
+    let decoder_output = encoder_feed_forward(cross_attention_residual, normalization_weight, normalization_bias);
+    let expected_decoder_output =
+        from_floats(
+            [
+                0.5080114128,
+                6.1746780794,
+                5.5080114128,
+                3.1746780794,
+                7.1746780794,
+                1.5080114128,
+                2.1746780794,
+                4.5080114128,
+            ],
+            [2, 2, 2],
+        );
     let decoder_loss = mse_loss(decoder_output, expected_decoder_output, 1);
     let observed_self_shape = shape(self_attention_residual);
     let observed_cross_shape = shape(cross_attention_residual);
@@ -559,54 +616,66 @@ pub causal_cross_attention_decoder_is_correct(): Bool ->
     dispose(normalization_weight);
     dispose(memory);
     dispose(decoder_input);
-    observed_self_shape.length() == 3 and observed_self_shape[0] == 2 and
-        observed_self_shape[1] == 2 and observed_self_shape[2] == 2 and
-        observed_cross_shape.length() == 3 and observed_cross_shape[0] == 2 and
-        observed_cross_shape[1] == 2 and observed_cross_shape[2] == 2 and
-        observed_decoder_shape.length() == 3 and observed_decoder_shape[0] == 2 and
-        observed_decoder_shape[1] == 2 and observed_decoder_shape[2] == 2 and
-        observed_self_loss == 0.0 and observed_cross_loss < 0.0000001 and
-        observed_decoder_loss < 0.0000001 and classifier_verified.
+    observed_self_shape.length() == 3
+        and observed_self_shape[0] == 2
+        and observed_self_shape[1] == 2
+        and observed_self_shape[2] == 2
+        and observed_cross_shape.length() == 3
+        and observed_cross_shape[0] == 2
+        and observed_cross_shape[1] == 2
+        and observed_cross_shape[2] == 2
+        and observed_decoder_shape.length() == 3
+        and observed_decoder_shape[0] == 2
+        and observed_decoder_shape[1] == 2
+        and observed_decoder_shape[2] == 2
+        and observed_self_loss == 0.0
+        and observed_cross_loss < 1e-7
+        and observed_decoder_loss < 1e-7
+        and classifier_verified.
 
 pub tokenized_seq2seq_is_correct(): Bool ->
     let source_embedding_weight = from_floats([0.0, 2.0, 2.0, 0.0], [2, 2]);
     let source_token_ids = from_ints([0, 0, 1, 1, 1, 0], [2, 3]);
-    let memory = embedding(
-        source_embedding_weight, source_token_ids, -1, false, false
-    );
-    let expected_memory = from_floats(
-        [0.0, 2.0, 0.0, 2.0, 2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 2.0],
-        [2, 3, 2]
-    );
+    let memory = embedding(source_embedding_weight, source_token_ids, -1, false, false);
+    let expected_memory = from_floats([0.0, 2.0, 0.0, 2.0, 2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 2.0], [2, 3, 2]);
     let memory_loss = mse_loss(memory, expected_memory, 1);
     let target_embedding_weight = from_floats([1.0, 3.0, 4.0, 2.0], [2, 2]);
     let target_token_ids = from_ints([0, 1, 1, 0], [2, 2]);
-    let decoder_input = embedding(
-        target_embedding_weight, target_token_ids, -1, false, false
-    );
-    let expected_decoder_input = from_floats(
-        [1.0, 3.0, 4.0, 2.0, 4.0, 2.0, 1.0, 3.0], [2, 2, 2]
-    );
+    let decoder_input = embedding(target_embedding_weight, target_token_ids, -1, false, false);
+    let expected_decoder_input = from_floats([1.0, 3.0, 4.0, 2.0, 4.0, 2.0, 1.0, 3.0], [2, 2, 2]);
     let decoder_input_loss = mse_loss(decoder_input, expected_decoder_input, 1);
     let normalization_weight = full_float([2], 1.0);
     let normalization_bias = full_float([2], 0.0);
     let causal_mask = from_floats([0.0, -1000.0, 0.0, 0.0], [2, 2]);
-    let self_attention_residual = causal_encoder_attention(
-        decoder_input, normalization_weight, normalization_bias, causal_mask
-    );
-    let cross_attention_residual = decoder_cross_attention(
-        self_attention_residual, memory, normalization_weight, normalization_bias
-    );
-    let decoder_output = encoder_feed_forward(
-        cross_attention_residual, normalization_weight, normalization_bias
-    );
-    let expected_decoder_output = from_floats(
-        [
-            0.5080114128, 6.1746780794, 5.5080114128, 3.1746780794,
-            7.1746780794, 1.5080114128, 2.1746780794, 4.5080114128
-        ],
-        [2, 2, 2]
-    );
+    let self_attention_residual =
+        causal_encoder_attention(
+            decoder_input,
+            normalization_weight,
+            normalization_bias,
+            causal_mask,
+        );
+    let cross_attention_residual =
+        decoder_cross_attention(
+            self_attention_residual,
+            memory,
+            normalization_weight,
+            normalization_bias,
+        );
+    let decoder_output = encoder_feed_forward(cross_attention_residual, normalization_weight, normalization_bias);
+    let expected_decoder_output =
+        from_floats(
+            [
+                0.5080114128,
+                6.1746780794,
+                5.5080114128,
+                3.1746780794,
+                7.1746780794,
+                1.5080114128,
+                2.1746780794,
+                4.5080114128,
+            ],
+            [2, 2, 2],
+        );
     let decoder_loss = mse_loss(decoder_output, expected_decoder_output, 1);
     let observed_memory_shape = shape(memory);
     let observed_decoder_input_shape = shape(decoder_input);
@@ -633,14 +702,22 @@ pub tokenized_seq2seq_is_correct(): Bool ->
     dispose(memory);
     dispose(source_token_ids);
     dispose(source_embedding_weight);
-    observed_memory_shape.length() == 3 and observed_memory_shape[0] == 2 and
-        observed_memory_shape[1] == 3 and observed_memory_shape[2] == 2 and
-        observed_decoder_input_shape.length() == 3 and observed_decoder_input_shape[0] == 2 and
-        observed_decoder_input_shape[1] == 2 and observed_decoder_input_shape[2] == 2 and
-        observed_decoder_shape.length() == 3 and observed_decoder_shape[0] == 2 and
-        observed_decoder_shape[1] == 2 and observed_decoder_shape[2] == 2 and
-        observed_memory_loss == 0.0 and observed_decoder_input_loss == 0.0 and
-        observed_decoder_loss < 0.0000001 and classifier_verified.
+    observed_memory_shape.length() == 3
+        and observed_memory_shape[0] == 2
+        and observed_memory_shape[1] == 3
+        and observed_memory_shape[2] == 2
+        and observed_decoder_input_shape.length() == 3
+        and observed_decoder_input_shape[0] == 2
+        and observed_decoder_input_shape[1] == 2
+        and observed_decoder_input_shape[2] == 2
+        and observed_decoder_shape.length() == 3
+        and observed_decoder_shape[0] == 2
+        and observed_decoder_shape[1] == 2
+        and observed_decoder_shape[2] == 2
+        and observed_memory_loss == 0.0
+        and observed_decoder_input_loss == 0.0
+        and observed_decoder_loss < 1e-7
+        and classifier_verified.
 
 pub main(): Unit ->
     let unbatched_verified = unbatched_token_transformer_is_correct();
@@ -651,8 +728,12 @@ pub main(): Unit ->
     let decoder_verified = causal_cross_attention_decoder_is_correct();
     let seq2seq_verified = tokenized_seq2seq_is_correct();
     if {
-        unbatched_verified and batched_verified and stacked_verified and causal_verified and
-            cross_attention_verified and decoder_verified and seq2seq_verified ->
-            report_token_transformer_success();
+        unbatched_verified
+            and batched_verified
+            and stacked_verified
+            and causal_verified
+            and cross_attention_verified
+            and decoder_verified
+            and seq2seq_verified -> report_token_transformer_success();
         true -> println("PYTORCH_TOKENIZED_SEQ2SEQ_CONSUMER_FAILED")
     }.

@@ -1,6 +1,7 @@
 module pytorch_consumer.Main.
 
 import pytorch.Tensor.{amax, dim, dispose, dtype, full_float, item_float, numel, shape}.
+import std.collections.List.
 import std.io.Console.{println}.
 
 pub main(): Unit ->
@@ -16,8 +17,12 @@ pub main(): Unit ->
     dispose(row_maximum);
     dispose(tensor);
     if {
-        observed_rank == 2 and observed_numel == 6 and observed_shape.length() == 2 and
-            observed_shape[0] == 2 and observed_shape[1] == 3 and
-            observed_dtype == 7 and observed == 1.25 -> println("PYTORCH_FULL_CONSUMER_OK");
+        observed_rank == 2
+            and observed_numel == 6
+            and observed_shape.length() == 2
+            and observed_shape[0] == 2
+            and observed_shape[1] == 3
+            and observed_dtype == 7
+            and observed == 1.25 -> println("PYTORCH_FULL_CONSUMER_OK");
         true -> println("PYTORCH_FULL_CONSUMER_FAILED")
     }.
