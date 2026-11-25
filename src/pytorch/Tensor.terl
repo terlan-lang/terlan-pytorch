@@ -4,11 +4,13 @@
 module pytorch.Tensor.
 
 import std.core.Option.{Some}.
+import std.core.Result.{Err, Ok}.
 import std.core.String.{length, starts_with, utf8_slice}.
+import std.vm.Bytes.
 
 import type pytorch.CorrectionStatisticsPairNative.TensorPair.
 import type std.collections.List.
-import type std.core.{Option, Result}.
+import type std.core.{Error, Option, Result}.
 import type std.vm.Bytes.
 
 /**
@@ -459,7 +461,7 @@ pub mul_int(tensor: Tensor, scalar: Int): Tensor ->
  * Converts a scalar to an integer with contained errors.
  */
 @compiler.native {pytorch.cxx_migration.scalar.to_int}
-pub scalar_to_int(scalar: Scalar): Result[Int, std.core.Error] ->
+pub scalar_to_int(scalar: Scalar): Result[Int, Error] ->
     native.
 
 /**
@@ -664,6 +666,39 @@ pub from_array(packet: Bytes): Tensor ->
  */
 @compiler.native {pytorch.tensor.import_packet}
 pub from_packet(packet: Bytes): Tensor ->
+    native.
+
+/**
+ * Stable code for a rejected TNXP import, including allocation failures.
+ */
+pub type TensorPacketRejected.
+
+/**
+ * Recoverable TNXP import failure. No tensor ownership is transferred.
+ */
+pub struct TensorPacketError {
+    code: TensorPacketRejected,
+    message: String,
+}.
+
+/**
+ * Validates untrusted TNXP bytes and copies accepted data into an owned CPU
+ * tensor. Returns Err on malformed/unsupported packets or native import failure.
+ * Dispose a successful tensor explicitly. Input bytes remain caller-owned.
+ * This loads the bounded TNXP tensor format, not pickle or torch.save archives.
+ */
+pub try_from_packet(packet: Bytes): Result[Tensor, TensorPacketError] ->
+    if {
+        Bytes.length(packet) < 16 or Bytes.length(packet) > 16_777_216 -> Err(TensorPacketError {code: TensorPacketRejected, message: "TNXP packet size is invalid"});
+        true -> case try_from_packet_native(packet) {
+            Ok(tensor) -> Ok(tensor);
+            Err(error) ->
+                Err(TensorPacketError {code: TensorPacketRejected, message: error.message})
+        }
+    }.
+
+@compiler.native {pytorch.tensor.try_import_packet}
+try_from_packet_native(packet: Bytes): Result[Tensor, Error] ->
     native.
 
 /**

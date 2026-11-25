@@ -23,6 +23,22 @@ macro_rules! ffi_result {
     };
 }
 
+// A fallible import must return a domain error instead of a native trap.
+macro_rules! ffi_packet_result {
+    ($call:expr) => {
+        match $call {
+            Ok(value) => value,
+            Err(_) => return packet_rejected_reply(),
+        }
+    };
+}
+
+fn packet_rejected_reply() -> String {
+    format!("result_err {} {}",
+        STANDARD.encode("tensor_packet_rejected"),
+        STANDARD.encode("TNXP packet rejected or tensor allocation failed"))
+}
+
 fn main() {
     let mut worker = match Worker::new() {
         Ok(worker) => worker,
@@ -1324,6 +1340,21 @@ impl Worker {
                 let id = self.next_id;
                 self.handles.insert(id, HandleEntry { generation: 1, type_name: "pytorch.Tensor.Tensor", value: HandleValue::PytorchTensorTensor(value) });
                 format!("ok_handle {} {id} 1 {}", STANDARD.encode(self.owner.as_bytes()), STANDARD.encode("pytorch.Tensor.Tensor"))
+            }
+            "pytorch.tensor.try_import_packet" => {
+                let [Arg::Bytes(packet)] = request.args.as_slice() else {
+                    return protocol_error("invalid_arguments", "try_from_packet received invalid arguments");
+                };
+                // The C++ adapter validates before allocation and contains exceptions.
+                // Do not register ownership unless a non-null tensor was returned.
+                let value = ffi_packet_result!(ffi::import_tensor_packet(packet.as_slice()));
+                if value.is_null() {
+                    return packet_rejected_reply();
+                }
+                self.next_id += 1;
+                let id = self.next_id;
+                self.handles.insert(id, HandleEntry { generation: 1, type_name: "pytorch.Tensor.Tensor", value: HandleValue::PytorchTensorTensor(value) });
+                format!("result_ok_handle {} {id} 1 {}", STANDARD.encode(self.owner.as_bytes()), STANDARD.encode("pytorch.Tensor.Tensor"))
             }
             "pytorch.tensor.export_packet" => {
                 let [Arg::Handle(arg_0)] = request.args.as_slice() else {
@@ -51544,4 +51575,47 @@ fn protocol_error(code: &str, message: &str) -> String {
 }
 fn native_null_failure(default_message: &str) -> String {
     protocol_error("native_null_handle", default_message)
+}
+
+#[cfg(test)]
+mod packet_result_tests {
+    use super::*;
+
+    fn request(packet: Vec<u8>) -> Request {
+        Request { operation: "pytorch.tensor.try_import_packet".into(), args: vec![Arg::Bytes(packet)] }
+    }
+
+    #[test]
+    fn rejected_packets_leave_no_owned_handles_and_worker_recovers() {
+        let mut worker = Worker::new().unwrap();
+        let valid = vec![84, 78, 88, 80, 1, 1, 2, 64, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 64];
+        let mut invalid = vec![vec![], valid[..23].to_vec(), vec![0; 16 * 1024 * 1024 + 1]];
+        for (offset, value) in [(0, 0), (4, 2), (5, 2), (6, 255), (8, 2), (10, 2), (11, 1), (12, 33)] {
+            let mut packet = valid.clone();
+            packet[offset] = value;
+            invalid.push(packet);
+        }
+        // Rank-one layouts with unrepresentable dimensions or overflowed extents.
+        for (dimension, stride) in [(u64::MAX, 1_u64), (i64::MAX as u64, i64::MAX as u64)] {
+            let mut packet = valid[..16].to_vec();
+            packet[12] = 1;
+            packet.extend_from_slice(&dimension.to_le_bytes());
+            packet.extend_from_slice(&stride.to_le_bytes());
+            packet.extend_from_slice(&[0; 8]);
+            invalid.push(packet);
+        }
+        for packet in invalid {
+            let reply = worker.execute(request(packet));
+            assert!(reply.starts_with("result_err "), "{reply}");
+            assert!(worker.handles.is_empty());
+            assert_eq!(worker.next_id, 0);
+        }
+        let reply = worker.execute(request(valid));
+        assert!(reply.starts_with("result_ok_handle "), "{reply}");
+        assert_eq!(worker.handles.len(), 1);
+        let handle = HandleArg { owner: worker.owner.clone(), id: 1, generation: 1, type_name: "pytorch.Tensor.Tensor".into() };
+        let reply = worker.execute(Request { operation: "pytorch.tensor.dispose".into(), args: vec![Arg::Handle(handle)] });
+        assert_eq!(reply, "ok_unit");
+        assert!(worker.handles.is_empty());
+    }
 }

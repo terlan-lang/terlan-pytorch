@@ -1,0 +1,87 @@
+/**
+ * Sealed native executable regression; deliberately declares no error atoms.
+ */
+module packet_consumer.Main.
+
+import pytorch.Tensor.
+import std.core.Atom.
+import std.core.Result.{Err, Ok}.
+import std.io.Console.
+import std.vm.{Bytes, Process}.
+
+import type std.collections.List.
+import type std.vm.Bytes.
+
+rejected(packet: Bytes): Bool ->
+    case Tensor.try_from_packet(packet) {
+        Err(error) -> Atom.to_string(error.code) == "tensor_packet_rejected";
+        Ok(tensor) ->
+            let _disposed = Tensor.dispose(tensor);
+            false
+    }.
+
+reject_all(packets: List[Bytes]): Bool ->
+    case packets {
+        [] -> true;
+        [packet | rest] -> rejected(packet) and reject_all(rest)
+    }.
+
+replace_byte(packet: Bytes, index: Int, value: Int): Bytes ->
+    Bytes.concat(
+        Bytes.concat(Bytes.slice(packet, 0, index), Bytes.from_list([value])),
+        Bytes.slice(packet, index + 1, Bytes.length(packet) - index - 1),
+    ).
+
+double_bytes(value: Bytes, remaining: Int): Bytes ->
+    if {
+        remaining == 0 -> value;
+        true -> double_bytes(Bytes.concat(value, value), remaining - 1)
+    }.
+
+exercise(): Bool ->
+    let valid =
+        Bytes.from_list(
+            [84, 78, 88, 80, 1, 1, 2, 64, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 64],
+        );
+    let errors =
+        reject_all(
+            [
+                Bytes.from_list([]),
+                Bytes.slice(valid, 0, 15),
+                Bytes.slice(valid, 0, 23),
+                Bytes.concat(valid, Bytes.from_list([0])),
+                replace_byte(valid, 0, 0),
+                replace_byte(valid, 4, 2),
+                replace_byte(valid, 5, 2),
+                replace_byte(valid, 6, 255),
+                replace_byte(valid, 8, 2),
+                replace_byte(valid, 10, 2),
+                replace_byte(valid, 11, 1),
+                replace_byte(valid, 12, 33),
+                replace_byte(valid, 12, 1),
+            ],
+        );
+    let large_invalid = rejected(double_bytes(Bytes.from_list([0]), 21));
+    let success =
+        case Tensor.try_from_packet(valid) {
+            Err(_error) -> false;
+            Ok(tensor) ->
+                let snapshot = Tensor.to_packet(tensor);
+                let _disposed = Tensor.dispose(tensor);
+                case Tensor.try_from_packet(snapshot) {
+                    Err(_error) -> false;
+                    Ok(restored) ->
+                        let scalar = Tensor.item(restored);
+                        let correct = Tensor.scalar_to_float(scalar) == 3.5 and Tensor.shape(restored) == [];
+                        let _scalar = Tensor.dispose_scalar(scalar);
+                        let _tensor = Tensor.dispose(restored);
+                        correct
+                }
+        };
+    errors and large_invalid and success.
+
+pub main(): Unit ->
+    if {
+        exercise() -> Console.println("PYTORCH_TRY_PACKET_OK");
+        true -> Process.fail(Process.exit_reason(1))
+    }.

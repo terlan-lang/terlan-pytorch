@@ -1,7 +1,11 @@
 module pytorch_cxx.TensorPacketBehaviorTest.
 
-import pytorch.TensorPacketBehaviorSupport.{tensor_packet_contracts_on}.
+import pytorch.TensorPacketBehaviorSupport.{tensor_packet_contracts_on, try_tensor_packet_contracts}.
 
 @test
 pub generated_cxx_tensor_packet_contracts(): Bool ->
     tensor_packet_contracts_on("cpu", false).
+
+@test
+pub generated_cxx_try_tensor_packet_returns_typed_errors(): Bool ->
+    try_tensor_packet_contracts().

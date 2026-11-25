@@ -1,0 +1,7 @@
+
+[functions."pytorch.Tensor.try_from_packet_native"]
+operation = "pytorch.tensor.try_import_packet"
+arity = 1
+returns = "Result[Tensor, std.core.Error.Error]"
+blocking = "blocking"
+resource = "owned_handle"

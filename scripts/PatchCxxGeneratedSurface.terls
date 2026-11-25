@@ -126,8 +126,25 @@ copy_all(repository: String, generated: String, paths: List[String]): Bool ->
             copy_one(repository, generated, path) and copy_all(repository, generated, rest)
     }.
 
+patch_packet_metadata(generated: String, repository: String): Bool ->
+    let path = child(generated, "native/terlan-native.toml");
+    when {
+        Ok(source) <- File.read_text(path);
+        Ok(entry) <- File.read_text(child(repository, "bindings/cxx/tensor-packet-native.toml"))
+    } else {
+        _ -> false
+    };
+    if {
+        String.contains(source, "pytorch.tensor.try_import_packet") -> true;
+        true -> case File.write_text(path, String.append(source, entry)) {
+            Ok(Unit) -> true;
+            Err(_) -> false
+        }
+    }.
+
 execute(generated: String, repository: String): Bool ->
     copy_all(repository, generated, canonical_files())
+        and patch_packet_metadata(generated, repository)
         and patch_generated_exception_adapters(generated)
         and patch_generated_owned_adapters(generated)
         and patch_unique(generated).

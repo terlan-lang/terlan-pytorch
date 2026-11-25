@@ -188,6 +188,21 @@ remain outside the completed-module migration count. The generated CXX contract
 snapshot is the sole migration baseline; the historical C ABI manifest has
 been retired from the package and build path.
 
+For untrusted TNXP checkpoint bytes, use
+`Tensor.try_from_packet(bytes): Result[Tensor, TensorPacketError]`.
+`Ok(tensor)` transfers one independently owned CPU tensor; dispose it explicitly.
+`Err(error)` carries the stable `TensorPacketRejected` code and a diagnostic
+message, with no tensor handle created. Malformed/unsupported layouts and native
+allocation failures are recoverable. Packet lengths outside 16 bytes–16 MiB
+are rejected before native transport. The original `from_packet` and
+`from_array` retain their trapping compatibility behavior. TNXP is a tensor
+exchange format, not a pickle or `torch.save` archive loader.
+
+Run `make tensor-packet-check LIBTORCH=/path/to/libtorch` for malformed packet,
+sealed error-atom, size-limit, ownership, and recovery regressions. Generated
+packages receive the same fallible API and native operation through the reviewed
+compatibility patch and `bindings/cxx/tensor-packet-native.toml`.
+
 Report exact progress against both frozen PyTorch 2.13 inventories:
 
 ```sh

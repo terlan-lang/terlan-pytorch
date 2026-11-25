@@ -1,0 +1,552 @@
+{
+  "date": "2026-11-26",
+  "package": "terlan-pytorch",
+  "base_commit": "725dd4228c9433488ad08119759d549d03013583",
+  "source_sha256": {
+    "src/pytorch/Tensor.terl": "65fd308bed49928023607c472c4404f6fa7dcf2aad2a63b0cbdf6f0768f7d3fd",
+    "native/rust/src/bin/native_boundary_helper.rs": "d2b2e60a3db16e7f3f1a128098c3a3c40ddd01179f2ec75f5b6a717072125b76",
+    "native/terlan-native.toml": "1c9cf9490913f2c689bfef02f2cc64f0dbb907ba4f2988a3b05dbd6681eef447",
+    "bindings/cxx/tensor-packet-native.toml": "c439cc468b86f45dbdaeab1161606ea86dc11a7c7eda91f9649b1e8fe9baed10"
+  },
+  "compiler": {
+    "version": "0.0.10",
+    "source_revision": "8b40bcca5a47",
+    "target": "x86_64-unknown-linux-gnu",
+    "distribution": "https://github.com/terlan-lang/terlan/releases/tag/v0.0.10",
+    "archive_sha256": "f251afd1ffdb7aa6704df6786a9c4800daec6ac2c6485e7e7342defc286e3547",
+    "terlc_sha256": "2bc491fd8ff5b599c25a038f026ce6bb9ca87d83e8101b00853870ca7f07e75d"
+  },
+  "scope": "CPU native VM tests with real LibTorch and ndarray helpers; forced uncached execution",
+  "selection": {
+    "public_tests": "tests/pytorch/*Test.terl",
+    "cxx_tests": "tests/cxx/*BehaviorTest.terl",
+    "excluded": [
+      "TensorTest.terl (same exclusion as the existing CPU runner)",
+      "CudaTest.terl",
+      "*CudaBehaviorTest.terl"
+    ],
+    "staging": "Canonical src tree plus CXX BehaviorSupport modules; native and fixture directories refer to repository inputs",
+    "modules_per_group": 12,
+    "parallel_groups": 3
+  },
+  "tests_passed": 711,
+  "tests_failed": 0,
+  "groups": [
+    {
+      "group": "group-00",
+      "exit_code": 0,
+      "elapsed_seconds": 21.7,
+      "modules": [
+        "ActivationCompletionParityTest.terl",
+        "AdamTest.terl",
+        "AggregationParityTest.terl",
+        "AliasParityTest.terl",
+        "AtleastSequenceParityTest.terl",
+        "AttentionParityTest.terl",
+        "AutocastStateParityTest.terl",
+        "AutogradGradientParityTest.terl",
+        "AutogradStateParityTest.terl",
+        "AutogradTest.terl",
+        "BackendAvailabilityParityTest.terl",
+        "BernoulliParityTest.terl"
+      ],
+      "tests_passed": 26,
+      "log_sha256": "15838c92dfeb7c32c0f3395c1169deb6d746518978c7d75fa4cc54d2430e0526"
+    },
+    {
+      "group": "group-01",
+      "exit_code": 0,
+      "elapsed_seconds": 23.4,
+      "modules": [
+        "BinaryCrossEntropyCompletionParityTest.terl",
+        "BinaryMutationParityTest.terl",
+        "BinaryOutputParityTest.terl",
+        "BinaryParityTest.terl",
+        "BinaryScalarParityTest.terl",
+        "BinaryStorageParityTest.terl",
+        "ChalfParityTest.terl",
+        "ClampParityTest.terl",
+        "ComparisonScalarParityTest.terl",
+        "ConstructionTest.terl",
+        "ConvolutionBackwardParityTest.terl",
+        "ConvolutionParityTest.terl"
+      ],
+      "tests_passed": 51,
+      "log_sha256": "167419406401f7be0b7d1f5ce1bee918ea1df8f6c7b30130ef7481350734f3c3"
+    },
+    {
+      "group": "group-02",
+      "exit_code": 0,
+      "elapsed_seconds": 25.61,
+      "modules": [
+        "CorrectionStatisticsCompletionParityTest.terl",
+        "CovParityTest.terl",
+        "CreationCompletionParityTest.terl",
+        "CtcLossParityTest.terl",
+        "DLPackTest.terl",
+        "DefaultDtypeParityTest.terl",
+        "DenseDtypeParityTest.terl",
+        "DenseParityTest.terl",
+        "DeterminismParityTest.terl",
+        "DevicePlacementTest.terl",
+        "DispatcherTest.terl",
+        "DistributionInplaceParityTest.terl"
+      ],
+      "tests_passed": 79,
+      "log_sha256": "40eb29051a82f73c27088e4cbd05a8f2807970904105f199802a3c55ddf4cdd3"
+    },
+    {
+      "group": "group-03",
+      "exit_code": 0,
+      "elapsed_seconds": 23.75,
+      "modules": [
+        "DistributionParityTest.terl",
+        "DivisionParityTest.terl",
+        "DropoutCompletionParityTest.terl",
+        "DtypeAliasParityTest.terl",
+        "DtypeTest.terl",
+        "EinsumCxxParityTest.terl",
+        "EmbeddingParityTest.terl",
+        "EmptyPermutedParityTest.terl",
+        "ExtendedActivationCompletionParityTest.terl",
+        "FakeQuantizeParityTest.terl",
+        "FftOutParityTest.terl",
+        "FftParityTest.terl"
+      ],
+      "tests_passed": 25,
+      "log_sha256": "c0852c774769b7ba2d376dd4c4f90c3f010af4bf9882c8340a5c5025bd45f2e4"
+    },
+    {
+      "group": "group-04",
+      "exit_code": 0,
+      "elapsed_seconds": 28.27,
+      "modules": [
+        "FillParityTest.terl",
+        "FloorDivisionParityTest.terl",
+        "FlushDenormalParityTest.terl",
+        "FromFileParityTest.terl",
+        "FunctionalCompletionParityTest.terl",
+        "FunctionalParityTest.terl",
+        "FusedArithmeticParityTest.terl",
+        "GaussianNllLossParityTest.terl",
+        "GeneratorParityTest.terl",
+        "GeqrfOutParityTest.terl",
+        "GlobalRandomStateParityTest.terl",
+        "GluCompletionParityTest.terl"
+      ],
+      "tests_passed": 20,
+      "log_sha256": "4f887171692a11a9b0c21b3699488015ed351d11a9554a9e600c848de19b15fb"
+    },
+    {
+      "group": "group-05",
+      "exit_code": 0,
+      "elapsed_seconds": 27.06,
+      "modules": [
+        "GradientKernelsParityTest.terl",
+        "GruCellParityTest.terl",
+        "GumbelSoftmaxParityTest.terl",
+        "HashTensorParityTest.terl",
+        "HistogramParityTest.terl",
+        "IndexFillParityTest.terl",
+        "IndexMutationParityTest.terl",
+        "IndexTensorOptionalParityTest.terl",
+        "IndexingParityTest.terl",
+        "InferenceModeParityTest.terl",
+        "InstanceNormParityTest.terl",
+        "IntegrationCompletionParityTest.terl"
+      ],
+      "tests_passed": 38,
+      "log_sha256": "65adae7924f28425f2cbcf003995f52f55e9f2b4226bd451113f55b4135e79f7"
+    },
+    {
+      "group": "group-06",
+      "exit_code": 0,
+      "elapsed_seconds": 35.43,
+      "modules": [
+        "InterpolateParityTest.terl",
+        "IsPinnedParityTest.terl",
+        "LegacyAliasParityTest.terl",
+        "LerpParityTest.terl",
+        "LinalgOutToleranceParityTest.terl",
+        "LinalgScalarOutParityTest.terl",
+        "LinalgSingleParityTest.terl",
+        "LinalgTupleParityTest.terl",
+        "LinearStorageCompletionParityTest.terl",
+        "LocalResponseNormParityTest.terl",
+        "LogSigmoidParityTest.terl",
+        "LookupParityTest.terl"
+      ],
+      "tests_passed": 45,
+      "log_sha256": "2e7feabb8553a942b7c16fd0a06c63294bfc5b9ae4c8912a84cafa35da4a982f"
+    },
+    {
+      "group": "group-07",
+      "exit_code": 0,
+      "elapsed_seconds": 29.63,
+      "modules": [
+        "LossOutputCompletionParityTest.terl",
+        "LossParityTest.terl",
+        "LpPool1dParityTest.terl",
+        "LpPool23dParityTest.terl",
+        "LstmCellParityTest.terl",
+        "LuUnpackParityTest.terl",
+        "MatmulPrecisionParityTest.terl",
+        "MaxUnpool1dParityTest.terl",
+        "MultiLabelSoftMarginLossParityTest.terl",
+        "MultiMarginLossParityTest.terl",
+        "MultilabelMarginLossParityTest.terl",
+        "MultinomialParityTest.terl"
+      ],
+      "tests_passed": 18,
+      "log_sha256": "43281143b581cfd4691f37ee1fd04aa4fe9de9b8925133b70b1c1c9357251fde"
+    },
+    {
+      "group": "group-08",
+      "exit_code": 0,
+      "elapsed_seconds": 30.88,
+      "modules": [
+        "MultiplicationParityTest.terl",
+        "MutationAliasParityTest.terl",
+        "MutationCompletionParityTest.terl",
+        "NanStatisticsCxxParityTest.terl",
+        "NanToNumParityTest.terl",
+        "NanquantileParityTest.terl",
+        "NativeBatchNormBackwardParityTest.terl",
+        "NativeBatchNormParityTest.terl",
+        "NativeBoundaryTest.terl",
+        "NativeDropoutParityTest.terl",
+        "NativeGroupNormBackwardParityTest.terl",
+        "NativeGroupNormParityTest.terl"
+      ],
+      "tests_passed": 19,
+      "log_sha256": "f3b24f0f9e942d9e4c311890e1193b60f73d0a7155167e6a9363fde817ef568e"
+    },
+    {
+      "group": "group-09",
+      "exit_code": 0,
+      "elapsed_seconds": 25.53,
+      "modules": [
+        "NativeLayerNormBackwardParityTest.terl",
+        "NativeLayerNormParityTest.terl",
+        "NdarrayInteropTest.terl",
+        "NewCreationParityTest.terl",
+        "NewEmptyStridedParityTest.terl",
+        "NllLoss2dInternalParityTest.terl",
+        "NllLoss2dParityTest.terl",
+        "NllLossInternalParityTest.terl",
+        "NllLossNdInternalParityTest.terl",
+        "NllLossParityTest.terl",
+        "NonContiguousTest.terl",
+        "NonzeroNumpyParityTest.terl"
+      ],
+      "tests_passed": 18,
+      "log_sha256": "d9d28ad66265c8cf8695d4fc518d4334cef9f6516e36e5feb8a4f8c236a13680"
+    },
+    {
+      "group": "group-10",
+      "exit_code": 0,
+      "elapsed_seconds": 28.26,
+      "modules": [
+        "NonzeroStaticParityTest.terl",
+        "NormDimensionedCxxParityTest.terl",
+        "NormOutputParityTest.terl",
+        "NormalParityTest.terl",
+        "NumericalCompletionParityTest.terl",
+        "OptionalNumericsParityTest.terl",
+        "OptionalOutputTest.terl",
+        "OutputCompletionParityTest.terl",
+        "PaddingBackwardCompletionParityTest.terl",
+        "PaddingParityTest.terl",
+        "PoolingOutputParityTest.terl",
+        "PoolingParityTest.terl"
+      ],
+      "tests_passed": 24,
+      "log_sha256": "6f3f1730fb68a8f40678ce7dde979f34a18ab260baa2dee9d66cbbcea91e3cf0"
+    },
+    {
+      "group": "group-11",
+      "exit_code": 0,
+      "elapsed_seconds": 26.12,
+      "modules": [
+        "PpoDeviceParityTest.terl",
+        "PpoLossTest.terl",
+        "PpoMinibatchTest.terl",
+        "PpoSamplingTest.terl",
+        "PpoTensorOpsTest.terl",
+        "QuantileParityTest.terl",
+        "QuantizationInternalsParityTest.terl",
+        "QuantizationMetadataParityTest.terl",
+        "QuantizePerTensorParityTest.terl",
+        "QuantizedAllocationParityTest.terl",
+        "QuantizedInternalsParityTest.terl",
+        "RandomParityTest.terl"
+      ],
+      "tests_passed": 27,
+      "log_sha256": "a41d5f33de697967382f3cdd03def7df1df924d688fc4f9656ece55ec80f66c8"
+    },
+    {
+      "group": "group-12",
+      "exit_code": 0,
+      "elapsed_seconds": 24.86,
+      "modules": [
+        "RandpermParityTest.terl",
+        "RangeBehaviorTest.terl",
+        "RangeMetadataTest.terl",
+        "RangeParityTest.terl",
+        "ReadmeExampleTest.terl",
+        "RecurrentDataParityTest.terl",
+        "RecurrentSequenceParityTest.terl",
+        "RepeatInterleaveParityTest.terl",
+        "ResizeAsParityTest.terl",
+        "ResizeParityTest.terl",
+        "RmsNormParityTest.terl",
+        "RngStateParityTest.terl"
+      ],
+      "tests_passed": 18,
+      "log_sha256": "382f33df0ec8ba1f0104bd864f4820c7165823e57e190838041da3b7b6e8103a"
+    },
+    {
+      "group": "group-13",
+      "exit_code": 0,
+      "elapsed_seconds": 25.34,
+      "modules": [
+        "RnnReluCellParityTest.terl",
+        "RnnTanhCellParityTest.terl",
+        "RreluWithNoiseBackwardParityTest.terl",
+        "RreluWithNoiseFunctionalParityTest.terl",
+        "RreluWithNoiseValueParityTest.terl",
+        "ScalarTensorParityTest.terl",
+        "ScaledArithmeticParityTest.terl",
+        "ScatterParityTest.terl",
+        "SeedParityTest.terl",
+        "SegmentReduceParityTest.terl",
+        "SelectionParityTest.terl",
+        "SetDataParityTest.terl"
+      ],
+      "tests_passed": 20,
+      "log_sha256": "a962628a868b738dd6a8cba6f6b69a9bdf3bde5ff25942d887b9cb9d220d2f5f"
+    },
+    {
+      "group": "group-14",
+      "exit_code": 0,
+      "elapsed_seconds": 27.41,
+      "modules": [
+        "SgdTest.terl",
+        "ShapeCompletionParityTest.terl",
+        "ShapeGradientParityTest.terl",
+        "ShapeMutationParityTest.terl",
+        "ShapeParityTest.terl",
+        "ShapePartitionParityTest.terl",
+        "ShapeTransformParityTest.terl",
+        "SliceInverseParityTest.terl",
+        "SliceParityTest.terl",
+        "SlowConvolutionParityTest.terl",
+        "SparseMatmulParityTest.terl",
+        "SparseParityTest.terl"
+      ],
+      "tests_passed": 31,
+      "log_sha256": "278ef24b4c7587746a53cb3deddabfb93f283bb1cc65b2b3649c494085042f85"
+    },
+    {
+      "group": "group-15",
+      "exit_code": 0,
+      "elapsed_seconds": 20.57,
+      "modules": [
+        "SparsePublicAddmmParityTest.terl",
+        "SparsePublicSumParityTest.terl",
+        "SpatialParityTest.terl",
+        "SpecialOutParityTest.terl",
+        "SpecialParityTest.terl",
+        "SpecialScalarFamilyParityTest.terl",
+        "SpecialScalarParityTest.terl",
+        "SpecialTensorOutParityTest.terl",
+        "SpectralParityTest.terl",
+        "StatisticsParityTest.terl",
+        "StorageParityTest.terl",
+        "StridedParityTest.terl"
+      ],
+      "tests_passed": 68,
+      "log_sha256": "7d61ba82edd9be98de0a41a2f6a083d421783a366e79befed6c942cbca18a7e4"
+    },
+    {
+      "group": "group-16",
+      "exit_code": 0,
+      "elapsed_seconds": 16.51,
+      "modules": [
+        "SvdParityTest.terl",
+        "SymbolicConstraintsParityTest.terl",
+        "TensorJoiningParityTest.terl",
+        "TensorListOutputTest.terl",
+        "TensorListTransformsParityTest.terl",
+        "TensorMethodAliasParityTest.terl",
+        "TensorSparseAliasParityTest.terl",
+        "TensorToAliasParityTest.terl",
+        "TensorViewAliasParityTest.terl",
+        "ThnnConv2dParityTest.terl",
+        "ThreadingParityTest.terl",
+        "ToOtherParityTest.terl"
+      ],
+      "tests_passed": 16,
+      "log_sha256": "e551fc6f71532e207bf177bb88412e15efe7afb6d564aca5349fbd720b04290c"
+    },
+    {
+      "group": "group-17",
+      "exit_code": 0,
+      "elapsed_seconds": 18.36,
+      "modules": [
+        "ToPaddedTensorParityTest.terl",
+        "TrainingTest.terl",
+        "TriangularIndicesParityTest.terl",
+        "TriangularSolveOutParityTest.terl",
+        "TypeRelationsParityTest.terl",
+        "UnaryFamilyParityTest.terl",
+        "UnaryOutputCompletionTest.terl",
+        "UnaryParityTest.terl",
+        "UnaryResidualParityTest.terl",
+        "UnaryStorageParityTest.terl",
+        "UniqueParityTest.terl",
+        "UnravelIndexParityTest.terl"
+      ],
+      "tests_passed": 46,
+      "log_sha256": "ca1cf5bd62a651961bb09c2e270eba36fa56fb9f64da64f6ab8c900a7dee8421"
+    },
+    {
+      "group": "group-18",
+      "exit_code": 0,
+      "elapsed_seconds": 14.6,
+      "modules": [
+        "UpsampleBackward2dParityTest.terl",
+        "UpsampleBackwardParityTest.terl",
+        "UpsampleBicubic2dParityTest.terl",
+        "UpsampleBilinear2dParityTest.terl",
+        "UpsampleLinear1dParityTest.terl",
+        "UpsampleNearest1dParityTest.terl",
+        "UpsampleNearest23dParityTest.terl",
+        "UpsampleNearest2dParityTest.terl",
+        "UpsampleNearest3dParityTest.terl",
+        "UpsampleTrilinear3dParityTest.terl",
+        "UpsampleVectorParityTest.terl",
+        "ValueSelectingReductionBackwardParityTest.terl"
+      ],
+      "tests_passed": 18,
+      "log_sha256": "e2ee5c20e94e811cd2209531beeed9c12a5662809b3d3ce87072b5a537def39e"
+    },
+    {
+      "group": "group-19",
+      "exit_code": 0,
+      "elapsed_seconds": 15.66,
+      "modules": [
+        "AggregationNativeBehaviorTest.terl",
+        "BinaryBehaviorTest.terl",
+        "BinaryScalarBehaviorTest.terl",
+        "ClampNativeBehaviorTest.terl",
+        "VanderParityTest.terl",
+        "ViewCopyDtypeParityTest.terl",
+        "ViewDtypeParityTest.terl",
+        "ViewParityTest.terl",
+        "WarningStateParityTest.terl",
+        "WhereParityTest.terl",
+        "WindowParityTest.terl",
+        "XlogyParityTest.terl"
+      ],
+      "tests_passed": 23,
+      "log_sha256": "98ff28ac3890e4b48009785f6e7391152628ef041605a83597282d08e3369f47"
+    },
+    {
+      "group": "group-20",
+      "exit_code": 0,
+      "elapsed_seconds": 18.06,
+      "modules": [
+        "ConvolutionNativeBehaviorTest.terl",
+        "CorrectionStatisticsCompletionBehaviorTest.terl",
+        "CreationCompletionBehaviorTest.terl",
+        "FusedArithmeticNativeBehaviorTest.terl",
+        "LinearStorageCompletionBehaviorTest.terl",
+        "LookupBehaviorTest.terl",
+        "NumericalCompletionNativeBehaviorTest.terl",
+        "OutputCompletionBehaviorTest.terl",
+        "PoolingBehaviorTest.terl",
+        "RangeBehaviorTest.terl",
+        "RepeatInterleaveNativeBehaviorTest.terl",
+        "ScaledArithmeticNativeBehaviorTest.terl"
+      ],
+      "tests_passed": 18,
+      "log_sha256": "0476f07ccebd53a14ee64e5308bf81594043769484580188ffe01d683ffc2eb7"
+    },
+    {
+      "group": "group-21",
+      "exit_code": 0,
+      "elapsed_seconds": 21.32,
+      "modules": [
+        "ScatterBehaviorTest.terl",
+        "SelectionBehaviorTest.terl",
+        "ShapeBehaviorTest.terl",
+        "SparseBehaviorTest.terl",
+        "SpecialBehaviorTest.terl",
+        "SpecialScalarBehaviorTest.terl",
+        "StatisticsBehaviorTest.terl",
+        "TensorBehaviorTest.terl",
+        "TensorListTransformsBehaviorTest.terl",
+        "TensorPacketBehaviorTest.terl",
+        "TensorToAliasBehaviorTest.terl",
+        "TypeRelationsNativeBehaviorTest.terl"
+      ],
+      "tests_passed": 59,
+      "log_sha256": "c8a5224b04187a409fcfa43cf1fb39a33b9bf4a2e467b40cca4a8bd1be6dcccb"
+    },
+    {
+      "group": "group-22",
+      "exit_code": 0,
+      "elapsed_seconds": 14.2,
+      "modules": [
+        "UnaryBehaviorTest.terl",
+        "UnaryStorageBehaviorTest.terl",
+        "ViewBehaviorTest.terl",
+        "WindowNativeBehaviorTest.terl"
+      ],
+      "tests_passed": 4,
+      "log_sha256": "8e3aef1589b7756547decca7312adc993ec7c0b6e7154bfb9bafb6140a0f43f0"
+    }
+  ],
+  "additional_checks": [
+    {
+      "check": "pytorch-packet-consumer",
+      "exit_code": 0,
+      "success_marker": "PYTORCH_TRY_PACKET_OK",
+      "log_sha256": "19ca74bcc4b7203514cb37de23686a86935607caab1dcfbd97f6a50aad755480"
+    },
+    {
+      "check": "pytorch-native-packet",
+      "exit_code": 0,
+      "success_marker": "1 passed; 0 failed",
+      "log_sha256": "b6482fb19cd18dc997952f1575d81d67d3a961e85777d15137ad6c5667409bf3"
+    },
+    {
+      "check": "pytorch-exception-audit",
+      "exit_code": 0,
+      "success_marker": "CXX exception surface is fully Result-wrapped",
+      "log_sha256": "bcb804c2bac82814d97d54fb452ee502d843868adb1dc1758790e7763916cc40"
+    },
+    {
+      "check": "pytorch-source-ownership",
+      "exit_code": 0,
+      "success_marker": "canonical CXX source ownership is synchronized",
+      "log_sha256": "d83671ee84346d06584a51f66c323066fd287e24863d09c5d221fbabb91ffda2"
+    },
+    {
+      "check": "pytorch-generation",
+      "exit_code": 0,
+      "success_marker": "generated 121 native binding modules",
+      "log_sha256": "7f741f7c9e44527f4ba3152a19e8f81a154a63fcc8518526d61bd9d47cead272"
+    }
+  ],
+  "compilation_observation": {
+    "combined_test_invocation": "Stopped before execution; the same complete module selection subsequently passed in groups.",
+    "observed_elapsed_seconds": 241,
+    "observed_rss_kib": 4959104
+  },
+  "limits": [
+    "CUDA execution was not tested.",
+    "VM managed objects are capped at 16 MiB; oversized packet rejection was tested directly in the native worker, and a 2 MiB malformed packet was tested through VM chunk transport."
+  ]
+}

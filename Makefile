@@ -547,6 +547,7 @@ fetch-libtorch:
 	"$(TERLC)" run scripts/FetchLibTorch.terls
 
 release-check: fetch-libtorch
+	$(MAKE) tensor-packet-check LIBTORCH="$(PINNED_LIBTORCH)"
 	$(MAKE) cxx-check LIBTORCH="$(PINNED_LIBTORCH)"
 	$(MAKE) package-check LIBTORCH="$(PINNED_LIBTORCH)"
 	$(MAKE) ndarray-interop-check \
@@ -577,3 +578,12 @@ fixture-check: ndarray-dependency-check terlan-script-check
 clean:
 	@test -x "$(TERLC)" || { echo "missing terlc: $(TERLC)" >&2; exit 1; }
 	"$(TERLC)" run scripts/Clean.terls -- "$(CURDIR)"
+
+# Exercise typed packet rejection in a sealed native executable consumer.
+.PHONY: tensor-packet-check
+tensor-packet-check:
+	LD_LIBRARY_PATH="$(LIBTORCH)/lib:$${LD_LIBRARY_PATH:-}" LIBTORCH="$(LIBTORCH)" cargo test --manifest-path native/rust/Cargo.toml --bin native-boundary-helper
+	LIBTORCH="$(LIBTORCH)" cargo build --manifest-path native/rust/Cargo.toml --bin native-boundary-helper
+	LD_LIBRARY_PATH="$(LIBTORCH)/lib:$${LD_LIBRARY_PATH:-}" \
+	TERLAN_PYTORCH_NATIVE_BOUNDARY_HELPER_PATH="$(CURDIR)/native/rust/target/debug/native-boundary-helper" \
+		"$(TERLC)" run fixtures/packet-consumer --target terlan-vm

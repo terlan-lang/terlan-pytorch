@@ -1,0 +1,11 @@
+[package]
+name = "pytorch-packet-consumer"
+version = "0.0.0"
+namespace = "packet_consumer"
+
+[build]
+source_roots = ["src"]
+artifact = "terlan-vm"
+
+[dependencies]
+terlan-pytorch-cxx = { path = "../.." }

@@ -83,7 +83,8 @@ helper_calls_are_wrapped(lines: List[String], names: List[String]): Bool ->
         [line | rest] ->
             if {
                 String.contains(line, "ffi::") and String.contains(line, "(") -> if {
-                    String.contains(line, "ffi_result!(ffi::") -> helper_calls_are_wrapped(rest, names);
+                    String.contains(line, "ffi_result!(ffi::")
+                        or String.contains(line, "ffi_packet_result!(ffi::") -> helper_calls_are_wrapped(rest, names);
                     helper_line_matches_name(line, names) -> false;
                     true -> helper_calls_are_wrapped(rest, names)
                 };

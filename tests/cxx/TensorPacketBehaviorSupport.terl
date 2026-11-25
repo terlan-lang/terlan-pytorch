@@ -1,6 +1,7 @@
 module pytorch.TensorPacketBehaviorSupport.
 
-import pytorch.Tensor.{DType, dispose, dispose_scalar, dtype, dtype_code, from_array, from_packet, is_cpu, is_cuda, item, ones_device, scalar_to_float, shape, to_packet}.
+import pytorch.Tensor.{DType, TensorPacketRejected, dispose, dispose_scalar, dtype, dtype_code, from_array, from_packet, is_cpu, is_cuda, item, ones_device, scalar_to_float, shape, to_packet, try_from_packet}.
+import std.core.Result.{Err, Ok}.
 import std.vm.Bytes.{from_list}.
 
 /**
@@ -31,3 +32,30 @@ pub tensor_packet_contracts_on(device_name: String, expected_cuda: Bool): Bool -
             and not is_cuda(restored)
             and scalar_to_float(restored_scalar) == 1.0;
     (dispose_scalar(restored_scalar); dispose(restored); dispose_scalar(compatibility_scalar); dispose_scalar(imported_scalar); dispose(compatibility); dispose(imported); fixture_valid and source_device_valid and roundtrip_valid).
+
+/**
+ * Rejection is typed and does not prevent a later successful import.
+ */
+pub try_tensor_packet_contracts(): Bool ->
+    let rejected =
+        case try_from_packet(from_list([0, 0, 0, 0, 1, 1, 2, 64, 1, 0, 1, 0, 0, 0, 0, 0])) {
+            Err(error) -> error.code == TensorPacketRejected;
+            Ok(tensor) ->
+                let _disposed = dispose(tensor);
+                false
+        };
+    let restored =
+        case try_from_packet(
+            from_list(
+                [84, 78, 88, 80, 1, 1, 2, 64, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 64],
+            ),
+        ) {
+            Err(_error) -> false;
+            Ok(tensor) ->
+                let scalar = item(tensor);
+                let valid = scalar_to_float(scalar) == 3.5;
+                let _scalar = dispose_scalar(scalar);
+                let _tensor = dispose(tensor);
+                valid
+        };
+    rejected and restored.
