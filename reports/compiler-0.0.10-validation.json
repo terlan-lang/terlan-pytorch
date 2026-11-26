@@ -546,7 +546,7 @@
     "observed_rss_kib": 4959104
   },
   "limits": [
-    "CUDA execution was not tested.",
     "VM managed objects are capped at 16 MiB; oversized packet rejection was tested directly in the native worker, and a 2 MiB malformed packet was tested through VM chunk transport."
-  ]
+  ],
+  "cuda_follow_up_report": "compiler-0.0.10-cuda-validation.json"
 }

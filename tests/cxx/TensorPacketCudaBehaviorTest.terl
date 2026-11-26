@@ -1,7 +1,33 @@
 module pytorch_cxx.TensorPacketCudaBehaviorTest.
 
+import pytorch.Tensor.
 import pytorch.TensorPacketBehaviorSupport.{tensor_packet_contracts_on}.
+import std.core.Result.{Err, Ok}.
+
+import type pytorch.Tensor.DType.
 
 @test
 pub generated_cxx_tensor_packet_cuda_contracts(): Bool ->
     tensor_packet_contracts_on("cuda:0", true).
+
+@test
+pub generated_cxx_try_tensor_packet_restores_cuda_snapshot(): Bool ->
+    let source = Tensor.ones_device([2, 2], Tensor.dtype_code(DType.FLOAT64), 0, "cuda:0");
+    let on_cuda = Tensor.is_cuda(source);
+    let packet = Tensor.to_packet(source);
+    let _source = Tensor.dispose(source);
+    case Tensor.try_from_packet(packet) {
+        Err(_error) -> false;
+        Ok(restored) ->
+            let total = Tensor.sum(restored);
+            let scalar = Tensor.item(total);
+            let valid =
+                on_cuda
+                    and Tensor.is_cpu(restored)
+                    and Tensor.shape(restored) == [2, 2]
+                    and Tensor.scalar_to_float(scalar) == 4.0;
+            let _scalar = Tensor.dispose_scalar(scalar);
+            let _total = Tensor.dispose(total);
+            let _restored = Tensor.dispose(restored);
+            valid
+    }.
