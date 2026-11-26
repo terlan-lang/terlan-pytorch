@@ -1,0 +1,87 @@
+{
+  "date": "2026-11-26",
+  "package": "terlan-pytorch",
+  "base_commit": "fecf315f98621037ed5de5588cb290519ebbb371",
+  "build_script_sha256": "7ef3d75ee3cc0921b87acf86a4ddbf53e07675a3dfe44b2f5c3775a1f39fe1d9",
+  "platform": {
+    "target": "x86_64-linux-gnu",
+    "cxx": "GCC 11.4.0",
+    "libtorch": "2.13.0+cu129"
+  },
+  "policy": {
+    "default": "C++ debug information disabled",
+    "opt_in": "TERLAN_PYTORCH_CXX_DEBUG=1",
+    "cargo_rerun_tracks_environment": true,
+    "rust_debug_and_optimization_profiles": "unchanged"
+  },
+  "adapter_comparison": {
+    "source": "native/rust/cpp/terlan_mutation_adapters.cc",
+    "flags": "-O0 -ffunction-sections -fdata-sections -fPIC -gdwarf-4 -fno-omit-frame-pointer -m64 -std=c++17 -DTERLAN_LIBTORCH_CUDA, followed by -g or -g0",
+    "method": "Sequential single-run compilations with the same SDK, headers and compiler. Measurements are not statistical guarantees.",
+    "samples": [
+      {
+        "mode": "debug",
+        "exit_code": 0,
+        "object_bytes": 11899544,
+        "elapsed_seconds": 33.52,
+        "max_rss_kib": 1476852
+      },
+      {
+        "mode": "no-debug",
+        "exit_code": 0,
+        "object_bytes": 3702752,
+        "elapsed_seconds": 26.28,
+        "max_rss_kib": 1247696
+      }
+    ],
+    "disassembly": {
+      "tool": "objdump -d",
+      "ignored": "three-line file header",
+      "identical_disassembly": true
+    }
+  },
+  "helper_rebuild": {
+    "elapsed_seconds": 129.27,
+    "max_rss_kib": 1503468,
+    "scope": "All native C++ adapters rebuilt after build.rs changed; existing Cargo target and Rust dependencies retained. This is not an empty-Cargo-cache measurement."
+  },
+  "unchanged_helper_build": {
+    "elapsed_seconds": 0.18,
+    "max_rss_kib": 36276
+  },
+  "verification_compiler": {
+    "version": "0.0.10",
+    "source_revision": "8b40bcca5a47",
+    "target": "x86_64-unknown-linux-gnu",
+    "distribution": "https://github.com/terlan-lang/terlan/releases/tag/v0.0.10",
+    "archive_sha256": "f251afd1ffdb7aa6704df6786a9c4800daec6ac2c6485e7e7342defc286e3547",
+    "terlc_sha256": "2bc491fd8ff5b599c25a038f026ce6bb9ca87d83e8101b00853870ca7f07e75d"
+  },
+  "checks": [
+    {
+      "check": "packet-consumer.log",
+      "exit_code": 0,
+      "success_marker": "PYTORCH_TRY_PACKET_OK",
+      "log_sha256": "19ca74bcc4b7203514cb37de23686a86935607caab1dcfbd97f6a50aad755480"
+    },
+    {
+      "check": "cuda-tests.log",
+      "exit_code": 0,
+      "success_marker": "10 passed; 0 failed",
+      "log_sha256": "fe2f4dae5bc897a0f51ad89d87491d73e682de693152c6aad3429273eeff6e79"
+    },
+    {
+      "check": "cuda-packet-tests.log",
+      "exit_code": 0,
+      "success_marker": "2 passed; 0 failed",
+      "log_sha256": "5aaafd84f4a5bb1cacd900d10148be0b22134b446eb548fdac33e16c45dcaa24"
+    },
+    {
+      "check": "source-ownership.log",
+      "exit_code": 0,
+      "success_marker": "canonical CXX source ownership is synchronized",
+      "log_sha256": "d83671ee84346d06584a51f66c323066fd287e24863d09c5d221fbabb91ffda2"
+    }
+  ],
+  "remaining_cost": "LibTorch header parsing and CXX code generation still require substantial memory and time. Reuse cached helpers or build/package them before serving requests."
+}

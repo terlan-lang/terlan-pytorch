@@ -1,6 +1,16 @@
 fn main() {
     let root = std::path::PathBuf::from(std::env::var_os("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR"));
     let mut build = cxx_build::bridge(root.join("src/lib.rs"));
+    // Cargo's dev profile otherwise enables full DWARF for every generated
+    // adapter, multiplying the cost of parsing and emitting LibTorch templates.
+    // Keep source-level C++ debugging available without imposing it on consumers.
+    println!("cargo:rerun-if-env-changed=TERLAN_PYTORCH_CXX_DEBUG");
+    let cxx_debug = match std::env::var("TERLAN_PYTORCH_CXX_DEBUG").as_deref() {
+        Ok("1") => true,
+        Ok("0") | Err(std::env::VarError::NotPresent) => false,
+        _ => panic!("TERLAN_PYTORCH_CXX_DEBUG must be 0 or 1"),
+    };
+    build.debug(cxx_debug);
     build.include(&root);
     build.file(root.join("cpp/libtorch_metadata.cc"));
     build.file(root.join("cpp/terlan_tensor_packet.cc"));

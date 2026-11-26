@@ -230,6 +230,18 @@ make ndarray-interop-check \
   NDARRAY=/path/to/terlan-ndarray
 ```
 
+Cold native helper builds still parse the LibTorch headers and generated CXX
+adapters. C++ debug information is disabled by default to reduce construction
+time, peak compiler memory, and object size. Set `TERLAN_PYTORCH_CXX_DEBUG=1`
+when source-level debugging of the C++ adapters is needed; `0` restores the
+default. Cargo tracks this setting and rebuilds the adapters when it changes.
+Rust debug information and the selected optimization profile are unchanged.
+Reuse a Cargo target directory for repeated builds. CPU and CUDA SDKs should
+have separate target directories so switching SDKs does not repeatedly rebuild
+the same helper target.
+Single-run build measurements and validation are recorded in
+[`reports/native-helper-build-cost.json`](reports/native-helper-build-cost.json).
+
 The package manifest declares `terlan-ndarray` as an ordinary Terlan
 dependency, and the immutable-consumer gate resolves and locks that dependency
 without either source checkout remaining available. The consumer runner clears
