@@ -5,15 +5,21 @@
 #include <string>
 #include <vector>
 
-#include <torch/script.h>
 #include "rust/cxx.h"
 #include "libtorch_bindings.hpp"
+
+namespace torch::jit {
+struct Module;
+}
 
 namespace at::native {
 
 struct TorchScriptModel {
-  explicit TorchScriptModel(torch::jit::Module&& value) : module(std::move(value)) {}
-  torch::jit::Module module;
+  explicit TorchScriptModel(torch::jit::Module&& value);
+  ~TorchScriptModel();
+
+  // Keep JIT implementation headers out of every generated CXX adapter.
+  std::unique_ptr<torch::jit::Module> module;
 };
 
 std::unique_ptr<TorchScriptModel> tensor_load_torchscript(rust::Str path);

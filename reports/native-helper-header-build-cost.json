@@ -1,0 +1,94 @@
+{
+  "date": "2026-11-27",
+  "package": "terlan-pytorch",
+  "base_commit": "9fa1a8bfa57a14e499e338ee29a262c5b88db8f6",
+  "source_sha256": {
+    "native/rust/cpp/optimizer.cc": "d8fc912b4ebfe591c1f5a121f820f0b03470e83cfd962a851d5ae49dba2b8a5d",
+    "native/rust/cpp/tensor_ops.cc": "2f293f3b3a536529e63d338659ca78619f1343de24836467852690a3045fd9d6",
+    "native/rust/cpp/torchscript_compat.cc": "a40bcddc75df900c79957c1520bd6304dca3bfcca65dfb440f8dd700439e979d",
+    "native/rust/include/torchscript_compat.hpp": "4c5fa66b6d0f5f2bdbb76435342b21e7159267628ba91cea26f4ed909c55fd01",
+    "tests/pytorch/DispatcherTest.terl": "ef807d72438fbd949046a6d6eef61433022fe63ea06f62bcac8f64064d992bed"
+  },
+  "changes": [
+    "Hide torch::jit::Module behind a unique_ptr with an out-of-line destructor to isolate torch/script.h from shared adapters.",
+    "Replace torch/torch.h with specific autograd, gradient-mode, tensor and archive headers."
+  ],
+  "method": {
+    "tool": "/usr/bin/time",
+    "cargo_build_jobs": 2,
+    "profile": "dev; C++ debug information disabled by default",
+    "measurement_limitations": "Single-run wall times on a shared development machine; not statistical guarantees. max_rss_kib is the maximum RSS reported by GNU time, not aggregate simultaneous process memory. Fresh target builds still use downloaded SDKs and cached Cargo registry sources."
+  },
+  "cuda_native_rebuild": {
+    "libtorch": "2.13.0+cu129",
+    "elapsed_seconds": 97.54,
+    "max_rss_kib": 1211776,
+    "scope": "All native C++ adapters rebuilt with existing Rust dependencies retained.",
+    "baseline": {
+      "elapsed_seconds": 129.27,
+      "max_rss_kib": 1503468,
+      "scope": "All native C++ adapters rebuilt after build.rs changed; existing Cargo target and Rust dependencies retained. This is not an empty-Cargo-cache measurement."
+    },
+    "log_sha256": "20cc1efc49c04f85e742ef35769448e8b624c7195d9948413ae9f4a83c42c0a0"
+  },
+  "cpu_fresh_target_build": {
+    "libtorch": "2.13.0+cpu",
+    "elapsed_seconds": 118.48,
+    "max_rss_kib": 2451188,
+    "scope": "cargo build --offline --manifest-path native/rust/Cargo.toml --bin native-boundary-helper with an empty CARGO_TARGET_DIR, including Rust dependencies. This differs from the CUDA rebuild scope and is not a before/after comparison.",
+    "log_sha256": "b3f542219451aa0c757b903f4c176248f663dfef602dc75d115dcb85a3cc2f03"
+  },
+  "verification_compiler": {
+    "version": "0.0.10",
+    "source_revision": "8b40bcca5a47",
+    "target": "x86_64-unknown-linux-gnu",
+    "distribution": "https://github.com/terlan-lang/terlan/releases/tag/v0.0.10",
+    "archive_sha256": "f251afd1ffdb7aa6704df6786a9c4800daec6ac2c6485e7e7342defc286e3547",
+    "terlc_sha256": "2bc491fd8ff5b599c25a038f026ce6bb9ca87d83e8101b00853870ca7f07e75d"
+  },
+  "checks": [
+    {
+      "log": "regressions.log",
+      "exit_code": 0,
+      "log_sha256": "0840e605ef8202a4c711acbb54b7eb1bda89c10264d018c7596d4b4f8e8e44ea",
+      "modules": 9,
+      "passed": 82,
+      "failed": 0
+    },
+    {
+      "log": "cpu-regressions.log",
+      "exit_code": 0,
+      "log_sha256": "8b9941309179477092e38df5d0d054d27fcd76bb32e00a899703bdaffdb97397",
+      "modules": 8,
+      "passed": 72,
+      "failed": 0
+    },
+    {
+      "log": "packet-consumer.log",
+      "exit_code": 0,
+      "log_sha256": "19ca74bcc4b7203514cb37de23686a86935607caab1dcfbd97f6a50aad755480"
+    },
+    {
+      "log": "generate.log",
+      "exit_code": 0,
+      "log_sha256": "a3084d075597f50e086cb4e4a97cafa29b35c87057ae89742c84c498e68e18ce"
+    },
+    {
+      "log": "generation-patch.log",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "log": "source-ownership.log",
+      "exit_code": 0,
+      "log_sha256": "d83671ee84346d06584a51f66c323066fd287e24863d09c5d221fbabb91ffda2"
+    },
+    {
+      "log": "lint.log",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "regression_coverage": "TorchScript forward and disposal, optional/list tensor ownership, Adam and SGD checkpoint restoration, autograd, and CUDA. New test checks that TorchScript output outlives disposed model and input. CPU run excludes the ten CUDA tests.",
+  "remaining_cost": "Cold helper construction still requires substantial memory. Reuse or prebuild helpers for latency-sensitive consumers."
+}

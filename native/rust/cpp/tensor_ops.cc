@@ -9,7 +9,8 @@
 #include <ATen/ops/mse_loss_backward.h>
 #include <ATen/ops/multinomial.h>
 #include <libshm.h>
-#include <torch/torch.h>
+#include <ATen/core/grad_mode.h>
+#include <torch/csrc/autograd/autograd.h>
 
 namespace at::native {
 
@@ -1565,7 +1566,7 @@ at::Tensor tensor_sgd_step(const at::Tensor& tensor, double learning_rate) {
     throw std::invalid_argument("invalid SGD step");
   auto gradient = tensor.grad();
   if (!gradient.defined()) throw std::runtime_error("gradient is unavailable");
-  torch::NoGradGuard no_grad;
+  at::NoGradGuard no_grad;
   auto result = (tensor - learning_rate * gradient).detach();
   result.set_requires_grad(true);
   return result;

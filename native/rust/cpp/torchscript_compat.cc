@@ -1,9 +1,15 @@
 #include "torchscript_compat.hpp"
 
+#include <torch/script.h>
 #include <initializer_list>
 #include <stdexcept>
 
 namespace at::native {
+
+TorchScriptModel::TorchScriptModel(torch::jit::Module&& value)
+    : module(std::make_unique<torch::jit::Module>(std::move(value))) {}
+
+TorchScriptModel::~TorchScriptModel() = default;
 
 namespace {
 torch::jit::IValue forward(const TorchScriptModel& model,
@@ -11,7 +17,7 @@ torch::jit::IValue forward(const TorchScriptModel& model,
   // LibTorch's JIT forward mutates execution state despite the logical
   // immutable model contract exposed to Terlan; keep the resource handle
   // immutable while applying the library's required non-const call.
-  return const_cast<torch::jit::Module&>(model.module).forward(inputs);
+  return model.module->forward(inputs);
 }
 }
 

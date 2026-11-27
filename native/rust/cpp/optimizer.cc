@@ -6,7 +6,9 @@
 #include <string>
 #include <utility>
 
-#include <torch/torch.h>
+#include <ATen/core/grad_mode.h>
+#include <torch/serialize/archive.h>
+#include <torch/types.h>
 
 namespace at::native {
 namespace {
@@ -83,7 +85,7 @@ void adam_add_parameter(Adam& optimizer, const at::Tensor& parameter) {
 
 void adam_zero_grad(Adam& optimizer) {
   if (optimizer.cancelled) throw std::runtime_error("optimizer cancelled");
-  torch::NoGradGuard no_grad;
+  at::NoGradGuard no_grad;
   for (auto& parameter : optimizer.parameters)
     if (parameter.grad().defined()) parameter.mutable_grad().zero_();
 }
@@ -93,7 +95,7 @@ void adam_step(Adam& optimizer) {
   if (optimizer.parameters.empty()) throw std::runtime_error("optimizer has no parameters");
   for (const auto& parameter : optimizer.parameters)
     if (!parameter.grad().defined()) throw std::runtime_error("parameter gradient unavailable");
-  torch::NoGradGuard no_grad;
+  at::NoGradGuard no_grad;
   const std::int64_t next_step = optimizer.step + 1;
   if (optimizer.kind == Adam::Kind::Sgd) {
     for (std::size_t i = 0; i < optimizer.parameters.size(); ++i) {
@@ -194,7 +196,7 @@ void adam_restore(Adam& optimizer, rust::Slice<const std::uint8_t> checkpoint) {
         second_value.sizes() != target.sizes() || parameter.scalar_type() != target.scalar_type() ||
         first_value.scalar_type() != target.scalar_type() || second_value.scalar_type() != target.scalar_type())
       throw std::runtime_error("optimizer checkpoint shape mismatch");
-    torch::NoGradGuard no_grad;
+    at::NoGradGuard no_grad;
     target.copy_(parameter.to(target.device()));
     first.push_back(first_value.to(target.device()));
     second.push_back(second_value.to(target.device()));

@@ -239,8 +239,13 @@ Rust debug information and the selected optimization profile are unchanged.
 Reuse a Cargo target directory for repeated builds. CPU and CUDA SDKs should
 have separate target directories so switching SDKs does not repeatedly rebuild
 the same helper target.
-Single-run build measurements and validation are recorded in
-[`reports/native-helper-build-cost.json`](reports/native-helper-build-cost.json).
+TorchScript implementation headers are isolated in their implementation file,
+and optimizer/autograd adapters include only the APIs they use. Single-run
+build measurements and validation are recorded in
+[`reports/native-helper-build-cost.json`](reports/native-helper-build-cost.json)
+and [`reports/native-helper-header-build-cost.json`](reports/native-helper-header-build-cost.json).
+The latter distinguishes native rebuilds with cached Rust dependencies from a
+fresh Cargo target build; cold construction still requires substantial memory.
 
 The package manifest declares `terlan-ndarray` as an ordinary Terlan
 dependency, and the immutable-consumer gate resolves and locks that dependency
