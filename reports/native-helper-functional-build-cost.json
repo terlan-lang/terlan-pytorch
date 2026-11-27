@@ -1,0 +1,84 @@
+{
+  "date": "2026-11-28",
+  "package": "terlan-pytorch",
+  "base_commit": "fcfbbacfa40ef07a63530b0db5cde5a5a8b2d368",
+  "source_sha256": {
+    "native/rust/include/libtorch_bindings.hpp": "ac85e29331573c4f0b2a8df67597e98c26ee06b9eb2b64f0dc4ebfb131e51d16",
+    "native/rust/cpp/libtorch_metadata.cc": "620886967e6ba0cce3d84b9697fd4ccacb189d59219a38e6a3d4469930c889c0"
+  },
+  "change": "Move nine existing functional wrapper bodies unchanged from the shared header into libtorch_metadata.cc, isolating five torch/nn/functional headers. Public signatures remain unchanged.",
+  "compiler": {
+    "version": "0.0.10",
+    "source_revision": "8b40bcca5a47",
+    "target": "x86_64-unknown-linux-gnu",
+    "distribution": "https://github.com/terlan-lang/terlan/releases/tag/v0.0.10",
+    "archive_sha256": "f251afd1ffdb7aa6704df6786a9c4800daec6ac2c6485e7e7342defc286e3547",
+    "terlc_sha256": "2bc491fd8ff5b599c25a038f026ce6bb9ca87d83e8101b00853870ca7f07e75d"
+  },
+  "toolchain": {
+    "cxx": "GCC 11.4.0",
+    "rustc": "1.96.0",
+    "libtorch_cpu": "2.13.0+cpu",
+    "libtorch_cuda": "2.13.0+cu129"
+  },
+  "adapter_comparison": {
+    "source": "native/rust/cpp/terlan_mutation_adapters.cc",
+    "flags": "-O0 -g0 -ffunction-sections -fdata-sections -fPIC -m64 -std=c++17",
+    "method": "Sequential compilations with copied include trees; before uses the base commit shared header, after uses the updated header. Same CPU SDK and compiler.",
+    "before": {
+      "elapsed_seconds": 15.16,
+      "max_rss_kib": 970952
+    },
+    "after": {
+      "elapsed_seconds": 23.78,
+      "max_rss_kib": 873980
+    },
+    "conclusion": "Maximum RSS decreased by about 10%; wall time increased. These single-run samples demonstrate memory savings but do not establish a speedup."
+  },
+  "helper_rebuilds": {
+    "cpu": {
+      "elapsed_seconds": 240.14,
+      "max_rss_kib": 1098096,
+      "log_sha256": "403ef178c9b044add660b41102427e5296c6840c921fc862e5755136291f2a82"
+    },
+    "cuda": {
+      "elapsed_seconds": 247.79,
+      "max_rss_kib": 1099160,
+      "log_sha256": "94c982c7c4a51d3f8325999b713ea947ea19e5112f4c79e7c699d6d9d6083a12"
+    }
+  },
+  "measurement_limitations": "GNU time maximum RSS is the maximum reported process RSS, not aggregate simultaneous memory. Existing Rust dependencies were retained. CPU/CUDA builds partly overlapped on a shared machine. These are not fresh Cargo target or controlled end-to-end before/after measurements; no end-to-end speedup is claimed.",
+  "checks": [
+    {
+      "log": "cpu-tests.log",
+      "exit_code": 0,
+      "sha256": "cdccb6b70ad4c6d3174af383f2a69b635d2a52a61bddb33343dbc9291db2699b",
+      "passed": 9,
+      "failed": 0
+    },
+    {
+      "log": "cuda-tests.log",
+      "exit_code": 0,
+      "sha256": "e8b94b386ad56538392c5e9e3081daea79e418eea2f775813b963e1ca6cfd583",
+      "passed": 19,
+      "failed": 0
+    },
+    {
+      "log": "generate.log",
+      "exit_code": 0,
+      "sha256": "eafc2c5d92f1ce707c5609c3aa29c079c8ce516f450d53c1323feb77eb52ceaa"
+    },
+    {
+      "log": "generation-patch.log",
+      "exit_code": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "log": "source-ownership.log",
+      "exit_code": 0,
+      "sha256": "d83671ee84346d06584a51f66c323066fd287e24863d09c5d221fbabb91ffda2"
+    }
+  ],
+  "coverage": "Nine CPU functional parity tests cover all moved wrappers. CUDA helper run passes those nine tests with TERLAN_PYTORCH_REQUIRE_CUDA=1, plus ten CUDA tests. Generation produces 121 modules and 2829 functions; canonical source ownership matches.",
+  "remaining_cost": "Header parsing and helper construction remain substantial; reuse or prebuild native helpers."
+}
